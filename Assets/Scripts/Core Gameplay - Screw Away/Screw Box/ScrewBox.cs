@@ -88,6 +88,10 @@ public class ScrewBox : MonoBehaviour
             boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
             Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
+            .OnComplete(() =>
+            {
+                Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
+            })
             .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
             .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
             {

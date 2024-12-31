@@ -39,7 +39,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
-        throwForceMultiplier = new Vector3(66f, 9f, 66f) * 0.2f;
+        throwForceMultiplier = new Vector3(66f, 22f, 66f) * 0.3f;
     }
 
     void OnDestroy()
@@ -88,7 +88,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     private IEnumerator Throwing()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
 
         while (true)
         {

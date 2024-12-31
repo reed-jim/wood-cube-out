@@ -25,6 +25,6 @@ public class RotateObject : MonoBehaviour
 
     private void Rotate(Vector2 direction)
     {
-        _targetEulerAngle -= new Vector3(0, rotateSpeedMultiplier * direction.x, 0);
+        _targetEulerAngle -= new Vector3(-rotateSpeedMultiplier * direction.y, rotateSpeedMultiplier * direction.x, 0);
     }
 }

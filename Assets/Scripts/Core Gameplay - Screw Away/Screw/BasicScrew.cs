@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using CandyCoded.HapticFeedback;
 using PrimeTween;
 using UnityEngine;
 
@@ -80,7 +81,7 @@ public class BasicScrew : BaseScrew
 
             _tweens.Add(Tween.Position(transform, transform.position + 2f * transform.forward, duration: 0.3f).OnComplete(() =>
             {
-                _isRotating = false;
+                // _isRotating = false;
 
                 _tweens.Add(Tween.Delay(duration: 0.1f)
                 .OnComplete(() =>
@@ -91,26 +92,54 @@ public class BasicScrew : BaseScrew
 
                     float duration = 0.3f;
 
+                    _isRotating = false;
+
                     _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: duration));
-                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: duration));
-                    _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: duration)
+                    _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox * Vector3.one, duration: duration));
+                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.5f, -0.3f), duration: duration)
                     .OnComplete(() =>
                     {
-                        SoundManager.Instance.PlaySoundTightenScrew();
+                        _isRotating = true;
 
-                        screwBoxSlot.CompleteFill();
+                        _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: duration));
+                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: duration)
+                        .OnComplete(() =>
+                        {
+                            SoundManager.Instance.PlaySoundTightenScrew();
 
-                        _isDone = true;
-                        _isInScrewPort = screwBoxSlot.IsScrewPort;
+                            screwBoxSlot.CompleteFill();
 
-                        InvokeScrewLoosenedEvent();
+                            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: duration));
+
+                            _isRotating = false;
+                            _isDone = true;
+                            _isInScrewPort = screwBoxSlot.IsScrewPort;
+
+                            InvokeScrewLoosenedEvent();
+                        }));
                     }));
+
+                    // _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: duration)
+                    // .OnComplete(() =>
+                    // {
+                    //     SoundManager.Instance.PlaySoundTightenScrew();
+
+                    //     screwBoxSlot.CompleteFill();
+
+                    //     _isRotating = false;
+                    //     _isDone = true;
+                    //     _isInScrewPort = screwBoxSlot.IsScrewPort;
+
+                    //     InvokeScrewLoosenedEvent();
+                    // }));
                 }));
             }));
 
             SoundManager.Instance.PlaySoundLoosenScrew();
 
             // VibrateSlightly();
+
+            HapticFeedback.MediumFeedback();
         }
     }
 
@@ -122,7 +151,7 @@ public class BasicScrew : BaseScrew
             using (AndroidJavaObject vibrator = vibratorClass.Call<AndroidJavaObject>("getSystemService", "vibrator"))
             {
                 // Pattern: start immediately, vibrate for 50ms, then pause for 50ms, and repeat
-                long[] pattern = { 0, 20, 20 };  // Vibrate for 50ms, pause for 50ms
+                long[] pattern = { 0, 50, 0 };  // Vibrate for 50ms, pause for 50ms
                 vibrator.Call("vibrate", pattern, -1); // -1 means no repeat
             }
         }
