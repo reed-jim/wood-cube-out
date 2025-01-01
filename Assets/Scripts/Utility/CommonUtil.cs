@@ -7,6 +7,14 @@ using UnityEngine;
 
 public static class CommonUtil
 {
+    public static void StopTween(Tween tween)
+    {
+        if (tween.isAlive)
+        {
+            tween.Stop();
+        }
+    }
+
     public static void StopAllTweens(List<Tween> tweens)
     {
         for (int i = 0; i < tweens.Count; i++)

@@ -22,7 +22,8 @@ public class GameEnum : MonoBehaviour
         Pause,
         RemoveAd,
         Lose,
-        Booster
+        Booster,
+        Revive
     }
 
     public enum GameFaction

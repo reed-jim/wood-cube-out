@@ -12,7 +12,8 @@ public class LosePopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        GameStateLose.loseLevelEvent += OnLevelLose;
+        // GameStateLose.loseLevelEvent += OnLevelLose;
+        RevivePopup.reviveRefusedEvent += OnLevelLose;
 
         replayButton.onClick.AddListener(Replay);
         returnHomeButton.onClick.AddListener(ReturnHome);
@@ -20,7 +21,8 @@ public class LosePopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
-        GameStateLose.loseLevelEvent -= OnLevelLose;
+        // GameStateLose.loseLevelEvent -= OnLevelLose;
+        RevivePopup.reviveRefusedEvent -= OnLevelLose;
     }
 
     private void OnLevelLose()

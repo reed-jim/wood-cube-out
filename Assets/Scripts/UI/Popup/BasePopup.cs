@@ -105,7 +105,7 @@ public class BasePopup : MonoBehaviour
         _isShown = true;
     }
 
-    protected void Hide()
+    protected virtual void Hide()
     {
         if (_isShown)
         {
