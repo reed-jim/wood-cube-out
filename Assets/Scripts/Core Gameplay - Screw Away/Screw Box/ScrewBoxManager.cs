@@ -391,15 +391,26 @@ public class ScrewBoxManager : MonoBehaviour
 
                             screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
 
-                            screwPorts[screwPortIndex].Screw.transform.SetParent(screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].transform);
+                            // screwPorts[screwPortIndex].Screw.transform.SetParent(screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].transform);
 
-                            Tween.LocalPosition(screwPorts[screwPortIndex].Screw.transform, new Vector3(0, 0, -0.3f), duration: 0.5f)
-                            .OnComplete(() =>
-                            {
-                                screwPorts[screwPortIndex].IsFilled = false;
+                            // Tween.LocalPosition(screwPorts[screwPortIndex].Screw.transform, new Vector3(0, 0, -0.3f), duration: 0.5f)
+                            // .OnComplete(() =>
+                            // {
+                            // screwPorts[screwPortIndex].IsFilled = false;
 
-                                screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
-                            });
+                            // screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+                            // });
+
+                            screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
+                            (
+                                screwBoxSlot: screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex],
+                                onCompleteAction: () =>
+                                {
+                                    screwPorts[screwPortIndex].IsFilled = false;
+
+                                    screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+                                }
+                            );
 
                             break;
                         }
