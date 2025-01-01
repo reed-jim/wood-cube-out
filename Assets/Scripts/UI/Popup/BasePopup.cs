@@ -24,6 +24,7 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
+        BoosterUI.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -54,6 +55,7 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
+        BoosterUI.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 

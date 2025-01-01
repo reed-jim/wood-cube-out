@@ -21,7 +21,8 @@ public class GameEnum : MonoBehaviour
         IAPShop,
         Pause,
         RemoveAd,
-        Lose
+        Lose,
+        Booster
     }
 
     public enum GameFaction

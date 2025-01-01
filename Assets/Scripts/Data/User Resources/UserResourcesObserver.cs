@@ -35,6 +35,7 @@ public class UserResourcesObserver : ScriptableObject
 public class UserResources
 {
     [SerializeField] private float coinQuantity;
+    [SerializeField] private float diamondQuantity;
     [SerializeField] private int[] boosterQuantities;
 
     public float CoinQuantity
@@ -43,6 +44,15 @@ public class UserResources
         set
         {
             coinQuantity = value;
+        }
+    }
+
+    public float DiamondQuantity
+    {
+        get => diamondQuantity;
+        set
+        {
+            diamondQuantity = value;
         }
     }
 

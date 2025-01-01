@@ -2,6 +2,7 @@ using System;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class BoosterUI : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class BoosterUI : MonoBehaviour
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
@@ -26,6 +28,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action addMoreScrewPortEvent;
     public static event Action enableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     private int _numScrewPortsAdded;
     private bool _isInTransition;
@@ -73,6 +76,13 @@ public class BoosterUI : MonoBehaviour
 
     private void AddMoreScrewPort()
     {
+        if (!IsBoosterAvailable(boosterIndex: 0))
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+
+            return;
+        }
+
         if (_isInTransition)
         {
             return;
@@ -104,6 +114,13 @@ public class BoosterUI : MonoBehaviour
 
     private void EnableBreakObjectMode()
     {
+        if (!IsBoosterAvailable(boosterIndex: 1))
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+
+            return;
+        }
+
         if (_isInTransition)
         {
             return;
@@ -137,6 +154,13 @@ public class BoosterUI : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
+        if (!IsBoosterAvailable(boosterIndex: 2))
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+
+            return;
+        }
+
         if (_isInTransition)
         {
             return;
@@ -156,5 +180,29 @@ public class BoosterUI : MonoBehaviour
         {
             _isInTransition = false;
         });
+    }
+
+    private void CheckBoosterAvailability(int boosterIndex)
+    {
+        if (IsBoosterAvailable(boosterIndex))
+        {
+
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+        }
+    }
+
+    private bool IsBoosterAvailable(int boosterIndex)
+    {
+        if (userResourcesObserver.UserResources.BoosterQuantities[boosterIndex] > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
