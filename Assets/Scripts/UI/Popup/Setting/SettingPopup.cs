@@ -5,6 +5,7 @@ using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class SettingPopup : BasePopup
 {
@@ -15,12 +16,14 @@ public class SettingPopup : BasePopup
     [SerializeField] private RectTransform chooseLanguageContainer;
     [SerializeField] private Button openLanguageDropdownButton;
     [SerializeField] private Button[] chooseLanguageButtons;
+    [SerializeField] private Button rateButton;
     #endregion
 
     [SerializeField] private GameSetting gameSetting;
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -34,6 +37,7 @@ public class SettingPopup : BasePopup
     {
         turnMusicToggle.onValueChanged.AddListener(SettingGameMusic);
         turnSoundToggle.onValueChanged.AddListener(SettingGameSound);
+        rateButton.onClick.AddListener(Rate);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
 
@@ -91,6 +95,13 @@ public class SettingPopup : BasePopup
         LeanLocalization.SetCurrentLanguageAll(language);
 
         CloseLanguageDropdown();
+    }
+    #endregion
+
+    #region RATE
+    private void Rate()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.Rate);
     }
     #endregion
 }
