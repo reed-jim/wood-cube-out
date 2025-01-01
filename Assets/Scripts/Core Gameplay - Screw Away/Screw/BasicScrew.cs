@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class BasicScrew : BaseScrew
 {
+    [Header("CUSTOMIZE - UNSCREW ANIMATION")]
+    [SerializeField] private float durationMoveOut = 0.3f;
+    [SerializeField] private float durationDelay = 0.1f;
+    [SerializeField] private float durationMoveToScrewPort = 0.3f;
+    [SerializeField] private float durationTightenScrewPort = 0.3f;
+
     private float _distanceBlocked;
 
     private void Update()
@@ -74,66 +80,7 @@ public class BasicScrew : BaseScrew
 
             screwBoxSlot.Fill(this);
 
-            _isRotating = true;
-
-            // FOR ROTATING
-            await Task.Delay(100);
-
-            _tweens.Add(Tween.Position(transform, transform.position + 2f * transform.forward, duration: 0.3f).OnComplete(() =>
-            {
-                // _isRotating = false;
-
-                _tweens.Add(Tween.Delay(duration: 0.1f)
-                .OnComplete(() =>
-                {
-                    transform.SetParent(screwBoxSlot.transform);
-
-                    gameObject.layer = LayerMask.NameToLayer("UI");
-
-                    float duration = 0.3f;
-
-                    _isRotating = false;
-
-                    _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: duration));
-                    _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox * Vector3.one, duration: duration));
-                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.5f, -0.3f), duration: duration)
-                    .OnComplete(() =>
-                    {
-                        _isRotating = true;
-
-                        _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: duration));
-                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: duration)
-                        .OnComplete(() =>
-                        {
-                            SoundManager.Instance.PlaySoundTightenScrew();
-
-                            screwBoxSlot.CompleteFill();
-
-                            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: duration));
-
-                            _isRotating = false;
-                            _isDone = true;
-                            _isInScrewPort = screwBoxSlot.IsScrewPort;
-
-                            InvokeScrewLoosenedEvent();
-                        }));
-                    }));
-
-                    // _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: duration)
-                    // .OnComplete(() =>
-                    // {
-                    //     SoundManager.Instance.PlaySoundTightenScrew();
-
-                    //     screwBoxSlot.CompleteFill();
-
-                    //     _isRotating = false;
-                    //     _isDone = true;
-                    //     _isInScrewPort = screwBoxSlot.IsScrewPort;
-
-                    //     InvokeScrewLoosenedEvent();
-                    // }));
-                }));
-            }));
+            UnscrewAnimationAsync(screwBoxSlot);
 
             SoundManager.Instance.PlaySoundLoosenScrew();
 
@@ -141,6 +88,59 @@ public class BasicScrew : BaseScrew
 
             HapticFeedback.MediumFeedback();
         }
+    }
+
+    public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot)
+    {
+        _isRotating = true;
+
+        // FOR ROTATING
+        await Task.Delay(100);
+
+        _tweens.Add(Tween.Position(transform, transform.position + 2f * transform.forward, duration: durationMoveOut).OnComplete(() =>
+        {
+            // _isRotating = false;
+
+            _tweens.Add(Tween.Delay(duration: durationDelay)
+            .OnComplete(() =>
+            {
+                transform.SetParent(screwBoxSlot.transform);
+
+                gameObject.layer = LayerMask.NameToLayer("UI");
+
+                GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
+
+                _isRotating = false;
+
+                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: durationMoveToScrewPort));
+                _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox * Vector3.one, duration: durationMoveToScrewPort));
+                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -1f, -0.3f), duration: durationMoveToScrewPort)
+                .OnComplete(() =>
+                {
+                    _isRotating = true;
+
+                    _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: durationTightenScrewPort));
+                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
+                    .OnComplete(() =>
+                    {
+                        _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: 0.5f * durationTightenScrewPort)
+                            .OnComplete(() =>
+                            {
+                                SoundManager.Instance.PlaySoundTightenScrew();
+                            })
+                        );
+
+                        screwBoxSlot.CompleteFill();
+
+                        _isRotating = false;
+                        _isDone = true;
+                        _isInScrewPort = screwBoxSlot.IsScrewPort;
+
+                        InvokeScrewLoosenedEvent();
+                    }));
+                }));
+            }));
+        }));
     }
 
     public void VibrateSlightly()

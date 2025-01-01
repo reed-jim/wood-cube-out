@@ -27,6 +27,7 @@ public class LosePopup : BasePopup
 
     private void OnLevelLose()
     {
+        Debug.Log("LOSE");
         Show();
 
         AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);

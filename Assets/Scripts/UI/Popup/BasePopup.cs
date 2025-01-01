@@ -13,7 +13,7 @@ public class BasePopup : MonoBehaviour
     [SerializeField] private bool isRouteActiveFromStart;
 
     private ISaferioUIAnimation _transitionAnimation;
-    private bool _isShown;
+    protected bool _isShown;
 
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;

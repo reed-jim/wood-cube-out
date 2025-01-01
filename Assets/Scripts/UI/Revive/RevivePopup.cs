@@ -28,7 +28,10 @@ public class RevivePopup : BasePopup
     {
         base.Hide();
 
-        reviveRefusedEvent?.Invoke();
+        if (_isShown)
+        {
+            reviveRefusedEvent?.Invoke();
+        }
     }
 
     private void OnLevelLose()
