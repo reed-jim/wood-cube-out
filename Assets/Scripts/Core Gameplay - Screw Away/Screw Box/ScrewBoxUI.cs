@@ -26,11 +26,20 @@ public class ScrewBoxUI : MonoBehaviour
         unlockByAdsButton.gameObject.SetActive(false);
 
         unlockByAdsButton.onClick.AddListener(Unlock);
+
+        SetupUI();
     }
 
     void OnDestroy()
     {
         ScrewBoxCameraManager.setCameraEvent -= OnCameraSet;
+    }
+
+    private async void SetupUI()
+    {
+        await Task.Delay(200);
+
+        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, 0.148f * canvasSize.Value.x);
     }
 
     private void OnCameraSet(Camera camera)
