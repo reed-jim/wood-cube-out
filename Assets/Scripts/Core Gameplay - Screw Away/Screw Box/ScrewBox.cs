@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -26,6 +27,7 @@ public class ScrewBox : MonoBehaviour
     public static event Action spawnNewScrewBoxEvent;
     public static event Action<ScrewBox> setFactionForScrewBoxEvent;
     public static event Action screwBoxUnlockedEvent;
+    public static event Action shakeCameraEvent;
     #endregion
 
     #region PRIVATE FIELD
@@ -94,7 +96,10 @@ public class ScrewBox : MonoBehaviour
             Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
             .OnComplete(() =>
             {
-                Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
+                shakeCameraEvent?.Invoke();
+                // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
+
+                HapticFeedback.HeavyFeedback();
             })
             .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
             .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>

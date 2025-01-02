@@ -186,7 +186,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                     {
                         SoundManager.Instance.PlaySoundTightenScrew();
 
-                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, -0.0f), duration: durationTightenScrewPort)
+                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort)
                             .OnComplete(() =>
                             {
                                 _isRotating = false;
