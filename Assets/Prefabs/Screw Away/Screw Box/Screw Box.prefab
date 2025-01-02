@@ -329,7 +329,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Sblocca casella
+  m_text: "\u30DC\u30C3\u30AF\u30B9\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3059\u308B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea321c4dec4cdd74fae016f2a45adbe2, type: 2}
   m_sharedMaterial: {fileID: -8589212015780818781, guid: ea321c4dec4cdd74fae016f2a45adbe2, type: 2}
@@ -889,6 +889,7 @@ MonoBehaviour:
   boxLid: {fileID: 2922332451361325574}
   screwBoxServiceLocator: {fileID: 2012672908965376577}
   isLocked: 0
+  delayMoveInDuration: 0.1
   closeBoxLidDuration: 0.2
   scaleDownDuration: 0.2
   delayMoveOutDuration: 0.05
@@ -975,6 +976,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8db1d414b36c98f48b1e1004f029a989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  screwBoxSpriteRenderer: {fileID: 8200636108910568844}
   unlockByAdsButtonRT: {fileID: 1738942172558580213}
   unlockByAdsButton: {fileID: 3310385434065370710}
   screwBoxCameraObserver: {fileID: 11400000, guid: 1a69e9b3f1a65784d98c141293c992da, type: 2}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -14,6 +15,7 @@ public class ScrewBox : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isLocked;
+    [SerializeField] private float delayMoveInDuration;
     [SerializeField] private float closeBoxLidDuration;
     [SerializeField] private float scaleDownDuration;
     [SerializeField] private float delayMoveOutDuration;
@@ -73,10 +75,12 @@ public class ScrewBox : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void OnScrewBoxCompleted(int instanceId)
+    private async void OnScrewBoxCompleted(int instanceId)
     {
         if (instanceId == gameObject.GetInstanceID())
         {
+            await Task.Delay((int)(delayMoveInDuration * 1000));
+
             AudioSource screwBoxDoneSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.SCREW_BOX_DONE_SOUND);
 
             screwBoxDoneSound.Play();

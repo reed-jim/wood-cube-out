@@ -30,9 +30,11 @@ public class GameVariableInitializer : MonoBehaviour
         Testing();
     }
 
-    private async void Testing() {
-        while(true) {
-            testCXurrentLevel.text = currentLevel.Value.ToString();
+    private async void Testing()
+    {
+        while (true)
+        {
+            testCXurrentLevel.text = userResourcesObserver.UserResources.BoosterQuantities.Length.ToString();
 
             await Task.Delay(500);
         }

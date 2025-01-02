@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class ScrewBoxUI : MonoBehaviour
 {
+    [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
     [SerializeField] private RectTransform unlockByAdsButtonRT;
     [SerializeField] private Button unlockByAdsButton;
 
@@ -37,14 +38,30 @@ public class ScrewBoxUI : MonoBehaviour
 
     private async void SetupUI()
     {
-        await Task.Delay(200);
+        await Task.Delay(500);
 
-        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, 0.148f * canvasSize.Value.x);
+        // float orthoSize = _screwBoxCamera.orthographicSize;
+
+        // float screenHeightWorld = orthoSize * 2;
+        // float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
+
+        // float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
+
+        // UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * canvasSize.Value.x);
     }
 
     private void OnCameraSet(Camera camera)
     {
         _screwBoxCamera = camera;
+
+        float orthoSize = _screwBoxCamera.orthographicSize;
+
+        float screenHeightWorld = orthoSize * 2;
+        float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
+
+        float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
+
+        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, 1.08f * ratio * canvasSize.Value.x);
     }
 
     public void SetUnlockByAdsButtonPosition()

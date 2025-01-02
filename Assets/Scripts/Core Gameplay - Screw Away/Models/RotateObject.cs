@@ -4,18 +4,23 @@ public class RotateObject : MonoBehaviour
 {
     [SerializeField] private float rotateSpeedMultiplier;
 
-    private Vector3 _targetEulerAngle;
+    private float _pitch;
+    private float _yaw;
 
     void Awake()
     {
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        _targetEulerAngle = transform.eulerAngles;
+        rotateSpeedMultiplier = 0.1f;
     }
 
     void Update()
     {
-        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.Euler(_targetEulerAngle), 0.25f);
+        transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+        transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+
+        _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
+        _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
     }
 
     void OnDestroy()
@@ -25,6 +30,9 @@ public class RotateObject : MonoBehaviour
 
     private void Rotate(Vector2 direction)
     {
-        _targetEulerAngle -= new Vector3(-rotateSpeedMultiplier * direction.y, rotateSpeedMultiplier * direction.x, 0);
+        Vector2 normalizedDirection = direction.normalized;
+
+        _pitch = normalizedDirection.y;
+        _yaw = -normalizedDirection.x;
     }
 }
