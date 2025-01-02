@@ -23,10 +23,12 @@ public class BasicScrew : BaseScrew
 
         if (_isRotatingToCorrectAngleOnScrewBox)
         {
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(0, 180, 0)), 0.25f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-30, 180, 0)), 0.25f);
 
-            if (transform.localRotation == Quaternion.Euler(new Vector3(0, 180, 0)))
+            if (transform.localRotation == Quaternion.Euler(new Vector3(-30, 180, 0)))
             {
+                transform.localRotation = Quaternion.Euler(new Vector3(-30, 180, 0));
+
                 _isRotatingToCorrectAngleOnScrewBox = false;
             }
         }
@@ -198,7 +200,7 @@ public class BasicScrew : BaseScrew
                         minBlockedDistance = distance;
                     }
 
-                    if (distance < 2)
+                    if (distance < 1)
                     {
                         number++;
                     }

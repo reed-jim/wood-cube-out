@@ -172,7 +172,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                 _isRotating = false;
 
-                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-20f, 180 + 20f, 0)), duration: durationMoveToScrewPort));
+                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-20f, 180 + 0f, 0)), duration: durationMoveToScrewPort));
                 _tweens.Add(Tween.Scale(transform, 1.4f * scaleOnScrewBox * Vector3.one, duration: durationMoveToScrewPort));
                 _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.3f, -0.3f), duration: durationMoveToScrewPort)
                 .OnComplete(() =>
@@ -186,7 +186,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                     {
                         SoundManager.Instance.PlaySoundTightenScrew();
 
-                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
+                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, -0.0f), duration: durationTightenScrewPort)
                             .OnComplete(() =>
                             {
                                 _isRotating = false;
