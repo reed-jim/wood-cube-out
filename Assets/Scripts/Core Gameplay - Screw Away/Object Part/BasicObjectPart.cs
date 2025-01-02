@@ -145,6 +145,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         Vector3 expectedPosition;
 
+
+
+        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
+        // hammer.transform.rotation = Quaternion.LookRotation(transform.forward);
+        // hammer.transform.Rotate(new Vector3(0, 90, 0));
+
         if (Vector3.Distance(position1, Vector3.zero) < Vector3.Distance(position2, Vector3.zero))
         {
             // expectedPosition = position2 - 0.8f * transform.up;
@@ -158,7 +164,9 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             expectedZDirection = 1;
         }
 
-        if (Vector3.Distance(hammer.transform.position + transform.up, transform.position) < Vector3.Distance(hammer.transform.position - transform.up, transform.position))
+        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
+
+        if (Vector3.Distance(hammer.transform.position + hammer.transform.up, transform.position) < Vector3.Distance(hammer.transform.position - hammer.transform.up, transform.position))
         {
             expectedYDirection = 1;
         }
@@ -167,19 +175,25 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             expectedYDirection = -1;
         }
 
-        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
-        hammer.transform.rotation = Quaternion.LookRotation(transform.forward);
-        hammer.transform.Rotate(new Vector3(0, 90, 0));
+        hammer.transform.rotation = Quaternion.Euler(12, 90, 0);
+        hammer.transform.position = touchPosition + 4 * hammer.transform.right;
 
-        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
-        hammer.transform.position = touchPosition;
+        // Tween.Position(hammer.transform, transform.position + 2f * expectedZDirection * transform.forward + 0 * expectedYDirection * hammer.transform.up, duration: 0.2f)
 
-        Tween.Position(hammer.transform, transform.position + 2f * expectedZDirection * transform.forward + 1 * expectedYDirection * transform.up, duration: 0.2f)
-        .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, expectedZDirection * 60), duration: 0.6f))
-        .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, -expectedZDirection * 30), duration: 0.2f)
+        // Tween.Position(hammer.transform, touchPosition, duration: 0.2f)
+        // .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, expectedZDirection * 60), duration: 0.6f))
+        // .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, -expectedZDirection * 30), duration: 0.2f)
+        // .OnComplete(() =>
+        // {
+        //     Tween.Position(hammer.transform, 50f * expectedZDirection * transform.forward, startDelay: 0.3f, duration: 0.3f);
+        // }));
+
+        Tween.Position(hammer.transform, touchPosition + 1f * hammer.transform.right, duration: 0.2f)
+        .Chain(Tween.Rotation(hammer.transform, Quaternion.Euler(0, 78, -60), duration: 0.6f))
+        .Chain(Tween.Rotation(hammer.transform, Quaternion.Euler(0, 78, 45), duration: 0.2f)
         .OnComplete(() =>
         {
-            Tween.Position(hammer.transform, 50f * expectedZDirection * transform.forward, startDelay: 0.3f, duration: 0.3f);
+            Tween.Position(hammer.transform, touchPosition + 50f * hammer.transform.right, startDelay: 0.3f, duration: 0.3f);
         }));
 
         await Task.Delay(950);
