@@ -10,7 +10,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private Transform levelCenter;
     [SerializeField] private Rigidbody partRigidbody;
 
-    [SerializeField] private ScrewOutline[] screwOutlines;
+    [SerializeField] private BaseScrew[] attachedScrews;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private Vector3 throwForceMultiplier = new Vector3(0.003f, 0.001f, 0.003f);
@@ -43,11 +43,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         throwForceMultiplier = new Vector3(66f, 22f, 66f) * 0.3f;
 
-        screwOutlines = new ScrewOutline[transform.childCount];
+        attachedScrews = new BaseScrew[transform.childCount];
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < attachedScrews.Length; i++)
         {
-            screwOutlines[i] = transform.GetChild(i).GetComponent<ScrewOutline>();
+            attachedScrews[i] = transform.GetChild(i).GetComponent<BaseScrew>();
         }
     }
 
@@ -65,9 +65,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _isSelecting = true;
 
-        for (int i = 0; i < transform.childCount; i++)
+        for (int i = 0; i < attachedScrews.Length; i++)
         {
-            screwOutlines[i].ShowOutline();
+            if (!attachedScrews[i].IsDone)
+            {
+                attachedScrews[i].ScrewServiceLocator.screwOutline.ShowOutline();
+            }
         }
     }
 
@@ -79,9 +82,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             _isSelecting = false;
 
-            for (int i = 0; i < transform.childCount; i++)
+            for (int i = 0; i < attachedScrews.Length; i++)
             {
-                screwOutlines[i].HideOutline();
+                if (!attachedScrews[i].IsDone)
+                {
+                    attachedScrews[i].ScrewServiceLocator.screwOutline.HideOutline();
+                }
             }
         }
     }
