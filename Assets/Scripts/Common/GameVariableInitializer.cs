@@ -27,16 +27,28 @@ public class GameVariableInitializer : MonoBehaviour
 
         currentLevelFetchedEvent?.Invoke();
 
-        Testing();
+        // Testing();
     }
 
     private async void Testing()
     {
+        await Task.Delay(1000);
+
+        int time = 0;
+
         while (true)
         {
-            testCXurrentLevel.text = userResourcesObserver.UserResources.BoosterQuantities.Length.ToString();
+            string text = userResourcesObserver.UserResources.BoosterQuantities.ToString();
+
+            text += " / " + userResourcesObserver.UserResources.BoosterQuantities[1].ToString();
+            text += " / " + userResourcesObserver.UserResources.BoosterQuantities[2].ToString();
+            text += " / " + time;
+
+            testCXurrentLevel.text = text;
 
             await Task.Delay(500);
+
+            time++;
         }
     }
 

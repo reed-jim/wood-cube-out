@@ -196,6 +196,8 @@ public class BoosterUI : MonoBehaviour
 
     private bool IsBoosterAvailable(int boosterIndex)
     {
+        return true;
+        
         if (userResourcesObserver.UserResources.BoosterQuantities[boosterIndex] > 0)
         {
             return true;

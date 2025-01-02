@@ -1,9 +1,10 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/UserResourcesObserver")]
 public class UserResourcesObserver : ScriptableObject
 {
-    [SerializeField] private UserResources userResources = new UserResources();
+    [SerializeField] private UserResources userResources;
 
     public UserResources UserResources
     {
@@ -31,7 +32,7 @@ public class UserResourcesObserver : ScriptableObject
     }
 }
 
-
+[Serializable]
 public class UserResources
 {
     [SerializeField] private float coinQuantity;

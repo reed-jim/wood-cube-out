@@ -409,7 +409,8 @@ public class ScrewBoxManager : MonoBehaviour
                                     screwPorts[screwPortIndex].IsFilled = false;
 
                                     screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
-                                }
+                                },
+                                isSwitchCamera: false
                             );
 
                             break;

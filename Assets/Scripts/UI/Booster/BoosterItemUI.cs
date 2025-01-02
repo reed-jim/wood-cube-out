@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,8 +22,13 @@ public class BoosterItemUI : MonoBehaviour
         Setup();
     }
 
-    private void Setup()
+    private async void Setup()
     {
+        while (userResourcesObserver.UserResources.BoosterQuantities.Length == 0)
+        {
+            await Task.Delay(200);
+        }
+
         int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
         if (quantity > 0)

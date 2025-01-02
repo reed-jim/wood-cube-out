@@ -409,6 +409,8 @@ public class ScrewManager : MonoBehaviour
                     nextFaction = faction;
 
                     isFound = true;
+
+                    break;
                 }
             }
         }

@@ -27,6 +27,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected int _numberBlockingObjects;
     protected Vector3 _initialScale;
     protected bool _isRotating;
+    protected bool _isRotatingToCorrectAngleOnScrewBox;
     protected bool _isInteractable = true;
     protected bool _isDone;
     protected bool _isLocked;
@@ -146,7 +147,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     }
 
-    public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null)
+    public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
     {
         _isRotating = true;
 
@@ -162,37 +163,48 @@ public class BaseScrew : MonoBehaviour, IScrew
             {
                 transform.SetParent(screwBoxSlot.transform);
 
-                gameObject.layer = LayerMask.NameToLayer("UI");
+                if (isSwitchCamera)
+                {
+                    gameObject.layer = LayerMask.NameToLayer("UI");
 
-                GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
+                    GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
+                }
 
                 _isRotating = false;
 
-                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(30, 180 + 0f, 0)), duration: durationMoveToScrewPort));
-                _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox * Vector3.one, duration: durationMoveToScrewPort));
-                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -1f, -0.3f), duration: durationMoveToScrewPort)
+                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-20f, 180 + 20f, 0)), duration: durationMoveToScrewPort));
+                _tweens.Add(Tween.Scale(transform, 1.4f * scaleOnScrewBox * Vector3.one, duration: durationMoveToScrewPort));
+                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.3f, -0.3f), duration: durationMoveToScrewPort)
                 .OnComplete(() =>
                 {
                     _isRotating = true;
 
-                    _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: durationTightenScrewPort));
-                    _tweens
-
-                    .Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
+                    _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: durationDelay));
+                    _tweens.Add(Tween.Delay(duration: durationDelay)
+                    // _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
                     .OnComplete(() =>
                     {
                         SoundManager.Instance.PlaySoundTightenScrew();
 
-                        _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: 1f * durationTightenScrewPort)
+                        _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
                             .OnComplete(() =>
                             {
-                                // SoundManager.Instance.PlaySoundTightenScrew();
+                                _isRotating = false;
+                                _isRotatingToCorrectAngleOnScrewBox = true;
                             })
                         );
+                        // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)),
+                        //     duration: durationTightenScrewPort)
+                        //     .OnComplete(() =>
+                        //     {
+                        //         _isRotating = false;
+                        //         // SoundManager.Instance.PlaySoundTightenScrew();
+                        //     })
+                        // );
 
                         screwBoxSlot.CompleteFill();
 
-                        _isRotating = false;
+                        // _isRotating = false;
                         _isDone = true;
                         _isInScrewPort = screwBoxSlot.IsScrewPort;
 

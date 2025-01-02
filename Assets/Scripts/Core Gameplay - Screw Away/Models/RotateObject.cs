@@ -11,7 +11,7 @@ public class RotateObject : MonoBehaviour
     {
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.1f;
+        rotateSpeedMultiplier = 0.12f;
     }
 
     void Update()

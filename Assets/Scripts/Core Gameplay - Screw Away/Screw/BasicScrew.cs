@@ -20,6 +20,16 @@ public class BasicScrew : BaseScrew
         {
             transform.RotateAround(transform.forward, 0.3f);
         }
+
+        if (_isRotatingToCorrectAngleOnScrewBox)
+        {
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(0, 180, 0)), 0.25f);
+
+            if (transform.localRotation == Quaternion.Euler(new Vector3(0, 180, 0)))
+            {
+                _isRotatingToCorrectAngleOnScrewBox = false;
+            }
+        }
     }
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
