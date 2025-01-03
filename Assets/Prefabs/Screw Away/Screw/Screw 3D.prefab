@@ -102,7 +102,6 @@ GameObject:
   - component: {fileID: 2480204014084754691}
   - component: {fileID: 5059581111959322311}
   - component: {fileID: 1860856407277781807}
-  - component: {fileID: 465249894318900486}
   - component: {fileID: 4820946931393587339}
   - component: {fileID: 4567112148891185875}
   - component: {fileID: 4437216730832237330}
@@ -220,6 +219,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   colorReference: _Color
   secondaryColorReference: _SecondaryColor
+  outlineFadeReference: _OutlineWidth
   secondaryColorMultiplier: 0.6
   _renderer: {fileID: 4437216730832237330}
 --- !u!114 &1860856407277781807
@@ -234,25 +234,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3d1834d0c85e55478b474190f57da39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  outline: {fileID: 465249894318900486}
---- !u!114 &465249894318900486
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4340868010685783976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fea29bb7c508c244a1f805a5fd3fc4d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  outlineMode: 0
-  outlineColor: {r: 1, g: 1, b: 1, a: 1}
-  outlineWidth: 8
-  precomputeOutline: 0
-  bakeKeys: []
-  bakeValues: []
+  outline: {fileID: 0}
+  screwServiceLocator: {fileID: 1697211288241465870}
 --- !u!135 &4820946931393587339
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -307,6 +290,7 @@ MeshRenderer:
   m_Materials:
   - {fileID: 2100000, guid: 87eb48919ec946f49bad379df782db11, type: 2}
   - {fileID: 2100000, guid: f6ab20fdb935bb945b775776df6bbc12, type: 2}
+  - {fileID: 2100000, guid: fd8a83432a5c7fb4bbf44e70c6343e8d, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
