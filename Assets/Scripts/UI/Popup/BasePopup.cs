@@ -17,6 +17,7 @@ public class BasePopup : MonoBehaviour
 
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
+    public static event Action<bool> enableSwipingScreenEvent; 
 
     private void Awake()
     {
@@ -105,6 +106,8 @@ public class BasePopup : MonoBehaviour
         popupShowEvent?.Invoke();
 
         _isShown = true;
+
+        enableSwipingScreenEvent?.Invoke(false);
     }
 
     protected virtual void Hide()
@@ -120,6 +123,8 @@ public class BasePopup : MonoBehaviour
             AfterHide();
 
             PlayClickSound();
+
+            enableSwipingScreenEvent?.Invoke(true);
         }
     }
 

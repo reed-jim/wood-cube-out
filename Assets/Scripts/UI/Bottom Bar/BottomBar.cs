@@ -14,6 +14,7 @@ public class BottomBar : MonoBehaviour
     #region PRIVATE FIELD
     private float _slotSize;
     private bool _isSwitchingByTap;
+    private bool _isEnabledSwiping;
     #endregion
 
     #region ACTION
@@ -25,8 +26,11 @@ public class BottomBar : MonoBehaviour
         SwipeGesture.swipeGestureEvent += OnSwipe;
         SwipeGesture.stopSwipeGestureEvent += OnStopSwiping;
         BottomBarItem.moveBottomBarHighlightEvent += MoveBottomBarHighlight;
+        BasePopup.enableSwipingScreenEvent += EnableSwiping;
 
         _slotSize = canvasSize.Value.x / screenNumber;
+
+        _isEnabledSwiping = true;
     }
 
     private void Start()
@@ -39,11 +43,12 @@ public class BottomBar : MonoBehaviour
         SwipeGesture.swipeGestureEvent -= OnSwipe;
         SwipeGesture.stopSwipeGestureEvent -= OnStopSwiping;
         BottomBarItem.moveBottomBarHighlightEvent -= MoveBottomBarHighlight;
+        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
     }
 
     private void OnSwipe(Vector2 direction)
     {
-        if (_isSwitchingByTap)
+        if (_isSwitchingByTap || !_isEnabledSwiping)
         {
             return;
         }
@@ -58,7 +63,7 @@ public class BottomBar : MonoBehaviour
 
     private void OnStopSwiping()
     {
-        if (_isSwitchingByTap)
+        if (_isSwitchingByTap || !_isEnabledSwiping)
         {
             return;
         }
@@ -108,5 +113,10 @@ public class BottomBar : MonoBehaviour
         });
 
         _isSwitchingByTap = true;
+    }
+
+    private void EnableSwiping(bool isEnable)
+    {
+        _isEnabledSwiping = isEnable;
     }
 }

@@ -514,9 +514,7 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 screwPorts[i].IsFilled = false;
 
-                // screwPorts[i].Screw.gameObject.SetActive(false);
-
-                screwPorts[i].Screw.ThrowOutside();
+                screwPorts[i].Screw.ForceUnscrew();
 
                 screwPorts[i].Screw = null;
             }

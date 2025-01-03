@@ -247,13 +247,16 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public virtual void ForceUnscrew()
     {
-        joint.breakForce = 0;
+        if (joint != null)
+        {
+            joint.breakForce = 0;
 
-        breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
+            breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
+        }
 
         ThrowOutside();
 
-        // _isDone = true;
+        _isDone = false;
         _isOutsideWithNoScrewBox = true;
     }
 
@@ -281,7 +284,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             {
                 InvokeScrewLoosenedEvent();
 
-                // gameObject.SetActive(false);
+                screwServiceLocator.screwMeshRenderer.enabled = false;
             });
         });
     }

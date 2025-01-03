@@ -14,6 +14,7 @@ public class SwipingScreen : MonoBehaviour
     #region PRIVATE FIELD
     private float _slotSize;
     private bool _isSwitchingByTap;
+    private bool _isEnabledSwiping;
     #endregion
 
     #region ACTION
@@ -25,6 +26,9 @@ public class SwipingScreen : MonoBehaviour
         SwipeGesture.swipeGestureEvent += OnSwipe;
         SwipeGesture.stopSwipeGestureEvent += OnStopSwiping;
         UIScreen.moveSwipingScreenEvent += MoveSwipingScreen;
+        BasePopup.enableSwipingScreenEvent += EnableSwiping;
+
+        _isEnabledSwiping = true;
     }
 
     private void Start()
@@ -37,11 +41,12 @@ public class SwipingScreen : MonoBehaviour
         SwipeGesture.swipeGestureEvent -= OnSwipe;
         SwipeGesture.stopSwipeGestureEvent -= OnStopSwiping;
         UIScreen.moveSwipingScreenEvent -= MoveSwipingScreen;
+        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
     }
 
     private void OnSwipe(Vector2 direction)
     {
-        if (_isSwitchingByTap)
+        if (_isSwitchingByTap || !_isEnabledSwiping)
         {
             return;
         }
@@ -54,7 +59,7 @@ public class SwipingScreen : MonoBehaviour
 
     private void OnStopSwiping()
     {
-        if (_isSwitchingByTap)
+        if (_isSwitchingByTap || !_isEnabledSwiping)
         {
             return;
         }
@@ -95,5 +100,10 @@ public class SwipingScreen : MonoBehaviour
         });
 
         _isSwitchingByTap = true;
+    }
+
+    private void EnableSwiping(bool isEnable)
+    {
+        _isEnabledSwiping = isEnable;
     }
 }

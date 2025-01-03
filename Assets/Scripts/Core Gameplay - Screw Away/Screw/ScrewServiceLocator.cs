@@ -6,4 +6,5 @@ public class ScrewServiceLocator : MonoBehaviour
     [SerializeField] public ScrewFaction screwFaction;
     [SerializeField] public ScrewMaterialPropertyBlock screwMaterialPropertyBlock;
     [SerializeField] public ScrewOutline screwOutline;
+    [SerializeField] public MeshRenderer screwMeshRenderer;
 }
