@@ -38,6 +38,11 @@ public class GameStateMachine : MonoBehaviour
 
     public void ChangeState(BaseGameState newState)
     {
+        if (!newState.CanTransitionTo())
+        {
+            return;
+        }
+
         if (currentState != null)
         {
             currentState.Exit();

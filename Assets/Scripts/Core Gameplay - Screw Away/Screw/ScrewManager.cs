@@ -39,6 +39,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.screwLoosenedEvent += CheckWin;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
+        ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
     }
 
     void OnDestroy()
@@ -51,6 +52,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.screwLoosenedEvent -= CheckWin;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
+        ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
     }
     #endregion
 
@@ -160,6 +162,17 @@ public class ScrewManager : MonoBehaviour
         foreach (var faction in totalNotBlockedScrewByFaction.Keys)
         {
             difficultyLevelByFactions[faction] -= (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length;
+        }
+
+        // DECREASE Chance of factions that are already available in screw boxes
+        for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
+        {
+            if (screwBoxManager.ScrewBoxs[i] == null)
+            {
+                continue;
+            }
+
+            difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
         }
 
         return difficultyLevelByFactions;
@@ -396,26 +409,45 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        // CASE: there are a few screws left, but no screw box spawned and player can't win
-        if (!isFound)
+        // // CASE: there are a few screws left, but no screw box spawned and player can't win
+        // if (!isFound)
+        // {
+        //     for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        //     {
+        //         GameFaction faction = factionSortedByDifficulty[i];
+
+        //         if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) > 0 &&
+        //             (remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
+        //         {
+        //             nextFaction = faction;
+
+        //             isFound = true;
+
+        //             break;
+        //         }
+        //     }
+        // }
+
+        return nextFaction;
+    }
+
+    // HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
+    private void OnScrewBoxSpawned(ScrewBox screwBox)
+    {
+        for (int i = 0; i < _screws.Count; i++)
         {
-            for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+            if (_screws[i].IsOutsideWithNoScrewBox)
             {
-                GameFaction faction = factionSortedByDifficulty[i];
+                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(_screws[i].Faction, isIncludeScrewPorts: false);
 
-                if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) > 0 &&
-                    (remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
+                if (screwBoxSlot != null)
                 {
-                    nextFaction = faction;
+                    screwBoxSlot.Fill(_screws[i]);
 
-                    isFound = true;
-
-                    break;
+                    _screws[i].Loose(_screws[i].ScrewId, _screws[i].Faction, screwBoxSlot);
                 }
             }
         }
-
-        return nextFaction;
     }
     #endregion
 }

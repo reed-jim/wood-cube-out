@@ -30,6 +30,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected bool _isRotatingToCorrectAngleOnScrewBox;
     protected bool _isInteractable = true;
     protected bool _isDone;
+    protected bool _isOutsideWithNoScrewBox;
     protected bool _isLocked;
     protected bool _isInScrewPort;
     protected ScrewData _screwData;
@@ -78,6 +79,12 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         get => _isDone;
         set => _isDone = value;
+    }
+
+    public bool IsOutsideWithNoScrewBox
+    {
+        get => _isOutsideWithNoScrewBox;
+        set => _isOutsideWithNoScrewBox = value;
     }
 
     public bool IsLocked
@@ -244,9 +251,10 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
 
-        _isDone = true;
-
         ThrowOutside();
+
+        // _isDone = true;
+        _isOutsideWithNoScrewBox = true;
     }
 
     public virtual void ThrowOutside()
@@ -273,7 +281,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             {
                 InvokeScrewLoosenedEvent();
 
-                gameObject.SetActive(false);
+                // gameObject.SetActive(false);
             });
         });
     }

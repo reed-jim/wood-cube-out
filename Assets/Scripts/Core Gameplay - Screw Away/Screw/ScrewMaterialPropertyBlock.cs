@@ -5,7 +5,7 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
     [SerializeField] private string secondaryColorReference;
-    [SerializeField] private string outlineFadeReference;
+    [SerializeField] private string outlineWidthReference;
     [SerializeField] private float secondaryColorMultiplier;
 
     #region PRIVATE FIELD
@@ -41,9 +41,9 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
-    public void SetOutlineFade(float value)
+    public void SetOutlineWidth(float value)
     {
-        _propertyBlock.SetFloat(outlineFadeReference, value);
+        _propertyBlock.SetFloat(outlineWidthReference, value);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }

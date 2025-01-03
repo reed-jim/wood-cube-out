@@ -86,9 +86,12 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
-            joint.breakForce = 0;
+            if (joint != null)
+            {
+                joint.breakForce = 0;
 
-            InvokeBreakJointEvent();
+                InvokeBreakJointEvent();
+            }
 
             screwBoxSlot.Fill(this);
 

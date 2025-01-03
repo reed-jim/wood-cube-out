@@ -28,6 +28,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
+    public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
     #endregion
 
@@ -276,6 +277,8 @@ public class ScrewBoxManager : MonoBehaviour
             Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
             {
                 MoveFromScrewPortToScrewBox();
+
+                screwBoxSpawnedEvent?.Invoke(screwBox);
             });
         }
     }

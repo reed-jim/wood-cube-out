@@ -27,7 +27,7 @@ public class ScrewOutline : MonoBehaviour
         {
             // outline.OutlineWidth = newVal;
 
-            screwServiceLocator.screwMaterialPropertyBlock.SetOutlineFade(newVal);
+            screwServiceLocator.screwMaterialPropertyBlock.SetOutlineWidth(newVal);
         });
     }
 
@@ -39,7 +39,7 @@ public class ScrewOutline : MonoBehaviour
         {
             // outline.OutlineWidth = newVal;
 
-            screwServiceLocator.screwMaterialPropertyBlock.SetOutlineFade(newVal);
+            screwServiceLocator.screwMaterialPropertyBlock.SetOutlineWidth(newVal);
         });
     }
 }

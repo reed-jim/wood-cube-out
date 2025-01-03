@@ -37,8 +37,6 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        currentLevel.Value++;
-
         Show();
 
         await Task.Delay(500);
@@ -50,6 +48,8 @@ public class WinPopup : BasePopup
         winSound.Play();
 
         CollectCoin(500);
+
+        currentLevel.Value++;
     }
 
     // private async void OnEnable()
