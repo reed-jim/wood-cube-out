@@ -446,6 +446,8 @@ public class ScrewManager : MonoBehaviour
 
                     _screws[i].ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
+                    _screws[i].IsInteractable = true;
+
                     _screws[i].Loose(_screws[i].ScrewId, _screws[i].Faction, screwBoxSlot);
                 }
             }

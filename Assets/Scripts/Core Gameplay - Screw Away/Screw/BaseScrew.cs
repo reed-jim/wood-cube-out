@@ -81,6 +81,12 @@ public class BaseScrew : MonoBehaviour, IScrew
         set => _isDone = value;
     }
 
+    public bool IsInteractable
+    {
+        get => _isInteractable;
+        set => _isInteractable = value;
+    }
+
     public bool IsOutsideWithNoScrewBox
     {
         get => _isOutsideWithNoScrewBox;
@@ -285,6 +291,8 @@ public class BaseScrew : MonoBehaviour, IScrew
                 InvokeScrewLoosenedEvent();
 
                 screwServiceLocator.screwMeshRenderer.enabled = false;
+
+                _isRotating = false;
             });
         });
     }
