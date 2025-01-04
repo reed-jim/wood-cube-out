@@ -7,6 +7,8 @@ public class ScrewOutline : MonoBehaviour
 
     [SerializeField] private ScrewServiceLocator screwServiceLocator;
 
+    [SerializeField] private float outlineWidth;
+
     private Tween _outlineTween;
 
     void Awake()
@@ -23,7 +25,7 @@ public class ScrewOutline : MonoBehaviour
     {
         CommonUtil.StopTween(_outlineTween);
 
-        _outlineTween = Tween.Custom(0, 0.2f, duration: 0.3f, onValueChange: newVal =>
+        _outlineTween = Tween.Custom(1, outlineWidth, duration: 0.3f, onValueChange: newVal =>
         {
             // outline.OutlineWidth = newVal;
 
@@ -35,7 +37,7 @@ public class ScrewOutline : MonoBehaviour
     {
         CommonUtil.StopTween(_outlineTween);
 
-        _outlineTween = Tween.Custom(0.2f, 0, duration: 0.3f, onValueChange: newVal =>
+        _outlineTween = Tween.Custom(outlineWidth, 1, duration: 0.3f, onValueChange: newVal =>
         {
             // outline.OutlineWidth = newVal;
 
