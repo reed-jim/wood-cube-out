@@ -172,7 +172,7 @@ public class ScrewManager : MonoBehaviour
                 continue;
             }
 
-            difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
+            difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 99;
         }
 
         return difficultyLevelByFactions;
