@@ -7,8 +7,8 @@ public class PausePopup : BasePopup
 {
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Button replayLevelButton;
-    [SerializeField] private Toggle turnMusicToggle;
-    [SerializeField] private Toggle turnSoundToggle;
+    [SerializeField] private SaferioToggle turnMusicToggle;
+    [SerializeField] private SaferioToggle turnSoundToggle;
 
     [SerializeField] private GameSetting gameSetting;
 
@@ -18,16 +18,16 @@ public class PausePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        turnMusicToggle.isOn = gameSetting.IsTurnOnBackgroundMusic;
-        turnSoundToggle.isOn = gameSetting.IsTurnOnSound;
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
     }
 
     protected override void RegisterMoreEvent()
     {
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
-        turnMusicToggle.onValueChanged.AddListener(EnableGameMusic);
-        turnSoundToggle.onValueChanged.AddListener(EnableGameSound);
+        turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
+        turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
     }
 
     // protected override void AfterHide()
