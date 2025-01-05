@@ -8,6 +8,7 @@ public class BottomBarItem : MonoBehaviour
     [SerializeField] private RectTransform container;
     [SerializeField] private RectTransform iconRT;
     [SerializeField] private RectTransform textRT;
+    [SerializeField] private Image activeState;
 
     [SerializeField] private Button selectButton;
 
@@ -67,8 +68,10 @@ public class BottomBarItem : MonoBehaviour
 
         if (ratio <= 1)
         {
-            iconRT.localPosition = new Vector3(_iconInitialPosition.x, _iconInitialPosition.y + ratio * 0.6f * _slotSize, 0);
-            textRT.localScale = ratio * Vector3.one;
+            // iconRT.localPosition = new Vector3(_iconInitialPosition.x, _iconInitialPosition.y + ratio * 0.6f * _slotSize, 0);
+            // textRT.localScale = ratio * Vector3.one;
+
+            activeState.color = ColorUtil.WithAlpha(activeState.color, ratio);
         }
 
         // if (ratio == 1)
