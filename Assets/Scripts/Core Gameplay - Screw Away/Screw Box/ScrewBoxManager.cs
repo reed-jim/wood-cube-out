@@ -247,15 +247,15 @@ public class ScrewBoxManager : MonoBehaviour
                     numScrewPortsEmpty++;
                 }
             }
-        }
 
-        if (numScrewPortsEmpty == 1)
-        {
-            loseLevelEvent?.Invoke();
-        }
-        else
-        {
-            return emptyScrewPort;
+            if (numScrewPortsEmpty == 1)
+            {
+                loseLevelEvent?.Invoke();
+            }
+            else
+            {
+                return emptyScrewPort;
+            }
         }
 
         return null;

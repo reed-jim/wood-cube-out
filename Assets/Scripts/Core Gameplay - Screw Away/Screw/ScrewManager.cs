@@ -449,6 +449,8 @@ public class ScrewManager : MonoBehaviour
                     _screws[i].IsInteractable = true;
 
                     _screws[i].Loose(_screws[i].ScrewId, _screws[i].Faction, screwBoxSlot);
+
+                    _screws[i].IsOutsideWithNoScrewBox = false;
                 }
             }
         }
