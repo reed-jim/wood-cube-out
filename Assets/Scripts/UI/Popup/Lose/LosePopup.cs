@@ -13,6 +13,7 @@ public class LosePopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent += OnLevelLose;
+        GameStateLose.loseLevelEvent += OnLevelLose;
         RevivePopup.reviveRefusedEvent += OnLevelLose;
 
         replayButton.onClick.AddListener(Replay);
@@ -22,12 +23,12 @@ public class LosePopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent -= OnLevelLose;
+        GameStateLose.loseLevelEvent -= OnLevelLose;
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
     }
 
     private void OnLevelLose()
     {
-        Debug.Log("LOSE");
         Show();
 
         AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);

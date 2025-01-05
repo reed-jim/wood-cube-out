@@ -76,7 +76,7 @@ public class ScrewBoxUI : MonoBehaviour
         unlockByAdsButton.gameObject.SetActive(true);
     }
 
-    private void Unlock()
+    public void Unlock()
     {
         Tween.LocalPositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.localPosition.y + 0.5f * canvasSize.Value.y, duration: 0.3f).OnComplete(() =>
         {

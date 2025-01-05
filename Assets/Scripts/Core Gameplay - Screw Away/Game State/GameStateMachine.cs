@@ -5,9 +5,16 @@ public class GameStateMachine : MonoBehaviour
 {
     private BaseGameState currentState;
 
+    [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
+
     public GameState CurrentState
     {
         get => currentState.GameState;
+    }
+
+    public ScrewBoxesObserver ScrewBoxesObserver
+    {
+        get => screwBoxesObserver;
     }
 
     private void Awake()

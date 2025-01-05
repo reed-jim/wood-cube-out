@@ -33,7 +33,7 @@ public class PopupFadeBackground : MonoBehaviour
 
         CommonUtil.StopTween(_transitionTween);
 
-        _transitionTween = Tween.Alpha(fadeBackground, 0.9f, duration: transitionDuration);
+        _transitionTween = Tween.Alpha(fadeBackground, 0.95f, duration: transitionDuration);
     }
 
     private void OnPopupClose()

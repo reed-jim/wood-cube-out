@@ -13,6 +13,7 @@ public class GameStateLose : BaseGameState
     public override GameState GameState { get => GameState.Lose; }
 
     public static event Action loseLevelEvent;
+    public static event Action showRevivePopupEvent;
 
     public override bool CanTransitionTo()
     {
@@ -28,7 +29,14 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        loseLevelEvent?.Invoke();
+        if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
+        {
+            loseLevelEvent?.Invoke();
+        }
+        else
+        {
+            showRevivePopupEvent?.Invoke();
+        }
     }
 
     public override void Exit()

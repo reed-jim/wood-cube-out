@@ -12,16 +12,15 @@ public class RevivePopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        GameStateLose.loseLevelEvent += OnLevelLose;
+        GameStateLose.showRevivePopupEvent += ShowRevivePopup;
 
         reviveByDiamondButton.onClick.AddListener(ReviveByDiamond);
+        reviveByAdsButton.onClick.AddListener(ReviveByAds);
     }
 
     protected override void MoreActionOnDestroy()
     {
-        GameStateLose.loseLevelEvent -= OnLevelLose;
-
-        reviveByAdsButton.onClick.AddListener(ReviveByAds);
+        GameStateLose.showRevivePopupEvent -= ShowRevivePopup;
     }
 
     protected override void Hide()
@@ -34,7 +33,7 @@ public class RevivePopup : BasePopup
         }
     }
 
-    private void OnLevelLose()
+    private void ShowRevivePopup()
     {
         Show();
 
