@@ -9,8 +9,8 @@ using static GameEnum;
 
 public class SettingPopup : BasePopup
 {
-    [SerializeField] private Toggle turnMusicToggle;
-    [SerializeField] private Toggle turnSoundToggle;
+    [SerializeField] private SaferioToggle turnMusicToggle;
+    [SerializeField] private SaferioToggle turnSoundToggle;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -27,16 +27,16 @@ public class SettingPopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        turnMusicToggle.isOn = gameSetting.IsTurnOnBackgroundMusic;
-        turnSoundToggle.isOn = gameSetting.IsTurnOnSound;
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
 
         chooseLanguageContainer.gameObject.SetActive(false);
     }
 
     protected override void RegisterMoreEvent()
     {
-        turnMusicToggle.onValueChanged.AddListener(SettingGameMusic);
-        turnSoundToggle.onValueChanged.AddListener(SettingGameSound);
+        turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
+        turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         rateButton.onClick.AddListener(Rate);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
