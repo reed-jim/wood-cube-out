@@ -28,7 +28,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action addMoreScrewPortEvent;
     public static event Action enableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
-    public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
     private int _numScrewPortsAdded;
     private bool _isInTransition;
@@ -42,6 +42,7 @@ public class BoosterUI : MonoBehaviour
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
         LevelLoader.startLevelEvent += Reset;
+        BuyBoosterPopup.useBoosterEvent += UseBooster;
 
         addMoreScrewPortButton.onClick.AddListener(AddMoreScrewPort);
         breakObjectButton.onClick.AddListener(EnableBreakObjectMode);
@@ -57,6 +58,7 @@ public class BoosterUI : MonoBehaviour
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
         LevelLoader.startLevelEvent -= Reset;
+        BuyBoosterPopup.useBoosterEvent -= UseBooster;
     }
 
     private void Reset()
@@ -74,11 +76,27 @@ public class BoosterUI : MonoBehaviour
         _isInTransition = false;
     }
 
+    private void UseBooster(BoosterType boosterType)
+    {
+        if (boosterType == BoosterType.AddScrewPort)
+        {
+            AddMoreScrewPort();
+        }
+        else if (boosterType == BoosterType.BreakObject)
+        {
+            EnableBreakObjectMode();
+        }
+        else if (boosterType == BoosterType.ClearScrewPorts)
+        {
+            ClearAllScrewPorts();
+        }
+    }
+
     private void AddMoreScrewPort()
     {
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.AddScrewPort);
 
             return;
         }
@@ -116,7 +134,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
 
             return;
         }
@@ -156,7 +174,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
 
             return;
         }
@@ -190,14 +208,12 @@ public class BoosterUI : MonoBehaviour
         }
         else
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Booster);
+            // switchRouteEvent?.Invoke(ScreenRoute.Booster);
         }
     }
 
     private bool IsBoosterAvailable(int boosterIndex)
     {
-        return true;
-        
         if (userResourcesObserver.UserResources.BoosterQuantities[boosterIndex] > 0)
         {
             return true;

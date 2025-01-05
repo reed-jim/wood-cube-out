@@ -67,6 +67,13 @@ public class GameEnum : MonoBehaviour
         CompleteLevel,
     }
 
+    public enum BoosterType
+    {
+        AddScrewPort,
+        BreakObject,
+        ClearScrewPorts
+    }
+
     public static T GetRandomEnumValue<T>()
     {
         Array enumValues = Enum.GetValues(typeof(T));
