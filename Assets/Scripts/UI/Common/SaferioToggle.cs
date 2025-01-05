@@ -32,13 +32,13 @@ public class SaferioToggle : MonoBehaviour
         if (isOn)
         {
             activeBackground.color = ColorUtil.WithAlpha(activeBackground.color, 1);
-            inactiveBackground.color = ColorUtil.WithAlpha(activeBackground.color, 0);
+            // inactiveBackground.color = ColorUtil.WithAlpha(activeBackground.color, 0);
             icon.localPosition = icon.localPosition.ChangeX(52);
         }
         else
         {
             activeBackground.color = ColorUtil.WithAlpha(activeBackground.color, 0);
-            inactiveBackground.color = ColorUtil.WithAlpha(activeBackground.color, 1);
+            // inactiveBackground.color = ColorUtil.WithAlpha(activeBackground.color, 1);
             icon.localPosition = icon.localPosition.ChangeX(-52);
         }
 
@@ -61,7 +61,7 @@ public class SaferioToggle : MonoBehaviour
         }
 
         Tween.Alpha(activeBackground, activeBackground.color.a, activeBackgroundAlpha, duration: transitionDuration);
-        Tween.Alpha(inactiveBackground, inactiveBackground.color.a, inactiveBackgroundAlpha, duration: transitionDuration);
+        // Tween.Alpha(inactiveBackground, inactiveBackground.color.a, inactiveBackgroundAlpha, duration: transitionDuration);
 
         Tween.LocalPositionX(icon, iconLocalPositionX, duration: transitionDuration)
         .OnComplete(() =>
