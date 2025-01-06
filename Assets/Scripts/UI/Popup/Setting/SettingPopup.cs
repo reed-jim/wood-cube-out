@@ -16,6 +16,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private RectTransform chooseLanguageContainer;
     [SerializeField] private Button openLanguageDropdownButton;
     [SerializeField] private Button[] chooseLanguageButtons;
+    [SerializeField] private Image[] chooseLanguageButtonBackground;
     [SerializeField] private Button rateButton;
     #endregion
 
@@ -74,6 +75,18 @@ public class SettingPopup : BasePopup
 
         openLanguageDropdownButton.onClick.RemoveAllListeners();
         openLanguageDropdownButton.onClick.AddListener(CloseLanguageDropdown);
+
+        for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
+        {
+            if (GameConstants.AvailableLanguages[i] == gameSetting.CurrentLanguage)
+            {
+                chooseLanguageButtonBackground[i].enabled = true;
+            }
+            else
+            {
+                chooseLanguageButtonBackground[i].enabled = false;
+            }
+        }
     }
 
     private void CloseLanguageDropdown()
@@ -95,6 +108,8 @@ public class SettingPopup : BasePopup
         LeanLocalization.SetCurrentLanguageAll(language);
 
         CloseLanguageDropdown();
+
+        gameSetting.CurrentLanguage = language;
     }
     #endregion
 
