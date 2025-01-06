@@ -175,6 +175,46 @@ public class BasicScrew : BaseScrew
 #endif
     }
 
+    public int CountBlockingObjectsPrefabMode()
+    {
+        const int MAX_OBSTACLE_ARRAY_SIZE = 10;
+
+        Vector3 start = transform.position + transform.forward;
+
+        Collider[] obstacles = new Collider[MAX_OBSTACLE_ARRAY_SIZE];
+
+        int numObstacle = gameObject.scene.GetPhysicsScene().OverlapCapsule(start, start + 10 * transform.forward, 0.2f, obstacles);
+
+        int number = 0;
+
+        float minBlockedDistance = float.MaxValue;
+
+        for (int i = 0; i < numObstacle; i++)
+        {
+            if (obstacles[i].transform == transform.parent)
+            {
+                continue;
+            }
+
+            if (obstacles[i].GetComponent<IObjectPart>() != null)
+            {
+                float distance = Vector3.Distance(obstacles[i].ClosestPoint(transform.position), transform.position);
+
+                if (distance < minBlockedDistance)
+                {
+                    minBlockedDistance = distance;
+                }
+
+                if (distance < 1)
+                {
+                    number++;
+                }
+            }
+        }
+
+        return number;
+    }
+
     public override int CountBlockingObjects()
     {
         Vector3 start = transform.position + transform.forward;

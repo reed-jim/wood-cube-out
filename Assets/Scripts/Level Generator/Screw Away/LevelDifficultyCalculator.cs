@@ -51,13 +51,52 @@ public class LevelDifficultyCalculator : EditorWindow
 
     private void Calculate(string levelPath)
     {
-        // GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
+        const float WEIGHT_NUM_SCREW = 0.02f;
+        const float WEIGHT_PHASES_DIFFICULTY = 0.7f;
+        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 0.28f;
+
+
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
 
         // BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
 
-        // BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+        // Number Screw difficulty
+        float numScrewDifficulty = 0;
 
-        float difficulty = 0;
+        BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(levelPrefab.transform).ToArray();
+
+        int numScrew = screws.Length;
+
+        numScrewDifficulty = numScrew;
+
+
+
+
+        // Initial difficulty
+        float modelDifficulty = 0;
+
+        float percentBlockedScrews = 0;
+
+        int numScrewBlocked = 0;
+
+        for (int i = 0; i < numScrew; i++)
+        {
+            int numBlockingObjects = screws[i].CountBlockingObjectsPrefabMode();
+
+            if (numBlockingObjects > 0)
+            {
+                numScrewBlocked++;
+            }
+        }
+
+        percentBlockedScrews = (float)numScrewBlocked / numScrew;
+
+        modelDifficulty = percentBlockedScrews * numScrew;
+
+
+
+        // Screw boxes generation difficulty
+        float screwBoxesGenerationDifficulty = 0;
 
         float currentProgress = 0;
 
@@ -65,12 +104,20 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             LevelPhase phase = levelDifficultyConfiguration.LevelPhases[i];
 
-            difficulty += (phase.EndProgress - currentProgress) * Mathf.Pow(2, i);
+            screwBoxesGenerationDifficulty += (phase.EndProgress - currentProgress) * Mathf.Pow(2, i);
 
             currentProgress = phase.EndProgress;
         }
 
-        Debug.Log(difficulty);
+
+
+        float finalDifficulty =
+            WEIGHT_NUM_SCREW * numScrewDifficulty +
+            WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficulty +
+            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficulty;
+
+
+        Debug.Log(numScrewDifficulty + "/" + screwBoxesGenerationDifficulty + "/" + modelDifficulty + "/" + finalDifficulty);
     }
 
     #region UTIL
