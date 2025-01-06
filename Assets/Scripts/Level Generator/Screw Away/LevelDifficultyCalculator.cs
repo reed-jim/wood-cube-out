@@ -51,31 +51,28 @@ public class LevelDifficultyCalculator : EditorWindow
 
     private void Calculate(string levelPath)
     {
+        const int MAX_SCREW = 300;
+
         const float WEIGHT_NUM_SCREW = 0.02f;
         const float WEIGHT_PHASES_DIFFICULTY = 0.7f;
         const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 0.28f;
 
-
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
 
-        // BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
+
 
         // Number Screw difficulty
-        float numScrewDifficulty = 0;
-
         BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(levelPrefab.transform).ToArray();
 
         int numScrew = screws.Length;
 
-        numScrewDifficulty = numScrew;
-
+        float numScrewDifficultyNormalized = (float)numScrew / MAX_SCREW;
 
 
 
         // Initial difficulty
+        float MAX_MODEL_DIFFICULTY = (numScrew - 1);
         float modelDifficulty = 0;
-
-        float percentBlockedScrews = 0;
 
         int numScrewBlocked = 0;
 
@@ -89,13 +86,15 @@ public class LevelDifficultyCalculator : EditorWindow
             }
         }
 
-        percentBlockedScrews = (float)numScrewBlocked / numScrew;
+        modelDifficulty = numScrewBlocked;
 
-        modelDifficulty = percentBlockedScrews * numScrew;
+        float modelDifficultyNormalized = modelDifficulty / MAX_MODEL_DIFFICULTY;
 
 
 
         // Screw boxes generation difficulty
+        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, levelDifficultyConfiguration.LevelPhases.Length - 1);
+
         float screwBoxesGenerationDifficulty = 0;
 
         float currentProgress = 0;
@@ -109,15 +108,26 @@ public class LevelDifficultyCalculator : EditorWindow
             currentProgress = phase.EndProgress;
         }
 
+        float screwBoxesGenerationDifficultyNormalized = screwBoxesGenerationDifficulty / MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
 
 
+
+        // Number of triple matched color no blocked at game start
+
+
+
+        // Final
         float finalDifficulty =
-            WEIGHT_NUM_SCREW * numScrewDifficulty +
-            WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficulty +
-            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficulty;
+            WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
+            WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
+            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized;
 
+        string difficultyText = $"Num Screw Difficulty: {numScrewDifficultyNormalized}";
+        difficultyText += $" - Screw Boxes Generation Difficulty: {screwBoxesGenerationDifficultyNormalized}";
+        difficultyText += $" - Model Difficulty: {modelDifficultyNormalized}";
+        difficultyText += $" - Final Difficulty: {finalDifficulty}";
 
-        Debug.Log(numScrewDifficulty + "/" + screwBoxesGenerationDifficulty + "/" + modelDifficulty + "/" + finalDifficulty);
+        Debug.Log(difficultyText);
     }
 
     #region UTIL

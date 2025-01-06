@@ -205,10 +205,12 @@ public class BasicScrew : BaseScrew
                     minBlockedDistance = distance;
                 }
 
-                if (distance < 1)
-                {
-                    number++;
-                }
+                // if (distance < 1)
+                // {
+                //     number++;
+                // }
+
+                number++;
             }
         }
 
