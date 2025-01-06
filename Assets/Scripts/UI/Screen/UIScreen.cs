@@ -21,6 +21,11 @@ public class UIScreen : MonoBehaviour
     private bool _isShown;
     #endregion
 
+    public RectTransform Container
+    {
+        get => container;
+    }
+
     #region ACTION
     public static event Action<float> moveSwipingScreenEvent;
     #endregion  
@@ -72,6 +77,13 @@ public class UIScreen : MonoBehaviour
     protected virtual void MoreActionInAwake()
     {
 
+    }
+
+    public void SetInitialPosition(Vector3 position)
+    {
+        container.localPosition = position;
+
+        _initialContainerPosititon = position;
     }
 
     private void OnRouteSwitched(ScreenRoute route)

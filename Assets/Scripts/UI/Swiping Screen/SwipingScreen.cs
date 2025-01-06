@@ -5,6 +5,8 @@ using UnityEngine;
 public class SwipingScreen : MonoBehaviour
 {
     [SerializeField] private RectTransform container;
+    [SerializeField] private UIScreen iapShopScreen;
+    [SerializeField] private UIScreen leaderboardScreen;
 
     [SerializeField] private Vector2Variable canvasSize;
 
@@ -34,6 +36,8 @@ public class SwipingScreen : MonoBehaviour
     private void Start()
     {
         hideOutsideScreenEvent?.Invoke(container.localPosition.x);
+
+        SetupUI();
     }
 
     private void OnDestroy()
@@ -42,6 +46,12 @@ public class SwipingScreen : MonoBehaviour
         SwipeGesture.stopSwipeGestureEvent -= OnStopSwiping;
         UIScreen.moveSwipingScreenEvent -= MoveSwipingScreen;
         BasePopup.enableSwipingScreenEvent -= EnableSwiping;
+    }
+
+    private void SetupUI()
+    {
+        iapShopScreen.SetInitialPosition(new Vector3(-canvasSize.Value.x, 0, 0));
+        leaderboardScreen.SetInitialPosition(new Vector3(canvasSize.Value.x, 0, 0));
     }
 
     private void OnSwipe(Vector2 direction)
