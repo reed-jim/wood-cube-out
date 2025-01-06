@@ -111,6 +111,11 @@ public class HingeJointGenerator : EditorWindow
             GetScrewNumberByPhase(prefabPath);
         }
 
+        if (GUILayout.Button("Snap Surface"))
+        {
+            SnapSurface();
+        }
+
         GUILayout.EndArea();
     }
 
@@ -519,6 +524,29 @@ public class HingeJointGenerator : EditorWindow
         foreach (var phase in numberScrewByPhase.Keys)
         {
             Debug.Log($"Phase {phase}: {numberScrewByPhase[phase]}");
+        }
+    }
+    #endregion
+
+    #region SNAP
+    private void SnapSurface()
+    {
+        Transform selectedObject = Selection.activeTransform;
+
+        RaycastHit hit;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, -selectedObject.forward, out hit, 10))
+        {
+            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+            if (objectPart != null)
+            {
+                selectedObject.position = hit.point;
+
+                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
+
+                selectedObject.rotation = surfaceRotation;
+            }
         }
     }
     #endregion
