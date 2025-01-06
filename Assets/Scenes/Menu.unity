@@ -2792,7 +2792,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Niveau {level}
+  m_text: Livello {level}
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea321c4dec4cdd74fae016f2a45adbe2, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: e457c2cb9daee9c40a010770422f3d46, type: 2}
@@ -5144,7 +5144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Aucune publicit\xE9"
+  m_text: "Nessuna pubblicit\xE0"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: ea321c4dec4cdd74fae016f2a45adbe2, type: 2}
   m_sharedMaterial: {fileID: -8589212015780818781, guid: ea321c4dec4cdd74fae016f2a45adbe2, type: 2}
@@ -5171,7 +5171,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.15
+  m_fontSize: 21.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5267,7 +5267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: French
+  currentLanguage: Italian
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -5316,6 +5316,7 @@ Transform:
   - {fileID: 1696363410}
   - {fileID: 139358672}
   - {fileID: 89517066}
+  - {fileID: 1636348101}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1353185547
@@ -6380,6 +6381,79 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8095954138240836332, guid: 1772343ffd80317488d2a851d25acac8, type: 3}
   m_PrefabInstance: {fileID: 3492980695375251603}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1636348100
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1636348101}
+  - component: {fileID: 1636348102}
+  m_Layer: 0
+  m_Name: Booster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1636348101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636348100}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1636348102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1636348100}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Booster
+    Object: {fileID: 0}
+  - Language: French
+    Text: Amplificateur
+    Object: {fileID: 0}
+  - Language: German
+    Text: Booster
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Booster
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D6\u30FC\u30B9\u30BF\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBD80\uC2A4\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Refor\xE7o"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0411\u0443\u0441\u0442\u0435\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Refuerzo
+    Object: {fileID: 0}
 --- !u!224 &1662404711 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4083705754466361092, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
