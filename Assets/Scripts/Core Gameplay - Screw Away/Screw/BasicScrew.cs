@@ -219,7 +219,7 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects()
     {
-        Vector3 start = transform.position + transform.forward;
+        Vector3 start = transform.position;
 
         Collider[] hits = Physics.OverlapCapsule(start, start + 10 * transform.forward, 0.2f);
 
@@ -238,14 +238,21 @@ public class BasicScrew : BaseScrew
 
                 if (hits[i].GetComponent<IObjectPart>() != null)
                 {
-                    float distance = Vector3.Distance(hits[i].ClosestPoint(transform.position), transform.position);
+                    Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].ClosestPoint(transform.position));
+
+                    if (hits[i].transform == transform.parent)
+                    {
+                        continue;
+                    }
+
+                    float distance = Mathf.Abs(positionInScrewSpace.z);
 
                     if (distance < minBlockedDistance)
                     {
                         minBlockedDistance = distance;
                     }
 
-                    if (distance < 1)
+                    if (distance < 0.6f)
                     {
                         number++;
                     }

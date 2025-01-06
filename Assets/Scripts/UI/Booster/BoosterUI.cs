@@ -48,6 +48,14 @@ public class BoosterUI : MonoBehaviour
         breakObjectButton.onClick.AddListener(EnableBreakObjectMode);
         clearAllScrewPortsButton.onClick.AddListener(ClearAllScrewPorts);
 
+        // _initialBoosterContainerPosition = boosterContainer.localPosition;
+        // _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
+        // _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
+        // _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
+    }
+
+    private void Start()
+    {
         _initialBoosterContainerPosition = boosterContainer.localPosition;
         _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
         _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
