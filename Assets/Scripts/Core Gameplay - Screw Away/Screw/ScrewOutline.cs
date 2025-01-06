@@ -3,33 +3,40 @@ using UnityEngine;
 
 public class ScrewOutline : MonoBehaviour
 {
-    [SerializeField] private Outline outline;
-
     [SerializeField] private ScrewServiceLocator screwServiceLocator;
 
     [SerializeField] private float outlineWidth;
 
     private Tween _outlineTween;
+    private bool _isOutlined;
+    private bool _isScrewLoosed;
 
-    void Awake()
+    private void Awake()
     {
-        // outline.OutlineWidth = 0;
+        BaseScrew.screwStartLoosenedEvent += OnScrewStartLoosed;
     }
 
     void OnDestroy()
     {
+        BaseScrew.screwStartLoosenedEvent -= OnScrewStartLoosed;
+
         CommonUtil.StopTween(_outlineTween);
     }
 
     public void ShowOutline()
     {
+        if (_isScrewLoosed)
+        {
+            return;
+        }
+
         CommonUtil.StopTween(_outlineTween);
 
         _outlineTween = Tween.Custom(1, outlineWidth, duration: 0.3f, onValueChange: newVal =>
         {
-            // outline.OutlineWidth = newVal;
-
             screwServiceLocator.screwMaterialPropertyBlock.SetOutlineWidth(newVal);
+
+            _isOutlined = true;
         });
     }
 
@@ -39,9 +46,22 @@ public class ScrewOutline : MonoBehaviour
 
         _outlineTween = Tween.Custom(outlineWidth, 1, duration: 0.3f, onValueChange: newVal =>
         {
-            // outline.OutlineWidth = newVal;
-
             screwServiceLocator.screwMaterialPropertyBlock.SetOutlineWidth(newVal);
+
+            _isOutlined = false;
         });
+    }
+
+    private void OnScrewStartLoosed(int instanceId)
+    {
+        if (instanceId == gameObject.GetInstanceID())
+        {
+            if (_isOutlined)
+            {
+                HideOutline();
+            }
+
+            _isScrewLoosed = true;
+        }
     }
 }

@@ -110,6 +110,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     public static event Action<int, GameFaction> selectScrewEvent;
     public static event Action<BaseScrew> addScrewToListEvent;
     public static event Action<int> breakJointEvent;
+    public static event Action<int> screwStartLoosenedEvent;
     public static event Action screwLoosenedEvent;
     #endregion
 
@@ -162,6 +163,8 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
     {
+        screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
+
         _isRotating = true;
 
         // FOR ROTATING
