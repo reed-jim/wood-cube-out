@@ -122,10 +122,10 @@ public class LevelDifficultyCalculator : EditorWindow
             WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
             WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized;
 
-        string difficultyText = $"Num Screw Difficulty: {numScrewDifficultyNormalized}";
-        difficultyText += $" - Screw Boxes Generation Difficulty: {screwBoxesGenerationDifficultyNormalized}";
-        difficultyText += $" - Model Difficulty: {modelDifficultyNormalized}";
-        difficultyText += $" - Final Difficulty: {finalDifficulty}";
+        string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{numScrewDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{screwBoxesGenerationDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{modelDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
     }
