@@ -26,6 +26,7 @@ public class ScrewBoxManager : MonoBehaviour
     }
 
     #region PRIVATE FIELD
+    private float _screwBoxPositionY = 10;
     private bool _isSpawnScrewBoxFirstTimeInLevel;
     #endregion
 
@@ -280,7 +281,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.Faction = faction;
 
-        screwBox.transform.position = new Vector3(-10, 9.5f, screwBox.transform.position.z);
+        screwBox.transform.position = new Vector3(-10, _screwBoxPositionY, screwBox.transform.position.z);
 
         int index = 0;
 
@@ -312,7 +313,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         Vector3 destination = screwBox.transform.position;
 
-        destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.5f;
+        destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
         destination.z = -0.001f * index;
 
         if (_isSpawnScrewBoxFirstTimeInLevel)
@@ -347,14 +348,14 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
 
-                screwBox.transform.position = new Vector3(10, 9.5f, screwBox.transform.position.z);
+                screwBox.transform.position = new Vector3(10, _screwBoxPositionY, screwBox.transform.position.z);
 
                 screwBox.Lock();
 
                 int index = i;
 
                 destination = screwBox.transform.position;
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.5f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
                 destination.z = -0.001f * index;
 
                 Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
@@ -378,7 +379,7 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
 
-                screwBox.transform.position = new Vector3(10, 9.5f, screwBox.transform.position.z);
+                screwBox.transform.position = new Vector3(10, _screwBoxPositionY, screwBox.transform.position.z);
 
                 screwBox.Lock();
 
@@ -389,7 +390,7 @@ public class ScrewBoxManager : MonoBehaviour
 
                 Vector3 destination = screwBox.transform.position;
 
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.5f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
                 destination.z = -0.001f * index;
 
                 if (_isSpawnScrewBoxFirstTimeInLevel)
