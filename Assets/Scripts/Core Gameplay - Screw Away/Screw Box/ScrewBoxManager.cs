@@ -152,7 +152,7 @@ public class ScrewBoxManager : MonoBehaviour
         {
             if (screwBoxs[i].IsLocked)
             {
-                screwBoxs[i].Unlock();
+                screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
 
                 break;
             }
