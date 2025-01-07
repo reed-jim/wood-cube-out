@@ -22,6 +22,10 @@ public class HingeJointGenerator : EditorWindow
 
 
 
+    private float ratioSnapOffset = 0.06f;
+
+
+
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
 
     [MenuItem("Saferio/Tools/Hinge Joint Generator")]
@@ -50,6 +54,8 @@ public class HingeJointGenerator : EditorWindow
 
         expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
         expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
+
+        ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
 
         if (GUILayout.Button("Generate"))
         {
@@ -541,7 +547,7 @@ public class HingeJointGenerator : EditorWindow
 
             if (objectPart != null)
             {
-                selectedObject.position = hit.point;
+                selectedObject.position = hit.point - ratioSnapOffset * selectedObject.forward;
 
                 Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 

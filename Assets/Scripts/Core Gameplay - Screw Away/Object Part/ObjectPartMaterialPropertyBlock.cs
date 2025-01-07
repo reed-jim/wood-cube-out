@@ -94,11 +94,11 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
             return;
         }
 
-        ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX);
+        // ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX);
 
-        fx.transform.position = transform.position;
+        // fx.transform.position = transform.position;
 
-        fx.Play();
+        // fx.Play();
 
         Tween.Custom(0f, 1, duration: 0.6f, onValueChange: newVal =>
         {
