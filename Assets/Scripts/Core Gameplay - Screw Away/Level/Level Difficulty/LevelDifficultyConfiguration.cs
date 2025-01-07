@@ -6,6 +6,7 @@ using static GameEnum;
 public class LevelDifficultyConfiguration : ScriptableObject
 {
     [SerializeField] private LevelPhase[] levelPhases;
+    [Header("Modify chance to get screw ports' faction. Range: -99 --> 99")]
     [SerializeField] private int screwPortFactionDifficultyModifier;
 
     public LevelPhase[] LevelPhases

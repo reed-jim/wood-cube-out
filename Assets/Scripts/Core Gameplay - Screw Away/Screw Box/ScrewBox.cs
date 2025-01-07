@@ -26,7 +26,7 @@ public class ScrewBox : MonoBehaviour
     public static event Action<ScrewBox> screwBoxCompletedEvent;
     public static event Action spawnNewScrewBoxEvent;
     public static event Action<ScrewBox> setFactionForScrewBoxEvent;
-    public static event Action screwBoxUnlockedEvent;
+    public static event Action<ScrewBox> screwBoxUnlockedEvent;
     public static event Action shakeCameraEvent;
     #endregion
 
@@ -142,8 +142,7 @@ public class ScrewBox : MonoBehaviour
         isLocked = false;
 
         setFactionForScrewBoxEvent?.Invoke(this);
-
-        screwBoxUnlockedEvent?.Invoke();
+        screwBoxUnlockedEvent?.Invoke(this);
     }
 
     private void Unlock(int instanceId)

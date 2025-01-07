@@ -132,10 +132,10 @@ public class LevelDifficultyCalculator : EditorWindow
             WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized +
             WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized;
 
-        string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{numScrewDifficultyNormalized}";
-        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{screwBoxesGenerationDifficultyNormalized}";
-        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{modelDifficultyNormalized}";
-        difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{screwPortFactionChanceModifierDifficultyNormalized}";
+        string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
