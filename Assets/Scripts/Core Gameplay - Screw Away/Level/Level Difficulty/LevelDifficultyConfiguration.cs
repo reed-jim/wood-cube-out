@@ -6,10 +6,16 @@ using static GameEnum;
 public class LevelDifficultyConfiguration : ScriptableObject
 {
     [SerializeField] private LevelPhase[] levelPhases;
+    [SerializeField] private int screwPortFactionDifficultyModifier;
 
     public LevelPhase[] LevelPhases
     {
         get => levelPhases;
+    }
+
+    public int ScrewPortFactionDifficultyModifier
+    {
+        get => screwPortFactionDifficultyModifier;
     }
 }
 

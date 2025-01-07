@@ -121,6 +121,8 @@ public class ScrewManager : MonoBehaviour
 
     private Dictionary<GameFaction, int> GetDifficultyLevelByFaction()
     {
+        // RULE: The more difficulty point, the less chance to spawn for a faction
+
         Dictionary<GameFaction, int> difficultyLevelByFactions = new Dictionary<GameFaction, int>();
         Dictionary<GameFaction, int> totalNotBlockedScrewByFaction = new Dictionary<GameFaction, int>();
 
@@ -140,12 +142,8 @@ public class ScrewManager : MonoBehaviour
 
             int numberBlockObject = _screws[i].NumberBlockingObjects;
 
-            // Compensate
             if (numberBlockObject == 0)
             {
-                // numberBlockObject = -GameConstants.SCREW_FACTION.Length;
-                // numberBlockObject = -1;
-
                 if (totalNotBlockedScrewByFaction.ContainsKey(faction))
                 {
                     totalNotBlockedScrewByFaction[faction]++;
@@ -173,6 +171,15 @@ public class ScrewManager : MonoBehaviour
             }
 
             difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 99;
+        }
+
+        // Modify chance of factions of screw port
+        for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
+        {
+            if (screwBoxManager.ScrewPorts[i].IsFilled)
+            {
+                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] += levelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
+            }
         }
 
         return difficultyLevelByFactions;

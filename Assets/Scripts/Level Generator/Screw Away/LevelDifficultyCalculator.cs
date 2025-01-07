@@ -53,9 +53,10 @@ public class LevelDifficultyCalculator : EditorWindow
     {
         const int MAX_SCREW = 300;
 
-        const float WEIGHT_NUM_SCREW = 0.02f;
-        const float WEIGHT_PHASES_DIFFICULTY = 0.7f;
-        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 0.28f;
+        const float WEIGHT_NUM_SCREW = 0.2f;
+        const float WEIGHT_PHASES_DIFFICULTY = 5f;
+        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 2.8f;
+        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 2f;
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
 
@@ -112,6 +113,14 @@ public class LevelDifficultyCalculator : EditorWindow
 
 
 
+        // Chance to get screw ports' faction difficulty
+        float MAX_SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = 99;
+
+        float screwPortFactionChanceModifierDifficultyNormalized =
+            levelDifficultyConfiguration.ScrewPortFactionDifficultyModifier / MAX_SCREW_PORT_FACTION_DIFFICULTY_MODIFIER;
+
+
+
         // Number of triple matched color no blocked at game start
 
 
@@ -120,11 +129,13 @@ public class LevelDifficultyCalculator : EditorWindow
         float finalDifficulty =
             WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
             WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
-            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized;
+            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized +
+            WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized;
 
         string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{numScrewDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{screwBoxesGenerationDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{modelDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{screwPortFactionChanceModifierDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
