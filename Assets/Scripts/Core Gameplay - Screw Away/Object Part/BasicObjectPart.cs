@@ -41,7 +41,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
-        throwForceMultiplier = new Vector3(66f, 22f, 66f);
+        throwForceMultiplier = new Vector3(33f, 22f, 33f);
 
         attachedScrews = new BaseScrew[transform.childCount];
 
@@ -49,6 +49,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             attachedScrews[i] = transform.GetChild(i).GetComponent<BaseScrew>();
         }
+
+        // if (_totalJoint > 1)
+        // {
+        //     partRigidbody.isKinematic = true;
+        // }
     }
 
     void OnDestroy()
@@ -106,10 +111,13 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
                 Throw();
 
-                // StartCoroutine(Throwing());
-
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
+
+            // if (_totalJoint <= 1)
+            // {
+            //     partRigidbody.isKinematic = false;
+            // }
         }
     }
 
