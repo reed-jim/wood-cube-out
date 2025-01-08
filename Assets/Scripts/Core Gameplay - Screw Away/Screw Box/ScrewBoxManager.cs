@@ -313,7 +313,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         Vector3 destination = screwBox.transform.position;
 
-        destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
+        destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
         destination.z = -0.001f * index;
 
         if (_isSpawnScrewBoxFirstTimeInLevel)
@@ -355,7 +355,7 @@ public class ScrewBoxManager : MonoBehaviour
                 int index = i;
 
                 destination = screwBox.transform.position;
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
                 destination.z = -0.001f * index;
 
                 Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
@@ -390,7 +390,7 @@ public class ScrewBoxManager : MonoBehaviour
 
                 Vector3 destination = screwBox.transform.position;
 
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.87f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
                 destination.z = -0.001f * index;
 
                 if (_isSpawnScrewBoxFirstTimeInLevel)
