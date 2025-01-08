@@ -46,6 +46,30 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
         // SaferioTween.LocalPositionAsync(target, Vector2.zero, duration: duration);
     }
 
+    public void Show(Action onCompletedAction)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        target.gameObject.SetActive(true);
+
+        target.localScale = Vector3.zero;
+
+        Tween.Scale(target, 1.1f, duration: 0.5f * duration)
+            .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
+            {
+                _isInTransition = false;
+
+                onCompletedAction?.Invoke();
+            }));
+    }
+
     public void Hide()
     {
         if (_isInTransition)

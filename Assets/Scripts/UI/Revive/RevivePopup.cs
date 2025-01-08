@@ -25,12 +25,10 @@ public class RevivePopup : BasePopup
 
     protected override void Hide()
     {
-        base.Hide();
-
-        if (_isShown)
+        base.Hide(onCompletedAction: () =>
         {
             reviveRefusedEvent?.Invoke();
-        }
+        });
     }
 
     private void ShowRevivePopup()

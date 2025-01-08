@@ -95,11 +95,11 @@ public class BasePopup : MonoBehaviour
         }
     }
 
-    protected void Show()
+    protected void Show(Action onCompletedAction = null)
     {
         gameObject.SetActive(true);
 
-        _transitionAnimation.Show();
+        _transitionAnimation.Show(onCompletedAction);
 
         popupShowEvent?.Invoke();
 
@@ -108,6 +108,11 @@ public class BasePopup : MonoBehaviour
         PlayClickSound();
 
         enableSwipingScreenEvent?.Invoke(false);
+    }
+
+    protected void Show()
+    {
+        Show(onCompletedAction: null);
     }
 
     protected virtual void Hide(Action onCompletedAction = null)

@@ -40,6 +40,29 @@ public class SlideTransition : MonoBehaviour, ISaferioUIAnimation
         // SaferioTween.LocalPositionAsync(target, Vector2.zero, duration: duration);
     }
 
+    public void Show(Action onCompletedAction)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        target.gameObject.SetActive(true);
+
+        UIUtil.SetLocalPositionX(target, canvasSize.Value.x);
+
+        Tween.LocalPositionX(target, 0, duration: duration).OnComplete(() =>
+        {
+            _isInTransition = false;
+
+            onCompletedAction?.Invoke();
+        });
+    }
+
     public void Hide()
     {
         if (_isInTransition)

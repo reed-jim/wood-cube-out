@@ -14,6 +14,7 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelDifficultyConfiguration levelDifficultyConfiguration;
+    [SerializeField] private LevelObserver levelObserver;
 
     #region PRIVATE FIELD
     private List<BaseScrew> _screws;
@@ -185,6 +186,11 @@ public class ScrewManager : MonoBehaviour
         return difficultyLevelByFactions;
     }
 
+    private void OnScrewLoosed()
+    {
+        CheckWin();
+    }
+
     private void CheckWin()
     {
         Dictionary<GameFaction, int> remainingScrewByFaction = new Dictionary<GameFaction, int>();
@@ -210,6 +216,8 @@ public class ScrewManager : MonoBehaviour
         {
             winLevelEvent?.Invoke();
         }
+
+        levelObserver.Progress = 1 - (float)remainingScrew / _totalScrew;
     }
     #endregion
 
