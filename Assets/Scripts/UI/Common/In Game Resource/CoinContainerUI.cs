@@ -12,7 +12,6 @@ public class CoinContainerUI : MonoBehaviour
 
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasScale;
-    [SerializeField] private Button testCollectCoinButton;
     [SerializeField] private TMP_Text coinText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -31,7 +30,7 @@ public class CoinContainerUI : MonoBehaviour
         SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
 
-        testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
+        // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
 
         _tweens = new List<Tween>();
 
