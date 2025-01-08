@@ -71,7 +71,8 @@ public class GameEnum : MonoBehaviour
     {
         AddScrewPort,
         BreakObject,
-        ClearScrewPorts
+        ClearScrewPorts,
+        UnlockScrewBox
     }
 
     public static T GetRandomEnumValue<T>()

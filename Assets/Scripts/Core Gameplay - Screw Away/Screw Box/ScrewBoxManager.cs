@@ -49,6 +49,7 @@ public class ScrewBoxManager : MonoBehaviour
         BoosterUI.clearAllScrewPortsEvent += ClearAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent += LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
+        BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
     }
 
     void OnDestroy()
@@ -63,6 +64,7 @@ public class ScrewBoxManager : MonoBehaviour
         BoosterUI.clearAllScrewPortsEvent -= ClearAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent -= LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
+        BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
 
         ResetScrewBoxes();
     }
@@ -197,6 +199,19 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         screwBoxesObserver.NumLockedScrewBoxes = numLockedScrewBoxes;
+    }
+
+    private void OnRewardedAdUnlockScrewBoxCompleted()
+    {
+        for (int i = 0; i < screwBoxs.Length; i++)
+        {
+            if (screwBoxs[i].IsLocked)
+            {
+                screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
+
+                break;
+            }
+        }
     }
     #endregion
 

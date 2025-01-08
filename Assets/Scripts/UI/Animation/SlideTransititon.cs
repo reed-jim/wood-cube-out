@@ -1,4 +1,5 @@
 
+using System;
 using PrimeTween;
 using UnityEngine;
 
@@ -61,5 +62,26 @@ public class SlideTransition : MonoBehaviour, ISaferioUIAnimation
         // {
         //     target.gameObject.SetActive(false);
         // });
+    }
+
+    public void Hide(Action onCompletedAction)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        Tween.LocalPositionX(target, -canvasSize.Value.x, duration: duration).OnComplete(() =>
+        {
+            target.gameObject.SetActive(false);
+
+            _isInTransition = false;
+
+            onCompletedAction?.Invoke();
+        });
     }
 }

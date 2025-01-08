@@ -44,29 +44,21 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        PlayClickSound();
-
         Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE);
     }
 
     private void OpenRemoveAdPopup()
     {
-        PlayClickSound();
-
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
 
     private void OpenLuckyWheelScreen()
     {
-        PlayClickSound();
-
         switchRouteEvent?.Invoke(ScreenRoute.LuckyWheel);
     }
 
     private void OpenWeeklyTaskScreen()
     {
-        PlayClickSound();
-
         switchRouteEvent?.Invoke(ScreenRoute.WeeklyTask);
     }
 

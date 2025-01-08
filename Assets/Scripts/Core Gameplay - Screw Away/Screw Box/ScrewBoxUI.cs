@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class ScrewBoxUI : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class ScrewBoxUI : MonoBehaviour
 
     #region EVENT
     public static event Action<int> unlockScrewBox;
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
     #endregion
 
     private void Awake()
@@ -26,7 +28,7 @@ public class ScrewBoxUI : MonoBehaviour
 
         unlockByAdsButton.gameObject.SetActive(false);
 
-        unlockByAdsButton.onClick.AddListener(Unlock);
+        unlockByAdsButton.onClick.AddListener(ClickButtonUnlockByAds);
 
         SetupUI();
     }
@@ -67,6 +69,11 @@ public class ScrewBoxUI : MonoBehaviour
     public void SetUnlockByAdsButtonPosition()
     {
         unlockByAdsButtonRT.localPosition = _screwBoxCamera.WorldToScreenPoint(transform.position) - 0.5f * (Vector3)canvasSize.Value;
+    }
+
+    private void ClickButtonUnlockByAds()
+    {
+        showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
     }
 
     public void Lock()

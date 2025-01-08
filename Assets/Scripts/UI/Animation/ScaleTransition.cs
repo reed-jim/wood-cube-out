@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -72,5 +73,26 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
         // {
         //     target.gameObject.SetActive(false);
         // });
+    }
+
+    public void Hide(Action onCompletedAction)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        Tween.Scale(target, 0, duration: duration).OnComplete(() =>
+        {
+            target.gameObject.SetActive(false);
+
+            _isInTransition = false;
+
+            onCompletedAction?.Invoke();
+        });
     }
 }

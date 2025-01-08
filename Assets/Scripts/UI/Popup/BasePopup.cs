@@ -17,7 +17,7 @@ public class BasePopup : MonoBehaviour
 
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
-    public static event Action<bool> enableSwipingScreenEvent; 
+    public static event Action<bool> enableSwipingScreenEvent;
 
     private void Awake()
     {
@@ -105,14 +105,16 @@ public class BasePopup : MonoBehaviour
 
         _isShown = true;
 
+        PlayClickSound();
+
         enableSwipingScreenEvent?.Invoke(false);
     }
 
-    protected virtual void Hide()
+    protected virtual void Hide(Action onCompletedAction = null)
     {
         if (_isShown)
         {
-            _transitionAnimation.Hide();
+            _transitionAnimation.Hide(onCompletedAction);
 
             popupHideEvent?.Invoke();
 
@@ -124,6 +126,11 @@ public class BasePopup : MonoBehaviour
 
             enableSwipingScreenEvent?.Invoke(true);
         }
+    }
+
+    protected virtual void Hide()
+    {
+        Hide(onCompletedAction: null);
     }
 
     protected virtual void AfterHide()

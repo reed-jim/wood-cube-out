@@ -10,10 +10,12 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private Button buyWithDiamondButton;
     [SerializeField] private Button getWithAdsButton;
     [SerializeField] private Image icon;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
 
     [Header("BOOSTER SPRITE")]
     [SerializeField] private Sprite[] boosterSprites;
+    [SerializeField] private string[] leanTranslationTitle;
     [SerializeField] private string[] leanTranslationNames;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -22,6 +24,7 @@ public class BuyBoosterPopup : BasePopup
     private BoosterType _boosterType;
 
     public static event Action<BoosterType> useBoosterEvent;
+    public static event Action unlockScrewBoxEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -38,6 +41,7 @@ public class BuyBoosterPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
 
         getWithAdsButton.onClick.AddListener(GetWithAds);
     }
@@ -45,6 +49,7 @@ public class BuyBoosterPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
     }
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
@@ -55,9 +60,21 @@ public class BuyBoosterPopup : BasePopup
 
         icon.sprite = boosterSprites[(int)_boosterType];
 
-        UIUtil.SetSizeKeepRatioY(icon, 0.3f * container.sizeDelta.x);
+        UIUtil.SetSizeKeepRatioY(icon, 0.25f * container.sizeDelta.x);
 
+        title.TranslationName = leanTranslationTitle[(int)_boosterType];
         boosterDescription.TranslationName = leanTranslationNames[(int)_boosterType];
+
+        getWithAdsButton.onClick.RemoveAllListeners();
+
+        if (boosterType == BoosterType.UnlockScrewBox)
+        {
+            getWithAdsButton.onClick.AddListener(UnlockScrewBoxWithAds);
+        }
+        else
+        {
+            getWithAdsButton.onClick.AddListener(GetWithAds);
+        }
     }
 
     private void GetWithAds()
@@ -67,5 +84,13 @@ public class BuyBoosterPopup : BasePopup
         useBoosterEvent?.Invoke(_boosterType);
 
         Hide();
+    }
+
+    private void UnlockScrewBoxWithAds()
+    {
+        Hide(onCompletedAction: () =>
+        {
+            unlockScrewBoxEvent?.Invoke();
+        });
     }
 }
