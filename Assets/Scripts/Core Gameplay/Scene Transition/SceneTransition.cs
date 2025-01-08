@@ -10,11 +10,14 @@ public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform container;
+    [SerializeField] private RectTransform loadingContent;
     [SerializeField] private RectTransform progressFillRT;
     [SerializeField] private RectTransform loadingTextRT;
     [SerializeField] private Image fadeBackground;
     [SerializeField] private Image blackBackground;
-    [SerializeField] private Image progressFill;
+    [SerializeField] private Slider progressBar;
+    [SerializeField] private Image progressBarFill;
+    // [SerializeField] private Image progressFill;
     [SerializeField] private TMP_Text loadingText;
 
     [Header("CUSTOMIZE")]
@@ -52,16 +55,21 @@ public class SceneTransition : MonoBehaviour
     {
         container.gameObject.SetActive(true);
 
-        _tweens.Add(Tween.Custom(0, 1, duration: 0.95f * startDelay, onValueChange: newVal =>
+        progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
+
+        _tweens.Add(Tween.Alpha(progressBarFill, 0, 1, duration: 0.2f * startDelay));
+
+        _tweens.Add(Tween.Custom(0, 1, duration: 0.85f * startDelay, ease: Ease.Linear, onValueChange: newVal =>
         {
-            progressFill.fillAmount = newVal;
+            progressBar.value = newVal;
+            // progressFill.fillAmount = newVal;
 
             loadingText.text = $"{(int)(newVal * 100)}%";
         }));
 
         SaferioTween.DelayAsync(startDelay, onCompletedAction: (() =>
         {
-            SaferioTween.LocalPositionAsync(progressFillRT, new Vector3(0, -_canvasSize.y), duration: fadeOutDuration);
+            SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
             SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
             {
                 container.gameObject.SetActive(false);
