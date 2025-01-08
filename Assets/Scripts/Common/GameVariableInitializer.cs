@@ -15,8 +15,6 @@ public class GameVariableInitializer : MonoBehaviour
 
     public static event Action currentLevelFetchedEvent;
 
-    [SerializeField] private TMP_Text testCXurrentLevel;
-
     private void Awake()
     {
         canvasSize.Value = canvas.sizeDelta;
@@ -26,30 +24,6 @@ public class GameVariableInitializer : MonoBehaviour
         userResourcesObserver.Load();
 
         currentLevelFetchedEvent?.Invoke();
-
-        // Testing();
-    }
-
-    private async void Testing()
-    {
-        await Task.Delay(1000);
-
-        int time = 0;
-
-        while (true)
-        {
-            string text = userResourcesObserver.UserResources.BoosterQuantities.ToString();
-
-            text += " / " + userResourcesObserver.UserResources.BoosterQuantities[1].ToString();
-            text += " / " + userResourcesObserver.UserResources.BoosterQuantities[2].ToString();
-            text += " / " + time;
-
-            testCXurrentLevel.text = text;
-
-            await Task.Delay(500);
-
-            time++;
-        }
     }
 
     private void Start()
