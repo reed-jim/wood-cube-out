@@ -2,7 +2,17 @@ using UnityEngine;
 
 public class SafeArea : MonoBehaviour
 {
+    private void Awake()
+    {
+        AdjustToSafeArea();
+    }
+
     private void OnValidate()
+    {
+        AdjustToSafeArea();
+    }
+
+    private void AdjustToSafeArea()
     {
         RectTransform uiElement = GetComponent<RectTransform>();
 
@@ -22,29 +32,29 @@ public class SafeArea : MonoBehaviour
         uiElement.offsetMax = Vector2.zero;
     }
 
-    void AdjustToSafeArea()
-    {
-        RectTransform uiElement = GetComponent<RectTransform>();
+    // void AdjustToSafeArea()
+    // {
+    //     RectTransform uiElement = GetComponent<RectTransform>();
 
-        Rect safeArea = Screen.safeArea;
-        Canvas canvas = uiElement.GetComponentInParent<Canvas>();
+    //     Rect safeArea = Screen.safeArea;
+    //     Canvas canvas = uiElement.GetComponentInParent<Canvas>();
 
-        Vector2 safeAreaMin = safeArea.position;
-        Vector2 safeAreaMax = safeArea.position + safeArea.size;
+    //     Vector2 safeAreaMin = safeArea.position;
+    //     Vector2 safeAreaMax = safeArea.position + safeArea.size;
 
-        Vector2 safeAreaSize = safeArea.size / canvas.transform.localScale.x;
+    //     Vector2 safeAreaSize = safeArea.size / canvas.transform.localScale.x;
 
-        Vector2 screenSize = canvas.GetComponent<RectTransform>().sizeDelta;
+    //     Vector2 screenSize = canvas.GetComponent<RectTransform>().sizeDelta;
 
-        Vector2 localPosition = new Vector2(
-            (safeAreaMin.x + safeAreaMax.x) * 0.5f - screenSize.x * 0.5f,
-            (safeAreaMin.y + safeAreaMax.y) * 0.5f - screenSize.y * 0.5f
-        );
+    //     Vector2 localPosition = new Vector2(
+    //         (safeAreaMin.x + safeAreaMax.x) * 0.5f - screenSize.x * 0.5f,
+    //         (safeAreaMin.y + safeAreaMax.y) * 0.5f - screenSize.y * 0.5f
+    //     );
 
-        Debug.Log(safeArea.center + "/" + safeArea.position + "/" + safeArea.y);
-        
-        uiElement.localPosition = localPosition;
+    //     Debug.Log(safeArea.center + "/" + safeArea.position + "/" + safeArea.y);
 
-        uiElement.sizeDelta = safeAreaSize;
-    }
+    //     uiElement.localPosition = localPosition;
+
+    //     uiElement.sizeDelta = safeAreaSize;
+    // }
 }
