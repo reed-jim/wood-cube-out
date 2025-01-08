@@ -218,11 +218,63 @@ public class BasicScrew : BaseScrew
         return number;
     }
 
+    // public override int CountBlockingObjects()
+    // {
+    //     Vector3 start = transform.position;
+
+    //     Collider[] hits = Physics.OverlapCapsule(start, start + 10 * transform.forward, 0.2f);
+
+    //     int number = 0;
+
+    //     float minBlockedDistance = float.MaxValue;
+
+    //     if (hits != null)
+    //     {
+    //         for (int i = 0; i < hits.Length; i++)
+    //         {
+    //             if (hits[i].transform == transform.parent)
+    //             {
+    //                 continue;
+    //             }
+
+    //             if (hits[i].GetComponent<IObjectPart>() != null)
+    //             {
+    //                 Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].ClosestPoint(transform.position));
+
+    //                 if (hits[i].transform == transform.parent)
+    //                 {
+    //                     continue;
+    //                 }
+
+    //                 float distance = Mathf.Abs(positionInScrewSpace.z);
+
+    //                 if (distance < minBlockedDistance)
+    //                 {
+    //                     minBlockedDistance = distance;
+    //                 }
+
+    //                 if (distance < 0.6f)
+    //                 {
+    //                     Debug.Log(transform.position + "/" + hits[i].ClosestPoint(transform.position));
+    //                     Debug.Log(hits[i].name + "/" + hits[i].GetInstanceID());
+    //                     number++;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     _numberBlockingObjects = number;
+    //     _distanceBlocked = minBlockedDistance;
+
+    //     return number;
+    // }
+
     public override int CountBlockingObjects()
     {
         Vector3 start = transform.position;
 
-        Collider[] hits = Physics.OverlapCapsule(start, start + 10 * transform.forward, 0.2f);
+        // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
+        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.1f * transform.forward, 0.2f, transform.forward, 10);
 
         int number = 0;
 
@@ -237,16 +289,19 @@ public class BasicScrew : BaseScrew
                     continue;
                 }
 
-                if (hits[i].GetComponent<IObjectPart>() != null)
+                if (hits[i].transform.GetComponent<IObjectPart>() != null)
                 {
-                    Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].ClosestPoint(transform.position));
-
                     if (hits[i].transform == transform.parent)
                     {
                         continue;
                     }
 
-                    float distance = Mathf.Abs(positionInScrewSpace.z);
+                    // Perpendicular distance
+                    // Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
+
+                    // float distance = Mathf.Abs(positionInScrewSpace.z);
+
+                    float distance = Vector3.Distance(hits[i].point, transform.position);
 
                     if (distance < minBlockedDistance)
                     {

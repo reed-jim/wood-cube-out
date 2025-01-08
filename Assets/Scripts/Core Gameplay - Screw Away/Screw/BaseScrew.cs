@@ -157,7 +157,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     //     Vector3 startPoint = transform.position;
 
-    //     Vector3 direction = -transform.forward;
+    //     Vector3 direction = transform.forward;
 
     //     Vector3 endPoint = startPoint + direction * 10f;
 
