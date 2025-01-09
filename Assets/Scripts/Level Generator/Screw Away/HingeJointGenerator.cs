@@ -89,7 +89,7 @@ public class HingeJointGenerator : EditorWindow
 
         if (GUILayout.Button("Auto Assign Screw Faction"))
         {
-            AutoAssignScrewFaction(prefabPath);
+            // AutoAssignScrewFaction(prefabPath);
         }
 
         if (GUILayout.Button("Spawn Screw"))
