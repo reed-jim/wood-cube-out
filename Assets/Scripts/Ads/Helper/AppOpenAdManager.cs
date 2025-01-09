@@ -23,10 +23,15 @@ using System.Collections.Generic;
 public class AppOpenAdManager
 {
 
+    // #if UNITY_ANDROID
+    //     private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/3614647346";
+    // #elif UNITY_IOS
+    //     private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/5619876469";
+    // #else
 #if UNITY_ANDROID
-    private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/3614647346";
-#elif UNITY_IOS
-    private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/5619876469";
+    private string AD_UNIT_ID = "ca-app-pub-3940256099942544/9257395921";
+#elif UNITY_IPHONE
+    string AD_UNIT_ID = "ca-app-pub-3940256099942544/5575463023";
 #else
     private const string AD_UNIT_ID = "unexpected_platform";
 #endif
