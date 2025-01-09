@@ -101,4 +101,13 @@ public static class CommonUtil
 
         onCompletedAction?.Invoke();
     }
+
+    public static Vector2 GetScreenSizeWorld(Camera camera)
+    {
+        float orthoSize = camera.orthographicSize;
+        float screenHeight = orthoSize * 2;
+        float screenWidth = screenHeight * camera.aspect;
+
+        return new Vector2(screenWidth, screenHeight);
+    }
 }

@@ -13,6 +13,7 @@ public class ScrewBoxManager : MonoBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
 
+    [Header("CUSTOMIZE")]
     [SerializeField] private int maxScrewBox;
 
     public ScrewBox[] ScrewBoxs
@@ -28,6 +29,7 @@ public class ScrewBoxManager : MonoBehaviour
     #region PRIVATE FIELD
     private float _screwBoxPositionY = 10;
     private bool _isSpawnScrewBoxFirstTimeInLevel;
+    private float _screwBoxDistance;
     #endregion
 
     #region EVENT
@@ -40,6 +42,7 @@ public class ScrewBoxManager : MonoBehaviour
     void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStart;
+        ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
         BaseScrew.selectScrewEvent += OnScrewSelected;
         ScrewManager.spawnScrewBoxEvent += SpawnScrewBox;
         ScrewManager.spawnAdsScrewBoxesEvent += SpawnAdsScrewBoxes;
@@ -55,6 +58,7 @@ public class ScrewBoxManager : MonoBehaviour
     void OnDestroy()
     {
         LevelLoader.startLevelEvent -= OnLevelStart;
+        ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         BaseScrew.selectScrewEvent -= OnScrewSelected;
         ScrewManager.spawnScrewBoxEvent -= SpawnScrewBox;
         ScrewManager.spawnAdsScrewBoxesEvent -= SpawnAdsScrewBoxes;
@@ -132,7 +136,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 0.8f;
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
 
             screwPorts[i].transform.position = screwPortPosition;
         }
@@ -146,6 +150,19 @@ public class ScrewBoxManager : MonoBehaviour
         ResetScrewBoxes();
 
         _isSpawnScrewBoxFirstTimeInLevel = true;
+    }
+
+    private void OnScrewBoxCameraSet(Camera screwBoxCamera)
+    {
+        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
+
+        _screwBoxDistance = 0.215f * worldSize.x;
+        // _screwBoxPositionY = 0.333f * worldSize.y;
+
+        // the camera is at position (0, 6.5f, -10) and rotation (30, 0, 0);
+        // Vector3 test = screwBoxCamera.transform.InverseTransformPoint(new Vector3(0, (640f / (1920 / 2)) * worldSize.y, 0));
+
+        _screwBoxPositionY = 0.42f * worldSize.y;
     }
 
     private void OnRevived()
@@ -328,7 +345,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         Vector3 destination = screwBox.transform.position;
 
-        destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
+        destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
         destination.z = -0.001f * index;
 
         if (_isSpawnScrewBoxFirstTimeInLevel)
@@ -370,7 +387,7 @@ public class ScrewBoxManager : MonoBehaviour
                 int index = i;
 
                 destination = screwBox.transform.position;
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
                 destination.z = -0.001f * index;
 
                 Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
@@ -405,7 +422,7 @@ public class ScrewBoxManager : MonoBehaviour
 
                 Vector3 destination = screwBox.transform.position;
 
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * 2.8f;
+                destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
                 destination.z = -0.001f * index;
 
                 if (_isSpawnScrewBoxFirstTimeInLevel)
@@ -580,7 +597,7 @@ public class ScrewBoxManager : MonoBehaviour
         {
             int index = i;
 
-            position.x = (-(screwPorts.Count - 1) / 2f + i) * 0.8f;
+            position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
 
             Tween.Position(screwPorts[i].transform, position, duration: 0.3f)
             .OnComplete(() =>

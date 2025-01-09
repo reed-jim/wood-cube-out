@@ -11,6 +11,7 @@ public class ScrewBox : MonoBehaviour
 {
     [SerializeField] private ScrewBoxSlot[] screwBoxSlots;
     [SerializeField] private Transform boxLid;
+    [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
 
     [SerializeField] private ScrewBoxServiceLocator screwBoxServiceLocator;
 
@@ -59,6 +60,7 @@ public class ScrewBox : MonoBehaviour
 
     private void Awake()
     {
+        ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent += OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox += Unlock;
 
@@ -71,10 +73,18 @@ public class ScrewBox : MonoBehaviour
 
     private void OnDestroy()
     {
+        ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent -= OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox -= Unlock;
 
         CommonUtil.StopAllTweens(_tweens);
+    }
+
+    private void OnScrewBoxCameraSet(Camera screwBoxCamera)
+    {
+        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
+
+        transform.localScale = ((0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x) * Vector3.one;
     }
 
     private async void OnScrewBoxCompleted(int instanceId)
