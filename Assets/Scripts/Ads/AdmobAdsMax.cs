@@ -5,17 +5,9 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
-//using com.adjust.sdk;
-using Facebook.Unity;
 using Firebase.Analytics;
-using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using AppsFlyerSDK;
-using Falcon.FalconAnalytics.Scripts.Enum;
-using Falcon;
-using AmazonAds;
-using static MaxSdkBase;
-using FileHelpers;
 
 public class AdmobAdsMax : MonoBehaviour
 {
@@ -59,10 +51,10 @@ public class AdmobAdsMax : MonoBehaviour
     private ActionWatchVideo actionWatchVideo;
     public Coroutine coroutineShowAppOpen;
 
-    private APSBannerAdRequest bannerAdRequest;
-    private const string SlotBannerId = "da89158c-1a1b-423d-bfd1-e5e2fbde42af";
-    private const string SlotIpadLeaderId = "aad4cd1a-4473-4ad0-90bb-6947d6c79e73";
-    private const string amazonAppId = "4fb1e5b9-4be3-4da2-9ab0-a5106875f7d4";
+    // private APSBannerAdRequest bannerAdRequest;
+    // private const string SlotBannerId = "da89158c-1a1b-423d-bfd1-e5e2fbde42af";
+    // private const string SlotIpadLeaderId = "aad4cd1a-4473-4ad0-90bb-6947d6c79e73";
+    // private const string amazonAppId = "4fb1e5b9-4be3-4da2-9ab0-a5106875f7d4";
 
     public void Init()
     {
@@ -82,7 +74,7 @@ public class AdmobAdsMax : MonoBehaviour
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
         };
-        MaxSdk.SetHasUserConsent(UseProfile.IsTrackedPremission);
+        MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
         //MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
         MaxSdk.InitializeSdk();
@@ -96,7 +88,8 @@ public class AdmobAdsMax : MonoBehaviour
         MobileAds.Initialize((initStatus) =>
         {
             Debug.Log("===== Init Admob Done ====");
-            AppOpenAdManager.Instance.LoadAd(() => {
+            AppOpenAdManager.Instance.LoadAd(() =>
+            {
                 //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
             });
             InitBannerAdmob();
@@ -180,6 +173,7 @@ public class AdmobAdsMax : MonoBehaviour
         LoadBannerAdmob();
         LoadBannerCollap();
     }
+
     #region Collap Banner
     private BannerView _bannerViewCollap;
     private bool isReloadBannerCollap;
@@ -194,6 +188,7 @@ public class AdmobAdsMax : MonoBehaviour
     {
         _bannerViewCollap?.LoadAd(bannerCollapLoadRequest);
     }
+
     private void LoadBannerCollap()
     {
         GoogleMobileAds.Api.AdSize adaptiveSize =
@@ -218,7 +213,7 @@ public class AdmobAdsMax : MonoBehaviour
         isReloadBannerCollap = false;
         timeReloadBannerCollap = RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 15);
 
-_isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, true);
+        _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, true);
         Debug.Log($"Is show ads collap banner {_isShowAdmobCollap}");
 
         void OnBannerAdLoaded()
@@ -265,7 +260,7 @@ _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_
     {
         if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
         {
-            if (GameController.Instance.useProfile.IsRemoveAds)
+            if (UserData.IsRemoveAds)
                 return;
 
             if (_isShowAdmobCollap)
@@ -309,6 +304,7 @@ _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_
         bannerHomeLoadRequest.Extras["collapsible_request_id"] = Guid.NewGuid().ToString();
         _bannerViewHome.LoadAd(bannerHomeLoadRequest);
     }*/
+
     private bool isLoadedAdBanner;
 
     private void RefreshAdmobBanner()
@@ -345,7 +341,7 @@ _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_
         {
             Debug.Log("load admob banner success=====");
             _isTryLoadAdmobBanner = false;
-var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, true);
+            var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, true);
 
             Debug.Log($"Is show ads admob banner {isEnableAdmobBanner}");
             _isShowAdmobBanner = isEnableAdmobBanner;
@@ -370,9 +366,9 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
             //nếu dùng Appsflyer
             var dic = new Dictionary<string, string>
-    {
-        { "ad_format", "collapsible_banner" }
-    };
+            {
+                { "ad_format", "collapsible_banner" }
+            };
             AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
                 value, "USD", dic);
         }
@@ -386,9 +382,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
             ShowBanner();
         }
     }
-
-#endregion
-
+    #endregion
 
     public void InitializeBannerMax()
     {
@@ -403,57 +397,57 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
         ShowBanner();
     }
 
-    void InitAmazon()
-    {
-        Amazon.Initialize(amazonAppId);
-        Amazon.SetAdNetworkInfo(new AdNetworkInfo(DTBAdNetwork.MAX));
-        Amazon.UseGeoLocation(true);
-#if TESTER
-        Amazon.EnableTesting(true);
-        Amazon.EnableLogging(true);
-#endif
-        //----------
-        Amazon.IsLocationEnabled();
-        Amazon.SetMRAIDPolicy(Amazon.MRAIDPolicy.CUSTOM);
-        //----------
+    //     void InitAmazon()
+    //     {
+    //         Amazon.Initialize(amazonAppId);
+    //         Amazon.SetAdNetworkInfo(new AdNetworkInfo(DTBAdNetwork.MAX));
+    //         Amazon.UseGeoLocation(true);
+    // #if TESTER
+    //         Amazon.EnableTesting(true);
+    //         Amazon.EnableLogging(true);
+    // #endif
+    //         //----------
+    //         Amazon.IsLocationEnabled();
+    //         Amazon.SetMRAIDPolicy(Amazon.MRAIDPolicy.CUSTOM);
+    //         //----------
 
-        Amazon.AddCustomAttribute("sessDuration", "11");
-        Amazon.AddCustomAttribute("contentURL", "TEST_URL");
-#if UNITY_IOS
-        Amazon.SetAPSPublisherExtendedIdFeatureEnabled(true);
-#endif
-    }
+    //         Amazon.AddCustomAttribute("sessDuration", "11");
+    //         Amazon.AddCustomAttribute("contentURL", "TEST_URL");
+    // #if UNITY_IOS
+    //         Amazon.SetAPSPublisherExtendedIdFeatureEnabled(true);
+    // #endif
+    //     }
 
-    public void RequestBanner()
-    {
-        int width;
-        int height;
-        string amazonBannerSlotId = "";
-        if (MaxSdkUtils.IsTablet())
-        {
-            width = 728;
-            height = 90;
-            amazonBannerSlotId = SlotIpadLeaderId;
-        }
-        else
-        {
-            width = 320;
-            height = 50;
-            amazonBannerSlotId = SlotBannerId;
-        }
-        if (bannerAdRequest != null) bannerAdRequest.DestroyFetchManager();
-        bannerAdRequest = new APSBannerAdRequest(width, height, amazonBannerSlotId);
-        bannerAdRequest.onFailedWithError += (adError) => {
-            MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_error", adError.GetAdError());
-            CreateMaxBannerAd();
-        };
-        bannerAdRequest.onSuccess += (adResponse) => {
-            MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_response", adResponse.GetResponse());
-            CreateMaxBannerAd();
-        };
+    //     public void RequestBanner()
+    //     {
+    //         int width;
+    //         int height;
+    //         string amazonBannerSlotId = "";
+    //         if (MaxSdkUtils.IsTablet())
+    //         {
+    //             width = 728;
+    //             height = 90;
+    //             amazonBannerSlotId = SlotIpadLeaderId;
+    //         }
+    //         else
+    //         {
+    //             width = 320;
+    //             height = 50;
+    //             amazonBannerSlotId = SlotBannerId;
+    //         }
+    //         if (bannerAdRequest != null) bannerAdRequest.DestroyFetchManager();
+    //         bannerAdRequest = new APSBannerAdRequest(width, height, amazonBannerSlotId);
+    //         bannerAdRequest.onFailedWithError += (adError) => {
+    //             MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_error", adError.GetAdError());
+    //             CreateMaxBannerAd();
+    //         };
+    //         bannerAdRequest.onSuccess += (adResponse) => {
+    //             MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_response", adResponse.GetResponse());
+    //             CreateMaxBannerAd();
+    //         };
 
-        bannerAdRequest.LoadAd();
-    }
+    //         bannerAdRequest.LoadAd();
+    //     }
 
     private void CreateMaxBannerAd()
     {
@@ -461,10 +455,9 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
         MaxSdk.SetBannerPlacement(BanerAdUnitId, "MY_BANNER_PLACEMENT");
     }
 
-
     private void OnBannerAdLoadedEvent(string obj, MaxSdk.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Banner - OnBannerAdLoadedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Banner - OnBannerAdLoadedEvent ++ {adInfo} \n");
         Debug.Log("Request success");
         if (reloadBannerCoru != null)
         {
@@ -476,13 +469,13 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     private void OnBannerAdClickedEvent(string obj, MaxSdk.AdInfo adInfo)
     {
         //inter click
-        Debug.Log($"LongTH_ Banner - OnBannerAdClickedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Banner - OnBannerAdClickedEvent ++ {adInfo} \n");
         Debug.Log("Click Baner !!!");
     }
 
     private void OnBannerAdLoadFailedEvent(string arg1, MaxSdk.ErrorInfo errInfo)
     {
-        Debug.Log($"LongTH_ Banner - OnBannerAdLoadFailedEvent ++ {errInfo } \n");
+        Debug.Log($"LongTH_ Banner - OnBannerAdLoadFailedEvent ++ {errInfo} \n");
         if (reloadBannerCoru != null)
         {
             StopCoroutine(reloadBannerCoru);
@@ -499,17 +492,16 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     }
 
     #region Interstitial
-
     private void OnInterstitialLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
         _isLoading = true;
         GameController.Instance.AnalyticsController.LogInterReady();
     }
 
     private void OnInterstitialFailedEvent(string adUnitId, MaxSdk.ErrorInfo errInfo)
     {
-        Debug.Log($"LongTH_ Interstitial - OnInterstitialFailedEvent ++ {errInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialFailedEvent ++ {errInfo} \n");
         _isLoading = false;
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
@@ -532,7 +524,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void InterstitialFailedToDisplayEvent(string adUnitId, MaxSdk.ErrorInfo errInfo, MaxSdk.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Interstitial - InterstitialFailedToDisplayEvent ++ {errInfo} ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - InterstitialFailedToDisplayEvent ++ {errInfo} ++ {adInfo} \n");
         _isLoading = false;
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
@@ -542,7 +534,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     private void OnInterstitialHiddenEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
         _isLoading = false;
-        Debug.Log($"LongTH_ Interstitial - OnInterstitialHiddenEvent  ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialHiddenEvent  ++ {adInfo} \n");
         Time.timeScale = 1;
 
         _actionRewardVideo?.Invoke();
@@ -567,7 +559,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void MaxSdkCallbacks_OnInterstitialDisplayedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialDisplayedEvent  ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialDisplayedEvent  ++ {adInfo} \n");
         Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
@@ -575,7 +567,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialClickedEvent  ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialClickedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogInterClick();
         _isLoading = false;
     }
@@ -585,7 +577,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
         bool isInGame = true)
     {
         Debug.Log("show inter ========" + countdownAds);
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (UserData.IsRemoveAds)
         {
             Debug.Log("show inter ======== is RemoveAds ");
             //if (!isInGame)
@@ -593,7 +585,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
             return false;
         }
 
-        if ((UseProfile.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
+        if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
             isShowImmediatly)
@@ -619,45 +611,45 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
         UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
-        actionIniterClose += () => { IsCooldownAdmobBanner = true; };
-        if (IsLoadedInterstitial())
-        {
-            isShowingAds = true;
-            oldTime = DateTime.Now;
-            if (isInGame)
-            {
-                Debug.Log("show inter ======");
-                AdBreakBox.Setup().Show(() =>
-                {
-                    actionInterstitialClose = actionIniterClose;
-                    IsCooldownAdmobBanner = false;
-                    MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-                    countdownAds = 0;
-                    GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+        // actionIniterClose += () => { IsCooldownAdmobBanner = true; };
+        // if (IsLoadedInterstitial())
+        // {
+        //     isShowingAds = true;
+        //     oldTime = DateTime.Now;
+        //     if (isInGame)
+        //     {
+        //         Debug.Log("show inter ======");
+        //         AdBreakBox.Setup().Show(() =>
+        //         {
+        //             actionInterstitialClose = actionIniterClose;
+        //             IsCooldownAdmobBanner = false;
+        //             MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+        //             countdownAds = 0;
+        //             GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
-                    UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-                    UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-                });
-            }
-            else
-            {
-                actionInterstitialClose = actionIniterClose;
-                IsCooldownAdmobBanner = false;
-                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-                countdownAds = 0;
-                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+        //             UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+        //             UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
+        //         });
+        //     }
+        //     else
+        //     {
+        //         actionInterstitialClose = actionIniterClose;
+        //         IsCooldownAdmobBanner = false;
+        //         MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+        //         countdownAds = 0;
+        //         GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
-                UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-                UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-            }
-        }
-        else
-        {
-            //if (!isInGame)
-            if (actionIniterClose != null)
-                actionIniterClose();
-            RequestInterstitial();
-        }
+        //         UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+        //         UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
+        //     }
+        // }
+        // else
+        // {
+        //     //if (!isInGame)
+        //     if (actionIniterClose != null)
+        //         actionIniterClose();
+        //     RequestInterstitial();
+        // }
     }
 
     private void InitInterstitial()
@@ -684,7 +676,6 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     #endregion
 
     #region Video Reward
-
     private void LoadRewardedAd()
     {
         MaxSdk.LoadRewardedAd(RewardedAdUnitId);
@@ -692,13 +683,13 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogVideoRewardReady();
     }
 
     private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
         Invoke("LoadRewardedAd", 15);
         GameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
             errInfo.Message.ToString());
@@ -706,7 +697,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo} \n");
         isVideoDone = false;
 
         //if (IsLoadedInterstitial())
@@ -722,13 +713,13 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
     private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
         GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
@@ -741,7 +732,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
         //}
 
         // Rewarded ad is hidden. Pre-load the next ad
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo } \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo} \n");
         _actionClose?.Invoke();
         _actionClose = null;
         if (_actionRewardVideo != null)
@@ -803,7 +794,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
         {
             actionNotLoadedVideo?.Invoke();
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
-                UseProfile.CurrentLevel.ToString());
+                UserData.CurrentLevel.ToString());
             return false;
         }
 
@@ -821,7 +812,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
             MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                UseProfile.CurrentLevel.ToString());
+                UserData.CurrentLevel.ToString());
             GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
@@ -834,12 +825,12 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
 
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                    UseProfile.CurrentLevel.ToString());
+                    UserData.CurrentLevel.ToString());
                 Debug.Log("ShowInterstitial !!!");
                 countdownAds = 0;
                 try
                 {
-                    DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
+                    // DWHLog.Log.AdsLog(UserData.CurrentLevel, AdType.Reward, adWhere);
                 }
                 catch (Exception e)
                 {
@@ -853,7 +844,7 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
                 Debug.Log("No ads !!!");
                 actionNotLoadedVideo?.Invoke();
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
-                    UseProfile.CurrentLevel.ToString());
+                    UserData.CurrentLevel.ToString());
                 return false;
             }
         }
@@ -864,20 +855,28 @@ var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.EN
     #endregion
 
     #region Banner
-
     public void ShowBanner()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (UserData.IsRemoveAds)
+        {
             return;
+        }
+
         if (isAdmobInitDone)
         {
             if (_isShowAdmobBanner)
+            {
                 ShowBannerAdmob();
+            }
             else
+            {
                 ShowBannerMax();
+            }
         }
         else
+        {
             ShowBannerMax();
+        }
     }
 
     public void ShowBannerAdmob()

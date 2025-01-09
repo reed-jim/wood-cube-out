@@ -87,10 +87,25 @@ public static class GameConstants
     #region SAVE/LOAD
     public static string SAVE_FILE_NAME = "Game Local Data";
     public static string CURRENT_LEVEL = "Current Level";
+    public static string CURRENT_LEVEL_PLAY = "Current Level Play";
     public static string WEEKLY_TASKS = "Weekly Tasks";
     public static string SCREWS_DATA = "Screws Data";
     public static string COIN_ = "User Coin";
     public static string USER_RESOURCES = "User Resources";
+    public static string IS_REMOVE_ADS = "Is Remove Ads";
+    #endregion
+
+    #region TRACKING
+    public static string RETENTION_D = "RETENTION_D";
+    public static string PREVIOUS_REVENUE_D0_D1 = "PREVIOUS_REVENUE_D0_D1";
+    public static string REVENUE_D0_D1 = "REVENUE_D0_D1";
+    public static string NUMBER_OF_DISPLAYED_INTERSTITIAL_D0_D1 = "NUMBER_OF_DISPLAYED_INTERSTITIAL_D0_D1";
+    public static string DAYS_PLAYED = "DAYS_PLAYED";
+    public static string PAYING_TYPE = "PAYING_TYPE";
+    public static string NUMBER_OF_ADS_IN_PLAY = "NUMBER_OF_ADS_IN_PLAY";
+    public static string NUMBER_OF_ADS_IN_DAY = "NUMBER_OF_ADS_IN_DAY";
+    public static string FLAG_LINK = "FLAG_LINK";
+    public static string IS_TRACKED_PREMISSION = "IS_TRACKED_PREMISSION";
     #endregion
 
     #region SCREW AWAY
