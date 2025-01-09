@@ -314,9 +314,14 @@ public class BaseScrew : MonoBehaviour, IScrew
         });
     }
 
-    public virtual int CountBlockingObjects()
+    public virtual int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
         return 0;
+    }
+
+    public virtual int CountBlockingObjects()
+    {
+        return CountBlockingObjects(isIncludeHiddenScrew: false);
     }
 
     protected void InvokeScrewLoosenedEvent()

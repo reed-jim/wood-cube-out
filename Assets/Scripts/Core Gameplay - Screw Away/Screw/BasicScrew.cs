@@ -218,58 +218,7 @@ public class BasicScrew : BaseScrew
         return number;
     }
 
-    // public override int CountBlockingObjects()
-    // {
-    //     Vector3 start = transform.position;
-
-    //     Collider[] hits = Physics.OverlapCapsule(start, start + 10 * transform.forward, 0.2f);
-
-    //     int number = 0;
-
-    //     float minBlockedDistance = float.MaxValue;
-
-    //     if (hits != null)
-    //     {
-    //         for (int i = 0; i < hits.Length; i++)
-    //         {
-    //             if (hits[i].transform == transform.parent)
-    //             {
-    //                 continue;
-    //             }
-
-    //             if (hits[i].GetComponent<IObjectPart>() != null)
-    //             {
-    //                 Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].ClosestPoint(transform.position));
-
-    //                 if (hits[i].transform == transform.parent)
-    //                 {
-    //                     continue;
-    //                 }
-
-    //                 float distance = Mathf.Abs(positionInScrewSpace.z);
-
-    //                 if (distance < minBlockedDistance)
-    //                 {
-    //                     minBlockedDistance = distance;
-    //                 }
-
-    //                 if (distance < 0.6f)
-    //                 {
-    //                     Debug.Log(transform.position + "/" + hits[i].ClosestPoint(transform.position));
-    //                     Debug.Log(hits[i].name + "/" + hits[i].GetInstanceID());
-    //                     number++;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     _numberBlockingObjects = number;
-    //     _distanceBlocked = minBlockedDistance;
-
-    //     return number;
-    // }
-
-    public override int CountBlockingObjects()
+    public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
         Vector3 start = transform.position;
 
@@ -291,8 +240,10 @@ public class BasicScrew : BaseScrew
 
                 if (hits[i].transform.GetComponent<IObjectPart>() != null)
                 {
-                    if (hits[i].transform == transform.parent)
+                    if (isIncludeHiddenScrew)
                     {
+                        number++;
+
                         continue;
                     }
 

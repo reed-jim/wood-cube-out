@@ -86,9 +86,9 @@ public class WinPopup : BasePopup
 
     private async void Continue()
     {
-        collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
+        // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
 
-        await Task.Delay(3000);
+        // await Task.Delay(3000);
 
         Hide();
 

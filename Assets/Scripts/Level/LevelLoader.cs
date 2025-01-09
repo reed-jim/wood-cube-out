@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -10,6 +11,8 @@ public class LevelLoader : MonoBehaviour
 {
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
+    [SerializeField] private LevelDataContainer levelDataContainer;
+    [SerializeField] private LevelDifficultyConfiguration tempLevelDifficulty;
 
     public static event Action startLevelEvent;
     public static event Action<int> setLevelScrewNumberEvent;
@@ -150,13 +153,144 @@ public class LevelLoader : MonoBehaviour
     {
         BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
 
-        int currentFaction = 0;
+        int numScrew = screws.Length;
 
-        List<GameFaction> remainingFactionForScrews = new List<GameFaction>();
+        List<BaseScrew> noBlockedScrews = new List<BaseScrew>();
+        List<BaseScrew> blockedScrews = new List<BaseScrew>();
 
         for (int i = 0; i < screws.Length; i++)
         {
-            remainingFactionForScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
+            int numBlockedObject = screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
+
+            if (numBlockedObject == 0)
+            {
+                noBlockedScrews.Add(screws[i]);
+            }
+            else
+            {
+                blockedScrews.Add(screws[i]);
+            }
+        }
+
+        // SHUFFLE SCREW LISTS
+        ShuffleList(noBlockedScrews);
+        ShuffleList(blockedScrews);
+
+        List<BaseScrew> shuffledScrews = new List<BaseScrew>();
+
+        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = tempLevelDifficulty.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+
+        // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
+        //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+
+        int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
+        int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
+
+        // EASY SCREWS
+        for (int i = 0; i < numNoBlockedScrewsToGetSameFaction; i++)
+        {
+            BaseScrew nextScrew = noBlockedScrews.First();
+
+            shuffledScrews.Add(nextScrew);
+
+            noBlockedScrews.Remove(nextScrew);
+        }
+
+        // REMAINING SCREWS
+        int currentIndex = 0;
+
+        for (int i = 0; i < numRemainingScrews; i++)
+        {
+            BaseScrew nextScrew;
+
+            if (currentIndex % (GameConstants.NUMBER_SLOT_PER_SCREW_BOX - 1) == 0)
+            {
+                if (noBlockedScrews.Count > 0)
+                {
+                    nextScrew = noBlockedScrews.First();
+
+                    noBlockedScrews.Remove(nextScrew);
+                }
+                else
+                {
+                    nextScrew = blockedScrews.First();
+
+                    blockedScrews.Remove(nextScrew);
+                }
+            }
+            else
+            {
+                if (blockedScrews.Count > 0)
+                {
+                    nextScrew = blockedScrews.First();
+
+                    blockedScrews.Remove(nextScrew);
+                }
+                else
+                {
+                    nextScrew = noBlockedScrews.First();
+
+                    noBlockedScrews.Remove(nextScrew);
+                }
+            }
+
+            shuffledScrews.Add(nextScrew);
+
+            currentIndex++;
+        }
+
+        // // NO BLOCKED SCREW
+        // int currentFaction = 0;
+        // bool isGeneratingSameFactionForTripleScrews = false;
+
+        // List<GameFaction> remainingFactionForNoBlockedScrews = new List<GameFaction>();
+
+        // for (int i = 0; i < noBlockedScrews.Count; i++)
+        // {
+        //     if (i % GameConstants.NUMBER_SLOT_PER_SCREW_BOX == 0)
+        //     {
+        //         float random = UnityEngine.Random.Range(0f, 1f);
+
+        //         if (random < levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame)
+        //         {
+        //             isGeneratingSameFactionForTripleScrews = true;
+        //         }
+        //         else
+        //         {
+        //             isGeneratingSameFactionForTripleScrews = false;
+        //         }
+        //     }
+
+        //     if (isGeneratingSameFactionForTripleScrews)
+        //     {
+        //         remainingFactionForNoBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
+        //     }
+        //     else
+        //     {
+        //         int randomFactionIndex = UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length);
+
+        //         remainingFactionForNoBlockedScrews.Add(GameConstants.SCREW_FACTION[randomFactionIndex]);
+        //     }
+
+        //     if (i > 0 && (i + 1) % 3 == 0)
+        //     {
+        //         currentFaction++;
+
+        //         if (currentFaction >= GameConstants.SCREW_FACTION.Length)
+        //         {
+        //             currentFaction = 0;
+        //         }
+        //     }
+        // }
+
+        // int currentFaction = UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length - 1);
+        int currentFaction = 0;
+
+        List<GameFaction> remainingFactionForBlockedScrews = new List<GameFaction>();
+
+        for (int i = 0; i < shuffledScrews.Count; i++)
+        {
+            remainingFactionForBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
 
             if (i > 0 && (i + 1) % 3 == 0)
             {
@@ -169,18 +303,46 @@ public class LevelLoader : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < screws.Length; i++)
+        for (int i = 0; i < shuffledScrews.Count; i++)
         {
-            int randomIndex = UnityEngine.Random.Range(0, remainingFactionForScrews.Count);
+            GameFaction nextFaction = remainingFactionForBlockedScrews.First();
 
-            screws[i].ScrewId = i;
-            screws[i].Faction = remainingFactionForScrews[randomIndex];
+            shuffledScrews[i].ScrewId = i;
+            shuffledScrews[i].Faction = nextFaction;
 
-            screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+            shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
 
-            remainingFactionForScrews.RemoveAt(randomIndex);
+            remainingFactionForBlockedScrews.Remove(nextFaction);
         }
 
-        setLevelScrewNumberEvent?.Invoke(screws.Length);
+        // RAMDOMIZE
+        // for (int i = 0; i < shuffledScrews.Count; i++)
+        // {
+        //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
+
+        //     shuffledScrews[i].ScrewId = i;
+        //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
+
+        //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+
+        //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
+        // }
+
+        setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
+    }
+
+    void ShuffleList<T>(List<T> list)
+    {
+        System.Random rand = new System.Random();
+        int n = list.Count;
+
+        while (n > 1)
+        {
+            n--;
+            int k = rand.Next(n + 1);
+            T value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 }

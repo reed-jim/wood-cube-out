@@ -296,7 +296,7 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            _screws[i].CountBlockingObjects();
+            _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
 
             if (_screws[i].NumberBlockingObjects > maxNumberBlockingObject)
             {
@@ -330,7 +330,7 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                _screws[i].CountBlockingObjects();
+                // _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
 
                 // if (_screws[i].NumberBlockingObjects > maxNumberBlockingObject)
                 // {
