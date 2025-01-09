@@ -90,6 +90,11 @@ public class WinPopup : BasePopup
 
         // await Task.Delay(3000);
 
+        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+    }
+
+    private void OnInterstitialAdCompleted()
+    {
         Hide();
 
         goLevelEvent?.Invoke(currentLevel.Value);

@@ -79,6 +79,11 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithAds()
     {
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, null, null);
+    }
+
+    private void OnRewaredAdCompleted()
+    {
         userResourcesObserver.UserResources.BoosterQuantities[(int)_boosterType]++;
 
         useBoosterEvent?.Invoke(_boosterType);

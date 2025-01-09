@@ -11,30 +11,37 @@ using AppsFlyerSDK;
 
 public class AdmobAdsMax : MonoBehaviour
 {
+    public static AdmobAdsMax Instance;
+
     public static bool isAdmobInitDone;
 
 #if UNITY_ANDROID
     private const string MaxSdkKey =
-        "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
+        "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
 
-    private const string InterstitialAdUnitId = "e0149e0cc5671fd9";
-    private const string RewardedAdUnitId = "6d589c35a5469e7c";
-    private const string BanerAdUnitId = "0b1ea9a61a60c38a";
-#elif UNITY_IOS
-    private const string MaxSdkKey =
-"M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-    private const string InterstitialAdUnitId = "e62bc78796e8e537";
-    private const string RewardedAdUnitId = "1ef401adad30de04";
-    private const string BanerAdUnitId = "faa58304689e5d2b";
-#endif
-#if UNITY_ANDROID
-    private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
-    private string _adUnitIdMedium = "ca-app-pub-8467610367562059/2324932310";
-    private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/8893924685";
-#elif UNITY_IPHONE
-    private string _adUnitIdHigh = "ca-app-pub-3940256099942544/6978759866";
-    private string _adUnitIdMedium = "ca-app-pub-3940256099942544/6978759866";
-    private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/4180939469";
+    private const string InterstitialAdUnitId = "948e190d8c5cd11d";
+    private const string RewardedAdUnitId = "34ea7232532db3db";
+    private const string BanerAdUnitId = "efc1069b84f4656f";
+
+    // private const string InterstitialAdUnitId = "testInterstitialAdId";
+    // private const string RewardedAdUnitId = "testRewardedAdId";
+    // private const string BanerAdUnitId = "testBannerAdId";
+    // #elif UNITY_IOS
+    //     private const string MaxSdkKey =
+    // "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
+    //     private const string InterstitialAdUnitId = "e62bc78796e8e537";
+    //     private const string RewardedAdUnitId = "1ef401adad30de04";
+    //     private const string BanerAdUnitId = "faa58304689e5d2b";
+    // #endif
+    // #if UNITY_ANDROID
+    //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
+    //     private string _adUnitIdMedium = "ca-app-pub-8467610367562059/2324932310";
+    //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/8893924685";
+    // #elif UNITY_IPHONE
+    //     private string _adUnitIdHigh = "ca-app-pub-3940256099942544/6978759866";
+    //     private string _adUnitIdMedium = "ca-app-pub-3940256099942544/6978759866";
+    //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/4180939469";
+    private string REWARD_INTER_ID = "test";
 #else
   private string _adUnitId = "unused";
 #endif
@@ -56,14 +63,27 @@ public class AdmobAdsMax : MonoBehaviour
     // private const string SlotIpadLeaderId = "aad4cd1a-4473-4ad0-90bb-6947d6c79e73";
     // private const string amazonAppId = "4fb1e5b9-4be3-4da2-9ab0-a5106875f7d4";
 
+    void Awake()
+    {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+
+        Init();
+    }
+
     public void Init()
     {
         //countdownAds = 0;
-        #region Amazon
-        // InitAmazon();
-        #endregion
-        #region Applovin Ads
 
+        #region Applovin Ads
         MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
         {
             Debug.Log("LongTH_ MAX SDK Initialized");
@@ -74,31 +94,32 @@ public class AdmobAdsMax : MonoBehaviour
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
         };
+
         MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
         //MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
+        MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
         MaxSdk.InitializeSdk();
-
         #endregion
 
         _isInited = true;
 
-        //#if !UNITY_EDITOR
-        Debug.Log("===== Init Admob ====");
-        MobileAds.Initialize((initStatus) =>
-        {
-            Debug.Log("===== Init Admob Done ====");
-            AppOpenAdManager.Instance.LoadAd(() =>
-            {
-                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-            });
-            InitBannerAdmob();
-            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-            isAdmobInitDone = true;
-            //nativeAdsManager.Instance.OnInitAdmobDone();
-            //LoadRewardedInterstitialAd();
-        });
-        //#endif
+        // //#if !UNITY_EDITOR
+        // Debug.Log("===== Init Admob ====");
+        // MobileAds.Initialize((initStatus) =>
+        // {
+        //     Debug.Log("===== Init Admob Done ====");
+        //     AppOpenAdManager.Instance.LoadAd(() =>
+        //     {
+        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+        //     });
+        //     InitBannerAdmob();
+        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+        //     isAdmobInitDone = true;
+        //     //nativeAdsManager.Instance.OnInitAdmobDone();
+        //     //LoadRewardedInterstitialAd();
+        // });
+        // //#endif
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -111,7 +132,6 @@ public class AdmobAdsMax : MonoBehaviour
     //}
 
     #region Admob Banner
-
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
 #if TESTER
@@ -397,58 +417,6 @@ public class AdmobAdsMax : MonoBehaviour
         ShowBanner();
     }
 
-    //     void InitAmazon()
-    //     {
-    //         Amazon.Initialize(amazonAppId);
-    //         Amazon.SetAdNetworkInfo(new AdNetworkInfo(DTBAdNetwork.MAX));
-    //         Amazon.UseGeoLocation(true);
-    // #if TESTER
-    //         Amazon.EnableTesting(true);
-    //         Amazon.EnableLogging(true);
-    // #endif
-    //         //----------
-    //         Amazon.IsLocationEnabled();
-    //         Amazon.SetMRAIDPolicy(Amazon.MRAIDPolicy.CUSTOM);
-    //         //----------
-
-    //         Amazon.AddCustomAttribute("sessDuration", "11");
-    //         Amazon.AddCustomAttribute("contentURL", "TEST_URL");
-    // #if UNITY_IOS
-    //         Amazon.SetAPSPublisherExtendedIdFeatureEnabled(true);
-    // #endif
-    //     }
-
-    //     public void RequestBanner()
-    //     {
-    //         int width;
-    //         int height;
-    //         string amazonBannerSlotId = "";
-    //         if (MaxSdkUtils.IsTablet())
-    //         {
-    //             width = 728;
-    //             height = 90;
-    //             amazonBannerSlotId = SlotIpadLeaderId;
-    //         }
-    //         else
-    //         {
-    //             width = 320;
-    //             height = 50;
-    //             amazonBannerSlotId = SlotBannerId;
-    //         }
-    //         if (bannerAdRequest != null) bannerAdRequest.DestroyFetchManager();
-    //         bannerAdRequest = new APSBannerAdRequest(width, height, amazonBannerSlotId);
-    //         bannerAdRequest.onFailedWithError += (adError) => {
-    //             MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_error", adError.GetAdError());
-    //             CreateMaxBannerAd();
-    //         };
-    //         bannerAdRequest.onSuccess += (adResponse) => {
-    //             MaxSdk.SetBannerLocalExtraParameter(BanerAdUnitId, "amazon_ad_response", adResponse.GetResponse());
-    //             CreateMaxBannerAd();
-    //         };
-
-    //         bannerAdRequest.LoadAd();
-    //     }
-
     private void CreateMaxBannerAd()
     {
         MaxSdk.CreateBanner(BanerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
@@ -599,7 +567,6 @@ public class AdmobAdsMax : MonoBehaviour
                 actionIniterClose();
         }
 
-
         return true;
     }
 
@@ -675,7 +642,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     #endregion
 
-    #region Video Reward
+    #region Rewarded
     private void LoadRewardedAd()
     {
         MaxSdk.LoadRewardedAd(RewardedAdUnitId);
@@ -851,7 +818,6 @@ public class AdmobAdsMax : MonoBehaviour
 
         return true;
     }
-
     #endregion
 
     #region Banner
@@ -905,25 +871,22 @@ public class AdmobAdsMax : MonoBehaviour
     #endregion
 
     #region Open App Ads
-
     DateTime oldTime = DateTime.MinValue;
 
     public void OnAppStateChanged(AppState state)
     {
-        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
-            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
-            {
-                // COMPLETE: Show an app open ad if available.
-                AppOpenAdManager.Instance.ShowAdIfAvailable();
-                oldTime = DateTime.Now;
-                countdownAds = 0;
-            }
+        // if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
+        //     if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
+        //     {
+        //         // COMPLETE: Show an app open ad if available.
+        //         AppOpenAdManager.Instance.ShowAdIfAvailable();
+        //         oldTime = DateTime.Now;
+        //         countdownAds = 0;
+        //     }
     }
-
     #endregion
 
     #region Reward Inter
-
     public void LoadRewardedInterstitialAd()
     {
         // Clean up the old ad before loading a new one.
@@ -1057,7 +1020,6 @@ public class AdmobAdsMax : MonoBehaviour
         AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
             adInfo.Revenue, "USD", dic);
     }
-
     #endregion
 
     private void Update()

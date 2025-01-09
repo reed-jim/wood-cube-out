@@ -538,6 +538,40 @@ MonoBehaviour:
   - Language: Spanish
     Text: Reanimar
     Object: {fileID: 0}
+--- !u!1 &147768595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 147768596}
+  m_Layer: 0
+  m_Name: GPlay
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &147768596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 147768595}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1604703621}
+  - {fileID: 1112921792}
+  - {fileID: 1489411170}
+  m_Father: {fileID: 619569312}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &217978874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,6 +1107,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 313851987}
   m_CullTransparentMesh: 1
+--- !u!1 &375299546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 375299547}
+  - component: {fileID: 375299548}
+  m_Layer: 0
+  m_Name: Ads Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &375299547
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375299546}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 619569312}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &375299548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 375299546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9df7135512cf1f6408ab4b22a0c26561, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdownAds: 0
 --- !u!1 &388174204
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,6 +2001,8 @@ Transform:
   - {fileID: 790147928}
   - {fileID: 1707770148}
   - {fileID: 1485822430}
+  - {fileID: 375299547}
+  - {fileID: 147768596}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &619569313
@@ -2808,7 +2889,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Ebene {level}
+  m_text: Level {level}
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -4223,6 +4304,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 1527055450098318974, guid: d723c6557bd6de145a2fad37a6fe8229, type: 3}
   m_PrefabInstance: {fileID: 1091637321}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1112921791
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1112921792}
+  - component: {fileID: 1112921793}
+  m_Layer: 0
+  m_Name: Analytics Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1112921792
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112921791}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 147768596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1112921793
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112921791}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e172fe8d5edbfa840902b04b568ddd0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1118778394
 GameObject:
   m_ObjectHideFlags: 0
@@ -4907,7 +5032,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Keine Werbung
+  m_text: No Ads
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -4934,7 +5059,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 19.6
+  m_fontSize: 31.05
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5030,7 +5155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: German
+  currentLanguage: English
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -6020,6 +6145,451 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9944f2c14a5e73c43bb480a024ba4941, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1489411169
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1489411170}
+  - component: {fileID: 1489411171}
+  m_Layer: 0
+  m_Name: Segment Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1489411170
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489411169}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 147768596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1489411171
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1489411169}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f9edc4b214843941be87acab4da03f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segments:
+  - nameSegment: 
+    coreGameData:
+      config:
+        loadGameConfig:
+          isComeHomeWhenEndLevel: 0
+          typeSenceFirstOnOpenGame: 0
+          typeSenceFirstOnInstall: 0
+        levelConfig:
+          bonusIQ1Star: 0
+          bonusIQ2Star: 0
+          bonusIQ3Star: 0
+          coinEndLevel: 0
+        healthConfig:
+          timeReFillHealth: 0
+          priceCoinReFillHeath: 0
+          isAddHealthVideo: 0
+          addHeathVideo: 0
+        bootsConfig:
+          addTime_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          blockBrand_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          return_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          sugget_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          ice_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          shuffle_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          breakTheRule_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+          addBrand_BirdSort:
+            unlockLevel: 0
+            price: 0
+            packAmount: 0
+            workValue: []
+            isOnVideoBuy: 0
+            numItemAddBuyVideo: 0
+            cappingWatchVideoBuy: 0
+            spacingWatchVideoBuy: 0
+        dailyLoginConfig:
+          unlockLevel: 0
+          is_video_x_reward: 0
+          num_x_reward: 0
+        starChestConfig:
+          unlockLevel: 0
+          startRequirement: 0
+          rewards: []
+          is_video_x_reward: 0
+          num_x_reward: 0
+        levelChestConfig:
+          unlockLevel: 0
+          levelSpacing: 0
+          rewards: []
+          is_video_x_reward: 0
+          num_x_reward: 0
+        rateConfig:
+          isActive: 0
+          levelStartShow: 0
+          levelMaxShow: 0
+    reviveData:
+      config:
+        isOnVideoRevive: 0
+        timeAddedReviveVideo: 0
+        cappingWatchVideoRevive: 0
+        spacingWatchVideoRevive: 0
+        reviveData: []
+    adsData:
+      config:
+        banner:
+          minimumLevel: 0
+        interstitials:
+          minimumLevel: 3
+          minimumInterval: 10
+          showAfterDefeat: 1
+          showAfterQuit: 1
+          showOnAppResume: 1
+          appResumedThreshold: 60
+          showBeforeLevel: 1
+        reward:
+          minimumLevel: 0
+          isRewardedGetMoreLivesEnabled: 1
+          isRewardedStoreEnabled: 1
+          limitRVStoreEnabled: 1
+          maximumRVStorePerDay: 10
+          amountRV: 10
+    saleData:
+      config:
+        beginerPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        removeAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        bigRemoveAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        pickOneChoicePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        saleCoinPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        weeklySalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        dailyOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        itemSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        coinSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        noelSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+    saleVideoData:
+      config:
+        videoGirl:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+        xCoinWinLevel:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+    challengeData:
+      config:
+        weeklyChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards: []
+          percentSpawnItems: []
+          parmaExtral: []
+          timeLife: 0
+        coinChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards: []
+          percentSpawnItems: []
+          parmaExtral: []
+          timeLife: 0
+        diamodChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards: []
+          percentSpawnItems: []
+          parmaExtral: []
+          timeLife: 0
+        royalPass:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards: []
+          percentSpawnItems: []
+          parmaExtral: []
+          timeLife: 0
+        raceSpaceChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards: []
+          percentSpawnItems: []
+          parmaExtral: []
+          timeLife: 0
+    skillUserData:
+      config:
+        isActive: 0
+        level_start: 0
+    notificationData:
+      config:
+        isActive: 0
+        comeBackSeconds: 0
+    suggetBuyerInGameSegmentData:
+      config:
+        suggetStartLevel:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+        suggetEndLevel:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+        suggetOnPopup:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+    suggetBuyItemSegmentData:
+      config:
+        amountItem: 0
+        isHasBuyVideo: 0
+        isHasBuyCoin: 0
+        percentDiscount: 0
 --- !u!1001 &1492986314
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6232,6 +6802,55 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   appKey: 20690af6d
   showAdButton: {fileID: 0}
+--- !u!1 &1604703620
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1604703621}
+  - component: {fileID: 1604703622}
+  m_Layer: 0
+  m_Name: Game Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1604703621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604703620}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 147768596}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1604703622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1604703620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de31b9b9127fecb4cac3b2ab7f84c29e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  admobAds: {fileID: 375299548}
+  AnalyticsController: {fileID: 1112921793}
+  segmentController: {fileID: 1489411171}
+  currentScene: 0
+  openFeatureBox: 0
 --- !u!1 &1636348100
 GameObject:
   m_ObjectHideFlags: 0
@@ -7443,7 +8062,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1995970651
 MonoBehaviour:
   m_ObjectHideFlags: 0
