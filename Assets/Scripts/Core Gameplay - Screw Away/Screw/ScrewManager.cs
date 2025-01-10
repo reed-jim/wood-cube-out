@@ -160,7 +160,7 @@ public class ScrewManager : MonoBehaviour
 
         foreach (var faction in totalNotBlockedScrewByFaction.Keys)
         {
-            difficultyLevelByFactions[faction] -= (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length;
+            difficultyLevelByFactions[faction] -= 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length;
         }
 
         // DECREASE Chance of factions that are already available in screw boxes
@@ -369,19 +369,19 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
-        Debug.Log("---------------------------------------");
+        // Debug.Log("---------------------------------------");
 
-        for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        {
-            GameFaction faction = factionSortedByDifficulty[i];
+        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        // {
+        //     GameFaction faction = factionSortedByDifficulty[i];
 
-            string debugString = $"{faction} Remaining: {remainingScrewByFaction[faction]}";
+        //     string debugString = $"{faction} Remaining: {remainingScrewByFaction[faction]}";
 
-            debugString += $" Available: {screwPortAvailableByFaction[faction]}";
-            debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
+        //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
+        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
 
-            Debug.Log(debugString);
-        }
+        //     Debug.Log(debugString);
+        // }
 
         int currentSortedFactionIndex = 0;
 

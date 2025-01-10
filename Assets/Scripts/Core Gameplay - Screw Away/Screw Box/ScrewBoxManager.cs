@@ -511,12 +511,14 @@ public class ScrewBoxManager : MonoBehaviour
 
                         screwBox.ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
 
+                        screwPorts[screwPortIndex].IsFilled = false;
+
                         screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
                         (
                             screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
                             onCompleteAction: () =>
                             {
-                                screwPorts[screwPortIndex].IsFilled = false;
+                                // screwPorts[screwPortIndex].IsFilled = false;
 
                                 screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
                             },
