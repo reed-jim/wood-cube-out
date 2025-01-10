@@ -166,7 +166,7 @@ public class ScrewManager : MonoBehaviour
         // DECREASE Chance of factions that are already available in screw boxes
         for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
         {
-            if (screwBoxManager.ScrewBoxs[i] == null)
+            if (screwBoxManager.ScrewBoxs[i] == null || screwBoxManager.ScrewBoxs[i].IsLocked)
             {
                 continue;
             }
@@ -383,17 +383,19 @@ public class ScrewManager : MonoBehaviour
         //     Debug.Log(debugString);
         // }
 
+        int currentSortedFactionIndex = 0;
+
         for (int i = 0; i < factionSortedByDifficulty.Length; i++)
         {
             GameFaction faction = factionSortedByDifficulty[i];
-            int sortedFactionIndex = i;
+            // int sortedFactionIndex = i;
 
             if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
             {
                 continue;
             }
 
-            if (levelDifficulty == sortedFactionIndex)
+            if (levelDifficulty == currentSortedFactionIndex)
             {
                 nextFaction = faction;
 
@@ -401,6 +403,8 @@ public class ScrewManager : MonoBehaviour
 
                 break;
             }
+
+            currentSortedFactionIndex++;
         }
 
         if (!isFound)
