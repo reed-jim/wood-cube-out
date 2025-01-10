@@ -33,7 +33,7 @@ public class ScrewSelectionInput : MonoBehaviour
     {
         if (Input.GetMouseButton(0))
         {
-            _holdTime += Time.deltaTime;
+            _holdTime++;
         }
 
         if (Input.GetMouseButtonDown(0))
