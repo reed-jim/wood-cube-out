@@ -66,8 +66,6 @@ public class ScrewBox : MonoBehaviour
 
         _tweens = new List<Tween>();
 
-        _initialScale = transform.localScale;
-
         boxLid.gameObject.SetActive(false);
     }
 
@@ -85,6 +83,8 @@ public class ScrewBox : MonoBehaviour
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
         transform.localScale = ((0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x) * Vector3.one;
+
+        _initialScale = transform.localScale;
     }
 
     private async void OnScrewBoxCompleted(int instanceId)
