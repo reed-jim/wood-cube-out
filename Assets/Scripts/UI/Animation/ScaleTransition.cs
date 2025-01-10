@@ -6,6 +6,7 @@ using UnityEngine;
 public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 {
     [SerializeField] private RectTransform target;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private Vector2Variable canvasSize;
@@ -35,6 +36,13 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
         // SaferioTween.ScaleAsync(target, 1.1f * Vector3.one, duration: 0.5f * duration, onCompletedAction: () =>
         // {
         //     SaferioTween.ScaleAsync(target, Vector3.one, duration: 0.5f * duration);
+        // });
+
+        // canvasGroup.alpha = 0;
+
+        // Tween.Custom(0, 1, duration: 0.5f * duration, onValueChange: newVal =>
+        // {
+        //     canvasGroup.alpha = newVal;
         // });
 
         Tween.Scale(target, 1.1f, duration: 0.5f * duration)
@@ -68,6 +76,13 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
                 onCompletedAction?.Invoke();
             }));
+
+        canvasGroup.alpha = 0;
+
+        Tween.Custom(0, 1, duration: 0.5f * duration, onValueChange: newVal =>
+        {
+            canvasGroup.alpha = newVal;
+        });
     }
 
     public void Hide()
@@ -91,6 +106,11 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
             target.gameObject.SetActive(false);
 
             _isInTransition = false;
+        });
+
+        Tween.Custom(1, 0, duration: 0.7f * duration, onValueChange: newVal =>
+        {
+            canvasGroup.alpha = newVal;
         });
 
         // SaferioTween.LocalPositionAsync(target, new Vector2(-canvasSize.Value.x, 0), duration: duration, onCompletedAction: () =>
@@ -117,6 +137,11 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
             _isInTransition = false;
 
             onCompletedAction?.Invoke();
+        });
+
+        Tween.Custom(1, 0, duration: 0.7f * duration, onValueChange: newVal =>
+        {
+            canvasGroup.alpha = newVal;
         });
     }
 }

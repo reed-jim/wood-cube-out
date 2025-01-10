@@ -69,6 +69,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7951308194052173408}
+  canvasGroup: {fileID: 2982810847881407315}
   canvasSize: {fileID: 11400000, guid: cff3c506c9f63d645a923fa57c7a07c1, type: 2}
   duration: 0.3
 --- !u!1 &1350897087146864734
@@ -1506,6 +1507,7 @@ GameObject:
   - component: {fileID: 7951308194052173408}
   - component: {fileID: 6123310766363475649}
   - component: {fileID: 3268834291470471773}
+  - component: {fileID: 2982810847881407315}
   m_Layer: 5
   m_Name: Container
   m_TagString: Untagged
@@ -1576,6 +1578,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &2982810847881407315
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7512390144290183572}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &7518720976641315512
 GameObject:
   m_ObjectHideFlags: 0
