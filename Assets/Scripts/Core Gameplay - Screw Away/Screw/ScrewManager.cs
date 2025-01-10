@@ -369,19 +369,19 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
-        // Debug.Log("---------------------------------------");
+        Debug.Log("---------------------------------------");
 
-        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        // {
-        //     GameFaction faction = factionSortedByDifficulty[i];
+        for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        {
+            GameFaction faction = factionSortedByDifficulty[i];
 
-        //     string debugString = $"{faction} Remaining: {remainingScrewByFaction[faction]}";
+            string debugString = $"{faction} Remaining: {remainingScrewByFaction[faction]}";
 
-        //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
-        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
+            debugString += $" Available: {screwPortAvailableByFaction[faction]}";
+            debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
 
-        //     Debug.Log(debugString);
-        // }
+            Debug.Log(debugString);
+        }
 
         int currentSortedFactionIndex = 0;
 

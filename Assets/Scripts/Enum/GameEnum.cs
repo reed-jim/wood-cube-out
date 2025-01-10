@@ -75,6 +75,13 @@ public class GameEnum : MonoBehaviour
         UnlockScrewBox
     }
 
+
+    public enum ButtonMode
+    {
+        Normal,
+        Grayscale
+    }
+
     public static T GetRandomEnumValue<T>()
     {
         Array enumValues = Enum.GetValues(typeof(T));

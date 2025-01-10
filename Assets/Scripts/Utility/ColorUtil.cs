@@ -85,6 +85,13 @@ public static class ColorUtil
         );
     }
 
+    public static Color ToGrayscale(Color color)
+    {
+        float grayValue = (color.r + color.g + color.b) / 3f;
+        
+        return new Color(grayValue, grayValue, grayValue);
+    }
+
     #region MATH
     public static Color Multiply(this Color color, float multiplier)
     {

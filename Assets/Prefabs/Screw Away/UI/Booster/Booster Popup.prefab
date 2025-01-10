@@ -103,6 +103,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8413571409018055670}
+  - component: {fileID: 639185997992078244}
   - component: {fileID: 1138188743743981208}
   - component: {fileID: 2454033204531371358}
   - component: {fileID: 6757407959856365082}
@@ -135,6 +136,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 160}
   m_SizeDelta: {x: 700, y: 172}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &639185997992078244
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 671631108256780304}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonSprite: {fileID: 0}
 --- !u!222 &1138188743743981208
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -605,6 +619,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7437072780955976007}
+  - component: {fileID: 1965173347377543095}
   - component: {fileID: 3876647017274908880}
   - component: {fileID: 653396912319331547}
   - component: {fileID: 8742533398202396948}
@@ -634,6 +649,19 @@ RectTransform:
   m_AnchoredPosition: {x: -80, y: -80}
   m_SizeDelta: {x: 64, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1965173347377543095
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3854989008193944888}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonSprite: {fileID: 0}
 --- !u!222 &3876647017274908880
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -803,7 +831,7 @@ GameObject:
   - component: {fileID: 7749702445469442612}
   - component: {fileID: 5763659255987939911}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: Cost Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1161,6 +1189,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8670298157679974156}
+  - component: {fileID: 6243492832094999909}
   - component: {fileID: 8938397680279319222}
   - component: {fileID: 4772516238153713671}
   - component: {fileID: 3696929823513074187}
@@ -1193,6 +1222,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 352}
   m_SizeDelta: {x: 700, y: 172}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6243492832094999909
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6477163745908592866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonSprite: {fileID: 4171366441763368862}
 --- !u!222 &8938397680279319222
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1482,8 +1524,10 @@ MonoBehaviour:
   isRouteActiveFromStart: 0
   container: {fileID: 8842760936961652694}
   buyWithDiamondButton: {fileID: 3696929823513074187}
+  buyWithDiamondButtonForeground: {fileID: 4171366441763368862}
   getWithAdsButton: {fileID: 6757407959856365082}
   icon: {fileID: 6423396166341458331}
+  costText: {fileID: 5763659255987939911}
   title: {fileID: 2495682434215931646}
   boosterDescription: {fileID: 1267407493455897027}
   boosterSprites:
@@ -1502,6 +1546,7 @@ MonoBehaviour:
   - Clear Holes
   - Unlock Box
   userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
+  boosterDataObserver: {fileID: 11400000, guid: 08938125d62ca854e8a5ab1cb58d04bb, type: 2}
 --- !u!114 &7844468637041112300
 MonoBehaviour:
   m_ObjectHideFlags: 0
