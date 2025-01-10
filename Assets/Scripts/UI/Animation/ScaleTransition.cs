@@ -139,7 +139,7 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
             onCompletedAction?.Invoke();
         });
 
-        Tween.Custom(1, 0, duration: 0.7f * duration, onValueChange: newVal =>
+        Tween.Custom(1, 0, duration: 0.4f * duration, onValueChange: newVal =>
         {
             canvasGroup.alpha = newVal;
         });
