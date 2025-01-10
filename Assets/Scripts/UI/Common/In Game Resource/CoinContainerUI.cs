@@ -4,6 +4,7 @@ using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class CoinContainerUI : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class CoinContainerUI : MonoBehaviour
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasScale;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private Button addButton;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -23,6 +25,7 @@ public class CoinContainerUI : MonoBehaviour
 
     #region EVENT
     public static event Action<Vector3> collectCoinEvent;
+    public static event Action goToIAPShopEvent;
     #endregion
 
     private void Awake()
@@ -31,6 +34,7 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
+        addButton.onClick.AddListener(ShowIAPShop);
 
         _tweens = new List<Tween>();
 
@@ -63,5 +67,10 @@ public class CoinContainerUI : MonoBehaviour
 
             _isInTransition = true;
         }
+    }
+
+    private void ShowIAPShop()
+    {
+        goToIAPShopEvent?.Invoke();
     }
 }

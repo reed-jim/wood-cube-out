@@ -31,6 +31,7 @@ public class BottomBarItem : MonoBehaviour
     private void Awake()
     {
         BottomBar.setHighlightPositionEvent += OnSwipe;
+        CoinContainerUI.goToIAPShopEvent += GoToIAPShop;
 
         selectButton.onClick.AddListener(Select);
 
@@ -42,6 +43,7 @@ public class BottomBarItem : MonoBehaviour
     private void OnDestroy()
     {
         BottomBar.setHighlightPositionEvent -= OnSwipe;
+        CoinContainerUI.goToIAPShopEvent -= GoToIAPShop;
     }
 
     private void OnSwipe(float highlightPosition)
@@ -84,5 +86,13 @@ public class BottomBarItem : MonoBehaviour
     {
         switchRouteEvent?.Invoke(route);
         moveBottomBarHighlightEvent?.Invoke(container.localPosition.x);
+    }
+
+    private void GoToIAPShop()
+    {
+        if (route == ScreenRoute.IAPShop)
+        {
+            Select();
+        }
     }
 }

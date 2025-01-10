@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +20,8 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private Image progressBarFill;
     // [SerializeField] private Image progressFill;
     [SerializeField] private TMP_Text loadingText;
+    [SerializeField] private SkeletonGraphic loadingSpine;
+    [SerializeField] private CanvasGroup canvasGroup;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float startDelay;
@@ -69,11 +72,23 @@ public class SceneTransition : MonoBehaviour
 
         SaferioTween.DelayAsync(startDelay, onCompletedAction: (() =>
         {
-            SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
-            SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
-            {
-                container.gameObject.SetActive(false);
-            });
+            _tweens.Add(
+                Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
+                {
+                    canvasGroup.alpha = newVal;
+                    loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
+                })
+                .OnComplete(() =>
+                {
+                    container.gameObject.SetActive(false);
+                })
+            );
+
+            // SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
+            // SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
+            // {
+            //     container.gameObject.SetActive(false);
+            // });
         }));
     }
 

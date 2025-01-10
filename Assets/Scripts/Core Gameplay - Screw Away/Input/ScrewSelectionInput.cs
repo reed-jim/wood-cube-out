@@ -22,6 +22,10 @@ public class ScrewSelectionInput : MonoBehaviour
     void Awake()
     {
         BoosterUI.enableBreakObjectModeEvent += EnableBreakObjectMode;
+
+#if UNITY_EDITOR
+        maxHoldTime *= 3;
+#endif
     }
 
     void OnDestroy()

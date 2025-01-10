@@ -240,6 +240,8 @@ MonoBehaviour:
   progressBar: {fileID: 8802834625065371647}
   progressBarFill: {fileID: 837603518909787420}
   loadingText: {fileID: 5508576994547081247}
+  loadingSpine: {fileID: 3038380708027597816}
+  canvasGroup: {fileID: 659192208611926813}
   startDelay: 3
   fadeOutDuration: 0.5
 --- !u!1 &875232279484972525
@@ -389,6 +391,7 @@ GameObject:
   - component: {fileID: 3047112275583075511}
   - component: {fileID: 1597078818367548483}
   - component: {fileID: 6455071809919310629}
+  - component: {fileID: 659192208611926813}
   m_Layer: 5
   m_Name: Scene Transition
   m_TagString: Untagged
@@ -455,6 +458,18 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!225 &659192208611926813
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1832117194290770430}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2837307830165086401
 GameObject:
   m_ObjectHideFlags: 0
