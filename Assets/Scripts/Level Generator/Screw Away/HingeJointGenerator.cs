@@ -122,6 +122,11 @@ public class HingeJointGenerator : EditorWindow
             SnapSurface();
         }
 
+        if (GUILayout.Button("Snap Parent Surface"))
+        {
+            SnapParentSurface();
+        }
+
         GUILayout.EndArea();
     }
 
@@ -542,6 +547,29 @@ public class HingeJointGenerator : EditorWindow
         RaycastHit hit;
 
         if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, -selectedObject.forward, out hit, 10))
+        {
+            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+            if (objectPart != null)
+            {
+                selectedObject.position = hit.point - ratioSnapOffset * selectedObject.forward;
+
+                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
+
+                selectedObject.rotation = surfaceRotation;
+            }
+        }
+    }
+
+    private void SnapParentSurface()
+    {
+        Transform selectedObject = Selection.activeTransform;
+
+        RaycastHit hit;
+
+        Vector3 direction = selectedObject.parent.position - selectedObject.position;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, direction, out hit, 10))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 
