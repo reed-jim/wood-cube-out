@@ -303,5 +303,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
+
+        transform.SetParent(LevelGarbageBin.GarbageBin);
     }
 }
