@@ -55,7 +55,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         //     partRigidbody.isKinematic = true;
         // }
 
-        // partRigidbody.isKinematic = true;
+        partRigidbody.isKinematic = true;
     }
 
     void OnDestroy()
@@ -118,10 +118,10 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
 
-            // if (_totalJoint <= 1)
-            // {
-            //     partRigidbody.isKinematic = false;
-            // }
+            if (_totalJoint <= 1)
+            {
+                partRigidbody.isKinematic = false;
+            }
         }
     }
 
