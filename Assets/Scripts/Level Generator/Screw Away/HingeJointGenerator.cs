@@ -67,55 +67,55 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAll(prefabPath);
         }
 
-        if (GUILayout.Button("Reset Local Rotation"))
-        {
-            ResetLocalRotation(target.transform);
-        }
+        // if (GUILayout.Button("Reset Local Rotation"))
+        // {
+        //     ResetLocalRotation(target.transform);
+        // }
 
-        if (GUILayout.Button("Flip Horizontally"))
-        {
-            FlipHorizontally(Selection.activeTransform, prefabPath);
-        }
+        // if (GUILayout.Button("Flip Horizontally"))
+        // {
+        //     FlipHorizontally(Selection.activeTransform, prefabPath);
+        // }
 
-        if (GUILayout.Button("Flip Vertically"))
-        {
-            FlipVertically(Selection.activeTransform, prefabPath);
-        }
+        // if (GUILayout.Button("Flip Vertically"))
+        // {
+        //     FlipVertically(Selection.activeTransform, prefabPath);
+        // }
 
-        if (GUILayout.Button("Move"))
-        {
-            Move(Selection.activeTransform, prefabPath);
-        }
+        // if (GUILayout.Button("Move"))
+        // {
+        //     Move(Selection.activeTransform, prefabPath);
+        // }
 
-        if (GUILayout.Button("Auto Assign Screw Faction"))
-        {
-            // AutoAssignScrewFaction(prefabPath);
-        }
+        // if (GUILayout.Button("Auto Assign Screw Faction"))
+        // {
+        //     // AutoAssignScrewFaction(prefabPath);
+        // }
 
         if (GUILayout.Button("Spawn Screw"))
         {
             SpawnScrew(prefabPath);
         }
 
-        if (GUILayout.Button("Assign Material"))
-        {
-            AssignMaterial(prefabPath);
-        }
+        // if (GUILayout.Button("Assign Material"))
+        // {
+        //     AssignMaterial(prefabPath);
+        // }
 
-        if (GUILayout.Button("Center Level Pivot"))
-        {
-            CenterLevelPivot(prefabPath);
-        }
+        // if (GUILayout.Button("Center Level Pivot"))
+        // {
+        //     CenterLevelPivot(prefabPath);
+        // }
 
-        if (GUILayout.Button("Remove All Grandchildren Of"))
-        {
-            RemoveAllGrandchildrenOf();
-        }
+        // if (GUILayout.Button("Remove All Grandchildren Of"))
+        // {
+        //     RemoveAllGrandchildrenOf();
+        // }
 
-        if (GUILayout.Button("Get Screw Number By Phase"))
-        {
-            GetScrewNumberByPhase(prefabPath);
-        }
+        // if (GUILayout.Button("Get Screw Number By Phase"))
+        // {
+        //     GetScrewNumberByPhase(prefabPath);
+        // }
 
         if (GUILayout.Button("Snap Surface"))
         {
@@ -125,6 +125,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Snap Rotation Surface"))
         {
             SnapRotationSurface();
+        }
+
+        if (GUILayout.Button("Magic Snap"))
+        {
+            MagicSnap();
         }
 
         GUILayout.EndArea();
@@ -603,6 +608,12 @@ public class HingeJointGenerator : EditorWindow
                 selectedObject.rotation = surfaceRotation;
             }
         }
+    }
+
+    private void MagicSnap()
+    {
+        SnapRotationSurface();
+        SnapSurface();
     }
     #endregion
 
