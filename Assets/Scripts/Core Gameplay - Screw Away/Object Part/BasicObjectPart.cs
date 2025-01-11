@@ -14,6 +14,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     [Header("CUSTOMIZE")]
     [SerializeField] private Vector3 throwForceMultiplier = new Vector3(0.003f, 0.001f, 0.003f);
+    [SerializeField] private int minJointToDisableKinematic = 1;
 
     #region PRIVATE FIELD
     private bool _isSelecting;
@@ -111,16 +112,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             {
                 _isFree = true;
 
-                partRigidbody.isKinematic = false;
-
                 Throw();
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
 
-            if (_totalJoint <= 1)
+            if (partRigidbody.isKinematic)
             {
-                partRigidbody.isKinematic = false;
+                if (_totalJoint <= 1 && _totalJoint <= minJointToDisableKinematic)
+                {
+                    partRigidbody.isKinematic = false;
+                }
             }
         }
     }
