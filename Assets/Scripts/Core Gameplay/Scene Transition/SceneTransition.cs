@@ -40,6 +40,7 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
+        BlackScreenTransition();
         Transition();
 
         blackBackground.gameObject.SetActive(false);
