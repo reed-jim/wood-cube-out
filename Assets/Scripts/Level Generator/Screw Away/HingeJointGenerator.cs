@@ -122,9 +122,9 @@ public class HingeJointGenerator : EditorWindow
             SnapSurface();
         }
 
-        if (GUILayout.Button("Snap Parent Surface"))
+        if (GUILayout.Button("Snap Rotation Surface"))
         {
-            SnapParentSurface();
+            SnapRotationSurface();
         }
 
         GUILayout.EndArea();
@@ -577,6 +577,27 @@ public class HingeJointGenerator : EditorWindow
             {
                 selectedObject.position = hit.point - ratioSnapOffset * selectedObject.forward;
 
+                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
+
+                selectedObject.rotation = surfaceRotation;
+            }
+        }
+    }
+
+    private void SnapRotationSurface()
+    {
+        Transform selectedObject = Selection.activeTransform;
+
+        RaycastHit hit;
+
+        Vector3 direction = selectedObject.parent.position - selectedObject.position;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, direction, out hit, 10))
+        {
+            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+            if (objectPart != null)
+            {
                 Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
                 selectedObject.rotation = surfaceRotation;
