@@ -55,7 +55,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         //     partRigidbody.isKinematic = true;
         // }
 
-        partRigidbody.isKinematic = true;
+        // partRigidbody.isKinematic = true;
     }
 
     void OnDestroy()

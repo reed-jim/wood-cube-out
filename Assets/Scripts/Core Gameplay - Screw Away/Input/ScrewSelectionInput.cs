@@ -24,7 +24,7 @@ public class ScrewSelectionInput : MonoBehaviour
         BoosterUI.enableBreakObjectModeEvent += EnableBreakObjectMode;
 
 #if UNITY_EDITOR
-        maxHoldTime *= 3;
+        maxHoldTime *= 6;
 #endif
     }
 
