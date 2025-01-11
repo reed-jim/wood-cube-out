@@ -183,11 +183,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         // FOR ROTATING
         await Task.Delay(100);
 
-        _tweens.Add(Tween.Position(transform, transform.position + 2f * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
+        _tweens.Add(Tween.Position(transform, transform.position + 1f * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             // _isRotating = false;
 
-            _tweens.Add(Tween.Delay(duration: durationDelay)
+            _tweens.Add(Tween.Delay(duration: 0)
             .OnComplete(() =>
             {
                 transform.SetParent(screwBoxSlot.transform);
