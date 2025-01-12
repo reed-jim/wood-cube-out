@@ -40,7 +40,6 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
-        BlackScreenTransition();
         Transition();
 
         blackBackground.gameObject.SetActive(false);
@@ -63,7 +62,7 @@ public class SceneTransition : MonoBehaviour
 
         _tweens.Add(Tween.Alpha(progressBarFill, 0, 1, duration: 0.2f * startDelay));
 
-        _tweens.Add(Tween.Custom(0, 1, duration: 0.85f * startDelay, ease: Ease.Linear, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0, 1, duration: startDelay, ease: Ease.Linear, onValueChange: newVal =>
         {
             progressBar.value = newVal;
             // progressFill.fillAmount = newVal;
@@ -71,26 +70,43 @@ public class SceneTransition : MonoBehaviour
             loadingText.text = $"{(int)(newVal * 100)}%";
         }));
 
-        SaferioTween.DelayAsync(startDelay, onCompletedAction: (() =>
-        {
-            _tweens.Add(
-                Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
-                {
-                    canvasGroup.alpha = newVal;
-                    loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
-                })
-                .OnComplete(() =>
-                {
-                    container.gameObject.SetActive(false);
-                })
-            );
+        _tweens.Add(Tween.Delay(startDelay).OnComplete(
+            () =>
+            {
+                _tweens.Add(
+                    Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
+                    {
+                        canvasGroup.alpha = newVal;
+                        loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
+                    })
+                    .OnComplete(() =>
+                    {
+                        container.gameObject.SetActive(false);
+                    })
+                );
+            }
+        ));
 
-            // SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
-            // SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
-            // {
-            //     container.gameObject.SetActive(false);
-            // });
-        }));
+        //     SaferioTween.DelayAsync(startDelay, onCompletedAction: (() =>
+        //     {
+        //         _tweens.Add(
+        //             Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
+        //             {
+        //                 canvasGroup.alpha = newVal;
+        //                 loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
+        //             })
+        //             .OnComplete(() =>
+        //             {
+        //                 container.gameObject.SetActive(false);
+        //             })
+        //         );
+
+        //         // SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
+        //         // SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
+        //         // {
+        //         //     container.gameObject.SetActive(false);
+        //         // });
+        //     }));
     }
 
     private void BlackScreenTransition()
