@@ -9,6 +9,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 {
     [SerializeField] private Transform levelCenter;
     [SerializeField] private Rigidbody partRigidbody;
+    [SerializeField] private MeshCollider meshCollider;
 
     [SerializeField] private BaseScrew[] attachedScrews;
 
@@ -39,6 +40,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         SwipeGesture.swipeGestureEvent += OnSwipe;
 
         partRigidbody = GetComponent<Rigidbody>();
+        meshCollider = GetComponent<MeshCollider>();
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
@@ -121,6 +123,14 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             {
                 if (_totalJoint <= 1 && _totalJoint <= minJointToDisableKinematic)
                 {
+                    if (meshCollider != null)
+                    {
+                        if (!meshCollider.convex)
+                        {
+                            meshCollider.convex = true;
+                        }
+                    }
+
                     partRigidbody.isKinematic = false;
                 }
             }
