@@ -22,10 +22,6 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "948e190d8c5cd11d";
     private const string RewardedAdUnitId = "34ea7232532db3db";
     private const string BanerAdUnitId = "efc1069b84f4656f";
-
-    // private const string InterstitialAdUnitId = "testInterstitialAdId";
-    // private const string RewardedAdUnitId = "testRewardedAdId";
-    // private const string BanerAdUnitId = "testBannerAdId";
     // #elif UNITY_IOS
     //     private const string MaxSdkKey =
     // "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
@@ -104,22 +100,22 @@ public class AdmobAdsMax : MonoBehaviour
 
         _isInited = true;
 
-        // //#if !UNITY_EDITOR
-        // Debug.Log("===== Init Admob ====");
-        // MobileAds.Initialize((initStatus) =>
-        // {
-        //     Debug.Log("===== Init Admob Done ====");
-        //     AppOpenAdManager.Instance.LoadAd(() =>
-        //     {
-        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-        //     });
-        //     InitBannerAdmob();
-        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-        //     isAdmobInitDone = true;
-        //     //nativeAdsManager.Instance.OnInitAdmobDone();
-        //     //LoadRewardedInterstitialAd();
-        // });
-        // //#endif
+        //#if !UNITY_EDITOR
+        Debug.Log("===== Init Admob ====");
+        MobileAds.Initialize((initStatus) =>
+        {
+            Debug.Log("===== Init Admob Done ====");
+            AppOpenAdManager.Instance.LoadAd(() =>
+            {
+                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+            });
+            InitBannerAdmob();
+            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            isAdmobInitDone = true;
+            //nativeAdsManager.Instance.OnInitAdmobDone();
+            //LoadRewardedInterstitialAd();
+        });
+        //#endif
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -137,24 +133,24 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/1908612182";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/6300978111";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9348118506";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/6300978111";
 #endif
-#elif UNITY_IOS
-#if TESTER
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
-#else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
-#endif
-#if TESTER
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
-#else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
-#endif
+    // #elif UNITY_IOS
+    // #if TESTER
+    //     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
+    // #else
+    //     private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
+    // #endif
+    // #if TESTER
+    //     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
+    // #else
+    //     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
+    // #endif
 #endif
     private bool _isShowAdmobBanner;
     private bool _isShowAdmobCollap;
@@ -895,14 +891,19 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnAppStateChanged(AppState state)
     {
-        // if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
-        //     if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
-        //     {
-        //         // COMPLETE: Show an app open ad if available.
-        //         AppOpenAdManager.Instance.ShowAdIfAvailable();
-        //         oldTime = DateTime.Now;
-        //         countdownAds = 0;
-        //     }
+        // if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
+        // {
+        //     return;
+        // }
+
+        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
+            if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
+            {
+                // COMPLETE: Show an app open ad if available.
+                AppOpenAdManager.Instance.ShowAdIfAvailable();
+                oldTime = DateTime.Now;
+                countdownAds = 0;
+            }
     }
     #endregion
 

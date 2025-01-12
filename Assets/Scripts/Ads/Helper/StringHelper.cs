@@ -468,6 +468,7 @@ public class FirebaseConfig
 
     // Interstitial
     public const string ENABLE_INTERSTITIAL = "enable_interstitial";
+    public const string ENABLE_APP_OPEN_ADS = "enable_app_open_ads";
 
     //Controll level
     public const string ENABLE_HARD_LEVEL_SET = "enable_hard_level_set";
