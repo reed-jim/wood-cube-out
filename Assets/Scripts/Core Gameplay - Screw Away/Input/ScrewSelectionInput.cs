@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static GameEnum;
@@ -7,11 +8,11 @@ public class ScrewSelectionInput : MonoBehaviour
 {
     [Header("CUSTOMIZE")]
     [SerializeField] private LayerMask layerMaskCheck;
-    [SerializeField] private float maxHoldTime;
+    [SerializeField] private float maxSwipeDistance;
 
     #region PRIVATE FIELD
     [SerializeField] private InputMode _inputMode;
-    private float _holdTime;
+    private List<Vector3> twoTouchPoints;
     #endregion
 
     #region EVENT
@@ -23,9 +24,7 @@ public class ScrewSelectionInput : MonoBehaviour
     {
         BoosterUI.enableBreakObjectModeEvent += EnableBreakObjectMode;
 
-#if UNITY_EDITOR
-        maxHoldTime *= 6;
-#endif
+        twoTouchPoints = new List<Vector3>();
     }
 
     void OnDestroy()
@@ -35,26 +34,25 @@ public class ScrewSelectionInput : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
-        {
-            _holdTime++;
-        }
-
         if (Input.GetMouseButtonDown(0))
         {
+            twoTouchPoints.Add(Input.mousePosition);
+
             SelectObjectPart();
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (_holdTime < maxHoldTime)
+            twoTouchPoints.Add(Input.mousePosition);
+
+            if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
             {
                 SelectScrew();
             }
 
             mouseUpEvent?.Invoke();
 
-            _holdTime = 0;
+            twoTouchPoints.Clear();
         }
     }
 
