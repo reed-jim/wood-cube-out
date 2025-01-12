@@ -506,7 +506,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -279.6181}
+  m_AnchoredPosition: {x: 0, y: -279.61783}
   m_SizeDelta: {x: 100, y: 1080}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1493299853964855454
@@ -1826,6 +1826,7 @@ GameObject:
   - component: {fileID: 7543643626106847367}
   - component: {fileID: 2865394997734303829}
   - component: {fileID: 5640428947429776457}
+  - component: {fileID: 3240277023014633906}
   m_Layer: 5
   m_Name: Template
   m_TagString: Untagged
@@ -1922,6 +1923,18 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!225 &3240277023014633906
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4503475516872554752}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4669973503380397958
 GameObject:
   m_ObjectHideFlags: 0
@@ -2194,8 +2207,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 8415006568010257479}
   m_HandleRect: {fileID: 837088418714778944}
   m_Direction: 2
-  m_Value: 1.0000006
-  m_Size: 0.4796998
+  m_Value: 1.0000001
+  m_Size: 0.48218945
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4317,6 +4330,7 @@ MonoBehaviour:
   turnMusicToggle: {fileID: 5583926186628533101}
   turnSoundToggle: {fileID: 3864493013397585400}
   chooseLanguageContainer: {fileID: 3210983027986731742}
+  chooseLanguageContainerCanvasGroup: {fileID: 3240277023014633906}
   openLanguageDropdownButton: {fileID: 3424207579929107998}
   chooseLanguageButtons:
   - {fileID: 5603071535992450139}

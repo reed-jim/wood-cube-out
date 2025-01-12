@@ -14,6 +14,7 @@ public class SettingPopup : BasePopup
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
+    [SerializeField] private CanvasGroup chooseLanguageContainerCanvasGroup;
     [SerializeField] private Button openLanguageDropdownButton;
     [SerializeField] private Button[] chooseLanguageButtons;
     [SerializeField] private Image[] chooseLanguageButtonBackground;
@@ -91,15 +92,24 @@ public class SettingPopup : BasePopup
 
     private void CloseLanguageDropdown()
     {
-        Tween.ScaleY(chooseLanguageContainer, 0, duration: 0.3f)
+        Tween.Custom(1, 0, duration: 0.2f, onValueChange: newVal =>
+        {
+            chooseLanguageContainerCanvasGroup.alpha = newVal;
+        })
         .OnComplete(() =>
         {
-            chooseLanguageContainer.localScale = Vector3.one;
+            chooseLanguageContainerCanvasGroup.alpha = 1;
 
             chooseLanguageContainer.gameObject.SetActive(false);
 
             openLanguageDropdownButton.onClick.RemoveAllListeners();
             openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        });
+
+        Tween.ScaleY(chooseLanguageContainer, 0, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            chooseLanguageContainer.localScale = Vector3.one;
         });
     }
 
