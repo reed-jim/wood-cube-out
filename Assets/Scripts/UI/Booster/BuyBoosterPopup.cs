@@ -99,6 +99,11 @@ public class BuyBoosterPopup : BasePopup
 
     private void UnlockScrewBoxWithAds()
     {
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompletedToUnlockBox, null, null);
+    }
+
+    private void OnRewaredAdCompletedToUnlockBox()
+    {
         Hide(onCompletedAction: () =>
         {
             unlockScrewBoxEvent?.Invoke();
