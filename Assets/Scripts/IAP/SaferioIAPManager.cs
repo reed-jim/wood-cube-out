@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
@@ -86,6 +88,26 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
         Debug.Log("SAFERIO " + error);
+    }
+
+    public List<Product> GetAvailableProducts()
+    {
+        if (controller != null)
+        {
+            return new List<Product>(controller.products.all);
+        }
+        else
+        {
+            return new List<Product>();
+        }
+    }
+
+    public string GetLocalizedPrice(Product product)
+    {
+        var price = product.metadata.localizedPrice;
+        var cultureInfo = new CultureInfo("en-US");
+
+        return string.Format(cultureInfo, "{0:C}", price);
     }
 }
 

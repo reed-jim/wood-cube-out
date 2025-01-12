@@ -545,13 +545,24 @@ public class AdmobAdsMax : MonoBehaviour
         bool isInGame = true)
     {
         Debug.Log("show inter ========" + countdownAds);
+
         if (UserData.IsRemoveAds)
         {
             Debug.Log("show inter ======== is RemoveAds ");
+
             //if (!isInGame)
+
             actionIniterClose?.Invoke();
+
             return false;
         }
+
+        // if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
+        // {
+        //     actionIniterClose?.Invoke();
+
+        //     return false;
+        // }
 
         if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
@@ -578,45 +589,54 @@ public class AdmobAdsMax : MonoBehaviour
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
         UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
-        // actionIniterClose += () => { IsCooldownAdmobBanner = true; };
-        // if (IsLoadedInterstitial())
-        // {
-        //     isShowingAds = true;
-        //     oldTime = DateTime.Now;
-        //     if (isInGame)
-        //     {
-        //         Debug.Log("show inter ======");
-        //         AdBreakBox.Setup().Show(() =>
-        //         {
-        //             actionInterstitialClose = actionIniterClose;
-        //             IsCooldownAdmobBanner = false;
-        //             MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-        //             countdownAds = 0;
-        //             GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+        actionIniterClose += () => { IsCooldownAdmobBanner = true; };
+        if (IsLoadedInterstitial())
+        {
+            isShowingAds = true;
+            oldTime = DateTime.Now;
+            if (isInGame)
+            {
+                Debug.Log("show inter ======");
+                // AdBreakBox.Setup().Show(() =>
+                // {
+                //     actionInterstitialClose = actionIniterClose;
+                //     IsCooldownAdmobBanner = false;
+                //     MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+                //     countdownAds = 0;
+                //     GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
-        //             UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-        //             UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-        //         });
-        //     }
-        //     else
-        //     {
-        //         actionInterstitialClose = actionIniterClose;
-        //         IsCooldownAdmobBanner = false;
-        //         MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-        //         countdownAds = 0;
-        //         GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+                //     UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+                //     UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
+                // });
 
-        //         UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-        //         UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-        //     }
-        // }
-        // else
-        // {
-        //     //if (!isInGame)
-        //     if (actionIniterClose != null)
-        //         actionIniterClose();
-        //     RequestInterstitial();
-        // }
+                actionInterstitialClose = actionIniterClose;
+                IsCooldownAdmobBanner = false;
+                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+                countdownAds = 0;
+                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+
+                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
+                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
+            }
+            else
+            {
+                actionInterstitialClose = actionIniterClose;
+                IsCooldownAdmobBanner = false;
+                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+                countdownAds = 0;
+                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+
+                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
+                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
+            }
+        }
+        else
+        {
+            //if (!isInGame)
+            if (actionIniterClose != null)
+                actionIniterClose();
+            RequestInterstitial();
+        }
     }
 
     private void InitInterstitial()

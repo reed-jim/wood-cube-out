@@ -24,7 +24,7 @@ public static class StringHelper
     public const string PATH_CONFIG_LEVEL_MKT = "LevelsMKT/Level_{0}";
     public const string PATH_CONFIG_MAP = "Maps/Map_{0}";
 
-    
+
     public const string SALE_IAP = "_sale";
 
     public const string LOGGED_REVENUE_CENTS = "logged_revenue_cents";
@@ -47,7 +47,7 @@ public static class StringHelper
 
     public const string CAN_SHOW_RATE = "CAN_SHOW_RATE";
     public const string LEVEL_SHOWED_RATE = "LEVEL_SHOWED_RATE";
-    
+
 
     public const string IS_TUTED_RETURN = "IS_TUTED_RETURN";
     public const string CURRENT_NUM_RETURN = "CURRENT_NUM_RETURN";
@@ -84,7 +84,7 @@ public static class StringHelper
 
     public const string NUMBER_OF_ADS_IN_DAY = "NUMBER_OF_ADS_IN_DAY";
     public const string NUMBER_OF_ADS_IN_PLAY = "NUMBER_OF_ADS_IN_PLAY";
-    public const string NUMBER_INTER_SHOWED= "NUMBER_INTER_SHOWED";
+    public const string NUMBER_INTER_SHOWED = "NUMBER_INTER_SHOWED";
     public const string NUMBER_REWARD_SHOWED = "NUMBER_REWARD_SHOWED";
 
     public const string IS_PACK_PURCHASED_ = "IS_PACK_PURCHASED_";
@@ -163,7 +163,7 @@ public static class StringHelper
     public const string FIRST_WEEK = "first_week";
 
     #endregion
-    
+
 
     public const string TIME_WATCHED_SPECIAL_VIDEO_ = "time_watched_special_video_";
 
@@ -180,7 +180,7 @@ public static class StringHelper
 
     public const string TIME_END_UNLIMITED_HEALTH = "time_end_unlimited_health";
     public const string TIME_LAST_OVER_HEALTH = "time_last_over_health";
-    
+
     public const string CURRENT_SEGMENT = "current_segment";
 
     public const string IS_REFILL_HEALTH = "is_refill_health";
@@ -271,14 +271,14 @@ public class PathPrefabs
     public const string REWARD_IAP_BOX = "UI/Popups/RewardIAPBox";
     public const string SHOP_BOX = "UI/ShopBox";
     public const string RATE_GAME_BOX = "UI/Popups/RateGameBox";
-    
-   
+
+
     public const string REWARD_CONGRATULATION_BOX = "UI/Popups/RewardCongratulationBox";
     public const string SHOP_GAME_BOX = "UI/Popups/ShopBox";
     public const string CONGRATULATION_BOX = "UI/Popups/CongratulationBox";
 
     public const string STARTER_PACK_BOX = "UI/Popups/PackBoxes/StarterPackBox";
-  
+
     public const string CREDIT_BOX = "UI/Popups/CreditBox";
     public const string TRACKING_BOX = "UI/Popups/TrackingBox";
 
@@ -296,7 +296,7 @@ public class PathPrefabs
     public const string OPEN_CHEST_BOX = "UI/Popups/OpenChestBox";
     public const string SUGGET_LOGIN_BOX = "UI/Popups/SuggetLoginBox";
     public const string REPLAY_BOX = "UI/Popups/ReplayBox";
-    
+
 
     //Pack Sale
     public const string BIG_REMOVE_ADS_BOX = "UI/Popups/SalePacks/BigRemoveAdsBox";
@@ -325,8 +325,8 @@ public class PathPrefabs
     public const string SPACE_RACE_CHALLENGE_BOX = "UI/Popups/SpaceRaceChallengeBox";
     public const string JOIN_SPACE_RACE_BOX = "UI/Popups/JoinSpaceRaceBox";
     public const string SPACE_RACE_TUT_BOX = "UI/Popups/SpaceRaceTutBox";
-    
-    
+
+
     public const string MINI_GAME_CONNECT_BIRD_BOX = "UI/Popups/ConnectBirdMGBox";
     public const string MINI_GAME_TRIPLE_BIRD_BOX = "UI/Popups/TripleBirdMGBox";
     public const string CONNECT_BIRD_MINI_GAME_SHOP_BOX = "UI/Popups/ConnectBirdMiniGameShop";
@@ -411,7 +411,7 @@ public class FirebaseConfig
 
     public const string LEVEL_START_SHOW_RATE = "level_start_show_rate";//Level bắt đầu show popuprate
 
-    
+
 
     public const string LEVEL_START_TUT_RETURN = "level_start_tut_return";//4
     public const string LEVEL_START_TUT_BUY_STAND = "level_start_tut_buy_stand";//5
@@ -456,27 +456,6 @@ public class FirebaseConfig
     public const string DEFAULT_NUM_ADD_STAND = "default_num_add_stand";
     public const string TIME_COOL_DOWN_PVP1_TICKET = "time_cool_down_pvp1_ticket";
 
-    //Tripple Match
-    public const string DEFAULT_NUM_ITEM = "default_num_{0}_item";
-    public const string BONUS_TIME_ITEM = "bonus_time_item";
-
-    public const string REVIEW_IAP_VERSION = "review_iap_version";
-    public const string REVIEW_FUNC_VERSION = "review_func_version";
-
-    public const string IS_TEST_LEVEL = "is_test_level";
-
-    public const string DEFAULT_NUM_ADD_BRANCH = "default_num_add_branch";//2
-    public const string DEFAULT_NUM_REMOVE_BOMB = "default_num_remove_bomb";//0
-    public const string DEFAULT_NUM_REMOVE_EGG = "default_num_remove_egg";//0
-    public const string DEFAULT_NUM_REMOVE_JAIL = "default_num_remove_jail";//0
-    public const string DEFAULT_NUM_REMOVE_SLEEP = "default_num_remove_sleep";//0
-    public const string DEFAULT_NUM_REMOVE_CAGE = "default_num_remove_cage";//0
-    public const string NUM_RETURN_CLAIM_VIDEO_REWARD = "num_return_claim_video_reward";//3
-    public const string DEFAULT_NUM_RETURN = "default_num_return";//2
-
-    public const string CONFERI_MUTIL_TIME_LEVEL = "conferi_mutil_time_level";
-    public const string START_LEVEL_BACK_TO_HOME = "start_level_back_to_home";
-
     //Banner Collap
     public const string ENABLE_ADMOB_BANNER = "enable_banner_admob";
     public const string ENABLE_ADMOB_COLLAPSE_BANNER = "enable_collapse_banner_admob";
@@ -486,6 +465,9 @@ public class FirebaseConfig
     public const string RELOAD_BANNER_COLLAPSE_TIME = "reload_banner_collapse_time";
     public const string ENABLE_ADMOB_BANNER_COLLAP = "enable_admob_banner_collap";
     public const string COOL_DOWN_SHOW_COLLAP_BANNER = "cool_down_show_collap_banner";
+
+    // Interstitial
+    public const string ENABLE_INTERSTITIAL = "enable_interstitial";
 
     //Controll level
     public const string ENABLE_HARD_LEVEL_SET = "enable_hard_level_set";
@@ -542,9 +524,9 @@ public static class LocalizationKey
     public const string LOCAL_NOTI_COMEBACK_3 = "s_local_noti_comeback_game_3";
     public const string LOCAL_NOTI_COMEBACK_TITLE_ = "s_local_noti_comeback_game_title_";
     public const string LOCAL_NOTI_COMEBACK_ = "s_local_noti_comeback_game_";
-    public const string FREE_SOCK  = "s_free_sock_in";
+    public const string FREE_SOCK = "s_free_sock_in";
     public const string CLAIM_NOW = "s_claimnow";
-     public const string LOADING = "s_loading";
+    public const string LOADING = "s_loading";
     public const string LOWER_NOTIFICATION = "s_notification_lower";
     public const string CANT_CONNECT_TO_SERVER = "s_cant_connect";
     public const string CANT_CONNECT_CHECK_INTERNET = "s_cant_connect_check_internet";
@@ -573,7 +555,7 @@ public static class LocalizationKey
     public const string THANK_FOR_REVIEW = "s_thank_for_review";
     public const string TRY_AGAIN = "s_tryagain";
     public const string PLEASE_ENTER_NAME = "s_please_enter_name";
-    public const string NAME_TAKEN ="s_name_taken";
+    public const string NAME_TAKEN = "s_name_taken";
     public const string COMING_SOON = "s_comingsoon";
     public const string END_IN = "s_end_in";
     public const string DAYS = "s_days";

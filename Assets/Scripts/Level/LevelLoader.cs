@@ -23,8 +23,8 @@ public class LevelLoader : MonoBehaviour
         PausePopup.replayLevelEvent += Replay;
         LosePopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
-        GameplayScreen.nextLevelEvent += NextLevel;
-        GameplayScreen.prevLevelEvent += PrevLevel;
+        DebugPopup.nextLevelEvent += NextLevel;
+        DebugPopup.prevLevelEvent += PrevLevel;
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
 
@@ -38,8 +38,8 @@ public class LevelLoader : MonoBehaviour
         PausePopup.replayLevelEvent -= Replay;
         LosePopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
-        GameplayScreen.nextLevelEvent -= NextLevel;
-        GameplayScreen.prevLevelEvent -= PrevLevel;
+        DebugPopup.nextLevelEvent -= NextLevel;
+        DebugPopup.prevLevelEvent -= PrevLevel;
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
     }

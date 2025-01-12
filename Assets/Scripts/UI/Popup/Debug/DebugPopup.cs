@@ -9,14 +9,20 @@ public class DebugPopup : BasePopup
     [SerializeField] private TMP_InputField levelInput;
 
     [SerializeField] private Button debugPlayLevelButton;
+    [SerializeField] private Button debugNextLevelButton;
+    [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private Button debugWinLevelButton;
 
     public static event Action<int> toLevelEvent;
+    public static event Action nextLevelEvent;
+    public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
 
     protected override void RegisterMoreEvent()
     {
         debugPlayLevelButton.onClick.AddListener(DebugPlayLevel);
+        debugNextLevelButton.onClick.AddListener(NextLevel);
+        debugPrevLevelButton.onClick.AddListener(PrevLevel);
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
     }
 
@@ -25,6 +31,20 @@ public class DebugPopup : BasePopup
         int level = int.Parse(levelInput.text);
 
         toLevelEvent?.Invoke(level);
+
+        Hide();
+    }
+
+    private void NextLevel()
+    {
+        nextLevelEvent?.Invoke();
+
+        Hide();
+    }
+
+    private void PrevLevel()
+    {
+        prevLevelEvent?.Invoke();
 
         Hide();
     }

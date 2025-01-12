@@ -90,7 +90,7 @@ public class WinPopup : BasePopup
 
         // await Task.Delay(3000);
 
-        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+        AdmobAdsMax.Instance.ShowInterstitial(isShowImmediatly:true, actionIniterClose: OnInterstitialAdCompleted);
     }
 
     private void OnInterstitialAdCompleted()
