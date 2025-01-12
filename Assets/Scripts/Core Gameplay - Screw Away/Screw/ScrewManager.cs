@@ -320,8 +320,6 @@ public class ScrewManager : MonoBehaviour
         float progress;
         int doneScrew = 0;
 
-        // int maxNumberBlockingObject = 0;
-
         for (int i = 0; i < _screws.Count; i++)
         {
             if (_screws[i].IsDone)
@@ -330,15 +328,8 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                // _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
-
-                // if (_screws[i].NumberBlockingObjects > maxNumberBlockingObject)
-                // {
-                //     maxNumberBlockingObject = _screws[i].NumberBlockingObjects;
-                // }
+                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
             }
-
-            // await Task.Delay(9);
         }
 
         progress = (float)doneScrew / _totalScrew;
