@@ -117,6 +117,11 @@ public class HingeJointGenerator : EditorWindow
         //     GetScrewNumberByPhase(prefabPath);
         // }
 
+        if (GUILayout.Button("Move All Screws"))
+        {
+            MoveAllScrews(prefabPath);
+        }
+
         if (GUILayout.Button("Snap Surface"))
         {
             SnapSurface();
@@ -493,6 +498,24 @@ public class HingeJointGenerator : EditorWindow
 
         PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
     }
+
+    #region MOVE
+    private void MoveAllScrews(string path)
+    {
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
+
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+
+        for (int i = 0; i < screws.Length; i++)
+        {
+            screws[i].transform.position -= ratioSnapOffset * screws[i].transform.forward;
+        }
+
+        EditorUtility.SetDirty(levelPrefab);
+
+        PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
+    }
+    #endregion
 
     #region REMOVE
     private void RemoveAllGrandchildrenOf()
