@@ -15,18 +15,23 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
+    [SerializeField] private Image topBarDivider;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private Vector2Variable canvasSize;
 
+    #region PRIVATE FIELD
     private float _initialOpenRemoveAdPopupButtonPositionY;
+    private Tween _openRemoveAdPopupButtonTween;
+    private Tween _topBarDividerTween;
+    #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
     private void Awake()
     {
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
-        BottomBarItem.switchRouteEvent += ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch;
+        BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -34,12 +39,15 @@ public class MenuScreen : MonoBehaviour
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
+
+        _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
+        topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
     }
 
     void OnDestroy()
     {
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
-        BottomBarItem.switchRouteEvent -= ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch;
+        BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
     }
@@ -81,17 +89,37 @@ public class MenuScreen : MonoBehaviour
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
     }
 
+    private void OnScreenRouteSwitched(ScreenRoute screenRoute)
+    {
+        ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(screenRoute);
+        ShowTopBarDivider(screenRoute);
+    }
+
     private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)
     {
+        CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
+
         if (screenRoute == ScreenRoute.Home)
         {
-            Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
+            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
         }
         else
         {
-            _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
+            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * canvasSize.Value.y, 0.3f);
+        }
+    }
 
-            Tween.LocalPositionY(openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * canvasSize.Value.y, 0.3f);
+    private void ShowTopBarDivider(ScreenRoute screenRoute)
+    {
+        CommonUtil.StopTween(_topBarDividerTween);
+
+        if (screenRoute == ScreenRoute.IAPShop)
+        {
+            _topBarDividerTween = Tween.Alpha(topBarDivider, 1, 0.3f);
+        }
+        else
+        {
+            _topBarDividerTween = Tween.Alpha(topBarDivider, 0, 0.3f);
         }
     }
 }

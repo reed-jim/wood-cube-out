@@ -10,6 +10,7 @@ public class GameVariableInitializer : MonoBehaviour
 
     CanvasScaler canvasScaler;
     [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private Vector2Variable canvasSizeAfterCanvasScaler;
     [SerializeField] private Vector2Variable canvasScale;
 
     [SerializeField] private IntVariable currentLevel;
@@ -32,6 +33,7 @@ public class GameVariableInitializer : MonoBehaviour
 
     private void Start()
     {
+        canvasSizeAfterCanvasScaler.Value = canvas.sizeDelta;
         canvasScale.Value = canvas.localScale;
     }
 }
