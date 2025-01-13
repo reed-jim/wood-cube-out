@@ -8,18 +8,32 @@ public class PinchGesture : MonoBehaviour
     public float minZoom = 10f;
     public float maxZoom = 100f;
 
+    private bool _isDisabled;
+
     #region ACTION
     public static event Action<float> pinchGestureEvent;
     #endregion
 
     private void Awake()
     {
+        BasePopup.enableSwipingScreenEvent += EnablePinching;
+
         minZoom = 0.85f * cameraToZoom.orthographicSize;
         maxZoom = 1.15f * cameraToZoom.orthographicSize;
     }
 
+    void OnDestroy()
+    {
+        BasePopup.enableSwipingScreenEvent -= EnablePinching;
+    }
+
     private void Update()
     {
+        if (_isDisabled)
+        {
+            return;
+        }
+
         if (Input.touchCount == 2)
         {
             Touch touch1 = Input.GetTouch(0);
@@ -35,5 +49,10 @@ public class PinchGesture : MonoBehaviour
 
             pinchGestureEvent?.Invoke(Mathf.Clamp(cameraToZoom.orthographicSize + deltaMagnitudeDiff * zoomSpeed, minZoom, maxZoom));
         }
+    }
+
+    private void EnablePinching(bool isEnable)
+    {
+        _isDisabled = !isEnable;
     }
 }

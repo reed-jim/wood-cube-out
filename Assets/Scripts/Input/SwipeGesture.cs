@@ -21,6 +21,16 @@ public class SwipeGesture : MonoBehaviour
     public static event Action stopSwipeGestureEvent;
     #endregion
 
+    void Awake()
+    {
+        BasePopup.enableSwipingScreenEvent += EnableSwiping;
+    }
+
+    void OnDestroy()
+    {
+        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
+    }
+
     private void Update()
     {
         if (Input.GetMouseButton(0) && Input.touchCount == 1 && !_isDisabled)
@@ -65,6 +75,11 @@ public class SwipeGesture : MonoBehaviour
 
             _isLastPositionExist = false;
         }
+    }
+
+    private void EnableSwiping(bool isEnable)
+    {
+        _isDisabled = !isEnable;
     }
 
     private void TemporaryDisableSwipe(float value)
