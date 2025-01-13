@@ -29,7 +29,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
         GUILayout.BeginArea(areaRect);
 
-        prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
+        // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
         level =
             EditorGUILayout.IntField("Level", level);
@@ -50,9 +50,11 @@ public class LevelDifficultyCalculator : EditorWindow
 
         const float WEIGHT_NUM_SCREW = 0.2f;
         const float WEIGHT_PHASES_DIFFICULTY = 5f;
-        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 1.8f;
-        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 1.5f;
-        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 1.5f;
+        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 0.5f;
+        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 2f;
+        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 2.3f;
+
+        prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
 
@@ -133,10 +135,15 @@ public class LevelDifficultyCalculator : EditorWindow
             WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty;
 
         string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
-        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
+        difficultyText += $" <color=#9DFF8D>({numScrewDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized}";
+        difficultyText += $" <color=#9DFF8D>({modelDifficultyNormalized * 100}%)";
+        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
+        difficultyText += $" <color=#9DFF8D>({screwBoxesGenerationDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized}";
+        difficultyText += $" <color=#9DFF8D>({screwPortFactionChanceModifierDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Start Game Triple Match Difficulty: <color=#FF7A75>{WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty}";
+        difficultyText += $" <color=#9DFF8D>({startGameTripleSameFactionGenerationDifficulty * 100}%)";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
