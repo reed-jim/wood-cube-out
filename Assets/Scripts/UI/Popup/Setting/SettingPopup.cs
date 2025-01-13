@@ -88,6 +88,8 @@ public class SettingPopup : BasePopup
                 chooseLanguageButtonBackground[i].enabled = false;
             }
         }
+
+        isAbleToHideOnClickOutside = false;
     }
 
     private void CloseLanguageDropdown()
@@ -111,6 +113,8 @@ public class SettingPopup : BasePopup
         {
             chooseLanguageContainer.localScale = Vector3.one;
         });
+
+        isAbleToHideOnClickOutside = true;
     }
 
     private void ChangeLanguage(string language)

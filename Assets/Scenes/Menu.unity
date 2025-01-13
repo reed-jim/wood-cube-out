@@ -572,6 +572,80 @@ Transform:
   - {fileID: 1489411170}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &177128150
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 177128151}
+  - component: {fileID: 177128152}
+  m_Layer: 0
+  m_Name: Remove Ads Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &177128151
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177128150}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &177128152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177128150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Remove Ads Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Supprimer le pack de publicit\xE9s"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Entfernen Sie das Anzeigenpaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Rimuovi pacchetto annunci
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5E83\u544A\u30D1\u30C3\u30AF\u3092\u524A\u9664"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAD11\uACE0 \uD329 \uC81C\uAC70"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Remover pacote de an\xFAncios"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0434\u0430\u043B\u0438\u0442\u044C \u043F\u0430\u043A\u0435\u0442
+      \u0440\u0435\u043A\u043B\u0430\u043C\u044B"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Eliminar paquete de anuncios
+    Object: {fileID: 0}
 --- !u!1 &217978874
 GameObject:
   m_ObjectHideFlags: 0
@@ -1490,6 +1564,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Borrar agujeros
+    Object: {fileID: 0}
+--- !u!1 &464787161
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 464787162}
+  - component: {fileID: 464787163}
+  m_Layer: 0
+  m_Name: Daily Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &464787162
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464787161}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &464787163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 464787161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Daily Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: Pack quotidien
+    Object: {fileID: 0}
+  - Language: German
+    Text: Tagespaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto giornaliero
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C7\u30A4\u30EA\u30FC\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB370\uC77C\uB9AC \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Pacote Di\xE1rio"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u044B\u0439 \u043F\u0430\u043A\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete diario
     Object: {fileID: 0}
 --- !u!1 &465165977
 GameObject:
@@ -2888,7 +3035,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 6}
-  m_SizeDelta: {x: 0, y: -12}
+  m_SizeDelta: {x: -96, y: -84}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &746027520
 MonoBehaviour:
@@ -2910,7 +3057,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Level {level}
+  m_text: "\u30EC\u30D9\u30EB {level}"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -2937,10 +3084,10 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 80
+  m_fontSize: 72
   m_fontSizeBase: 80
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -3004,6 +3151,79 @@ MonoBehaviour:
   translationName: Level
   parameter: level
   FallbackText: Level 1
+--- !u!1 &786188376
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 786188377}
+  - component: {fileID: 786188378}
+  m_Layer: 0
+  m_Name: Starter Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &786188377
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786188376}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &786188378
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 786188376}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Starter Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Pack de d\xE9marrage"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Starterpaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto iniziale
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30BF\u30FC\u30BF\u30FC\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uD0C0\uD130 \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote inicial
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u0442\u0430\u0440\u0442\u043E\u0432\u044B\u0439 \u043F\u0430\u043A\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete de inicio
+    Object: {fileID: 0}
 --- !u!1001 &786974596
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3518,6 +3738,82 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 815539594}
   m_CullTransparentMesh: 1
+--- !u!1 &844582175
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 844582176}
+  - component: {fileID: 844582177}
+  m_Layer: 0
+  m_Name: Remove ads between levels and banners in the game
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &844582176
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844582175}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &844582177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 844582175}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Remove ads between levels and banners in the game
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Supprimez les publicit\xE9s entre les niveaux et les banni\xE8res du jeu"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Entfernen Sie Werbung zwischen Levels und Bannern im Spiel
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Rimuovi gli annunci tra i livelli e i banner nel gioco
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B2\u30FC\u30E0\u5185\u306E\u30EC\u30D9\u30EB\u9593\u306E\u5E83\u544A\u3068\u30D0\u30CA\u30FC\u3092\u524A\u9664\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC8C\uC784 \uB0B4 \uB808\uBCA8\uACFC \uBC30\uB108 \uC0AC\uC774\uC758
+      \uAD11\uACE0 \uC81C\uAC70"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Remova an\xFAncios entre n\xEDveis e banners do jogo"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0431\u0440\u0430\u0442\u044C \u0440\u0435\u043A\u043B\u0430\u043C\u0443
+      \u043C\u0435\u0436\u0434\u0443 \u0443\u0440\u043E\u0432\u043D\u044F\u043C\u0438
+      \u0438 \u0431\u0430\u043D\u043D\u0435\u0440\u044B \u0432 \u0438\u0433\u0440\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Elimina anuncios entre niveles y banners en el juego.
+    Object: {fileID: 0}
 --- !u!1 &844664049
 GameObject:
   m_ObjectHideFlags: 0
@@ -4650,7 +4946,7 @@ RectTransform:
   m_Father: {fileID: 1673665026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 0.96581197}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -4932,6 +5228,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Hogar
     Object: {fileID: 0}
+--- !u!1 &1287708363
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1287708364}
+  - component: {fileID: 1287708365}
+  m_Layer: 0
+  m_Name: Loading
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1287708364
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287708363}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1287708365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1287708363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Loading...
+    Object: {fileID: 0}
+  - Language: French
+    Text: Chargement...
+    Object: {fileID: 0}
+  - Language: German
+    Text: Laden...
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Caricamento...
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u8AAD\u307F\u8FBC\u307F\u4E2D..."
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB85C\uB4DC \uC911..."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Carregando...
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cargando...
+    Object: {fileID: 0}
 --- !u!1 &1324098209
 GameObject:
   m_ObjectHideFlags: 0
@@ -4990,7 +5359,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: No Ads
+  m_text: "\u5E83\u544A\u306A\u3057"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -5017,7 +5386,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 31.05
+  m_fontSize: 36
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5113,7 +5482,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: English
+  currentLanguage: Japanese
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -5169,6 +5538,14 @@ Transform:
   - {fileID: 290187708}
   - {fileID: 475565281}
   - {fileID: 695267863}
+  - {fileID: 844582176}
+  - {fileID: 1287708364}
+  - {fileID: 786188377}
+  - {fileID: 1733361420}
+  - {fileID: 464787162}
+  - {fileID: 1669764596}
+  - {fileID: 1408452296}
+  - {fileID: 177128151}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1353185547
@@ -5317,11 +5694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 837088418714778944, guid: f74b941e47297af45988eefa261895b9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5189446
-      objectReference: {fileID: 0}
-    - target: {fileID: 1511301158132928384, guid: f74b941e47297af45988eefa261895b9, type: 3}
-      propertyPath: m_Size
-      value: 0.48218945
+      value: 0.7589054
       objectReference: {fileID: 0}
     - target: {fileID: 1511301158132928384, guid: f74b941e47297af45988eefa261895b9, type: 3}
       propertyPath: m_Value
@@ -5425,7 +5798,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6548393395528160456, guid: f74b941e47297af45988eefa261895b9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 212
       objectReference: {fileID: 0}
     - target: {fileID: 6548393395528160456, guid: f74b941e47297af45988eefa261895b9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -5449,19 +5822,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8795071366832344345, guid: f74b941e47297af45988eefa261895b9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -279.6178
-      objectReference: {fileID: 0}
-    - target: {fileID: 8824205736329639997, guid: f74b941e47297af45988eefa261895b9, type: 3}
-      propertyPath: m_fontAsset
-      value: 
-      objectReference: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
-    - target: {fileID: 8824205736329639997, guid: f74b941e47297af45988eefa261895b9, type: 3}
-      propertyPath: m_sharedMaterial
-      value: 
-      objectReference: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
-    - target: {fileID: 8824205736329639997, guid: f74b941e47297af45988eefa261895b9, type: 3}
-      propertyPath: m_hasFontAssetChanged
-      value: 0
+      value: -280.62784
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5660,6 +6021,79 @@ MonoBehaviour:
   prefab: {fileID: 6655206068968023495, guid: 32c18610d458dfa40af83d745434d857, type: 3}
   container: {fileID: 1363410858}
   poolSize: 16
+--- !u!1 &1408452295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1408452296}
+  - component: {fileID: 1408452297}
+  m_Layer: 0
+  m_Name: Monthly Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1408452296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408452295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1408452297
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1408452295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Monthly Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: Forfait mensuel
+    Object: {fileID: 0}
+  - Language: German
+    Text: Monatspaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto mensile
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30DE\u30F3\u30B9\u30EA\u30FC\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC6D4\uAC04 \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote Mensal
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0436\u0435\u043C\u0435\u0441\u044F\u0447\u043D\u044B\u0439 \u043F\u0430\u043A\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete Mensual
+    Object: {fileID: 0}
 --- !u!1 &1408558331
 GameObject:
   m_ObjectHideFlags: 0
@@ -6882,6 +7316,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Refuerzo
     Object: {fileID: 0}
+--- !u!1 &1669764595
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1669764596}
+  - component: {fileID: 1669764597}
+  m_Layer: 0
+  m_Name: Weekly Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1669764596
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669764595}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1669764597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1669764595}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Weekly Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: Pack hebdomadaire
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xF6chentliches Paket"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto settimanale
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30A6\u30A3\u30FC\u30AF\u30EA\u30FC\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC8FC\uAC04 \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote Semanal
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0436\u0435\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u044B\u0439
+      \u043F\u0430\u043A\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete Semanal
+    Object: {fileID: 0}
 --- !u!1 &1673665022
 GameObject:
   m_ObjectHideFlags: 0
@@ -7363,6 +7871,79 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1733361419
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1733361420}
+  - component: {fileID: 1733361421}
+  m_Layer: 0
+  m_Name: VIP Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1733361420
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733361419}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1733361421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1733361419}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: VIP Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: Forfait VIP
+    Object: {fileID: 0}
+  - Language: German
+    Text: VIP-Paket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto VIP
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "VIP\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "VIP \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote VIP
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "VIP-\u043F\u0430\u043A\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete VIP
+    Object: {fileID: 0}
 --- !u!1001 &1739753800
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8418,9 +8999,21 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1972218272}
     m_Modifications:
+    - target: {fileID: 252138936779183788, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
+      propertyPath: m_text
+      value: "\u30A6\u30A3\u30FC\u30AF\u30EA\u30FC\u30D1\u30C3\u30AF"
+      objectReference: {fileID: 0}
     - target: {fileID: 839226693648946329, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_Name
       value: IAP Shop Screen
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338105230184399121, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
+      propertyPath: m_text
+      value: "VIP\u30D1\u30C3\u30AF"
+      objectReference: {fileID: 0}
+    - target: {fileID: 3547785242795116482, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
+      propertyPath: m_text
+      value: "\u30C7\u30A4\u30EA\u30FC\u30D1\u30C3\u30AF"
       objectReference: {fileID: 0}
     - target: {fileID: 4702533068511866652, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_SizeDelta.y
@@ -8505,6 +9098,14 @@ PrefabInstance:
     - target: {fileID: 7012652151622738283, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8689031071559013863, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
+      propertyPath: m_text
+      value: "\u30DE\u30F3\u30B9\u30EA\u30FC\u30D1\u30C3\u30AF"
+      objectReference: {fileID: 0}
+    - target: {fileID: 9160151637945332515, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
+      propertyPath: m_text
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

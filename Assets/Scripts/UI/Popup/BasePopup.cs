@@ -13,7 +13,7 @@ public class BasePopup : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
-    [SerializeField] private bool isAbleToHideOnClickOutside;
+    [SerializeField] protected bool isAbleToHideOnClickOutside;
 
     private ISaferioUIAnimation _transitionAnimation;
     protected bool _isShown;
