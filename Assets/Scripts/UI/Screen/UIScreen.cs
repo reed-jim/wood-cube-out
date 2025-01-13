@@ -9,7 +9,7 @@ public class UIScreen : MonoBehaviour
     [SerializeField] private RectTransform content;
 
     [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] protected Vector2Variable canvasSize;
+    [SerializeField] protected Vector2Variable canvasSizeOfReferenceDevice;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
@@ -119,7 +119,7 @@ public class UIScreen : MonoBehaviour
 
     private void HideOutsideScreen(float swipingScreenPositionX)
     {
-        if (Mathf.Abs(swipingScreenPositionX + container.localPosition.x) > canvasSize.Value.x)
+        if (Mathf.Abs(swipingScreenPositionX + container.localPosition.x) > canvasSizeOfReferenceDevice.Value.x)
         {
             content.gameObject.SetActive(false);
         }

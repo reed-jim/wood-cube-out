@@ -16,7 +16,7 @@ public class BottomBarItem : MonoBehaviour
     [SerializeField] private ScreenRoute route;
 
     [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
 
     #region ACTION
     public static event Action<float> moveBottomBarHighlightEvent;
@@ -35,7 +35,7 @@ public class BottomBarItem : MonoBehaviour
 
         selectButton.onClick.AddListener(Select);
 
-        _slotSize = canvasSize.Value.x / 5f;
+        _slotSize = canvasSizeOfReferenceDevice.Value.x / 3f;
 
         _iconInitialPosition = iconRT.localPosition;
     }

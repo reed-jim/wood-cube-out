@@ -16,9 +16,11 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button addMoreScrewPortButton;
     [SerializeField] private Button breakObjectButton;
     [SerializeField] private Button clearAllScrewPortsButton;
+    [SerializeField] private Button disableBreakObjectModeEarlyButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     [Header("CUSTOMIZE")]
@@ -27,6 +29,7 @@ public class BoosterUI : MonoBehaviour
 
     public static event Action addMoreScrewPortEvent;
     public static event Action enableBreakObjectModeEvent;
+    public static event Action disableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
@@ -47,6 +50,7 @@ public class BoosterUI : MonoBehaviour
         addMoreScrewPortButton.onClick.AddListener(AddMoreScrewPort);
         breakObjectButton.onClick.AddListener(EnableBreakObjectMode);
         clearAllScrewPortsButton.onClick.AddListener(ClearAllScrewPorts);
+        disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         // _initialBoosterContainerPosition = boosterContainer.localPosition;
         // _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
@@ -158,7 +162,7 @@ public class BoosterUI : MonoBehaviour
 
         breakModeContainer.gameObject.SetActive(true);
 
-        Tween.LocalPositionY(boosterContainer, -canvasSize.Value.y, duration: transitionTime);
+        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
         Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y, duration: transitionTime)
         .OnComplete(() =>
         {
@@ -171,11 +175,18 @@ public class BoosterUI : MonoBehaviour
     private void DisableBreakObjectMode()
     {
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, -canvasSize.Value.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime)
         .OnComplete(() =>
         {
             breakModeContainer.gameObject.SetActive(false);
         });
+    }
+
+    private void DisableBreakObjectModeEarly()
+    {
+        DisableBreakObjectMode();
+
+        disableBreakObjectModeEvent?.Invoke();
     }
 
     private void ClearAllScrewPorts()

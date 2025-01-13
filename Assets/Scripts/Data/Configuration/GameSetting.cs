@@ -10,18 +10,44 @@ public class GameSetting : ScriptableObject
     public bool IsTurnOnBackgroundMusic
     {
         get => isTurnOnBackgroundMusic;
-        set => isTurnOnBackgroundMusic = value;
+        set
+        {
+            isTurnOnBackgroundMusic = value;
+            Save();
+        }
     }
 
     public bool IsTurnOnSound
     {
         get => isTurnOnSound;
-        set => isTurnOnSound = value;
+        set
+        {
+            isTurnOnSound = value;
+            Save();
+        }
     }
 
     public string CurrentLanguage
     {
         get => currentLanguage;
-        set => currentLanguage = value;
+        set
+        {
+            currentLanguage = value;
+            Save();
+        }
+    }
+
+    public void Save()
+    {
+        DataUtility.SaveAsync(GameConstants.GAME_SETTING, this);
+    }
+
+    public void Load()
+    {
+        GameSetting savedGameSetting = DataUtility.Load(GameConstants.GAME_SETTING, new GameSetting());
+
+        isTurnOnBackgroundMusic = savedGameSetting.isTurnOnBackgroundMusic;
+        isTurnOnSound = savedGameSetting.IsTurnOnSound;
+        currentLanguage = savedGameSetting.CurrentLanguage;
     }
 }

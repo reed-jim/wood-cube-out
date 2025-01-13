@@ -751,6 +751,7 @@ GameObject:
   - component: {fileID: 550549737660314208}
   - component: {fileID: 486777971900084877}
   - component: {fileID: 1962913667840222433}
+  - component: {fileID: 1751288780193439428}
   m_Layer: 5
   m_Name: CloseBtn
   m_TagString: Untagged
@@ -859,6 +860,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1751288780193439428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4883355722811552148}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5622139147723956394
 GameObject:
   m_ObjectHideFlags: 0
@@ -925,7 +938,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: "\u30B2\u30FC\u30E0\u5185\u306E\u30EC\u30D9\u30EB\u9593\u306E\u5E83\u544A\u3068\u30D0\u30CA\u30FC\u3092\u524A\u9664\u3057\u307E\u3059"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -952,7 +965,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42
+  m_fontSize: 50
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 1

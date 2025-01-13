@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 470993072733030549}
   - component: {fileID: 5259832156892776641}
   - component: {fileID: 6191695911771590696}
+  - component: {fileID: 7183470159847618697}
   m_Layer: 5
   m_Name: Add Button
   m_TagString: Untagged
@@ -120,6 +121,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &7183470159847618697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2360439373552220417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2645978322408802174
 GameObject:
   m_ObjectHideFlags: 0
@@ -231,7 +244,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: -36.5}
-  m_SizeDelta: {x: 200, y: 160}
+  m_SizeDelta: {x: 180, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5901188886193239875
 CanvasRenderer:
@@ -261,7 +274,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Add Hole
+  m_text: "\u7A74\u3092\u8FFD\u52A0\u3059\u308B"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -291,7 +304,7 @@ MonoBehaviour:
   m_fontSize: 30
   m_fontSizeBase: 32
   m_fontWeight: 400
-  m_enableAutoSizing: 0
+  m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
@@ -360,6 +373,7 @@ GameObject:
   - component: {fileID: 1519438519885064531}
   - component: {fileID: 1674414317526947859}
   - component: {fileID: 1531154902287509550}
+  - component: {fileID: 6479843484611013383}
   m_Layer: 5
   m_Name: Add More Screw Port Button
   m_TagString: Untagged
@@ -492,6 +506,18 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6479843484611013383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2803360258022319673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4596260091198830909
 GameObject:
   m_ObjectHideFlags: 0

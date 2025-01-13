@@ -38,8 +38,8 @@ public static class GameConstants
     public static Color SAFERIO_PURPLE = new Color(214f / 255, 86f / 255, 236f / 255, 1);
     public static Color SAFERIO_BLUE = new Color(24f / 255, 142f / 255, 233f / 255, 1);
     public static Color SAFERIO_YELLLOW = new Color(246f / 255, 209f / 255, 27f / 255, 1);
-    public static Color SAFERIO_LIGHT_BLUE = new Color(223f / 255, 217f / 255, 216f / 255, 1);
-    public static Color SAFERIO_PINK = new Color(243f / 255, 134f / 255, 81f / 255, 1);
+    public static Color SAFERIO_WHITE = new Color(223f / 255, 217f / 255, 216f / 255, 1);
+    public static Color SAFERIO_CYAN = new Color(41f / 255, 202f / 255, 163f / 255, 1);
     #endregion
 
     #region OBJECT POOLING
@@ -93,6 +93,7 @@ public static class GameConstants
     public static string COIN_ = "User Coin";
     public static string USER_RESOURCES = "User Resources";
     public static string IS_REMOVE_ADS = "Is Remove Ads";
+    public static string GAME_SETTING = "GAME_SETTING";
     #endregion
 
     #region TRACKING
@@ -114,7 +115,7 @@ public static class GameConstants
     public static int DEFAULT_NUMBER_SCREW_PORT = 5;
     public static GameFaction[] SCREW_FACTION = new GameFaction[8]
         {   GameFaction.Red, GameFaction.Green, GameFaction.Orange, GameFaction.Purple,
-            GameFaction.Blue, GameFaction.Yellow, GameFaction.LightBlue,GameFaction.Pink };
+            GameFaction.Blue, GameFaction.Yellow, GameFaction.Cyan,GameFaction.White };
     #endregion
 
     #region SWIPE

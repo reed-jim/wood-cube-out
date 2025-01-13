@@ -6,7 +6,7 @@ public class BottomBar : MonoBehaviour
 {
     [SerializeField] private RectTransform highlight;
 
-    [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int screenNumber;
@@ -28,7 +28,7 @@ public class BottomBar : MonoBehaviour
         BottomBarItem.moveBottomBarHighlightEvent += MoveBottomBarHighlight;
         BasePopup.enableSwipingScreenEvent += EnableSwiping;
 
-        _slotSize = canvasSize.Value.x / screenNumber;
+        _slotSize = canvasSizeOfReferenceDevice.Value.x / screenNumber;
 
         _isEnabledSwiping = true;
     }
@@ -53,7 +53,7 @@ public class BottomBar : MonoBehaviour
             return;
         }
 
-        if (Mathf.Abs(highlight.localPosition.x - direction.x / screenNumber) <= 0.5f * (canvasSize.Value.x - highlight.sizeDelta.x))
+        if (Mathf.Abs(highlight.localPosition.x - direction.x / screenNumber) <= 0.5f * (canvasSizeOfReferenceDevice.Value.x - highlight.sizeDelta.x))
         {
             highlight.localPosition -= new Vector3(direction.x / screenNumber, 0, 0);
 
@@ -68,7 +68,7 @@ public class BottomBar : MonoBehaviour
             return;
         }
 
-        float unitValue = canvasSize.Value.x / screenNumber;
+        float unitValue = canvasSizeOfReferenceDevice.Value.x / screenNumber;
 
         float ratio = (highlight.localPosition.x % unitValue) / unitValue;
 

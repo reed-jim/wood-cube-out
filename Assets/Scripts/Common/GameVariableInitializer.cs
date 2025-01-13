@@ -14,6 +14,7 @@ public class GameVariableInitializer : MonoBehaviour
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
+    [SerializeField] private GameSetting gameSetting;
 
     public static event Action currentLevelFetchedEvent;
 
@@ -24,6 +25,7 @@ public class GameVariableInitializer : MonoBehaviour
         currentLevel.Load();
 
         userResourcesObserver.Load();
+        gameSetting.Load();
 
         currentLevelFetchedEvent?.Invoke();
     }

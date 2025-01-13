@@ -31,21 +31,21 @@ namespace Saferio.Prototype.ColoringBook
 
         private void OnWin()
         {
-            gameObject.SetActive(true);
+            // gameObject.SetActive(true);
 
-            PlaySoundWin();
+            // PlaySoundWin();
 
-            winTextRT.localPosition = new Vector2(0, canvasSize.Value.y);
-            continueButtonRT.localPosition = new Vector2(0, -canvasSize.Value.y);
+            // winTextRT.localPosition = new Vector2(0, canvasSize.Value.y);
+            // continueButtonRT.localPosition = new Vector2(0, -canvasSize.Value.y);
 
-            winTextRT.gameObject.SetActive(true);
-            continueButtonRT.gameObject.SetActive(true);
-            fadeBackground.gameObject.SetActive(true);
-            fadeBackground.color = new Color(fadeBackground.color.r, fadeBackground.color.g, fadeBackground.color.b, 0);
+            // winTextRT.gameObject.SetActive(true);
+            // continueButtonRT.gameObject.SetActive(true);
+            // fadeBackground.gameObject.SetActive(true);
+            // fadeBackground.color = new Color(fadeBackground.color.r, fadeBackground.color.g, fadeBackground.color.b, 0);
 
-            SaferioTween.AlphaAsync(fadeBackground, 0.9f, duration: 0.5f);
-            SaferioTween.LocalPositionAsync(winTextRT, new Vector2(0, 0.2f * canvasSize.Value.y), duration: 0.5f);
-            SaferioTween.LocalPositionAsync(continueButtonRT, new Vector2(0, -0.2f * canvasSize.Value.y), duration: 0.5f);
+            // SaferioTween.AlphaAsync(fadeBackground, 0.9f, duration: 0.5f);
+            // SaferioTween.LocalPositionAsync(winTextRT, new Vector2(0, 0.2f * canvasSize.Value.y), duration: 0.5f);
+            // SaferioTween.LocalPositionAsync(continueButtonRT, new Vector2(0, -0.2f * canvasSize.Value.y), duration: 0.5f);
         }
 
         private void PlaySoundWin()

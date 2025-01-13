@@ -29,13 +29,13 @@ public static class FactionUtility
         {
             return GameConstants.SAFERIO_YELLLOW;
         }
-        else if (faction == GameFaction.LightBlue)
+        else if (faction == GameFaction.Cyan)
         {
-            return GameConstants.SAFERIO_LIGHT_BLUE;
+            return GameConstants.SAFERIO_CYAN;
         }
-        else if (faction == GameFaction.Pink)
+        else if (faction == GameFaction.White)
         {
-            return GameConstants.SAFERIO_PINK;
+            return GameConstants.SAFERIO_WHITE;
         }
 
         return GameConstants.SAFERIO_RED;

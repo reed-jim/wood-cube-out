@@ -12,6 +12,11 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private Button debugWinLevelButton;
+    [SerializeField] private Button debugAdsButton;
+    [SerializeField] private Button debugAddBoostersButton;
+    [SerializeField] private TMP_Text debugAdsText;
+
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<int> toLevelEvent;
     public static event Action nextLevelEvent;
@@ -24,6 +29,20 @@ public class DebugPopup : BasePopup
         debugNextLevelButton.onClick.AddListener(NextLevel);
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
+        debugAdsButton.onClick.AddListener(DebugAdsButton);
+        debugAddBoostersButton.onClick.AddListener(AddBooster);
+    }
+
+    protected override void MoreActionInAwake()
+    {
+        if (UserData.IsRemoveAds)
+        {
+            debugAdsText.text = "Enable Ads";
+        }
+        else
+        {
+            debugAdsText.text = "Disable Ads";
+        }
     }
 
     private void DebugPlayLevel()
@@ -56,5 +75,29 @@ public class DebugPopup : BasePopup
         await Task.Delay(500);
 
         winLevelEvent?.Invoke();
+    }
+
+    private async void DebugAdsButton()
+    {
+        if (UserData.IsRemoveAds)
+        {
+            UserData.IsRemoveAds = false;
+
+            debugAdsText.text = "Disable Ads";
+        }
+        else
+        {
+            UserData.IsRemoveAds = true;
+
+            debugAdsText.text = "Enable Ads";
+        }
+    }
+
+    private void AddBooster()
+    {
+        for (int i = 0; i < userResourcesObserver.UserResources.BoosterQuantities.Length; i++)
+        {
+            userResourcesObserver.UserResources.BoosterQuantities[i] += 999;
+        }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class SaferioButton : MonoBehaviour, ISelectHandler
+public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 {
     private float scaleMultiplier = 1.05f;
     private float animationDuration = 0.1f;
@@ -12,7 +12,7 @@ public class SaferioButton : MonoBehaviour, ISelectHandler
     private Button _button;
     private Sequence _sequence;
 
-    public void OnSelect(BaseEventData eventData)
+    public void OnPointerEnter(PointerEventData eventData)
     {
         PlayAnimationOnClick();
     }

@@ -23,6 +23,7 @@ public class ScrewSelectionInput : MonoBehaviour
     void Awake()
     {
         BoosterUI.enableBreakObjectModeEvent += EnableBreakObjectMode;
+        BoosterUI.disableBreakObjectModeEvent += DisableBreakObjectMode;
 
         twoTouchPoints = new List<Vector3>();
     }
@@ -30,6 +31,7 @@ public class ScrewSelectionInput : MonoBehaviour
     void OnDestroy()
     {
         BoosterUI.enableBreakObjectModeEvent -= EnableBreakObjectMode;
+        BoosterUI.disableBreakObjectModeEvent -= DisableBreakObjectMode;
     }
 
     void Update()
@@ -128,6 +130,11 @@ public class ScrewSelectionInput : MonoBehaviour
     private void EnableBreakObjectMode()
     {
         _inputMode = InputMode.BreakObject;
+    }
+
+    private void DisableBreakObjectMode()
+    {
+        _inputMode = InputMode.Select;
     }
 
     private bool IsClickedOnUI()

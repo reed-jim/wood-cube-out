@@ -92,30 +92,30 @@ public class AdmobAdsMax : MonoBehaviour
         };
 
         MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
-        //MaxSdk.SetVerboseLogging(true);
+        MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
-        MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
+        // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
         MaxSdk.InitializeSdk();
         #endregion
 
         _isInited = true;
 
-        //#if !UNITY_EDITOR
-        Debug.Log("===== Init Admob ====");
-        MobileAds.Initialize((initStatus) =>
-        {
-            Debug.Log("===== Init Admob Done ====");
-            AppOpenAdManager.Instance.LoadAd(() =>
-            {
-                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-            });
-            InitBannerAdmob();
-            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-            isAdmobInitDone = true;
-            //nativeAdsManager.Instance.OnInitAdmobDone();
-            //LoadRewardedInterstitialAd();
-        });
-        //#endif
+        // //#if !UNITY_EDITOR
+        // Debug.Log("===== Init Admob ====");
+        // MobileAds.Initialize((initStatus) =>
+        // {
+        //     Debug.Log("===== Init Admob Done ====");
+        //     AppOpenAdManager.Instance.LoadAd(() =>
+        //     {
+        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+        //     });
+        //     InitBannerAdmob();
+        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+        //     isAdmobInitDone = true;
+        //     //nativeAdsManager.Instance.OnInitAdmobDone();
+        //     //LoadRewardedInterstitialAd();
+        // });
+        // //#endif
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -750,6 +750,7 @@ public class AdmobAdsMax : MonoBehaviour
         MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += OnRewardedAdReceivedRewardEvent;
         MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
         // Load the first RewardedAd
+
         LoadRewardedAd();
     }
 
