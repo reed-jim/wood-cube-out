@@ -1,7 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class BoosterItemUI : MonoBehaviour
 {
@@ -15,10 +17,15 @@ public class BoosterItemUI : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private int boosterIndex;
 
+    [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
+
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
     void Awake()
     {
+        addButton.onClick.AddListener(ShowBuyBoosterPopup);
+
         Setup();
     }
 
@@ -43,5 +50,10 @@ public class BoosterItemUI : MonoBehaviour
             quantityTextContainer.gameObject.SetActive(false);
             addButtonRT.gameObject.SetActive(true);
         }
+    }
+
+    private void ShowBuyBoosterPopup()
+    {
+        showBuyBoosterPopupEvent?.Invoke((BoosterType)boosterIndex);
     }
 }

@@ -7,7 +7,6 @@ using static GameEnum;
 
 public class BuyBoosterPopup : BasePopup
 {
-    [SerializeField] private RectTransform container;
     [SerializeField] private Button buyWithDiamondButton;
     [SerializeField] private Image buyWithDiamondButtonForeground;
     [SerializeField] private Button getWithAdsButton;
@@ -33,6 +32,7 @@ public class BuyBoosterPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
 
         getWithAdsButton.onClick.AddListener(GetWithAds);
@@ -41,6 +41,7 @@ public class BuyBoosterPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
     }
 

@@ -147,7 +147,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buttonSprite: {fileID: 0}
 --- !u!222 &4258877923971434617
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -718,9 +717,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bf2f0cd448046945a2eeb5560b7241c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  container: {fileID: 2288482766312118813}
   closeButton: {fileID: 1962913667840222433}
   route: 15
   isRouteActiveFromStart: 0
+  isAbleToHideOnClickOutside: 1
   buyButton: {fileID: 834375169762777856}
 --- !u!114 &7773733892651645372
 MonoBehaviour:

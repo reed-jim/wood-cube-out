@@ -1,16 +1,19 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static GameEnum;
 
 public class BasePopup : MonoBehaviour
 {
     [Header("UI")]
+    [SerializeField] protected RectTransform container;
     [SerializeField] private Button closeButton;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
+    [SerializeField] private bool isAbleToHideOnClickOutside;
 
     private ISaferioUIAnimation _transitionAnimation;
     protected bool _isShown;
@@ -48,6 +51,11 @@ public class BasePopup : MonoBehaviour
         }
 
         MoreActionInAwake();
+    }
+
+    void Update()
+    {
+        HideOnClickOutside();
     }
 
     private void OnDestroy()
@@ -141,6 +149,43 @@ public class BasePopup : MonoBehaviour
     protected virtual void AfterHide()
     {
 
+    }
+
+    private void HideOnClickOutside()
+    {
+        if (!isAbleToHideOnClickOutside)
+        {
+            return;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+
+            EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+            bool clickedOutside = true;
+
+            foreach (var result in raycastResults)
+            {
+                if (result.gameObject == container.gameObject)
+                {
+                    clickedOutside = false;
+
+                    break;
+                }
+            }
+
+            if (clickedOutside)
+            {
+                Hide();
+            }
+        }
     }
 
     private void PlayClickSound()

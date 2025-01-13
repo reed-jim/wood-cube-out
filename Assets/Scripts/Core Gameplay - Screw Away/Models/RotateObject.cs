@@ -14,7 +14,7 @@ public class RotateObject : MonoBehaviour
     {
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.12f;
+        rotateSpeedMultiplier = 0.05f;
         _isAutoRotating = true;
 
         StartCoroutine(AutoRotating());
@@ -61,7 +61,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.02f;
+                    _yaw = 0.01f;
                     // _yaw = -normalizedDirection.x;
                 }
             }
