@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static GameEnum;
 
 public class GameStateMachine : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class GameStateMachine : MonoBehaviour
         LevelLoader.startLevelEvent += EnterPlayingState;
         ScrewManager.winLevelEvent += EnterWinState;
         ScrewBoxManager.loseLevelEvent += EnterLoseState;
-        RevivePopup.reviveEvent += EnterPlayingState;
+        RevivePopup.reviveEvent += OnRevived;
 
         ChangeState(new GameStatePlaying());
     }
@@ -32,7 +33,7 @@ public class GameStateMachine : MonoBehaviour
         LevelLoader.startLevelEvent -= EnterPlayingState;
         ScrewManager.winLevelEvent -= EnterWinState;
         ScrewBoxManager.loseLevelEvent -= EnterLoseState;
-        RevivePopup.reviveEvent -= EnterPlayingState;
+        RevivePopup.reviveEvent -= OnRevived;
     }
 
     // void Update()
@@ -73,5 +74,10 @@ public class GameStateMachine : MonoBehaviour
     private void EnterLoseState()
     {
         ChangeState(new GameStateLose(this));
+    }
+
+    private void OnRevived(BoosterType boosterType)
+    {
+        EnterPlayingState();
     }
 }

@@ -165,16 +165,23 @@ public class ScrewBoxManager : MonoBehaviour
         _screwBoxPositionY = 0.42f * worldSize.y;
     }
 
-    private void OnRevived()
+    private void OnRevived(BoosterType boosterType)
     {
-        for (int i = 0; i < screwBoxs.Length; i++)
+        if (boosterType == BoosterType.UnlockScrewBox)
         {
-            if (screwBoxs[i].IsLocked)
+            for (int i = 0; i < screwBoxs.Length; i++)
             {
-                screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
+                if (screwBoxs[i].IsLocked)
+                {
+                    screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
 
-                break;
+                    break;
+                }
             }
+        }
+        else if (boosterType == BoosterType.ClearScrewPorts)
+        {
+            ClearAllScrewPorts();
         }
     }
 

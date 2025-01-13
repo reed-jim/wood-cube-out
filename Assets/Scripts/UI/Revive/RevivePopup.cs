@@ -3,19 +3,29 @@ using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class RevivePopup : BasePopup
 {
     [SerializeField] private Button reviveByDiamondButton;
     [SerializeField] private Image reviveByDiamondButtonForeground;
+    [SerializeField] private Image boosterImage;
     [SerializeField] private Button reviveByAdsButton;
     [SerializeField] private TMP_Text costText;
+
+    [Header("SPRITE")]
+    [SerializeField] private Sprite unlockBoxSprite;
+    [SerializeField] private Sprite clearHolesSprite;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private BoosterDataObserver boosterDataObserver;
 
-    public static event Action reviveEvent;
+    #region PRIVATE FIELD
+    private BoosterType _currentBoosterOnRevive;
+    #endregion
+
+    public static event Action<BoosterType> reviveEvent;
     public static event Action reviveRefusedEvent;
 
     protected override void MoreActionInAwake()
@@ -44,7 +54,7 @@ public class RevivePopup : BasePopup
         });
     }
 
-    private void ShowRevivePopup()
+    private void ShowRevivePopup(BoosterType boosterType)
     {
         Show();
 
@@ -64,19 +74,32 @@ public class RevivePopup : BasePopup
 
             reviveByDiamondButtonForeground.color = ColorUtil.WithAlpha(reviveByDiamondButtonForeground.color, 1f);
         }
+
+        if (boosterType == BoosterType.UnlockScrewBox)
+        {
+            boosterImage.sprite = unlockBoxSprite;
+        }
+        else if (boosterType == BoosterType.ClearScrewPorts)
+        {
+            boosterImage.sprite = clearHolesSprite;
+        }
+
+        UIUtil.SetSizeKeepRatioY(boosterImage, 0.2f * container.sizeDelta.x);
+
+        _currentBoosterOnRevive = boosterType;
     }
 
     private void ReviveByDiamond()
     {
         base.Hide();
 
-        reviveEvent?.Invoke();
+        reviveEvent?.Invoke(_currentBoosterOnRevive);
     }
 
     private void ReviveByAds()
     {
         base.Hide();
 
-        reviveEvent?.Invoke();
+        reviveEvent?.Invoke(_currentBoosterOnRevive);
     }
 }

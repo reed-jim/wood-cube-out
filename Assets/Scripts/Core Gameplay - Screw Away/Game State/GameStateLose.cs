@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static GameEnum;
 
 public class GameStateLose : BaseGameState
 {
@@ -13,7 +14,7 @@ public class GameStateLose : BaseGameState
     public override GameState GameState { get => GameState.Lose; }
 
     public static event Action loseLevelEvent;
-    public static event Action showRevivePopupEvent;
+    public static event Action<BoosterType> showRevivePopupEvent;
 
     public override bool CanTransitionTo()
     {
@@ -31,11 +32,12 @@ public class GameStateLose : BaseGameState
     {
         if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
         {
-            loseLevelEvent?.Invoke();
+            // loseLevelEvent?.Invoke();
+            showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
         }
         else
         {
-            showRevivePopupEvent?.Invoke();
+            showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
         }
     }
 
