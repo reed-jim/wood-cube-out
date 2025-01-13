@@ -74,6 +74,8 @@ public class ScrewManager : MonoBehaviour
     private void SetLevelScrewNumber(int screwNumber)
     {
         _totalScrew = screwNumber;
+
+        updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
     }
 
     private void AddScrew(BaseScrew screw)

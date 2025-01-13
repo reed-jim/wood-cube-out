@@ -29,7 +29,7 @@ public class BoosterHammerMaterialPropertyBlock : MonoBehaviour
             return;
         }
 
-        Tween.Custom(0f, 1, duration: 0.6f, onValueChange: newVal =>
+        Tween.Custom(0f, 1, startDelay: 0.2f, duration: 0.6f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_DissolveStrength", newVal);
 
@@ -48,6 +48,8 @@ public class BoosterHammerMaterialPropertyBlock : MonoBehaviour
             }
 
             gameObject.SetActive(false);
+
+            _isDissolving = false;
         });
 
         _isDissolving = true;

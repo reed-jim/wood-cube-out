@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using static GameEnum;
@@ -87,7 +88,7 @@ public class ScrewSelectionInput : MonoBehaviour
         }
     }
 
-    private void SelectObjectPart()
+    private async void SelectObjectPart()
     {
         if (_inputMode == InputMode.Disabled)
         {
@@ -114,6 +115,9 @@ public class ScrewSelectionInput : MonoBehaviour
                     objectPart.Break(hit.point);
 
                     breakObjectEvent?.Invoke();
+
+                    // avoid click screw immediately
+                    await Task.Delay(500);
 
                     _inputMode = InputMode.Select;
                 }
