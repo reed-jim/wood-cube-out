@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class RotateObject : MonoBehaviour
@@ -6,12 +7,17 @@ public class RotateObject : MonoBehaviour
 
     private float _pitch;
     private float _yaw;
+    private bool _isAutoRotating;
+    private float _remainingTimeToAutoRotate;
 
     void Awake()
     {
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.12f;
+        _isAutoRotating = true;
+
+        StartCoroutine(AutoRotating());
     }
 
     void Update()
@@ -19,8 +25,11 @@ public class RotateObject : MonoBehaviour
         transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
         transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
 
-        _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
-        _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+        if (!_isAutoRotating)
+        {
+            _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
+            _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+        }
     }
 
     void OnDestroy()
@@ -34,5 +43,40 @@ public class RotateObject : MonoBehaviour
 
         _pitch = normalizedDirection.y;
         _yaw = -normalizedDirection.x;
+
+        _isAutoRotating = false;
+        _remainingTimeToAutoRotate = 20;
+    }
+
+    private IEnumerator AutoRotating()
+    {
+        float timePerCycle = 0.3f;
+
+        WaitForSeconds waitForSeconds = new WaitForSeconds(timePerCycle);
+
+        while (true)
+        {
+            if (_isAutoRotating)
+            {
+                if (_yaw != 1)
+                {
+                    // _pitch = 1;
+                    _yaw = 0.02f;
+                    // _yaw = -normalizedDirection.x;
+                }
+            }
+            else
+            {
+                _remainingTimeToAutoRotate -= timePerCycle;
+
+                if (_remainingTimeToAutoRotate < 0)
+                {
+                    _isAutoRotating = true;
+                    _remainingTimeToAutoRotate = 20;
+                }
+            }
+
+            yield return waitForSeconds;
+        }
     }
 }

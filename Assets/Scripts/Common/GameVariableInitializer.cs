@@ -2,11 +2,13 @@ using System;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameVariableInitializer : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
 
+    CanvasScaler canvasScaler;
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasScale;
 

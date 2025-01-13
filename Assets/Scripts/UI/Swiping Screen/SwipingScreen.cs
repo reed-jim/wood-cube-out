@@ -9,6 +9,7 @@ public class SwipingScreen : MonoBehaviour
     [SerializeField] private UIScreen leaderboardScreen;
 
     [SerializeField] private Vector2Variable canvasSize;
+    [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int screenNumber;
@@ -50,8 +51,8 @@ public class SwipingScreen : MonoBehaviour
 
     private void SetupUI()
     {
-        iapShopScreen.SetInitialPosition(new Vector3(-canvasSize.Value.x, 0, 0));
-        leaderboardScreen.SetInitialPosition(new Vector3(canvasSize.Value.x, 0, 0));
+        iapShopScreen.SetInitialPosition(new Vector3(-canvasSizeOfReferenceDevice.Value.x, 0, 0));
+        leaderboardScreen.SetInitialPosition(new Vector3(canvasSizeOfReferenceDevice.Value.x, 0, 0));
     }
 
     private void OnSwipe(Vector2 direction)
@@ -61,7 +62,7 @@ public class SwipingScreen : MonoBehaviour
             return;
         }
 
-        if (Mathf.Abs(container.localPosition.x + direction.x) <= 0.5f * screenNumber * canvasSize.Value.x)
+        if (Mathf.Abs(container.localPosition.x + direction.x) <= 0.5f * screenNumber * canvasSizeOfReferenceDevice.Value.x)
         {
             container.localPosition += new Vector3(direction.x, 0, 0);
         }
@@ -74,9 +75,9 @@ public class SwipingScreen : MonoBehaviour
             return;
         }
 
-        float ratio = (container.localPosition.x % canvasSize.Value.x) / canvasSize.Value.x;
+        float ratio = (container.localPosition.x % canvasSizeOfReferenceDevice.Value.x) / canvasSizeOfReferenceDevice.Value.x;
 
-        int factor = (int)(container.localPosition.x / canvasSize.Value.x);
+        int factor = (int)(container.localPosition.x / canvasSizeOfReferenceDevice.Value.x);
 
         if (Mathf.Abs(ratio) >= 0.5f)
         {
@@ -91,7 +92,7 @@ public class SwipingScreen : MonoBehaviour
         }
 
         Tween.StopAll(container);
-        Tween.LocalPositionX(container, factor * canvasSize.Value.x, duration: 0.3f)
+        Tween.LocalPositionX(container, factor * canvasSizeOfReferenceDevice.Value.x, duration: 0.3f)
         .OnComplete(() =>
         {
             hideOutsideScreenEvent?.Invoke(container.localPosition.x);

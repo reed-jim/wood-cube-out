@@ -1,17 +1,21 @@
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(Button))]
-public class SaferioButton : MonoBehaviour
+public class SaferioButton : MonoBehaviour, ISelectHandler
 {
-    [SerializeField] private Image buttonSprite;
-
     private float scaleMultiplier = 1.05f;
     private float animationDuration = 0.1f;
 
     private Button _button;
     private Sequence _sequence;
+
+    public void OnSelect(BaseEventData eventData)
+    {
+        PlayAnimationOnClick();
+    }
 
     private void Awake()
     {

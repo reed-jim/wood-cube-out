@@ -337,7 +337,7 @@ Transform:
   m_GameObject: {fileID: 133824154}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.3, z: 100}
+  m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 1, y: 0.78, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -532,13 +532,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: Scene Transition
       objectReference: {fileID: 0}
-    - target: {fileID: 4225463744827924657, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
-      propertyPath: m_AnchorMax.x
+    - target: {fileID: 480392705617413544, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
+      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4225463744827924657, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4225463744827924657, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5781427163644949665, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3415,6 +3419,7 @@ MonoBehaviour:
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelDifficultyConfiguration: {fileID: 11400000, guid: 670f5462c723b534a88e18900bec5706, type: 2}
   levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
+  delayShowPopupWin: 0
 --- !u!4 &1649438915
 Transform:
   m_ObjectHideFlags: 0
@@ -4501,7 +4506,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2111080451
 Transform:
   m_ObjectHideFlags: 0

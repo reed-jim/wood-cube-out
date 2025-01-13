@@ -16,6 +16,9 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private LevelDifficultyConfiguration levelDifficultyConfiguration;
     [SerializeField] private LevelObserver levelObserver;
 
+    [Header("CUSTOMIZE")]
+    [SerializeField] private float delayShowPopupWin;
+
     #region PRIVATE FIELD
     private List<BaseScrew> _screws;
     private int _totalScrewObserved;
@@ -191,7 +194,7 @@ public class ScrewManager : MonoBehaviour
         CheckWin();
     }
 
-    private void CheckWin()
+    private async void CheckWin()
     {
         Dictionary<GameFaction, int> remainingScrewByFaction = new Dictionary<GameFaction, int>();
 
@@ -214,6 +217,8 @@ public class ScrewManager : MonoBehaviour
 
         if (remainingScrew == 0)
         {
+            await Task.Delay((int)(delayShowPopupWin * 1000));
+
             winLevelEvent?.Invoke();
         }
 

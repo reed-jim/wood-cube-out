@@ -38,8 +38,8 @@ public static class GameConstants
     public static Color SAFERIO_PURPLE = new Color(214f / 255, 86f / 255, 236f / 255, 1);
     public static Color SAFERIO_BLUE = new Color(24f / 255, 142f / 255, 233f / 255, 1);
     public static Color SAFERIO_YELLLOW = new Color(246f / 255, 209f / 255, 27f / 255, 1);
-    public static Color SAFERIO_LIGHT_BLUE = new Color(63f / 255, 236f / 255, 246f / 255, 1);
-    public static Color SAFERIO_PINK = new Color(255f / 255, 140f / 255, 220f / 255, 1);
+    public static Color SAFERIO_LIGHT_BLUE = new Color(223f / 255, 217f / 255, 216f / 255, 1);
+    public static Color SAFERIO_PINK = new Color(243f / 255, 134f / 255, 81f / 255, 1);
     #endregion
 
     #region OBJECT POOLING
