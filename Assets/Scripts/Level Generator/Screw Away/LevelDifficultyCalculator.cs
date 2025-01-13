@@ -55,8 +55,9 @@ public class LevelDifficultyCalculator : EditorWindow
 
         const float WEIGHT_NUM_SCREW = 0.2f;
         const float WEIGHT_PHASES_DIFFICULTY = 5f;
-        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 2.8f;
-        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 2f;
+        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 1.8f;
+        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 1.5f;
+        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 1.5f;
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
 
@@ -122,7 +123,8 @@ public class LevelDifficultyCalculator : EditorWindow
 
 
         // Number of triple matched color no blocked at game start
-
+        float startGameTripleSameFactionGenerationDifficulty =
+            1 - levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
 
         // Final
@@ -130,12 +132,14 @@ public class LevelDifficultyCalculator : EditorWindow
             WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
             WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
             WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized +
-            WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized;
+            WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized +
+            WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty;
 
         string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized}";
         difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Start Game Triple Match Difficulty: <color=#FF7A75>{WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty}";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
