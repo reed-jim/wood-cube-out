@@ -5,15 +5,9 @@ using UnityEngine;
 public class LevelData
 {
     [SerializeField] private LevelDifficultyConfiguration levelDifficultyConfiguration;
-    [SerializeField] private int numScrew;
 
     public LevelDifficultyConfiguration LevelDifficultyConfiguration
     {
         get => levelDifficultyConfiguration;
-    }
-
-    public int NumScrew
-    {
-        get => numScrew;
     }
 }

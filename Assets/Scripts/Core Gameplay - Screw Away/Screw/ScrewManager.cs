@@ -13,7 +13,6 @@ public class ScrewManager : MonoBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
-    [SerializeField] private LevelDifficultyConfiguration levelDifficultyConfiguration;
     [SerializeField] private LevelObserver levelObserver;
 
     [Header("CUSTOMIZE")]
@@ -23,6 +22,7 @@ public class ScrewManager : MonoBehaviour
     private List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
+    private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     #endregion
 
     #region EVENT
@@ -65,6 +65,8 @@ public class ScrewManager : MonoBehaviour
         _screws = new List<BaseScrew>();
 
         _totalScrewObserved = 0;
+
+        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
     }
 
     #region SCREW
@@ -182,7 +184,7 @@ public class ScrewManager : MonoBehaviour
         {
             if (screwBoxManager.ScrewPorts[i].IsFilled)
             {
-                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] += levelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
+                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] += _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
             }
         }
 
@@ -341,9 +343,9 @@ public class ScrewManager : MonoBehaviour
 
         int levelDifficulty = 0;
 
-        for (int i = 0; i < levelDifficultyConfiguration.LevelPhases.Length; i++)
+        for (int i = 0; i < _currentLevelDifficultyConfiguration.LevelPhases.Length; i++)
         {
-            LevelPhase levelPhase = levelDifficultyConfiguration.LevelPhases[i];
+            LevelPhase levelPhase = _currentLevelDifficultyConfiguration.LevelPhases[i];
 
             if (progress <= levelPhase.EndProgress)
             {

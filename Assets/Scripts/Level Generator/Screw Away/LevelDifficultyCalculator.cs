@@ -8,17 +8,10 @@ using static GameEnum;
 
 public class LevelDifficultyCalculator : EditorWindow
 {
-    private LevelDifficultyConfiguration levelDifficultyConfiguration;
+    private int level;
+    private LevelDataContainer levelDataContainer;
 
-
-
-    private Vector3 dimensionSize;
-    private Vector3 distance;
-    private float expectedScale;
-    private Vector3 expectedLocalPositionOffset;
-    private Vector3 expectedLocalRotationOffset;
-
-
+    private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
 
@@ -38,8 +31,10 @@ public class LevelDifficultyCalculator : EditorWindow
 
         prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
-        levelDifficultyConfiguration =
-            (LevelDifficultyConfiguration)EditorGUILayout.ObjectField("Level Difficulty Configuration", levelDifficultyConfiguration, typeof(LevelDifficultyConfiguration), true);
+        level =
+            EditorGUILayout.IntField("Level", level);
+        levelDataContainer =
+            (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
 
         if (GUILayout.Button("Calculate"))
         {
@@ -60,6 +55,8 @@ public class LevelDifficultyCalculator : EditorWindow
         const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 1.5f;
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
+
+        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(level);
 
 
 
@@ -95,15 +92,15 @@ public class LevelDifficultyCalculator : EditorWindow
 
 
         // Screw boxes generation difficulty
-        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, levelDifficultyConfiguration.LevelPhases.Length - 1);
+        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 
         float screwBoxesGenerationDifficulty = 0;
 
         float currentProgress = 0;
 
-        for (int i = 0; i < levelDifficultyConfiguration.LevelPhases.Length; i++)
+        for (int i = 0; i < _currentLevelDifficultyConfiguration.LevelPhases.Length; i++)
         {
-            LevelPhase phase = levelDifficultyConfiguration.LevelPhases[i];
+            LevelPhase phase = _currentLevelDifficultyConfiguration.LevelPhases[i];
 
             screwBoxesGenerationDifficulty += (phase.EndProgress - currentProgress) * Mathf.Pow(2, i);
 
@@ -118,13 +115,13 @@ public class LevelDifficultyCalculator : EditorWindow
         float MAX_SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = 99;
 
         float screwPortFactionChanceModifierDifficultyNormalized =
-            levelDifficultyConfiguration.ScrewPortFactionDifficultyModifier / MAX_SCREW_PORT_FACTION_DIFFICULTY_MODIFIER;
+            _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier / MAX_SCREW_PORT_FACTION_DIFFICULTY_MODIFIER;
 
 
 
         // Number of triple matched color no blocked at game start
         float startGameTripleSameFactionGenerationDifficulty =
-            1 - levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+            1 - _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
 
         // Final

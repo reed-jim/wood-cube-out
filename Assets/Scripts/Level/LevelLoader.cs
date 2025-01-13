@@ -12,7 +12,8 @@ public class LevelLoader : MonoBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
-    [SerializeField] private LevelDifficultyConfiguration tempLevelDifficulty;
+
+    private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
     public static event Action startLevelEvent;
     public static event Action<int> setLevelScrewNumberEvent;
@@ -53,6 +54,8 @@ public class LevelLoader : MonoBehaviour
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
                 GameObject level = Instantiate(op.Result, transform);
+
+                _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
 
                 AutoAssignScrewFaction(level);
                 AutoAssignScrewFactionMultiPhaseLevel(level);
@@ -178,7 +181,7 @@ public class LevelLoader : MonoBehaviour
 
         List<BaseScrew> shuffledScrews = new List<BaseScrew>();
 
-        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = tempLevelDifficulty.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
         // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
         //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
