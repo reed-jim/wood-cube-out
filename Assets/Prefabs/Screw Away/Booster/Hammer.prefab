@@ -96,6 +96,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4695132672107586858}
   - component: {fileID: 6733131338843805503}
+  - component: {fileID: 7354854177557697092}
   m_Layer: 0
   m_Name: Hammer
   m_TagString: Untagged
@@ -134,6 +135,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitFx: {fileID: 774611328013033286}
+  boosterHammerMaterialPropertyBlock: {fileID: 7354854177557697092}
+--- !u!114 &7354854177557697092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4433449578633393889}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9a77880aaf70eb43bec76ba48c264ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  renderers:
+  - {fileID: 3643987576617352153}
+  - {fileID: 6279806620981843687}
+  - {fileID: 3183938101077174015}
 --- !u!1001 &6567148618320802185
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -323,6 +341,21 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ed71acbbdd1ac4e4eb35462bb4e04327, type: 3}
+--- !u!23 &3183938101077174015 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 6219524437602912265, guid: ed71acbbdd1ac4e4eb35462bb4e04327, type: 3}
+  m_PrefabInstance: {fileID: 8826965467964354294}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &3643987576617352153 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -3968334038777653969, guid: ed71acbbdd1ac4e4eb35462bb4e04327, type: 3}
+  m_PrefabInstance: {fileID: 8826965467964354294}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6279806620981843687 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: -5955460154393397231, guid: ed71acbbdd1ac4e4eb35462bb4e04327, type: 3}
+  m_PrefabInstance: {fileID: 8826965467964354294}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9076186110708336925 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: ed71acbbdd1ac4e4eb35462bb4e04327, type: 3}

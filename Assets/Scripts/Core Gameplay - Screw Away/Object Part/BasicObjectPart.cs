@@ -244,7 +244,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         .Chain(Tween.Rotation(hammer.transform, Quaternion.Euler(0, 78, 45), duration: 0.2f)
         .OnComplete(() =>
         {
-            Tween.Position(hammer.transform, touchPosition + 50f * hammer.transform.right, startDelay: 0.3f, duration: 0.3f);
+            hammer.Dissolve();
         }));
 
         await Task.Delay(950);

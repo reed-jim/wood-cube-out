@@ -69,6 +69,8 @@ public class BasicScrew : BaseScrew
 
                 SoundManager.Instance.PlaySoundLoosenScrewFail();
 
+                HapticFeedback.MediumFeedback();
+
                 _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 0.1f * (fakeScrew.transform.localRotation * Vector3.forward),
                     cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
                 .OnComplete(() =>
@@ -100,80 +102,8 @@ public class BasicScrew : BaseScrew
 
             SoundManager.Instance.PlaySoundLoosenScrew();
 
-            // VibrateSlightly();
-
             HapticFeedback.MediumFeedback();
         }
-    }
-
-    // public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot)
-    // {
-    //     _isRotating = true;
-
-    //     // FOR ROTATING
-    //     await Task.Delay(100);
-
-    //     _tweens.Add(Tween.Position(transform, transform.position + 2f * transform.forward, duration: durationMoveOut).OnComplete(() =>
-    //     {
-    //         // _isRotating = false;
-
-    //         _tweens.Add(Tween.Delay(duration: durationDelay)
-    //         .OnComplete(() =>
-    //         {
-    //             transform.SetParent(screwBoxSlot.transform);
-
-    //             gameObject.layer = LayerMask.NameToLayer("UI");
-
-    //             GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
-
-    //             _isRotating = false;
-
-    //             _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: durationMoveToScrewPort));
-    //             _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox * Vector3.one, duration: durationMoveToScrewPort));
-    //             _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -1f, -0.3f), duration: durationMoveToScrewPort)
-    //             .OnComplete(() =>
-    //             {
-    //                 _isRotating = true;
-
-    //                 _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: durationTightenScrewPort));
-    //                 _tweens
-
-    //                 .Add(Tween.LocalPosition(transform, new Vector3(0, 0, -0.3f), duration: durationTightenScrewPort)
-    //                 .OnComplete(() =>
-    //                 {
-    //                     _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(0, 180, 0)), duration: 0.5f * durationTightenScrewPort)
-    //                         .OnComplete(() =>
-    //                         {
-    //                             SoundManager.Instance.PlaySoundTightenScrew();
-    //                         })
-    //                     );
-
-    //                     screwBoxSlot.CompleteFill();
-
-    //                     _isRotating = false;
-    //                     _isDone = true;
-    //                     _isInScrewPort = screwBoxSlot.IsScrewPort;
-
-    //                     InvokeScrewLoosenedEvent();
-    //                 }));
-    //             }));
-    //         }));
-    //     }));
-    // }
-
-    public void VibrateSlightly()
-    {
-#if UNITY_ANDROID
-        using (AndroidJavaClass vibratorClass = new AndroidJavaClass("android.os.Vibrator"))
-        {
-            using (AndroidJavaObject vibrator = vibratorClass.Call<AndroidJavaObject>("getSystemService", "vibrator"))
-            {
-                // Pattern: start immediately, vibrate for 50ms, then pause for 50ms, and repeat
-                long[] pattern = { 0, 50, 0 };  // Vibrate for 50ms, pause for 50ms
-                vibrator.Call("vibrate", pattern, -1); // -1 means no repeat
-            }
-        }
-#endif
     }
 
     public int CountBlockingObjectsPrefabMode()

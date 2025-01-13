@@ -30,6 +30,7 @@ public class ScrewManager : MonoBehaviour
     public static event Action spawnAdsScrewBoxesEvent;
     public static event Action winLevelEvent;
     public static event Action<BaseScrew[]> setScrewsEvent;
+    public static event Action<int, int> updateRemainingScrewEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -40,7 +41,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.addScrewToListEvent += AddScrew;
         ScrewBox.spawnNewScrewBoxEvent += SpawnNewScrewBox;
         ScrewBox.setFactionForScrewBoxEvent += AssignFactionForNewScrewBox;
-        BaseScrew.screwLoosenedEvent += CheckWin;
+        BaseScrew.screwLoosenedEvent += OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
@@ -53,7 +54,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.addScrewToListEvent -= AddScrew;
         ScrewBox.spawnNewScrewBoxEvent -= SpawnNewScrewBox;
         ScrewBox.setFactionForScrewBoxEvent -= AssignFactionForNewScrewBox;
-        BaseScrew.screwLoosenedEvent -= CheckWin;
+        BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
@@ -225,6 +226,8 @@ public class ScrewManager : MonoBehaviour
         }
 
         levelObserver.Progress = 1 - (float)remainingScrew / _totalScrew;
+
+        updateRemainingScrewEvent?.Invoke(remainingScrew, _totalScrew);
     }
     #endregion
 

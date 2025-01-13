@@ -72,7 +72,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
+        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
 
         if (hit.collider != null)
         {

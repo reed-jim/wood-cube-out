@@ -202,6 +202,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                 _isRotating = false;
 
                 float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
+                timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
                 _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Default));
                 _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Default));

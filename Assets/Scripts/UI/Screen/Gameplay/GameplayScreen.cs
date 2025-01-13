@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -11,6 +12,7 @@ public class GameplayScreen : MonoBehaviour
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
+    [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
 
     [SerializeField] private IntVariable currentLevel;
@@ -21,19 +23,21 @@ public class GameplayScreen : MonoBehaviour
 
     void Awake()
     {
+        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
+        LevelLoader.startLevelEvent += SetLevelText;
+        ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
+
         pauseButton.onClick.AddListener(Pause);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         debugNextLevelButton.onClick.AddListener(NextLevel);
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
-
-        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
-        LevelLoader.startLevelEvent += SetLevelText;
     }
 
     void OnDestroy()
     {
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
         LevelLoader.startLevelEvent -= SetLevelText;
+        ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
     private async void Pause()
@@ -68,5 +72,10 @@ public class GameplayScreen : MonoBehaviour
     private void SetLevelText()
     {
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+    }
+
+    private void UpdateRemainingScrew(int remainingScrew, int totalScrew)
+    {
+        remainingScrewText.text = $"{remainingScrew}/{totalScrew}";
     }
 }
