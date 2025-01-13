@@ -99,5 +99,7 @@ public class DebugPopup : BasePopup
         {
             userResourcesObserver.UserResources.BoosterQuantities[i] += 999;
         }
+
+        userResourcesObserver.Save();
     }
 }

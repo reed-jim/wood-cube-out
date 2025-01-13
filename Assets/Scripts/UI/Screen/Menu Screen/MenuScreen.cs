@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -10,17 +11,22 @@ public class MenuScreen : MonoBehaviour
 {
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button openRemoveAdPopupButton;
+    [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
 
     [SerializeField] private IntVariable currentLevel;
+    [SerializeField] private Vector2Variable canvasSize;
+
+    private float _initialOpenRemoveAdPopupButtonPositionY;
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
     private void Awake()
     {
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
+        BottomBarItem.switchRouteEvent += ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -33,6 +39,7 @@ public class MenuScreen : MonoBehaviour
     void OnDestroy()
     {
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
+        BottomBarItem.switchRouteEvent -= ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
     }
@@ -72,5 +79,19 @@ public class MenuScreen : MonoBehaviour
     private void UpdateCurrentLevelText()
     {
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+    }
+
+    private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)
+    {
+        if (screenRoute == ScreenRoute.Home)
+        {
+            Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
+        }
+        else
+        {
+            _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
+
+            Tween.LocalPositionY(openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * canvasSize.Value.y, 0.3f);
+        }
     }
 }

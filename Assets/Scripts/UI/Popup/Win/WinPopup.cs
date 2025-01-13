@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -15,6 +17,12 @@ public class WinPopup : BasePopup
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelCompleted;
 
     [SerializeField] private IntVariable currentLevel;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
+
+    [Header("CUSTOMIZE")]
+    [SerializeField] private float timeCollectCoin;
+
+    private List<Tween> _tweens;
 
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
@@ -35,19 +43,32 @@ public class WinPopup : BasePopup
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
     }
 
+    protected override void MoreActionInAwake()
+    {
+        _tweens = new List<Tween>();
+    }
+
+    protected override void MoreActionOnDestroy()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+    }
+
     private async void OnLevelWinAsync()
     {
+        coinText.text = $"{0}";
+        continueButton.transform.localScale = Vector3.zero;
+
         Show();
 
         await Task.Delay(500);
 
-        SetLevelCompleted();
+        SetLevelCompletedText();
 
         AudioSource winSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WIN_SOUND);
 
         winSound.Play();
 
-        CollectCoin(500);
+        CollectCoin(10);
 
         currentLevel.Value++;
     }
@@ -63,25 +84,41 @@ public class WinPopup : BasePopup
     //     winSound.Play();
     // }
 
-    public void SetLevelCompleted()
+    public void SetLevelCompletedText()
     {
-        // localizedLevelCompleted.TranslationName = GameConstants.LEVEL_COMPLETED;
-
-        localizedLevelCompleted.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+        // localizedLevelCompleted.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
     }
 
-    private async void CollectCoin(int numCoin)
+    private void CollectCoin(int numCoin)
     {
         int _currentCoin = 0;
 
-        while (_currentCoin < numCoin)
+        coinText.text = $"{_currentCoin}";
+
+        int deltaCoin = (int)(numCoin / 10f);
+
+        _tweens.Add(Tween.Custom(0, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
         {
-            _currentCoin += 100;
+            coinText.text = $"{(int)newVal}";
+        })
+        .OnComplete(() =>
+        {
+            userResourcesObserver.UserResources.CoinQuantity += numCoin;
 
-            coinText.text = $"{_currentCoin}";
+            userResourcesObserver.Save();
 
-            await Task.Delay(100);
-        }
+            _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+        })
+        );
+
+        // while (_currentCoin < numCoin)
+        // {
+        //     _currentCoin += deltaCoin;
+
+        //     coinText.text = $"{_currentCoin}";
+
+        //     await Task.Delay(100);
+        // }
     }
 
     private async void Continue()
@@ -90,7 +127,7 @@ public class WinPopup : BasePopup
 
         // await Task.Delay(3000);
 
-        AdmobAdsMax.Instance.ShowInterstitial(isShowImmediatly:true, actionIniterClose: OnInterstitialAdCompleted);
+        AdmobAdsMax.Instance.ShowInterstitial(isShowImmediatly: true, actionIniterClose: OnInterstitialAdCompleted);
     }
 
     private void OnInterstitialAdCompleted()

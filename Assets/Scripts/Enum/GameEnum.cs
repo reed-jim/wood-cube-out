@@ -24,7 +24,8 @@ public class GameEnum : MonoBehaviour
         Lose,
         Booster,
         Revive,
-        Rate
+        Rate,
+        Home
     }
 
     public enum GameFaction
