@@ -30,6 +30,11 @@ public class UserResourcesObserver : ScriptableObject
 
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
     }
+
+    public void ConsumeBooster(int boosterIndex)
+    {
+        userResources.BoosterQuantities[boosterIndex]--;
+    }
 }
 
 [Serializable]

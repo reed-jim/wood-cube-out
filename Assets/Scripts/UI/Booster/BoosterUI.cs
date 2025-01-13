@@ -32,6 +32,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action disableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
+    public static event Action<int> updateBoosterQuantityEvent;
 
     private int _numScrewPortsAdded;
     private bool _isInTransition;
@@ -46,6 +47,7 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
+        ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
 
         addMoreScrewPortButton.onClick.AddListener(AddMoreScrewPort);
         breakObjectButton.onClick.AddListener(EnableBreakObjectMode);
@@ -71,6 +73,7 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
+        ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
     }
 
     private void Reset()
@@ -121,6 +124,8 @@ public class BoosterUI : MonoBehaviour
         {
             _isInTransition = true;
         }
+
+        ConsumeBooster(boosterIndex: 0);
 
         addMoreScrewPortEvent?.Invoke();
 
@@ -207,6 +212,8 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
+        ConsumeBooster(boosterIndex: 2);
+
         clearAllScrewPortsEvent?.Invoke();
 
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND);
@@ -241,5 +248,17 @@ public class BoosterUI : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private void ConsumeBooster(int boosterIndex)
+    {
+        userResourcesObserver.ConsumeBooster(boosterIndex: boosterIndex);
+
+        updateBoosterQuantityEvent?.Invoke(boosterIndex);
+    }
+
+    private void UseBreakObjectBooster()
+    {
+        ConsumeBooster(boosterIndex: 1);
     }
 }

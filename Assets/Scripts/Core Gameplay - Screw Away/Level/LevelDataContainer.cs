@@ -17,7 +17,7 @@ public class LevelDataContainer : ScriptableObject
 
         if (levelIndex < levelsData.Length)
         {
-            if (levelsData[levelIndex] != null)
+            if (levelsData[levelIndex].LevelDifficultyConfiguration != null)
             {
                 return levelsData[levelIndex].LevelDifficultyConfiguration;
             }

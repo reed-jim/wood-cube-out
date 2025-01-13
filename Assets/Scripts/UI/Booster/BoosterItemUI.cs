@@ -24,9 +24,16 @@ public class BoosterItemUI : MonoBehaviour
 
     void Awake()
     {
+        BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
+
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
 
         Setup();
+    }
+
+    void OnDestroy()
+    {
+        BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
     }
 
     private async void Setup()
@@ -55,5 +62,13 @@ public class BoosterItemUI : MonoBehaviour
     private void ShowBuyBoosterPopup()
     {
         showBuyBoosterPopupEvent?.Invoke((BoosterType)boosterIndex);
+    }
+
+    private void UpdateQuantityText(int boosterIndex)
+    {
+        if (boosterIndex == this.boosterIndex)
+        {
+            quantityText.text = $"{userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]}";
+        }
     }
 }
