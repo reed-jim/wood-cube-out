@@ -10,6 +10,7 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
 
     #region PRIVATE FIELD
     [SerializeField] private Renderer _renderer;
+    [SerializeField] private Renderer _screwInsideRenderer;
     private MaterialPropertyBlock _propertyBlock;
     #endregion
 
@@ -39,6 +40,7 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
 
         _renderer.SetPropertyBlock(_propertyBlock);
+        // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
     }
 
     public void SetOutlineWidth(float value)

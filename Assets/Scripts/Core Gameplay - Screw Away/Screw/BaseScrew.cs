@@ -196,6 +196,11 @@ public class BaseScrew : MonoBehaviour, IScrew
                 {
                     gameObject.layer = LayerMask.NameToLayer("UI");
 
+                    foreach (Transform child in transform)
+                    {
+                        child.gameObject.layer = LayerMask.NameToLayer("UI");
+                    }
+
                     GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
                 }
 

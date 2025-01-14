@@ -59,6 +59,15 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         // }
 
         partRigidbody.isKinematic = true;
+
+        minJointToDisableKinematic = 0;
+
+        HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
+
+        for (int i = 0; i < hingeJoints.Length; i++)
+        {
+            hingeJoints[i].breakForce = 0;
+        }
     }
 
     void OnDestroy()
