@@ -15,6 +15,10 @@ public class LevelDifficultyCalculator : EditorWindow
 
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
 
+
+    private string resultText;
+
+
     [MenuItem("Saferio/Tools/Level Difficulty Calculator")]
     public static void ShowWindow()
     {
@@ -48,11 +52,12 @@ public class LevelDifficultyCalculator : EditorWindow
     {
         const int MAX_SCREW = 300;
 
-        const float WEIGHT_NUM_SCREW = 0.2f;
-        const float WEIGHT_PHASES_DIFFICULTY = 5f;
-        const float WEIGHT_MODEL_DIFFICULTY = 1.8f;
-        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 1.5f;
-        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 1.5f;
+        // const float WEIGHT_NUM_SCREW = 0.2f;
+        const float WEIGHT_PHASES_DIFFICULTY = 500f;
+        // const float WEIGHT_MODEL_DIFFICULTY = 1.8f;
+        const float WEIGHT_BLOCKED_RATIO_DIFFICULTY = 100f;
+        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 200f;
+        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 200f;
 
         prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
 
@@ -72,15 +77,16 @@ public class LevelDifficultyCalculator : EditorWindow
 
 
         // Initial difficulty
-        int MAX_SCREW_BLOCKED = 120;
-        float MAX_MODEL_DIFFICULTY = (numScrew - 1);
-        float modelDifficulty = 0;
+        float MAX_SCREW_BLOCKED = (numScrew - 1);
 
+        int totalObstacles = 0;
         int numScrewBlocked = 0;
 
         for (int i = 0; i < numScrew; i++)
         {
             int numBlockingObjects = screws[i].CountBlockingObjectsPrefabMode();
+
+            totalObstacles += numBlockingObjects;
 
             if (numBlockingObjects > 0)
             {
@@ -88,9 +94,8 @@ public class LevelDifficultyCalculator : EditorWindow
             }
         }
 
-        modelDifficulty = numScrewBlocked;
-
-        float modelDifficultyNormalized = (float)numScrewBlocked / MAX_SCREW_BLOCKED;
+        float blockedRatioDifficultyNormalized = (float)numScrewBlocked / MAX_SCREW_BLOCKED;
+        float finalDifficultyMultiplier = (float)numScrewBlocked / 100;
 
 
 
@@ -129,25 +134,34 @@ public class LevelDifficultyCalculator : EditorWindow
 
         // Final
         float finalDifficulty =
-            WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
+            // WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
             WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
-            WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized +
+            // WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized +
+            WEIGHT_BLOCKED_RATIO_DIFFICULTY * blockedRatioDifficultyNormalized +
             WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized +
             WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty;
 
-        string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
-        difficultyText += $" <color=#9DFF8D>({numScrewDifficultyNormalized * 100}%)";
-        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized}";
-        difficultyText += $" <color=#9DFF8D>({modelDifficultyNormalized * 100}%)";
-        difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
+        finalDifficulty *= finalDifficultyMultiplier;
+
+        // string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
+        // difficultyText += $" <color=#9DFF8D>({numScrewDifficultyNormalized * 100}%)";
+        // difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized}";
+        // difficultyText += $" <color=#9DFF8D>({modelDifficultyNormalized * 100}%)";
+        string difficultyText = $"Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
         difficultyText += $" <color=#9DFF8D>({screwBoxesGenerationDifficultyNormalized * 100}%)";
+        difficultyText += $" <color=#fff>- Blocked Ratio Difficulty: <color=#FF7A75>{WEIGHT_BLOCKED_RATIO_DIFFICULTY * blockedRatioDifficultyNormalized}";
+        difficultyText += $" <color=#9DFF8D>({blockedRatioDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Screw Port Faction Chance Modifier Difficulty: <color=#FF7A75>{WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized}";
         difficultyText += $" <color=#9DFF8D>({screwPortFactionChanceModifierDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Start Game Triple Match Difficulty: <color=#FF7A75>{WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty}";
         difficultyText += $" <color=#9DFF8D>({startGameTripleSameFactionGenerationDifficulty * 100}%)";
+        difficultyText += $" <color=#fff>- Total Obstacles: <color=#FF7A75>({numScrewBlocked})";
+        difficultyText += $" <color=#fff>- Final Difficulty Multiplier: <color=#FF7A75>({finalDifficultyMultiplier})";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
         Debug.Log(difficultyText);
+
+        EditorGUIUtility.systemCopyBuffer = $"{finalDifficulty}";
     }
 
     #region UTIL
