@@ -105,7 +105,7 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             LevelPhase phase = _currentLevelDifficultyConfiguration.LevelPhases[i];
 
-            screwBoxesGenerationDifficulty += (phase.EndProgress - currentProgress) * Mathf.Pow(2, i);
+            screwBoxesGenerationDifficulty += (phase.EndProgress - currentProgress) * Mathf.Pow(2, phase.PhaseIndex);
 
             currentProgress = phase.EndProgress;
         }
