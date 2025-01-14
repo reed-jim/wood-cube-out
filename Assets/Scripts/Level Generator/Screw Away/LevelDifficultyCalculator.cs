@@ -38,25 +38,25 @@ public class LevelDifficultyCalculator : EditorWindow
 
         if (GUILayout.Button("Calculate"))
         {
-            Calculate(prefabPath);
+            Calculate();
         }
 
         GUILayout.EndArea();
     }
 
-    private void Calculate(string levelPath)
+    private void Calculate()
     {
         const int MAX_SCREW = 300;
 
         const float WEIGHT_NUM_SCREW = 0.2f;
         const float WEIGHT_PHASES_DIFFICULTY = 5f;
-        const float WEIGHT_INITIAL_RANDOM_SCREW_FACTION = 0.5f;
-        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 2f;
-        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 2.3f;
+        const float WEIGHT_MODEL_DIFFICULTY = 1.8f;
+        const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 1.5f;
+        const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 1.5f;
 
         prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
 
-        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(levelPath);
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(prefabPath);
 
         _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(level);
 
@@ -72,6 +72,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
 
         // Initial difficulty
+        int MAX_SCREW_BLOCKED = 120;
         float MAX_MODEL_DIFFICULTY = (numScrew - 1);
         float modelDifficulty = 0;
 
@@ -89,7 +90,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
         modelDifficulty = numScrewBlocked;
 
-        float modelDifficultyNormalized = modelDifficulty / MAX_MODEL_DIFFICULTY;
+        float modelDifficultyNormalized = (float)numScrewBlocked / MAX_SCREW_BLOCKED;
 
 
 
@@ -130,13 +131,13 @@ public class LevelDifficultyCalculator : EditorWindow
         float finalDifficulty =
             WEIGHT_NUM_SCREW * numScrewDifficultyNormalized +
             WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized +
-            WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized +
+            WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized +
             WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized +
             WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty;
 
         string difficultyText = $"Num Screw Difficulty: <color=#FF7A75>{WEIGHT_NUM_SCREW * numScrewDifficultyNormalized}";
         difficultyText += $" <color=#9DFF8D>({numScrewDifficultyNormalized * 100}%)";
-        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_INITIAL_RANDOM_SCREW_FACTION * modelDifficultyNormalized}";
+        difficultyText += $" <color=#fff>- Model Difficulty: <color=#FF7A75>{WEIGHT_MODEL_DIFFICULTY * modelDifficultyNormalized}";
         difficultyText += $" <color=#9DFF8D>({modelDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Screw Boxes Generation Difficulty: <color=#FF7A75>{WEIGHT_PHASES_DIFFICULTY * screwBoxesGenerationDifficultyNormalized}";
         difficultyText += $" <color=#9DFF8D>({screwBoxesGenerationDifficultyNormalized * 100}%)";
