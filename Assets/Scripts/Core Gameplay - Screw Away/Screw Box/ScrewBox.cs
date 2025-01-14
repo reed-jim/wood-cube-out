@@ -34,6 +34,7 @@ public class ScrewBox : MonoBehaviour
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private Vector3 _initialScale;
+    private bool _isInTransition;
     #endregion
 
     public GameFaction Faction
@@ -51,6 +52,12 @@ public class ScrewBox : MonoBehaviour
     {
         get => isLocked;
         set => isLocked = value;
+    }
+
+    public bool IsInTransition
+    {
+        get => _isInTransition;
+        set => _isInTransition = value;
     }
 
     public ScrewBoxServiceLocator ScrewBoxServiceLocator

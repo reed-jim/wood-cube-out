@@ -253,7 +253,7 @@ public class ScrewBoxManager : MonoBehaviour
                 continue;
             }
 
-            if (screwBox.IsLocked)
+            if (screwBox.IsLocked || screwBox.IsInTransition)
             {
                 continue;
             }
@@ -320,7 +320,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.Faction = faction;
 
-        screwBox.transform.position = new Vector3(-10, _screwBoxPositionY, screwBox.transform.position.z);
+
 
         int index = 0;
 
@@ -336,19 +336,11 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < screwBox.ScrewBoxSlots.Length; i++)
-        {
-            ScrewBoxSlot screwBoxSlot = screwBox.ScrewBoxSlots[i];
+        Direction getInDirection = index > 1 ? Direction.Left : Direction.Right;
 
-            if (screwBoxSlot.IsFilled)
-            {
-                screwBoxSlot.Screw.gameObject.SetActive(false);
+        screwBox.transform.position = new Vector3(getInDirection == Direction.Right ? -10 : 10, _screwBoxPositionY, screwBox.transform.position.z);
 
-                screwBoxSlot.Screw = null;
-
-                screwBoxSlot.IsFilled = false;
-            }
-        }
+        ResetScrewBoxSlot();
 
         Vector3 destination = screwBox.transform.position;
 
@@ -363,12 +355,33 @@ public class ScrewBoxManager : MonoBehaviour
         }
         else
         {
+            screwBox.IsInTransition = true;
+
             Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
             {
+                screwBox.IsInTransition = false;
+
                 MoveFromScrewPortToScrewBox(screwBox);
 
                 screwBoxSpawnedEvent?.Invoke(screwBox);
             });
+        }
+
+        void ResetScrewBoxSlot()
+        {
+            for (int i = 0; i < screwBox.ScrewBoxSlots.Length; i++)
+            {
+                ScrewBoxSlot screwBoxSlot = screwBox.ScrewBoxSlots[i];
+
+                if (screwBoxSlot.IsFilled)
+                {
+                    screwBoxSlot.Screw.gameObject.SetActive(false);
+
+                    screwBoxSlot.Screw = null;
+
+                    screwBoxSlot.IsFilled = false;
+                }
+            }
         }
     }
 
