@@ -106,7 +106,7 @@ public class BasicScrew : BaseScrew
         }
     }
 
-    public int CountBlockingObjectsPrefabMode()
+    public int CountBlockingObjectsPrefabMode(bool isIncludeHiddenScrew)
     {
         const int MAX_OBSTACLE_ARRAY_SIZE = 10;
 
@@ -114,36 +114,36 @@ public class BasicScrew : BaseScrew
 
         Collider[] obstacles = new Collider[MAX_OBSTACLE_ARRAY_SIZE];
 
-        int numObstacle = gameObject.scene.GetPhysicsScene().OverlapCapsule(start, start + 10 * transform.forward, 0.2f, obstacles);
+        // int numObstacle = gameObject.scene.GetPhysicsScene().OverlapCapsule(start, start + 10 * transform.forward, 0.2f, obstacles);
+
+        RaycastHit hit;
+
+        gameObject.scene.GetPhysicsScene().CapsuleCast(start, start + 0.1f * transform.forward, 0.2f, transform.forward, out hit);
 
         int number = 0;
 
-        float minBlockedDistance = float.MaxValue;
-
-        for (int i = 0; i < numObstacle; i++)
+        if (hit.collider != null)
         {
-            if (obstacles[i].transform == transform.parent)
+            if (hit.transform == transform.parent)
             {
-                continue;
+                return 0;
             }
 
-            if (obstacles[i].GetComponent<IObjectPart>() != null)
+            if (hit.transform.GetComponent<IObjectPart>() != null)
             {
-                float distance = Vector3.Distance(obstacles[i].ClosestPoint(transform.position), transform.position);
+                float distance = Vector3.Distance(hit.point, transform.position);
 
-                if (distance < minBlockedDistance)
+                if (distance < 0.9f)
                 {
-                    minBlockedDistance = distance;
+                    number++;
                 }
-
-                // if (distance < 1)
-                // {
-                //     number++;
-                // }
-
-                number++;
             }
         }
+
+        // for (int i = 0; i < numObstacle; i++)
+        // {
+
+        // }
 
         return number;
     }
@@ -153,7 +153,7 @@ public class BasicScrew : BaseScrew
         Vector3 start = transform.position;
 
         // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
-        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.1f * transform.forward, 0.2f, transform.forward, 10);
+        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.01f * transform.forward, 0.2f, transform.forward, 10);
 
         int number = 0;
 

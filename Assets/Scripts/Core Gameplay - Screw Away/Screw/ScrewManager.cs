@@ -168,6 +168,7 @@ public class ScrewManager : MonoBehaviour
 
         foreach (var faction in totalNotBlockedScrewByFaction.Keys)
         {
+            // Debug.Log(faction + "/" + 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length);
             difficultyLevelByFactions[faction] -= 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length;
         }
 
@@ -340,7 +341,7 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
+                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: false);
             }
         }
 

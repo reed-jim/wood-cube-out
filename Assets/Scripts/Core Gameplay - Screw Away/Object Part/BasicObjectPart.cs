@@ -119,15 +119,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             _totalJoint--;
 
-            if (_totalJoint == 0)
-            {
-                _isFree = true;
-
-                Throw();
-
-                // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
-            }
-
             if (partRigidbody.isKinematic)
             {
                 if (_totalJoint <= 1 && _totalJoint <= minJointToDisableKinematic)
@@ -142,6 +133,15 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
                     partRigidbody.isKinematic = false;
                 }
+            }
+
+            if (_totalJoint == 0)
+            {
+                _isFree = true;
+
+                Throw();
+
+                // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
         }
     }

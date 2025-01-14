@@ -84,7 +84,9 @@ public class LevelDifficultyCalculator : EditorWindow
 
         for (int i = 0; i < numScrew; i++)
         {
-            int numBlockingObjects = screws[i].CountBlockingObjectsPrefabMode();
+            int numBlockingObjects = screws[i].CountBlockingObjects(isIncludeHiddenScrew: false);
+
+            Debug.Log(numBlockingObjects);
 
             totalObstacles += numBlockingObjects;
 
@@ -92,10 +94,15 @@ public class LevelDifficultyCalculator : EditorWindow
             {
                 numScrewBlocked++;
             }
+
+            // if (numBlockingObjects > 2)
+            // {
+            //     totalObstacles++;
+            // }
         }
 
         float blockedRatioDifficultyNormalized = (float)numScrewBlocked / MAX_SCREW_BLOCKED;
-        float finalDifficultyMultiplier = (float)numScrewBlocked / 100;
+        float finalDifficultyMultiplier = ((float)totalObstacles / numScrew) * totalObstacles / 100f;
 
 
 
@@ -155,7 +162,8 @@ public class LevelDifficultyCalculator : EditorWindow
         difficultyText += $" <color=#9DFF8D>({screwPortFactionChanceModifierDifficultyNormalized * 100}%)";
         difficultyText += $" <color=#fff>- Start Game Triple Match Difficulty: <color=#FF7A75>{WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty}";
         difficultyText += $" <color=#9DFF8D>({startGameTripleSameFactionGenerationDifficulty * 100}%)";
-        difficultyText += $" <color=#fff>- Total Obstacles: <color=#FF7A75>({numScrewBlocked})";
+        difficultyText += $" <color=#fff>- Total Screws: <color=#FF7A75>({numScrew})";
+        difficultyText += $" <color=#fff>- Total Obstacles: <color=#FF7A75>({totalObstacles})";
         difficultyText += $" <color=#fff>- Final Difficulty Multiplier: <color=#FF7A75>({finalDifficultyMultiplier})";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
 
