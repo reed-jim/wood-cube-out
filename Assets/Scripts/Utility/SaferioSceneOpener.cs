@@ -18,6 +18,12 @@ public class SaferioSceneOpener : EditorWindow
         EditorSceneManager.OpenScene("Assets/Scenes/Gameplay - Screw Away.unity");
     }
 
+    [MenuItem("Tools/Open Scene/Level Difficulty Calculator")]
+    public static void OpenLevelDifficultyCalculatorScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/Level Difficulty Calculator.unity");
+    }
+
     [MenuItem("Tools/Open Persistent Save Path")]
     public static void OpenPersistentSavePath()
     {

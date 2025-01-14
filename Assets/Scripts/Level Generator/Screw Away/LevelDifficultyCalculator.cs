@@ -53,9 +53,9 @@ public class LevelDifficultyCalculator : EditorWindow
         const int MAX_SCREW = 300;
 
         // const float WEIGHT_NUM_SCREW = 0.2f;
-        const float WEIGHT_PHASES_DIFFICULTY = 500f;
+        const float WEIGHT_PHASES_DIFFICULTY = 580f;
         // const float WEIGHT_MODEL_DIFFICULTY = 1.8f;
-        const float WEIGHT_BLOCKED_RATIO_DIFFICULTY = 100f;
+        const float WEIGHT_BLOCKED_RATIO_DIFFICULTY = 20f;
         const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 200f;
         const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 200f;
 
@@ -86,8 +86,6 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             int numBlockingObjects = screws[i].CountBlockingObjects(isIncludeHiddenScrew: false);
 
-            Debug.Log(numBlockingObjects);
-
             totalObstacles += numBlockingObjects;
 
             if (numBlockingObjects > 0)
@@ -102,7 +100,7 @@ public class LevelDifficultyCalculator : EditorWindow
         }
 
         float blockedRatioDifficultyNormalized = (float)numScrewBlocked / MAX_SCREW_BLOCKED;
-        float finalDifficultyMultiplier = ((float)totalObstacles / numScrew) * totalObstacles / 100f;
+        float finalDifficultyMultiplier = (1 + 0.1f * ((float)totalObstacles / numScrew) * totalObstacles / 100f);
 
 
 
