@@ -355,7 +355,7 @@ public class ScrewManager : MonoBehaviour
 
             if (progress <= levelPhase.EndProgress)
             {
-                levelDifficulty = i;
+                levelDifficulty = levelPhase.PhaseIndex;
 
                 break;
             }
