@@ -1,8 +1,10 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Unity.Mathematics;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using static GameEnum;
 
@@ -140,6 +142,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Magic Snap"))
         {
             MagicSnap();
+        }
+
+        if (GUILayout.Button("Unfold All"))
+        {
+            UnfoldAllInPrefabMode();
         }
 
         GUILayout.EndArea();
@@ -662,6 +669,47 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region UTIL
+    private void UnfoldAllInPrefabMode()
+    {
+        if (PrefabStageUtility.GetCurrentPrefabStage() != null)
+        {
+            PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+
+            UnfoldRecursively(prefabStage.prefabContentsRoot.transform);
+        }
+        else
+        {
+            Debug.LogWarning("Not in Prefab Mode!");
+        }
+    }
+
+    private static void UnfoldRecursively(Transform parentTransform)
+    {
+        var type = typeof(EditorWindow).Assembly.GetType("UnityEditor.SceneHierarchyWindow");
+        var window = GetWindow(type);
+        var exprec = type.GetMethod("SetExpandedRecursive");
+        exprec.Invoke(window, new object[] { Selection.activeGameObject.GetInstanceID(), false });
+
+        foreach (Transform child in parentTransform)
+        {
+            UnfoldRecursively(child);
+        }
+    }
+
+    private static EditorWindow GetHierarchyWindow()
+    {
+        var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
+        foreach (var window in windows)
+        {
+            if (window.titleContent.text == "Hierarchy")
+            {
+                return window;
+            }
+        }
+        return null;
+    }
+
+
     public List<T> GetComponentsFromAllChildren<T>(Transform parent) where T : Component
     {
         List<T> components = new List<T>();
