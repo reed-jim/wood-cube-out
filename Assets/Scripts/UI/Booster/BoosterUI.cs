@@ -168,7 +168,7 @@ public class BoosterUI : MonoBehaviour
         breakModeContainer.gameObject.SetActive(true);
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.05f * canvasSize.Value.y, duration: transitionTime)
         .OnComplete(() =>
         {
             enableBreakObjectModeEvent?.Invoke();
