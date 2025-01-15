@@ -6,7 +6,7 @@ using UnityEngine.UI;
 [RequireComponent(typeof(Button))]
 public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 {
-    private float scaleMultiplier = 1.05f;
+    private float scaleMultiplier = 1.025f;
     private float animationDuration = 0.1f;
 
     private Button _button;
