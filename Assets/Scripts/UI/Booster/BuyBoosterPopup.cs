@@ -25,16 +25,20 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private BoosterDataObserver boosterDataObserver;
 
     private BoosterType _boosterType;
+    private bool _isBoughtBreakObjectBoosterByCoin;
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
+    public static event Action openIAPShopPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
 
+        buyWithDiamondButton.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);
     }
 
@@ -43,6 +47,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
     }
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
@@ -59,18 +64,18 @@ public class BuyBoosterPopup : BasePopup
         title.TranslationName = leanTranslationTitle[(int)_boosterType];
         boosterDescription.TranslationName = leanTranslationNames[(int)_boosterType];
 
-        if (userResourcesObserver.UserResources.DiamondQuantity == 0)
-        {
-            buyWithDiamondButton.interactable = false;
+        // if (userResourcesObserver.UserResources.DiamondQuantity == 0)
+        // {
+        //     buyWithDiamondButton.interactable = false;
 
-            buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 0.5f);
-        }
-        else
-        {
-            buyWithDiamondButton.interactable = true;
+        //     buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 0.5f);
+        // }
+        // else
+        // {
+        //     buyWithDiamondButton.interactable = true;
 
-            buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 1f);
-        }
+        //     buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 1f);
+        // }
 
         getWithAdsButton.onClick.RemoveAllListeners();
 
@@ -84,6 +89,37 @@ public class BuyBoosterPopup : BasePopup
         }
     }
 
+    private void GetWithCoin()
+    {
+        int boosterIndex = (int)_boosterType;
+
+        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
+        {
+            if (_boosterType == BoosterType.BreakObject)
+            {
+                _isBoughtBreakObjectBoosterByCoin = true;
+            }
+            else
+            {
+                userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
+                userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+
+                userResourcesObserver.Save();
+            }
+
+            Hide(onCompletedAction: () =>
+            {
+                useBoosterEvent?.Invoke(_boosterType);
+            });
+        }
+        else
+        {
+            Hide();
+
+            openIAPShopPopupEvent?.Invoke();
+        }
+    }
+
     private void GetWithAds()
     {
         AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, null, null);
@@ -93,9 +129,10 @@ public class BuyBoosterPopup : BasePopup
     {
         userResourcesObserver.UserResources.BoosterQuantities[(int)_boosterType]++;
 
-        useBoosterEvent?.Invoke(_boosterType);
-
-        Hide();
+        Hide(onCompletedAction: () =>
+        {
+            useBoosterEvent?.Invoke(_boosterType);
+        });
     }
 
     private void UnlockScrewBoxWithAds()
@@ -109,5 +146,18 @@ public class BuyBoosterPopup : BasePopup
         {
             unlockScrewBoxEvent?.Invoke();
         });
+    }
+
+    private void OnConfirmedBreakObject()
+    {
+        if (_isBoughtBreakObjectBoosterByCoin)
+        {
+            userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[(int)_boosterType];
+            userResourcesObserver.UserResources.BoosterQuantities[(int)_boosterType]++;
+
+            userResourcesObserver.Save();
+
+            _isBoughtBreakObjectBoosterByCoin = false;
+        }
     }
 }

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,8 +17,11 @@ public class BasePopup : MonoBehaviour
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
 
+    #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
     protected bool _isShown;
+    protected List<Tween> _tweens;
+    #endregion
 
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
@@ -37,6 +42,7 @@ public class BasePopup : MonoBehaviour
 
         RegisterMoreEvent();
 
+        _tweens = new List<Tween>();
         _transitionAnimation = GetComponent<ISaferioUIAnimation>();
 
         if (isRouteActiveFromStart)
@@ -67,6 +73,8 @@ public class BasePopup : MonoBehaviour
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
+
+        CommonUtil.StopAllTweens(_tweens);
 
         MoreActionOnDestroy();
     }

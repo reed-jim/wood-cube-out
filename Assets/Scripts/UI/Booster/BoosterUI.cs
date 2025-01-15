@@ -22,6 +22,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
+    [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
@@ -196,6 +197,11 @@ public class BoosterUI : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
+        if (screwBoxesObserver.NumScrewInScrewPorts == 0)
+        {
+            return;
+        }
+
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
@@ -226,18 +232,6 @@ public class BoosterUI : MonoBehaviour
         });
     }
 
-    private void CheckBoosterAvailability(int boosterIndex)
-    {
-        if (IsBoosterAvailable(boosterIndex))
-        {
-
-        }
-        else
-        {
-            // switchRouteEvent?.Invoke(ScreenRoute.Booster);
-        }
-    }
-
     private bool IsBoosterAvailable(int boosterIndex)
     {
         if (userResourcesObserver.UserResources.BoosterQuantities[boosterIndex] > 0)
@@ -260,5 +254,13 @@ public class BoosterUI : MonoBehaviour
     private void UseBreakObjectBooster()
     {
         ConsumeBooster(boosterIndex: 1);
+    }
+
+    private void OnConfirmedClearScrewPorts(int numScrewCleared)
+    {
+        if (numScrewCleared > 0)
+        {
+            ConsumeBooster(boosterIndex: 2);
+        }
     }
 }

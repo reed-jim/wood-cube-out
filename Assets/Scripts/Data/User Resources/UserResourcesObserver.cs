@@ -33,7 +33,10 @@ public class UserResourcesObserver : ScriptableObject
 
     public void ConsumeBooster(int boosterIndex)
     {
-        userResources.BoosterQuantities[boosterIndex]--;
+        if (userResources.BoosterQuantities[boosterIndex] > 0)
+        {
+            userResources.BoosterQuantities[boosterIndex]--;
+        }
     }
 }
 

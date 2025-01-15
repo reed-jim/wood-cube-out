@@ -36,6 +36,7 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
+    public static event Action<int> screwPortsClearedEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -70,11 +71,11 @@ public class ScrewBoxManager : MonoBehaviour
         RevivePopup.reviveEvent -= OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
 
-        ResetScrewBoxes();
+        ReturnScrewBoxesToPool();
     }
     #endregion
 
-    private void ResetScrewBoxes()
+    private void ReturnScrewBoxesToPool()
     {
         if (screwBoxs != null)
         {
@@ -96,6 +97,11 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void ResetScrewBoxes()
+    {
+        ReturnScrewBoxesToPool();
 
         screwBoxs = new ScrewBox[maxScrewBox];
 
@@ -142,6 +148,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         screwBoxesObserver.NumLockedScrewBoxes = GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
+        screwBoxesObserver.NumScrewInScrewPorts = 0;
     }
 
     #region CALLBACK
@@ -296,6 +303,8 @@ public class ScrewBoxManager : MonoBehaviour
             }
             else
             {
+                screwBoxesObserver.NumScrewInScrewPorts++;
+
                 return emptyScrewPort;
             }
         }
@@ -499,6 +508,8 @@ public class ScrewBoxManager : MonoBehaviour
                             isSwitchCamera: false
                         );
 
+                        screwBoxesObserver.NumScrewInScrewPorts--;
+
                         break;
                     }
                 }
@@ -590,6 +601,8 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
+        int numScrewCleared = 0;
+
         for (int i = 0; i < screwPorts.Count; i++)
         {
             if (screwPorts[i].IsFilled)
@@ -599,8 +612,13 @@ public class ScrewBoxManager : MonoBehaviour
                 screwPorts[i].Screw.ForceUnscrew();
 
                 screwPorts[i].Screw = null;
+
+                screwBoxesObserver.NumScrewInScrewPorts--;
+                numScrewCleared++;
             }
         }
+
+        screwPortsClearedEvent?.Invoke(numScrewCleared);
     }
     #endregion
 }

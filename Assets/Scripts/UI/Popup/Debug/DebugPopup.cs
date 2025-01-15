@@ -14,6 +14,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugWinLevelButton;
     [SerializeField] private Button debugAdsButton;
     [SerializeField] private Button debugAddBoostersButton;
+    [SerializeField] private Button debugAddCoinButton;
     [SerializeField] private TMP_Text debugAdsText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -31,6 +32,7 @@ public class DebugPopup : BasePopup
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
         debugAdsButton.onClick.AddListener(DebugAdsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
+        debugAddCoinButton.onClick.AddListener(AddCoin);
     }
 
     protected override void MoreActionInAwake()
@@ -99,6 +101,13 @@ public class DebugPopup : BasePopup
         {
             userResourcesObserver.UserResources.BoosterQuantities[i] += 999;
         }
+
+        userResourcesObserver.Save();
+    }
+
+    private void AddCoin()
+    {
+        userResourcesObserver.UserResources.CoinQuantity += 9999;
 
         userResourcesObserver.Save();
     }
