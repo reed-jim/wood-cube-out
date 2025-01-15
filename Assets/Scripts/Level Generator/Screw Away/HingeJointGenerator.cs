@@ -144,9 +144,9 @@ public class HingeJointGenerator : EditorWindow
             MagicSnap();
         }
 
-        if (GUILayout.Button("Unfold All"))
+        if (GUILayout.Button("Fold All"))
         {
-            UnfoldAllInPrefabMode();
+            FoldAllInPrefabMode();
         }
 
         GUILayout.EndArea();
@@ -669,13 +669,13 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region UTIL
-    private void UnfoldAllInPrefabMode()
+    private void FoldAllInPrefabMode()
     {
         if (PrefabStageUtility.GetCurrentPrefabStage() != null)
         {
             PrefabStage prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
 
-            UnfoldRecursively(prefabStage.prefabContentsRoot.transform);
+            FoldRecursively(prefabStage.prefabContentsRoot.transform);
         }
         else
         {
@@ -683,7 +683,7 @@ public class HingeJointGenerator : EditorWindow
         }
     }
 
-    private static void UnfoldRecursively(Transform parentTransform)
+    private static void FoldRecursively(Transform parentTransform)
     {
         var type = typeof(EditorWindow).Assembly.GetType("UnityEditor.SceneHierarchyWindow");
         var window = GetWindow(type);
@@ -692,7 +692,7 @@ public class HingeJointGenerator : EditorWindow
 
         foreach (Transform child in parentTransform)
         {
-            UnfoldRecursively(child);
+            FoldRecursively(child);
         }
     }
 

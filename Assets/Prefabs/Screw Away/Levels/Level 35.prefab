@@ -63,8 +63,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &221824272225632574
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -480,8 +482,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &7377021026717355329
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -897,8 +901,8 @@ Transform:
   m_GameObject: {fileID: 2654325026702300434}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalPosition: {x: 0, y: 2, z: 0}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3586591739794156400}
@@ -1004,8 +1008,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &227413356181258497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1419,8 +1425,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &2332165620938581684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1834,8 +1842,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5243352263645730537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2249,8 +2259,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &4477321602976899617
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3819,8 +3831,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &8495748994449431179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4628,8 +4642,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &8157753379572540606
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5128,8 +5144,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5058616435960334908
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6318,8 +6336,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &8641953979512513144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7150,8 +7170,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5824677349726484199
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8431,8 +8453,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &7693668045648600804
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10381,8 +10405,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5766803707755445312
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11019,8 +11045,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &2547201971916150709
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11735,8 +11763,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &1176396596343301262
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12938,8 +12968,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5942747734585716689
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15386,8 +15418,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &7570793836072792624
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15837,8 +15871,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &5353041527961070207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17437,8 +17473,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &9135960718132117134
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18186,8 +18224,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &6149742249225950112
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20035,8 +20075,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &7151364693441756941
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20971,8 +21013,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &1200061577797052244
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21736,8 +21780,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &7912044238335952922
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22579,8 +22625,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &4172307956036107293
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -23528,8 +23576,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
   attachedScrews: []
   throwForceMultiplier: {x: 0.003, y: 0.001, z: 0.003}
+  minJointToDisableKinematic: 1
 --- !u!114 &1243463311950793283
 MonoBehaviour:
   m_ObjectHideFlags: 0
