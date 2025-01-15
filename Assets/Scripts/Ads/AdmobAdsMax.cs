@@ -257,8 +257,8 @@ public class AdmobAdsMax : MonoBehaviour
     {
         { "ad_format", "collapsible_banner" }
     };
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                value, "USD", dic);
+            // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //     value, "USD", dic);
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -385,8 +385,9 @@ public class AdmobAdsMax : MonoBehaviour
             {
                 { "ad_format", "collapsible_banner" }
             };
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                value, "USD", dic);
+            
+            // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //     value, "USD", dic);
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -1039,8 +1040,8 @@ public class AdmobAdsMax : MonoBehaviour
         { "ad_unit_name", adInfo.AdUnitIdentifier },
         { "ad_format", adInfo.AdFormat }
     };
-        AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-            adInfo.Revenue, "USD", dic);
+        // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
+        //     adInfo.Revenue, "USD", dic);
     }
     #endregion
 
