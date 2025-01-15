@@ -29,7 +29,7 @@ public class BuyBoosterPopup : BasePopup
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
-    public static event Action openIAPShopPopupEvent;
+    public static event Action<ScreenRoute> openIAPShopPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -99,6 +99,13 @@ public class BuyBoosterPopup : BasePopup
             {
                 _isBoughtBreakObjectBoosterByCoin = true;
             }
+            else if (_boosterType == BoosterType.UnlockScrewBox)
+            {
+                Hide(onCompletedAction: () =>
+                {
+                    unlockScrewBoxEvent?.Invoke();
+                });
+            }
             else
             {
                 userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
@@ -114,9 +121,10 @@ public class BuyBoosterPopup : BasePopup
         }
         else
         {
-            Hide();
-
-            openIAPShopPopupEvent?.Invoke();
+            Hide(onCompletedAction: () =>
+            {
+                openIAPShopPopupEvent?.Invoke(ScreenRoute.Booster);
+            });
         }
     }
 

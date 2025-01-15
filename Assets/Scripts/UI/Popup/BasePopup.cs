@@ -34,6 +34,7 @@ public class BasePopup : MonoBehaviour
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         SettingPopup.switchRouteEvent += OnRouteSwitched;
+        IAPShopPopup.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -71,6 +72,7 @@ public class BasePopup : MonoBehaviour
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
+        IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 

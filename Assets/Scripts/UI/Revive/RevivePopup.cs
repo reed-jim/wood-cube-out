@@ -27,6 +27,7 @@ public class RevivePopup : BasePopup
 
     public static event Action<BoosterType> reviveEvent;
     public static event Action reviveRefusedEvent;
+    public static event Action<ScreenRoute> openIAPShopPopupEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -62,19 +63,6 @@ public class RevivePopup : BasePopup
 
         loseSound.Play();
 
-        if (userResourcesObserver.UserResources.DiamondQuantity == 0)
-        {
-            reviveByDiamondButton.interactable = false;
-
-            reviveByDiamondButtonForeground.color = ColorUtil.WithAlpha(reviveByDiamondButtonForeground.color, 0.5f);
-        }
-        else
-        {
-            reviveByDiamondButton.interactable = true;
-
-            reviveByDiamondButtonForeground.color = ColorUtil.WithAlpha(reviveByDiamondButtonForeground.color, 1f);
-        }
-
         if (boosterType == BoosterType.UnlockScrewBox)
         {
             boosterImage.sprite = unlockBoxSprite;
@@ -91,12 +79,31 @@ public class RevivePopup : BasePopup
 
     private void ReviveByDiamond()
     {
-        base.Hide();
+        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
+        {
+            base.Hide();
 
-        reviveEvent?.Invoke(_currentBoosterOnRevive);
+            userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
+
+            userResourcesObserver.Save();
+
+            reviveEvent?.Invoke(_currentBoosterOnRevive);
+        }
+        else
+        {
+            Hide(onCompletedAction: () =>
+            {
+                openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
+            });
+        }
     }
 
     private void ReviveByAds()
+    {
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, null, null);
+    }
+
+    private void OnRewaredAdCompleted()
     {
         base.Hide();
 
