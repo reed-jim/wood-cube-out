@@ -274,9 +274,9 @@ public class ScrewManager : MonoBehaviour
         }
     }
 
-    private async void SpawnNewScrewBox()
+    private void SpawnNewScrewBox()
     {
-        GameFaction faction = await GetFactionForNewScrewBox();
+        GameFaction faction = GetFactionForNewScrewBox();
 
         if (faction == GameFaction.None)
         {
@@ -291,9 +291,9 @@ public class ScrewManager : MonoBehaviour
         }
     }
 
-    private async void AssignFactionForNewScrewBox(ScrewBox screwBox)
+    private void AssignFactionForNewScrewBox(ScrewBox screwBox)
     {
-        GameFaction faction = await GetFactionForNewScrewBox();
+        GameFaction faction = GetFactionForNewScrewBox();
 
         if (faction == GameFaction.None)
         {
@@ -328,7 +328,7 @@ public class ScrewManager : MonoBehaviour
         return factionSortedByDifficulty;
     }
 
-    private async Task<GameFaction> GetFactionForNewScrewBox()
+    private GameFaction GetFactionForNewScrewBox()
     {
         float progress;
         int doneScrew = 0;

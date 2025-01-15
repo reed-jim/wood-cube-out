@@ -212,6 +212,8 @@ public class ScrewBoxManager : MonoBehaviour
     {
         MoveFromScrewPortToScrewBox(screwBox);
 
+        screwBoxSpawnedEvent?.Invoke(screwBox);
+
         int numLockedScrewBoxes = 0;
 
         for (int i = 0; i < screwBoxs.Length; i++)
@@ -467,54 +469,6 @@ public class ScrewBoxManager : MonoBehaviour
         _isSpawnScrewBoxFirstTimeInLevel = false;
     }
     #endregion
-
-    // private void MoveFromScrewPortToScrewBox(ScrewBox screwBox)
-    // {
-    //     for (int i = 0; i < screwBoxs.Length; i++)
-    //     {
-    //         if (screwBoxs[i] == null)
-    //         {
-    //             continue;
-    //         }
-
-    //         if (screwBoxs[i].IsLocked)
-    //         {
-    //             continue;
-    //         }
-
-    //         for (int j = 0; j < screwPorts.Count; j++)
-    //         {
-    //             if (screwPorts[j].IsFilled && screwPorts[j].Screw.Faction == screwBoxs[i].Faction)
-    //             {
-    //                 for (int k = 0; k < screwBoxs[i].ScrewBoxSlots.Length; k++)
-    //                 {
-    //                     if (!screwBoxs[i].ScrewBoxSlots[k].IsFilled)
-    //                     {
-    //                         int screwPortIndex = j;
-    //                         int screwBoxIndex = i;
-    //                         int screwBoxSlotIndex = k;
-
-    //                         screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
-
-    //                         screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
-    //                         (
-    //                             screwBoxSlot: screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex],
-    //                             onCompleteAction: () =>
-    //                             {
-    //                                 screwPorts[screwPortIndex].IsFilled = false;
-
-    //                                 screwBoxs[screwBoxIndex].ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
-    //                             },
-    //                             isSwitchCamera: false
-    //                         );
-
-    //                         break;
-    //                     }
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
 
     private void MoveFromScrewPortToScrewBox(ScrewBox screwBox)
     {
