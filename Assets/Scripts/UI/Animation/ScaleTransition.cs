@@ -87,36 +87,7 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
     public void Hide()
     {
-        if (_isInTransition)
-        {
-            return;
-        }
-        else
-        {
-            _isInTransition = true;
-        }
-
-        // SaferioTween.ScaleAsync(target, Vector3.zero, duration: 0.5f * duration, onCompletedAction: () =>
-        // {
-        //     target.gameObject.SetActive(false);
-        // });
-
-        Tween.Scale(target, 0, duration: duration).OnComplete(() =>
-        {
-            target.gameObject.SetActive(false);
-
-            _isInTransition = false;
-        });
-
-        Tween.Custom(1, 0, duration: 0.7f * duration, onValueChange: newVal =>
-        {
-            canvasGroup.alpha = newVal;
-        });
-
-        // SaferioTween.LocalPositionAsync(target, new Vector2(-canvasSize.Value.x, 0), duration: duration, onCompletedAction: () =>
-        // {
-        //     target.gameObject.SetActive(false);
-        // });
+        Hide(onCompletedAction: null);
     }
 
     public void Hide(Action onCompletedAction)
@@ -130,18 +101,21 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
             _isInTransition = true;
         }
 
-        Tween.Scale(target, 0, duration: duration).OnComplete(() =>
+        Tween.Scale(target, 1.1f, duration: 0.5f * duration).OnComplete(() =>
         {
-            target.gameObject.SetActive(false);
+            Tween.Scale(target, 0.5f, duration: 0.5f * duration).OnComplete(() =>
+            {
+                target.gameObject.SetActive(false);
 
-            _isInTransition = false;
+                _isInTransition = false;
 
-            onCompletedAction?.Invoke();
-        });
+                onCompletedAction?.Invoke();
+            });
 
-        Tween.Custom(1, 0, duration: 0.4f * duration, onValueChange: newVal =>
-        {
-            canvasGroup.alpha = newVal;
+            Tween.Custom(1, 0, duration: 0.5f * duration, onValueChange: newVal =>
+            {
+                canvasGroup.alpha = newVal;
+            });
         });
     }
 }

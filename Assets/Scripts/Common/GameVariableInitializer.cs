@@ -18,17 +18,16 @@ public class GameVariableInitializer : MonoBehaviour
     [SerializeField] private GameSetting gameSetting;
 
     public static event Action currentLevelFetchedEvent;
-    public static event Action<bool> enableBackgroundMusicEvent;
-    public static event Action<bool> enableGameSoundEvent;
+    public static event Action gameSettingLoadedEvent;
 
     private void Awake()
     {
         canvasSize.Value = canvas.sizeDelta;
 
         currentLevel.Load();
-
         userResourcesObserver.Load();
-        gameSetting.Load();
+
+        LoadGameSetting();
 
         currentLevelFetchedEvent?.Invoke();
     }
@@ -37,8 +36,12 @@ public class GameVariableInitializer : MonoBehaviour
     {
         canvasSizeAfterCanvasScaler.Value = canvas.sizeDelta;
         canvasScale.Value = canvas.localScale;
+    }
 
-        enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);
-        enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
+    private async void LoadGameSetting()
+    {
+        await gameSetting.LoadAsync();
+
+        gameSettingLoadedEvent?.Invoke();
     }
 }

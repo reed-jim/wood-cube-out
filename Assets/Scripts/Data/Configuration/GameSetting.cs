@@ -1,10 +1,11 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/GameSetting")]
 public class GameSetting : ScriptableObject
 {
-    [SerializeField] private bool isTurnOnBackgroundMusic;
-    [SerializeField] private bool isTurnOnSound;
+    [SerializeField] private bool isTurnOnBackgroundMusic = true;
+    [SerializeField] private bool isTurnOnSound = true;
     [SerializeField] private string currentLanguage;
 
     public bool IsTurnOnBackgroundMusic
@@ -42,9 +43,9 @@ public class GameSetting : ScriptableObject
         DataUtility.SaveAsync(GameConstants.GAME_SETTING, this);
     }
 
-    public void Load()
+    public async Task LoadAsync()
     {
-        GameSetting savedGameSetting = DataUtility.Load(GameConstants.GAME_SETTING, new GameSetting());
+        GameSetting savedGameSetting = await DataUtility.LoadAsync(GameConstants.GAME_SETTING, new GameSetting());
 
         isTurnOnBackgroundMusic = savedGameSetting.isTurnOnBackgroundMusic;
         isTurnOnSound = savedGameSetting.IsTurnOnSound;

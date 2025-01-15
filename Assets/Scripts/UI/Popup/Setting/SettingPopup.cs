@@ -37,6 +37,8 @@ public class SettingPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
+
         turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         rateButton.onClick.AddListener(Rate);
@@ -51,6 +53,11 @@ public class SettingPopup : BasePopup
         }
     }
 
+    protected override void UnregisterMoreEvent()
+    {
+        GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
+    }
+
     private void SettingGameMusic(bool isTurnOn)
     {
         gameSetting.IsTurnOnBackgroundMusic = isTurnOn;
@@ -63,6 +70,12 @@ public class SettingPopup : BasePopup
         gameSetting.IsTurnOnSound = isTurnOn;
 
         enableGameSoundEvent?.Invoke(isTurnOn);
+    }
+
+    private void OnGameSettingLoaded()
+    {
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
     }
 
     #region LANGUAGE

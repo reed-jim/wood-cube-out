@@ -105,4 +105,41 @@ public static class DataUtility
     {
         return Load(GameConstants.SAVE_FILE_NAME, key, defaultValue);
     }
+
+    public static async Task<T> LoadAsync<T>(string fileName, string key, T defaultValue)
+    {
+        string filePath = Application.persistentDataPath + $"/{fileName}.json";
+
+        if (File.Exists(filePath))
+        {
+            string data = await File.ReadAllTextAsync(filePath);
+
+            if (data != "")
+            {
+                JObject json = JObject.Parse(data);
+
+                if (json.ContainsKey(key))
+                {
+                    return JsonConvert.DeserializeObject<T>(json[key].ToString(), settings);
+                }
+                else
+                {
+                    return defaultValue;
+                }
+            }
+            else
+            {
+                return defaultValue;
+            }
+        }
+        else
+        {
+            return defaultValue;
+        }
+    }
+
+    public static async Task<T> LoadAsync<T>(string key, T defaultValue)
+    {
+        return await LoadAsync(GameConstants.SAVE_FILE_NAME, key, defaultValue);
+    }
 }

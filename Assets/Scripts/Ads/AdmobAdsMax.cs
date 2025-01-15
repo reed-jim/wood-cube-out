@@ -92,7 +92,7 @@ public class AdmobAdsMax : MonoBehaviour
         };
 
         MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
-        MaxSdk.SetVerboseLogging(true);
+        // MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
         // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
         MaxSdk.InitializeSdk();
@@ -250,7 +250,7 @@ public class AdmobAdsMax : MonoBehaviour
         new Firebase.Analytics.Parameter("currency","USD"),
         new Firebase.Analytics.Parameter("value", value)
     };
-            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+            // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
             //nếu dùng Appsflyer
             var dic = new Dictionary<string, string>
@@ -378,7 +378,7 @@ public class AdmobAdsMax : MonoBehaviour
         new Firebase.Analytics.Parameter("currency","USD"),
         new Firebase.Analytics.Parameter("value", value)
     };
-            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+            // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
             //nếu dùng Appsflyer
             var dic = new Dictionary<string, string>
@@ -1031,7 +1031,7 @@ public class AdmobAdsMax : MonoBehaviour
         new Firebase.Analytics.Parameter("currency","USD"),
         new Firebase.Analytics.Parameter("value", adInfo.Revenue)
     };
-        FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+        // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         //nếu dùng Appsflyer                
         var dic = new Dictionary<string, string>
