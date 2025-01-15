@@ -18,6 +18,8 @@ public class GameVariableInitializer : MonoBehaviour
     [SerializeField] private GameSetting gameSetting;
 
     public static event Action currentLevelFetchedEvent;
+    public static event Action<bool> enableBackgroundMusicEvent;
+    public static event Action<bool> enableGameSoundEvent;
 
     private void Awake()
     {
@@ -35,5 +37,8 @@ public class GameVariableInitializer : MonoBehaviour
     {
         canvasSizeAfterCanvasScaler.Value = canvas.sizeDelta;
         canvasScale.Value = canvas.localScale;
+
+        enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);
+        enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
     }
 }

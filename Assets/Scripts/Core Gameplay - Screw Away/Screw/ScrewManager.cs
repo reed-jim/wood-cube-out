@@ -221,6 +221,8 @@ public class ScrewManager : MonoBehaviour
 
         int remainingScrew = remainingScrewByFaction.Sum(item => item.Value);
 
+        updateRemainingScrewEvent?.Invoke(remainingScrew, _totalScrew);
+
         if (remainingScrew == 0)
         {
             await Task.Delay((int)(delayShowPopupWin * 1000));
@@ -229,8 +231,6 @@ public class ScrewManager : MonoBehaviour
         }
 
         levelObserver.Progress = 1 - (float)remainingScrew / _totalScrew;
-
-        updateRemainingScrewEvent?.Invoke(remainingScrew, _totalScrew);
     }
     #endregion
 

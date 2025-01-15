@@ -14,6 +14,8 @@ public class SoundManager : MonoBehaviour
     {
         GameSettingManager.enableBackgroundMusicEvent += EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent += EnableGameSound;
+        GameVariableInitializer.enableBackgroundMusicEvent += EnableBackgroundMusic;
+        GameVariableInitializer.enableGameSoundEvent += EnableGameSound;
 
         if (Instance != null && Instance != this)
         {
@@ -31,6 +33,8 @@ public class SoundManager : MonoBehaviour
     {
         GameSettingManager.enableBackgroundMusicEvent -= EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent -= EnableGameSound;
+        GameVariableInitializer.enableBackgroundMusicEvent -= EnableBackgroundMusic;
+        GameVariableInitializer.enableGameSoundEvent -= EnableGameSound;
     }
 
     public void EnableBackgroundMusic(bool isEnable)
