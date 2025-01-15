@@ -153,7 +153,7 @@ public class BasicScrew : BaseScrew
         Vector3 start = transform.position;
 
         // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
-        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.01f * transform.forward, 0.2f, transform.forward, 10);
+        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.001f * transform.forward, 0.2f, transform.forward, 10);
 
         int number = 0;
 
