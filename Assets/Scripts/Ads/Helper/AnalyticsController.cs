@@ -82,15 +82,15 @@ public class AnalyticsController : MonoBehaviour
     public void LogWatchVideo(ActionWatchVideo action, bool isHasVideo, bool isHasInternet, string level)
     {
         if (!firebaseInitialized) return;
-        //Parameter[] parameters = new Parameter[4]
-        //{
-        //    new Parameter("actionWatch", action.ToString()) ,
+        // Parameter[] parameters = new Parameter[4]
+        // {
+        //     new Parameter("actionWatch", action.ToString()) ,
         //     new Parameter("has_ads", isHasVideo.ToString()) ,
-        //      new Parameter("has_internet", isHasInternet.ToString()) ,
-        //       new Parameter("level", level)
-        //};
+        //     new Parameter("has_internet", isHasInternet.ToString()) ,
+        //     new Parameter("level", level)
+        // };
 
-        //FirebaseAnalytics.LogEvent("watch_video_game", parameters);
+        // FirebaseAnalytics.LogEvent("watch_video_game", parameters);
     }
 
     public void LogWatchInter(string action, bool isHasVideo, bool isHasInternet, string level)
@@ -394,8 +394,10 @@ public class AnalyticsController : MonoBehaviour
     {
         try
         {
-            //if (firebaseInitialized)
-            //    FirebaseAnalytics.LogEvent("ad_inter_show");
+            if (firebaseInitialized)
+            {
+                FirebaseAnalytics.LogEvent("ad_inter_show");
+            }
 
         }
         catch
@@ -407,16 +409,6 @@ public class AnalyticsController : MonoBehaviour
         {
             Dictionary<string, string> paramas = new Dictionary<string, string>();
             AppsFlyer.sendEvent("af_inters_displayed", paramas);
-        }
-        catch
-        {
-
-        }
-
-        try
-        {
-            //DWHLog.Log.AdsLog("", AdsType.Interstitial.ToString(), AdmobAds.InterstitialAdUnitId.ToString(), "", "", actionWatchLog, StateAds.Show.ToString());
-            //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.interstitial, actionWatchLog);
         }
         catch
         {
@@ -665,16 +657,10 @@ public enum ActionClick
 public enum ActionWatchVideo
 {
     None = 0,
-    Skip_level = 1,
-    Return = 2,
-    BuyStand = 3,
-    BuyExtral = 4,
-    ClaimSkin = 5,
-    BuyTurnMiniGame = 6,
-    ResetShop = 7,
-    SkipQuest = 8,
-    SkipAllQuest = 9,
-    ClaimGem = 10
+    AddHole,
+    BreakObject,
+    ClearHoles,
+    UnlockScrewBox
 }
 
 public enum ActionShowInter

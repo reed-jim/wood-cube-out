@@ -28,6 +28,7 @@ public class RevivePopup : BasePopup
     public static event Action<BoosterType> reviveEvent;
     public static event Action reviveRefusedEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -100,7 +101,18 @@ public class RevivePopup : BasePopup
 
     private void ReviveByAds()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, null, null);
+        ActionWatchVideo actionWatchVideo;
+
+        switch (_currentBoosterOnRevive)
+        {
+            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
+            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
+            case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
+            default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
+        }
+
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()
@@ -108,5 +120,10 @@ public class RevivePopup : BasePopup
         base.Hide();
 
         reviveEvent?.Invoke(_currentBoosterOnRevive);
+    }
+
+    private void ShowAdsNotLoadedPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }
 }

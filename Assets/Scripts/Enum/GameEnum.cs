@@ -26,7 +26,8 @@ public class GameEnum : MonoBehaviour
         Revive,
         Rate,
         Home,
-        IAPShopPopup
+        IAPShopPopup,
+        NoInternet
     }
 
     public enum GameFaction

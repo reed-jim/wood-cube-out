@@ -244,19 +244,20 @@ public class AdmobAdsMax : MonoBehaviour
             if (adValue == null) return;
             double value = adValue.Value * 0.000001f;
 
-            Firebase.Analytics.Parameter[] adParameters = {
-        new Firebase.Analytics.Parameter("ad_source", "admob"),
-        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
-        new Firebase.Analytics.Parameter("currency","USD"),
-        new Firebase.Analytics.Parameter("value", value)
-    };
-            // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+            Firebase.Analytics.Parameter[] adParameters =
+            {
+                new Firebase.Analytics.Parameter("ad_source", "admob"),
+                new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+                new Firebase.Analytics.Parameter("currency","USD"),
+                new Firebase.Analytics.Parameter("value", value)
+            };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
             //nếu dùng Appsflyer
             var dic = new Dictionary<string, string>
-    {
-        { "ad_format", "collapsible_banner" }
-    };
+            {
+                { "ad_format", "collapsible_banner" }
+            };
             // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
             //     value, "USD", dic);
         }
@@ -372,20 +373,21 @@ public class AdmobAdsMax : MonoBehaviour
             if (adValue == null) return;
             double value = adValue.Value * 0.000001f;
 
-            Firebase.Analytics.Parameter[] adParameters = {
-        new Firebase.Analytics.Parameter("ad_source", "admob"),
-        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
-        new Firebase.Analytics.Parameter("currency","USD"),
-        new Firebase.Analytics.Parameter("value", value)
-    };
-            // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+            Firebase.Analytics.Parameter[] adParameters =
+            {
+                new Firebase.Analytics.Parameter("ad_source", "admob"),
+                new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+                new Firebase.Analytics.Parameter("currency","USD"),
+                new Firebase.Analytics.Parameter("value", value)
+            };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
             //nếu dùng Appsflyer
             var dic = new Dictionary<string, string>
             {
                 { "ad_format", "collapsible_banner" }
             };
-            
+
             // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
             //     value, "USD", dic);
         }
@@ -867,7 +869,8 @@ public class AdmobAdsMax : MonoBehaviour
     {
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Show();
-        _bannerViewCollap.Hide();
+
+        TryHideBannerCollap();
     }
 
     public void ShowBannerMax()
@@ -875,17 +878,25 @@ public class AdmobAdsMax : MonoBehaviour
         MaxSdk.ShowBanner(BanerAdUnitId);
         // RequestBanner();
         _bannerView?.Hide();
-        _bannerViewCollap.Hide();
+
+        TryHideBannerCollap();
     }
 
     public void DestroyBanner()
     {
-        Debug.Log("destroy banner");
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Hide();
-        _bannerViewCollap.Hide();
+
+        TryHideBannerCollap();
     }
 
+    private void TryHideBannerCollap()
+    {
+        if (_bannerViewCollap != null)
+        {
+            _bannerViewCollap.Hide();
+        }
+    }
     #endregion
 
     #region Open App Ads
@@ -1024,22 +1035,23 @@ public class AdmobAdsMax : MonoBehaviour
         if (adInfo == null) return;
         if (adInfo.Revenue < 0) return;
 
-        Firebase.Analytics.Parameter[] adParameters = {
-        new Firebase.Analytics.Parameter("ad_platform", "Applovin"),
-        new Firebase.Analytics.Parameter("ad_source", adInfo.NetworkName),
-        new Firebase.Analytics.Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
-        new Firebase.Analytics.Parameter("ad_format", adInfo.AdFormat),
-        new Firebase.Analytics.Parameter("currency","USD"),
-        new Firebase.Analytics.Parameter("value", adInfo.Revenue)
-    };
-        // FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+        Firebase.Analytics.Parameter[] adParameters =
+        {
+            new Firebase.Analytics.Parameter("ad_platform", "Applovin"),
+            new Firebase.Analytics.Parameter("ad_source", adInfo.NetworkName),
+            new Firebase.Analytics.Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
+            new Firebase.Analytics.Parameter("ad_format", adInfo.AdFormat),
+            new Firebase.Analytics.Parameter("currency","USD"),
+            new Firebase.Analytics.Parameter("value", adInfo.Revenue)
+        };
+        FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         //nếu dùng Appsflyer                
         var dic = new Dictionary<string, string>
-    {
-        { "ad_unit_name", adInfo.AdUnitIdentifier },
-        { "ad_format", adInfo.AdFormat }
-    };
+        {
+            { "ad_unit_name", adInfo.AdUnitIdentifier },
+            { "ad_format", adInfo.AdFormat }
+        };
         // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
         //     adInfo.Revenue, "USD", dic);
     }
@@ -1059,6 +1071,7 @@ public class AdmobAdsMax : MonoBehaviour
                 }
             }
         }
+
         if (isReloadBannerCollap)
         {
             timerReloadBannerCollap += Time.deltaTime;
@@ -1068,6 +1081,7 @@ public class AdmobAdsMax : MonoBehaviour
                 timerReloadBannerCollap = 0;
             }
         }
+
         if (isShowingCollap)
         {
             IsCooldownAdmobBanner = false;
@@ -1077,6 +1091,7 @@ public class AdmobAdsMax : MonoBehaviour
                 DestroyBannerCollap();
             }
         }
+
         countdownAds += Time.unscaledDeltaTime;
     }
 }

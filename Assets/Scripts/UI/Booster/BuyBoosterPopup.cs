@@ -30,6 +30,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -130,7 +131,17 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithAds()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, null, null);
+        ActionWatchVideo actionWatchVideo;
+
+        switch (_boosterType)
+        {
+            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
+            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
+            default: actionWatchVideo = ActionWatchVideo.AddHole; break;
+        }
+
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()
@@ -145,7 +156,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void UnlockScrewBoxWithAds()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompletedToUnlockBox, null, null);
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
     }
 
     private void OnRewaredAdCompletedToUnlockBox()
@@ -167,5 +178,10 @@ public class BuyBoosterPopup : BasePopup
 
             _isBoughtBreakObjectBoosterByCoin = false;
         }
+    }
+
+    private void ShowAdsNotLoadedPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }
 }
