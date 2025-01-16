@@ -31,7 +31,7 @@ public class UserResourcesObserver : ScriptableObject
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
     }
 
-    public void ChangeCoin(int value)
+    public void ChangeCoin(float value)
     {
         userResources.CoinQuantity += value;
 

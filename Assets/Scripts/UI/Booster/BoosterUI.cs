@@ -251,6 +251,8 @@ public class BoosterUI : MonoBehaviour
         levelBoosterObserver.UseBooster(boosterIndex);
 
         updateBoosterQuantityEvent?.Invoke(boosterIndex);
+
+        SaferioTracking.TrackBoosterUsage((BoosterType)boosterIndex);
     }
 
     private void UseBreakObjectBooster()

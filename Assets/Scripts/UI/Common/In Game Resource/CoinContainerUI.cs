@@ -81,7 +81,5 @@ public class CoinContainerUI : MonoBehaviour
         Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
 
         collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
-
-        userResourcesObserver.ChangeCoin(value);
     }
 }
