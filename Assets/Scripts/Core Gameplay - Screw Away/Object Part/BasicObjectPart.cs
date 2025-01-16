@@ -14,7 +14,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private BaseScrew[] attachedScrews;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private Vector3 throwForceMultiplier = new Vector3(0.003f, 0.001f, 0.003f);
+    [SerializeField] private Vector3 throwForceMultiplier = new Vector3(0.003f, 0.003f, 0.003f);
     [SerializeField] private int minJointToDisableKinematic = 1;
 
     #region PRIVATE FIELD

@@ -129,6 +129,11 @@ public class HingeJointGenerator : EditorWindow
             ScaleAllScrews(prefabPath);
         }
 
+        if (GUILayout.Button("Set Lossy Scale All Screws"))
+        {
+            SetLossyScaleAllScrews(prefabPath);
+        }
+
         if (GUILayout.Button("Snap Surface"))
         {
             SnapSurface();
@@ -542,6 +547,27 @@ public class HingeJointGenerator : EditorWindow
         for (int i = 0; i < screws.Length; i++)
         {
             screws[i].transform.localScale *= expectedScale;
+        }
+
+        EditorUtility.SetDirty(levelPrefab);
+
+        PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
+    }
+
+    private void SetLossyScaleAllScrews(string path)
+    {
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
+
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+
+        if (expectedScale <= 0)
+        {
+            expectedScale = 1;
+        }
+
+        for (int i = 0; i < screws.Length; i++)
+        {
+            screws[i].transform.localScale = TransformUtil.ComponentWiseDivine(expectedScale * screws[i].transform.localScale, screws[i].transform.lossyScale);
         }
 
         EditorUtility.SetDirty(levelPrefab);
