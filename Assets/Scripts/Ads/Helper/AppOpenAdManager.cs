@@ -22,7 +22,6 @@ using System.Collections.Generic;
 
 public class AppOpenAdManager
 {
-
     // #if UNITY_ANDROID
     //     private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/3614647346";
     // #elif UNITY_IOS

@@ -23,6 +23,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
@@ -247,6 +248,7 @@ public class BoosterUI : MonoBehaviour
     private void ConsumeBooster(int boosterIndex)
     {
         userResourcesObserver.ConsumeBooster(boosterIndex: boosterIndex);
+        levelBoosterObserver.UseBooster(boosterIndex);
 
         updateBoosterQuantityEvent?.Invoke(boosterIndex);
     }

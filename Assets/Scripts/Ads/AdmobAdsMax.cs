@@ -904,12 +904,13 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnAppStateChanged(AppState state)
     {
-        // if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
-        // {
-        //     return;
-        // }
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
+        {
+            return;
+        }
 
         if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
+        {
             if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
             {
                 // COMPLETE: Show an app open ad if available.
@@ -917,6 +918,7 @@ public class AdmobAdsMax : MonoBehaviour
                 oldTime = DateTime.Now;
                 countdownAds = 0;
             }
+        }
     }
     #endregion
 
