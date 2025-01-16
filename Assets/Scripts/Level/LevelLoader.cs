@@ -12,6 +12,7 @@ public class LevelLoader : MonoBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
@@ -75,6 +76,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         currentLevel.Value = level;
+        levelBoosterObserver.Reset();
 
         startLevelEvent?.Invoke();
 

@@ -18,11 +18,10 @@ public class WinPopup : BasePopup
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
-
-    private List<Tween> _tweens;
 
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
@@ -43,16 +42,6 @@ public class WinPopup : BasePopup
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
     }
 
-    protected override void MoreActionInAwake()
-    {
-        _tweens = new List<Tween>();
-    }
-
-    protected override void MoreActionOnDestroy()
-    {
-        CommonUtil.StopAllTweens(_tweens);
-    }
-
     private async void OnLevelWinAsync()
     {
         coinText.text = $"{0}";
@@ -70,19 +59,10 @@ public class WinPopup : BasePopup
 
         CollectCoin(10);
 
+        TrackLevelWin();
+
         currentLevel.Value++;
     }
-
-    // private async void OnEnable()
-    // {
-    //     await Task.Delay(500);
-
-    //     SetLevelCompleted();
-
-    //     AudioSource winSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WIN_SOUND);
-
-    //     winSound.Play();
-    // }
 
     public void SetLevelCompletedText()
     {
@@ -140,5 +120,19 @@ public class WinPopup : BasePopup
     private void ReturnHome()
     {
         Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+    }
+
+    private async void TrackLevelWin()
+    {
+        bool isFirstWinLevel = await DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
+
+        if (isFirstWinLevel)
+        {
+            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, levelBoosterObserver);
+
+            DataUtility.SaveAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
+        }
+
+        SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
     }
 }

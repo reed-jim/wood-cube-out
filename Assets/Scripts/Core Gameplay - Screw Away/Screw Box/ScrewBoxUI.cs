@@ -13,6 +13,7 @@ public class ScrewBoxUI : MonoBehaviour
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxCameraObserver screwBoxCameraObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private Vector2Variable canvasSize;
 
     private Camera _screwBoxCamera;
@@ -98,6 +99,8 @@ public class ScrewBoxUI : MonoBehaviour
         unlockScrewBox?.Invoke(gameObject.GetInstanceID());
 
         PlayUnlockSound();
+
+        levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
     }
 
     private void PlayUnlockSound()

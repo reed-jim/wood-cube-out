@@ -16,11 +16,11 @@ public class LevelBoosterObserver : ScriptableObject
 
     public void UseBooster(int boosterIndex)
     {
-        if (boosterQuantitiesUsed == null)
-        {
-            boosterQuantitiesUsed = new int[4];
-        }
-
         boosterQuantitiesUsed[boosterIndex]++;
+    }
+
+    public void Reset()
+    {
+        boosterQuantitiesUsed = new int[4];
     }
 }

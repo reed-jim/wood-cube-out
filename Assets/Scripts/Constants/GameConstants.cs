@@ -118,6 +118,17 @@ public static class GameConstants
             GameFaction.Blue, GameFaction.Yellow, GameFaction.Cyan,GameFaction.White };
     #endregion
 
+    #region BOOSTER
+    public static int ADD_HOLE_BOOSTER_INDEX = 0;
+    public static int BREAK_OBJECT_BOOSTER_INDEX = 1;
+    public static int CLEAR_HOLES_BOOSTER_INDEX = 2;
+    public static int UNLOCK_SCREW_BOX_BOOSTER_INDEX = 3;
+    #endregion
+
+    #region LEVEL
+    public static string IS_FIRST_WIN_LEVEL = "is_first_win_level";
+    #endregion
+
     #region SWIPE
     public static int TYPICAL_FRAME_MILISECOND = 13;
     #endregion
