@@ -24,14 +24,15 @@ public class CoinContainerUI : MonoBehaviour
     #endregion
 
     #region EVENT
-    public static event Action<Vector3> collectCoinEvent;
+    public static event Action<Vector3, int> collectCoinEvent;
     public static event Action goToIAPShopEvent;
     #endregion
 
     private void Awake()
     {
-        SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
+        // SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
+        SaferioIAPManager.collectCoinEvent += CollectCoin;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -43,18 +44,19 @@ public class CoinContainerUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        SaferioIAPManager.iapProductPurchasedCompletedEvent -= OnCoinPurchased;
+        // SaferioIAPManager.iapProductPurchasedCompletedEvent -= OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
+        SaferioIAPManager.collectCoinEvent -= CollectCoin;
 
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void OnCoinPurchased()
-    {
-        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
+    // private void OnCoinPurchased()
+    // {
+    //     Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
 
-        collectCoinEvent?.Invoke(positionRelativeToCanvas);
-    }
+    //     collectCoinEvent?.Invoke(positionRelativeToCanvas);
+    // }
 
     private void UpdateCoinText(float value)
     {
@@ -72,5 +74,14 @@ public class CoinContainerUI : MonoBehaviour
     private void ShowIAPShop()
     {
         goToIAPShopEvent?.Invoke();
+    }
+
+    private void CollectCoin(int value)
+    {
+        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
+
+        collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
+
+        userResourcesObserver.ChangeCoin(value);
     }
 }

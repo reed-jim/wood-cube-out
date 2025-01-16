@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class SafeArea : MonoBehaviour
 {
+    [SerializeField] private Canvas canvas;
+
     private void Awake()
     {
         AdjustToSafeArea();
@@ -17,7 +19,16 @@ public class SafeArea : MonoBehaviour
         RectTransform uiElement = GetComponent<RectTransform>();
 
         Rect safeArea = Screen.safeArea;
-        Canvas canvas = uiElement.GetComponentInParent<Canvas>();
+
+        if (canvas == null)
+        {
+            canvas = uiElement.GetComponentInParent<Canvas>();
+        }
+
+        if (canvas == null)
+        {
+            return;
+        }
 
         Vector2 safeAreaMin = safeArea.position;
         Vector2 safeAreaMax = safeArea.position + safeArea.size;

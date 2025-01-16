@@ -8,6 +8,8 @@ using UnityEngine.Purchasing.Extension;
 public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 {
     [SerializeField] private GooglePlayStoreProduct[] googlePlayStoreProducts;
+    [SerializeField] private IAPDataContainer IAPDataContainer;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     private IStoreController controller;
     private IExtensionProvider extensions;
@@ -15,10 +17,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
     public static event Action removeAdPurchasedCompletedEvent;
+    public static event Action<int> collectCoinEvent;
+    public static event Action<string, string> updatePriceEvent;
     #endregion
 
     private void Awake()
     {
+        IAPPackageUI.buyIAPEvent += BuyProduct;
+        IAPCoinItemUI.buyIAPEvent += BuyProduct;
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyRemoveAdEvent += BuyProduct;
 
@@ -29,6 +35,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void OnDestroy()
     {
+        IAPPackageUI.buyIAPEvent -= BuyProduct;
+        IAPCoinItemUI.buyIAPEvent -= BuyProduct;
         IAPShopItem.buyIAPEvent -= BuyProduct;
         RemoveAdPopup.buyRemoveAdEvent -= BuyProduct;
     }
@@ -56,6 +64,19 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         this.controller = controller;
         this.extensions = extensions;
+
+        List<Product> products = GetAvailableProducts();
+
+        string productId;
+        string localizedPrice;
+
+        for (int i = 0; i < products.Count; i++)
+        {
+            productId = products[i].definition.id;
+            localizedPrice = GetLocalizedPrice(products[i]);
+
+            updatePriceEvent?.Invoke(productId, localizedPrice);
+        }
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
@@ -68,10 +89,26 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
         {
             removeAdPurchasedCompletedEvent?.Invoke();
+
+            UserData.IsRemoveAds = true;
         }
         else
         {
-            iapProductPurchasedCompletedEvent?.Invoke();
+            foreach (var productData in IAPDataContainer.ProductsData)
+            {
+                if (productData.ProductId == e.purchasedProduct.definition.id)
+                {
+                    collectCoinEvent?.Invoke(productData.CoinQuantity);
+
+                    userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
+                    userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
+                    userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+
+                    break;
+                }
+            }
+
+            // iapProductPurchasedCompletedEvent?.Invoke();
         }
 
         return PurchaseProcessingResult.Complete;
@@ -87,7 +124,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        Debug.Log("SAFERIO " + error);
+
     }
 
     public List<Product> GetAvailableProducts()

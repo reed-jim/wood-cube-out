@@ -31,6 +31,21 @@ public class UserResourcesObserver : ScriptableObject
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
     }
 
+    public void ChangeCoin(int value)
+    {
+        userResources.CoinQuantity += value;
+
+        Save();
+    }
+
+    public void ChangeBoosterQuantity(int boosterIndex, int value)
+    {
+        userResources.BoosterQuantities[boosterIndex] += value;
+        userResources.BoosterQuantities[boosterIndex] = Mathf.Max(userResources.BoosterQuantities[boosterIndex], 0);
+
+        Save();
+    }
+
     public void ConsumeBooster(int boosterIndex)
     {
         if (userResources.BoosterQuantities[boosterIndex] > 0)

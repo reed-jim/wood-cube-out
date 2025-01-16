@@ -3,11 +3,17 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/IAPPackageData")]
 public class IAPPackageData : ScriptableObject
 {
+    [SerializeField] private string productId;
     [SerializeField] private int coinQuantity;
     [SerializeField] private int addHoleBoosterQuantity;
     [SerializeField] private int breakObjectBoosterQuantity;
     [SerializeField] private int clearHolesBoosterQuantity;
     [SerializeField] private float price;
+
+    public string ProductId
+    {
+        get => productId;
+    }
 
     public int CoinQuantity
     {
