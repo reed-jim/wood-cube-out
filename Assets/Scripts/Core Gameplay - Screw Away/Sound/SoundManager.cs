@@ -83,6 +83,30 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundClick()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLICK_SOUND);
+
+        sound.Play();
+    }
+
+    public void PlaySoundClose()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLOSE_POPUP_SOUND);
+
+        sound.Play();
+    }
+
     private void OnGameSettingLoaded()
     {
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);

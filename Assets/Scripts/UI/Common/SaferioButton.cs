@@ -9,6 +9,9 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     private float scaleMultiplier = 1.025f;
     private float animationDuration = 0.1f;
 
+    [Header("CUSTOMIZE")]
+    [SerializeField] private bool isPlaySound = true;
+
     private Button _button;
     private Sequence _sequence;
 
@@ -21,7 +24,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     {
         _button = GetComponent<Button>();
 
-        _button.onClick.AddListener(PlayAnimationOnClick);
+        _button.onClick.AddListener(PlaySoundOnClick);
     }
 
     private void OnDestroy()
@@ -42,5 +45,13 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
         _sequence = Tween.Scale(transform, scaleMultiplier, duration: animationDuration)
         .Chain(Tween.Scale(transform, 1 / scaleMultiplier, duration: animationDuration))
         .Chain(Tween.Scale(transform, 1f, duration: animationDuration));
+    }
+
+    private void PlaySoundOnClick()
+    {
+        if (isPlaySound)
+        {
+            SoundManager.Instance.PlaySoundClick();
+        }
     }
 }

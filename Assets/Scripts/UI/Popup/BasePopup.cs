@@ -127,8 +127,6 @@ public class BasePopup : MonoBehaviour
 
         _isShown = true;
 
-        PlayClickSound();
-
         enableSwipingScreenEvent?.Invoke(false);
     }
 
@@ -149,7 +147,7 @@ public class BasePopup : MonoBehaviour
 
             AfterHide();
 
-            PlayClickSound();
+            SoundManager.Instance.PlaySoundClose();
 
             enableSwipingScreenEvent?.Invoke(true);
         }

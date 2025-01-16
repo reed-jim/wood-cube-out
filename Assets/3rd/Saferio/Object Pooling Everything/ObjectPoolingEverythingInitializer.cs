@@ -20,6 +20,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject winSoundPrefab;
     [SerializeField] private GameObject loseSoundPrefab;
     [SerializeField] private GameObject clickSoundPrefab;
+    [SerializeField] private GameObject closePopupSoundPrefab;
     [SerializeField] private GameObject unlockAdsScrewBoxSoundPrefab;
     [SerializeField] private GameObject clearScrewPortsSoundPrefab;
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -52,10 +53,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
-        // RegisterPool<AudioSource>(GameConstants.VEHICLE_ENGINE_SOUND, vehicleEngineSoundPrefab, 3);
-        // RegisterPool<AudioSource>(GameConstants.HIT_OBSTACLE_SOUND, hitObstacleSoundPrefab, 3);
-        // RegisterPool<AudioSource>(GameConstants.GET_IN_VEHICLE_SOUND, getInVehicleSoundPrefab, 3);
-        // RegisterPool<AudioSource>(GameConstants.VEHICLE_MOVE_OUT_SOUND, vehicleMoveOutSoundPrefab, 3);
         RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, 5);
         RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
         RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
@@ -67,7 +64,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.BREAK_OBJECT_SOUND, breakObjectSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.WIN_SOUND, winSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.LOSE_SOUND, loseSoundPrefab, 3);
-        RegisterPool<AudioSource>(GameConstants.CLICK_SOUND, clickSoundPrefab, 3);
+        RegisterPool<AudioSource>(GameConstants.CLICK_SOUND, clickSoundPrefab, 2);
+        RegisterPool<AudioSource>(GameConstants.CLOSE_POPUP_SOUND, closePopupSoundPrefab, 2);
         RegisterPool<AudioSource>(GameConstants.UNLOCK_ADS_SCREW_BOX_SOUND, unlockAdsScrewBoxSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND, clearScrewPortsSoundPrefab, 3);
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);

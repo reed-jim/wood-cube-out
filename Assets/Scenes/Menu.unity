@@ -2571,6 +2571,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlaySound: 1
 --- !u!1 &626605298
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,6 +2706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlaySound: 1
 --- !u!1 &670440681
 GameObject:
   m_ObjectHideFlags: 0
@@ -3613,6 +3615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 682718ba1024d014faf9472a59b0550d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPlaySound: 1
 --- !u!1 &790147927
 GameObject:
   m_ObjectHideFlags: 0
@@ -4972,6 +4975,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Reanudar
     Object: {fileID: 0}
+--- !u!1 &1136923303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1136923304}
+  - component: {fileID: 1136923305}
+  m_Layer: 0
+  m_Name: Revive now
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1136923304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136923303}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1136923305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136923303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Revive now
+    Object: {fileID: 0}
+  - Language: French
+    Text: Revivre maintenant
+    Object: {fileID: 0}
+  - Language: German
+    Text: Jetzt wiederbeleben
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Rianima adesso
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u4ECA\u3059\u3050\u5FA9\u6D3B\u3057\u3066\u304F\u3060\u3055\u3044"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC9C0\uAE08 \uBD80\uD65C\uD558\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Reviva agora
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u043E\u0437\u0440\u043E\u0434\u0438\u0442\u044C\u0441\u044F \u0441\u0435\u0439\u0447\u0430\u0441"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Revivir ahora
+    Object: {fileID: 0}
 --- !u!1 &1170355051
 GameObject:
   m_ObjectHideFlags: 0
@@ -5883,6 +5959,8 @@ Transform:
   - {fileID: 508525522}
   - {fileID: 388381603}
   - {fileID: 1059271581}
+  - {fileID: 1664760519}
+  - {fileID: 1136923304}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1353185547
@@ -7538,6 +7616,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Refuerzo
     Object: {fileID: 0}
+--- !u!1 &1664760518
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1664760519}
+  - component: {fileID: 1664760520}
+  m_Layer: 0
+  m_Name: Claim now
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1664760519
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664760518}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1664760520
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664760518}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Claim now
+    Object: {fileID: 0}
+  - Language: French
+    Text: "R\xE9clamez maintenant"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Jetzt beanspruchen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Richiedilo ora
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u4ECA\u3059\u3050\u8ACB\u6C42\u3057\u3066\u304F\u3060\u3055\u3044"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC9C0\uAE08 \uC2E0\uCCAD\uD558\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Reivindique agora
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043E\u0434\u0430\u0442\u044C \u0437\u0430\u044F\u0432\u043A\u0443
+      \u0441\u0435\u0439\u0447\u0430\u0441"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Reclama ahora
+    Object: {fileID: 0}
 --- !u!1 &1669764595
 GameObject:
   m_ObjectHideFlags: 0
@@ -9133,6 +9285,7 @@ MonoBehaviour:
   winSoundPrefab: {fileID: 7606835583939712495, guid: 4b7367c6506663f42ad5dc279e22b081, type: 3}
   loseSoundPrefab: {fileID: 7606835583939712495, guid: d571507b8a405ee4f930e0336f00a3ad, type: 3}
   clickSoundPrefab: {fileID: 7606835583939712495, guid: de8e9a28cde5f714cb4100d895c97faf, type: 3}
+  closePopupSoundPrefab: {fileID: 7606835583939712495, guid: 3bb1b26f373872649ad66276977066b0, type: 3}
   unlockAdsScrewBoxSoundPrefab: {fileID: 7606835583939712495, guid: 63f6778fb6b280a499f4ce3c4efab9e6, type: 3}
   clearScrewPortsSoundPrefab: {fileID: 7606835583939712495, guid: 3734458f6d3896141824ba0b0e6dbdbd, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
@@ -9236,11 +9389,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7012652151622738283, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_Pivot.x

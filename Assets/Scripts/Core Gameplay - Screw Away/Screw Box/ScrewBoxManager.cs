@@ -30,6 +30,7 @@ public class ScrewBoxManager : MonoBehaviour
     private float _screwBoxPositionY = 10;
     private bool _isSpawnScrewBoxFirstTimeInLevel;
     private float _screwBoxDistance;
+    private bool _isScrewPortsShaking;
     #endregion
 
     #region EVENT
@@ -51,6 +52,7 @@ public class ScrewBoxManager : MonoBehaviour
         ScrewBox.screwBoxUnlockedEvent += OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent += AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent += ClearAllScrewPorts;
+        BoosterUI.shakeScrewPortsEvent += ShakeAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent += LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
@@ -67,6 +69,7 @@ public class ScrewBoxManager : MonoBehaviour
         ScrewBox.screwBoxUnlockedEvent -= OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent -= AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent -= ClearAllScrewPorts;
+        BoosterUI.shakeScrewPortsEvent -= ShakeAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent -= LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
@@ -619,6 +622,30 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         screwPortsClearedEvent?.Invoke(numScrewCleared);
+    }
+
+    private void ShakeAllScrewPorts()
+    {
+        if (_isScrewPortsShaking)
+        {
+            return;
+        }
+
+        for (int i = 0; i < screwPorts.Count; i++)
+        {
+            bool isLast = i == screwPorts.Count - 1;
+
+            Tween.PunchScale(screwPorts[i].transform, strength: 0.3f * Vector3.one, duration: 0.4f)
+            .OnComplete(() =>
+            {
+                if (isLast)
+                {
+                    _isScrewPortsShaking = false;
+                }
+            });
+        }
+
+        _isScrewPortsShaking = true;
     }
     #endregion
 }
