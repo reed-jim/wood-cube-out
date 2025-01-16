@@ -4,6 +4,7 @@ using UnityEngine;
 public class RotateObject : MonoBehaviour
 {
     [SerializeField] private float rotateSpeedMultiplier;
+    [SerializeField] private bool isDisableAutoRotatingAtStart;
 
     private float _pitch;
     private float _yaw;
@@ -15,9 +16,13 @@ public class RotateObject : MonoBehaviour
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.05f;
-        _isAutoRotating = true;
 
-        StartCoroutine(AutoRotating());
+        if (!isDisableAutoRotatingAtStart)
+        {
+            _isAutoRotating = true;
+
+            StartCoroutine(AutoRotating());
+        }
     }
 
     void Update()

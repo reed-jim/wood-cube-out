@@ -1973,6 +1973,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &508525521
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 508525522}
+  - component: {fileID: 508525523}
+  m_Layer: 0
+  m_Name: Tutorial
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &508525522
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508525521}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &508525523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508525521}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Tutorial
+    Object: {fileID: 0}
+  - Language: French
+    Text: Tutoriel
+    Object: {fileID: 0}
+  - Language: German
+    Text: Anleitung
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Esercitazione
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C1\u30E5\u30FC\u30C8\u30EA\u30A2\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC9C0\uB3C4 \uC2DC\uAC04"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Tutorial
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0447\u0435\u0431\u043D\u043E\u0435 \u043F\u043E\u0441\u043E\u0431\u0438\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Tutorial
+    Object: {fileID: 0}
 --- !u!1 &587444889
 GameObject:
   m_ObjectHideFlags: 0
@@ -2067,6 +2140,81 @@ MonoBehaviour:
   googlePlayStoreProducts:
   - id: 100.coins
     productType: 0
+--- !u!1 &607138126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 607138127}
+  - component: {fileID: 607138128}
+  m_Layer: 0
+  m_Name: Click the screw to return to the box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &607138127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607138126}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &607138128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607138126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Click the screw to return to the box.
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Cliquez sur la vis pour revenir \xE0 la bo\xEEte."
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Klicken Sie auf die Schraube, um zur Box zur\xFCckzukehren."
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Fare clic sulla vite per tornare alla casella.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30CD\u30B8\u3092\u30AF\u30EA\u30C3\u30AF\u3057\u3066\u30DC\u30C3\u30AF\u30B9\u306B\u623B\u308A\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC0C1\uC790\uB85C \uB3CC\uC544\uAC00\uB824\uBA74 \uB098\uC0AC\uB97C \uD074\uB9AD\uD558\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Clique no parafuso para retornar \xE0 caixa."
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0430\u0436\u043C\u0438\u0442\u0435 \u043D\u0430 \u0432\u0438\u043D\u0442,
+      \u0447\u0442\u043E\u0431\u044B \u0432\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F
+      \u0432 \u043A\u043E\u0440\u043E\u0431\u043A\u0443."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Haga clic en el tornillo para regresar a la caja.
+    Object: {fileID: 0}
 --- !u!1 &619569311
 GameObject:
   m_ObjectHideFlags: 0
@@ -5035,7 +5183,7 @@ RectTransform:
   m_Father: {fileID: 1673665026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.22870371, y: 0.49010417}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5197,6 +5345,83 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Pausa
+    Object: {fileID: 0}
+--- !u!1 &1261189387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1261189388}
+  - component: {fileID: 1261189389}
+  m_Layer: 0
+  m_Name: Pinch the screen to zoom in or out
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1261189388
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261189387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1261189389
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1261189387}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Pinch the screen to zoom in or out.
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Pincez l'\xE9cran pour effectuer un zoom avant ou arri\xE8re."
+    Object: {fileID: 0}
+  - Language: German
+    Text: Ziehen Sie den Bildschirm zusammen, um hinein- oder herauszuzoomen.
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pizzica lo schermo per ingrandire o rimpicciolire.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u753B\u9762\u3092\u30D4\u30F3\u30C1\u3057\u3066\u62E1\u5927\u307E\u305F\u306F\u7E2E\u5C0F\u3057\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD654\uBA74\uC744 \uD540\uCE58\uD558\uC5EC \uD655\uB300\uD558\uAC70\uB098
+      \uCD95\uC18C\uD569\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Aperte a tela para aumentar ou diminuir o zoom.
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0430\u043B\u044C\u0446\u044B
+      \u043F\u043E \u044D\u043A\u0440\u0430\u043D\u0443, \u0447\u0442\u043E\u0431\u044B
+      \u0443\u0432\u0435\u043B\u0438\u0447\u0438\u0442\u044C \u0438\u043B\u0438 \u0443\u043C\u0435\u043D\u044C\u0448\u0438\u0442\u044C
+      \u043C\u0430\u0441\u0448\u0442\u0430\u0431."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Pellizca la pantalla para acercar o alejar.
     Object: {fileID: 0}
 --- !u!1 &1285423032
 GameObject:
@@ -5636,6 +5861,10 @@ Transform:
   - {fileID: 1408452296}
   - {fileID: 177128151}
   - {fileID: 860344832}
+  - {fileID: 607138127}
+  - {fileID: 1776764382}
+  - {fileID: 1261189388}
+  - {fileID: 508525522}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1353185547
@@ -8248,6 +8477,81 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Nivel {nivel} \xA1Completado!"
     Object: {fileID: 0}
+--- !u!1 &1776764381
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1776764382}
+  - component: {fileID: 1776764383}
+  m_Layer: 0
+  m_Name: Swipe to rotate the object
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1776764382
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776764381}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1776764383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1776764381}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Swipe to rotate the object.
+    Object: {fileID: 0}
+  - Language: French
+    Text: Faites glisser pour faire pivoter l'objet.
+    Object: {fileID: 0}
+  - Language: German
+    Text: Wischen Sie, um das Objekt zu drehen.
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scorrere per ruotare l'oggetto.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30EF\u30A4\u30D7\u3057\u3066\u30AA\u30D6\u30B8\u30A7\u30AF\u30C8\u3092\u56DE\u8EE2\u3057\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC1C\uCCB4\uB97C \uD68C\uC804\uD558\uB824\uBA74 \uC2A4\uC640\uC774\uD504\uD558\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Deslize para girar o objeto.
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u043E\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0430\u043B\u044C\u0446\u0435\u043C
+      \u043F\u043E \u044D\u043A\u0440\u0430\u043D\u0443, \u0447\u0442\u043E\u0431\u044B
+      \u043F\u043E\u0432\u0435\u0440\u043D\u0443\u0442\u044C \u043E\u0431\u044A\u0435\u043A\u0442."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Desliza para rotar el objeto.
+    Object: {fileID: 0}
 --- !u!1001 &1818030305
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9062,11 +9366,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.44444445
+      value: 0.22870371
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.1875
+      value: 0.49010417
       objectReference: {fileID: 0}
     - target: {fileID: 7012652151622738283, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_Pivot.x

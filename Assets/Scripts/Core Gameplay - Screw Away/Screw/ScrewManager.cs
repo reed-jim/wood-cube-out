@@ -164,6 +164,9 @@ public class ScrewManager : MonoBehaviour
             }
 
             difficultyLevelByFactions[faction] += numberBlockObject;
+
+            // FOR Tutorial
+            difficultyLevelByFactions[faction] += _screws[i].ScrewDifficultyModifier;
         }
 
         foreach (var faction in totalNotBlockedScrewByFaction.Keys)

@@ -15,6 +15,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     [Header("CUSTOMIZE")]
     [SerializeField] protected float scaleOnScrewBox;
+    [SerializeField] private int screwDifficultyModifier;
 
     [Header("CUSTOMIZE - UNSCREW ANIMATION")]
     [SerializeField] private float durationMoveOut = 0.3f;
@@ -103,6 +104,11 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         get => _isInScrewPort;
         set => _isInScrewPort = value;
+    }
+
+    public int ScrewDifficultyModifier
+    {
+        get => screwDifficultyModifier;
     }
     #endregion
 
