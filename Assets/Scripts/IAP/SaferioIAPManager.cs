@@ -77,6 +77,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
             updatePriceEvent?.Invoke(productId, localizedPrice);
         }
+
+        CheckRestoredRemoveAds();
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
@@ -145,6 +147,30 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         var cultureInfo = new CultureInfo("en-US");
 
         return string.Format(cultureInfo, "{0:C}", price);
+    }
+
+    private bool IsProductPurchased(string productId)
+    {
+        if (controller != null)
+        {
+            Product product = controller.products.WithID(productId);
+
+            if (product != null && product.hasReceipt)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return false;
+    }
+
+    private void CheckRestoredRemoveAds()
+    {
+        UserData.IsRemoveAds = IsProductPurchased("remove adddd");
     }
 }
 
