@@ -87,7 +87,7 @@ public class SettingPopup : BasePopup
 
         Tween.ScaleY(chooseLanguageContainer, 1, duration: 0.3f);
 
-        openLanguageDropdownButton.onClick.RemoveAllListeners();
+        openLanguageDropdownButton.onClick.RemoveListener(OpenLanguageDropdown);
         openLanguageDropdownButton.onClick.AddListener(CloseLanguageDropdown);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
@@ -117,7 +117,7 @@ public class SettingPopup : BasePopup
 
             chooseLanguageContainer.gameObject.SetActive(false);
 
-            openLanguageDropdownButton.onClick.RemoveAllListeners();
+            openLanguageDropdownButton.onClick.RemoveListener(CloseLanguageDropdown);
             openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
         });
 

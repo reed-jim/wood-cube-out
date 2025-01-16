@@ -6,6 +6,7 @@ public static class SaferioTracking
 {
     public static void TrackLevelFirstWin(int level, LevelBoosterObserver levelBoosterObserver)
     {
+#if !UNITY_EDITOR
         Parameter[] parameters =
         {
             new Parameter("level", level.ToString()),
@@ -16,10 +17,12 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("level_first_win", parameters);
+#endif
     }
 
     public static void TrackLevelWin(int level, LevelBoosterObserver levelBoosterObserver)
     {
+#if !UNITY_EDITOR
         Parameter[] parameters =
         {
             new Parameter("level", level.ToString()),
@@ -30,15 +33,18 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("level_win", parameters);
+#endif
     }
 
     public static void TrackBoosterUsage(BoosterType boosterType)
     {
+#if !UNITY_EDITOR
         Parameter[] parameters =
         {
             new Parameter("booster_type", boosterType.ToString())
         };
 
         FirebaseAnalytics.LogEvent("use_booster", parameters);
+#endif
     }
 }

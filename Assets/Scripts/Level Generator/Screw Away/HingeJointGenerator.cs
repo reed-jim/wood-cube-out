@@ -534,6 +534,11 @@ public class HingeJointGenerator : EditorWindow
 
         BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
 
+        if (expectedScale <= 0)
+        {
+            expectedScale = 1;
+        }
+
         for (int i = 0; i < screws.Length; i++)
         {
             screws[i].transform.localScale *= expectedScale;

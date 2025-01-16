@@ -4,9 +4,12 @@ using UnityEngine;
 public class GameplayCamera : MonoBehaviour
 {
     [SerializeField] private Camera gameplayCamera;
+    [SerializeField] private Transform background;
 
     private float _initialOrthographicSize;
     private float _targetOrthographicSize;
+    private Vector3 _initialBackgroundScale;
+    private Vector3 _targetBackgroundScale;
 
     private void Awake()
     {
@@ -17,6 +20,9 @@ public class GameplayCamera : MonoBehaviour
 
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
+
+        _initialBackgroundScale = background.localScale;
+        _targetBackgroundScale = background.localScale;
     }
 
     private void OnDestroy()
@@ -30,16 +36,20 @@ public class GameplayCamera : MonoBehaviour
     private void Update()
     {
         gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 0.333f);
+
+        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 0.333f);
     }
 
     private void OnLevelStart()
     {
         _targetOrthographicSize = _initialOrthographicSize;
+        _targetBackgroundScale = background.localScale;
     }
 
     private void Zoom(float orthographicSize)
     {
         _targetOrthographicSize = orthographicSize;
+        _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
     }
 
     private void Shake()
