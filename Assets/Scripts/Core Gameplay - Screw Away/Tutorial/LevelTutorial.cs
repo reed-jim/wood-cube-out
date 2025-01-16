@@ -18,14 +18,17 @@ public class LevelTutorial : MonoBehaviour
 
     #region PRIVATE FIELD
     private int _step;
+    private Vector2 _screenSizeWorld;
     #endregion
 
     void Awake()
     {
-        BaseScrew.screwLoosenedEvent += OnScrewSelected;
+        ScrewSelectionInput.selectScrewEvent += OnScrewSelected;
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
 
         StartCoroutine(TutorialStepOne());
+
+        _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
     }
 
     void Update()
@@ -35,7 +38,7 @@ public class LevelTutorial : MonoBehaviour
 
     void OnDestroy()
     {
-        BaseScrew.screwLoosenedEvent -= OnScrewSelected;
+        ScrewSelectionInput.selectScrewEvent -= OnScrewSelected;
         SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
     }
 
@@ -62,7 +65,7 @@ public class LevelTutorial : MonoBehaviour
                 targetPosition = screw.position - 5 * screw.right;
             }
 
-            targetPosition.y += 2.4f;
+            targetPosition.y += 0.09f * _screenSizeWorld.y;
             targetPosition.z = -5;
 
             tutorialHand.position = Vector3.Lerp(tutorialHand.position, targetPosition, lerpDelta);
@@ -85,8 +88,7 @@ public class LevelTutorial : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
-        Vector2 screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
-        float lerpDelta = 0.2f;
+        float lerpDelta = 1f / 4;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -97,11 +99,11 @@ public class LevelTutorial : MonoBehaviour
         {
             if (phase % 2 == 0)
             {
-                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(-0.3f * screenSizeWorld.x, 0.2f * screenSizeWorld.y, -5), lerpDelta);
+                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(-0.3f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
             }
             else
             {
-                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(0.5f * screenSizeWorld.x, 0.2f * screenSizeWorld.y, -5), lerpDelta);
+                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(0.4f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
             }
 
             lerpProgress += lerpDelta;

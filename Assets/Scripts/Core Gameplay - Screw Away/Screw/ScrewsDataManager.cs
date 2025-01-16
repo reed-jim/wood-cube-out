@@ -21,7 +21,7 @@ public class ScrewsDataManager : MonoBehaviour
     {
         ScrewManager.setScrewsEvent += OnAllLevelScrewsObservered;
 
-        StartCoroutine(PeriodicallySaving());
+        // StartCoroutine(PeriodicallySaving());
     }
 
     void OnDestroy()

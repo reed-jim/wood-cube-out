@@ -18,6 +18,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
     #region EVENT
     public static event Action mouseUpEvent;
+    public static event Action selectScrewEvent;
     public static event Action breakObjectEvent;
     #endregion
 
@@ -82,6 +83,8 @@ public class ScrewSelectionInput : MonoBehaviour
             if (screw != null)
             {
                 screw.Select();
+
+                selectScrewEvent?.Invoke();
 
                 return;
             }
