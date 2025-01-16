@@ -82,13 +82,14 @@ public class RevivePopup : BasePopup
     {
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
         {
-            base.Hide();
+            base.Hide(onCompletedAction: () =>
+            {
+                reviveEvent?.Invoke(_currentBoosterOnRevive);
+            });
 
             userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
             userResourcesObserver.Save();
-
-            reviveEvent?.Invoke(_currentBoosterOnRevive);
         }
         else
         {
@@ -117,9 +118,10 @@ public class RevivePopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
-        base.Hide();
-
-        reviveEvent?.Invoke(_currentBoosterOnRevive);
+        base.Hide(onCompletedAction: () =>
+        {
+            reviveEvent?.Invoke(_currentBoosterOnRevive);
+        });
     }
 
     private void ShowAdsNotLoadedPopup()
