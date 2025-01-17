@@ -25,6 +25,7 @@ public class LevelTutorial : MonoBehaviour
     {
         ScrewSelectionInput.selectScrewEvent += OnScrewSelected;
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
+        PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
         StartCoroutine(TutorialStepOne());
 
@@ -40,6 +41,7 @@ public class LevelTutorial : MonoBehaviour
     {
         ScrewSelectionInput.selectScrewEvent -= OnScrewSelected;
         SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
+        PinchGesture.pinchGestureEvent -= OnScreenZoomed;
     }
 
     private IEnumerator TutorialStepOne()
@@ -118,6 +120,32 @@ public class LevelTutorial : MonoBehaviour
             yield return waitForSeconds;
         }
 
+        StartCoroutine(TutorialStepThree());
+    }
+
+    private IEnumerator TutorialStepThree()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
+
+        float lerpDelta = 1f / 4;
+        float lerpProgress = 0;
+
+        int phase = 0;
+
+        localizedTutorialText.TranslationName = translationNames[1];
+
+        while (_step == 2)
+        {
+            if (phase == 0)
+            {
+                tutorialHand.position = Vector3.Lerp(tutorialHand.position, Vector3.zero, lerpDelta);
+
+                lerpProgress += lerpDelta;
+            }
+
+            yield return waitForSeconds;
+        }
+
         EndTutorial();
     }
 
@@ -145,6 +173,14 @@ public class LevelTutorial : MonoBehaviour
     private void OnScreenSwiped(Vector2 swipeDirection)
     {
         if (_step == 1)
+        {
+            _step++;
+        }
+    }
+
+    private void OnScreenZoomed(float orthographicSize)
+    {
+        if (_step == 2)
         {
             _step++;
         }
