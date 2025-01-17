@@ -17,6 +17,7 @@ public class GameplayCamera : MonoBehaviour
         PinchGesture.pinchGestureEvent += Zoom;
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
+        MultiPhaseLevelManager.resetCameraEvent += Reset;
 
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
@@ -31,6 +32,7 @@ public class GameplayCamera : MonoBehaviour
         PinchGesture.pinchGestureEvent -= Zoom;
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
+        MultiPhaseLevelManager.resetCameraEvent -= Reset;
     }
 
     private void Update()
@@ -42,8 +44,13 @@ public class GameplayCamera : MonoBehaviour
 
     private void OnLevelStart()
     {
+        Reset();
+    }
+
+    private void Reset()
+    {
         _targetOrthographicSize = _initialOrthographicSize;
-        _targetBackgroundScale = background.localScale;
+        _targetBackgroundScale = _initialBackgroundScale;
     }
 
     private void Zoom(float orthographicSize)

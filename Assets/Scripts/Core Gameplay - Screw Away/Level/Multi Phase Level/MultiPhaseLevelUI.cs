@@ -43,6 +43,8 @@ public class MultiPhaseLevelUI : MonoBehaviour
             {
                 _milestones[i] = Instantiate(milestonePrefab, container);
 
+                _milestones[i].GetComponent<MultiPhaseMilestoneUI>().PhaseIndex = i;
+
                 Vector3 localPosition = Vector3.zero;
 
                 currentNumberScrew += numberScrewByPhase[i];

@@ -18,6 +18,7 @@ public class LevelLoader : MonoBehaviour
 
     public static event Action startLevelEvent;
     public static event Action<int> setLevelScrewNumberEvent;
+    public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
 
     private void Awake()
@@ -106,11 +107,6 @@ public class LevelLoader : MonoBehaviour
 
         Dictionary<int, int> currentFactionByPhase = new Dictionary<int, int>();
 
-        if (screws.Length == 0)
-        {
-            return;
-        }
-
         for (int i = 0; i < screws.Length; i++)
         {
             int phase = screws[i].Phase;
@@ -151,7 +147,7 @@ public class LevelLoader : MonoBehaviour
             remainingFactionForScrewsByPhase[phase].RemoveAt(randomIndex);
         }
 
-        setLevelScrewNumberEvent?.Invoke(screws.Length);
+        setMultiPhaseLevelScrewNumberEvent?.Invoke(screws.Length);
     }
 
     private void AutoAssignScrewFaction(GameObject level)
