@@ -17,6 +17,7 @@ public class PinchGesture : MonoBehaviour
     private void Awake()
     {
         BasePopup.enableSwipingScreenEvent += EnablePinching;
+        LevelTutorial.enablePinchingEvent += EnablePinching;
 
         minZoom = 0.85f * cameraToZoom.orthographicSize;
         maxZoom = 1.15f * cameraToZoom.orthographicSize;
@@ -25,6 +26,7 @@ public class PinchGesture : MonoBehaviour
     void OnDestroy()
     {
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
+        LevelTutorial.enablePinchingEvent -= EnablePinching;
     }
 
     private void Update()

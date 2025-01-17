@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Lean.Localization;
 using PrimeTween;
@@ -21,15 +22,24 @@ public class LevelTutorial : MonoBehaviour
     private Vector2 _screenSizeWorld;
     #endregion
 
+    #region EVENT
+    public static event Action<bool> enableSwipingEvent;
+    public static event Action<bool> enablePinchingEvent;
+    #endregion
+
     void Awake()
     {
         ScrewSelectionInput.selectScrewEvent += OnScrewSelected;
+        ScrewSelectionInput.breakObjectEvent += OnScrewSelected;
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
         StartCoroutine(TutorialStepOne());
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
+
+        enableSwipingEvent?.Invoke(false);
+        enablePinchingEvent?.Invoke(false);
     }
 
     void Update()
@@ -40,6 +50,7 @@ public class LevelTutorial : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.selectScrewEvent -= OnScrewSelected;
+        ScrewSelectionInput.breakObjectEvent -= OnScrewSelected;
         SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
         PinchGesture.pinchGestureEvent -= OnScreenZoomed;
     }
@@ -112,6 +123,11 @@ public class LevelTutorial : MonoBehaviour
 
             if (lerpProgress >= 1)
             {
+                if (phase == 0)
+                {
+                    enableSwipingEvent?.Invoke(true);
+                }
+
                 phase++;
                 lerpProgress = 0;
                 lerpDelta = 0.03f;
@@ -141,6 +157,13 @@ public class LevelTutorial : MonoBehaviour
                 tutorialHand.position = Vector3.Lerp(tutorialHand.position, Vector3.zero, lerpDelta);
 
                 lerpProgress += lerpDelta;
+
+                if (lerpProgress >= 1)
+                {
+                    enablePinchingEvent?.Invoke(true);
+
+                    phase++;
+                }
             }
 
             yield return waitForSeconds;
