@@ -38,13 +38,13 @@ public static class SaferioTracking
 
     public static void TrackBoosterUsage(BoosterType boosterType)
     {
-// #if !UNITY_EDITOR
-//         Parameter[] parameters =
-//         {
-//             new Parameter("booster_type", boosterType.ToString())
-//         };
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("booster_type", boosterType.ToString())
+        };
 
-//         FirebaseAnalytics.LogEvent("use_booster", parameters);
-// #endif
+        FirebaseAnalytics.LogEvent("use_booster", parameters);
+#endif
     }
 }
