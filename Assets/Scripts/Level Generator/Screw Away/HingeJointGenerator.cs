@@ -525,6 +525,11 @@ public class HingeJointGenerator : EditorWindow
 
         for (int i = 0; i < screws.Length; i++)
         {
+            if (!screws[i].gameObject.activeSelf)
+            {
+                continue;
+            }
+
             screws[i].transform.position -= ratioSnapOffset * screws[i].transform.lossyScale.x * screws[i].transform.forward;
         }
 
