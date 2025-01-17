@@ -27,7 +27,8 @@ public class GameEnum : MonoBehaviour
         Rate,
         Home,
         IAPShopPopup,
-        NoInternet
+        NoInternet,
+        Notification
     }
 
     public enum GameFaction

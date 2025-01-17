@@ -36,6 +36,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
     public static event Action<int> updateBoosterQuantityEvent;
     public static event Action shakeScrewPortsEvent;
+    public static event Action<string, string> showNotificationEvent;
 
     private int _numScrewPortsAdded;
     private bool _isInTransition;
@@ -201,7 +202,8 @@ public class BoosterUI : MonoBehaviour
     {
         if (screwBoxesObserver.NumScrewInScrewPorts == 0)
         {
-            shakeScrewPortsEvent?.Invoke();
+            // shakeScrewPortsEvent?.Invoke();
+            showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
 
             return;
         }

@@ -5274,7 +5274,7 @@ RectTransform:
   m_Father: {fileID: 1673665026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.2638889, y: 0.49010417}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5364,6 +5364,80 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Desbloquear caja
+    Object: {fileID: 0}
+--- !u!1 &1233929512
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1233929513}
+  - component: {fileID: 1233929514}
+  m_Layer: 0
+  m_Name: No screw to be cleared
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1233929513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233929512}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1233929514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1233929512}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: No screw to be cleared
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Aucune vis \xE0 d\xE9visser"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Keine Schraube, die gel\xF6st werden muss"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Nessuna vite da pulire
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AF\u30EA\u30A2\u3059\u308B\u30CD\u30B8\u306F\u3042\u308A\u307E\u305B\u3093"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB098\uC0AC\uB97C \uC81C\uAC70\uD560 \uD544\uC694\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Nenhum parafuso a ser limpo
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0435\u0442 \u0432\u0438\u043D\u0442\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439
+      \u043D\u0443\u0436\u043D\u043E \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "No hay ning\xFAn tornillo que limpiar"
     Object: {fileID: 0}
 --- !u!1 &1238877138
 GameObject:
@@ -5961,6 +6035,8 @@ Transform:
   - {fileID: 1059271581}
   - {fileID: 1664760519}
   - {fileID: 1136923304}
+  - {fileID: 1694870822}
+  - {fileID: 1233929513}
   m_Father: {fileID: 619569312}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1353185547
@@ -7945,6 +8021,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Eliminar anuncios
     Object: {fileID: 0}
+--- !u!1 &1694870821
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694870822}
+  - component: {fileID: 1694870823}
+  m_Layer: 0
+  m_Name: Tips
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1694870822
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694870821}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1341924456}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1694870823
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694870821}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Tips
+    Object: {fileID: 0}
+  - Language: French
+    Text: Conseils
+    Object: {fileID: 0}
+  - Language: German
+    Text: Tipps
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Suggerimenti
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D2\u30F3\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD301"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pontas
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0432\u0435\u0442\u044B"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Consejos
+    Object: {fileID: 0}
 --- !u!1 &1696363409
 GameObject:
   m_ObjectHideFlags: 0
@@ -9389,11 +9538,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.2638889
       objectReference: {fileID: 0}
     - target: {fileID: 6282272966309245508, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.49010417
       objectReference: {fileID: 0}
     - target: {fileID: 7012652151622738283, guid: 45d7c7129fab29a4ca3b0da1ee55b1ef, type: 3}
       propertyPath: m_Pivot.x

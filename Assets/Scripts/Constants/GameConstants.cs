@@ -130,6 +130,11 @@ public static class GameConstants
     public static string IS_FIRST_WIN_LEVEL = "is_first_win_level";
     #endregion
 
+    #region LOCALIZE
+    public static string TIPS = "Tips";
+    public static string NO_SCREW_TO_BE_CLEARED = "No screw to be cleared";
+    #endregion
+
     #region SWIPE
     public static int TYPICAL_FRAME_MILISECOND = 13;
     #endregion

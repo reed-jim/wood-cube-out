@@ -98,6 +98,8 @@ public class BuyBoosterPopup : BasePopup
         {
             if (_boosterType == BoosterType.BreakObject)
             {
+                userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+
                 _isBoughtBreakObjectBoosterByCoin = true;
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
@@ -111,9 +113,9 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
                 userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
-
-                userResourcesObserver.Save();
             }
+
+            userResourcesObserver.Save();
 
             Hide(onCompletedAction: () =>
             {
@@ -172,7 +174,6 @@ public class BuyBoosterPopup : BasePopup
         if (_isBoughtBreakObjectBoosterByCoin)
         {
             userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[(int)_boosterType];
-            userResourcesObserver.UserResources.BoosterQuantities[(int)_boosterType]++;
 
             userResourcesObserver.Save();
 
