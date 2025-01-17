@@ -4,6 +4,7 @@ using Lean.Localization;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LevelTutorial : MonoBehaviour
 {
@@ -15,7 +16,12 @@ public class LevelTutorial : MonoBehaviour
     [SerializeField] private TMP_Text tutorialText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedTutorialText;
 
+    [SerializeField] private Image rotateIcon;
+    [SerializeField] private Image[] scaleIcons;
+    [SerializeField] private SpriteRenderer scaleIconHand;
+
     [SerializeField] private string[] translationNames;
+    [SerializeField] private Vector3 tutorialHandEulerAngles;
     [SerializeField] private Vector3 pinchTutorialHandPosition;
 
     #region PRIVATE FIELD
@@ -42,11 +48,16 @@ public class LevelTutorial : MonoBehaviour
 
         enableSwipingEvent?.Invoke(false);
         enablePinchingEvent?.Invoke(false);
+
+        rotateIcon.gameObject.SetActive(false);
+        scaleIcons[0].gameObject.SetActive(false);
+        scaleIcons[1].gameObject.SetActive(false);
+        scaleIconHand.gameObject.SetActive(false);
     }
 
     void Update()
     {
-        tutorialHand.rotation = Quaternion.Euler(Vector3.zero);
+        tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
 
         if (_isConstraintHand)
         {
@@ -68,7 +79,7 @@ public class LevelTutorial : MonoBehaviour
 
         tutorialHand.position = screw.position - 5f * screw.right;
 
-        float lerpDelta = 0.05f;
+        float lerpDelta = 0.1f;
         float lerpProgress = 0;
         Vector3 targetPosition;
 
@@ -78,14 +89,14 @@ public class LevelTutorial : MonoBehaviour
         {
             if (phase % 2 == 0)
             {
-                targetPosition = screw.position - screw.right;
+                targetPosition = screw.position - 0.5f * screw.right;
             }
             else
             {
                 targetPosition = screw.position - 5 * screw.right;
             }
 
-            targetPosition.y += 0.09f * _screenSizeWorld.y;
+            targetPosition.y += 0.08f * _screenSizeWorld.y;
             targetPosition.z = -5;
 
             tutorialHand.position = Vector3.Lerp(tutorialHand.position, targetPosition, lerpDelta);
@@ -114,6 +125,11 @@ public class LevelTutorial : MonoBehaviour
         int phase = 0;
 
         localizedTutorialText.TranslationName = translationNames[1];
+
+        rotateIcon.gameObject.SetActive(true);
+        rotateIcon.color = ColorUtil.WithAlpha(rotateIcon.color, 0);
+
+        Tween.Alpha(rotateIcon, 1, duration: 0.3f);
 
         while (_step == 1)
         {
@@ -157,6 +173,24 @@ public class LevelTutorial : MonoBehaviour
 
         localizedTutorialText.TranslationName = translationNames[2];
 
+        for (int i = 0; i < scaleIcons.Length; i++)
+        {
+            scaleIcons[i].gameObject.SetActive(true);
+            scaleIcons[i].color = ColorUtil.WithAlpha(scaleIcons[i].color, 0);
+        }
+
+        scaleIconHand.gameObject.SetActive(true);
+        scaleIconHand.color = ColorUtil.WithAlpha(scaleIconHand.color, 0);
+
+        Tween.Alpha(rotateIcon, 0, duration: 0.3f);
+
+        for (int i = 0; i < scaleIcons.Length; i++)
+        {
+            Tween.Alpha(scaleIcons[i], 1, duration: 0.3f);
+        }
+
+        Tween.Alpha(scaleIconHand, 1, duration: 0.3f);
+
         while (_step == 2)
         {
             if (phase == 0)
@@ -185,6 +219,7 @@ public class LevelTutorial : MonoBehaviour
         Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
         {
             canvasGroup.alpha = newVal;
+            scaleIconHand.color = ColorUtil.WithAlpha(scaleIconHand.color, newVal);
         });
         Tween.Alpha(tutorialHandSprite, 0, duration: 0.3f).OnComplete(() =>
         {
