@@ -192,6 +192,7 @@ public class BasicScrew : BaseScrew
                     if (distance < 0.9f)
                     {
                         number++;
+                        Debug.Log(hits[i].collider.name + "/" + hits[i].collider.GetInstanceID());
                     }
                 }
             }

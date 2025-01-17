@@ -37,7 +37,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         ScrewSelectionInput.mouseUpEvent += Deselect;
         BaseScrew.breakJointEvent += OnJointBreakCallback;
-        SwipeGesture.swipeGestureEvent += OnSwipe;
 
         partRigidbody = GetComponent<Rigidbody>();
         meshCollider = GetComponent<MeshCollider>();
@@ -74,7 +73,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         ScrewSelectionInput.mouseUpEvent -= Deselect;
         BaseScrew.breakJointEvent -= OnJointBreakCallback;
-        SwipeGesture.swipeGestureEvent -= OnSwipe;
     }
     #endregion
 
@@ -156,41 +154,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             yield return waitForSeconds;
         }
-    }
-
-    private async void OnSwipe(Vector2 direction)
-    {
-        // return;
-
-        // if (_totalJoint <= 1 && !_isImmuneSwipeForce)
-        // {
-        //     // partRigidbody.AddForce(-30f * direction);
-
-        //     if (partRigidbody.linearVelocity.magnitude > 5)
-        //     {
-        //         return;
-        //     }
-
-        //     // OUT OF CENTER
-        //     if (_totalJoint == 0)
-        //     {
-        //         Vector3 forceDirection = direction;
-
-        //         forceDirection.y = 0;
-
-        //         partRigidbody.AddForce(-20f * forceDirection);
-        //     }
-        //     else
-        //     {
-        //         partRigidbody.AddForce(20f * (Vector3.zero - transform.localPosition));
-        //     }
-
-        //     _isImmuneSwipeForce = true;
-
-        //     // await Task.Delay(1000);
-
-        //     _isImmuneSwipeForce = false;
-        // }
     }
 
     public async void Break(Vector3 touchPosition)
@@ -280,14 +243,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             BaseScrew screw = screws[i];
 
-            if (screw.IsValidToLoose())
-            {
-                loosenScrewOnObjectBrokenEvent?.Invoke(screw);
-            }
-            else
-            {
-                screw.ForceUnscrew();
-            }
+            loosenScrewOnObjectBrokenEvent?.Invoke(screw);
 
             await Task.Delay(133);
         }
