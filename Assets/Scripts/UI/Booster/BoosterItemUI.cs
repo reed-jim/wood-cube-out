@@ -68,7 +68,20 @@ public class BoosterItemUI : MonoBehaviour
     {
         if (boosterIndex == this.boosterIndex)
         {
-            quantityText.text = $"{userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]}";
+            int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+
+            if (quantity > 0)
+            {
+                quantityTextContainer.gameObject.SetActive(true);
+                addButtonRT.gameObject.SetActive(false);
+
+                quantityText.text = $"{quantity}";
+            }
+            else
+            {
+                quantityTextContainer.gameObject.SetActive(false);
+                addButtonRT.gameObject.SetActive(true);
+            }
         }
     }
 }

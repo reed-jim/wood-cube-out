@@ -245,7 +245,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             loosenScrewOnObjectBrokenEvent?.Invoke(screw);
 
-            await Task.Delay(133);
+            await Task.Delay(33);
         }
 
         Throw(forceBoost: 2);

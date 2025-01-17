@@ -124,6 +124,8 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected virtual void Awake()
     {
         ScrewBoxManager.looseScrewEvent += Loose;
+        ScrewBoxManager.looseScrewWithoutCheckingObstaclesEvent += LooseWithoutCheckingObstacles;
+
         RegisterMoreEvent();
 
         AddScrewToList();
@@ -136,6 +138,8 @@ public class BaseScrew : MonoBehaviour, IScrew
     void OnDestroy()
     {
         ScrewBoxManager.looseScrewEvent -= Loose;
+        ScrewBoxManager.looseScrewWithoutCheckingObstaclesEvent -= LooseWithoutCheckingObstacles;
+
         UnregisterMoreEvent();
 
         CommonUtil.StopAllTweens(_tweens);
@@ -178,6 +182,16 @@ public class BaseScrew : MonoBehaviour, IScrew
     public virtual void Loose(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
 
+    }
+
+    public virtual void Loose(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
+    {
+
+    }
+
+    public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
+    {
+        Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
     }
 
     public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)

@@ -51,6 +51,8 @@ public class UserResourcesObserver : ScriptableObject
         if (userResources.BoosterQuantities[boosterIndex] > 0)
         {
             userResources.BoosterQuantities[boosterIndex]--;
+
+            Save();
         }
     }
 }

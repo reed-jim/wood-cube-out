@@ -36,6 +36,11 @@ public class BasicScrew : BaseScrew
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
+        Loose(screwId, faction, screwBoxSlot, isCheckObstacles: true);
+    }
+
+    public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
+    {
         if (screwId == this.screwId)
         {
             if (!_isInteractable)
@@ -52,7 +57,14 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
-            CountBlockingObjects();
+            if (isCheckObstacles)
+            {
+                CountBlockingObjects();
+            }
+            else
+            {
+                _numberBlockingObjects = 0;
+            }
 
             // BLOCKED
             if (_numberBlockingObjects > 0)

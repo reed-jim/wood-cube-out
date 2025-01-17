@@ -35,6 +35,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
+    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingObstaclesEvent;
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
@@ -559,7 +560,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         if (screwBoxSlot != null)
         {
-            looseScrewEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
         }
         else
         {
