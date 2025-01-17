@@ -83,6 +83,7 @@ MonoBehaviour:
   screwServiceLocator: {fileID: 1697211288241465870}
   joint: {fileID: 0}
   scaleOnScrewBox: 0.85
+  screwDifficultyModifier: 0
   durationMoveOut: 0.1
   durationDelay: 0.05
   durationMoveToScrewPort: 0.025
@@ -135,7 +136,6 @@ MonoBehaviour:
   outlineWidthReference: _OutlineWidth
   secondaryColorMultiplier: 0.6
   _renderer: {fileID: 4437216730832237330}
-  _screwInsideRenderer: {fileID: 0}
 --- !u!114 &1860856407277781807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +169,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.6
+  m_Radius: 0.45
   m_Center: {x: 0, y: 0, z: 0.2}
 --- !u!33 &4567112148891185875
 MeshFilter:

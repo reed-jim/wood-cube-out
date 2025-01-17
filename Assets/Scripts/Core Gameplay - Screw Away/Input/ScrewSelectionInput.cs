@@ -14,6 +14,7 @@ public class ScrewSelectionInput : MonoBehaviour
     #region PRIVATE FIELD
     [SerializeField] private InputMode _inputMode;
     private List<Vector3> twoTouchPoints;
+    private bool _isSelectObjectPart;
     #endregion
 
     #region EVENT
@@ -45,6 +46,7 @@ public class ScrewSelectionInput : MonoBehaviour
             SelectObjectPart();
         }
 
+
         if (Input.GetMouseButtonUp(0))
         {
             twoTouchPoints.Add(Input.mousePosition);
@@ -63,6 +65,11 @@ public class ScrewSelectionInput : MonoBehaviour
     private void SelectScrew()
     {
         if (_inputMode != InputMode.Select)
+        {
+            return;
+        }
+
+        if (_isSelectObjectPart)
         {
             return;
         }
@@ -93,6 +100,8 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private async void SelectObjectPart()
     {
+        _isSelectObjectPart = false;
+
         if (_inputMode == InputMode.Disabled)
         {
             return;
@@ -113,6 +122,8 @@ public class ScrewSelectionInput : MonoBehaviour
 
             if (objectPart != null)
             {
+                _isSelectObjectPart = true;
+
                 if (_inputMode == InputMode.BreakObject)
                 {
                     objectPart.Break(hit.point);

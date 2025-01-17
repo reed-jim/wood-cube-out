@@ -92,14 +92,19 @@ public class AppOpenAdManager
     }
 
     public void ShowAdIfAvailable()
-    {
+    {  
         if (UserData.IsRemoveAds)
+        {
             return;
+        }
+
         if (!IsAdAvailable || isShowingAd)
         {
             LoadAd();
+
             return;
         }
+
         ad.OnAdFullScreenContentClosed += HandleAdDidDismissFullScreenContent;
         ad.OnAdFullScreenContentFailed += HandleAdFailedToPresentFullScreenContent;
         ad.OnAdFullScreenContentOpened += HandleAdDidPresentFullScreenContent;

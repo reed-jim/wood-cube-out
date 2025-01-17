@@ -100,22 +100,22 @@ public class AdmobAdsMax : MonoBehaviour
 
         _isInited = true;
 
-        // //#if !UNITY_EDITOR
-        // Debug.Log("===== Init Admob ====");
-        // MobileAds.Initialize((initStatus) =>
-        // {
-        //     Debug.Log("===== Init Admob Done ====");
-        //     AppOpenAdManager.Instance.LoadAd(() =>
-        //     {
-        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-        //     });
-        //     InitBannerAdmob();
-        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-        //     isAdmobInitDone = true;
-        //     //nativeAdsManager.Instance.OnInitAdmobDone();
-        //     //LoadRewardedInterstitialAd();
-        // });
-        // //#endif
+        //#if !UNITY_EDITOR
+        Debug.Log("===== Init Admob ====");
+        MobileAds.Initialize((initStatus) =>
+        {
+            Debug.Log("===== Init Admob Done ====");
+            AppOpenAdManager.Instance.LoadAd(() =>
+            {
+                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+            });
+            InitBannerAdmob();
+            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            isAdmobInitDone = true;
+            //nativeAdsManager.Instance.OnInitAdmobDone();
+            //LoadRewardedInterstitialAd();
+        });
+        //#endif
     }
 
     //public IEnumerator ShowAppOpenAds()

@@ -9,10 +9,14 @@ public class FirebaseManager : MonoBehaviour
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task =>
         {
             var dependencyStatus = task.Result;
-
+            
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                Firebase.FirebaseApp app = Firebase.FirebaseApp.DefaultInstance;
 
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
             }
             else
             {
