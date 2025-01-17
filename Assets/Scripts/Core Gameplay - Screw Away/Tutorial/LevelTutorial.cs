@@ -16,10 +16,12 @@ public class LevelTutorial : MonoBehaviour
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedTutorialText;
 
     [SerializeField] private string[] translationNames;
+    [SerializeField] private Vector3 pinchTutorialHandPosition;
 
     #region PRIVATE FIELD
     private int _step;
     private Vector2 _screenSizeWorld;
+    private bool _isConstraintHand;
     #endregion
 
     #region EVENT
@@ -45,6 +47,11 @@ public class LevelTutorial : MonoBehaviour
     void Update()
     {
         tutorialHand.rotation = Quaternion.Euler(Vector3.zero);
+
+        if (_isConstraintHand)
+        {
+            tutorialHand.position = pinchTutorialHandPosition;
+        }
     }
 
     void OnDestroy()
@@ -112,7 +119,7 @@ public class LevelTutorial : MonoBehaviour
         {
             if (phase % 2 == 0)
             {
-                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(-0.3f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
+                tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(-0.4f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
             }
             else
             {
@@ -148,13 +155,13 @@ public class LevelTutorial : MonoBehaviour
 
         int phase = 0;
 
-        localizedTutorialText.TranslationName = translationNames[1];
+        localizedTutorialText.TranslationName = translationNames[2];
 
         while (_step == 2)
         {
             if (phase == 0)
             {
-                tutorialHand.position = Vector3.Lerp(tutorialHand.position, Vector3.zero, lerpDelta);
+                tutorialHand.position = Vector3.Lerp(tutorialHand.position, pinchTutorialHandPosition, lerpDelta);
 
                 lerpProgress += lerpDelta;
 
@@ -162,6 +169,7 @@ public class LevelTutorial : MonoBehaviour
                 {
                     enablePinchingEvent?.Invoke(true);
 
+                    _isConstraintHand = true;
                     phase++;
                 }
             }

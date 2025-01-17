@@ -12,11 +12,9 @@ public class LevelDifficultyCalculator : EditorWindow
     private LevelDataContainer levelDataContainer;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    private float expectedDifficultyNormalized;
 
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
-
-
-    private string resultText;
 
 
     [MenuItem("Saferio/Tools/Level Difficulty Calculator")]
@@ -35,14 +33,18 @@ public class LevelDifficultyCalculator : EditorWindow
 
         // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
-        level =
-            EditorGUILayout.IntField("Level", level);
-        levelDataContainer =
-            (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
+        level = EditorGUILayout.IntField("Level", level);
+        levelDataContainer = (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
+        expectedDifficultyNormalized = EditorGUILayout.FloatField("Expected Difficulty", expectedDifficultyNormalized);
 
         if (GUILayout.Button("Calculate"))
         {
             Calculate();
+        }
+
+        if (GUILayout.Button("Generate Screw Box Difficulty"))
+        {
+            GenerateScrewBoxDifficulty(expectedDifficultyNormalized);
         }
 
         GUILayout.EndArea();
@@ -168,6 +170,42 @@ public class LevelDifficultyCalculator : EditorWindow
         Debug.Log(difficultyText);
 
         EditorGUIUtility.systemCopyBuffer = $"{finalDifficulty}";
+    }
+
+    private void GenerateScrewBoxDifficulty(float expectedDifficultyNormalized)
+    {
+        float currentProgress = 0;
+        float currentDifficulty = 0;
+
+        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
+
+        List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
+
+        for (int i = GameConstants.SCREW_FACTION.Length - 1; i >= 0; i--)
+        {
+            int phaseIndex = i;
+
+            float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
+
+            if (progress > 0.08f)
+            {
+                LevelPhase levelPhase = new LevelPhase(0, 1 - progress);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                levelPhase = new LevelPhase(phaseIndex, 1);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        levelDataContainer.SetLevelDifficultyConfiguration(level, generatedLevelPhases.ToArray());
     }
 
     #region UTIL

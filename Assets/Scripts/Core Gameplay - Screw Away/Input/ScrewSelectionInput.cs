@@ -119,6 +119,8 @@ public class ScrewSelectionInput : MonoBehaviour
 
                     breakObjectEvent?.Invoke();
 
+                    _inputMode = InputMode.Disabled;
+
                     // avoid click screw immediately
                     await Task.Delay(500);
 

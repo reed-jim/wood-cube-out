@@ -13,6 +13,7 @@ public class LevelDifficultyConfiguration : ScriptableObject
     public LevelPhase[] LevelPhases
     {
         get => levelPhases;
+        set => levelPhases = value;
     }
 
     public int ScrewPortFactionDifficultyModifier
@@ -33,14 +34,27 @@ public class LevelPhase
     [SerializeField] private float endProgress;
     // [SerializeField] private LevelDifficulty levelDifficulty;
 
+    public LevelPhase()
+    {
+
+    }
+
+    public LevelPhase(int phaseIndex, float endProgress)
+    {
+        this.phaseIndex = phaseIndex;
+        this.endProgress = endProgress;
+    }
+
     public int PhaseIndex
     {
         get => phaseIndex;
+        set => phaseIndex = value;
     }
 
     public float EndProgress
     {
         get => endProgress;
+        set => endProgress = value;
     }
 
     // public LevelDifficulty LevelDifficulty
