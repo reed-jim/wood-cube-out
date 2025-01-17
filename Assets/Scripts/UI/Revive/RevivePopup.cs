@@ -80,10 +80,14 @@ public class RevivePopup : BasePopup
 
     private void ReviveByDiamond()
     {
+        reviveByDiamondButton.interactable = false;
+
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
         {
             base.Hide(onCompletedAction: () =>
             {
+                reviveByDiamondButton.interactable = true;
+
                 reviveEvent?.Invoke(_currentBoosterOnRevive);
             });
 
@@ -95,6 +99,8 @@ public class RevivePopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
+                reviveByDiamondButton.interactable = true;
+
                 openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
             });
         }

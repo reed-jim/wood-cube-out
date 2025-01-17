@@ -43,7 +43,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
-        throwForceMultiplier = new Vector3(13f, 13f, 13f);
+        throwForceMultiplier = new Vector3(1600f, 800f, 1600f);
 
         attachedScrews = new BaseScrew[transform.childCount];
 
@@ -58,6 +58,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         // }
 
         partRigidbody.isKinematic = true;
+        meshCollider.isTrigger = true;
+        partRigidbody.mass = 100;
 
         minJointToDisableKinematic = 0;
 
