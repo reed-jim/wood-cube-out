@@ -29,7 +29,7 @@ public class LevelDataContainer : ScriptableObject
 
     public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
     {
-        int modulus = level % 5;
+        int modulus = (level - 1) % 5;
 
         return templateLevelDifficultyConfiguration[modulus];
     }
