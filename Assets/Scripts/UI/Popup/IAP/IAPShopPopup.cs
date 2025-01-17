@@ -39,13 +39,13 @@ public class IAPShopPopup : BasePopup
 
         Show(onCompletedAction: () =>
         {
-            float distance = firstPackRT.localPosition.y - firstCoinPackRT.localPosition.y;
+            float distance = 1.01f * (firstPackRT.localPosition.y - firstCoinPackRT.localPosition.y);
 
             _tweens.Add(Tween.LocalPositionY(scrollContent, distance, duration: scrollToCoinPackDuration)
-                .OnComplete(() =>
-                {
-                    scrollRect.vertical = true;
-                }));
+            .OnComplete(() =>
+            {
+                scrollRect.vertical = true;
+            }));
         });
 
         _prevRoute = prevRoute;

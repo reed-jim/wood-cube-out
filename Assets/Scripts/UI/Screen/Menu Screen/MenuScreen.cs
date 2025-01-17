@@ -99,7 +99,7 @@ public class MenuScreen : MonoBehaviour
     {
         CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 
-        if (screenRoute == ScreenRoute.Home)
+        if (screenRoute != ScreenRoute.IAPShop)
         {
             _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
         }

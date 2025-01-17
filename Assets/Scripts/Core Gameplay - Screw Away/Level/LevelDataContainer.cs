@@ -4,6 +4,7 @@ using UnityEngine;
 public class LevelDataContainer : ScriptableObject
 {
     [SerializeField] private LevelData[] levelsData;
+    [SerializeField] private LevelDifficultyConfiguration[] templateLevelDifficultyConfiguration;
     [SerializeField] private LevelDifficultyConfiguration fallbackLevelDifficultyConfiguration;
 
     public LevelData[] LevelsData
@@ -11,19 +12,26 @@ public class LevelDataContainer : ScriptableObject
         get => levelsData;
     }
 
+    // public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
+    // {
+    //     int levelIndex = level - 1;
+
+    //     if (levelIndex < levelsData.Length)
+    //     {
+    //         if (levelsData[levelIndex].LevelDifficultyConfiguration != null)
+    //         {
+    //             return levelsData[levelIndex].LevelDifficultyConfiguration;
+    //         }
+    //     }
+
+    //     return fallbackLevelDifficultyConfiguration;
+    // }
+
     public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
     {
-        int levelIndex = level - 1;
+        int modulus = level % 5;
 
-        if (levelIndex < levelsData.Length)
-        {
-            if (levelsData[levelIndex].LevelDifficultyConfiguration != null)
-            {
-                return levelsData[levelIndex].LevelDifficultyConfiguration;
-            }
-        }
-
-        return fallbackLevelDifficultyConfiguration;
+        return templateLevelDifficultyConfiguration[modulus];
     }
 
     public void SetLevelDifficultyConfiguration(int level, LevelPhase[] levelPhases)

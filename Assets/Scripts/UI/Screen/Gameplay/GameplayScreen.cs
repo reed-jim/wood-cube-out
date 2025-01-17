@@ -14,6 +14,7 @@ public class GameplayScreen : MonoBehaviour
     [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedScrewText;
 
     [SerializeField] private IntVariable currentLevel;
 
@@ -76,6 +77,11 @@ public class GameplayScreen : MonoBehaviour
 
     private void UpdateRemainingScrew(int remainingScrew, int totalScrew)
     {
-        remainingScrewText.text = $"{remainingScrew}/{totalScrew}";
+        remainingScrewText.text = $"{remainingScrew}";
+
+        if (remainingScrew < 2)
+        {
+            localizedScrewText.TranslationName = GameConstants.SCREW;
+        }
     }
 }
