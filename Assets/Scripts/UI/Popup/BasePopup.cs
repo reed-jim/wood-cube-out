@@ -20,6 +20,7 @@ public class BasePopup : MonoBehaviour
     #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
     protected bool _isShown;
+    protected bool _isInTransition;
     protected List<Tween> _tweens;
     #endregion
 
@@ -119,15 +120,28 @@ public class BasePopup : MonoBehaviour
 
     protected void Show(Action onCompletedAction = null)
     {
+        if (_isInTransition)
+        {
+            return;
+        }
+
         gameObject.SetActive(true);
 
-        _transitionAnimation.Show(onCompletedAction);
+        _transitionAnimation.Show(OnTransitionCompleted);
 
         popupShowEvent?.Invoke();
 
         _isShown = true;
+        _isInTransition = true;
 
         enableSwipingScreenEvent?.Invoke(false);
+
+        void OnTransitionCompleted()
+        {
+            _isInTransition = false;
+
+            onCompletedAction?.Invoke();
+        }
     }
 
     protected void Show()
@@ -137,19 +151,32 @@ public class BasePopup : MonoBehaviour
 
     protected virtual void Hide(Action onCompletedAction = null)
     {
+        if (_isInTransition)
+        {
+            return;
+        }
+
         if (_isShown)
         {
-            _transitionAnimation.Hide(onCompletedAction);
+            _transitionAnimation.Hide(OnTransitionCompleted);
 
             popupHideEvent?.Invoke();
 
             _isShown = false;
+            _isInTransition = true;
 
             AfterHide();
 
             SoundManager.Instance.PlaySoundClose();
 
             enableSwipingScreenEvent?.Invoke(true);
+        }
+
+        void OnTransitionCompleted()
+        {
+            _isInTransition = false;
+
+            onCompletedAction?.Invoke();
         }
     }
 
