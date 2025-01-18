@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -9,6 +10,7 @@ public class ScrewBoxManager : MonoBehaviour
 {
     [SerializeField] private ScrewBox[] screwBoxs;
     [SerializeField] private List<ScrewBoxSlot> screwPorts;
+    [SerializeField] private Transform screwPortsContainer;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
@@ -167,13 +169,11 @@ public class ScrewBoxManager : MonoBehaviour
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
-        _screwBoxDistance = 0.215f * worldSize.x;
-        // _screwBoxPositionY = 0.333f * worldSize.y;
-
-        // the camera is at position (0, 6.5f, -10) and rotation (30, 0, 0);
-        // Vector3 test = screwBoxCamera.transform.InverseTransformPoint(new Vector3(0, (640f / (1920 / 2)) * worldSize.y, 0));
+        _screwBoxDistance = 0.213f * worldSize.x;
 
         _screwBoxPositionY = 0.42f * worldSize.y;
+
+        screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
     }
 
     private void OnRevived(BoosterType boosterType)
