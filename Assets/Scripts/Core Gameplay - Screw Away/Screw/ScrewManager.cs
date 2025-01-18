@@ -40,7 +40,7 @@ public class ScrewManager : MonoBehaviour
         LevelLoader.setLevelScrewNumberEvent += SetLevelScrewNumber;
         BaseScrew.addScrewToListEvent += AddScrew;
         ScrewBox.spawnNewScrewBoxEvent += SpawnNewScrewBox;
-        ScrewBox.setFactionForScrewBoxEvent += AssignFactionForNewScrewBox;
+        ScrewBox.setFactionForScrewBoxEvent += AssignFactionForNewAdsScrewBox;
         BaseScrew.screwLoosenedEvent += OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
@@ -53,7 +53,7 @@ public class ScrewManager : MonoBehaviour
         LevelLoader.setLevelScrewNumberEvent -= SetLevelScrewNumber;
         BaseScrew.addScrewToListEvent -= AddScrew;
         ScrewBox.spawnNewScrewBoxEvent -= SpawnNewScrewBox;
-        ScrewBox.setFactionForScrewBoxEvent -= AssignFactionForNewScrewBox;
+        ScrewBox.setFactionForScrewBoxEvent -= AssignFactionForNewAdsScrewBox;
         BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
@@ -294,9 +294,14 @@ public class ScrewManager : MonoBehaviour
         }
     }
 
-    private void AssignFactionForNewScrewBox(ScrewBox screwBox)
+    private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
     {
-        GameFaction faction = GetFactionForNewScrewBox();
+        AssignFactionForNewScrewBox(screwBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
+    }
+
+    private void AssignFactionForNewScrewBox(ScrewBox screwBox, int difficultyLevelModifier)
+    {
+        GameFaction faction = GetFactionForNewScrewBox(difficultyLevelModifier);
 
         if (faction == GameFaction.None)
         {
@@ -331,7 +336,7 @@ public class ScrewManager : MonoBehaviour
         return factionSortedByDifficulty;
     }
 
-    private GameFaction GetFactionForNewScrewBox()
+    private GameFaction GetFactionForNewScrewBox(int difficultyLevelModifier = 0)
     {
         float progress;
         int doneScrew = 0;
@@ -350,7 +355,7 @@ public class ScrewManager : MonoBehaviour
 
         progress = (float)doneScrew / _totalScrew;
 
-        int levelDifficulty = 0;
+        int difficultyLevel = 0;
 
         for (int i = 0; i < _currentLevelDifficultyConfiguration.LevelPhases.Length; i++)
         {
@@ -358,11 +363,14 @@ public class ScrewManager : MonoBehaviour
 
             if (progress <= levelPhase.EndProgress)
             {
-                levelDifficulty = levelPhase.PhaseIndex;
+                difficultyLevel = levelPhase.PhaseIndex;
 
                 break;
             }
         }
+
+        difficultyLevel += difficultyLevelModifier;
+        difficultyLevel = Mathf.Max(difficultyLevel, 0);
 
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
@@ -371,8 +379,6 @@ public class ScrewManager : MonoBehaviour
         GameFaction[] factionSortedByDifficulty = totalBlockObjectsByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
 
         GameFaction nextFaction = GameFaction.None;
-
-        int difficultyLevel = factionSortedByDifficulty.Length;
 
         bool isFound = false;
 
@@ -395,14 +401,13 @@ public class ScrewManager : MonoBehaviour
         for (int i = 0; i < factionSortedByDifficulty.Length; i++)
         {
             GameFaction faction = factionSortedByDifficulty[i];
-            // int sortedFactionIndex = i;
 
             if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
             {
                 continue;
             }
 
-            if (levelDifficulty == currentSortedFactionIndex)
+            if (difficultyLevel == currentSortedFactionIndex)
             {
                 nextFaction = faction;
 
@@ -434,25 +439,6 @@ public class ScrewManager : MonoBehaviour
                 }
             }
         }
-
-        // // CASE: there are a few screws left, but no screw box spawned and player can't win
-        // if (!isFound)
-        // {
-        //     for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        //     {
-        //         GameFaction faction = factionSortedByDifficulty[i];
-
-        //         if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) > 0 &&
-        //             (remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
-        //         {
-        //             nextFaction = faction;
-
-        //             isFound = true;
-
-        //             break;
-        //         }
-        //     }
-        // }
 
         return nextFaction;
     }

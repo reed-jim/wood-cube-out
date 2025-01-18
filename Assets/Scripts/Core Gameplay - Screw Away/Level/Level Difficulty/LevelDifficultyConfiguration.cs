@@ -8,6 +8,7 @@ public class LevelDifficultyConfiguration : ScriptableObject
     [SerializeField] private LevelPhase[] levelPhases;
     [Header("Modify chance to get screw ports' faction. Range: -99 --> 99")]
     [SerializeField] private int screwPortFactionDifficultyModifier;
+    [SerializeField] private int adsScrewBoxDifficultyLevelModifier;
     [SerializeField] private float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
     public LevelPhase[] LevelPhases
@@ -19,6 +20,11 @@ public class LevelDifficultyConfiguration : ScriptableObject
     public int ScrewPortFactionDifficultyModifier
     {
         get => screwPortFactionDifficultyModifier;
+    }
+
+    public int AdsScrewBoxDifficultyLevelModifier
+    {
+        get => adsScrewBoxDifficultyLevelModifier;
     }
 
     public float RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame

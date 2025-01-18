@@ -444,16 +444,13 @@ public class ScrewBoxManager : MonoBehaviour
         {
             if (screwBoxs[i] == null)
             {
+                int index = i;
+
                 ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
 
                 screwBox.transform.position = new Vector3(10, _screwBoxPositionY, screwBox.transform.position.z);
 
                 screwBox.Lock();
-
-                int index = i;
-
-
-
 
                 Vector3 destination = screwBox.transform.position;
 

@@ -43,7 +43,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
-        throwForceMultiplier = new Vector3(1600f, 800f, 1600f);
+        throwForceMultiplier = new Vector3(1600f, 1200f, 1600f);
 
         attachedScrews = new BaseScrew[transform.childCount];
 
