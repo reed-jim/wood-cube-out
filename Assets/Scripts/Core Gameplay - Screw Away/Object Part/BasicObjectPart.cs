@@ -58,17 +58,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         // }
 
         partRigidbody.isKinematic = true;
-        // meshCollider.isTrigger = true;
+        meshCollider.isTrigger = true;
         partRigidbody.mass = 100;
 
-        // minJointToDisableKinematic = 0;
+        minJointToDisableKinematic = 0;
 
-        // HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
+        HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
 
-        // for (int i = 0; i < hingeJoints.Length; i++)
-        // {
-        //     hingeJoints[i].breakForce = 0;
-        // }
+        for (int i = 0; i < hingeJoints.Length; i++)
+        {
+            hingeJoints[i].breakForce = 0;
+        }
     }
 
     void OnDestroy()
