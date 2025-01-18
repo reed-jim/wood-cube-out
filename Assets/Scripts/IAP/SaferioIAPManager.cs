@@ -19,6 +19,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action removeAdPurchasedCompletedEvent;
     public static event Action<int> collectCoinEvent;
     public static event Action<string, string> updatePriceEvent;
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     #endregion
 
     private void Awake()
@@ -100,11 +101,19 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             {
                 if (productData.ProductId == e.purchasedProduct.definition.id)
                 {
-                    collectCoinEvent?.Invoke(productData.CoinQuantity);
+                    // collectCoinEvent?.Invoke(productData.CoinQuantity);
 
                     userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
                     userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
                     userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+
+                    int[] boosterQuantites = new int[3] {
+                        productData.AddHoleBoosterQuantity,
+                        productData.BreakObjectBoosterQuantity,
+                        productData.ClearHolesBoosterQuantity
+                    };
+
+                    showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                     break;
                 }

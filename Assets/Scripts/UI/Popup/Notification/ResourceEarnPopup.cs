@@ -1,0 +1,119 @@
+using System;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class ResourceEarnPopup : BasePopup
+{
+    [SerializeField] private RectTransform[] resourceGroups;
+
+    [SerializeField] private Button okButton;
+
+    private ResourceGroupUI[] _resourceGroupsUI;
+
+    private int _coinQuantity;
+
+    public static event Action<int> collectCoinEvent;
+
+    protected override void MoreActionInAwake()
+    {
+        _resourceGroupsUI = new ResourceGroupUI[resourceGroups.Length];
+
+        for (int i = 0; i < resourceGroups.Length; i++)
+        {
+            _resourceGroupsUI[i] = resourceGroups[i].GetComponent<ResourceGroupUI>();
+        }
+    }
+
+    protected override void RegisterMoreEvent()
+    {
+        SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
+
+        okButton.onClick.AddListener(Hide);
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+    }
+
+    protected override void Hide()
+    {
+        base.Hide();
+
+        if (_coinQuantity > 0)
+        {
+            collectCoinEvent?.Invoke(_coinQuantity);
+
+            _coinQuantity = 0;
+        }
+    }
+
+    private void ShowResourcesEarned(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
+    {
+        Show();
+
+        int totalResourceType = 0;
+
+        List<RectTransform> validResourceGroups = new List<RectTransform>();
+
+        if (isRemoveAd)
+        {
+            validResourceGroups.Add(resourceGroups[0]);
+
+            totalResourceType++;
+        }
+
+        if (coinQuantity > 0)
+        {
+            _resourceGroupsUI[1].SetQuantity(coinQuantity);
+
+            validResourceGroups.Add(resourceGroups[1]);
+
+            totalResourceType++;
+        }
+
+        for (int i = 0; i < boosterQuantities.Length; i++)
+        {
+            if (boosterQuantities[i] > 0)
+            {
+                _resourceGroupsUI[2 + i].SetQuantity(boosterQuantities[i]);
+
+                validResourceGroups.Add(resourceGroups[2 + i]);
+
+                totalResourceType++;
+            }
+        }
+
+        Vector3 position = Vector3.zero;
+
+        position.y = 0.08f * container.sizeDelta.y;
+
+        for (int i = 0; i < resourceGroups.Length; i++)
+        {
+            resourceGroups[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < validResourceGroups.Count; i++)
+        {
+            position.x = (-(totalResourceType - 1) / 2f + i) * 0.17f * container.sizeDelta.x;
+
+            validResourceGroups[i].gameObject.SetActive(true);
+            validResourceGroups[i].localPosition = position;
+        }
+
+        _coinQuantity = coinQuantity;
+    }
+
+    // private void Claim()
+    // {
+    //     Hide();
+
+    //     if (_coinQuantity > 0)
+    //     {
+    //         collectCoinEvent?.Invoke(_coinQuantity);
+
+    //         _coinQuantity = 0;
+    //     }
+    // }
+}
