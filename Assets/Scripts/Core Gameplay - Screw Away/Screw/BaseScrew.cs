@@ -11,6 +11,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     [SerializeField] protected ScrewServiceLocator screwServiceLocator;
 
+    [SerializeField] protected MeshRenderer meshRenderer;
     [SerializeField] protected HingeJoint joint;
 
     [Header("CUSTOMIZE")]

@@ -12,8 +12,10 @@ public class ResourceEarnPopup : BasePopup
     private ResourceGroupUI[] _resourceGroupsUI;
 
     private int _coinQuantity;
+    private bool _isRemoveAds;
 
     public static event Action<int> collectCoinEvent;
+    public static event Action removeAdsEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -47,13 +49,18 @@ public class ResourceEarnPopup : BasePopup
 
             _coinQuantity = 0;
         }
+
+        if (_isRemoveAds)
+        {
+            removeAdsEvent?.Invoke();
+
+            _isRemoveAds = false;
+        }
     }
 
     private void ShowResourcesEarned(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
     {
         Show();
-
-        int totalResourceType = 0;
 
         List<RectTransform> validResourceGroups = new List<RectTransform>();
 
@@ -61,7 +68,7 @@ public class ResourceEarnPopup : BasePopup
         {
             validResourceGroups.Add(resourceGroups[0]);
 
-            totalResourceType++;
+            _isRemoveAds = true;
         }
 
         if (coinQuantity > 0)
@@ -69,8 +76,6 @@ public class ResourceEarnPopup : BasePopup
             _resourceGroupsUI[1].SetQuantity(coinQuantity);
 
             validResourceGroups.Add(resourceGroups[1]);
-
-            totalResourceType++;
         }
 
         for (int i = 0; i < boosterQuantities.Length; i++)
@@ -80,8 +85,6 @@ public class ResourceEarnPopup : BasePopup
                 _resourceGroupsUI[2 + i].SetQuantity(boosterQuantities[i]);
 
                 validResourceGroups.Add(resourceGroups[2 + i]);
-
-                totalResourceType++;
             }
         }
 
@@ -96,7 +99,7 @@ public class ResourceEarnPopup : BasePopup
 
         for (int i = 0; i < validResourceGroups.Count; i++)
         {
-            position.x = (-(totalResourceType - 1) / 2f + i) * 0.17f * container.sizeDelta.x;
+            position.x = (-(validResourceGroups.Count - 1) / 2f + i) * 0.17f * container.sizeDelta.x;
 
             validResourceGroups[i].gameObject.SetActive(true);
             validResourceGroups[i].localPosition = position;

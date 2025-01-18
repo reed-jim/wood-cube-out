@@ -79,7 +79,7 @@ public class LevelTutorial : MonoBehaviour
 
         tutorialHand.position = screw.position - 5f * screw.right;
 
-        float lerpDelta = 0.1f;
+        float lerpDelta = 0.08f;
         float lerpProgress = 0;
         Vector3 targetPosition;
 
@@ -164,12 +164,15 @@ public class LevelTutorial : MonoBehaviour
 
     private IEnumerator TutorialStepThree()
     {
+        float TIME_OUT = 10;
+
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
         float lerpDelta = 1f / 4;
         float lerpProgress = 0;
 
         int phase = 0;
+        float timePassed = 0;
 
         localizedTutorialText.TranslationName = translationNames[2];
 
@@ -191,7 +194,7 @@ public class LevelTutorial : MonoBehaviour
 
         Tween.Alpha(scaleIconHand, 1, duration: 0.3f);
 
-        while (_step == 2)
+        while (_step == 2 && timePassed < TIME_OUT)
         {
             if (phase == 0)
             {
@@ -207,6 +210,8 @@ public class LevelTutorial : MonoBehaviour
                     phase++;
                 }
             }
+
+            timePassed += Time.deltaTime;
 
             yield return waitForSeconds;
         }

@@ -190,18 +190,18 @@ public class BasicScrew : BaseScrew
                     }
 
                     // Perpendicular distance
-                    // Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
+                    Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
 
-                    // float distance = Mathf.Abs(positionInScrewSpace.z);
+                    float distance = Mathf.Abs(positionInScrewSpace.z);
 
-                    float distance = Vector3.Distance(hits[i].point, transform.position);
+                    // float distance = Vector3.Distance(hits[i].point, transform.position);
 
                     if (distance < minBlockedDistance)
                     {
                         minBlockedDistance = distance;
                     }
 
-                    if (distance < 0.9f)
+                    if (distance < meshRenderer.bounds.size.z)
                     {
                         number++;
                     }

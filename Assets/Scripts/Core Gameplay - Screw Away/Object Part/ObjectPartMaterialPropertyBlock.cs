@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
     [SerializeField] private string alphaValueReference;
 
     #region PRIVATE FIELD
+    [SerializeField] private List<Tween> _tweens;
     [SerializeField] private Renderer _renderer;
     private MaterialPropertyBlock _propertyBlock;
     private Tween _currentAlphaTransition;
@@ -20,6 +22,8 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
         ObjectPartHolder.dissolveObjectPartEvent += Dissolve;
         BasicObjectPart.dissolveObjectPartEvent += Dissolve;
 
+        _tweens = new List<Tween>();
+
         Init();
     }
 
@@ -29,6 +33,9 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
         BasicObjectPart.deselectObjectPartEvent -= OnObjectPartDeselected;
         ObjectPartHolder.dissolveObjectPartEvent -= Dissolve;
         BasicObjectPart.dissolveObjectPartEvent -= Dissolve;
+
+        CommonUtil.StopAllTweens(_tweens);
+        CommonUtil.StopTween(_currentAlphaTransition);
     }
 
     private void Init()
@@ -100,7 +107,7 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 
         // fx.Play();
 
-        Tween.Custom(0f, 1, duration: 0.6f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0f, 1, duration: 0.6f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_DissolveStrength", newVal);
 
@@ -109,7 +116,7 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
         .OnComplete(() =>
         {
             gameObject.SetActive(false);
-        });
+        }));
 
         _isDissolving = true;
     }

@@ -32,6 +32,7 @@ public class MenuScreen : MonoBehaviour
     {
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
+        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -42,12 +43,19 @@ public class MenuScreen : MonoBehaviour
 
         _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
         topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
+
+
+        if (UserData.IsRemoveAds)
+        {
+            openRemoveAdPopupButton.gameObject.SetActive(false);
+        }
     }
 
     void OnDestroy()
     {
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
+        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
     }
@@ -95,8 +103,18 @@ public class MenuScreen : MonoBehaviour
         ShowTopBarDivider(screenRoute);
     }
 
+    private void OnAdsRemoved()
+    {
+        openRemoveAdPopupButton.gameObject.SetActive(false);
+    }
+
     private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)
     {
+        if (UserData.IsRemoveAds)
+        {
+            return;
+        }
+
         CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 
         if (screenRoute != ScreenRoute.IAPShop)

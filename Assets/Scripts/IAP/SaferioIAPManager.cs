@@ -107,6 +107,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                     userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
                     userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
 
+                    if (productData.IsRemoveAd)
+                    {
+                        UserData.IsRemoveAds = true;
+                    }
+
                     int[] boosterQuantites = new int[3] {
                         productData.AddHoleBoosterQuantity,
                         productData.BreakObjectBoosterQuantity,
@@ -179,7 +184,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void CheckRestoredRemoveAds()
     {
-        UserData.IsRemoveAds = IsProductPurchased("remove adddd");
+        // UserData.IsRemoveAds = IsProductPurchased("remove adddd");
     }
 }
 

@@ -12,6 +12,9 @@ public class IAPPackageUI : MonoBehaviour
     [SerializeField] private TMP_Text priceText;
     [SerializeField] private Button buyButton;
 
+    [Header("CUSTOMIZE")]
+    [SerializeField] private bool isContainRemoveAd;
+
     [SerializeField] private IAPPackageData _packageData;
 
     #region EVENT
@@ -21,6 +24,7 @@ public class IAPPackageUI : MonoBehaviour
     private void Awake()
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
+        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
 
         buyButton.onClick.AddListener(Buy);
 
@@ -30,10 +34,18 @@ public class IAPPackageUI : MonoBehaviour
     void OnDestroy()
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
+        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
     }
 
     public void Setup(IAPPackageData data)
     {
+        if (isContainRemoveAd && UserData.IsRemoveAds)
+        {
+            gameObject.SetActive(false);
+
+            return;
+        }
+
         if (coinQuantityText != null)
         {
             coinQuantityText.text = $"{data.CoinQuantity}";
@@ -67,6 +79,14 @@ public class IAPPackageUI : MonoBehaviour
         if (productId == _packageData.ProductId)
         {
             priceText.text = price;
+        }
+    }
+
+    private void OnAdsRemoved()
+    {
+        if (isContainRemoveAd)
+        {
+            gameObject.SetActive(false);
         }
     }
 }
