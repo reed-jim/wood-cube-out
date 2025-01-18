@@ -83,5 +83,9 @@ public class GameplayScreen : MonoBehaviour
         {
             localizedScrewText.TranslationName = GameConstants.SCREW;
         }
+        else if (remainingScrew == totalScrew)
+        {
+            localizedScrewText.TranslationName = GameConstants.SCREWS;
+        }
     }
 }

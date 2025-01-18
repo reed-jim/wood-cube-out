@@ -25,11 +25,13 @@ public class LevelDifficultyConfiguration : ScriptableObject
     public int AdsScrewBoxDifficultyLevelModifier
     {
         get => adsScrewBoxDifficultyLevelModifier;
+        set => adsScrewBoxDifficultyLevelModifier = value;
     }
 
     public float RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame
     {
         get => ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+        set => ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = value;
     }
 }
 

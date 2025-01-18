@@ -177,7 +177,7 @@ public class LevelDifficultyCalculator : EditorWindow
         EditorGUIUtility.systemCopyBuffer = $"{finalDifficulty}";
     }
 
-    private void GenerateScrewBoxDifficultyTemplate(int level)
+    public static LevelDifficultyConfiguration GenerateScrewBoxDifficultyTemplate(int level)
     {
         float currentProgress = 0;
         float currentDifficulty = 0;
@@ -200,13 +200,11 @@ public class LevelDifficultyCalculator : EditorWindow
         // int randomIndex = UnityEngine.Random.Range(0, validMaxPhaseIndexToRandom.Count);
         // int maxPhase = validMaxPhaseIndexToRandom[randomIndex];
 
-        int PREDICTED_MAX_LEVEL = 300;
+        int PREDICTED_MAX_LEVEL = 100;
 
         float[] weightForModules = new float[5] { 0.1f, 0.15f, 0.2f, 0.4f, 0.15f };
 
-        expectedDifficultyNormalized = weightForModules[(level - 1) % 5] * 0.6f + ((float)level / PREDICTED_MAX_LEVEL) * 0.4f;
-
-        Debug.Log(expectedDifficultyNormalized);
+        float expectedDifficultyNormalized = weightForModules[(level - 1) % 5] * 0.7f + ((float)level / PREDICTED_MAX_LEVEL) * 0.3f;
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 
@@ -234,7 +232,15 @@ public class LevelDifficultyCalculator : EditorWindow
             }
         }
 
-        levelDataContainer.SetLevelDifficultyConfiguration(30, generatedLevelPhases.ToArray());
+        // levelDataContainer.SetLevelDifficultyConfiguration(30, generatedLevelPhases.ToArray());
+
+        LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
+
+        levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
+        levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;
+        levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame = 1;
+
+        return levelDifficultyConfiguration;
     }
 
     private void GenerateScrewBoxDifficulty()

@@ -68,6 +68,7 @@ public class ScrewManager : MonoBehaviour
         _totalScrewObserved = 0;
 
         _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
+        _currentLevelDifficultyConfiguration = LevelDifficultyCalculator.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
     }
 
     #region SCREW
