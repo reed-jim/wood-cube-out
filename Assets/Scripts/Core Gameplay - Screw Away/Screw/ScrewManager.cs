@@ -67,7 +67,7 @@ public class ScrewManager : MonoBehaviour
 
         _totalScrewObserved = 0;
 
-        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
+        // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculator.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
     }
 
@@ -129,7 +129,7 @@ public class ScrewManager : MonoBehaviour
         return remainingScrewByFaction;
     }
 
-    private Dictionary<GameFaction, int> GetDifficultyLevelByFaction()
+    private Dictionary<GameFaction, int> GetDifficultyLevelByFaction(int? levelPhase = null)
     {
         // RULE: The more difficulty point, the less chance to spawn for a faction
 
@@ -184,7 +184,22 @@ public class ScrewManager : MonoBehaviour
                 continue;
             }
 
-            difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 99;
+            // avoid get factions that are already available in screw boxes when difficulty is max
+            if (levelPhase != null)
+            {
+                if (levelPhase == GameConstants.SCREW_FACTION.Length - 1)
+                {
+                    difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] -= 999;
+                }
+                else
+                {
+                    difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 999;
+                }
+            }
+            else
+            {
+                difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 999;
+            }
         }
 
         // Modify chance of factions of screw port
@@ -375,7 +390,7 @@ public class ScrewManager : MonoBehaviour
 
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
-        Dictionary<GameFaction, int> totalBlockObjectsByFaction = GetDifficultyLevelByFaction();
+        Dictionary<GameFaction, int> totalBlockObjectsByFaction = GetDifficultyLevelByFaction(difficultyLevel);
 
         GameFaction[] factionSortedByDifficulty = totalBlockObjectsByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
 
@@ -397,18 +412,11 @@ public class ScrewManager : MonoBehaviour
         //     Debug.Log(debugString);
         // }
 
-        int currentSortedFactionIndex = 0;
-
-        for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        for (int i = difficultyLevel; i >= 0; i--)
         {
             GameFaction faction = factionSortedByDifficulty[i];
 
-            if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
-            {
-                continue;
-            }
-
-            if (difficultyLevel == currentSortedFactionIndex)
+            if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) >= 3)
             {
                 nextFaction = faction;
 
@@ -416,9 +424,47 @@ public class ScrewManager : MonoBehaviour
 
                 break;
             }
-
-            currentSortedFactionIndex++;
         }
+
+        if (!isFound)
+        {
+            for (int i = difficultyLevel + 1; i < factionSortedByDifficulty.Length; i++)
+            {
+                GameFaction faction = factionSortedByDifficulty[i];
+
+                if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) >= 3)
+                {
+                    nextFaction = faction;
+
+                    isFound = true;
+
+                    break;
+                }
+            }
+        }
+
+        // int currentSortedFactionIndex = 0;
+
+        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        // {
+        // GameFaction faction = factionSortedByDifficulty[i];
+
+        // if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
+        // {
+        //     continue;
+        // }
+
+        // if (difficultyLevel == currentSortedFactionIndex)
+        // {
+        //     nextFaction = faction;
+
+        //     isFound = true;
+
+        //     break;
+        // }
+
+        //     currentSortedFactionIndex++;
+        // }
 
         if (!isFound)
         {

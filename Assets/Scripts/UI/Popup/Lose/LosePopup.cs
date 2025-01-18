@@ -13,7 +13,9 @@ public class LosePopup : BasePopup
     [SerializeField] private TMP_Text progressText;
 
     [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelObserver levelObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionDuration;
@@ -51,6 +53,8 @@ public class LosePopup : BasePopup
         {
             progressText.gameObject.SetActive(false);
         }
+
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver);
 
         Show(onCompletedAction: () =>
         {

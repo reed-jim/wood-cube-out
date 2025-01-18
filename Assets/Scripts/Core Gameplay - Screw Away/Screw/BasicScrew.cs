@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class BasicScrew : BaseScrew
 {
-    private float _distanceBlocked;
-
     // private Vector3 hitPoint;
     // private GameObject obstacle;
+
+    private Vector3 _obstacleHitPointWorld;
 
     private void Update()
     {
@@ -33,10 +33,15 @@ public class BasicScrew : BaseScrew
 
     // private void OnDrawGizmos()
     // {
+    //     // Vector3 pointOne = transform.position + transform.lossyScale.z * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
+    //     // Vector3 pointTwo = pointOne + 10f * transform.forward;
+
+    //     // Gizmos.DrawLine(pointOne, pointTwo);
+
     //     if (obstacle != null)
     //     {
-    //         Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
-    //         Gizmos.DrawWireSphere(hitPoint, 0.3f);
+    //         // Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
+    //         Gizmos.DrawWireSphere(hitPoint, 0.1f);
     //     }
     // }
 
@@ -89,7 +94,10 @@ public class BasicScrew : BaseScrew
 
                 HapticFeedback.MediumFeedback();
 
-                _tweens.Add(Tween.LocalPosition(fakeScrew.transform, _distanceBlocked * (fakeScrew.transform.localRotation * Vector3.forward),
+                Vector3 hitPointFakeScrewSpace =
+                    fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
+
+                _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 1.25f * hitPointFakeScrewSpace.z * (fakeScrew.transform.localRotation * Vector3.forward),
                     cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
                 .OnComplete(() =>
                 {
@@ -168,14 +176,12 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
-        Vector3 pointOne = transform.position + transform.lossyScale.x * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
+        Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
         Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
 
         int number = 0;
-
-        float minBlockedDistance = float.MaxValue;
 
         if (hits != null)
         {
@@ -200,23 +206,17 @@ public class BasicScrew : BaseScrew
                     // Perpendicular distance
                     Vector3 positionInScrewSpace = transform.InverseTransformPoint(hitPos);
 
-                    float distance = positionInScrewSpace.z - transform.lossyScale.z * 0.75f * meshFilter.mesh.bounds.size.z;
+                    float distance = positionInScrewSpace.z - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z;
 
-                    if (distance < 0)
-                    {
-                        continue;
-                    }
-
-                    if (distance < minBlockedDistance)
-                    {
-                        minBlockedDistance = distance;
-                    }
+                    distance = Mathf.Max(distance, 0);
 
                     if (distance < transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z)
                     {
                         number++;
 
-                        // hitPoint = hitPos;
+                        _obstacleHitPointWorld = hitPos;
+
+                        // hitPoint = positionInScrewSpace;
                         // obstacle = hits[i].gameObject;
                     }
                 }
@@ -224,7 +224,6 @@ public class BasicScrew : BaseScrew
         }
 
         _numberBlockingObjects = number;
-        _distanceBlocked = minBlockedDistance;
 
         return number;
     }
