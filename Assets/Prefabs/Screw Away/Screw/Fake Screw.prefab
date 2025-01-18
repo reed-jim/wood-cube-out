@@ -80,8 +80,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screwId: -1
   screwServiceLocator: {fileID: 8892752953658211009}
+  meshRenderer: {fileID: 3605883866489035732}
   joint: {fileID: 0}
   scaleOnScrewBox: 0
+  screwDifficultyModifier: 0
   durationMoveOut: 0.3
   durationDelay: 0.1
   durationMoveToScrewPort: 0.3
@@ -134,7 +136,6 @@ MonoBehaviour:
   outlineWidthReference: 
   secondaryColorMultiplier: 0.6
   _renderer: {fileID: 3605883866489035732}
-  _screwInsideRenderer: {fileID: 0}
 --- !u!135 &4184167494153281086
 SphereCollider:
   m_ObjectHideFlags: 0

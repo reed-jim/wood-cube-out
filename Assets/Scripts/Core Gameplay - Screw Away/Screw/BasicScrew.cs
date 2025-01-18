@@ -6,13 +6,10 @@ using UnityEngine;
 
 public class BasicScrew : BaseScrew
 {
-    // [Header("CUSTOMIZE - UNSCREW ANIMATION")]
-    // [SerializeField] private float durationMoveOut = 0.3f;
-    // [SerializeField] private float durationDelay = 0.1f;
-    // [SerializeField] private float durationMoveToScrewPort = 0.3f;
-    // [SerializeField] private float durationTightenScrewPort = 0.3f;
-
     private float _distanceBlocked;
+
+    // private Vector3 hitPoint;
+    // private GameObject obstacle;
 
     private void Update()
     {
@@ -33,6 +30,14 @@ public class BasicScrew : BaseScrew
             }
         }
     }
+
+    // private void OnDrawGizmos()
+    // {
+    //     if (obstacle != null)
+    //     {
+    //         Gizmos.DrawWireSphere(hitPoint, 0.3f);
+    //     }
+    // }
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
@@ -162,10 +167,10 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
-        Vector3 start = transform.position;
+        Vector3 pointOne = transform.position + 0.75f * meshRenderer.bounds.size.z * transform.forward;
+        Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
-        RaycastHit[] hits = Physics.CapsuleCastAll(start, start + 0.001f * transform.forward, 0.2f, transform.forward, 10);
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshRenderer.bounds.size.x);
 
         int number = 0;
 
@@ -189,21 +194,29 @@ public class BasicScrew : BaseScrew
                         continue;
                     }
 
+                    Vector3 hitPos = hits[i].ClosestPoint(transform.position);
+
                     // Perpendicular distance
-                    Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
+                    Vector3 positionInScrewSpace = transform.InverseTransformPoint(hitPos);
+
+                    if (positionInScrewSpace.z < 0)
+                    {
+                        continue;
+                    }
 
                     float distance = Mathf.Abs(positionInScrewSpace.z);
-
-                    // float distance = Vector3.Distance(hits[i].point, transform.position);
 
                     if (distance < minBlockedDistance)
                     {
                         minBlockedDistance = distance;
                     }
 
-                    if (distance < meshRenderer.bounds.size.z)
+                    if (distance < transform.lossyScale.x * 1.75f * meshRenderer.bounds.size.z)
                     {
                         number++;
+
+                        // hitPoint = hitPos;
+                        // obstacle = hits[i].gameObject;
                     }
                 }
             }
@@ -214,4 +227,72 @@ public class BasicScrew : BaseScrew
 
         return number;
     }
+
+    // public override int CountBlockingObjects(bool isIncludeHiddenScrew)
+    // {
+    //     // Vector3 pointOne = transform.position + 0.5f * meshRenderer.bounds.size.z * transform.forward;
+    //     Vector3 pointOne = transform.position;
+    //     Vector3 pointTwo = pointOne + 0.01f * transform.forward;
+
+    //     // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
+    //     RaycastHit[] hits = Physics.CapsuleCastAll(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshRenderer.bounds.size.x, transform.forward, 10);
+
+    //     int number = 0;
+
+    //     float minBlockedDistance = float.MaxValue;
+
+    //     if (hits != null)
+    //     {
+    //         for (int i = 0; i < hits.Length; i++)
+    //         {
+    //             if (hits[i].transform == transform.parent)
+    //             {
+    //                 continue;
+    //             }
+
+    //             if (hits[i].transform.GetComponent<IObjectPart>() != null)
+    //             {
+    //                 if (isIncludeHiddenScrew)
+    //                 {
+    //                     number++;
+
+    //                     continue;
+    //                 }
+
+    //                 // Perpendicular distance
+    //                 Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
+
+    //                 if (positionInScrewSpace.z < 0)
+    //                 {
+    //                     continue;
+    //                 }
+
+    //                 float distance = Mathf.Abs(positionInScrewSpace.z);
+
+    //                 // float distance = Vector3.Distance(hits[i].point, transform.position);
+
+    //                 if (distance < minBlockedDistance)
+    //                 {
+    //                     minBlockedDistance = distance;
+
+    //                     hitPoint = hits[i].point;
+    //                     obstacle = hits[i].collider.gameObject;
+    //                 }
+
+    //                 if (distance < transform.lossyScale.x * 1.75f * meshRenderer.bounds.size.z)
+    //                 {
+    //                     number++;
+
+    //                     hitPoint = hits[i].point;
+    //                     obstacle = hits[i].collider.gameObject;
+    //                 }
+    //             }
+    //         }
+    //     }
+
+    //     _numberBlockingObjects = number;
+    //     _distanceBlocked = minBlockedDistance;
+
+    //     return number;
+    // }
 }
