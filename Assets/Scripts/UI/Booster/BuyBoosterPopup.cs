@@ -104,6 +104,8 @@ public class BuyBoosterPopup : BasePopup
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
+                userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
+
                 Hide(onCompletedAction: () =>
                 {
                     unlockScrewBoxEvent?.Invoke();
