@@ -35,6 +35,7 @@ public class BasicScrew : BaseScrew
     // {
     //     if (obstacle != null)
     //     {
+    //         Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
     //         Gizmos.DrawWireSphere(hitPoint, 0.3f);
     //     }
     // }
@@ -88,7 +89,7 @@ public class BasicScrew : BaseScrew
 
                 HapticFeedback.MediumFeedback();
 
-                _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 0.1f * (fakeScrew.transform.localRotation * Vector3.forward),
+                _tweens.Add(Tween.LocalPosition(fakeScrew.transform, _distanceBlocked * (fakeScrew.transform.localRotation * Vector3.forward),
                     cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
                 .OnComplete(() =>
                 {
@@ -167,10 +168,10 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
-        Vector3 pointOne = transform.position + 0.75f * meshRenderer.bounds.size.z * transform.forward;
+        Vector3 pointOne = transform.position + transform.lossyScale.x * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshRenderer.bounds.size.x);
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
 
         int number = 0;
 
@@ -194,7 +195,7 @@ public class BasicScrew : BaseScrew
                         continue;
                     }
 
-                    Vector3 hitPos = hits[i].ClosestPoint(transform.position);
+                    Vector3 hitPos = hits[i].ClosestPoint(pointOne);
 
                     // Perpendicular distance
                     Vector3 positionInScrewSpace = transform.InverseTransformPoint(hitPos);
@@ -211,7 +212,7 @@ public class BasicScrew : BaseScrew
                         minBlockedDistance = distance;
                     }
 
-                    if (distance < transform.lossyScale.x * 1.75f * meshRenderer.bounds.size.z)
+                    if (distance < transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z)
                     {
                         number++;
 

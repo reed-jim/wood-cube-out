@@ -13,6 +13,7 @@ public class RotateObject : MonoBehaviour
 
     void Awake()
     {
+        ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.05f;
@@ -39,6 +40,7 @@ public class RotateObject : MonoBehaviour
 
     void OnDestroy()
     {
+        ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
         SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
@@ -83,5 +85,10 @@ public class RotateObject : MonoBehaviour
 
             yield return waitForSeconds;
         }
+    }
+
+    private void DisableAutoRotating()
+    {
+        _isAutoRotating = false;
     }
 }
