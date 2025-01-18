@@ -44,7 +44,12 @@ public class LevelDifficultyCalculator : EditorWindow
 
         if (GUILayout.Button("Generate Screw Box Difficulty"))
         {
-            GenerateScrewBoxDifficulty(expectedDifficultyNormalized);
+            GenerateScrewBoxDifficulty();
+        }
+
+        if (GUILayout.Button("Generate Screw Box Difficulty Template"))
+        {
+            GenerateScrewBoxDifficultyTemplate(level);
         }
 
         GUILayout.EndArea();
@@ -172,7 +177,7 @@ public class LevelDifficultyCalculator : EditorWindow
         EditorGUIUtility.systemCopyBuffer = $"{finalDifficulty}";
     }
 
-    private void GenerateScrewBoxDifficulty(float expectedDifficultyNormalized)
+    private void GenerateScrewBoxDifficultyTemplate(int level)
     {
         float currentProgress = 0;
         float currentDifficulty = 0;
@@ -181,13 +186,84 @@ public class LevelDifficultyCalculator : EditorWindow
 
         List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
 
-        for (int i = GameConstants.SCREW_FACTION.Length - 1; i >= 0; i--)
+        // // RANDOM
+        // List<int> validMaxPhaseIndexToRandom = new List<int>();
+
+        // for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+        // {
+        //     if (0.9f * (Mathf.Pow(2, i) / MAX_SCREW_BOXES_GENERATION_DIFFICULTY) > expectedDifficultyNormalized)
+        //     {
+        //         validMaxPhaseIndexToRandom.Add(i);
+        //     }
+        // }
+
+        // int randomIndex = UnityEngine.Random.Range(0, validMaxPhaseIndexToRandom.Count);
+        // int maxPhase = validMaxPhaseIndexToRandom[randomIndex];
+
+        int PREDICTED_MAX_LEVEL = 300;
+
+        float[] weightForModules = new float[5] { 0.1f, 0.15f, 0.2f, 0.4f, 0.15f };
+
+        expectedDifficultyNormalized = weightForModules[(level - 1) % 5] * 0.6f + ((float)level / PREDICTED_MAX_LEVEL) * 0.4f;
+
+        Debug.Log(expectedDifficultyNormalized);
+
+        int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
+
+        for (int i = maxPhaseIndex; i >= 0; i--)
         {
             int phaseIndex = i;
 
             float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
 
-            if (progress > 0.08f)
+            if (progress > 0.1f && progress < 0.9f)
+            {
+                LevelPhase levelPhase = new LevelPhase(0, 1 - progress);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                levelPhase = new LevelPhase(phaseIndex, 1);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        levelDataContainer.SetLevelDifficultyConfiguration(30, generatedLevelPhases.ToArray());
+    }
+
+    private void GenerateScrewBoxDifficulty()
+    {
+        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
+
+        List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
+
+        // RANDOM
+        List<int> validMaxPhaseIndexToRandom = new List<int>();
+
+        for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+        {
+            if (0.9f * (Mathf.Pow(2, i) / MAX_SCREW_BOXES_GENERATION_DIFFICULTY) > expectedDifficultyNormalized)
+            {
+                validMaxPhaseIndexToRandom.Add(i);
+            }
+        }
+
+        int randomIndex = UnityEngine.Random.Range(0, validMaxPhaseIndexToRandom.Count);
+        int maxPhase = validMaxPhaseIndexToRandom[randomIndex];
+
+        for (int i = maxPhase; i >= 0; i--)
+        {
+            int phaseIndex = i;
+
+            float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
+
+            if (progress > 0.1f && progress < 0.9f)
             {
                 LevelPhase levelPhase = new LevelPhase(0, 1 - progress);
 
