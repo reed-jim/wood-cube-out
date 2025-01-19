@@ -272,6 +272,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         direction = direction.normalized;
 
+        direction.y = Mathf.Abs(direction.y);
+
         if (Mathf.Abs(direction.x) < 0.01f)
         {
             direction.x = 1f;
