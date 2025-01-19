@@ -41,6 +41,7 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
+    public static event Action<bool> enableBoosterEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -482,6 +483,8 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void MoveFromScrewPortToScrewBox(ScrewBox screwBox)
     {
+        enableBoosterEvent?.Invoke(false);
+
         for (int i = 0; i < screwPorts.Count; i++)
         {
             if (screwPorts[i].IsFilled && screwPorts[i].Screw.Faction == screwBox.Faction)
@@ -502,9 +505,9 @@ public class ScrewBoxManager : MonoBehaviour
                             screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
                             onCompleteAction: () =>
                             {
-                                // screwPorts[screwPortIndex].IsFilled = false;
-
                                 screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+
+                                enableBoosterEvent?.Invoke(true);
                             },
                             isSwitchCamera: false
                         );

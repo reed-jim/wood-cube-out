@@ -162,19 +162,6 @@ public class BaseScrew : MonoBehaviour, IScrew
     }
     #endregion
 
-    // private void OnDrawGizmos()
-    // {
-    //     Gizmos.color = Color.green;
-
-    //     Vector3 startPoint = transform.position;
-
-    //     Vector3 direction = transform.forward;
-
-    //     Vector3 endPoint = startPoint + direction * 10f;
-
-    //     Gizmos.DrawLine(startPoint, endPoint);
-    // }
-
     public void Select()
     {
         selectScrewEvent?.Invoke(screwId, Faction);

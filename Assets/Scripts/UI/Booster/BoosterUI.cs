@@ -40,6 +40,7 @@ public class BoosterUI : MonoBehaviour
 
     private int _numScrewPortsAdded;
     private bool _isInTransition;
+    private bool _isEnable;
 
     private Vector2 _initialBoosterContainerPosition;
     private Vector2 _initialAddMoreScrewPortButtonPosition;
@@ -52,16 +53,14 @@ public class BoosterUI : MonoBehaviour
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
+        ScrewBoxManager.enableBoosterEvent += EnableBooster;
 
-        addMoreScrewPortButton.onClick.AddListener(AddMoreScrewPort);
-        breakObjectButton.onClick.AddListener(EnableBreakObjectMode);
-        clearAllScrewPortsButton.onClick.AddListener(ClearAllScrewPorts);
+        addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
+        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
+        clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
-        // _initialBoosterContainerPosition = boosterContainer.localPosition;
-        // _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
-        // _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
-        // _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
+        _isEnable = true;
     }
 
     private void Start()
@@ -78,6 +77,7 @@ public class BoosterUI : MonoBehaviour
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
+        ScrewBoxManager.enableBoosterEvent -= EnableBooster;
     }
 
     private void Reset()
@@ -97,6 +97,13 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
+        if (!_isEnable)
+        {
+            showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
+
+            return;
+        }
+
         if (boosterType == BoosterType.AddScrewPort)
         {
             AddMoreScrewPort();
@@ -149,6 +156,11 @@ public class BoosterUI : MonoBehaviour
         {
             _isInTransition = false;
         });
+    }
+
+    private void EnableBooster(bool isEnable)
+    {
+        _isEnable = isEnable;
     }
 
     private void EnableBreakObjectMode()
