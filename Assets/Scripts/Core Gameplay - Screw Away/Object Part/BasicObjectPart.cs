@@ -22,7 +22,13 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private bool _isFree;
     private bool _isImmuneSwipeForce;
     private int _totalJoint;
+    private bool _isConcave;
     #endregion
+
+    public bool IsConcave
+    {
+        get => _isConcave;
+    }
 
     #region EVENT
     public static event Action<int> selectObjectPartEvent;
@@ -59,7 +65,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         partRigidbody.isKinematic = true;
 
-        if (meshCollider.convex)
+        if (!meshCollider.convex)
+        {
+            _isConcave = true;
+        }
+        else
         {
             meshCollider.isTrigger = true;
         }
@@ -133,6 +143,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                         if (!meshCollider.convex)
                         {
                             meshCollider.convex = true;
+                            meshCollider.isTrigger = true;
                         }
                     }
 
@@ -148,18 +159,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
-        }
-    }
-
-    private IEnumerator Throwing()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
-
-        while (true)
-        {
-            Throw();
-
-            yield return waitForSeconds;
         }
     }
 

@@ -11,6 +11,8 @@ public class BasicScrew : BaseScrew
 
     private Vector3 _obstacleHitPointWorld;
 
+    [SerializeField] private LayerMask checkObstacleLayer;
+
     private void Update()
     {
         if (_isRotating)
@@ -192,7 +194,9 @@ public class BasicScrew : BaseScrew
                     continue;
                 }
 
-                if (hits[i].transform.GetComponent<IObjectPart>() != null)
+                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
                 {
                     if (isIncludeHiddenScrew)
                     {
@@ -201,14 +205,28 @@ public class BasicScrew : BaseScrew
                         continue;
                     }
 
-                    MeshCollider meshCollider = hits[i] as MeshCollider;
-
-                    if (!meshCollider.convex)
-                    {
-                        continue;
-                    }
-
                     Vector3 hitPos = hits[i].ClosestPoint(pointOne);
+
+                    // Concave
+                    if (objectPart.IsConcave)
+                    {
+                        RaycastHit hit;
+
+                        float radius = transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x;
+
+                        Physics.CapsuleCast(
+                            pointOne - radius * transform.forward, pointOne - radius * transform.forward + 0.01f * transform.forward,
+                            transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x, transform.forward, out hit, 10, checkObstacleLayer);
+
+                        if (hit.collider != null)
+                        {
+                            hitPos = hit.point;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
 
                     // Perpendicular distance
                     Vector3 positionInScrewSpace = transform.InverseTransformPoint(hitPos);
