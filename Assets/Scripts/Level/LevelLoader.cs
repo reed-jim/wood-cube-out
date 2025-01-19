@@ -57,7 +57,7 @@ public class LevelLoader : MonoBehaviour
             {
                 GameObject level = Instantiate(op.Result, transform);
 
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculator.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
                 AutoAssignScrewFaction(level);
                 AutoAssignScrewFactionMultiPhaseLevel(level);

@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BasicScrew : BaseScrew
 {
-    // private Vector3 hitPoint;
-    // private GameObject obstacle;
+    private Vector3 hitPoint;
+    private GameObject obstacle;
 
     private Vector3 _obstacleHitPointWorld;
 
@@ -31,19 +31,19 @@ public class BasicScrew : BaseScrew
         }
     }
 
-    // private void OnDrawGizmos()
-    // {
-    //     // Vector3 pointOne = transform.position + transform.lossyScale.z * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
-    //     // Vector3 pointTwo = pointOne + 10f * transform.forward;
+    private void OnDrawGizmos()
+    {
+        // Vector3 pointOne = transform.position + transform.lossyScale.z * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
+        // Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-    //     // Gizmos.DrawLine(pointOne, pointTwo);
+        // Gizmos.DrawLine(pointOne, pointTwo);
 
-    //     if (obstacle != null)
-    //     {
-    //         // Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
-    //         Gizmos.DrawWireSphere(hitPoint, 0.1f);
-    //     }
-    // }
+        if (obstacle != null)
+        {
+            // Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
+            Gizmos.DrawWireSphere(_obstacleHitPointWorld, 0.1f);
+        }
+    }
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
@@ -179,7 +179,7 @@ public class BasicScrew : BaseScrew
         Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x);
 
         int number = 0;
 
@@ -201,6 +201,13 @@ public class BasicScrew : BaseScrew
                         continue;
                     }
 
+                    MeshCollider meshCollider = hits[i] as MeshCollider;
+
+                    if (!meshCollider.convex)
+                    {
+                        continue;
+                    }
+
                     Vector3 hitPos = hits[i].ClosestPoint(pointOne);
 
                     // Perpendicular distance
@@ -210,14 +217,14 @@ public class BasicScrew : BaseScrew
 
                     distance = Mathf.Max(distance, 0);
 
-                    if (distance < transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z)
+                    if (distance < transform.lossyScale.z * 0.5f * meshFilter.mesh.bounds.size.z)
                     {
                         number++;
 
                         _obstacleHitPointWorld = hitPos;
 
-                        // hitPoint = positionInScrewSpace;
-                        // obstacle = hits[i].gameObject;
+                        hitPoint = positionInScrewSpace;
+                        obstacle = hits[i].gameObject;
                     }
                 }
             }

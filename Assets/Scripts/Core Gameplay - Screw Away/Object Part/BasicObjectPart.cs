@@ -58,7 +58,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         // }
 
         partRigidbody.isKinematic = true;
-        meshCollider.isTrigger = true;
+
+        if (meshCollider.convex)
+        {
+            meshCollider.isTrigger = true;
+        }
+
         partRigidbody.mass = 100;
 
         minJointToDisableKinematic = 0;

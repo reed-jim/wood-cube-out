@@ -1,10 +1,11 @@
-#if UNITY_EDITOR
+
 using System.Collections.Generic;
 using System.Linq;
 using Unity.Mathematics;
-using UnityEditor;
 using UnityEngine;
 using static GameEnum;
+#if UNITY_EDITOR
+using UnityEditor;
 
 public class LevelDifficultyCalculator : EditorWindow
 {
@@ -316,3 +317,59 @@ public class LevelDifficultyCalculator : EditorWindow
     #endregion
 }
 #endif
+
+
+public static class LevelDifficultyCalculatorUltility
+{
+    public static LevelDifficultyConfiguration GenerateScrewBoxDifficultyTemplate(int level)
+    {
+        float WEIGHT_REPEAT_TEMPLATE = 0.8f;
+        float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
+        float DIFFICULTY_MULTIPLIER = 2f;
+
+        float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
+
+        List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
+
+        int PREDICTED_MAX_LEVEL = 100;
+
+        float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
+
+        float expectedDifficultyNormalized =
+            DIFFICULTY_MULTIPLIER * WEIGHT_REPEAT_TEMPLATE * weightForModules[(level - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)level / PREDICTED_MAX_LEVEL);
+
+        int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
+
+        for (int i = maxPhaseIndex; i >= 0; i--)
+        {
+            int phaseIndex = i;
+
+            float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
+
+            if (progress > 0.1f && progress < 0.9f)
+            {
+                LevelPhase levelPhase = new LevelPhase(0, 1 - progress);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                levelPhase = new LevelPhase(phaseIndex, 1);
+
+                generatedLevelPhases.Add(levelPhase);
+
+                break;
+            }
+            else
+            {
+                continue;
+            }
+        }
+
+        LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
+
+        levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
+        levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;
+        levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame = 1;
+
+        return levelDifficultyConfiguration;
+    }
+}
