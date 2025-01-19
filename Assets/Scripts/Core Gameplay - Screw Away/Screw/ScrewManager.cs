@@ -302,12 +302,7 @@ public class ScrewManager : MonoBehaviour
             return;
         }
 
-        Spawn(faction);
-
-        void Spawn(GameFaction faction)
-        {
-            spawnScrewBoxEvent?.Invoke(faction);
-        }
+        spawnScrewBoxEvent?.Invoke(faction);
     }
 
     private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)

@@ -555,7 +555,7 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 ScrewBoxSlot screwBoxSlot = screwBoxs[i].ScrewBoxSlots[j];
 
-                if (!screwBoxSlot.IsFilled)
+                if (!screwBoxSlot.IsFilled || screwBoxs[i].IsInTransition)
                 {
                     screwPortAvailableByFaction[faction]++;
                 }
