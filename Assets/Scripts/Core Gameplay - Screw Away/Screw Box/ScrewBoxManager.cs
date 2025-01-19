@@ -485,6 +485,8 @@ public class ScrewBoxManager : MonoBehaviour
     {
         enableBoosterEvent?.Invoke(false);
 
+        bool isFound = false;
+
         for (int i = 0; i < screwPorts.Count; i++)
         {
             if (screwPorts[i].IsFilled && screwPorts[i].Screw.Faction == screwBox.Faction)
@@ -514,10 +516,20 @@ public class ScrewBoxManager : MonoBehaviour
 
                         screwBoxesObserver.NumScrewInScrewPorts--;
 
+                        if (!isFound)
+                        {
+                            isFound = true;
+                        }
+
                         break;
                     }
                 }
             }
+        }
+
+        if (!isFound)
+        {
+            enableBoosterEvent?.Invoke(true);
         }
     }
 

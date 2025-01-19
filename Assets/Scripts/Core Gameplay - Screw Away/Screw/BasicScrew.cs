@@ -178,10 +178,12 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
+        float screwRadius = transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x;
+
         Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x, checkObstacleLayer);
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, checkObstacleLayer);
 
         int number = 0;
 
@@ -237,6 +239,11 @@ public class BasicScrew : BaseScrew
 
                     if (distance < transform.lossyScale.z * 0.5f * meshFilter.mesh.bounds.size.z)
                     {
+                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
+                        {
+                            continue;
+                        }
+
                         number++;
 
                         _obstacleHitPointWorld = hitPos;
