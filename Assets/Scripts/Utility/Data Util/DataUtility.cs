@@ -39,6 +39,11 @@ public static class DataUtility
         File.WriteAllText(filePath, json.ToString());
     }
 
+    public static void Save<T>(string key, T data)
+    {
+        Save(GameConstants.SAVE_FILE_NAME, key, data);
+    }
+
     public async static Task SaveAsync<T>(string fileName, string key, T data)
     {
         string filePath = Application.persistentDataPath + $"/{fileName}.json";
@@ -64,7 +69,7 @@ public static class DataUtility
         await File.WriteAllTextAsync(filePath, json.ToString());
     }
 
-    public static async void SaveAsync<T>(string key, T data)
+    public static async Task SaveAsync<T>(string key, T data)
     {
         await SaveAsync(GameConstants.SAVE_FILE_NAME, key, data);
     }

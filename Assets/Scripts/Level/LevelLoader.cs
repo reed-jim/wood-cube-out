@@ -15,8 +15,10 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    private int _maxLevel;
 
     public static event Action startLevelEvent;
+    public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
@@ -33,6 +35,8 @@ public class LevelLoader : MonoBehaviour
 
         currentLevel.Load();
 
+        _maxLevel = levelDataContainer.MaxLevel;
+
         GoLevel(currentLevel.Value);
     }
 
@@ -47,9 +51,41 @@ public class LevelLoader : MonoBehaviour
         WinPopup.goLevelEvent -= GoLevel;
     }
 
-    private void LoadLevel()
+    private async Task LoadLevel()
     {
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Level {currentLevel.Value}");
+        int nextLevel = 0;
+
+        if (!UserData.IsLoopLevel)
+        {
+            if (currentLevel.Value < _maxLevel)
+            {
+
+            }
+            else
+            {
+                await UserData.SetIsLoopLevel(true);
+                await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+            }
+
+            nextLevel = currentLevel.Value;
+        }
+        else
+        {
+            if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+            {
+                nextLevel = UnityEngine.Random.Range(6, _maxLevel);
+
+                await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
+            }
+            else
+            {
+                nextLevel = currentLevel.Value - UserData.NumLevelLoop + 1;
+            }
+        }
+
+        setLevelNumberEvent?.Invoke();
+
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Level {nextLevel}");
 
         handle.Completed += (op) =>
         {
@@ -77,6 +113,9 @@ public class LevelLoader : MonoBehaviour
         }
 
         currentLevel.Value = level;
+
+        await currentLevel.SaveAsync();
+
         levelBoosterObserver.Reset();
 
         startLevelEvent?.Invoke();

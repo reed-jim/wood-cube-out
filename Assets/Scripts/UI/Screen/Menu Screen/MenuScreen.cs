@@ -62,7 +62,7 @@ public class MenuScreen : MonoBehaviour
 
     private void OnLevelTextTranslated()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void StartGame()
@@ -94,7 +94,7 @@ public class MenuScreen : MonoBehaviour
 
     private void UpdateCurrentLevelText()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)
@@ -139,5 +139,10 @@ public class MenuScreen : MonoBehaviour
         {
             _topBarDividerTween = Tween.Alpha(topBarDivider, 0, 0.3f);
         }
+    }
+
+    private int GetDisplayedLevel()
+    {
+        return currentLevel.Value;
     }
 }

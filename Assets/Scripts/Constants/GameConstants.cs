@@ -89,6 +89,9 @@ public static class GameConstants
     public static string SAVE_FILE_NAME = "Game Local Data";
     public static string CURRENT_LEVEL = "Current Level";
     public static string CURRENT_LEVEL_PLAY = "Current Level Play";
+    public static string IS_LOOP_LEVEL = "IS_LOOP_LEVEL";
+    public static string LAST_LEVEL_BEFORE_LOOP = "LAST_LEVEL_BEFORE_LOOP";
+    public static string NUM_LEVEL_LOOP = "NUM_LEVEL_LOOP";
     public static string WEEKLY_TASKS = "Weekly Tasks";
     public static string SCREWS_DATA = "Screws Data";
     public static string COIN_ = "User Coin";

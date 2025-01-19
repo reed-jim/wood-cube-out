@@ -25,7 +25,7 @@ public class GameplayScreen : MonoBehaviour
     void Awake()
     {
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
-        LevelLoader.startLevelEvent += SetLevelText;
+        LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
@@ -37,7 +37,7 @@ public class GameplayScreen : MonoBehaviour
     void OnDestroy()
     {
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
-        LevelLoader.startLevelEvent -= SetLevelText;
+        LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
@@ -67,12 +67,12 @@ public class GameplayScreen : MonoBehaviour
 
     private void OnLevelTextTranslated()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void SetLevelText()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void UpdateRemainingScrew(int remainingScrew, int totalScrew)
@@ -87,5 +87,10 @@ public class GameplayScreen : MonoBehaviour
         {
             localizedScrewText.TranslationName = GameConstants.SCREWS;
         }
+    }
+
+    private int GetDisplayedLevel()
+    {
+        return currentLevel.Value;
     }
 }

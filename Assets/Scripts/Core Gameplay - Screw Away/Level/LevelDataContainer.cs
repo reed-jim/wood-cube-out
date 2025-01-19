@@ -3,9 +3,15 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObjects/Saferio/ScrewAway/LevelDataContainer")]
 public class LevelDataContainer : ScriptableObject
 {
+    [SerializeField] private int maxLevel;
     [SerializeField] private LevelData[] levelsData;
     [SerializeField] private LevelDifficultyConfiguration[] templateLevelDifficultyConfiguration;
     [SerializeField] private LevelDifficultyConfiguration fallbackLevelDifficultyConfiguration;
+
+    public int MaxLevel
+    {
+        get => maxLevel;
+    }
 
     public LevelData[] LevelsData
     {

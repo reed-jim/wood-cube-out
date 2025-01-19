@@ -79,7 +79,7 @@ public class LevelTutorial : MonoBehaviour
 
         tutorialHand.position = screw.position - 5f * screw.right;
 
-        float lerpDelta = 0.08f;
+        float lerpDelta = 0.065f;
         float lerpProgress = 0;
         Vector3 targetPosition;
 

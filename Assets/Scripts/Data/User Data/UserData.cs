@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public static class UserData
@@ -24,6 +25,53 @@ public static class UserData
         {
             DataUtility.SaveAsync(GameConstants.CURRENT_LEVEL_PLAY, value);
         }
+    }
+
+    public static bool IsLoopLevel
+    {
+        get
+        {
+            return DataUtility.Load(GameConstants.IS_LOOP_LEVEL, false);
+        }
+        // set
+        // {
+        //     DataUtility.SaveAsync(GameConstants.IS_LOOP_LEVEL, value);
+        // }
+    }
+
+    public async static Task SetIsLoopLevel(bool value)
+    {
+        await DataUtility.SaveAsync(GameConstants.IS_LOOP_LEVEL, value);
+    }
+
+    public static int LastLevelBeforeLoop
+    {
+        get
+        {
+            return DataUtility.Load(GameConstants.LAST_LEVEL_BEFORE_LOOP, 1);
+        }
+        // set
+        // {
+        //     DataUtility.SaveAsync(GameConstants.LAST_LEVEL_BEFORE_LOOP, value);
+        // }
+    }
+
+    public async static Task SetIsLastLevelBeforeLoop(int value)
+    {
+        await DataUtility.SaveAsync(GameConstants.LAST_LEVEL_BEFORE_LOOP, value);
+    }
+
+    public static int NumLevelLoop
+    {
+        get
+        {
+            return DataUtility.Load(GameConstants.NUM_LEVEL_LOOP, 0);
+        }
+    }
+
+    public async static Task SetNumLevelLoop(int value)
+    {
+        await DataUtility.SaveAsync(GameConstants.NUM_LEVEL_LOOP, value);
     }
 
     public static bool IsRemoveAds

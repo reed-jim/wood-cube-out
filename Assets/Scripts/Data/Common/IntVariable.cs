@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/IntVariable")]
@@ -24,6 +25,11 @@ public class IntVariable : ScriptableObject
     public void Save(string key)
     {
         DataUtility.SaveAsync(key, value);
+    }
+
+    public async Task SaveAsync()
+    {
+        await DataUtility.SaveAsync(saveKey, value);
     }
 
     public void Load()
