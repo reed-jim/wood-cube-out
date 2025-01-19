@@ -54,7 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screwId: 0
   screwServiceLocator: {fileID: 5531244131276348113}
-  meshRenderer: {fileID: 7411641360957457357}
+  meshFilter: {fileID: 7218986368265683468}
   joint: {fileID: 0}
   scaleOnScrewBox: 0.85
   screwDifficultyModifier: 0
@@ -62,6 +62,9 @@ MonoBehaviour:
   durationDelay: 0.05
   durationMoveToScrewPort: 0.025
   durationTightenScrewPort: 0.3
+  checkObstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
   phase: 0
 --- !u!114 &5531244131276348113
 MonoBehaviour:
