@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +11,8 @@ public class RateStarItemUI : MonoBehaviour
 
     [SerializeField] private int index;
     [SerializeField] private float transitionDuration;
+
+    private List<Tween> _tweens;
 
     public static event Action<int> selectRateStarEvent;
 
@@ -23,28 +26,44 @@ public class RateStarItemUI : MonoBehaviour
         selectRateStarEvent += OnRateStarSelected;
 
         selectButton.onClick.AddListener(Select);
+
+        _tweens = new List<Tween>();
+    }
+
+    void OnEnable()
+    {
+        activeState.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
     {
         selectRateStarEvent -= OnRateStarSelected;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     public void ChangeState(bool _isActive)
     {
+        if (_isActive == gameObject.activeSelf)
+        {
+            return;
+        }
+
         if (_isActive)
         {
             activeState.gameObject.SetActive(true);
 
-            Tween.Alpha(activeState, activeState.color.a, 1, duration: transitionDuration);
+            activeState.color = ColorUtil.WithAlpha(activeState.color, 0);
+
+            _tweens.Add(Tween.Alpha(activeState, activeState.color.a, 1, duration: transitionDuration));
         }
         else
         {
-            Tween.Alpha(activeState, activeState.color.a, 0, duration: transitionDuration)
+            _tweens.Add(Tween.Alpha(activeState, activeState.color.a, 0, duration: transitionDuration)
             .OnComplete(() =>
             {
                 activeState.gameObject.SetActive(false);
-            });
+            }));
         }
     }
 
@@ -59,7 +78,11 @@ public class RateStarItemUI : MonoBehaviour
     {
         if (index < selectedIndex)
         {
-            Select();
+            ChangeState(true);
+        }
+        else if (index > selectedIndex)
+        {
+            ChangeState(false);
         }
     }
 }

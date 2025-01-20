@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class RatePopup : BasePopup
 {
-    [SerializeField] private Button okButton;
+    [SerializeField] private Button rateButton;
+
+    private int _numStar;
 
     public static event Action launchInAppReviewEvent;
 
@@ -12,7 +14,7 @@ public class RatePopup : BasePopup
     {
         RateStarItemUI.selectRateStarEvent += SelectRateStar;
 
-        okButton.onClick.AddListener(Hide);
+        rateButton.onClick.AddListener(Rate);
     }
 
     protected override void UnregisterMoreEvent()
@@ -22,14 +24,7 @@ public class RatePopup : BasePopup
 
     private void Rate()
     {
-        OpenReviewPage();
-
-        // launchInAppReviewEvent?.Invoke();
-    }
-
-    private void SelectRateStar(int index)
-    {
-        if (index == 4)
+        if (_numStar == 5)
         {
             OpenReviewPage();
         }
@@ -37,6 +32,13 @@ public class RatePopup : BasePopup
         {
             Hide();
         }
+
+        // launchInAppReviewEvent?.Invoke();
+    }
+
+    private void SelectRateStar(int index)
+    {
+        _numStar = index + 1;
     }
 
     public void OpenReviewPage()

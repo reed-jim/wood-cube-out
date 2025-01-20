@@ -177,6 +177,8 @@ public class BasePopup : MonoBehaviour
             _isInTransition = false;
 
             onCompletedAction?.Invoke();
+
+            gameObject.SetActive(false);
         }
     }
 

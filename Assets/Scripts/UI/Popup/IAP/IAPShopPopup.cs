@@ -8,6 +8,7 @@ using static GameEnum;
 public class IAPShopPopup : BasePopup
 {
     [SerializeField] private ScrollRect scrollRect;
+    [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private RectTransform scrollContent;
     [SerializeField] private RectTransform firstPackRT;
     [SerializeField] private RectTransform firstCoinPackRT;
@@ -25,12 +26,14 @@ public class IAPShopPopup : BasePopup
     {
         BuyBoosterPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         RevivePopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
     }
 
     protected override void UnregisterMoreEvent()
     {
         BuyBoosterPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         RevivePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
     private void ShowAndScrollToCoinPack(ScreenRoute prevRoute)
@@ -57,5 +60,22 @@ public class IAPShopPopup : BasePopup
         {
             switchRouteEvent?.Invoke(_prevRoute);
         });
+    }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
     }
 }

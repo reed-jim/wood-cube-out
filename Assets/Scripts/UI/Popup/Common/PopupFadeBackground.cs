@@ -38,8 +38,25 @@ public class PopupFadeBackground : MonoBehaviour
 
     private void OnPopupClose()
     {
+        Transform popupContainer = transform.parent;
+
+        int numActivePopup = 0;
+
+        for (int i = 1; i < popupContainer.childCount; i++)
+        {
+            if (popupContainer.GetChild(i).gameObject.activeSelf)
+            {
+                numActivePopup++;
+            }
+        }
+
+        if (numActivePopup > 1)
+        {
+            return;
+        }
+
         CommonUtil.StopTween(_transitionTween);
-        
+
         _transitionTween = Tween.Alpha(fadeBackground, 0, duration: transitionDuration).OnComplete(() =>
         {
             fadeBackground.gameObject.SetActive(false);

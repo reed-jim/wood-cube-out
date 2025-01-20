@@ -29,6 +29,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyRemoveAdEvent += BuyProduct;
 
+        for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
+        {
+            googlePlayStoreProducts[i].Id = IAPDataContainer.ProductsData[i].ProductId;
+        }
+
         Init();
 
         DontDestroyOnLoad(gameObject);
@@ -197,6 +202,7 @@ public class GooglePlayStoreProduct
     public string Id
     {
         get => id;
+        set => id = value;
     }
 
     public ProductType ProductType

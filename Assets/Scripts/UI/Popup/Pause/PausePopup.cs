@@ -24,10 +24,17 @@ public class PausePopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        ScriptableObjectInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
+
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        ScriptableObjectInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
     }
 
     // protected override void AfterHide()
@@ -61,5 +68,11 @@ public class PausePopup : BasePopup
         gameSetting.IsTurnOnSound = isTurnOn;
 
         enableGameSoundEvent?.Invoke(isTurnOn);
+    }
+
+    private void OnGameSettingLoaded()
+    {
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
     }
 }

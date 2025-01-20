@@ -16,6 +16,7 @@ public class ResourceEarnPopup : BasePopup
 
     public static event Action<int> collectCoinEvent;
     public static event Action removeAdsEvent;
+    public static event Action<bool> showResourcesEarnPopupEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -41,7 +42,10 @@ public class ResourceEarnPopup : BasePopup
 
     protected override void Hide()
     {
-        base.Hide();
+        base.Hide(onCompletedAction: () =>
+        {
+            showResourcesEarnPopupEvent?.Invoke(false);
+        });
 
         if (_coinQuantity > 0)
         {
@@ -60,6 +64,8 @@ public class ResourceEarnPopup : BasePopup
 
     private void ShowResourcesEarned(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
     {
+        showResourcesEarnPopupEvent?.Invoke(true);
+        
         Show();
 
         List<RectTransform> validResourceGroups = new List<RectTransform>();
