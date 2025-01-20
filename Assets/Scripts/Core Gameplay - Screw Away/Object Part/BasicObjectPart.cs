@@ -49,7 +49,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
-        throwForceMultiplier = new Vector3(1600f, 1200f, 1600f);
+        throwForceMultiplier = new Vector3(1200f, 800f, 1200f);
 
         attachedScrews = new BaseScrew[transform.childCount];
 
@@ -272,20 +272,47 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         direction = direction.normalized;
 
-        direction.y = Mathf.Abs(direction.y);
+        if (direction.x > 0)
+        {
+            direction.x = 1;
+        }
+        else
+        {
+            direction.x = -1;
+        }
 
-        if (Mathf.Abs(direction.x) < 0.01f)
+        if (direction.y > 0)
         {
-            direction.x = 1f;
+            direction.y = 1;
         }
-        if (Mathf.Abs(direction.y) < 0.01f)
+        else
         {
-            direction.y = 1f;
+            direction.y = -1;
         }
-        if (Mathf.Abs(direction.z) < 0.01f)
+
+        if (direction.z > 0)
         {
-            direction.z = 1f;
+            direction.z = 1;
         }
+        else
+        {
+            direction.z = -1;
+        }
+
+        // // direction.y = Mathf.Abs(direction.y);
+
+        // if (Mathf.Abs(direction.x) < 0.01f)
+        // {
+        //     direction.x = 1f;
+        // }
+        // if (Mathf.Abs(direction.y) < 0.01f)
+        // {
+        //     direction.y = 1f;
+        // }
+        // if (Mathf.Abs(direction.z) < 0.01f)
+        // {
+        //     direction.z = 1f;
+        // }
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
 
