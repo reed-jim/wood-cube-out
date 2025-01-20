@@ -79,7 +79,7 @@ public class LevelLoader : MonoBehaviour
             }
             else
             {
-                nextLevel = currentLevel.Value - UserData.NumLevelLoop + 1;
+                nextLevel = currentLevel.Value - UserData.NumLevelLoop;
             }
         }
 
