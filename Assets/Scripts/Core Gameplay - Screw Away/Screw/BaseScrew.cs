@@ -219,12 +219,12 @@ public class BaseScrew : MonoBehaviour, IScrew
             float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
             timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
-            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-45f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
             _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.25f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
+            _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
             .OnComplete(() =>
             {
-                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationDelay, ease: Ease.Linear));
+                // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationDelay, ease: Ease.Linear));
                 _tweens.Add(Tween.Delay(duration: durationDelay)
                 .OnComplete(() =>
                 {
@@ -233,13 +233,14 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                     SoundManager.Instance.PlaySoundTightenScrew();
 
-                    _tweens.Add(Tween.Delay(0.8f * durationTightenScrewPort)
+                    _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                     .OnComplete(() =>
                     {
                         _isRotating = false;
                         rotateSpeed = _initialRotateSpeed;
                         _isRotatingToCorrectAngleOnScrewBox = true;
                     }));
+                    // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationTightenScrewPort, ease: Ease.Linear));
                     _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort, ease: Ease.Linear)
                     // .OnComplete(() =>
                     // {
