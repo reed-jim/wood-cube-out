@@ -6,15 +6,34 @@ public class RemoveAdPopup : BasePopup
 {
     [SerializeField] private Button buyButton;
 
-    public static event Action<string> buyRemoveAdEvent;
+    [SerializeField] private IAPPackageData iapData;
+
+    #region EVENT
+    public static event Action<string> buyIAPEvent;
+    #endregion
 
     protected override void RegisterMoreEvent()
     {
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+
         buyButton.onClick.AddListener(BuyRemoveAd);
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
     }
 
     private void BuyRemoveAd()
     {
-        buyRemoveAdEvent?.Invoke(GameConstants.REMOVE_AD_ID);
+        buyIAPEvent?.Invoke(iapData.ProductId);
+    }
+
+    private void OnResourceEarnPopupShow(bool isShow)
+    {
+        if (isShow)
+        {
+            Hide();
+        }
     }
 }
