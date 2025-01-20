@@ -246,7 +246,7 @@ public class ScrewManager : MonoBehaviour
         if (remainingScrew == 0)
         {
             enableBoosterEvent?.Invoke(false);
-            
+
             await Task.Delay((int)(delayShowPopupWin * 1000));
 
             winLevelEvent?.Invoke();

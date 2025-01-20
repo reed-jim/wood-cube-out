@@ -489,7 +489,9 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            if (screwPorts[i].IsFilled && screwPorts[i].Screw.Faction == screwBox.Faction)
+            BaseScrew screw = screwPorts[i].Screw;
+
+            if (screwPorts[i].IsFilled && screw.Faction == screwBox.Faction && !screw.IsMoving)
             {
                 for (int k = 0; k < screwBox.ScrewBoxSlots.Length; k++)
                 {

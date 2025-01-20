@@ -30,6 +30,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected int _numberBlockingObjects;
     protected Vector3 _initialScale;
     protected float _initialRotateSpeed;
+    protected bool _isMoving;
     protected bool _isRotating;
     protected bool _isRotatingToCorrectAngleOnScrewBox;
     protected bool _isInteractable = true;
@@ -71,6 +72,12 @@ public class BaseScrew : MonoBehaviour, IScrew
     public int NumberBlockingObjects
     {
         get => _numberBlockingObjects;
+    }
+
+    public bool IsMoving
+    {
+        get => _isMoving;
+        set => _isMoving = value;
     }
 
     public bool IsRotating
@@ -189,6 +196,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
 
+        _isMoving = true;
         _isRotating = true;
 
         Vector3 screwSize = TransformUtil.ComponentWiseMultiply(transform.lossyScale, meshFilter.mesh.bounds.size);
@@ -242,11 +250,10 @@ public class BaseScrew : MonoBehaviour, IScrew
                     }));
                     // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationTightenScrewPort, ease: Ease.Linear));
                     _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort, ease: Ease.Linear)
-                    // .OnComplete(() =>
-                    // {
-                    //     _isRotating = false;
-                    //     _isRotatingToCorrectAngleOnScrewBox = true;
-                    // })
+                        .OnComplete(() =>
+                        {
+                            _isMoving = false;
+                        })
                     );
 
                     screwBoxSlot.CompleteFill();

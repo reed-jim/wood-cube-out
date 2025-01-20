@@ -204,6 +204,8 @@ public class BasePopup : MonoBehaviour
             _isInTransition = true;
 
             AfterHide();
+
+            enableSwipingScreenEvent?.Invoke(true);
         }
     }
 
