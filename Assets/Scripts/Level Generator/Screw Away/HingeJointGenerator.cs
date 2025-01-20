@@ -19,6 +19,7 @@ public class HingeJointGenerator : EditorWindow
     private Vector3 dimensionSize;
     private Vector3 distance;
     private float expectedScale;
+    private float expectedOffsetRatioAutoSnapSurface = 0.55f;
     private Vector3 expectedLocalPositionOffset;
     private Vector3 expectedLocalRotationOffset;
 
@@ -29,6 +30,10 @@ public class HingeJointGenerator : EditorWindow
 
 
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
+
+
+    private Vector2 scrollPosition;
+
 
     [MenuItem("Saferio/Tools/Hinge Joint Generator")]
     public static void ShowWindow()
@@ -58,6 +63,10 @@ public class HingeJointGenerator : EditorWindow
         expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
 
         ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
+
+        expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
+
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
         if (GUILayout.Button("Generate"))
         {
@@ -171,6 +180,7 @@ public class HingeJointGenerator : EditorWindow
         }
 
         GUILayout.EndArea();
+        EditorGUILayout.EndScrollView();
     }
 
     private void CenterLevelPivot(string path)
@@ -701,7 +711,7 @@ public class HingeJointGenerator : EditorWindow
 
             if (objectPart != null)
             {
-                selectedObject.position = hit.point - 0.53f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+                selectedObject.position = hit.point - expectedOffsetRatioAutoSnapSurface * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 
                 Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
@@ -733,7 +743,7 @@ public class HingeJointGenerator : EditorWindow
 
         Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
 
-        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+        Vector3 origin = selectedObject.position + 1f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
         Vector3 direction = selectedObject.parent.position - selectedObject.position;
 
         RaycastHit hit;

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using PrimeTween;
@@ -25,6 +26,7 @@ public class SceneTransition : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float startDelay;
+    [SerializeField] private float blackScreenStartDelay;
     [SerializeField] private float fadeOutDuration;
 
     private Vector2 _canvasSize;
@@ -40,9 +42,13 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
-        Transition();
+        BlackScreenTransition(blackScreenStartDelay, onCompletedAction: () =>
+        {
+            Transition();
+        });
 
-        blackBackground.gameObject.SetActive(false);
+        progressBar.value = 0;
+        progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
     }
@@ -58,14 +64,12 @@ public class SceneTransition : MonoBehaviour
     {
         container.gameObject.SetActive(true);
 
-        progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
-
-        _tweens.Add(Tween.Alpha(progressBarFill, 0, 1, duration: 0.2f * startDelay));
+        // _tweens.Add(Tween.Alpha(progressBarFill, 0, 1, duration: 0.2f * startDelay));
 
         _tweens.Add(Tween.Custom(0, 1, duration: startDelay, ease: Ease.Linear, onValueChange: newVal =>
         {
             progressBar.value = newVal;
-            // progressFill.fillAmount = newVal;
+            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
 
             loadingText.text = $"{(int)(newVal * 100)}%";
         }));
@@ -111,6 +115,11 @@ public class SceneTransition : MonoBehaviour
 
     private void BlackScreenTransition()
     {
+        BlackScreenTransition(blackScreenStartDelay, onCompletedAction: null);
+    }
+
+    private void BlackScreenTransition(float delay, Action onCompletedAction)
+    {
         if (_isFirstTimeEnterScene)
         {
             _isFirstTimeEnterScene = false;
@@ -122,11 +131,11 @@ public class SceneTransition : MonoBehaviour
 
         blackBackground.gameObject.SetActive(true);
 
-        // Tween.Alpha(blackBackground, 0, 1, duration: 0.1f * fadeOutDuration)
-        Tween.Delay(fadeOutDuration)
-        .Chain(Tween.Alpha(blackBackground, 1, 0, duration: fadeOutDuration).OnComplete(() =>
+        Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
         {
             blackBackground.gameObject.SetActive(false);
-        }));
+
+            onCompletedAction?.Invoke();
+        });
     }
 }
