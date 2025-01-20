@@ -119,7 +119,10 @@ public class WinPopup : BasePopup
 
     private void OnInterstitialAdCompleted()
     {
-        Hide();
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
+        {
+            HideImmediately();
+        }));
 
         goLevelEvent?.Invoke(currentLevel.Value);
     }

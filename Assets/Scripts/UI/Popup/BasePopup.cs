@@ -187,6 +187,26 @@ public class BasePopup : MonoBehaviour
         Hide(onCompletedAction: null);
     }
 
+    protected virtual void HideImmediately()
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+
+        if (_isShown)
+        {
+            gameObject.SetActive(false);
+
+            popupHideEvent?.Invoke();
+
+            _isShown = false;
+            _isInTransition = true;
+
+            AfterHide();
+        }
+    }
+
     protected virtual void AfterHide()
     {
 
