@@ -44,7 +44,7 @@ public class RateStarItemUI : MonoBehaviour
 
     public void ChangeState(bool _isActive)
     {
-        if (_isActive == gameObject.activeSelf)
+        if (_isActive == activeState.gameObject.activeSelf)
         {
             return;
         }

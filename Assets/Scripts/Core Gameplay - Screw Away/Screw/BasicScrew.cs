@@ -17,12 +17,12 @@ public class BasicScrew : BaseScrew
     {
         if (_isRotating)
         {
-            transform.RotateAround(transform.forward, 0.3f);
+            transform.RotateAround(transform.forward, rotateSpeed);
         }
 
         if (_isRotatingToCorrectAngleOnScrewBox)
         {
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-30, 180, 0)), 0.25f);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-30, 180, 0)), 1f / 3);
 
             if (transform.localRotation == Quaternion.Euler(new Vector3(-30, 180, 0)))
             {

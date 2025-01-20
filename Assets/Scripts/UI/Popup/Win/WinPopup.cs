@@ -19,6 +19,7 @@ public class WinPopup : BasePopup
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
+    [SerializeField] private LevelDataContainer levelDataContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
@@ -26,7 +27,7 @@ public class WinPopup : BasePopup
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
-    
+
 
     protected override void RegisterMoreEvent()
     {
@@ -61,6 +62,11 @@ public class WinPopup : BasePopup
         CollectCoin(10);
 
         TrackLevelWin();
+
+        if (currentLevel.Value - UserData.NumLevelLoop >= levelDataContainer.MaxLevel)
+        {
+            await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
+        }
 
         currentLevel.Value++;
     }

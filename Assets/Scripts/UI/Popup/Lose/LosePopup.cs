@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class LosePopup : BasePopup
 {
@@ -54,7 +55,7 @@ public class LosePopup : BasePopup
             progressText.gameObject.SetActive(false);
         }
 
-        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver);
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
         Show(onCompletedAction: () =>
         {

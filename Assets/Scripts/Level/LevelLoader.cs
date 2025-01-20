@@ -57,17 +57,17 @@ public class LevelLoader : MonoBehaviour
 
         if (!UserData.IsLoopLevel)
         {
-            if (currentLevel.Value < _maxLevel)
+            if (currentLevel.Value <= _maxLevel)
             {
-
+                nextLevel = currentLevel.Value;
             }
             else
             {
+                nextLevel = UnityEngine.Random.Range(6, _maxLevel);
+
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
             }
-
-            nextLevel = currentLevel.Value;
         }
         else
         {
@@ -75,7 +75,7 @@ public class LevelLoader : MonoBehaviour
             {
                 nextLevel = UnityEngine.Random.Range(6, _maxLevel);
 
-                await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
+                // await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
             }
             else
             {

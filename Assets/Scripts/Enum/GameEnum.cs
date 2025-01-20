@@ -87,6 +87,14 @@ public class GameEnum : MonoBehaviour
         Grayscale
     }
 
+    public enum EndLevelReason
+    {
+        Lose,
+        ReturnHome,
+        Replay,
+        Quit
+    }
+
     public static T GetRandomEnumValue<T>()
     {
         Array enumValues = Enum.GetValues(typeof(T));

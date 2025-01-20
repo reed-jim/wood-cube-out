@@ -56,6 +56,7 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
+        ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -81,6 +82,7 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
+        ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
     }
 
     private void Reset()
@@ -250,8 +252,6 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 2);
-
         clearAllScrewPortsEvent?.Invoke();
 
         AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND);
@@ -291,11 +291,15 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 1);
     }
 
-    private void OnConfirmedClearScrewPorts(int numScrewCleared)
+    private void OnAllScrewPortsCleared(int numScrewCleared)
     {
         if (numScrewCleared > 0)
         {
             ConsumeBooster(boosterIndex: 2);
+        }
+        else
+        {
+            showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
         }
     }
 }

@@ -77,7 +77,7 @@ public class GameplayScreen : MonoBehaviour
 
     private void UpdateRemainingScrew(int remainingScrew, int totalScrew)
     {
-        remainingScrewText.text = $"{remainingScrew}";
+        remainingScrewText.text = $"{remainingScrew}/{totalScrew}";
 
         if (remainingScrew < 2)
         {

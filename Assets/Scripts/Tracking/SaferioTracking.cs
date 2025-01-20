@@ -36,7 +36,7 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackLevelLose(int level, float progress, LevelBoosterObserver levelBoosterObserver)
+    public static void TrackLevelLose(int level, float progress, LevelBoosterObserver levelBoosterObserver, string reason)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
@@ -47,6 +47,7 @@ public static class SaferioTracking
             new Parameter("break_object_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[1]),
             new Parameter("clear_holes_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[2]),
             new Parameter("unlock_screw_box_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[3]),
+            new Parameter("reason", reason)
         };
 
         FirebaseAnalytics.LogEvent("level_lose", parameters);

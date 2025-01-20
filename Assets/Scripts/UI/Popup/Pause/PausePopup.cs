@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class PausePopup : BasePopup
 {
@@ -10,7 +11,10 @@ public class PausePopup : BasePopup
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
 
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
+    [SerializeField] private LevelObserver levelObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
@@ -46,11 +50,15 @@ public class PausePopup : BasePopup
     {
         // Time.timeScale = 1;
 
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
+
         Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 
     private void Replay()
     {
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
+
         replayLevelEvent?.Invoke();
 
         Hide();
