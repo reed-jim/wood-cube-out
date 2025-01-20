@@ -53,7 +53,7 @@ public class LevelLoader : MonoBehaviour
 
     private async Task LoadLevel()
     {
-        int nextLevel = 0;
+        int nextLevel = 1;
 
         if (!UserData.IsLoopLevel)
         {
@@ -82,6 +82,8 @@ public class LevelLoader : MonoBehaviour
                 nextLevel = currentLevel.Value - UserData.NumLevelLoop + 1;
             }
         }
+
+        nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
         setLevelNumberEvent?.Invoke();
 

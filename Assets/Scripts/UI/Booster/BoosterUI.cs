@@ -41,6 +41,7 @@ public class BoosterUI : MonoBehaviour
     private int _numScrewPortsAdded;
     private bool _isInTransition;
     private bool _isEnable;
+    private bool _isPreventShowWarningPopup;
 
     private Vector2 _initialBoosterContainerPosition;
     private Vector2 _initialAddMoreScrewPortButtonPosition;
@@ -54,7 +55,7 @@ public class BoosterUI : MonoBehaviour
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
-        ScrewManager.enableBoosterEvent += EnableBooster;
+        ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -79,7 +80,7 @@ public class BoosterUI : MonoBehaviour
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;
-        ScrewManager.enableBoosterEvent -= EnableBooster;
+        ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
     }
 
     private void Reset()
@@ -96,13 +97,17 @@ public class BoosterUI : MonoBehaviour
         _numScrewPortsAdded = 0;
         _isInTransition = false;
         _isEnable = true;
+        _isPreventShowWarningPopup = false;
     }
 
     private void UseBooster(BoosterType boosterType)
     {
         if (!_isEnable)
         {
-            showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
+            if (!_isPreventShowWarningPopup)
+            {
+                showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
+            }
 
             return;
         }
@@ -164,6 +169,12 @@ public class BoosterUI : MonoBehaviour
     private void EnableBooster(bool isEnable)
     {
         _isEnable = isEnable;
+    }
+
+    private void EnableBoosterWithoutWarningPopup(bool isEnable)
+    {
+        _isEnable = isEnable;
+        _isPreventShowWarningPopup = true;
     }
 
     private void EnableBreakObjectMode()
