@@ -149,6 +149,12 @@ public class HingeJointGenerator : EditorWindow
             SnapSurface();
         }
 
+        if (GUILayout.Button("Snap Surface All"))
+        {
+            SnapSurfaceAll();
+        }
+
+
         if (GUILayout.Button("Snap Rotation Surface"))
         {
             SnapRotationSurface();
@@ -303,7 +309,7 @@ public class HingeJointGenerator : EditorWindow
     {
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
 
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
 
         for (int i = 0; i < objectParts.Length; i++)
         {
@@ -679,19 +685,23 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region SNAP
-    private void SnapSurface()
+    private void SnapSurface(Transform target)
     {
-        Transform selectedObject = Selection.activeTransform;
+        Transform selectedObject = target;
+
+        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+
+        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 
         RaycastHit hit;
 
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, -selectedObject.forward, out hit, 10))
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 10))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 
             if (objectPart != null)
             {
-                selectedObject.position = hit.point - ratioSnapOffset * selectedObject.forward;
+                selectedObject.position = hit.point - 0.53f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 
                 Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
@@ -700,21 +710,41 @@ public class HingeJointGenerator : EditorWindow
         }
     }
 
+    private void SnapSurface()
+    {
+        SnapSurface(Selection.activeTransform);
+    }
+
+    private void SnapSurfaceAll()
+    {
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(Selection.activeTransform).ToArray();
+
+        foreach (var screw in screws)
+        {
+            SnapSurface(screw.transform);
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
     private void SnapParentSurface()
     {
         Transform selectedObject = Selection.activeTransform;
 
-        RaycastHit hit;
+        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
 
+        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
         Vector3 direction = selectedObject.parent.position - selectedObject.position;
 
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, direction, out hit, 10))
+        RaycastHit hit;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, direction, out hit, 10))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 
             if (objectPart != null)
             {
-                selectedObject.position = hit.point - ratioSnapOffset * selectedObject.forward;
+                selectedObject.position = hit.point - 0.3f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 
                 Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
@@ -731,7 +761,11 @@ public class HingeJointGenerator : EditorWindow
 
         Vector3 direction = selectedObject.parent.position - selectedObject.position;
 
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(selectedObject.position, direction, out hit, 10))
+        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+
+        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, direction, out hit, 10))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 

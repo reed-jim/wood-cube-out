@@ -278,7 +278,7 @@ Transform:
   m_GameObject: {fileID: 660651762071547965}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.4, y: -0.498, z: -0.537}
+  m_LocalPosition: {x: 0.3, y: -0.498, z: -0.537}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1179,6 +1179,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateSpeedMultiplier: 0.2
+  isDisableAutoRotatingAtStart: 0
 --- !u!1 &7046726811225668834
 GameObject:
   m_ObjectHideFlags: 0
@@ -3022,6 +3023,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Screw 3D
       objectReference: {fileID: 0}
+    - target: {fileID: 4567112148891185875, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 3948578019858759536, guid: 5826ee6031c10af48974999ac11618d4, type: 3}
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
@@ -3040,15 +3045,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.60000026
+      value: 0.6000011
       objectReference: {fileID: 0}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.000000044703484
+      value: -0.00000013411045
       objectReference: {fileID: 0}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.17741339
+      value: 0.18267421
       objectReference: {fileID: 0}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalRotation.w
