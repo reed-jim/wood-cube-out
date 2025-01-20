@@ -54,6 +54,7 @@ public class BoosterUI : MonoBehaviour
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
+        ScrewManager.enableBoosterEvent += EnableBooster;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -78,6 +79,7 @@ public class BoosterUI : MonoBehaviour
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;
+        ScrewManager.enableBoosterEvent -= EnableBooster;
     }
 
     private void Reset()
@@ -93,6 +95,7 @@ public class BoosterUI : MonoBehaviour
 
         _numScrewPortsAdded = 0;
         _isInTransition = false;
+        _isEnable = true;
     }
 
     private void UseBooster(BoosterType boosterType)

@@ -31,6 +31,7 @@ public class ScrewManager : MonoBehaviour
     public static event Action winLevelEvent;
     public static event Action<BaseScrew[]> setScrewsEvent;
     public static event Action<int, int> updateRemainingScrewEvent;
+    public static event Action<bool> enableBoosterEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -244,6 +245,8 @@ public class ScrewManager : MonoBehaviour
 
         if (remainingScrew == 0)
         {
+            enableBoosterEvent?.Invoke(false);
+            
             await Task.Delay((int)(delayShowPopupWin * 1000));
 
             winLevelEvent?.Invoke();

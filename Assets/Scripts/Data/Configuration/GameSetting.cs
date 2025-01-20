@@ -45,7 +45,11 @@ public class GameSetting : ScriptableObject
 
     public async Task LoadAsync()
     {
-        GameSetting savedGameSetting = await DataUtility.LoadAsync(GameConstants.GAME_SETTING, new GameSetting());
+        GameSetting defaultGameSetting = new GameSetting();
+
+        defaultGameSetting.CurrentLanguage = GameConstants.DEFAULT_LANGUAGE;
+
+        GameSetting savedGameSetting = await DataUtility.LoadAsync(GameConstants.GAME_SETTING, defaultGameSetting);
 
         isTurnOnBackgroundMusic = savedGameSetting.isTurnOnBackgroundMusic;
         isTurnOnSound = savedGameSetting.IsTurnOnSound;

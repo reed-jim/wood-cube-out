@@ -26,6 +26,7 @@ public class WinPopup : BasePopup
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
+    
 
     protected override void RegisterMoreEvent()
     {
