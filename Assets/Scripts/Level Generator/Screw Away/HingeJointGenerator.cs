@@ -69,6 +69,16 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAll(prefabPath);
         }
 
+        if (GUILayout.Button("Check HingeJoint Number"))
+        {
+            CheckHingeJointNumber(prefabPath);
+        }
+
+        if (GUILayout.Button("Check HingeJoint Number All Levels"))
+        {
+            CheckHingeJointNumberAllLevels();
+        }
+
         // if (GUILayout.Button("Reset Local Rotation"))
         // {
         //     ResetLocalRotation(target.transform);
@@ -363,6 +373,43 @@ public class HingeJointGenerator : EditorWindow
         EditorUtility.SetDirty(levelPrefab);
 
         PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
+    }
+
+    private void CheckHingeJointNumber(string path)
+    {
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
+
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
+        BaseScrew[] screw = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+
+        int numScrew = screw.Length;
+        int numHingeJoint = 0;
+
+        for (int i = 0; i < objectParts.Length; i++)
+        {
+            int numHingeJointInObjectPart = objectParts[i].GetComponents<HingeJoint>().Length;
+
+            numHingeJoint += numHingeJointInObjectPart;
+        }
+
+        bool isPassed = numHingeJoint == numScrew;
+
+        string resultText = $"<color=#89FF5B>Passed</color>";
+
+        if (!isPassed)
+        {
+            resultText = $"<color=#FF7878>Failed</color>";
+        }
+
+        Debug.Log($"{levelPrefab.name}: {numHingeJoint}/{numScrew} - {resultText}<color=#fff></color>");
+    }
+
+    private void CheckHingeJointNumberAllLevels()
+    {
+        for (int i = 1; i <= 50; i++)
+        {
+            CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
+        }
     }
 
     private void AutoAssignScrewFaction(string path)
