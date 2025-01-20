@@ -107,6 +107,18 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundScrewBoxDone()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource screwBoxDoneSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.SCREW_BOX_DONE_SOUND);
+
+        screwBoxDoneSound.Play();
+    }
+
     private void OnGameSettingLoaded()
     {
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);

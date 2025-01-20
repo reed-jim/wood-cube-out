@@ -104,9 +104,7 @@ public class ScrewBox : MonoBehaviour
         {
             await Task.Delay((int)(delayMoveInDuration * 1000));
 
-            AudioSource screwBoxDoneSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.SCREW_BOX_DONE_SOUND);
-
-            screwBoxDoneSound.Play();
+            SoundManager.Instance.PlaySoundScrewBoxDone();
 
             float initialPositionY = transform.position.y;
 

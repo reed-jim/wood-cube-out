@@ -10,11 +10,14 @@ public class ScrewSelectionInput : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private LayerMask layerMaskCheck;
     [SerializeField] private float maxSwipeDistance;
+    [SerializeField] private float timeToConfirmSelectObjectPart;
 
     #region PRIVATE FIELD
     [SerializeField] private InputMode _inputMode;
     private List<Vector3> twoTouchPoints;
     private bool _isSelectObjectPart;
+    private bool _isSelectingObjectPart;
+    private float _timeHold;
     #endregion
 
     #region EVENT
@@ -42,10 +45,19 @@ public class ScrewSelectionInput : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             twoTouchPoints.Add(Input.mousePosition);
-
-            SelectObjectPart();
         }
 
+        if (Input.GetMouseButton(0))
+        {
+            _timeHold += Time.deltaTime;
+
+            if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
+            {
+                SelectObjectPart();
+
+                _isSelectingObjectPart = true;
+            }
+        }
 
         if (Input.GetMouseButtonUp(0))
         {
@@ -59,6 +71,10 @@ public class ScrewSelectionInput : MonoBehaviour
             mouseUpEvent?.Invoke();
 
             twoTouchPoints.Clear();
+
+            _timeHold = 0;
+            _isSelectObjectPart = false;
+            _isSelectingObjectPart = false;
         }
     }
 

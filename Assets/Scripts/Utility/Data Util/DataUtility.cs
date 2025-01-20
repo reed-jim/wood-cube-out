@@ -46,27 +46,29 @@ public static class DataUtility
 
     public async static Task SaveAsync<T>(string fileName, string key, T data)
     {
-        string filePath = Application.persistentDataPath + $"/{fileName}.json";
+        Save(fileName, key, data);
 
-        string fileText = "{}";
+        // string filePath = Application.persistentDataPath + $"/{fileName}.json";
 
-        if (File.Exists(filePath))
-        {
-            fileText = await File.ReadAllTextAsync(filePath);
-        }
+        // string fileText = "{}";
 
-        JObject json = JObject.Parse(fileText);
+        // if (File.Exists(filePath))
+        // {
+        //     fileText = await File.ReadAllTextAsync(filePath);
+        // }
 
-        if (json.ContainsKey(key))
-        {
-            json[key] = JsonConvert.SerializeObject(data, settings);
-        }
-        else
-        {
-            json.Add(key, JsonConvert.SerializeObject(data, settings));
-        }
+        // JObject json = JObject.Parse(fileText);
 
-        await File.WriteAllTextAsync(filePath, json.ToString());
+        // if (json.ContainsKey(key))
+        // {
+        //     json[key] = JsonConvert.SerializeObject(data, settings);
+        // }
+        // else
+        // {
+        //     json.Add(key, JsonConvert.SerializeObject(data, settings));
+        // }
+
+        // await File.WriteAllTextAsync(filePath, json.ToString());
     }
 
     public static async Task SaveAsync<T>(string key, T data)
