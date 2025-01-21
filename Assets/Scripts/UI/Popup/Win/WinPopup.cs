@@ -57,7 +57,7 @@ public class WinPopup : BasePopup
 
         SetLevelCompletedText();
 
-        // CollectCoin(10);
+        CollectCoin(10);
 
         TrackLevelWin();
 
@@ -87,13 +87,13 @@ public class WinPopup : BasePopup
             coinText.text = $"{(int)newVal}";
         })
         .OnComplete(() =>
-        {
-            userResourcesObserver.UserResources.CoinQuantity += numCoin;
+            {
+                // userResourcesObserver.UserResources.CoinQuantity += numCoin;
 
-            userResourcesObserver.Save();
+                // userResourcesObserver.Save();
 
-            _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
-        })
+                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+            })
         );
 
         // while (_currentCoin < numCoin)

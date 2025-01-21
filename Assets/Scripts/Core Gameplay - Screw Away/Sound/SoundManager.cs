@@ -1,3 +1,4 @@
+using PrimeTween;
 using UnityEngine;
 
 public class SoundManager : MonoBehaviour
@@ -126,6 +127,8 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
+        TemporarilyDisableBackgroundMusic();
+
         AudioSource winSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WIN_SOUND);
 
         winSound.Play();
@@ -137,6 +140,8 @@ public class SoundManager : MonoBehaviour
         {
             return;
         }
+
+        TemporarilyDisableBackgroundMusic();
 
         AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);
 
@@ -177,6 +182,29 @@ public class SoundManager : MonoBehaviour
         AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.UNLOCK_ADS_SCREW_BOX_SOUND);
 
         breakObjectSound.Play();
+    }
+
+    private void FadeOutBackgroundMusic()
+    {
+        Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        {
+            backgroundMusic.volume = newVal;
+        });
+    }
+
+    private void FadeInBackgroundMusic()
+    {
+        Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+        {
+            backgroundMusic.volume = newVal;
+        });
+    }
+
+    private void TemporarilyDisableBackgroundMusic()
+    {
+        FadeOutBackgroundMusic();
+
+        Tween.Delay(5).OnComplete(() => FadeInBackgroundMusic());
     }
 
     private void OnGameSettingLoaded()
