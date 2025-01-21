@@ -9,7 +9,7 @@ public static class DataUtility
     // use to save interface or abstract class
     private static JsonSerializerSettings settings = new JsonSerializerSettings
     {
-        TypeNameHandling = TypeNameHandling.All
+        TypeNameHandling = TypeNameHandling.Auto
     };
 
     public static void Save<T>(string fileName, string key, T data)
@@ -27,12 +27,12 @@ public static class DataUtility
 
         if (json.ContainsKey(key))
         {
-            json[key] = JsonConvert.SerializeObject(data, settings);
+            json[key] = JsonConvert.SerializeObject(data);
             // json[key] = JsonUtility.ToJson(data);
         }
         else
         {
-            json.Add(key, JsonConvert.SerializeObject(data, settings));
+            json.Add(key, JsonConvert.SerializeObject(data));
             // json.Add(key, JsonUtility.ToJson(data));
         }
 
@@ -73,7 +73,9 @@ public static class DataUtility
 
     public static async Task SaveAsync<T>(string key, T data)
     {
-        await SaveAsync(GameConstants.SAVE_FILE_NAME, key, data);
+        Save(key, data);
+
+        // await SaveAsync(GameConstants.SAVE_FILE_NAME, key, data);
     }
 
     public static T Load<T>(string fileName, string key, T defaultValue)
@@ -90,7 +92,7 @@ public static class DataUtility
 
                 if (json.ContainsKey(key))
                 {
-                    return JsonConvert.DeserializeObject<T>(json[key].ToString(), settings);
+                    return JsonConvert.DeserializeObject<T>(json[key].ToString());
                 }
                 else
                 {
@@ -127,7 +129,7 @@ public static class DataUtility
 
                 if (json.ContainsKey(key))
                 {
-                    return JsonConvert.DeserializeObject<T>(json[key].ToString(), settings);
+                    return JsonConvert.DeserializeObject<T>(json[key].ToString());
                 }
                 else
                 {
