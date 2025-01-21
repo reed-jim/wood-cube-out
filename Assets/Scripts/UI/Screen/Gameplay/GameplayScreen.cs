@@ -33,6 +33,11 @@ public class GameplayScreen : MonoBehaviour
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         debugNextLevelButton.onClick.AddListener(NextLevel);
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
+
+        if (!gameSetting.IsDebug)
+        {
+            openDebugPopupButton.gameObject.SetActive(false);
+        }
     }
 
     void OnDestroy()

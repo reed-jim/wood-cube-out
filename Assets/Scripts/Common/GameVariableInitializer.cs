@@ -30,6 +30,27 @@ public class GameVariableInitializer : MonoBehaviour
         LoadGameSetting();
 
         currentLevelFetchedEvent?.Invoke();
+
+        FetchRemoteConfigAsync();
+    }
+
+    private async Task FetchRemoteConfigAsync()
+    {
+        // RemoteConfigController.FetchDataAsync();
+
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, ""));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, ""));
+
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0));
+
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, 0));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOL_DOWN_SHOW_COLLAP_BANNER, 0));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 0));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false));
+        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 0));
     }
 
     private void Start()

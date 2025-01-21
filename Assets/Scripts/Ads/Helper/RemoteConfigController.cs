@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Newtonsoft.Json;
 using UnityEngine.Events;
+using Firebase.Extensions;
 
 public class RemoteConfigController : MonoBehaviour
 {
@@ -25,24 +26,96 @@ public class RemoteConfigController : MonoBehaviour
     #region Public Methods
     public static bool isFetchDone;
 
-    public static async Task FetchData()
+    //     public static async Task FetchData()
+    //     {
+    //         //Context.Waiting.ShowWaiting("Fetching data...");
+    //         DebugLog("Fetching data...");
+    //         // FetchAsync only fetches new data if the current data is older than the provided
+    //         // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
+    //         // By default the timespan is 12 hours, and for production apps, this is a good
+    //         // number.  For this example though, it's set to a timespan of zero, so that
+    //         // changes in the console will always show up immediately.
+    // #if TEST
+    //         System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+    //             TimeSpan.FromSeconds(30));
+    // #else
+    //         System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+    //             TimeSpan.FromHours(6));
+    // #endif
+    //         await fetchTask.ContinueWith(FetchComplete);
+    //     }
+
+    private void Awake()
     {
-        //Context.Waiting.ShowWaiting("Fetching data...");
-        DebugLog("Fetching data...");
-        // FetchAsync only fetches new data if the current data is older than the provided
-        // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
-        // By default the timespan is 12 hours, and for production apps, this is a good
-        // number.  For this example though, it's set to a timespan of zero, so that
-        // changes in the console will always show up immediately.
-#if TEST
-        System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-            TimeSpan.FromSeconds(30));
-#else
-        System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-            TimeSpan.FromHours(6));
-#endif
-        await fetchTask.ContinueWith(FetchComplete);
+        Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(async task =>
+        {
+            var dependencyStatus = task.Result;
+            if (dependencyStatus == Firebase.DependencyStatus.Available)
+            {
+                // Create and hold a reference to your FirebaseApp,
+                // where app is a Firebase.FirebaseApp property of your application class.
+                var app = Firebase.FirebaseApp.DefaultInstance;
+
+                // Set a flag here to indicate whether Firebase is ready to use by your app.
+
+                FetchDataNow();
+
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, ""));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, ""));
+
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0));
+
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, 0));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOL_DOWN_SHOW_COLLAP_BANNER, 0));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 0));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false));
+                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 0));
+            }
+            else
+            {
+                UnityEngine.Debug.LogError(System.String.Format(
+                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
+                // Firebase Unity SDK is not safe to use here.
+            }
+        });
     }
+
+    // public Task FetchDataAsync()
+    // {
+    //     DebugLog("Fetching data...");
+    //     System.Threading.Tasks.Task fetchTask =
+    //     Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+    //         TimeSpan.Zero);
+    //     return fetchTask.ContinueWithOnMainThread(FetchComplete);
+    // }
+
+    // private void FetchComplete(Task fetchTask)
+    // {
+    //     if (!fetchTask.IsCompleted)
+    //     {
+    //         Debug.LogError("Retrieval hasn't finished.");
+    //         return;
+    //     }
+
+    //     var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+    //     var info = remoteConfig.Info;
+    //     if (info.LastFetchStatus != LastFetchStatus.Success)
+    //     {
+    //         Debug.LogError($"{nameof(FetchComplete)} was unsuccessful\n{nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
+    //         return;
+    //     }
+
+    //     // Fetch successful. Parameter values must be activated to use.
+    //     remoteConfig.ActivateAsync()
+    //       .ContinueWithOnMainThread(
+    //         task =>
+    //         {
+    //             Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
+    //         });
+    // }
 
     public static void FetchDataNow()
     {
@@ -335,20 +408,20 @@ public class RemoteConfigController : MonoBehaviour
 
     #endregion Private Methods
 
-//     public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
-//     {
-//         var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
-//         PlayFabClientAPI.GetStoreItems(request,
-//            (s) =>
-//            {
-//                var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
-// #if LOG_VERBOSE
-//                Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
-// #endif
-//                if (data != null)
-//                    success?.Invoke(data);
+    //     public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
+    //     {
+    //         var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
+    //         PlayFabClientAPI.GetStoreItems(request,
+    //            (s) =>
+    //            {
+    //                var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
+    // #if LOG_VERBOSE
+    //                Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
+    // #endif
+    //                if (data != null)
+    //                    success?.Invoke(data);
 
-//            },
-//             (e) => error?.Invoke(e));
-//     }
+    //            },
+    //             (e) => error?.Invoke(e));
+    //     }
 }

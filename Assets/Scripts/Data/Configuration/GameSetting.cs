@@ -4,9 +4,15 @@ using UnityEngine;
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/GameSetting")]
 public class GameSetting : ScriptableObject
 {
+    [SerializeField] private bool isDebug;
     [SerializeField] private bool isTurnOnBackgroundMusic = true;
     [SerializeField] private bool isTurnOnSound = true;
     [SerializeField] private string currentLanguage;
+
+    public bool IsDebug
+    {
+        get => isDebug;
+    }
 
     public bool IsTurnOnBackgroundMusic
     {
