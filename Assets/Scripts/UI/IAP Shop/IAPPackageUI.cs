@@ -66,7 +66,7 @@ public class IAPPackageUI : MonoBehaviour
             clearHolesQuantityText.text = $"{data.ClearHolesBoosterQuantity}";
         }
 
-        priceText.text = $"{data.Price}$";
+        // priceText.text = $"{data.Price}$";
     }
 
     private void Buy()

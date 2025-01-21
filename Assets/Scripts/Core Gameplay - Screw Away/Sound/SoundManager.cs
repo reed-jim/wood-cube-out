@@ -174,7 +174,7 @@ public class SoundManager : MonoBehaviour
             return;
         }
 
-        AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.BREAK_OBJECT_SOUND);
+        AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.UNLOCK_ADS_SCREW_BOX_SOUND);
 
         breakObjectSound.Play();
     }

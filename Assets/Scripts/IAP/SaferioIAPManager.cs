@@ -28,6 +28,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent += BuyProduct;
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyIAPEvent += BuyProduct;
+        IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -54,6 +55,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent -= BuyProduct;
         IAPShopItem.buyIAPEvent -= BuyProduct;
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
+        IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
     }
 
     private void Init()
@@ -80,18 +82,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         this.controller = controller;
         this.extensions = extensions;
 
-        List<Product> products = GetAvailableProducts();
-
-        string productId;
-        string localizedPrice;
-
-        for (int i = 0; i < products.Count; i++)
-        {
-            productId = products[i].definition.id;
-            localizedPrice = GetLocalizedPrice(products[i]);
-
-            updatePriceEvent?.Invoke(productId, localizedPrice);
-        }
+        FetchLocalizedPrice();
 
         CheckRestoredRemoveAds();
     }
@@ -157,6 +148,23 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     }
 
+    private void FetchLocalizedPrice()
+    {
+        List<Product> products = GetAvailableProducts();
+
+        // string productId;
+        // string localizedPrice;
+
+        for (int i = 0; i < products.Count; i++)
+        {
+            string productId = products[i].definition.id;
+
+            string localizedPrice = GetLocalizedPrice(products[i]);
+
+            updatePriceEvent?.Invoke(productId, localizedPrice);
+        }
+    }
+
     public List<Product> GetAvailableProducts()
     {
         if (controller != null)
@@ -171,10 +179,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public string GetLocalizedPrice(Product product)
     {
-        var price = product.metadata.localizedPrice;
+        var price = product.metadata.localizedPriceString;
         var cultureInfo = new CultureInfo("en-US");
 
-        return string.Format(cultureInfo, "{0:C}", price);
+        return price;
     }
 
     private bool IsProductPurchased(string productId)

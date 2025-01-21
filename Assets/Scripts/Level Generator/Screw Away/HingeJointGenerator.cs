@@ -317,8 +317,6 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateHingeJointAll(string path)
     {
-        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
-
         BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
 
         for (int i = 0; i < objectParts.Length; i++)
@@ -386,9 +384,9 @@ public class HingeJointGenerator : EditorWindow
         //     }
         // }
 
-        EditorUtility.SetDirty(levelPrefab);
+        EditorUtility.SetDirty(Selection.activeGameObject);
 
-        PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
+        PrefabUtility.SaveAsPrefabAsset(Selection.activeGameObject, path);
     }
 
     private void CheckHingeJointNumber(string path)
@@ -409,6 +407,11 @@ public class HingeJointGenerator : EditorWindow
         }
 
         bool isPassed = numHingeJoint == numScrew;
+
+        if (numScrew % 3 != 0)
+        {
+            isPassed = false;
+        }
 
         string resultText = $"<color=#89FF5B>Passed</color>";
 

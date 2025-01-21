@@ -43,7 +43,7 @@ public static class DataUtility
         }
         catch (Exception e)
         {
-
+            Debug.Log("SAFERIO " + e.Message);
         }
     }
 

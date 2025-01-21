@@ -49,8 +49,8 @@ public class GameplayCamera : MonoBehaviour
 
     private void Reset()
     {
-        _targetOrthographicSize = _initialOrthographicSize;
-        _targetBackgroundScale = _initialBackgroundScale;
+        // _targetOrthographicSize = _initialOrthographicSize;
+        // _targetBackgroundScale = _initialBackgroundScale;
     }
 
     private void Zoom(float orthographicSize)

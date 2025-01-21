@@ -310,7 +310,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
             else
             {
-                screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
+                screwBoxesObserver.NumScrewInScrewPorts++;
 
                 return emptyScrewPort;
             }
@@ -551,12 +551,12 @@ public class ScrewBoxManager : MonoBehaviour
         {
             ScrewBox screwBox = screwBoxs[i];
 
-            if (screwBox.Faction != screw.Faction)
+            if (screwBox == null)
             {
                 continue;
             }
 
-            if (screwBox == null || screwBox.IsLocked || screwBox.IsInTransition)
+            if (screwBox.Faction != screw.Faction || screwBox.IsLocked || screwBox.IsInTransition)
             {
                 continue;
             }

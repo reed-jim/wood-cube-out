@@ -21,6 +21,12 @@ public class IAPShopPopup : BasePopup
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action fetchLocalizedPriceIAPEvent;
+
+    protected override void MoreActionInAwake()
+    {
+        fetchLocalizedPriceIAPEvent?.Invoke();
+    }
 
     protected override void RegisterMoreEvent()
     {

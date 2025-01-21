@@ -57,7 +57,7 @@ public class WinPopup : BasePopup
 
         SetLevelCompletedText();
 
-        CollectCoin(10);
+        // CollectCoin(10);
 
         TrackLevelWin();
 
