@@ -88,6 +88,7 @@ public static class GameConstants
 
     #region SAVE/LOAD
     public static string SAVE_FILE_NAME = "Game Local Data";
+    public static string IS_FIRST_TIME_OPEN_APP = "IS_FIRST_TIME_OPEN_APP";
     public static string CURRENT_LEVEL = "Current Level";
     public static string CURRENT_LEVEL_PLAY = "Current Level Play";
     public static string IS_LOOP_LEVEL = "IS_LOOP_LEVEL";

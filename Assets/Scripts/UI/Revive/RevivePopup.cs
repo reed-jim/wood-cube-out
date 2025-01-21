@@ -80,6 +80,11 @@ public class RevivePopup : BasePopup
 
     private void ReviveByDiamond()
     {
+        // if (_isInTransition)
+        // {
+        //     return;
+        // }
+
         reviveByDiamondButton.interactable = false;
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
@@ -87,6 +92,8 @@ public class RevivePopup : BasePopup
             base.Hide(onCompletedAction: () =>
             {
                 reviveEvent?.Invoke(_currentBoosterOnRevive);
+
+                reviveByDiamondButton.interactable = true;
             });
 
             userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
@@ -98,12 +105,19 @@ public class RevivePopup : BasePopup
             Hide(onCompletedAction: () =>
             {
                 openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
+
+                reviveByDiamondButton.interactable = true;
             });
         }
     }
 
     private void ReviveByAds()
     {
+        if (_isInTransition)
+        {
+            return;
+        }
+
         ActionWatchVideo actionWatchVideo;
 
         switch (_currentBoosterOnRevive)

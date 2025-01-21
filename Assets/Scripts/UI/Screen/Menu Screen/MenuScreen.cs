@@ -44,11 +44,17 @@ public class MenuScreen : MonoBehaviour
         _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
         topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
 
-
         if (UserData.IsRemoveAds)
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
         }
+
+        // if (UserData.IsFirstTimeOpenApp && currentLevel.Value == 1)
+        // {
+        //     UserData.IsFirstTimeOpenApp = false;
+
+        //     StartGame();
+        // }
     }
 
     void OnDestroy()
@@ -95,6 +101,13 @@ public class MenuScreen : MonoBehaviour
     private void UpdateCurrentLevelText()
     {
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+
+        if (UserData.IsFirstTimeOpenApp && currentLevel.Value == 1)
+        {
+            UserData.IsFirstTimeOpenApp = false;
+
+            StartGame();
+        }
     }
 
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)

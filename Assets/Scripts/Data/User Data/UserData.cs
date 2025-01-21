@@ -3,6 +3,18 @@ using UnityEngine;
 
 public static class UserData
 {
+    public static bool IsFirstTimeOpenApp
+    {
+        get
+        {
+            return DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
+        }
+        set
+        {
+            DataUtility.SaveAsync(GameConstants.IS_FIRST_TIME_OPEN_APP, value);
+        }
+    }
+
     public static int CurrentLevel
     {
         get

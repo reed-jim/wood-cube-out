@@ -45,10 +45,14 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
         //     canvasGroup.alpha = newVal;
         // });
 
+        canvasGroup.interactable = false;
+
         Tween.Scale(target, 1.1f, duration: 0.5f * duration)
             .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
             {
                 _isInTransition = false;
+
+                canvasGroup.interactable = true;
             }));
 
         // SaferioTween.LocalPositionAsync(target, Vector2.zero, duration: duration);
@@ -69,10 +73,14 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
         target.localScale = Vector3.zero;
 
+        canvasGroup.interactable = false;
+
         Tween.Scale(target, 1.1f, duration: 0.5f * duration)
             .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
             {
                 _isInTransition = false;
+
+                canvasGroup.interactable = true;
 
                 onCompletedAction?.Invoke();
             }));

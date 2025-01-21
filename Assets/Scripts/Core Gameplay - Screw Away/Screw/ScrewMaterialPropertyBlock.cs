@@ -51,7 +51,6 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
 
         return;
 
-
         Init();
 
         _propertyBlock.SetColor(colorReference, color);
