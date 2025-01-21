@@ -12,6 +12,7 @@ public class FakeScrew : BasicScrew
         );
         transform.rotation = screw.transform.rotation;
 
-        screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(screw.Faction));
+        // screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(screw.Faction));
+        screwServiceLocator.screwMaterialPropertyBlock.SetColor(screw.Faction);
     }
 }

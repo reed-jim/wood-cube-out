@@ -1,7 +1,12 @@
 using UnityEngine;
+using static GameEnum;
 
 public class ScrewMaterialPropertyBlock : MonoBehaviour
 {
+    [SerializeField] private MeshRenderer meshRenderer;
+
+    [SerializeField] private Material[] materials;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
     [SerializeField] private string secondaryColorReference;
@@ -31,8 +36,22 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         }
     }
 
+    public void SetColor(GameFaction faction)
+    {
+        meshRenderer.material = materials[(int)faction];
+
+        meshRenderer.material.SetColor("_SecondaryColor", meshRenderer.material.GetColor("_Color") * 0.4f);
+
+        return;
+    }
+
     public void SetColor(Color color)
     {
+        meshRenderer.material = materials[Random.Range(0, materials.Length)];
+
+        return;
+
+
         Init();
 
         _propertyBlock.SetColor(colorReference, color);

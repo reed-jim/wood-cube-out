@@ -15,11 +15,13 @@ public class ScrewFaction : MonoBehaviour
 
     void Awake()
     {
-        screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
+        // screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
+        screwServiceLocator.screwMaterialPropertyBlock.SetColor(faction);
     }
 
     public void SetColorByFaction()
     {
-        screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
+        // screwServiceLocator.screwMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
+        screwServiceLocator.screwMaterialPropertyBlock.SetColor(faction);
     }
 }
