@@ -67,9 +67,7 @@ public class LosePopup : BasePopup
             });
         });
 
-        AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);
-
-        loseSound.Play();
+        SoundManager.Instance.PlaySoundLose();
     }
 
     private void Replay()

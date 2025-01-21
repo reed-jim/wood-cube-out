@@ -51,11 +51,18 @@ public class ScrewSelectionInput : MonoBehaviour
         {
             _timeHold += Time.deltaTime;
 
-            if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
+            if (_inputMode == InputMode.Select)
+            {
+                if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
+                {
+                    SelectObjectPart();
+
+                    _isSelectingObjectPart = true;
+                }
+            }
+            else if (_inputMode == InputMode.BreakObject)
             {
                 SelectObjectPart();
-
-                _isSelectingObjectPart = true;
             }
         }
 

@@ -119,6 +119,30 @@ public class SoundManager : MonoBehaviour
         screwBoxDoneSound.Play();
     }
 
+    public void PlaySoundWin()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource winSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WIN_SOUND);
+
+        winSound.Play();
+    }
+
+    public void PlaySoundLose()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);
+
+        loseSound.Play();
+    }
+
     private void OnGameSettingLoaded()
     {
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);

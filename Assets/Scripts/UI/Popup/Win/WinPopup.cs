@@ -51,13 +51,11 @@ public class WinPopup : BasePopup
 
         Show();
 
+        SoundManager.Instance.PlaySoundWin();
+
         await Task.Delay(500);
 
         SetLevelCompletedText();
-
-        AudioSource winSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.WIN_SOUND);
-
-        winSound.Play();
 
         CollectCoin(10);
 
