@@ -1,4 +1,5 @@
 using System;
+using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -7,6 +8,8 @@ public class GameStateMachine : MonoBehaviour
     private BaseGameState currentState;
 
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
+
+    [SerializeField] private float delayToEnableInputAfterRevived;
 
     public GameState CurrentState
     {
@@ -65,9 +68,12 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterPlayingState()
     {
-        enableInputEvent?.Invoke(true);
-
         ChangeState(new GameStatePlaying());
+
+        Tween.Delay(delayToEnableInputAfterRevived).OnComplete(() =>
+        {
+            enableInputEvent?.Invoke(true);
+        });
     }
 
     private void EnterWinState()
