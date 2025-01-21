@@ -18,6 +18,8 @@ public class GameStateMachine : MonoBehaviour
         get => screwBoxesObserver;
     }
 
+    public static event Action<bool> enableInputEvent;
+
     private void Awake()
     {
         LevelLoader.startLevelEvent += EnterPlayingState;
@@ -63,6 +65,8 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterPlayingState()
     {
+        enableInputEvent?.Invoke(true);
+
         ChangeState(new GameStatePlaying());
     }
 
@@ -73,6 +77,8 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterLoseState()
     {
+        enableInputEvent?.Invoke(false);
+
         ChangeState(new GameStateLose(this));
     }
 

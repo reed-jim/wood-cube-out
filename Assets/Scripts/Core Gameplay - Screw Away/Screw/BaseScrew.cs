@@ -194,9 +194,16 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
     {
+        // CommonUtil.StopAllTweens(_tweens);
+
         screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
 
-        _isMoving = true;
+        // TEMP FIX
+        if (!screwBoxSlot.IsScrewPort)
+        {
+            _isMoving = true;
+        }
+
         _isRotating = true;
 
         Vector3 screwSize = TransformUtil.ComponentWiseMultiply(transform.lossyScale, meshFilter.mesh.bounds.size);

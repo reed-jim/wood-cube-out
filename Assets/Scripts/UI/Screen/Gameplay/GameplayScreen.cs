@@ -17,6 +17,7 @@ public class GameplayScreen : MonoBehaviour
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedScrewText;
 
     [SerializeField] private IntVariable currentLevel;
+    [SerializeField] private GameSetting gameSetting;
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action nextLevelEvent;

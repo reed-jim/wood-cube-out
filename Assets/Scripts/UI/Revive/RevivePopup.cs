@@ -60,9 +60,7 @@ public class RevivePopup : BasePopup
     {
         Show();
 
-        AudioSource loseSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.LOSE_SOUND);
-
-        loseSound.Play();
+        SoundManager.Instance.PlaySoundLose();
 
         if (boosterType == BoosterType.UnlockScrewBox)
         {
@@ -75,6 +73,8 @@ public class RevivePopup : BasePopup
 
         UIUtil.SetSizeKeepRatioY(boosterImage, 0.2f * container.sizeDelta.x);
 
+        reviveByDiamondButton.interactable = true;
+
         _currentBoosterOnRevive = boosterType;
     }
 
@@ -86,8 +86,6 @@ public class RevivePopup : BasePopup
         {
             base.Hide(onCompletedAction: () =>
             {
-                reviveByDiamondButton.interactable = true;
-
                 reviveEvent?.Invoke(_currentBoosterOnRevive);
             });
 
@@ -99,8 +97,6 @@ public class RevivePopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
-                reviveByDiamondButton.interactable = true;
-
                 openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
             });
         }

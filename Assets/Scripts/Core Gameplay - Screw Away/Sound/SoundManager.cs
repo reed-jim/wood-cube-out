@@ -143,6 +143,42 @@ public class SoundManager : MonoBehaviour
         loseSound.Play();
     }
 
+    public void PlaySoundBreakObject()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.BREAK_OBJECT_SOUND);
+
+        breakObjectSound.Play();
+    }
+
+    public void PlaySoundClearScrewPorts()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND);
+
+        sound.Play();
+    }
+
+    public void PlaySoundUnlockScrewBox()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.BREAK_OBJECT_SOUND);
+
+        breakObjectSound.Play();
+    }
+
     private void OnGameSettingLoaded()
     {
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);

@@ -254,9 +254,7 @@ public class BoosterUI : MonoBehaviour
 
         clearAllScrewPortsEvent?.Invoke();
 
-        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND);
-
-        sound.Play();
+        SoundManager.Instance.PlaySoundClearScrewPorts();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

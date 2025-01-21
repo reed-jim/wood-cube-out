@@ -227,9 +227,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         await Task.Delay(950);
 
-        AudioSource breakObjectSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.BREAK_OBJECT_SOUND);
-
-        breakObjectSound.Play();
+        SoundManager.Instance.PlaySoundBreakObject();
 
         // hammer.PlayHitFx();
 

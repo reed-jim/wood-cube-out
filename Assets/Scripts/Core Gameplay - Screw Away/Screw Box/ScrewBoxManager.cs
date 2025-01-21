@@ -308,7 +308,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
             else
             {
-                screwBoxesObserver.NumScrewInScrewPorts++;
+                screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
 
                 return emptyScrewPort;
             }
@@ -483,6 +483,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void MoveFromScrewPortToScrewBox(ScrewBox screwBox)
     {
+        // avoid too fast action
         enableBoosterEvent?.Invoke(false);
 
         bool isFound = false;
@@ -516,8 +517,6 @@ public class ScrewBoxManager : MonoBehaviour
                             isSwitchCamera: false
                         );
 
-                        screwBoxesObserver.NumScrewInScrewPorts--;
-
                         if (!isFound)
                         {
                             isFound = true;
@@ -529,11 +528,52 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
+        screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
+
         if (!isFound)
         {
             enableBoosterEvent?.Invoke(true);
         }
     }
+
+    // private void MoveSingleScrewFromHoleToScrewBox(BaseScrew screw) {
+    //     for (int i = 0; i < screwBoxs.Length; i++)
+    //     {
+    //         ScrewBox screwBox = screwBoxs[i];
+
+    //         for (int k = 0; k < screwBox.ScrewBoxSlots.Length; k++)
+    //             {
+    //                 if (!screwBox.ScrewBoxSlots[k].IsFilled)
+    //                 {
+    //                     int screwPortIndex = i;
+    //                     int screwBoxSlotIndex = k;
+
+    //                     screwBox.ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
+
+    //                     screwPorts[screwPortIndex].IsFilled = false;
+
+    //                     screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
+    //                     (
+    //                         screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
+    //                         onCompleteAction: () =>
+    //                         {
+    //                             screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+
+    //                             enableBoosterEvent?.Invoke(true);
+    //                         },
+    //                         isSwitchCamera: false
+    //                     );
+
+    //                     if (!isFound)
+    //                     {
+    //                         isFound = true;
+    //                     }
+
+    //                     break;
+    //                 }
+    //             }
+    //     }
+    // }
 
     public Dictionary<GameFaction, int> GetScrewPortAvailableByFaction()
     {
@@ -631,12 +671,28 @@ public class ScrewBoxManager : MonoBehaviour
 
                 screwPorts[i].Screw = null;
 
-                screwBoxesObserver.NumScrewInScrewPorts--;
                 numScrewCleared++;
             }
         }
 
+        screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
+
         screwPortsClearedEvent?.Invoke(numScrewCleared);
+    }
+
+    private int GetNumScrewsInScrewPorts()
+    {
+        int numScrew = 0;
+
+        for (int i = 0; i < screwPorts.Count; i++)
+        {
+            if (screwPorts[i].IsFilled)
+            {
+                numScrew++;
+            }
+        }
+
+        return numScrew;
     }
 
     private void ShakeAllScrewPorts()

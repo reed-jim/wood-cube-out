@@ -32,6 +32,15 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
             googlePlayStoreProducts[i].Id = IAPDataContainer.ProductsData[i].ProductId;
+
+            if (IAPDataContainer.ProductsData[i].IsRemoveAd)
+            {
+                googlePlayStoreProducts[i].ProductType = ProductType.NonConsumable;
+            }
+            else
+            {
+                googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
+            }
         }
 
         Init();
@@ -208,5 +217,6 @@ public class GooglePlayStoreProduct
     public ProductType ProductType
     {
         get => productType;
+        set => productType = value;
     }
 }

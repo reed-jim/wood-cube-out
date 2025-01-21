@@ -98,15 +98,8 @@ public class ScrewBoxUI : MonoBehaviour
 
         unlockScrewBox?.Invoke(gameObject.GetInstanceID());
 
-        PlayUnlockSound();
+        SoundManager.Instance.PlaySoundUnlockScrewBox();
 
         levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
-    }
-
-    private void PlayUnlockSound()
-    {
-        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.UNLOCK_ADS_SCREW_BOX_SOUND);
-
-        sound.Play();
     }
 }

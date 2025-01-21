@@ -201,7 +201,6 @@ public class BasePopup : MonoBehaviour
             popupHideEvent?.Invoke();
 
             _isShown = false;
-            _isInTransition = true;
 
             AfterHide();
 
@@ -249,12 +248,5 @@ public class BasePopup : MonoBehaviour
                 Hide();
             }
         }
-    }
-
-    private void PlayClickSound()
-    {
-        AudioSource clickSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLICK_SOUND);
-
-        clickSound.Play();
     }
 }
