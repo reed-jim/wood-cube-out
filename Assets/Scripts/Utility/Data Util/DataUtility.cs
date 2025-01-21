@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -23,20 +24,27 @@ public static class DataUtility
             fileText = File.ReadAllText(filePath);
         }
 
-        JObject json = JObject.Parse(fileText);
-
-        if (json.ContainsKey(key))
+        try
         {
-            json[key] = JsonConvert.SerializeObject(data);
-            // json[key] = JsonUtility.ToJson(data);
-        }
-        else
-        {
-            json.Add(key, JsonConvert.SerializeObject(data));
-            // json.Add(key, JsonUtility.ToJson(data));
-        }
+            JObject json = JObject.Parse(fileText);
 
-        File.WriteAllText(filePath, json.ToString());
+            if (json.ContainsKey(key))
+            {
+                json[key] = JsonConvert.SerializeObject(data);
+                // json[key] = JsonUtility.ToJson(data);
+            }
+            else
+            {
+                json.Add(key, JsonConvert.SerializeObject(data));
+                // json.Add(key, JsonUtility.ToJson(data));
+            }
+
+            File.WriteAllText(filePath, json.ToString());
+        }
+        catch (Exception e)
+        {
+
+        }
     }
 
     public static void Save<T>(string key, T data)
