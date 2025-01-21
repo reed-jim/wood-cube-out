@@ -38,6 +38,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected bool _isOutsideWithNoScrewBox;
     protected bool _isLocked;
     protected bool _isInScrewPort;
+    protected ScrewBoxSlot _screwBoxSlot;
     protected ScrewData _screwData;
     #endregion
 
@@ -51,6 +52,11 @@ public class BaseScrew : MonoBehaviour, IScrew
     public HingeJoint Joint
     {
         set => joint = value;
+    }
+
+    public ScrewBoxSlot ScrewBoxSlot
+    {
+        get => _screwBoxSlot;
     }
 
     public ScrewData ScrewData
@@ -125,6 +131,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     #region EVENT
     public static event Action<int, GameFaction> selectScrewEvent;
     public static event Action<BaseScrew> addScrewToListEvent;
+    public static event Action<BaseScrew> screwMovedCompletedEvent;
     public static event Action<int> breakJointEvent;
     public static event Action<int> screwStartLoosenedEvent;
     public static event Action screwLoosenedEvent;
@@ -194,22 +201,22 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
     {
-        // CommonUtil.StopAllTweens(_tweens);
+        if (_isMoving)
+        {
+            return;
+        }
 
         screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
 
-        // TEMP FIX
-        if (!screwBoxSlot.IsScrewPort)
-        {
-            _isMoving = true;
-        }
-
+        _isMoving = true;
         _isRotating = true;
+
+        _screwBoxSlot = screwBoxSlot;
 
         Vector3 screwSize = TransformUtil.ComponentWiseMultiply(transform.lossyScale, meshFilter.mesh.bounds.size);
 
-        // FOR ROTATING
-        await Task.Delay(100);
+        // // FOR ROTATING
+        // await Task.Delay(100);
 
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
@@ -260,6 +267,8 @@ public class BaseScrew : MonoBehaviour, IScrew
                         .OnComplete(() =>
                         {
                             _isMoving = false;
+
+                            screwMovedCompletedEvent?.Invoke(this);
                         })
                     );
 

@@ -16,15 +16,19 @@ public class PinchGesture : MonoBehaviour
 
     private void Awake()
     {
+        LevelLoader.startLevelEvent += OnLevelStarted;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
         minZoom = 0.85f * cameraToZoom.orthographicSize;
         maxZoom = 1.15f * cameraToZoom.orthographicSize;
+
+
     }
 
     void OnDestroy()
     {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
     }
@@ -51,6 +55,11 @@ public class PinchGesture : MonoBehaviour
 
             pinchGestureEvent?.Invoke(Mathf.Clamp(cameraToZoom.orthographicSize + deltaMagnitudeDiff * zoomSpeed, minZoom, maxZoom));
         }
+    }
+
+    private void OnLevelStarted()
+    {
+        pinchGestureEvent?.Invoke(minZoom);
     }
 
     private void EnablePinching(bool isEnable)
