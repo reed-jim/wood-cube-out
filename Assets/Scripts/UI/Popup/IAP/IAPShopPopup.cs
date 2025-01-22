@@ -23,11 +23,6 @@ public class IAPShopPopup : BasePopup
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action fetchLocalizedPriceIAPEvent;
 
-    protected override void MoreActionInAwake()
-    {
-        fetchLocalizedPriceIAPEvent?.Invoke();
-    }
-
     protected override void RegisterMoreEvent()
     {
         BuyBoosterPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
@@ -40,6 +35,13 @@ public class IAPShopPopup : BasePopup
         BuyBoosterPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         RevivePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+
+        fetchLocalizedPriceIAPEvent?.Invoke();
     }
 
     private void ShowAndScrollToCoinPack(ScreenRoute prevRoute)

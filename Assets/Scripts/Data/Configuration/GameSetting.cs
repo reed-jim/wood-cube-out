@@ -44,6 +44,11 @@ public class GameSetting : ScriptableObject
         }
     }
 
+    public GameSetting(string defaultLanguage)
+    {
+        currentLanguage = defaultLanguage;
+    }
+
     public void Save()
     {
         DataUtility.SaveAsync(GameConstants.GAME_SETTING, this);
@@ -51,9 +56,7 @@ public class GameSetting : ScriptableObject
 
     public async Task LoadAsync()
     {
-        GameSetting defaultGameSetting = new GameSetting();
-
-        defaultGameSetting.CurrentLanguage = GameConstants.DEFAULT_LANGUAGE;
+        GameSetting defaultGameSetting = new GameSetting(GameConstants.DEFAULT_LANGUAGE);
 
         GameSetting savedGameSetting = await DataUtility.LoadAsync(GameConstants.GAME_SETTING, defaultGameSetting);
 

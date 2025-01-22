@@ -325,7 +325,7 @@ public static class LevelDifficultyCalculatorUltility
     {
         float WEIGHT_REPEAT_TEMPLATE = 0.8f;
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
-        float DIFFICULTY_MULTIPLIER = 1.3f;
+        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 1.25f);
 
         float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 

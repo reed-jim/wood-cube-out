@@ -100,22 +100,22 @@ public class AdmobAdsMax : MonoBehaviour
 
         _isInited = true;
 
-        // //#if !UNITY_EDITOR
-        // Debug.Log("===== Init Admob ====");
-        // MobileAds.Initialize((initStatus) =>
-        // {
-        //     Debug.Log("===== Init Admob Done ====");
-        //     AppOpenAdManager.Instance.LoadAd(() =>
-        //     {
-        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-        //     });
-        //     InitBannerAdmob();
-        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-        //     isAdmobInitDone = true;
-        //     //nativeAdsManager.Instance.OnInitAdmobDone();
-        //     //LoadRewardedInterstitialAd();
-        // });
-        // //#endif
+        //#if !UNITY_EDITOR
+        Debug.Log("===== Init Admob ====");
+        MobileAds.Initialize((initStatus) =>
+        {
+            Debug.Log("===== Init Admob Done ====");
+            AppOpenAdManager.Instance.LoadAd(() =>
+            {
+                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+            });
+            InitBannerAdmob();
+            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            isAdmobInitDone = true;
+            //nativeAdsManager.Instance.OnInitAdmobDone();
+            //LoadRewardedInterstitialAd();
+        });
+        //#endif
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -133,7 +133,7 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/6300978111";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/2446388915";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
@@ -556,12 +556,12 @@ public class AdmobAdsMax : MonoBehaviour
             return false;
         }
 
-        // if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
-        // {
-        //     actionIniterClose?.Invoke();
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
+        {
+            actionIniterClose?.Invoke();
 
-        //     return false;
-        // }
+            return false;
+        }
 
         if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController

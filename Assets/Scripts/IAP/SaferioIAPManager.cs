@@ -34,14 +34,16 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         {
             googlePlayStoreProducts[i].Id = IAPDataContainer.ProductsData[i].ProductId;
 
-            if (IAPDataContainer.ProductsData[i].IsRemoveAd)
-            {
-                googlePlayStoreProducts[i].ProductType = ProductType.NonConsumable;
-            }
-            else
-            {
-                googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
-            }
+            // if (IAPDataContainer.ProductsData[i].IsRemoveAd)
+            // {
+            //     googlePlayStoreProducts[i].ProductType = ProductType.NonConsumable;
+            // }
+            // else
+            // {
+            //     googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
+            // }
+
+            googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
         }
 
         Init();

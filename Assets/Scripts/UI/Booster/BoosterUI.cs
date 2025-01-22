@@ -158,8 +158,8 @@ public class BoosterUI : MonoBehaviour
 
             Tween.LocalPositionY(addMoreScrewPortButtonRT, addMoreScrewPortButtonRT.localPosition.y - 600, duration: 0.3f);
 
-            Tween.LocalPositionX(breakModeButtonRT, -0.2f * canvasSize.Value.x, duration: 0.3f);
-            Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.2f * canvasSize.Value.x, duration: 0.3f);
+            Tween.LocalPositionX(breakModeButtonRT, -0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
+            Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
         }
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
@@ -200,7 +200,7 @@ public class BoosterUI : MonoBehaviour
         breakModeContainer.gameObject.SetActive(true);
 
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.05f * canvasSize.Value.y, duration: transitionTime)
+        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
         .OnComplete(() =>
         {
             enableBreakObjectModeEvent?.Invoke();

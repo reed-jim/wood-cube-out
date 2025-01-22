@@ -18,7 +18,10 @@ public class SimpleSceneTransition : MonoBehaviour
     {
         _tweens = new List<Tween>();
 
-        BlackScreenTransition(startDelay, onCompletedAction: null);
+        if (!DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()

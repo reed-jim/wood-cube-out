@@ -24,7 +24,9 @@ public class BoosterItemUI : MonoBehaviour
 
     void Awake()
     {
+        BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
 
@@ -33,7 +35,9 @@ public class BoosterItemUI : MonoBehaviour
 
     void OnDestroy()
     {
+        BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
     }
 
     private async void Setup()
@@ -67,6 +71,27 @@ public class BoosterItemUI : MonoBehaviour
     private void UpdateQuantityText(int boosterIndex)
     {
         if (boosterIndex == this.boosterIndex)
+        {
+            int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+
+            if (quantity > 0)
+            {
+                quantityTextContainer.gameObject.SetActive(true);
+                addButtonRT.gameObject.SetActive(false);
+
+                quantityText.text = $"{quantity}";
+            }
+            else
+            {
+                quantityTextContainer.gameObject.SetActive(false);
+                addButtonRT.gameObject.SetActive(true);
+            }
+        }
+    }
+
+    private void OnResourceEarnPopupShow(bool isShow)
+    {
+        if (!isShow)
         {
             int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 

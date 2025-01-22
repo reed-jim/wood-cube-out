@@ -17,11 +17,15 @@ public class GameVariableInitializer : MonoBehaviour
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private GameSetting gameSetting;
 
+    private Vector2 _cachedCanvasSize;
+
     public static event Action currentLevelFetchedEvent;
     public static event Action gameSettingLoadedEvent;
 
     private void Awake()
     {
+        ScriptableObjectInitializer.getCachedCanvasSizeEvent += GetCachedCanvasSize;
+
         canvasSize.Value = canvas.sizeDelta;
 
         currentLevel.Load();
@@ -31,26 +35,7 @@ public class GameVariableInitializer : MonoBehaviour
 
         currentLevelFetchedEvent?.Invoke();
 
-        FetchRemoteConfigAsync();
-    }
-
-    private async Task FetchRemoteConfigAsync()
-    {
-        // RemoteConfigController.FetchDataAsync();
-
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, ""));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, ""));
-
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0));
-
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, 0));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOL_DOWN_SHOW_COLLAP_BANNER, 0));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 0));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false));
-        // Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 0));
+        _cachedCanvasSize = canvas.sizeDelta;
     }
 
     private void Start()
@@ -59,10 +44,20 @@ public class GameVariableInitializer : MonoBehaviour
         canvasScale.Value = canvas.localScale;
     }
 
+    void OnDestroy()
+    {
+        ScriptableObjectInitializer.getCachedCanvasSizeEvent -= GetCachedCanvasSize;
+    }
+
     private async void LoadGameSetting()
     {
         await gameSetting.LoadAsync();
 
         gameSettingLoadedEvent?.Invoke();
+    }
+
+    private void GetCachedCanvasSize()
+    {
+        canvasSize.Value = _cachedCanvasSize;
     }
 }

@@ -31,6 +31,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action unlockScrewBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<int> updateBoosterQuantityEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -99,6 +100,8 @@ public class BuyBoosterPopup : BasePopup
             if (_boosterType == BoosterType.BreakObject)
             {
                 userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+
+                updateBoosterQuantityEvent?.Invoke(boosterIndex);
 
                 _isBoughtBreakObjectBoosterByCoin = true;
             }

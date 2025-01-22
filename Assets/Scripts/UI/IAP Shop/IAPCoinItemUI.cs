@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class IAPCoinItemUI : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class IAPCoinItemUI : MonoBehaviour
 
     #region EVENT
     public static event Action<string> buyIAPEvent;
+    public static event Action<string, string> showNotificationEvent;
     #endregion
 
     private void Awake()
@@ -33,12 +35,22 @@ public class IAPCoinItemUI : MonoBehaviour
     {
         coinQuantityText.text = $"{data.CoinQuantity}";
 
-        priceText.text = $"{data.Price}$";
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            priceText.text = $"{data.Price}$";
+        }
     }
 
     private void Buy()
     {
-        buyIAPEvent?.Invoke(_packageData.ProductId);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+        }
+        else
+        {
+            buyIAPEvent?.Invoke(_packageData.ProductId);
+        }
     }
 
     private void UpdatePrice(string productId, string price)

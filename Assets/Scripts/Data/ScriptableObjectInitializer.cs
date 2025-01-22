@@ -3,11 +3,15 @@ using UnityEngine;
 
 public class ScriptableObjectInitializer : MonoBehaviour
 {
+    [SerializeField] private RectTransform canvas;
+
     [SerializeField] private IntVariable currentLevel;
+    [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action gameSettingLoadedEvent;
+    public static event Action getCachedCanvasSizeEvent;
 
     void Awake()
     {
@@ -15,6 +19,8 @@ public class ScriptableObjectInitializer : MonoBehaviour
         userResourcesObserver.Load();
 
         LoadGameSetting();
+
+        getCachedCanvasSizeEvent?.Invoke();
     }
 
     private async void LoadGameSetting()

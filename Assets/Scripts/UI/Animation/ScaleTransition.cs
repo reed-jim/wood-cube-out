@@ -109,6 +109,8 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
             _isInTransition = true;
         }
 
+        canvasGroup.interactable = false;
+
         Tween.Scale(target, 1.1f, duration: 0.5f * duration).OnComplete(() =>
         {
             Tween.Scale(target, 0.5f, duration: 0.5f * duration).OnComplete(() =>

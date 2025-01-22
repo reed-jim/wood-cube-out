@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class RemoveAdPopup : BasePopup
 {
@@ -12,7 +13,16 @@ public class RemoveAdPopup : BasePopup
 
     #region EVENT
     public static event Action<string> buyIAPEvent;
+    public static event Action<string, string> showNotificationEvent;
     #endregion
+
+    protected override void MoreActionInAwake()
+    {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            priceText.text = $"6.99$";
+        }
+    }
 
     protected override void RegisterMoreEvent()
     {
@@ -30,7 +40,16 @@ public class RemoveAdPopup : BasePopup
 
     private void BuyRemoveAd()
     {
-        buyIAPEvent?.Invoke(iapData.ProductId);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            Hide();
+
+            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+        }
+        else
+        {
+            buyIAPEvent?.Invoke(iapData.ProductId);
+        }
     }
 
     private void OnResourceEarnPopupShow(bool isShow)

@@ -17,6 +17,7 @@ public class PinchGesture : MonoBehaviour
 
     private List<Tween> _tweens;
     private bool _isDisabled;
+    private float _zoomPercent;
 
     #region ACTION
     public static event Action<float> pinchGestureEvent;
@@ -62,26 +63,33 @@ public class PinchGesture : MonoBehaviour
 
     private void Update()
     {
-        // if (_isDisabled)
-        // {
-        //     return;
-        // }
+        if (_isDisabled)
+        {
+            return;
+        }
 
-        // if (Input.touchCount == 2)
-        // {
-        //     Touch touch1 = Input.GetTouch(0);
-        //     Touch touch2 = Input.GetTouch(1);
+        if (Input.touchCount == 2)
+        {
+            Touch touch1 = Input.GetTouch(0);
+            Touch touch2 = Input.GetTouch(1);
 
-        //     Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
-        //     Vector2 touch2PrevPos = touch2.position - touch2.deltaPosition;
+            Vector2 touch1PrevPos = touch1.position - touch1.deltaPosition;
+            Vector2 touch2PrevPos = touch2.position - touch2.deltaPosition;
 
-        //     float prevTouchDeltaMag = (touch1PrevPos - touch2PrevPos).magnitude;
-        //     float touchDeltaMag = (touch1.position - touch2.position).magnitude;
+            float prevTouchDeltaMag = (touch1PrevPos - touch2PrevPos).magnitude;
+            float touchDeltaMag = (touch1.position - touch2.position).magnitude;
 
-        //     float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
+            float deltaMagnitudeDiff = prevTouchDeltaMag - touchDeltaMag;
 
-        //     pinchGestureEvent?.Invoke(Mathf.Clamp(cameraToZoom.orthographicSize + deltaMagnitudeDiff * zoomSpeed, minZoom, maxZoom));
-        // }
+            float targetOrthographicSize = Mathf.Clamp(cameraToZoom.orthographicSize + deltaMagnitudeDiff * zoomSpeed, minZoom, maxZoom);
+
+            // pinchGestureEvent?.Invoke(targetOrthographicSize);
+
+            _zoomPercent = (maxZoom - targetOrthographicSize) / (maxZoom - minZoom);
+
+            zoomSlider.value = _zoomPercent;
+            // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
+        }
     }
 
     private void OnLevelStarted()

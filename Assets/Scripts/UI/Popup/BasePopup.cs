@@ -118,7 +118,7 @@ public class BasePopup : MonoBehaviour
         }
     }
 
-    protected void Show(Action onCompletedAction = null)
+    protected virtual void Show(Action onCompletedAction = null)
     {
         if (_isInTransition)
         {

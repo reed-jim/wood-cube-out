@@ -11,6 +11,9 @@ public class NotificationPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showNotificationEvent += ShowNotification;
+        IAPPackageUI.showNotificationEvent += ShowNotification;
+        IAPCoinItemUI.showNotificationEvent += ShowNotification;
+        RemoveAdPopup.showNotificationEvent += ShowNotification;
 
         okButton.onClick.AddListener(Hide);
     }
@@ -18,6 +21,9 @@ public class NotificationPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         BoosterUI.showNotificationEvent -= ShowNotification;
+        IAPPackageUI.showNotificationEvent -= ShowNotification;
+        IAPCoinItemUI.showNotificationEvent -= ShowNotification;
+        RemoveAdPopup.showNotificationEvent -= ShowNotification;
     }
 
     private void ShowNotification(string titleTranslation, string descriptionTranslation)

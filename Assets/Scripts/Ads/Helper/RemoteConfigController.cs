@@ -10,9 +10,56 @@ using System.Globalization;
 using Newtonsoft.Json;
 using UnityEngine.Events;
 using Firebase.Extensions;
+using System.Collections;
+using Firebase;
 
 public class RemoteConfigController : MonoBehaviour
 {
+    private static RemoteConfigController Instance;
+
+    FirebaseRemoteConfig _remoteConfig;
+
+    public Task FetchDataAsync()
+    {
+        System.Threading.Tasks.Task fetchTask =
+        Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+            TimeSpan.Zero);
+        return fetchTask.ContinueWithOnMainThread(FetchComplete);
+    }
+
+    private void FetchComplete(Task fetchTask)
+    {
+        if (!fetchTask.IsCompleted)
+        {
+            Debug.LogError("Retrieval hasn't finished.");
+            return;
+        }
+
+        _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
+
+        var info = _remoteConfig.Info;
+
+        if (info.LastFetchStatus != LastFetchStatus.Success)
+        {
+            Debug.LogError($"{nameof(FetchComplete)} was unsuccessful\n{nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
+            return;
+        }
+
+        // Fetch successful. Parameter values must be activated to use.
+        _remoteConfig.ActivateAsync()
+            .ContinueWithOnMainThread(
+            task =>
+            {
+
+            });
+    }
+
+
+
+
+
+
+
     #region Variables
     //private static bool LoadedConfig;
     //private static bool LoadingConfig;
@@ -47,6 +94,17 @@ public class RemoteConfigController : MonoBehaviour
 
     private void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(async task =>
         {
             var dependencyStatus = task.Result;
@@ -58,21 +116,7 @@ public class RemoteConfigController : MonoBehaviour
 
                 // Set a flag here to indicate whether Firebase is ready to use by your app.
 
-                FetchDataNow();
-
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, ""));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetStringConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, ""));
-
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0));
-
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.MINIMUM_TIME_SHOW_COLLAPSE, 0));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOL_DOWN_SHOW_COLLAP_BANNER, 0));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 0));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false));
-                Debug.Log("SAFERIO RC " + RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 0));
+                FetchDataAsync();
             }
             else
             {
@@ -83,75 +127,51 @@ public class RemoteConfigController : MonoBehaviour
         });
     }
 
-    // public Task FetchDataAsync()
+    // public async Task FetchDataAsync()
     // {
     //     DebugLog("Fetching data...");
     //     System.Threading.Tasks.Task fetchTask =
     //     Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
     //         TimeSpan.Zero);
-    //     return fetchTask.ContinueWithOnMainThread(FetchComplete);
+    //     fetchTask.ContinueWithOnMainThread(FetchComplete);
     // }
 
-    // private void FetchComplete(Task fetchTask)
+    // public static async Task FetchDataNow()
     // {
-    //     if (!fetchTask.IsCompleted)
-    //     {
-    //         Debug.LogError("Retrieval hasn't finished.");
-    //         return;
-    //     }
+    //     //Context.Waiting.ShowWaiting("Fetching data...");
+    //     DebugLog("Fetching data Now...");
+    //     // FetchAsync only fetches new data if the current data is older than the provided
+    //     // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
+    //     // By default the timespan is 12 hours, and for production apps, this is a good
+    //     // number.  For this example though, it's set to a timespan of zero, so that
+    //     // changes in the console will always show up immediately.
 
-    //     var remoteConfig = FirebaseRemoteConfig.DefaultInstance;
-    //     var info = remoteConfig.Info;
-    //     if (info.LastFetchStatus != LastFetchStatus.Success)
-    //     {
-    //         Debug.LogError($"{nameof(FetchComplete)} was unsuccessful\n{nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
-    //         return;
-    //     }
+    //     System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+    //         TimeSpan.Zero);
 
-    //     // Fetch successful. Parameter values must be activated to use.
-    //     remoteConfig.ActivateAsync()
-    //       .ContinueWithOnMainThread(
-    //         task =>
-    //         {
-    //             Debug.Log($"Remote data loaded and ready for use. Last fetch time {info.FetchTime}.");
-    //         });
+    //     fetchTask.ContinueWithOnMainThread(FetchComplete);
     // }
-
-    public static void FetchDataNow()
-    {
-        //Context.Waiting.ShowWaiting("Fetching data...");
-        DebugLog("Fetching data Now...");
-        // FetchAsync only fetches new data if the current data is older than the provided
-        // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
-        // By default the timespan is 12 hours, and for production apps, this is a good
-        // number.  For this example though, it's set to a timespan of zero, so that
-        // changes in the console will always show up immediately.
-
-        System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-            TimeSpan.FromSeconds(0));
-        fetchTask.ContinueWith(FetchComplete);
-    }
 
 
     public static string GetStringConfig(string key, string defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
         //if (!defaults.ContainsKey(key)) return defaultValue;+
-        return FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
+        return Instance._remoteConfig.GetValue(key).StringValue;
     }
 
 
     public static bool GetBoolConfig(string key, bool defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        return FirebaseRemoteConfig.DefaultInstance.GetValue(key).BooleanValue;
+        return Instance._remoteConfig.GetValue(key).BooleanValue;
     }
 
 
     public static float GetFloatConfig(string key, float defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        string val = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
+        string val = Instance._remoteConfig.GetValue(key).StringValue;
         try
         {
             return float.Parse(val, CultureInfo.InvariantCulture);
@@ -166,7 +186,7 @@ public class RemoteConfigController : MonoBehaviour
     public static int GetIntConfig(string key, int defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        string val = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
+        string val = Instance._remoteConfig.GetValue(key).StringValue;
         try
         {
             return int.Parse(val);
@@ -183,7 +203,7 @@ public class RemoteConfigController : MonoBehaviour
 
 
         if (!firebaseRemoteKeys.Contains(key) ||
-            string.IsNullOrEmpty(input = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue))
+            string.IsNullOrEmpty(input = Instance._remoteConfig.GetValue(key).StringValue))
         {
             result = default;
             return false;
@@ -305,52 +325,53 @@ public class RemoteConfigController : MonoBehaviour
         //MzU.ConfigOnlineServer(GetIntConfig("Photon_Server", 2));
     }
 
-    private static void FetchComplete(Task fetchTask)
-    {
-        if (fetchTask.IsCanceled)
-        {
-            DebugLog("Fetch canceled.");
-            isFetchDone = true;
-        }
-        else if (fetchTask.IsFaulted)
-        {
-            DebugLog("Fetch encountered an error.");
-            isFetchDone = true;
-        }
-        else if (fetchTask.IsCompleted)
-        {
-            DebugLog("Fetch completed successfully!");
-        }
-        //Context.Waiting.HideWaiting();
-        var info = FirebaseRemoteConfig.DefaultInstance.Info;
-        switch (info.LastFetchStatus)
-        {
-            case LastFetchStatus.Success:
-                FetchAndActivateAsync(fetchTask, info);
-                break;
+    // private static void FetchComplete(Task fetchTask)
+    // {
+    //     if (fetchTask.IsCanceled)
+    //     {
+    //         DebugLog("Fetch canceled.");
+    //         isFetchDone = true;
+    //     }
+    //     else if (fetchTask.IsFaulted)
+    //     {
+    //         DebugLog("Fetch encountered an error. " + fetchTask.Exception.HResult + "/" + fetchTask.Exception.Data.Count);
+    //         isFetchDone = true;
+    //     }
+    //     else if (fetchTask.IsCompleted)
+    //     {
+    //         DebugLog("Fetch completed successfully!");
+    //     }
+    //     //Context.Waiting.HideWaiting();
+    //     var info = FirebaseRemoteConfig.DefaultInstance.Info;
 
-            case LastFetchStatus.Failure:
-                switch (info.LastFetchFailureReason)
-                {
-                    case FetchFailureReason.Error:
-                        DebugLog("Fetch failed for unknown reason");
-                        break;
+    //     switch (info.LastFetchStatus)
+    //     {
+    //         case LastFetchStatus.Success:
+    //             FetchAndActivateAsync(fetchTask, info);
+    //             break;
 
-                    case FetchFailureReason.Throttled:
-                        DebugLog("Fetch throttled until " + info.ThrottledEndTime);
-                        break;
-                }
-                isFetchDone = true;
-                break;
+    //         case LastFetchStatus.Failure:
+    //             switch (info.LastFetchFailureReason)
+    //             {
+    //                 case FetchFailureReason.Error:
+    //                     DebugLog("Fetch failed for unknown reason");
+    //                     break;
 
-            case LastFetchStatus.Pending:
-                DebugLog("Latest Fetch call still pending.");
-                isFetchDone = true;
-                break;
-        }
+    //                 case FetchFailureReason.Throttled:
+    //                     DebugLog("Fetch throttled until " + info.ThrottledEndTime);
+    //                     break;
+    //             }
+    //             isFetchDone = true;
+    //             break;
 
-        //AdmobAds.Instance.Init();
-    }
+    //         case LastFetchStatus.Pending:
+    //             DebugLog("Latest Fetch call still pending.");
+    //             isFetchDone = true;
+    //             break;
+    //     }
+
+    //     //AdmobAds.Instance.Init();
+    // }
 
     public static async void FetchAndActivateAsync(Task fetchTask, ConfigInfo info)
     {
@@ -367,6 +388,7 @@ public class RemoteConfigController : MonoBehaviour
     public static void ReloadFirebaseKeys()
     {
         firebaseRemoteKeys.Clear();
+
         foreach (var key in FirebaseRemoteConfig.DefaultInstance.Keys)
         {
             firebaseRemoteKeys.Add(key);
