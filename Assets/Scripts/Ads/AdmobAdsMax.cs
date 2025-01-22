@@ -100,21 +100,21 @@ public class AdmobAdsMax : MonoBehaviour
 
         _isInited = true;
 
-        //#if !UNITY_EDITOR
-        Debug.Log("===== Init Admob ====");
-        MobileAds.Initialize((initStatus) =>
-        {
-            Debug.Log("===== Init Admob Done ====");
-            AppOpenAdManager.Instance.LoadAd(() =>
-            {
-                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-            });
-            InitBannerAdmob();
-            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-            isAdmobInitDone = true;
-            //nativeAdsManager.Instance.OnInitAdmobDone();
-            //LoadRewardedInterstitialAd();
-        });
+        // //#if !UNITY_EDITOR
+        // Debug.Log("===== Init Admob ====");
+        // MobileAds.Initialize((initStatus) =>
+        // {
+        //     Debug.Log("===== Init Admob Done ====");
+        //     AppOpenAdManager.Instance.LoadAd(() =>
+        //     {
+        //         //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+        //     });
+        //     InitBannerAdmob();
+        //     AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+        //     isAdmobInitDone = true;
+        //     //nativeAdsManager.Instance.OnInitAdmobDone();
+        //     //LoadRewardedInterstitialAd();
+        // });
         //#endif
     }
 
@@ -383,13 +383,21 @@ public class AdmobAdsMax : MonoBehaviour
             FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
             //nếu dùng Appsflyer
-            var dic = new Dictionary<string, string>
-            {
-                { "ad_format", "collapsible_banner" }
-            };
+            Dictionary<string, string> additionalParams = new Dictionary<string, string>();
+            additionalParams.Add(AdRevenueScheme.COUNTRY, "USA");
+            additionalParams.Add(AdRevenueScheme.AD_TYPE, "banner");
 
-            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-                value, "USD", dic);
+            var logRevenue = new AFAdRevenueData("Admob", MediationNetwork.GoogleAdMob, "USD", value);
+
+            AppsFlyer.logAdRevenue(logRevenue, additionalParams);
+
+            // var dic = new Dictionary<string, string>
+            // {
+            //     { "ad_format", "collapsible_banner" }
+            // };
+
+            // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //     value, "USD", dic);
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -1049,14 +1057,23 @@ public class AdmobAdsMax : MonoBehaviour
         FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
         //nếu dùng Appsflyer                
-        var dic = new Dictionary<string, string>
-        {
-            { "ad_unit_name", adInfo.AdUnitIdentifier },
-            { "ad_format", adInfo.AdFormat }
-        };
+        Dictionary<string, string> additionalParams = new Dictionary<string, string>();
+        additionalParams.Add(AdRevenueScheme.COUNTRY, "USA");
+        additionalParams.Add(AdRevenueScheme.AD_UNIT, adInfo.AdUnitIdentifier);
+        additionalParams.Add(AdRevenueScheme.AD_TYPE, adInfo.AdFormat);
+        // additionalParams.Add(AdRevenueScheme.PLACEMENT, "place");
+        var logRevenue = new AFAdRevenueData(adInfo.NetworkName, MediationNetwork.ApplovinMax, "USD", adInfo.Revenue);
+        AppsFlyer.logAdRevenue(logRevenue, additionalParams);
 
-        AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-            adInfo.Revenue, "USD", dic);
+        // Old SDK version
+        // var dic = new Dictionary<string, string>
+        // {
+        //     { "ad_unit_name", adInfo.AdUnitIdentifier },
+        //     { "ad_format", adInfo.AdFormat }
+        // };
+
+        // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
+        //     adInfo.Revenue, "USD", dic);
     }
     #endregion
 
