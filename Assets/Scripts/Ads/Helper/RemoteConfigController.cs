@@ -12,33 +12,32 @@ using UnityEngine.Events;
 using Firebase.Extensions;
 using System.Collections;
 using Firebase;
+using UnityEngine.UI;
 
 public class RemoteConfigController : MonoBehaviour
 {
     private static RemoteConfigController Instance;
 
+    [SerializeField] private Button fetchButton;
+
     FirebaseRemoteConfig _remoteConfig;
 
-    public Task FetchDataAsync()
+    private Task FetchAsync()
     {
-        System.Threading.Tasks.Task fetchTask =
-        Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-            TimeSpan.Zero);
-        return fetchTask.ContinueWithOnMainThread(FetchComplete);
+        var task = FirebaseRemoteConfig.DefaultInstance.FetchAsync(System.TimeSpan.Zero);
+        return task.ContinueWithOnMainThread(FetchComplete);
     }
 
-    private void FetchComplete(Task fetchTask)
+    private void FetchComplete(Task task)
     {
-        if (!fetchTask.IsCompleted)
+        if (!task.IsCompleted)
         {
             Debug.LogError("Retrieval hasn't finished.");
             return;
         }
 
         _remoteConfig = FirebaseRemoteConfig.DefaultInstance;
-
         var info = _remoteConfig.Info;
-
         if (info.LastFetchStatus != LastFetchStatus.Success)
         {
             Debug.LogError($"{nameof(FetchComplete)} was unsuccessful\n{nameof(info.LastFetchStatus)}: {info.LastFetchStatus}");
@@ -47,10 +46,9 @@ public class RemoteConfigController : MonoBehaviour
 
         // Fetch successful. Parameter values must be activated to use.
         _remoteConfig.ActivateAsync()
-            .ContinueWithOnMainThread(
-            task =>
+            .ContinueWithOnMainThread(task =>
             {
-
+                Debug.Log("SAFERIO " + _remoteConfig.Keys.Count());
             });
     }
 
@@ -116,7 +114,7 @@ public class RemoteConfigController : MonoBehaviour
 
                 // Set a flag here to indicate whether Firebase is ready to use by your app.
 
-                FetchDataAsync();
+                FetchAsync();
             }
             else
             {

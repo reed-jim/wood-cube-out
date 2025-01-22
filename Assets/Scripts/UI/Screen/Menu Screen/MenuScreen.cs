@@ -53,7 +53,7 @@ public class MenuScreen : MonoBehaviour
         {
             StartGame();
 
-            UserData.IsFirstTimeOpenApp = false;
+            // UserData.IsFirstTimeOpenApp = false;
         }
     }
 

@@ -20,7 +20,9 @@ public class SimpleSceneTransition : MonoBehaviour
 
         if (!DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            gameObject.SetActive(false);
+            blackBackground.gameObject.SetActive(false);
+
+            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
     }
 
