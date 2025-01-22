@@ -81,7 +81,6 @@ public static class DataUtility
 
     public static async Task SaveAsync<T>(string key, T data)
     {
-        Debug.Log(key);
         Save(key, data);
 
         // await SaveAsync(GameConstants.SAVE_FILE_NAME, key, data);

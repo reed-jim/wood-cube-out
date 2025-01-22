@@ -44,6 +44,11 @@ public class ScrewSelectionInput : MonoBehaviour
 
     void Update()
     {
+        if (Input.touchCount == 2)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             twoTouchPoints.Add(Input.mousePosition);

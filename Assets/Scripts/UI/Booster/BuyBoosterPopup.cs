@@ -88,7 +88,7 @@ public class BuyBoosterPopup : BasePopup
         {
             if (_boosterType == BoosterType.BreakObject)
             {
-                userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
 
                 updateBoosterQuantityEvent?.Invoke(boosterIndex);
 
@@ -96,11 +96,7 @@ public class BuyBoosterPopup : BasePopup
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
-                userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
-
-                Debug.Log(userResourcesObserver.UserResources.CoinQuantity + "/" + boosterDataObserver.BoosterCosts[boosterIndex]);
-
-                userResourcesObserver.Save();
+                userResourcesObserver.ChangeCoin(boosterDataObserver.BoosterCosts[boosterIndex]);
 
                 Hide(onCompletedAction: () =>
                 {
@@ -111,6 +107,9 @@ public class BuyBoosterPopup : BasePopup
             }
             else
             {
+                // userResourcesObserver.ChangeCoin(boosterDataObserver.BoosterCosts[boosterIndex]);
+                // userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+
                 userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
                 userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
             }

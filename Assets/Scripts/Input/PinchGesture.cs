@@ -13,11 +13,13 @@ public class PinchGesture : MonoBehaviour
     public float zoomSpeed = 0.1f;
     public float minZoom = 10f;
     public float maxZoom = 100f;
+    public float changeThreshold;
     public float delayToEnableSwipeGesture;
 
     private List<Tween> _tweens;
     private bool _isDisabled;
     private float _zoomPercent;
+    private float _lastZoomPercent;
 
     #region ACTION
     public static event Action<float> pinchGestureEvent;
@@ -54,6 +56,11 @@ public class PinchGesture : MonoBehaviour
             return;
         }
 
+        if (Mathf.Abs(value - _lastZoomPercent) < changeThreshold)
+        {
+            return;
+        }
+
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
         enableSwipingEvent?.Invoke(false);
@@ -64,6 +71,8 @@ public class PinchGesture : MonoBehaviour
         {
             enableSwipingEvent?.Invoke(true);
         }));
+
+        _lastZoomPercent = value;
     }
 
     private void Update()
