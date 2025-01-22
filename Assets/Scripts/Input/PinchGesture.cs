@@ -49,6 +49,11 @@ public class PinchGesture : MonoBehaviour
 
     private void OnZoomSliderValueChanged(float value)
     {
+        if (_isDisabled)
+        {
+            return;
+        }
+
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
         enableSwipingEvent?.Invoke(false);

@@ -27,6 +27,7 @@ public class MenuScreen : MonoBehaviour
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<bool> showMenuBlackScreenEvent;
 
     private void Awake()
     {
@@ -48,12 +49,19 @@ public class MenuScreen : MonoBehaviour
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
         }
+    }
+
+    private void Start()
+    {
+        bool isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
+
+        showMenuBlackScreenEvent?.Invoke(isFirstTimeOpenApp);
 
         if (UserData.IsFirstTimeOpenApp)
         {
             StartGame();
 
-            // UserData.IsFirstTimeOpenApp = false;
+            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
     }
 

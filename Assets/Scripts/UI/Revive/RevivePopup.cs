@@ -85,6 +85,8 @@ public class RevivePopup : BasePopup
         //     return;
         // }
 
+        userResourcesObserver.Load();
+
         reviveByDiamondButton.interactable = false;
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())

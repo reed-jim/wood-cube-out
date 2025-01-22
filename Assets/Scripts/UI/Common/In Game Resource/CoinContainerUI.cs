@@ -40,6 +40,8 @@ public class CoinContainerUI : MonoBehaviour
 
         _tweens = new List<Tween>();
 
+        userResourcesObserver.Load();
+
         coinText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
     }
 

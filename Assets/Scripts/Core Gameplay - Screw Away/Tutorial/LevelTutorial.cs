@@ -51,15 +51,18 @@ public class LevelTutorial : MonoBehaviour
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
 
-        enableSwipingEvent?.Invoke(false);
-        enablePinchingEvent?.Invoke(false);
-
         rotateIcon.gameObject.SetActive(false);
         scaleIcons[0].gameObject.SetActive(false);
         scaleIcons[1].gameObject.SetActive(false);
         scaleIconHand.gameObject.SetActive(false);
 
         pinchHand.gameObject.SetActive(false);
+    }
+
+    private void Start()
+    {
+        enableSwipingEvent?.Invoke(false);
+        enablePinchingEvent?.Invoke(false);
     }
 
     void Update()
@@ -281,7 +284,7 @@ public class LevelTutorial : MonoBehaviour
 
         float timePassed = 0;
 
-
+        localizedTutorialText.TranslationName = translationNames[2];
 
         pinchHand.gameObject.SetActive(true);
 

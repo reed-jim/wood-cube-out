@@ -76,7 +76,34 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void BuyProduct(string productId)
     {
-        controller.InitiatePurchase(productId);
+        // controller.InitiatePurchase(productId);
+
+        foreach (var productData in IAPDataContainer.ProductsData)
+        {
+            if (productData.ProductId == productId)
+            {
+                // collectCoinEvent?.Invoke(productData.CoinQuantity);
+
+                userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
+                userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
+                userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+
+                if (productData.IsRemoveAd)
+                {
+                    UserData.IsRemoveAds = true;
+                }
+
+                int[] boosterQuantites = new int[3] {
+                        productData.AddHoleBoosterQuantity,
+                        productData.BreakObjectBoosterQuantity,
+                        productData.ClearHolesBoosterQuantity
+                    };
+
+                showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+
+                break;
+            }
+        }
     }
 
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)

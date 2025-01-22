@@ -66,19 +66,6 @@ public class BuyBoosterPopup : BasePopup
         title.TranslationName = leanTranslationTitle[(int)_boosterType];
         boosterDescription.TranslationName = leanTranslationNames[(int)_boosterType];
 
-        // if (userResourcesObserver.UserResources.DiamondQuantity == 0)
-        // {
-        //     buyWithDiamondButton.interactable = false;
-
-        //     buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 0.5f);
-        // }
-        // else
-        // {
-        //     buyWithDiamondButton.interactable = true;
-
-        //     buyWithDiamondButtonForeground.color = ColorUtil.WithAlpha(buyWithDiamondButtonForeground.color, 1f);
-        // }
-
         getWithAdsButton.onClick.RemoveAllListeners();
 
         if (boosterType == BoosterType.UnlockScrewBox)
@@ -93,6 +80,8 @@ public class BuyBoosterPopup : BasePopup
 
     private void GetWithCoin()
     {
+        userResourcesObserver.Load();
+
         int boosterIndex = (int)_boosterType;
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
@@ -109,10 +98,16 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
 
+                Debug.Log(userResourcesObserver.UserResources.CoinQuantity + "/" + boosterDataObserver.BoosterCosts[boosterIndex]);
+
+                userResourcesObserver.Save();
+
                 Hide(onCompletedAction: () =>
                 {
                     unlockScrewBoxEvent?.Invoke();
                 });
+
+                return;
             }
             else
             {
@@ -153,7 +148,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
-        userResourcesObserver.UserResources.BoosterQuantities[(int)_boosterType]++;
+        userResourcesObserver.ChangeBoosterQuantity((int)_boosterType, 1);
 
         Hide(onCompletedAction: () =>
         {
@@ -178,9 +173,7 @@ public class BuyBoosterPopup : BasePopup
     {
         if (_isBoughtBreakObjectBoosterByCoin)
         {
-            userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[(int)_boosterType];
-
-            userResourcesObserver.Save();
+            userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[(int)_boosterType]);
 
             _isBoughtBreakObjectBoosterByCoin = false;
         }

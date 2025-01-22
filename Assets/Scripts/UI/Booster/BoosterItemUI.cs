@@ -42,10 +42,7 @@ public class BoosterItemUI : MonoBehaviour
 
     private async void Setup()
     {
-        while (userResourcesObserver.UserResources.BoosterQuantities.Length == 0)
-        {
-            await Task.Delay(200);
-        }
+        userResourcesObserver.Load();
 
         int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
@@ -72,6 +69,8 @@ public class BoosterItemUI : MonoBehaviour
     {
         if (boosterIndex == this.boosterIndex)
         {
+            userResourcesObserver.Load();
+
             int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
             if (quantity > 0)
@@ -93,6 +92,8 @@ public class BoosterItemUI : MonoBehaviour
     {
         if (!isShow)
         {
+            userResourcesObserver.Load();
+
             int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
             if (quantity > 0)
