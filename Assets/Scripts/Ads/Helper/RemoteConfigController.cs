@@ -48,7 +48,7 @@ public class RemoteConfigController : MonoBehaviour
         _remoteConfig.ActivateAsync()
             .ContinueWithOnMainThread(task =>
             {
-                Debug.Log("SAFERIO " + _remoteConfig.Keys.Count());
+                
             });
     }
 

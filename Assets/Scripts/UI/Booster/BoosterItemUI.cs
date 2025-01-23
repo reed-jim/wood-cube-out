@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
@@ -35,7 +36,7 @@ public class BoosterItemUI : MonoBehaviour
 
     void OnDestroy()
     {
-        BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
+        BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
     }

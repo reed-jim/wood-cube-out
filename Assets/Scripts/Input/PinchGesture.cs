@@ -56,11 +56,6 @@ public class PinchGesture : MonoBehaviour
             return;
         }
 
-        if (Mathf.Abs(value - _lastZoomPercent) < changeThreshold)
-        {
-            return;
-        }
-
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
         enableSwipingEvent?.Invoke(false);
@@ -100,6 +95,11 @@ public class PinchGesture : MonoBehaviour
             // pinchGestureEvent?.Invoke(targetOrthographicSize);
 
             _zoomPercent = (maxZoom - targetOrthographicSize) / (maxZoom - minZoom);
+
+            if (Mathf.Abs(_zoomPercent - _lastZoomPercent) < changeThreshold)
+            {
+                return;
+            }
 
             zoomSlider.value = _zoomPercent;
             // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);

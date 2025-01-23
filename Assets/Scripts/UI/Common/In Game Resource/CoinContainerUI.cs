@@ -45,6 +45,13 @@ public class CoinContainerUI : MonoBehaviour
         coinText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
     }
 
+    void OnEnable()
+    {
+        userResourcesObserver.Load();
+
+        UpdateCoinText(userResourcesObserver.UserResources.CoinQuantity);
+    }
+
     private void OnDestroy()
     {
         // SaferioIAPManager.iapProductPurchasedCompletedEvent -= OnCoinPurchased;

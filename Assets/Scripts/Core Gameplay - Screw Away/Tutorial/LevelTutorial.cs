@@ -12,6 +12,7 @@ public class LevelTutorial : MonoBehaviour
 {
     [SerializeField] private Transform tutorialHand;
     [SerializeField] private SpriteRenderer tutorialHandSprite;
+    [SerializeField] private ScrewOutline screwOutline;
     [SerializeField] private Transform screw;
     [SerializeField] private Transform spline;
     [SerializeField] private SplinePositioner tutorialHandSplinePositioner;
@@ -21,7 +22,8 @@ public class LevelTutorial : MonoBehaviour
     [SerializeField] private TMP_Text tutorialText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedTutorialText;
 
-    [SerializeField] private Image rotateIcon;
+    [SerializeField] private SpriteRenderer rotateIconWorld;
+    // [SerializeField] private Image rotateIcon;
     [SerializeField] private Image[] scaleIcons;
     [SerializeField] private SpriteRenderer scaleIconHand;
 
@@ -33,6 +35,8 @@ public class LevelTutorial : MonoBehaviour
     private int _step;
     private Vector2 _screenSizeWorld;
     private bool _isConstraintHand;
+    private Vector3 _initialRotateIconPosition;
+    private Vector3 _initialRotateIconRotation;
     #endregion
 
     #region EVENT
@@ -51,12 +55,15 @@ public class LevelTutorial : MonoBehaviour
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
 
-        rotateIcon.gameObject.SetActive(false);
+        rotateIconWorld.gameObject.SetActive(false);
         scaleIcons[0].gameObject.SetActive(false);
         scaleIcons[1].gameObject.SetActive(false);
         scaleIconHand.gameObject.SetActive(false);
 
         pinchHand.gameObject.SetActive(false);
+
+        _initialRotateIconPosition = rotateIconWorld.transform.position;
+        _initialRotateIconRotation = rotateIconWorld.transform.eulerAngles;
     }
 
     private void Start()
@@ -69,6 +76,9 @@ public class LevelTutorial : MonoBehaviour
     {
         tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
         spline.rotation = Quaternion.Euler(new Vector3(30, 0, 0));
+
+        rotateIconWorld.transform.position = _initialRotateIconPosition;
+        rotateIconWorld.transform.rotation = Quaternion.Euler(_initialRotateIconRotation);
 
         if (_isConstraintHand)
         {
@@ -88,24 +98,45 @@ public class LevelTutorial : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
-        tutorialHand.position = screw.position - 5f * screw.right;
-
-        float lerpDelta = 0.08f;
-        float lerpProgress = 0;
         Vector3 targetPosition;
 
+        targetPosition = screw.position + 0.8f * screw.right;
+        targetPosition.y += 0.8f;
+
+        tutorialHand.position = targetPosition;
+
+        float lerpDelta = 0.05f;
+        float lerpProgress = 0;
+
         int phase = 0;
+
+        bool isScrewOulined = false;
 
         while (_step == 0)
         {
             if (phase % 2 == 0)
             {
-                targetPosition = screw.position - 0.5f * screw.right;
+                if (!isScrewOulined)
+                {
+                    screwOutline.HideOutline();
+
+                    isScrewOulined = true;
+                }
+
+                targetPosition = screw.position + 0.8f * screw.right;
+                targetPosition.y += 1f;
             }
             else
             {
-                targetPosition = screw.position - 4 * screw.right;
-                targetPosition.y -= 4;
+                if (isScrewOulined)
+                {
+                    screwOutline.ShowOutline();
+
+                    isScrewOulined = false;
+                }
+
+                targetPosition = screw.position - 3 * screw.right;
+                targetPosition.y -= 3;
             }
 
             targetPosition.y += 0.08f * _screenSizeWorld.y;
@@ -124,6 +155,8 @@ public class LevelTutorial : MonoBehaviour
             yield return waitForSeconds;
         }
 
+        screwOutline.HideOutline();
+
         StartCoroutine(TutorialStepTwo());
     }
 
@@ -138,10 +171,10 @@ public class LevelTutorial : MonoBehaviour
 
         localizedTutorialText.TranslationName = translationNames[1];
 
-        rotateIcon.gameObject.SetActive(true);
-        rotateIcon.color = ColorUtil.WithAlpha(rotateIcon.color, 0);
+        rotateIconWorld.gameObject.SetActive(true);
+        rotateIconWorld.color = ColorUtil.WithAlpha(rotateIconWorld.color, 0);
 
-        Tween.Alpha(rotateIcon, 1, duration: 0.3f);
+        Tween.Alpha(rotateIconWorld, 1, duration: 0.3f);
 
         tutorialHandSplinePositioner.enabled = true;
         // tutorialHandSplineFollower.follow = true;
@@ -154,14 +187,12 @@ public class LevelTutorial : MonoBehaviour
                 percent = Mathf.Lerp(percent, 1, lerpDelta);
                 tutorialHandSplinePositioner.SetPercent(percent);
                 tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
-                // tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(-0.4f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
             }
             else
             {
                 percent = Mathf.Lerp(percent, 0, lerpDelta);
                 tutorialHandSplinePositioner.SetPercent(percent);
                 tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
-                // tutorialHand.position = Vector3.Lerp(tutorialHand.position, new Vector3(0.4f * _screenSizeWorld.x, tutorialHand.position.y, -5), lerpDelta);
             }
 
             lerpProgress += lerpDelta;
@@ -186,96 +217,6 @@ public class LevelTutorial : MonoBehaviour
         StartCoroutine(TutorialStepThree());
     }
 
-    // private IEnumerator TutorialStepThree()
-    // {
-    //     float TIME_OUT = 5;
-
-    //     WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
-
-    //     float lerpDelta = 0.25f;
-    //     float lerpProgress = 0;
-
-    //     int phase = 0;
-    //     float timePassed = 0;
-
-    //     localizedTutorialText.TranslationName = translationNames[2];
-
-    //     // for (int i = 0; i < scaleIcons.Length; i++)
-    //     // {
-    //     //     scaleIcons[i].gameObject.SetActive(true);
-    //     //     scaleIcons[i].color = ColorUtil.WithAlpha(scaleIcons[i].color, 0);
-    //     // }
-
-    //     // scaleIconHand.gameObject.SetActive(true);
-    //     // scaleIconHand.color = ColorUtil.WithAlpha(scaleIconHand.color, 0);
-
-    //     // Tween.Alpha(rotateIcon, 0, duration: 0.3f);
-
-    //     // for (int i = 0; i < scaleIcons.Length; i++)
-    //     // {
-    //     //     Tween.Alpha(scaleIcons[i], 1, duration: 0.3f);
-    //     // }
-
-    //     // Tween.Alpha(scaleIconHand, 1, duration: 0.3f);
-
-    //     Vector3 targetPosition;
-
-    //     Vector2 screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
-
-    //     enableSwipingEvent?.Invoke(false);
-
-    //     while (_step == 2 && timePassed < TIME_OUT)
-    //     {
-    //         if (phase % 2 == 0)
-    //         {
-    //             targetPosition = new Vector3(-0.32f * screenSizeWorld.x, 0.1f * screenSizeWorld.y, tutorialHand.transform.position.z);
-    //         }
-    //         else
-    //         {
-    //             targetPosition = new Vector3(-0.32f * screenSizeWorld.x, 0.35f * screenSizeWorld.y, tutorialHand.transform.position.z);
-    //         }
-
-    //         // if (phase == 0)
-    //         // {
-    //         //     tutorialHand.position = Vector3.Lerp(tutorialHand.position, pinchTutorialHandPosition, lerpDelta);
-
-    //         //     lerpProgress += lerpDelta;
-
-    //         //     if (lerpProgress >= 1)
-    //         //     {
-    //         //         enablePinchingEvent?.Invoke(true);
-
-    //         //         _isConstraintHand = true;
-    //         //         phase++;
-    //         //     }
-
-    //         tutorialHand.position = Vector3.Lerp(tutorialHand.position, targetPosition, lerpDelta);
-
-    //         lerpProgress += lerpDelta;
-
-    //         if (lerpProgress >= 1)
-    //         {
-    //             phase++;
-    //             lerpProgress = 0;
-
-    //             if (phase % 2 == 0)
-    //             {
-    //                 lerpDelta = 0.08f;
-    //             }
-    //             else
-    //             {
-    //                 lerpDelta = 0.04f;
-    //             }
-    //         }
-
-    //         timePassed += Time.deltaTime;
-
-    //         yield return waitForSeconds;
-    //     }
-
-    //     EndTutorial();
-    // }
-
     private IEnumerator TutorialStepThree()
     {
         float TIME_OUT = 5;
@@ -298,7 +239,7 @@ public class LevelTutorial : MonoBehaviour
             scaleIcons[i].color = ColorUtil.WithAlpha(scaleIcons[i].color, 0);
         }
 
-        Tween.Alpha(rotateIcon, 0, duration: 0.3f);
+        Tween.Alpha(rotateIconWorld, 0, duration: 0.3f);
         Tween.Alpha(tutorialHandSprite, 0, duration: 0.3f);
 
         for (int i = 0; i < scaleIcons.Length; i++)
@@ -312,8 +253,42 @@ public class LevelTutorial : MonoBehaviour
             enablePinchingEvent?.Invoke(true);
         });
 
+        int phase = 0;
+
+        RectTransform[] scaleIconRTs = new RectTransform[2];
+
+        scaleIconRTs[0] = scaleIcons[0].GetComponent<RectTransform>();
+        scaleIconRTs[1] = scaleIcons[1].GetComponent<RectTransform>();
+
+        Vector3[] initialScaleIconPosition = new Vector3[2];
+
+        initialScaleIconPosition[0] = scaleIconRTs[0].localPosition;
+        initialScaleIconPosition[1] = scaleIconRTs[1].localPosition;
+
+        float lerpProgress = 0;
+        float lerpDelta = 0.15f;
+
         while (_step == 2 && timePassed < TIME_OUT)
         {
+            if (phase % 2 == 0)
+            {
+                scaleIconRTs[0].localPosition = Vector3.Lerp(scaleIconRTs[0].localPosition, initialScaleIconPosition[0] + 60 * Vector3.one, lerpDelta);
+                scaleIconRTs[1].localPosition = Vector3.Lerp(scaleIconRTs[1].localPosition, initialScaleIconPosition[1] - 60 * Vector3.one, lerpDelta);
+            }
+            else
+            {
+                scaleIconRTs[0].localPosition = Vector3.Lerp(scaleIconRTs[0].localPosition, initialScaleIconPosition[0] - 60 * Vector3.one, lerpDelta);
+                scaleIconRTs[1].localPosition = Vector3.Lerp(scaleIconRTs[1].localPosition, initialScaleIconPosition[1] + 60 * Vector3.one, lerpDelta);
+            }
+
+            lerpProgress += lerpDelta;
+
+            if (lerpProgress >= 1)
+            {
+                phase++;
+                lerpProgress = 0;
+            }
+
             yield return waitForSeconds;
         }
 

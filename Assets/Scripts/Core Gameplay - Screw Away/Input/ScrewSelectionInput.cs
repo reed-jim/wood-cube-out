@@ -77,9 +77,12 @@ public class ScrewSelectionInput : MonoBehaviour
         {
             twoTouchPoints.Add(Input.mousePosition);
 
-            if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
+            if (twoTouchPoints.Count == 2)
             {
-                SelectScrew();
+                if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
+                {
+                    SelectScrew();
+                }
             }
 
             mouseUpEvent?.Invoke();
