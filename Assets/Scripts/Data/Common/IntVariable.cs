@@ -15,16 +15,21 @@ public class IntVariable : ScriptableObject
         {
             this.value = value;
 
-            if (isSave)
-            {
-                Save(saveKey);
-            }
+            // if (isSave)
+            // {
+            //     Save(saveKey);
+            // }
         }
     }
 
     public void Save(string key)
     {
         DataUtility.SaveAsync(key, value);
+    }
+
+    public void Save()
+    {
+        DataUtility.SaveAsync(saveKey, value);
     }
 
     public async Task SaveAsync()

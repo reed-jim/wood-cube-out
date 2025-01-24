@@ -67,6 +67,8 @@ public class WinPopup : BasePopup
         }
 
         currentLevel.Value++;
+
+        currentLevel.Save();
     }
 
     public void SetLevelCompletedText()
@@ -132,7 +134,7 @@ public class WinPopup : BasePopup
 
     private async void TrackLevelWin()
     {
-        bool isFirstWinLevel = await DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
+        bool isFirstWinLevel = DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
 
         if (isFirstWinLevel)
         {
