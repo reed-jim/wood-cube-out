@@ -107,7 +107,7 @@ public class LevelTutorial : MonoBehaviour
 
         tutorialHand.position = targetPosition;
 
-        float lerpDelta = 0.08f;
+        float lerpDelta = 0.05f;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -166,7 +166,7 @@ public class LevelTutorial : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
-        float lerpDelta = 1f / 3;
+        float lerpDelta = 1f / 30;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -207,7 +207,7 @@ public class LevelTutorial : MonoBehaviour
             {
                 phase++;
                 lerpProgress = 0;
-                lerpDelta = 0.03f;
+                lerpDelta = 0.02f;
             }
 
             yield return waitForSeconds;
@@ -269,7 +269,7 @@ public class LevelTutorial : MonoBehaviour
         initialScaleIconPosition[1] = scaleIconRTs[1].localPosition;
 
         float lerpProgress = 0;
-        float lerpDelta = 0.15f;
+        float lerpDelta = 0.12f;
 
         while (_step == 2 && timePassed < TIME_OUT)
         {

@@ -493,21 +493,25 @@ public class ScrewManager : MonoBehaviour
     {
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsOutsideWithNoScrewBox)
+            BaseScrew screw = _screws[i];
+
+            if (screw.IsOutsideWithNoScrewBox)
             {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(_screws[i].Faction, isIncludeScrewPorts: false);
+                GameFaction faction = screw.Faction;
+
+                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
 
                 if (screwBoxSlot != null)
                 {
-                    screwBoxSlot.Fill(_screws[i]);
+                    screwBoxSlot.Fill(screw);
 
-                    _screws[i].ScrewServiceLocator.screwMeshRenderer.enabled = true;
+                    screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
-                    _screws[i].IsInteractable = true;
+                    screw.IsInteractable = true;
 
-                    _screws[i].Loose(_screws[i].ScrewId, _screws[i].Faction, screwBoxSlot);
+                    screw.Loose(screw.ScrewId, faction, screwBoxSlot);
 
-                    _screws[i].IsOutsideWithNoScrewBox = false;
+                    screw.IsOutsideWithNoScrewBox = false;
                 }
             }
         }
