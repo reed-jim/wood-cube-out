@@ -51,7 +51,7 @@ public static class DataUtility
         }
         catch (Exception e)
         {
-            Debug.Log("SAFERIO " + e.Message);
+            // Debug.Log("SAFERIO " + e.Message);
         }
     }
 
@@ -136,7 +136,7 @@ public static class DataUtility
 
                 break;
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 Debug.Log("SAFERIO " + e.Message);
 

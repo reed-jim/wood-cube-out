@@ -166,7 +166,7 @@ public class LevelTutorial : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
-        float lerpDelta = 0.03f;
+        float lerpDelta = 1f / 3;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -183,6 +183,8 @@ public class LevelTutorial : MonoBehaviour
         tutorialHandSplinePositioner.enabled = true;
         // tutorialHandSplineFollower.follow = true;
         float percent = 0;
+
+        enableSwipingEvent?.Invoke(true);
 
         while (_step == 1)
         {
@@ -203,14 +205,9 @@ public class LevelTutorial : MonoBehaviour
 
             if (lerpProgress >= 1)
             {
-                if (phase == 0)
-                {
-                    enableSwipingEvent?.Invoke(true);
-                }
-
                 phase++;
                 lerpProgress = 0;
-                // lerpDelta = 0.03f;
+                lerpDelta = 0.03f;
             }
 
             yield return waitForSeconds;
