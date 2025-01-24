@@ -24,7 +24,12 @@ public class Vector2Variable : ScriptableObject
 
     public void Save(string key)
     {
-        DataUtility.SaveAsync(key, value);
+        DataUtility.SaveWithReferenceLoopHandling(key, value);
+    }
+
+    public void Save()
+    {
+        DataUtility.SaveWithReferenceLoopHandling(saveKey, value);
     }
 
     public void Load()

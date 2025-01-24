@@ -13,6 +13,51 @@ public static class DataUtility
         TypeNameHandling = TypeNameHandling.Auto
     };
 
+    public static void SaveWithReferenceLoopHandling<T>(string fileName, string key, T data)
+    {
+        string filePath = Application.persistentDataPath + $"/{fileName}.json";
+
+        string fileText = "{}";
+
+        if (File.Exists(filePath))
+        {
+            fileText = File.ReadAllText(filePath);
+        }
+
+        try
+        {
+            JObject json = JObject.Parse(fileText);
+
+            if (json.ContainsKey(key))
+            {
+                json[key] = JsonConvert.SerializeObject(data, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                });
+                // json[key] = JsonUtility.ToJson(data);
+            }
+            else
+            {
+                json.Add(key, JsonConvert.SerializeObject(data, new JsonSerializerSettings
+                {
+                    ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                }));
+                // json.Add(key, JsonUtility.ToJson(data));
+            }
+
+            File.WriteAllText(filePath, json.ToString());
+        }
+        catch (Exception e)
+        {
+            Debug.Log("SAFERIO " + e.Message);
+        }
+    }
+
+    public static void SaveWithReferenceLoopHandling<T>(string key, T data)
+    {
+        SaveWithReferenceLoopHandling(GameConstants.SAVE_FILE_NAME, key, data);
+    }
+
     public static void Save<T>(string fileName, string key, T data)
     {
         string filePath = Application.persistentDataPath + $"/{fileName}.json";

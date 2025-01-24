@@ -34,6 +34,7 @@ public class MenuScreen : MonoBehaviour
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -70,6 +71,7 @@ public class MenuScreen : MonoBehaviour
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
     }

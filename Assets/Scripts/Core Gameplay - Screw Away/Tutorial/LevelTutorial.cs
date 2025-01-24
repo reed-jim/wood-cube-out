@@ -19,7 +19,9 @@ public class LevelTutorial : MonoBehaviour
     [SerializeField] private SkeletonGraphic pinchHand;
 
     [SerializeField] private CanvasGroup canvasGroup;
-    [SerializeField] private TMP_Text tutorialText;
+    [SerializeField] private TMP_Text selectTutorialText;
+    [SerializeField] private TMP_Text scaleTutorialText;
+    [SerializeField] private TMP_Text pinchTutorialText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedTutorialText;
 
     [SerializeField] private SpriteRenderer rotateIconWorld;
@@ -105,7 +107,7 @@ public class LevelTutorial : MonoBehaviour
 
         tutorialHand.position = targetPosition;
 
-        float lerpDelta = 0.05f;
+        float lerpDelta = 0.08f;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -118,7 +120,7 @@ public class LevelTutorial : MonoBehaviour
             {
                 if (!isScrewOulined)
                 {
-                    screwOutline.HideOutline();
+                    screwOutline.ShowOutline();
 
                     isScrewOulined = true;
                 }
@@ -130,7 +132,7 @@ public class LevelTutorial : MonoBehaviour
             {
                 if (isScrewOulined)
                 {
-                    screwOutline.ShowOutline();
+                    screwOutline.HideOutline();
 
                     isScrewOulined = false;
                 }
@@ -169,7 +171,9 @@ public class LevelTutorial : MonoBehaviour
 
         int phase = 0;
 
-        localizedTutorialText.TranslationName = translationNames[1];
+        // localizedTutorialText.TranslationName = translationNames[1];
+        selectTutorialText.gameObject.SetActive(false);
+        scaleTutorialText.gameObject.SetActive(true);
 
         rotateIconWorld.gameObject.SetActive(true);
         rotateIconWorld.color = ColorUtil.WithAlpha(rotateIconWorld.color, 0);
@@ -225,7 +229,9 @@ public class LevelTutorial : MonoBehaviour
 
         float timePassed = 0;
 
-        localizedTutorialText.TranslationName = translationNames[2];
+        // localizedTutorialText.TranslationName = translationNames[2];
+        scaleTutorialText.gameObject.SetActive(false);
+        pinchTutorialText.gameObject.SetActive(true);
 
         pinchHand.gameObject.SetActive(true);
 

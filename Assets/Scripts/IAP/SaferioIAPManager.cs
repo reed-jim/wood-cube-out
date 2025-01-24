@@ -11,6 +11,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     [SerializeField] private IAPDataContainer IAPDataContainer;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
+    [SerializeField] private string removeAdsProductId;
+
     private IStoreController controller;
     private IExtensionProvider extensions;
 
@@ -20,6 +22,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<int> collectCoinEvent;
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static event Action removeAdsEvent;
     #endregion
 
     private void Awake()
@@ -235,7 +238,12 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void CheckRestoredRemoveAds()
     {
-        // UserData.IsRemoveAds = IsProductPurchased("remove adddd");
+        UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
+
+        if (UserData.IsRemoveAds)
+        {
+            removeAdsEvent?.Invoke();
+        }
     }
 }
 
