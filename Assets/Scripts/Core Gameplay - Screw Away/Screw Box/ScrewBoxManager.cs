@@ -245,6 +245,11 @@ public class ScrewBoxManager : MonoBehaviour
     {
         for (int i = 0; i < screwBoxs.Length; i++)
         {
+            if (screwBoxs[i] == null)
+            {
+                continue;
+            }
+
             if (screwBoxs[i].IsLocked)
             {
                 screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
