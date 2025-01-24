@@ -691,6 +691,11 @@ public class ScrewBoxManager : MonoBehaviour
         {
             if (screwPorts[i].IsFilled)
             {
+                if (screwPorts[i].Screw.IsMoving)
+                {
+                    continue;
+                }
+
                 screwPorts[i].IsFilled = false;
 
                 screwPorts[i].Screw.ForceUnscrew();

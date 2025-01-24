@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,6 +39,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action shakeScrewPortsEvent;
     public static event Action<string, string> showNotificationEvent;
 
+    private List<Tween> _tweens;
     private int _numScrewPortsAdded;
     private bool _isInTransition;
     private bool _isEnable;
@@ -57,11 +59,14 @@ public class BoosterUI : MonoBehaviour
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
+        RevivePopup.reviveEvent += OnRevived;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+
+        _tweens = new List<Tween>();
 
         _isEnable = true;
     }
@@ -83,6 +88,9 @@ public class BoosterUI : MonoBehaviour
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
+        RevivePopup.reviveEvent -= OnRevived;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private void Reset()
@@ -100,6 +108,18 @@ public class BoosterUI : MonoBehaviour
         _isInTransition = false;
         _isEnable = true;
         _isPreventShowWarningPopup = false;
+    }
+
+    private void OnRevived(BoosterType boosterType)
+    {
+        _isEnable = false;
+        _isPreventShowWarningPopup = false;
+
+        _tweens.Add(Tween.Delay(2f).OnComplete(() =>
+        {
+            _isEnable = true;
+            _isPreventShowWarningPopup = true;
+        }));
     }
 
     private void UseBooster(BoosterType boosterType)
@@ -265,7 +285,7 @@ public class BoosterUI : MonoBehaviour
     private bool IsBoosterAvailable(int boosterIndex)
     {
         userResourcesObserver.Load();
-        
+
         if (userResourcesObserver.UserResources.BoosterQuantities[boosterIndex] > 0)
         {
             return true;
