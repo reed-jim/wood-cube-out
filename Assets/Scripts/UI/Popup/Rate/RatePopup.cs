@@ -43,7 +43,7 @@ public class RatePopup : BasePopup
 
     public void OpenReviewPage()
     {
-        string url = "https://play.google.com/store/apps/details?id=com.screw.away.pin.puzzle.and";
+        string url = "https://play.google.com/store/apps/details?id=com.gplay.wood.cube.out";
 
         Application.OpenURL(url);
     }

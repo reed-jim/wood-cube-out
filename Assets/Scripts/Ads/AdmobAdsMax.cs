@@ -101,6 +101,15 @@ public class AdmobAdsMax : MonoBehaviour
         _isInited = true;
 
         // //#if !UNITY_EDITOR
+        List<string> testDeviceIds = new List<string>();
+
+        testDeviceIds.Add("EFC077ABD1A90039A1AA9986094B4F5C");
+
+        MobileAds.SetRequestConfiguration(new RequestConfiguration
+        {
+            TestDeviceIds = testDeviceIds
+        });
+
         MobileAds.Initialize((initStatus) =>
         {
             AppOpenAdManager.Instance.LoadAd(() =>
@@ -227,7 +236,7 @@ public class AdmobAdsMax : MonoBehaviour
         isReloadBannerCollap = false;
         timeReloadBannerCollap = RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 15);
 
-        _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, true);
+        _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false);
         Debug.Log($"Is show ads collap banner {_isShowAdmobCollap}");
 
         void OnBannerAdLoaded()

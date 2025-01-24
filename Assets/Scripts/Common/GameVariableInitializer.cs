@@ -28,6 +28,10 @@ public class GameVariableInitializer : MonoBehaviour
 
         canvasSize.Value = canvas.sizeDelta;
 
+        GamePersistentVariable.canvasSize = canvas.sizeDelta;
+
+        // canvasSize.Save();
+
         currentLevel.Load();
         userResourcesObserver.Load();
 
@@ -42,6 +46,8 @@ public class GameVariableInitializer : MonoBehaviour
     {
         canvasSizeAfterCanvasScaler.Value = canvas.sizeDelta;
         canvasScale.Value = canvas.localScale;
+
+        GamePersistentVariable.canvasScale = canvasScale.Value;
     }
 
     void OnDestroy()

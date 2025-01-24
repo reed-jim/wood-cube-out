@@ -89,7 +89,12 @@ public class CoinContainerUI : MonoBehaviour
 
     private void CollectCoin(int value)
     {
-        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
 
         collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
     }

@@ -24,7 +24,13 @@ public class UserResourcesObserver : ScriptableObject
     {
         UserResources defaultUserResources = new UserResources();
 
+        defaultUserResources.CoinQuantity = 100;
         defaultUserResources.BoosterQuantities = new int[3];
+        
+        for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
+        {
+            defaultUserResources.BoosterQuantities[i] = 1;
+        }
 
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
     }
@@ -32,7 +38,7 @@ public class UserResourcesObserver : ScriptableObject
     public void ChangeCoin(float value)
     {
         Load();
-        
+
         userResources.CoinQuantity += value;
 
         Save();

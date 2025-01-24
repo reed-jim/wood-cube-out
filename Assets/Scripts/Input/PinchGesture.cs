@@ -20,6 +20,7 @@ public class PinchGesture : MonoBehaviour
     private bool _isDisabled;
     private float _zoomPercent;
     private float _lastZoomPercent;
+    private bool _isZoomByPinching;
 
     #region ACTION
     public static event Action<float> pinchGestureEvent;
@@ -58,7 +59,10 @@ public class PinchGesture : MonoBehaviour
 
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
-        enableSwipingEvent?.Invoke(false);
+        if (!_isZoomByPinching)
+        {
+            enableSwipingEvent?.Invoke(false);
+        }
 
         CommonUtil.StopAllTweens(_tweens);
 
@@ -96,19 +100,39 @@ public class PinchGesture : MonoBehaviour
 
             _zoomPercent = (maxZoom - targetOrthographicSize) / (maxZoom - minZoom);
 
-            if (Mathf.Abs(_zoomPercent - _lastZoomPercent) < changeThreshold)
-            {
-                return;
-            }
+            zoomSlider.interactable = false;
 
-            zoomSlider.value = _zoomPercent;
+            _isZoomByPinching = true;
+
+            // if (Mathf.Abs(_zoomPercent - _lastZoomPercent) < changeThreshold)
+            // {
+            //     return;
+            // }
+
+            // zoomSlider.value = _zoomPercent;
             // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
+        }
+
+        if (_isZoomByPinching)
+        {
+            if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
+            {
+                zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
+            }
+            else
+            {
+                zoomSlider.interactable = true;
+
+                _isZoomByPinching = false;
+            }
         }
     }
 
     private void OnLevelStarted()
     {
         zoomSlider.value = 0;
+
+        OnZoomSliderValueChanged(0);
 
         // pinchGestureEvent?.Invoke(maxZoom);
     }
