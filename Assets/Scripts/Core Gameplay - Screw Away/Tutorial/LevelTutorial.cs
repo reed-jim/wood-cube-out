@@ -16,6 +16,7 @@ public class LevelTutorial : MonoBehaviour
     [SerializeField] private Transform screw;
     [SerializeField] private Transform spline;
     [SerializeField] private SplinePositioner tutorialHandSplinePositioner;
+    [SerializeField] private SplineFollower tutorialHandSplineFollower;
     [SerializeField] private SkeletonGraphic pinchHand;
 
     [SerializeField] private CanvasGroup canvasGroup;
@@ -166,7 +167,7 @@ public class LevelTutorial : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
 
-        float lerpDelta = 1f / 30;
+        float lerpDelta = 1f / 3;
         float lerpProgress = 0;
 
         int phase = 0;
@@ -180,40 +181,61 @@ public class LevelTutorial : MonoBehaviour
 
         Tween.Alpha(rotateIconWorld, 1, duration: 0.3f);
 
-        tutorialHandSplinePositioner.enabled = true;
-        // tutorialHandSplineFollower.follow = true;
+        // tutorialHandSplinePositioner.enabled = true;
+
         float percent = 0;
 
         enableSwipingEvent?.Invoke(true);
 
         while (_step == 1)
         {
-            if (phase % 2 == 0)
+            // tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
+            if (phase < 2)
             {
-                percent = Mathf.Lerp(percent, 1, lerpDelta);
-                tutorialHandSplinePositioner.SetPercent(percent);
-                tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
-            }
-            else
-            {
-                percent = Mathf.Lerp(percent, 0, lerpDelta);
-                tutorialHandSplinePositioner.SetPercent(percent);
-                tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
-            }
+                if (phase % 2 == 0)
+                {
+                    tutorialHandSprite.color = Color.Lerp(tutorialHandSprite.color, ColorUtil.WithAlpha(tutorialHandSprite.color, 0), lerpDelta);
+                }
+                else
+                {
+                    tutorialHandSprite.color = Color.Lerp(tutorialHandSprite.color, ColorUtil.WithAlpha(tutorialHandSprite.color, 1), lerpDelta);
 
-            lerpProgress += lerpDelta;
+                    // percent = Mathf.Lerp(percent, 0, lerpDelta);
+                    // tutorialHandSplinePositioner.SetPercent(percent);
+                    // tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
+                }
 
-            if (lerpProgress >= 1)
-            {
-                phase++;
-                lerpProgress = 0;
-                lerpDelta = 0.02f;
+                lerpProgress = Mathf.Lerp(lerpProgress, 1, lerpDelta);
+
+                if (lerpProgress > 0.99f)
+                {
+                    phase++;
+                    lerpProgress = 0;
+
+                    if (phase == 1)
+                    {
+                        tutorialHandSplineFollower.follow = true;
+                    }
+                    // lerpDelta = 0.02f;
+                }
             }
+            // if (phase % 2 == 0)
+            // {
+            //     percent = Mathf.Lerp(percent, 1, lerpDelta);
+            //     tutorialHandSplinePositioner.SetPercent(percent);
+            //     tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
+            // }
+            // else
+            // {
+            //     percent = Mathf.Lerp(percent, 0, lerpDelta);
+            //     tutorialHandSplinePositioner.SetPercent(percent);
+            //     tutorialHand.rotation = Quaternion.Euler(tutorialHandEulerAngles);
+            // }
 
             yield return waitForSeconds;
         }
 
-        tutorialHandSplinePositioner.enabled = false;
+        tutorialHandSplineFollower.follow = false;
 
         StartCoroutine(TutorialStepThree());
     }
