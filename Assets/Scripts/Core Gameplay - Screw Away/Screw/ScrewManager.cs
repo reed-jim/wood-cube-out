@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,11 @@ public class ScrewManager : MonoBehaviour
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     #endregion
 
+    #region QUEUE OUTSIDE SCREWS
+    private int _remainingHandleOutsideScrewCommands;
+    private bool _isHandlingOutsideScrews;
+    #endregion
+
     #region EVENT
     public static event Action<GameFaction> spawnScrewBoxEvent;
     public static event Action spawnAdsScrewBoxesEvent;
@@ -46,6 +52,8 @@ public class ScrewManager : MonoBehaviour
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
+
+        StartCoroutine(HandlingOutsideScrews());
     }
 
     void OnDestroy()
@@ -70,6 +78,9 @@ public class ScrewManager : MonoBehaviour
 
         // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+
+        _remainingHandleOutsideScrewCommands = 0;
+        _isHandlingOutsideScrews = false;
     }
 
     #region SCREW
@@ -491,6 +502,56 @@ public class ScrewManager : MonoBehaviour
     // HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     private void OnScrewBoxSpawned(ScrewBox screwBox)
     {
+        // for (int i = 0; i < _screws.Count; i++)
+        // {
+        //     BaseScrew screw = _screws[i];
+
+        //     if (screw.IsOutsideWithNoScrewBox)
+        //     {
+        //         GameFaction faction = screw.Faction;
+
+        //         ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
+
+        //         if (screwBoxSlot != null)
+        //         {
+        //             screwBoxSlot.Fill(screw);
+
+        //             screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
+
+        //             screw.IsInteractable = true;
+
+        //             screw.Loose(screw.ScrewId, faction, screwBoxSlot);
+
+        //             screw.IsOutsideWithNoScrewBox = false;
+        //         }
+        //     }
+        // }
+
+        _remainingHandleOutsideScrewCommands++;
+    }
+
+    private IEnumerator HandlingOutsideScrews()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(2);
+
+        while (true)
+        {
+            if (_remainingHandleOutsideScrewCommands > 0)
+            {
+                if (!_isHandlingOutsideScrews)
+                {
+                    _isHandlingOutsideScrews = true;
+
+                    HandleOutsideScrews();
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+
+    private void HandleOutsideScrews()
+    {
         for (int i = 0; i < _screws.Count; i++)
         {
             BaseScrew screw = _screws[i];
@@ -515,6 +576,9 @@ public class ScrewManager : MonoBehaviour
                 }
             }
         }
+
+        _remainingHandleOutsideScrewCommands--;
+        _isHandlingOutsideScrews = false;
     }
     #endregion
 }
