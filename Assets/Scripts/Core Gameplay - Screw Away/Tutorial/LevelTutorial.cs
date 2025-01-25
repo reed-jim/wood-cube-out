@@ -103,8 +103,9 @@ public class LevelTutorial : MonoBehaviour
 
         Vector3 targetPosition;
 
-        targetPosition = screw.position + 0.8f * screw.right;
-        targetPosition.y += 0.8f;
+        targetPosition = screw.position - 1f * screw.right;
+        targetPosition.y -= 1f;
+        targetPosition.z = -5;
 
         tutorialHand.position = targetPosition;
 
@@ -126,8 +127,8 @@ public class LevelTutorial : MonoBehaviour
                     isScrewOulined = true;
                 }
 
-                targetPosition = screw.position + 0.8f * screw.right;
-                targetPosition.y += 1f;
+                targetPosition = screw.position - 1f * screw.right;
+                targetPosition.y -= 1f;
             }
             else
             {
@@ -138,12 +139,11 @@ public class LevelTutorial : MonoBehaviour
                     isScrewOulined = false;
                 }
 
-                targetPosition = screw.position - 3 * screw.right;
-                targetPosition.y -= 3;
+                targetPosition = screw.position - 4 * screw.right;
+                targetPosition.y -= 4;
             }
 
             targetPosition.y += 0.08f * _screenSizeWorld.y;
-            targetPosition.z = -5;
 
             tutorialHand.position = Vector3.Lerp(tutorialHand.position, targetPosition, lerpDelta);
 

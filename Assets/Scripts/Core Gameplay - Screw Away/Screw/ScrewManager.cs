@@ -532,7 +532,7 @@ public class ScrewManager : MonoBehaviour
 
     private IEnumerator HandlingOutsideScrews()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(2);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
         while (true)
         {

@@ -44,7 +44,8 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(blackScreenStartDelay, onCompletedAction: () =>
         {
-            Transition();
+            container.gameObject.SetActive(false);
+            // Transition();
         });
 
         progressBar.value = 0;
