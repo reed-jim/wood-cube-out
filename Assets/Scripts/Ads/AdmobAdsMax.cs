@@ -249,24 +249,16 @@ public class AdmobAdsMax : MonoBehaviour
         void OnAdPaid(AdValue adValue)
         {
             if (adValue == null) return;
-            double value = adValue.Value * 0.000001f;
-
-            Firebase.Analytics.Parameter[] adParameters =
+            var revenue = adValue.Value / 1000000d;
+            try
             {
-                new Firebase.Analytics.Parameter("ad_source", "admob"),
-                new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
-                new Firebase.Analytics.Parameter("currency","USD"),
-                new Firebase.Analytics.Parameter("value", value)
-            };
-            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
-
-            //nếu dùng Appsflyer
-            var dic = new Dictionary<string, string>
+                AnalyticsController.LogAdsRevenue("admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode,
+                    MediationType.Admob, true);
+            }
+            catch (Exception e)
             {
-                { "ad_format", "collapsible_banner" }
-            };
-            // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //     value, "USD", dic);
+                // ignored
+            }
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -377,34 +369,16 @@ public class AdmobAdsMax : MonoBehaviour
 
         void OnAdPaid(AdValue adValue)
         {
-            if (adValue == null) return;
-            double value = adValue.Value * 0.000001f;
-
-            Firebase.Analytics.Parameter[] adParameters =
+            var revenue = adValue.Value / 1000000d;
+            try
             {
-                new Firebase.Analytics.Parameter("ad_source", "admob"),
-                new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
-                new Firebase.Analytics.Parameter("currency","USD"),
-                new Firebase.Analytics.Parameter("value", value)
-            };
-            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
-
-            //nếu dùng Appsflyer
-            Dictionary<string, string> additionalParams = new Dictionary<string, string>();
-            additionalParams.Add(AdRevenueScheme.COUNTRY, "USA");
-            additionalParams.Add(AdRevenueScheme.AD_TYPE, "banner");
-
-            var logRevenue = new AFAdRevenueData("Admob", MediationNetwork.GoogleAdMob, "USD", value);
-
-            AppsFlyer.logAdRevenue(logRevenue, additionalParams);
-
-            // var dic = new Dictionary<string, string>
-            // {
-            //     { "ad_format", "collapsible_banner" }
-            // };
-
-            // AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
-            //     value, "USD", dic);
+                AnalyticsController.LogAdsRevenue("admob", "banner", "banner", revenue, adValue.CurrencyCode,
+                    MediationType.Admob, true);
+            }
+            catch (Exception e)
+            {
+                // ignored
+            }
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
@@ -1054,38 +1028,19 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnAdRevenuePaidEvent(string message, MaxSdkBase.AdInfo adInfo)
     {
+    
         if (adInfo == null) return;
         if (adInfo.Revenue < 0) return;
+         double revenue = impressionData.Revenue;
+        AppFlyerGplay.LogRevenue(impressionData.Placement, "max", impressionData.AdUnitIdentifier,
+            impressionData.AdFormat, revenue, "USD");
 
-        Firebase.Analytics.Parameter[] adParameters =
-        {
-            new Firebase.Analytics.Parameter("ad_platform", "Applovin"),
-            new Firebase.Analytics.Parameter("ad_source", adInfo.NetworkName),
-            new Firebase.Analytics.Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
-            new Firebase.Analytics.Parameter("ad_format", adInfo.AdFormat),
-            new Firebase.Analytics.Parameter("currency","USD"),
-            new Firebase.Analytics.Parameter("value", adInfo.Revenue)
-        };
-        FirebaseAnalytics.LogEvent("ad_impression", adParameters);
-
-        //nếu dùng Appsflyer                
-        Dictionary<string, string> additionalParams = new Dictionary<string, string>();
-        additionalParams.Add(AdRevenueScheme.COUNTRY, "USA");
-        additionalParams.Add(AdRevenueScheme.AD_UNIT, adInfo.AdUnitIdentifier);
-        additionalParams.Add(AdRevenueScheme.AD_TYPE, adInfo.AdFormat);
-        // additionalParams.Add(AdRevenueScheme.PLACEMENT, "place");
-        var logRevenue = new AFAdRevenueData(adInfo.NetworkName, MediationNetwork.ApplovinMax, "USD", adInfo.Revenue);
-        AppsFlyer.logAdRevenue(logRevenue, additionalParams);
-
-        // Old SDK version
-        // var dic = new Dictionary<string, string>
-        // {
-        //     { "ad_unit_name", adInfo.AdUnitIdentifier },
-        //     { "ad_format", adInfo.AdFormat }
-        // };
-
-        // AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
-        //     adInfo.Revenue, "USD", dic);
+        AnalyticsController.LogAdsRevenue("ad_impression", impressionData.NetworkName, impressionData.AdUnitIdentifier,
+            impressionData.AdFormat, revenue, "USD");
+        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", impressionData.NetworkName.ToLower(),
+            impressionData.AdUnitIdentifier.ToLower(), impressionData.AdFormat.ToLower(), revenue, "USD");
+        AnalyticsController.LogAdsRevenue("real_time_rev_fix", impressionData.NetworkName.ToLower(),
+            impressionData.AdUnitIdentifier.ToLower(), impressionData.AdFormat.ToLower(), revenue, "USD");
     }
     #endregion
 
