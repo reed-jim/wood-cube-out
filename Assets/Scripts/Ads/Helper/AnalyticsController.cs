@@ -79,6 +79,31 @@ public class AnalyticsController : MonoBehaviour
     }
 
     #region Event
+    public static void LogAdsRevenue(string name_event, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
+    {
+        try
+        {
+            if (firebaseInitialized)
+            {
+                Parameter[] AdRevenueParameters =
+                {
+                    new Parameter(FirebaseAnalytics.ParameterLevel, GameData.LevelCurrent.ToString()),
+                    new Parameter("play_mode", GameData.LevelMode.ToString()),
+                    new Parameter("ad_source", ad_source),
+                    new Parameter("ad_unit_name", ad_unit_name),
+                    new Parameter("ad_format",  ad_format ?? ""),
+                    new Parameter(FirebaseAnalytics.ParameterValue, value),
+                    new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
+
+                };
+                FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
+                Utils1.AnDebugLog($"ad_source| {ad_source} ad_unit_name| {ad_unit_name} ad_format| {ad_format} value| {value } currency| {currency}");
+            }
+        }
+        catch { }
+    }
+    
+
     public void LogWatchVideo(ActionWatchVideo action, bool isHasVideo, bool isHasInternet, string level)
     {
         if (!firebaseInitialized) return;
