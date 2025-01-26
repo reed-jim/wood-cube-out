@@ -325,7 +325,7 @@ public static class LevelDifficultyCalculatorUltility
     {
         float WEIGHT_REPEAT_TEMPLATE = 0.8f;
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
-        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 1.25f);
+        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 1.2f);
 
         float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 
@@ -348,7 +348,7 @@ public static class LevelDifficultyCalculatorUltility
 
             if (progress > 0.1f && progress < 0.9f)
             {
-                LevelPhase levelPhase = new LevelPhase(0, 1 - progress);
+                LevelPhase levelPhase = new LevelPhase(phaseIndex: 0, endProgress: 1 - progress);
 
                 generatedLevelPhases.Add(levelPhase);
 

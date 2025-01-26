@@ -14,6 +14,7 @@ using UnityEngine.UI;
 public class GameLoading : MonoBehaviour
 {
     [SerializeField] private RectTransform container;
+    [SerializeField] private RectTransform loadingScreenContainer;
     [SerializeField] private Image blackBackground;
     [SerializeField] private Slider progressBar;
     [SerializeField] private Image progressBarFill;
@@ -28,7 +29,7 @@ public class GameLoading : MonoBehaviour
 
     private List<Tween> _tweens;
     private bool _isMenuSceneLoaded;
-    private AsyncOperationHandle _sceneHandle;
+    private AsyncOperationHandle _menuSceneHandle;
 
 
     private void Awake()
@@ -39,12 +40,14 @@ public class GameLoading : MonoBehaviour
 
         StartCoroutine(SlowTransititon());
 
-        _sceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+        _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
     }
 
     private void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private IEnumerator SlowTransititon()
@@ -55,27 +58,37 @@ public class GameLoading : MonoBehaviour
         float deltaProgress = Time.fixedDeltaTime / maxExpectedMenuLoadTime;
 
         bool isReadyToBurst = false;
-        float burstReadyDuration = 3f;
+        float burstReadyDuration = 2f;
         float timePassedAfterSceneLoaded = 0;
+
+        float avoidInitialLagDuration = 1.5f;
+        bool isPlayLoadingAnimation = false;
 
         while (!isReadyToBurst)
         {
             progressBar.value = progress;
-            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, progress * 2);
+            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 2 * (progress - 0.08f));
 
-            loadingText.text = $"{(int)(progress * 100)}%";
+            if (progress >= 0.08f)
+            {
+                loadingText.text = $"{(int)(progress * 100)}%";
+            }
+            else
+            {
+                loadingText.text = $"{(int)(0 * 100)}%";
+            }
 
             progress += deltaProgress;
 
-            if (_isMenuSceneLoaded)
-            {
-                timePassedAfterSceneLoaded += Time.fixedDeltaTime;
 
-                if (timePassedAfterSceneLoaded > burstReadyDuration)
-                {
-                    isReadyToBurst = true;
-                }
+
+            timePassedAfterSceneLoaded += Time.fixedDeltaTime;
+
+            if (timePassedAfterSceneLoaded > burstReadyDuration)
+            {
+                isReadyToBurst = true;
             }
+
 
             yield return waitForSeconds;
         }
@@ -96,48 +109,67 @@ public class GameLoading : MonoBehaviour
         _tweens.Add(Tween.Delay(loadingDuration).OnComplete(
             () =>
             {
-                _tweens.Add(
-                    Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
-                    {
-                        canvasGroup.alpha = newVal;
-                        loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
-                    })
-                    .OnComplete(() =>
-                    {
-                        SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-                    })
-                );
+                // _tweens.Add(
+                //     Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
+                //     {
+                //         canvasGroup.alpha = newVal;
+                //         loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
+                //     })
+                //     .OnComplete(() =>
+                //     {
+                //         SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                //     })
+                // );
+
+                // Black screen
+                blackBackground.gameObject.SetActive(true);
+
+                blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
+
+                _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
+                {
+                    // blackBackground.gameObject.SetActive(false);
+
+                    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                }));
+
+                _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>
+                {
+                    loadingScreenContainer.gameObject.SetActive(false);
+                }));
             }
         ));
     }
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
-
         blackBackground.gameObject.SetActive(true);
 
-        Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
+        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+
+        _tweens.Add(Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
         {
             blackBackground.gameObject.SetActive(false);
 
             onCompletedAction?.Invoke();
-        });
+        }));
     }
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == GameConstants.MENU_SCENE)
+        if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            _isMenuSceneLoaded = true;
+            if (scene.name == GameConstants.GAMEPLAY_SCENE)
+            {
+                Addressables.UnloadSceneAsync(_menuSceneHandle);
+            }
         }
-    }
-
-    private void OnSceneLoaded(AsyncOperationHandle<SceneInstance> handle)
-    {
-        if (handle.Status == AsyncOperationStatus.Succeeded)
+        else
         {
-            _sceneHandle = handle;
+            if (scene.name == GameConstants.MENU_SCENE)
+            {
+                _isMenuSceneLoaded = true;
+            }
         }
     }
 }

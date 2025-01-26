@@ -99,12 +99,12 @@ public class LevelTutorial : MonoBehaviour
 
     private IEnumerator TutorialStepOne()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.fixedDeltaTime);
 
         Vector3 targetPosition;
 
-        targetPosition = screw.position - 1f * screw.right;
-        targetPosition.y -= 1f;
+        targetPosition = screw.position - 1.2f * screw.right;
+        targetPosition.y -= 1.1f;
         targetPosition.z = -5;
 
         tutorialHand.position = targetPosition;
@@ -127,8 +127,8 @@ public class LevelTutorial : MonoBehaviour
                     isScrewOulined = true;
                 }
 
-                targetPosition = screw.position - 1f * screw.right;
-                targetPosition.y -= 1f;
+                targetPosition = screw.position - 1.3f * screw.right;
+                targetPosition.y -= 1.2f;
             }
             else
             {
@@ -139,11 +139,11 @@ public class LevelTutorial : MonoBehaviour
                     isScrewOulined = false;
                 }
 
-                targetPosition = screw.position - 4 * screw.right;
-                targetPosition.y -= 4;
+                targetPosition = screw.position - 3f * screw.right;
+                targetPosition.y -= 2.8f;
             }
 
-            targetPosition.y += 0.08f * _screenSizeWorld.y;
+            // targetPosition.y += 0.08f * _screenSizeWorld.y;
 
             tutorialHand.position = Vector3.Lerp(tutorialHand.position, targetPosition, lerpDelta);
 
@@ -165,7 +165,7 @@ public class LevelTutorial : MonoBehaviour
 
     private IEnumerator TutorialStepTwo()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.fixedDeltaTime);
 
         float lerpDelta = 1f / 3;
         float lerpProgress = 0;
@@ -244,7 +244,7 @@ public class LevelTutorial : MonoBehaviour
     {
         float TIME_OUT = 5;
 
-        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.deltaTime);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(Time.fixedDeltaTime);
 
         float timePassed = 0;
 

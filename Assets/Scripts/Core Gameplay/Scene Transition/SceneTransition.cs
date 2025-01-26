@@ -42,16 +42,21 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
-        BlackScreenTransition(blackScreenStartDelay, onCompletedAction: () =>
-        {
-            container.gameObject.SetActive(false);
-            // Transition();
-        });
-
         progressBar.value = 0;
         progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
+
+        if (!DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        {
+            BlackScreenTransition();
+        }
+        else
+        {
+            blackBackground.gameObject.SetActive(false);
+
+            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
+        }
     }
 
     private void OnDestroy()

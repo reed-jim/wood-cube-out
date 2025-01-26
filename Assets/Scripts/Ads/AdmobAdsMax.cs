@@ -863,6 +863,11 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
+        if (SceneManager.GetActiveScene().name == GameConstants.LOADING_SCENE)
+        {
+            return;
+        }
+
         if (isAdmobInitDone)
         {
             if (_isShowAdmobBanner)

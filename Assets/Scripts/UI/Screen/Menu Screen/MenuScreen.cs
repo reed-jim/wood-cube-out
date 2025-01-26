@@ -4,6 +4,7 @@ using Lean.Localization;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -35,6 +36,7 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -52,7 +54,7 @@ public class MenuScreen : MonoBehaviour
         }
     }
 
-    private void Start()
+    private async Task Start()
     {
         bool isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
 
@@ -60,9 +62,9 @@ public class MenuScreen : MonoBehaviour
 
         if (UserData.IsFirstTimeOpenApp)
         {
-            StartGame();
+            await Task.Delay(500);
 
-            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
+            StartGame();
         }
     }
 
@@ -72,6 +74,7 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
     }
@@ -83,7 +86,7 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE);
+        Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
     }
 
     private void OpenRemoveAdPopup()
@@ -160,5 +163,13 @@ public class MenuScreen : MonoBehaviour
     private int GetDisplayedLevel()
     {
         return currentLevel.Value;
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == GameConstants.GAMEPLAY_SCENE)
+        {
+            SceneManager.UnloadSceneAsync(GameConstants.MENU_SCENE);
+        }
     }
 }
