@@ -324,9 +324,10 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public virtual void ThrowOutside()
     {
+        _isMoving = true;
         _isRotating = true;
 
-        Tween.Position(transform, transform.position + 3f * transform.forward, duration: 0.3f)
+        _tweens.Add(Tween.Position(transform, transform.position + 3f * transform.forward, duration: 0.3f)
         .OnComplete(() =>
         {
             Vector3 destination = transform.position;
@@ -342,15 +343,16 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             destination.y = 0;
 
-            Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>
+            _tweens.Add(Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>
             {
-                InvokeScrewLoosenedEvent();
+                // InvokeScrewLoosenedEvent();
 
                 screwServiceLocator.screwMeshRenderer.enabled = false;
 
+                _isMoving = false;
                 _isRotating = false;
-            });
-        });
+            }));
+        }));
     }
 
     public virtual int CountBlockingObjects(bool isIncludeHiddenScrew)

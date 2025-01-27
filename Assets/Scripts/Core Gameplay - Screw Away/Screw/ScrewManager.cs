@@ -272,7 +272,7 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsDone)
+            if (_screws[i].IsDone && !_screws[i].IsInScrewPort)
             {
                 continue;
             }
