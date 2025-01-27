@@ -23,10 +23,17 @@ public class ScrewManager : MonoBehaviour
     private List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
-    private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    #endregion
+
+    #region QUEUE SPAWN SCREW BOXES
+    private int _remainingSpawnScrewBoxCommands;
+    private bool _isHandlingSpawningScrewBox;
     #endregion
 
     #region QUEUE OUTSIDE SCREWS
+    private int _totalScrewBoxes;
+    private int _totalScrewBoxesSpawned;
     private int _remainingHandleOutsideScrewCommands;
     private bool _isHandlingOutsideScrews;
     #endregion
@@ -53,6 +60,7 @@ public class ScrewManager : MonoBehaviour
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
 
+        // StartCoroutine(QueueSpawningScrewBoxes());
         StartCoroutine(HandlingOutsideScrews());
     }
 
@@ -79,6 +87,9 @@ public class ScrewManager : MonoBehaviour
         // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
+        _totalScrewBoxesSpawned = 0;
+        _remainingSpawnScrewBoxCommands = 0;
+        _isHandlingSpawningScrewBox = false;
         _remainingHandleOutsideScrewCommands = 0;
         _isHandlingOutsideScrews = false;
     }
@@ -87,6 +98,7 @@ public class ScrewManager : MonoBehaviour
     private void SetLevelScrewNumber(int screwNumber)
     {
         _totalScrew = screwNumber;
+        _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
 
         updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
     }
@@ -182,10 +194,28 @@ public class ScrewManager : MonoBehaviour
             difficultyLevelByFactions[faction] += _screws[i].ScrewDifficultyModifier;
         }
 
+        // TRIPLE SAME FACTION + NO BLOCKED
+        int totalTripleSameFactionNoBlocked = 0;
+
         foreach (var faction in totalNotBlockedScrewByFaction.Keys)
         {
             // Debug.Log(faction + "/" + 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length);
-            difficultyLevelByFactions[faction] -= 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length;
+            int numTriple = totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
+
+            difficultyLevelByFactions[faction] -= 3 * numTriple * GameConstants.SCREW_FACTION.Length;
+
+            if (numTriple > 0)
+            {
+                totalTripleSameFactionNoBlocked++;
+            }
+        }
+
+        if (totalTripleSameFactionNoBlocked == 0)
+        {
+            foreach (var faction in totalNotBlockedScrewByFaction.Keys)
+            {
+                difficultyLevelByFactions[faction] -= GameConstants.SCREW_FACTION.Length;
+            }
         }
 
         // DECREASE Chance of factions that are already available in screw boxes
@@ -309,6 +339,11 @@ public class ScrewManager : MonoBehaviour
 
     private void SpawnNewScrewBox()
     {
+        if (_totalScrewBoxesSpawned >= _totalScrewBoxes)
+        {
+            return;
+        }
+
         GameFaction faction = GetFactionForNewScrewBox();
 
         if (faction == GameFaction.None)
@@ -317,6 +352,36 @@ public class ScrewManager : MonoBehaviour
         }
 
         spawnScrewBoxEvent?.Invoke(faction);
+
+        _totalScrewBoxesSpawned++;
+        // _remainingSpawnScrewBoxCommands--;
+
+        // _isHandlingSpawningScrewBox = false;
+    }
+
+    private void OnSpawnNewScrewBoxRequested()
+    {
+        _remainingSpawnScrewBoxCommands++;
+    }
+
+    private IEnumerator QueueSpawningScrewBoxes()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
+
+        while (true)
+        {
+            if (_remainingSpawnScrewBoxCommands > 0 && _totalScrewBoxesSpawned <= _totalScrewBoxes)
+            {
+                if (!_isHandlingSpawningScrewBox)
+                {
+                    _isHandlingSpawningScrewBox = true;
+
+                    SpawnNewScrewBox();
+                }
+            }
+
+            yield return waitForSeconds;
+        }
     }
 
     private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
@@ -498,8 +563,9 @@ public class ScrewManager : MonoBehaviour
 
         return nextFaction;
     }
+    #endregion
 
-    // HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
+    #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     private void OnScrewBoxSpawned(ScrewBox screwBox)
     {
         // for (int i = 0; i < _screws.Count; i++)
