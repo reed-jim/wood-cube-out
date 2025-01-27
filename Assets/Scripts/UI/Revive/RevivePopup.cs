@@ -95,6 +95,8 @@ public class RevivePopup : BasePopup
             {
                 reviveEvent?.Invoke(_currentBoosterOnRevive);
 
+                SaferioTracking.TrackReviveEvent("coin", _currentBoosterOnRevive);
+
                 reviveByDiamondButton.interactable = true;
             });
 
@@ -139,6 +141,8 @@ public class RevivePopup : BasePopup
         base.Hide(onCompletedAction: () =>
         {
             reviveEvent?.Invoke(_currentBoosterOnRevive);
+
+            SaferioTracking.TrackReviveEvent("rewarded_ads", _currentBoosterOnRevive);
         });
     }
 

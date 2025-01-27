@@ -65,4 +65,17 @@ public static class SaferioTracking
         FirebaseAnalytics.LogEvent("use_booster", parameters);
 #endif
     }
+
+    public static void TrackReviveEvent(string method, BoosterType boosterType)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("method", method),
+            new Parameter("booster_type", boosterType.ToString())
+        };
+
+        FirebaseAnalytics.LogEvent("revive", parameters);
+#endif
+    }
 }

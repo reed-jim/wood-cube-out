@@ -134,7 +134,7 @@ public class WinPopup : BasePopup
 
     private async void TrackLevelWin()
     {
-        bool isFirstWinLevel = DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
+        bool isFirstWinLevel = DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", true);
 
         if (isFirstWinLevel)
         {
