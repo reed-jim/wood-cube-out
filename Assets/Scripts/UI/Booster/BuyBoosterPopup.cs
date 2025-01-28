@@ -112,6 +112,8 @@ public class BuyBoosterPopup : BasePopup
 
                 userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
                 userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+
+                updateBoosterQuantityEvent?.Invoke(boosterIndex);
             }
 
             userResourcesObserver.Save();
@@ -148,6 +150,8 @@ public class BuyBoosterPopup : BasePopup
     private void OnRewaredAdCompleted()
     {
         userResourcesObserver.ChangeBoosterQuantity((int)_boosterType, 1);
+
+        updateBoosterQuantityEvent?.Invoke((int)_boosterType);
 
         Hide(onCompletedAction: () =>
         {

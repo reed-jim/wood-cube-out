@@ -102,6 +102,11 @@ public class RevivePopup : BasePopup
 
             userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
+            if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
+            {
+                userResourcesObserver.ChangeBoosterQuantity(2, 1);
+            }
+
             userResourcesObserver.Save();
         }
         else
