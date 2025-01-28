@@ -13,6 +13,9 @@ public class AdmobAdsMax : MonoBehaviour
 {
     public static AdmobAdsMax Instance;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private IntVariable currentLevel;
+
     public static bool isAdmobInitDone;
 
 #if UNITY_ANDROID
@@ -252,8 +255,8 @@ public class AdmobAdsMax : MonoBehaviour
             var revenue = adValue.Value / 1000000d;
             try
             {
-                AnalyticsController.LogAdsRevenue("admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode,
-                    MediationType.Admob, true);
+                AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
+                // MediationType.Admob, true);
             }
             catch (Exception e)
             {
@@ -372,8 +375,9 @@ public class AdmobAdsMax : MonoBehaviour
             var revenue = adValue.Value / 1000000d;
             try
             {
-                AnalyticsController.LogAdsRevenue("admob", "banner", "banner", revenue, adValue.CurrencyCode,
-                    MediationType.Admob, true);
+                AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
+                // AnalyticsController.LogAdsRevenue("admob", "banner", "banner", revenue, adValue.CurrencyCode,
+                //     MediationType.Admob, true);
             }
             catch (Exception e)
             {
@@ -1028,19 +1032,19 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnAdRevenuePaidEvent(string message, MaxSdkBase.AdInfo adInfo)
     {
-    
         if (adInfo == null) return;
         if (adInfo.Revenue < 0) return;
-         double revenue = impressionData.Revenue;
-        AppFlyerGplay.LogRevenue(impressionData.Placement, "max", impressionData.AdUnitIdentifier,
-            impressionData.AdFormat, revenue, "USD");
 
-        AnalyticsController.LogAdsRevenue("ad_impression", impressionData.NetworkName, impressionData.AdUnitIdentifier,
-            impressionData.AdFormat, revenue, "USD");
-        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", impressionData.NetworkName.ToLower(),
-            impressionData.AdUnitIdentifier.ToLower(), impressionData.AdFormat.ToLower(), revenue, "USD");
-        AnalyticsController.LogAdsRevenue("real_time_rev_fix", impressionData.NetworkName.ToLower(),
-            impressionData.AdUnitIdentifier.ToLower(), impressionData.AdFormat.ToLower(), revenue, "USD");
+        double revenue = adInfo.Revenue;
+        AppFlyerGplay.LogRevenue(adInfo.Placement, "max", adInfo.AdUnitIdentifier,
+            adInfo.AdFormat, revenue, "USD");
+
+        AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
+            adInfo.AdFormat, revenue, "USD");
+        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
+            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+        AnalyticsController.LogAdsRevenue("real_time_rev_fix", currentLevel.Value, adInfo.NetworkName.ToLower(),
+            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
     }
     #endregion
 

@@ -405,6 +405,7 @@ public class KeyPref
 public class FirebaseConfig
 {
     public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
+    public const string ENABLE_JOINT = "enable_joint";
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
     public const string LEVEL_START_SHOW_INITSTIALL = "level_start_show_initstiall";//Level bắt đầu show initial//3

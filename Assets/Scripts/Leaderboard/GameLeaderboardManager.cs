@@ -20,10 +20,10 @@ public class GameLeaderboardManager : MonoBehaviour
     {
         var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync("SAMPLE");
 
-        foreach (var item in scoresResponse.Results)
-        {
-            Debug.Log(item.PlayerId + "/" + item.PlayerName + "/" + item.Score);
-        }
+        // foreach (var item in scoresResponse.Results)
+        // {
+        //     Debug.Log(item.PlayerId + "/" + item.PlayerName + "/" + item.Score);
+        // }
     }
 
     private async void AddPlayerScoreToLeaderboard()

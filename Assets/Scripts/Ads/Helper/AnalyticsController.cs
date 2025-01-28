@@ -79,7 +79,7 @@ public class AnalyticsController : MonoBehaviour
     }
 
     #region Event
-    public static void LogAdsRevenue(string name_event, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
+    public static void LogAdsRevenue(string name_event, int level, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
     {
         try
         {
@@ -87,8 +87,8 @@ public class AnalyticsController : MonoBehaviour
             {
                 Parameter[] AdRevenueParameters =
                 {
-                    new Parameter(FirebaseAnalytics.ParameterLevel, GameData.LevelCurrent.ToString()),
-                    new Parameter("play_mode", GameData.LevelMode.ToString()),
+                    new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
+                    new Parameter("play_mode", "normal"),
                     new Parameter("ad_source", ad_source),
                     new Parameter("ad_unit_name", ad_unit_name),
                     new Parameter("ad_format",  ad_format ?? ""),
@@ -97,12 +97,15 @@ public class AnalyticsController : MonoBehaviour
 
                 };
                 FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
-                Utils1.AnDebugLog($"ad_source| {ad_source} ad_unit_name| {ad_unit_name} ad_format| {ad_format} value| {value } currency| {currency}");
+                // Utils1.AnDebugLog($"ad_source| {ad_source} ad_unit_name| {ad_unit_name} ad_format| {ad_format} value| {value } currency| {currency}");
             }
         }
-        catch { }
+        catch
+        {
+
+        }
     }
-    
+
 
     public void LogWatchVideo(ActionWatchVideo action, bool isHasVideo, bool isHasInternet, string level)
     {

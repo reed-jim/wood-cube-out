@@ -96,16 +96,16 @@ public class SegmentData
 
     public void ToJsonConfig()
     {
-        Debug.Log(CoreGameData.Core_Game_Config + " " + coreGameData.ToJsonConfig());
-        Debug.Log(ReviveData.Revive_Config + " " + reviveData.ToJsonConfig());
-        Debug.Log(AdsSegmentData.Ads_Config + " " + adsData.ToJsonConfig());
-        Debug.Log(SaleSegemntData.Sale_Config + " " + saleData.ToJsonConfig());
-        Debug.Log(SaleVideoData.Sale_Video_Config + " " + saleVideoData.ToJsonConfig());
-        Debug.Log(ChallengeSegemtData.Challenge_Config + " " + challengeData.ToJsonConfig());
-        Debug.Log(SkillUserSegemntData.Skill_Config + " " + skillUserData.ToJsonConfig());
-        Debug.Log(NotificationSegmentData.NOTIFICATIONS_CONFIG + " " + notificationData.ToJsonConfig());
-        Debug.Log(SuggetBuyerInGameSegmentData.SUGGET_BUYER_CONFIG + " " + suggetBuyerInGameSegmentData.ToJsonConfig());
-        Debug.Log(SuggetBuyItemSegmentData.SUGGET_BUY_ITEM_CONFIG + " " + suggetBuyItemSegmentData.ToJsonConfig());
+        // Debug.Log(CoreGameData.Core_Game_Config + " " + coreGameData.ToJsonConfig());
+        // Debug.Log(ReviveData.Revive_Config + " " + reviveData.ToJsonConfig());
+        // Debug.Log(AdsSegmentData.Ads_Config + " " + adsData.ToJsonConfig());
+        // Debug.Log(SaleSegemntData.Sale_Config + " " + saleData.ToJsonConfig());
+        // Debug.Log(SaleVideoData.Sale_Video_Config + " " + saleVideoData.ToJsonConfig());
+        // Debug.Log(ChallengeSegemtData.Challenge_Config + " " + challengeData.ToJsonConfig());
+        // Debug.Log(SkillUserSegemntData.Skill_Config + " " + skillUserData.ToJsonConfig());
+        // Debug.Log(NotificationSegmentData.NOTIFICATIONS_CONFIG + " " + notificationData.ToJsonConfig());
+        // Debug.Log(SuggetBuyerInGameSegmentData.SUGGET_BUYER_CONFIG + " " + suggetBuyerInGameSegmentData.ToJsonConfig());
+        // Debug.Log(SuggetBuyItemSegmentData.SUGGET_BUY_ITEM_CONFIG + " " + suggetBuyItemSegmentData.ToJsonConfig());
     }
 }
 
