@@ -78,11 +78,14 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         minJointToDisableKinematic = 0;
 
-        HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
-
-        for (int i = 0; i < hingeJoints.Length; i++)
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_JOINT, false))
         {
-            hingeJoints[i].breakForce = 0;
+            HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
+
+            for (int i = 0; i < hingeJoints.Length; i++)
+            {
+                hingeJoints[i].breakForce = 0;
+            }
         }
     }
 

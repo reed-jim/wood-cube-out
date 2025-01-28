@@ -69,12 +69,12 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
         AppsFlyer.AFLog("onAppOpenAttributionFailure", error);
     }
 
-    private static void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
-    {
-#if UNITY_ANDROID
-        AppsFlyer.updateServerUninstallToken(token.Token);
-#endif
-    }
+//     private static void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+//     {
+// #if UNITY_ANDROID
+//         AppsFlyer.updateServerUninstallToken(token.Token);
+// #endif
+//     }
 
     public static void LogRevenue(string placement, string network, string unit,
         string format, double value, string currency)
