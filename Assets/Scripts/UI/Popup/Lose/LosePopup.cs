@@ -74,6 +74,8 @@ public class LosePopup : BasePopup
     {
         replayLevelEvent?.Invoke();
 
+        SaferioTracking.TrackReplayLevel(currentLevel.Value);
+
         Hide();
     }
 
