@@ -25,7 +25,7 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
 
     public void Awake()
     {
-      //  Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
+        //  Firebase.Messaging.FirebaseMessaging.TokenReceived += OnTokenReceived;
         _instance = this;
     }
 
@@ -69,39 +69,59 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
         AppsFlyer.AFLog("onAppOpenAttributionFailure", error);
     }
 
-//     private static void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
-//     {
-// #if UNITY_ANDROID
-//         AppsFlyer.updateServerUninstallToken(token.Token);
-// #endif
-//     }
+    //     private static void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
+    //     {
+    // #if UNITY_ANDROID
+    //         AppsFlyer.updateServerUninstallToken(token.Token);
+    // #endif
+    //     }
 
     public static void LogRevenue(string placement, string network, string unit,
         string format, double value, string currency)
     {
-        Dictionary<string, string> addParams = new Dictionary<string, string>()
-        {
-            { AFAdRevenueEvent.AD_UNIT, unit },
-            { AFAdRevenueEvent.AD_TYPE, format },
-            { AFAdRevenueEvent.PLACEMENT, placement }
-        };
-        AppsFlyerAdRevenue.logAdRevenue(
-            network,
-            Parser(),
-            value,
-            currency,
-            addParams
-        );
-        return;
+        Dictionary<string, string> additionalParams = new Dictionary<string, string>();
+        additionalParams.Add(AdRevenueScheme.COUNTRY, "USA");
+        additionalParams.Add(AdRevenueScheme.AD_UNIT, unit);
+        additionalParams.Add(AdRevenueScheme.AD_TYPE, format);
+        additionalParams.Add(AdRevenueScheme.PLACEMENT, placement);
 
-        AppsFlyerAdRevenueMediationNetworkType Parser()
+        var logRevenue = new AFAdRevenueData("monetizationNetworkEx", Parser(), currency, value);
+
+        AppsFlyer.logAdRevenue(logRevenue, additionalParams);
+
+        // Dictionary<string, string> addParams = new Dictionary<string, string>()
+        // {
+        //     { AFAdRevenueEvent.AD_UNIT, unit },
+        //     { AFAdRevenueEvent.AD_TYPE, format },
+        //     { AFAdRevenueEvent.PLACEMENT, placement }
+        // };
+        // AppsFlyerAdRevenue.logAdRevenue(
+        //     network,
+        //     Parser(),
+        //     value,
+        //     currency,
+        //     addParams
+        // );
+        // return;
+
+        // AppsFlyerAdRevenueMediationNetworkType Parser()
+        // {
+        //     network = network.ToLower();
+        //     if (network.Contains("admob"))
+        //         return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob;
+        //     if (network.Contains("max"))
+        //         return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax;
+        //     return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeCustomMediation;
+        // }
+
+        MediationNetwork Parser()
         {
             network = network.ToLower();
             if (network.Contains("admob"))
-                return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob;
+                return MediationNetwork.GoogleAdMob;
             if (network.Contains("max"))
-                return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax;
-            return AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeCustomMediation;
+                return MediationNetwork.ApplovinMax;
+            return MediationNetwork.Custom;
         }
     }
 }

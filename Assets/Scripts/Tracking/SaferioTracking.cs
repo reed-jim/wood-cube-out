@@ -78,4 +78,16 @@ public static class SaferioTracking
         FirebaseAnalytics.LogEvent("revive", parameters);
 #endif
     }
+
+    public static void TrackReplayLevel(int level)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("level", level.ToString()),
+        };
+
+        FirebaseAnalytics.LogEvent("level_replay", parameters);
+#endif
+    }
 }
