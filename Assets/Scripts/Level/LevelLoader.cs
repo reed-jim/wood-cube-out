@@ -97,8 +97,15 @@ public class LevelLoader : MonoBehaviour
 
                 _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
-                AutoAssignScrewFaction(level);
-                AutoAssignScrewFactionMultiPhaseLevel(level);
+                if (currentLevel.Value == 1)
+                {
+                    AutoAssignScrewFactionLevelManualGroup(level);
+                }
+                else
+                {
+                    AutoAssignScrewFaction(level);
+                    AutoAssignScrewFactionMultiPhaseLevel(level);
+                }
             }
         };
 
@@ -193,6 +200,43 @@ public class LevelLoader : MonoBehaviour
         setMultiPhaseLevelScrewNumberEvent?.Invoke(screws.Length);
     }
 
+    private void AutoAssignScrewFactionLevelManualGroup(GameObject level)
+    {
+        BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
+
+        int numScrew = screws.Length;
+
+        int numTripleScrews = numScrew / 3;
+
+        List<GameFaction> factionPool = new List<GameFaction>();
+
+        for (int i = 0; i < numTripleScrews; i++)
+        {
+            GameFaction randomFaction = GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
+
+            factionPool.Add(randomFaction);
+        }
+
+        ScrewFactionGroupManual[] screwFactionGroups = new ScrewFactionGroupManual[numScrew];
+
+        for (int i = 0; i < numScrew; i++)
+        {
+            screwFactionGroups[i] = screws[i].GetComponent<ScrewFactionGroupManual>();
+        }
+
+        // screwFactionGroups = screwFactionGroups.OrderBy(item => item.Group).ToArray();
+
+        for (int i = 0; i < numScrew; i++)
+        {
+            screws[i].ScrewId = i;
+            screws[i].Faction = factionPool[screwFactionGroups[i].Group];
+
+            screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+        }
+
+        setLevelScrewNumberEvent?.Invoke(numScrew);
+    }
+
     private void AutoAssignScrewFaction(GameObject level)
     {
         BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
@@ -283,51 +327,6 @@ public class LevelLoader : MonoBehaviour
             currentIndex++;
         }
 
-        // // NO BLOCKED SCREW
-        // int currentFaction = 0;
-        // bool isGeneratingSameFactionForTripleScrews = false;
-
-        // List<GameFaction> remainingFactionForNoBlockedScrews = new List<GameFaction>();
-
-        // for (int i = 0; i < noBlockedScrews.Count; i++)
-        // {
-        //     if (i % GameConstants.NUMBER_SLOT_PER_SCREW_BOX == 0)
-        //     {
-        //         float random = UnityEngine.Random.Range(0f, 1f);
-
-        //         if (random < levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame)
-        //         {
-        //             isGeneratingSameFactionForTripleScrews = true;
-        //         }
-        //         else
-        //         {
-        //             isGeneratingSameFactionForTripleScrews = false;
-        //         }
-        //     }
-
-        //     if (isGeneratingSameFactionForTripleScrews)
-        //     {
-        //         remainingFactionForNoBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
-        //     }
-        //     else
-        //     {
-        //         int randomFactionIndex = UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length);
-
-        //         remainingFactionForNoBlockedScrews.Add(GameConstants.SCREW_FACTION[randomFactionIndex]);
-        //     }
-
-        //     if (i > 0 && (i + 1) % 3 == 0)
-        //     {
-        //         currentFaction++;
-
-        //         if (currentFaction >= GameConstants.SCREW_FACTION.Length)
-        //         {
-        //             currentFaction = 0;
-        //         }
-        //     }
-        // }
-
-        // int currentFaction = UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length - 1);
         int currentFaction = 0;
 
         List<GameFaction> remainingFactionForBlockedScrews = new List<GameFaction>();
