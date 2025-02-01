@@ -66,13 +66,14 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackReviveEvent(string method, BoosterType boosterType)
+    public static void TrackReviveEvent(string method, BoosterType boosterType, float progress)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
             new Parameter("method", method),
-            new Parameter("booster_type", boosterType.ToString())
+            new Parameter("booster_type", boosterType.ToString()),
+            new Parameter("progress", progress.ToString()),
         };
 
         FirebaseAnalytics.LogEvent("revive", parameters);
@@ -88,6 +89,18 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("level_replay", parameters);
+#endif
+    }
+
+    public static void TrackIAPEvent(string productId)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("product_id", productId),
+        };
+
+        FirebaseAnalytics.LogEvent("buy_iap", parameters);
 #endif
     }
 }

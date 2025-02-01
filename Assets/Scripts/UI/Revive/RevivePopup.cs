@@ -20,6 +20,7 @@ public class RevivePopup : BasePopup
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private BoosterDataObserver boosterDataObserver;
+    [SerializeField] private LevelObserver levelObserver;
 
     #region PRIVATE FIELD
     private BoosterType _currentBoosterOnRevive;
@@ -95,7 +96,7 @@ public class RevivePopup : BasePopup
             {
                 reviveEvent?.Invoke(_currentBoosterOnRevive);
 
-                SaferioTracking.TrackReviveEvent("coin", _currentBoosterOnRevive);
+                SaferioTracking.TrackReviveEvent("coin", _currentBoosterOnRevive, levelObserver.Progress);
 
                 reviveByDiamondButton.interactable = true;
             });
@@ -147,7 +148,7 @@ public class RevivePopup : BasePopup
         {
             reviveEvent?.Invoke(_currentBoosterOnRevive);
 
-            SaferioTracking.TrackReviveEvent("rewarded_ads", _currentBoosterOnRevive);
+            SaferioTracking.TrackReviveEvent("rewarded_ads", _currentBoosterOnRevive, levelObserver.Progress);
         });
     }
 
