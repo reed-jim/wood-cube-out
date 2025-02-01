@@ -1036,6 +1036,7 @@ public class AdmobAdsMax : MonoBehaviour
         if (adInfo.Revenue < 0) return;
 
         double revenue = adInfo.Revenue;
+
         AppFlyerGplay.LogRevenue(adInfo.Placement, "max", adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
 

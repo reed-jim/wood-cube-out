@@ -81,29 +81,39 @@ public class AnalyticsController : MonoBehaviour
     #region Event
     public static void LogAdsRevenue(string name_event, int level, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
     {
-        try
+        Parameter[] AdRevenueParameters =
         {
-            if (firebaseInitialized)
-            {
-                Parameter[] AdRevenueParameters =
-                {
-                    new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
-                    new Parameter("play_mode", "normal"),
-                    new Parameter("ad_source", ad_source),
-                    new Parameter("ad_unit_name", ad_unit_name),
-                    new Parameter("ad_format",  ad_format ?? ""),
-                    new Parameter(FirebaseAnalytics.ParameterValue, value),
-                    new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
+                new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
+                new Parameter("play_mode", "normal"),
+                new Parameter("ad_source", ad_source),
+                new Parameter("ad_unit_name", ad_unit_name),
+                new Parameter("ad_format",  ad_format ?? ""),
+                new Parameter(FirebaseAnalytics.ParameterValue, value),
+                new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
 
-                };
-                FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
-                // Utils1.AnDebugLog($"ad_source| {ad_source} ad_unit_name| {ad_unit_name} ad_format| {ad_format} value| {value } currency| {currency}");
-            }
-        }
-        catch
-        {
+        };
 
-        }
+        FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
+
+        // try
+        // {
+        //     Parameter[] AdRevenueParameters =
+        //         {
+        //             new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
+        //             new Parameter("play_mode", "normal"),
+        //             new Parameter("ad_source", ad_source),
+        //             new Parameter("ad_unit_name", ad_unit_name),
+        //             new Parameter("ad_format",  ad_format ?? ""),
+        //             new Parameter(FirebaseAnalytics.ParameterValue, value),
+        //             new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
+
+        //         };
+
+        //     FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
+        // }
+        // catch (Exception e)
+        // {
+        // }
     }
 
 

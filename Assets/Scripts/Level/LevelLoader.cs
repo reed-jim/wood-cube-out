@@ -104,8 +104,9 @@ public class LevelLoader : MonoBehaviour
                 else
                 {
                     AutoAssignScrewFaction(level);
-                    AutoAssignScrewFactionMultiPhaseLevel(level);
                 }
+
+                AutoAssignScrewFactionMultiPhaseLevel(level);
             }
         };
 

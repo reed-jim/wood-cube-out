@@ -86,7 +86,7 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
         additionalParams.Add(AdRevenueScheme.PLACEMENT, placement);
 
         var logRevenue = new AFAdRevenueData("monetizationNetworkEx", Parser(), currency, value);
-
+        
         AppsFlyer.logAdRevenue(logRevenue, additionalParams);
 
         // Dictionary<string, string> addParams = new Dictionary<string, string>()

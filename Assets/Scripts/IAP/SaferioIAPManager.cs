@@ -155,6 +155,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         productData.ClearHolesBoosterQuantity
                     };
 
+                    SaferioTracking.TrackIAPEvent(productData.ProductId);
+
                     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                     break;
