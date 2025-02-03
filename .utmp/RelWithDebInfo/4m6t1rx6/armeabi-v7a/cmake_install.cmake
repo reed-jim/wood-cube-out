@@ -45,6 +45,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("D:/Projects/GStudio-Screw-Away/.utmp/RelWithDebInfo/4m6t1rx6/armeabi-v7a/GameActivity/cmake_install.cmake")
+  include("D:/Projects/GStudio-Screw-Away/.utmp/RelWithDebInfo/4m6t1rx6/armeabi-v7a/FramePacing/cmake_install.cmake")
 
 endif()
 
