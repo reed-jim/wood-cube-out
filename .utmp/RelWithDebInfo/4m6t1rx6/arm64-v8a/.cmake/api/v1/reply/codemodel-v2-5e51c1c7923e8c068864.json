@@ -8,7 +8,8 @@
 					"build" : ".",
 					"childIndexes" : 
 					[
-						1
+						1,
+						2
 					],
 					"jsonFile" : "directory-.-RelWithDebInfo-d0094a50bb2071803777.json",
 					"minimumCMakeVersion" : 
@@ -32,6 +33,21 @@
 					[
 						0
 					]
+				},
+				{
+					"build" : "FramePacing",
+					"jsonFile" : "directory-FramePacing-RelWithDebInfo-7f9c8865fd027a154c90.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.4.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 2,
+					"source" : "FramePacing",
+					"targetIndexes" : 
+					[
+						1
+					]
 				}
 			],
 			"name" : "RelWithDebInfo",
@@ -40,7 +56,8 @@
 				{
 					"childIndexes" : 
 					[
-						1
+						1,
+						2
 					],
 					"directoryIndexes" : 
 					[
@@ -59,6 +76,18 @@
 					[
 						0
 					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "swappywrapper",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
 				}
 			],
 			"targets" : 
@@ -66,9 +95,16 @@
 				{
 					"directoryIndex" : 1,
 					"id" : "game::@d02bb112ea9f9c2ed29f",
-					"jsonFile" : "target-game-RelWithDebInfo-2e714fd81d91159883b5.json",
+					"jsonFile" : "target-game-RelWithDebInfo-9c764fff242b330ad8a8.json",
 					"name" : "game",
 					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "swappywrapper::@7e25bd1f32ce224db4e9",
+					"jsonFile" : "target-swappywrapper-RelWithDebInfo-4a17de9ad847314a49fb.json",
+					"name" : "swappywrapper",
+					"projectIndex" : 2
 				}
 			]
 		}
