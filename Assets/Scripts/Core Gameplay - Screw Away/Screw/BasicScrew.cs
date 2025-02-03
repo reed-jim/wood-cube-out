@@ -70,6 +70,11 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
+            if (_isMoving)
+            {
+                return;
+            }
+
             if (isCheckObstacles)
             {
                 CountBlockingObjects();

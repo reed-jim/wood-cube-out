@@ -15,14 +15,21 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
     private void Awake()
     {
+        LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent += UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent += DisableMultiPhaseLevelUI;
     }
 
     private void OnDestroy()
     {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent -= UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent -= DisableMultiPhaseLevelUI;
+    }
+
+    private void OnLevelStarted()
+    {
+        progressBar.value = 0;
     }
 
     private void UpdateMultiPhaseLevelUI(Dictionary<int, int> numberScrewByPhase, float progress)
