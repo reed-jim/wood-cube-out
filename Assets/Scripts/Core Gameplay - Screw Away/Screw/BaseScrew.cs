@@ -308,6 +308,11 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public virtual void ForceUnscrew()
     {
+        if (_isMoving)
+        {
+            return;
+        }
+
         if (joint != null)
         {
             Destroy(joint);

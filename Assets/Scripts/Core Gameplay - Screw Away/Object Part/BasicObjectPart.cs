@@ -282,14 +282,16 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             direction.x = -1;
         }
 
-        if (direction.y > 0)
-        {
-            direction.y = 1;
-        }
-        else
-        {
-            direction.y = -1;
-        }
+        // if (direction.y > 0)
+        // {
+        //     direction.y = 1;
+        // }
+        // else
+        // {
+        //     direction.y = -1;
+        // }
+
+        direction.y = 1;
 
         if (direction.z > 0)
         {

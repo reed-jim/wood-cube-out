@@ -55,6 +55,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.addScrewToListEvent += AddScrew;
         ScrewBox.spawnNewScrewBoxEvent += SpawnNewScrewBox;
         ScrewBox.setFactionForScrewBoxEvent += AssignFactionForNewAdsScrewBox;
+        ScrewBox.screwBoxUnlockedEvent += OnScrewBoxUnlocked;
         BaseScrew.screwLoosenedEvent += OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
@@ -71,6 +72,7 @@ public class ScrewManager : MonoBehaviour
         BaseScrew.addScrewToListEvent -= AddScrew;
         ScrewBox.spawnNewScrewBoxEvent -= SpawnNewScrewBox;
         ScrewBox.setFactionForScrewBoxEvent -= AssignFactionForNewAdsScrewBox;
+        ScrewBox.screwBoxUnlockedEvent -= OnScrewBoxUnlocked;
         BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
@@ -303,12 +305,14 @@ public class ScrewManager : MonoBehaviour
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
         // Spawn 2 default screw boxes
-        for (int i = 0; i < 2; i++)
+        for (int i = 0; i < GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES; i++)
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
             spawnScrewBoxEvent?.Invoke(faction);
         }
+
+        _totalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
 
         spawnAdsScrewBoxesEvent?.Invoke();
     }
@@ -357,6 +361,11 @@ public class ScrewManager : MonoBehaviour
         // _remainingSpawnScrewBoxCommands--;
 
         // _isHandlingSpawningScrewBox = false;
+    }
+
+    private void OnScrewBoxUnlocked(ScrewBox screwBox)
+    {
+        _totalScrewBoxesSpawned++;
     }
 
     private void OnSpawnNewScrewBoxRequested()
@@ -622,7 +631,7 @@ public class ScrewManager : MonoBehaviour
         {
             BaseScrew screw = _screws[i];
 
-            if (screw.IsOutsideWithNoScrewBox)
+            if (screw.IsOutsideWithNoScrewBox && !screw.IsMoving)
             {
                 GameFaction faction = screw.Faction;
 

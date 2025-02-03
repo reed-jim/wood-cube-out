@@ -101,6 +101,8 @@ public class RevivePopup : BasePopup
                 reviveByDiamondButton.interactable = true;
             });
 
+            // userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
+
             userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)

@@ -21,6 +21,7 @@ public class MultiPhaseMilestoneUI : MonoBehaviour
 
     private void Awake()
     {
+        LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.phaseCompletedEvent += OnPhaseCompleted;
 
         _tweens = new List<Tween>();
@@ -30,9 +31,17 @@ public class MultiPhaseMilestoneUI : MonoBehaviour
 
     private void OnDestroy()
     {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.phaseCompletedEvent -= OnPhaseCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
+    }
+
+    private void OnLevelStarted()
+    {
+        doneImage.gameObject.SetActive(false);
+
+        inProgressImage.color = ColorUtil.WithAlpha(inProgressImage.color, 1);
     }
 
     private void OnPhaseCompleted(int nextPhase)
