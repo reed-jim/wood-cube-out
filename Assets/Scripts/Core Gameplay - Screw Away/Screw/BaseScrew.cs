@@ -266,20 +266,27 @@ public class BaseScrew : MonoBehaviour, IScrew
                     _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort, ease: Ease.Linear)
                         .OnComplete(() =>
                         {
+                            screwBoxSlot.CompleteFill();
+
+                            _isDone = true;
+                            _isInScrewPort = screwBoxSlot.IsScrewPort;
                             _isMoving = false;
 
+                            InvokeScrewLoosenedEvent();
                             screwMovedCompletedEvent?.Invoke(this);
+
+                            onCompleteAction?.Invoke();
                         })
                     );
 
-                    screwBoxSlot.CompleteFill();
+                    // screwBoxSlot.CompleteFill();
 
-                    _isDone = true;
-                    _isInScrewPort = screwBoxSlot.IsScrewPort;
+                    // _isDone = true;
+                    // _isInScrewPort = screwBoxSlot.IsScrewPort;
 
-                    InvokeScrewLoosenedEvent();
+                    // InvokeScrewLoosenedEvent();
 
-                    onCompleteAction?.Invoke();
+                    // onCompleteAction?.Invoke();
                 }));
             }));
         }));

@@ -125,7 +125,7 @@ public class ScrewBox : MonoBehaviour
             {
                 screwBoxCompletedEvent?.Invoke(this);
                 spawnNewScrewBoxEvent?.Invoke();
-
+                
                 transform.position = transform.position.ChangeY(initialPositionY);
                 transform.localScale = _initialScale;
 

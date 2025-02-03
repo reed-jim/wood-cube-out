@@ -343,8 +343,6 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.Faction = faction;
 
-
-
         int index = 0;
 
         for (int i = 0; i < screwBoxs.Length; i++)
@@ -517,7 +515,7 @@ public class ScrewBoxManager : MonoBehaviour
                             screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
                             onCompleteAction: () =>
                             {
-                                screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+                                // screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
 
                                 enableBoosterEvent?.Invoke(true);
                             },
@@ -586,7 +584,7 @@ public class ScrewBoxManager : MonoBehaviour
                         screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
                         onCompleteAction: () =>
                         {
-                            screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
+                            // screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
 
                             enableBoosterEvent?.Invoke(true);
                         },
