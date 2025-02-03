@@ -312,6 +312,10 @@ public class BaseScrew : MonoBehaviour, IScrew
         {
             return;
         }
+        else
+        {
+            _isMoving = true;
+        }
 
         if (joint != null)
         {
