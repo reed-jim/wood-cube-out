@@ -107,11 +107,16 @@ public class BuyBoosterPopup : BasePopup
             }
             else
             {
-                // userResourcesObserver.ChangeCoin(boosterDataObserver.BoosterCosts[boosterIndex]);
-                // userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+                userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
+                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
 
-                userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
-                userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]++;
+                // // WARNING: DO NOT change User Resource by property more than 1 time. The last one will overwrite the previous one.
+                // UserResources adjustedUserResources = userResourcesObserver.UserResources;
+
+                // adjustedUserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
+                // adjustedUserResources.BoosterQuantities[boosterIndex]++;
+
+                // userResourcesObserver.UserResources = adjustedUserResources;
 
                 updateBoosterQuantityEvent?.Invoke(boosterIndex);
             }
