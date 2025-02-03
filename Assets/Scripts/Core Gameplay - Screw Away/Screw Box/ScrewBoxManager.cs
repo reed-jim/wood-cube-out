@@ -550,6 +550,11 @@ public class ScrewBoxManager : MonoBehaviour
             return;
         }
 
+        if (screw.IsMoving)
+        {
+            return;
+        }
+
         bool isFound = false;
 
         for (int i = 0; i < screwBoxs.Length; i++)
