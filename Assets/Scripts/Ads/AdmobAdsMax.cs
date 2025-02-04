@@ -255,8 +255,11 @@ public class AdmobAdsMax : MonoBehaviour
             var revenue = adValue.Value / 1000000d;
             try
             {
+                AppFlyerGplay.LogRevenue("collapsible", "admob", "collapsible", "collapsible", revenue, "USD");
+
                 AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
-                // MediationType.Admob, true);
+                AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
+                AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
             }
             catch (Exception e)
             {
@@ -375,9 +378,11 @@ public class AdmobAdsMax : MonoBehaviour
             var revenue = adValue.Value / 1000000d;
             try
             {
+                AppFlyerGplay.LogRevenue("banner", "admob", "banner", "banner", revenue, "USD");
+
                 AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
-                // AnalyticsController.LogAdsRevenue("admob", "banner", "banner", revenue, adValue.CurrencyCode,
-                //     MediationType.Admob, true);
+                AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
+                AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
             }
             catch (Exception e)
             {
@@ -1037,14 +1042,12 @@ public class AdmobAdsMax : MonoBehaviour
 
         double revenue = adInfo.Revenue;
 
-        AppFlyerGplay.LogRevenue(adInfo.Placement, "max", adInfo.AdUnitIdentifier,
+        AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
 
         AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
             adInfo.AdFormat, revenue, "USD");
         AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
-            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
-        AnalyticsController.LogAdsRevenue("real_time_rev_fix", currentLevel.Value, adInfo.NetworkName.ToLower(),
             adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
     }
     #endregion
