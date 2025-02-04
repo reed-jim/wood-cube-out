@@ -66,11 +66,12 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackReviveEvent(string method, BoosterType boosterType, float progress)
+    public static void TrackReviveEvent(int level, string method, BoosterType boosterType, float progress)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
+            new Parameter("level", level.ToString()),
             new Parameter("method", method),
             new Parameter("booster_type", boosterType.ToString()),
             new Parameter("progress", progress.ToString()),
