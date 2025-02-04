@@ -12,12 +12,15 @@ public class MultiPhaseLevelUI : MonoBehaviour
     [SerializeField] private RectTransform milestonePrefab;
 
     private RectTransform[] _milestones;
+    private List<Tween> _tweens;
 
     private void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent += UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent += DisableMultiPhaseLevelUI;
+
+        _tweens = new List<Tween>();
     }
 
     private void OnDestroy()
@@ -25,6 +28,8 @@ public class MultiPhaseLevelUI : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent -= UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent -= DisableMultiPhaseLevelUI;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private void OnLevelStarted()
@@ -62,10 +67,12 @@ public class MultiPhaseLevelUI : MonoBehaviour
             }
         }
 
-        Tween.Custom(progressBar.value, progress, duration: 0.3f, onValueChange: newVal =>
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Custom(progressBar.value, progress, duration: 0.3f, onValueChange: newVal =>
         {
             progressBar.value = newVal;
-        });
+        }));
     }
 
     private void DisableMultiPhaseLevelUI()

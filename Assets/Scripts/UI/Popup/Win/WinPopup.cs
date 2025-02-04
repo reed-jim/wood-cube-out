@@ -49,6 +49,9 @@ public class WinPopup : BasePopup
         coinText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
+        continueButton.interactable = true;
+        returnHomeButton.interactable = true;
+
         Show();
 
         SoundManager.Instance.PlaySoundWin();
@@ -114,6 +117,8 @@ public class WinPopup : BasePopup
 
         // await Task.Delay(3000);
 
+        continueButton.interactable = false;
+
         AdmobAdsMax.Instance.ShowInterstitial(isShowImmediatly: true, actionIniterClose: OnInterstitialAdCompleted);
     }
 
@@ -129,6 +134,8 @@ public class WinPopup : BasePopup
 
     private void ReturnHome()
     {
+        returnHomeButton.interactable = false;
+
         Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 

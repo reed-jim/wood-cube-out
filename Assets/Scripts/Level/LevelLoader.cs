@@ -126,8 +126,6 @@ public class LevelLoader : MonoBehaviour
 
         currentLevel.Save();
 
-        await currentLevel.SaveAsync();
-
         levelBoosterObserver.Reset();
 
         startLevelEvent?.Invoke();
