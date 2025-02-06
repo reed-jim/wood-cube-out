@@ -84,6 +84,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevel();
         }
 
+        if (GUILayout.Button("Generate Level Simple"))
+        {
+            GenerateLevelSimple();
+        }
+
         if (GUILayout.Button("Fine Tune Level"))
         {
             FineTuneLevel();
@@ -1016,6 +1021,121 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return false;
+    }
+
+    private void GenerateLevelSimple()
+    {
+        int totalPiece = UnityEngine.Random.Range(28, 36);
+
+        totalPiece += totalPiece % 2;
+
+        int halfTotalPiece = totalPiece / 2;
+
+        Transform[] generatedPieces = new Transform[totalPiece];
+
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        int tryTime = 0;
+        int maxTryTime = 36;
+        bool isFound;
+
+        for (int i = 0; i < halfTotalPiece; i++)
+        {
+            tryTime = 0;
+            isFound = false;
+
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+            generatedPiece.name = $"Piece {i + 1}";
+
+            // float positionX = (i / 4f) * UnityEngine.Random.Range(1.5f, 4);
+
+            // Vector3 position = new Vector3(positionX, UnityEngine.Random.Range(-8, 8), UnityEngine.Random.Range(-8, 8));
+
+            // generatedPiece.position = position;
+
+            // if (IsNear(generatedPiece, generatedPieces))
+            // {
+            //     positionX = 1.8f * i;
+            // }
+
+            // for (int j = 0; j < maxTryTime; j++)
+            // {
+            //     positionX = (j / 12 + 1) * UnityEngine.Random.Range(1.5f, 4);
+
+            //     float multiplier = j / 12 + 1;
+
+            //     position = new Vector3(positionX, multiplier * UnityEngine.Random.Range(-4, 4), multiplier * UnityEngine.Random.Range(-4, 4));
+
+            //     generatedPiece.position = position;
+
+            //     if (!IsNear(generatedPiece, generatedPieces))
+            //     {
+            //         isFound = true;
+
+            //         break;
+            //     }
+            // }
+
+            // if (!isFound)
+            // {
+            //     position = position.ChangeX(1.8f * i);
+            // }
+
+            Vector3 position = new Vector3(1.8f * UnityEngine.Random.Range(1, 6), UnityEngine.Random.Range(-9, 9), UnityEngine.Random.Range(-9, 9));
+            Vector3 rotation = 45 * new Vector3(UnityEngine.Random.Range(0, 4), 0, 2 * UnityEngine.Random.Range(-1, 1));
+
+            generatedPiece.position = position;
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+            generatedPiece.position = position;
+
+            generatedPieces[i] = generatedPiece;
+        }
+
+        for (int i = halfTotalPiece; i < totalPiece; i++)
+        {
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+            generatedPiece.name = $"Piece {i + 1}";
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalPiece].GetComponent<MeshRenderer>().sharedMaterial;
+
+            // POSITION
+            Vector3 position = generatedPieces[i - halfTotalPiece].position;
+
+            position.x *= -1;
+
+            generatedPiece.position = position;
+
+            // ROTATION
+            Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
+
+            rotation.x += 180;
+            rotation.z += 180;
+
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
     }
 
     private void GenerateLevel()
