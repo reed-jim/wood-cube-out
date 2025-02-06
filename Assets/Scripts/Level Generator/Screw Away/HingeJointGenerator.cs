@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -68,12 +69,17 @@ public class HingeJointGenerator : EditorWindow
 
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
-        if (GUILayout.Button("Generate"))
+        // if (GUILayout.Button("Generate"))
+        // {
+        //     Generate(prefabPath);
+        // }
+
+        if (GUILayout.Button("Generate Level"))
         {
-            Generate(prefabPath);
+            GenerateLevel();
         }
 
-        if (GUILayout.Button("Generate All"))
+        if (GUILayout.Button("Generate Hinge Joint All"))
         {
             GenerateHingeJointAll(prefabPath);
         }
@@ -859,6 +865,140 @@ public class HingeJointGenerator : EditorWindow
         {
             GetComponentsFromAllChildrenRecursive<T>(child, components);
         }
+    }
+    #endregion
+
+
+
+    #region GENERATE LEVEL
+    private void GenerateLevel()
+    {
+        Transform piecePrefab = Selection.activeTransform;
+
+        int totalPiece = UnityEngine.Random.Range(24, 32);
+
+        totalPiece += (totalPiece % 2);
+
+        int halfTotalPiece = totalPiece / 2;
+
+        Transform[] generatedPieces = new Transform[totalPiece];
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        int tryTime = 0;
+        int maxTryTime = 36;
+
+        for (int i = 0; i < halfTotalPiece; i++)
+        {
+            tryTime = 0;
+
+            Transform generatedPiece = Instantiate(piecePrefab, piecePrefab.parent);
+
+            generatedPiece.name = $"Piece {i + 1}";
+
+            Vector3 position = new Vector3(UnityEngine.Random.Range(3, 9), UnityEngine.Random.Range(-12, 12), UnityEngine.Random.Range(-12, 12));
+
+            generatedPiece.position = position;
+
+            while (IsOverlapping(position, generatedPiece.gameObject) && tryTime <= maxTryTime)
+            {
+                position = new Vector3(UnityEngine.Random.Range(1, 12), UnityEngine.Random.Range(-24, 24), UnityEngine.Random.Range(-24, 24));
+
+                generatedPiece.position = position;
+
+                tryTime++;
+            }
+
+            Vector3 rotation = 45 * new Vector3(UnityEngine.Random.Range(0, 4), 0, 2 * UnityEngine.Random.Range(-1, 1));
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+            generatedPiece.position = position;
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+
+            generatedPieces[i] = generatedPiece;
+        }
+
+        // for (int i = halfTotalPiece; i < totalPiece; i++)
+        // {
+        //     Transform generatedPiece = Instantiate(piecePrefab, piecePrefab.parent);
+
+        //     generatedPiece.name = $"Piece {i + 1}";
+
+        //     // MATERIAL
+        //     generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalPiece].GetComponent<MeshRenderer>().sharedMaterial;
+
+        //     // POSITION
+        //     Vector3 position = generatedPieces[i - halfTotalPiece].position;
+
+        //     position.x *= -1;
+
+        //     generatedPiece.position = position;
+
+        //     // ROTATION
+        //     Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
+
+        //     // rotation.y -= 180;
+
+        //     rotation.z *= -1;
+
+        //     generatedPiece.rotation = Quaternion.Euler(rotation);
+
+        //     // generatedPiece.Rotate(Vector3.up, 180);
+        // }
+
+        EditorUtility.SetDirty(piecePrefab);
+
+        bool IsOverlapping(Vector3 spawnPosition, GameObject target)
+        {
+            Collider objectCollider = target.GetComponent<Collider>();
+
+            Collider[] colliders = Physics.OverlapBox(spawnPosition, 3 * target.GetComponent<Collider>().bounds.extents, target.transform.rotation);
+
+            int totalCollider = 0;
+
+            for (int i = 0; i < colliders.Length; i++)
+            {
+                if(colliders[i].gameObject == target) {
+
+                }
+                else {
+                    Debug.Log(spawnPosition + "/" + target.name + "/" + colliders[i].name);
+                }
+            }
+
+            
+
+            return totalCollider > 1;
+        }
+    }
+
+    private Material[] LoadAllMaterialsInFolder(string folder)
+    {
+        List<Material> prefabs = new List<Material>();
+
+        string[] prefabGUIDs = AssetDatabase.FindAssets("t:Material", new[] { folder });
+
+        // if (prefabGUIDs.Length == 0)
+        // {
+        //     Debug.LogWarning("No prefabs found in folder: " + folder);
+        //     return null;
+        // }
+
+        foreach (string guid in prefabGUIDs)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            Material prefab = AssetDatabase.LoadAssetAtPath<Material>(path);
+
+            if (prefab != null)
+            {
+                prefabs.Add(prefab);
+            }
+        }
+
+        return prefabs.ToArray();
     }
     #endregion
 }
