@@ -994,7 +994,7 @@ public class HingeJointGenerator : EditorWindow
 
     bool IsNear(Transform target, Transform[] pieces)
     {
-        Vector3 halfSize = 0.5f * target.transform.localScale.x * target.GetComponent<Collider>().bounds.size;
+        Vector3 halfSize = 0.6f * target.transform.localScale.x * target.GetComponent<Collider>().bounds.size;
 
         for (int i = 0; i < pieces.Length; i++)
         {
@@ -1073,9 +1073,11 @@ public class HingeJointGenerator : EditorWindow
 
             for (int j = 0; j < maxTryTime; j++)
             {
-                positionX = (i / 4f) * UnityEngine.Random.Range(1.5f, 4);
+                positionX = (j / 12 + 1) * UnityEngine.Random.Range(1.5f, 4);
 
-                position = new Vector3(positionX, UnityEngine.Random.Range(-9, 9), UnityEngine.Random.Range(-9, 9));
+                float multiplier = j / 12 + 1;
+
+                position = new Vector3(positionX, multiplier * UnityEngine.Random.Range(-4, 4), multiplier * UnityEngine.Random.Range(-4, 4));
 
                 generatedPiece.position = position;
 
