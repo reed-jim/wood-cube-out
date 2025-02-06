@@ -35,6 +35,10 @@ public class HingeJointGenerator : EditorWindow
 
     private Vector2 scrollPosition;
 
+    #region GENERATE LEVEL
+    private GameObject piecePrefab;
+    #endregion
+
 
     [MenuItem("Saferio/Tools/Hinge Joint Generator")]
     public static void ShowWindow()
@@ -55,6 +59,7 @@ public class HingeJointGenerator : EditorWindow
         target = (GameObject)EditorGUILayout.ObjectField("Target", target, typeof(GameObject), true);
         screwPrefab = (GameObject)EditorGUILayout.ObjectField("Screw Prefab", screwPrefab, typeof(GameObject), true);
         targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), true);
+        piecePrefab = (GameObject)EditorGUILayout.ObjectField("Piece Prefab", piecePrefab, typeof(GameObject), true);
 
         dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         distance = EditorGUILayout.Vector3Field("Distance", distance);
@@ -77,6 +82,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Generate Level"))
         {
             GenerateLevel();
+        }
+
+        if (GUILayout.Button("Fine Tune Level"))
+        {
+            FineTuneLevel();
         }
 
         if (GUILayout.Button("Generate Hinge Joint All"))
@@ -185,8 +195,38 @@ public class HingeJointGenerator : EditorWindow
             FoldAllInPrefabMode();
         }
 
+        if (GUILayout.Button("Overlap"))
+        {
+            IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
+        }
+
         GUILayout.EndArea();
         EditorGUILayout.EndScrollView();
+    }
+
+    bool IsOverlapping(Vector3 spawnPosition, GameObject target)
+    {
+        Collider[] colliders = Physics.OverlapBox(spawnPosition, 0.5f * target.transform.localScale, target.transform.rotation);
+
+        int totalCollider = 0;
+
+        for (int i = 0; i < colliders.Length; i++)
+        {
+            if (colliders[i].gameObject == target)
+            {
+
+            }
+            else
+            {
+                totalCollider++;
+
+                Debug.Log(spawnPosition + "/" + target.name + "/" + colliders[i].name);
+            }
+        }
+
+        Debug.Log(target.name + "/" + totalCollider);
+
+        return totalCollider > 0;
     }
 
     private void CenterLevelPivot(string path)
@@ -871,107 +911,272 @@ public class HingeJointGenerator : EditorWindow
 
 
     #region GENERATE LEVEL
+    private void FineTuneLevel()
+    {
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
+
+        int maxTryTime = 36;
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            for (int j = 0; j < maxTryTime; j++)
+            {
+                Vector3 position = Flee(pieces[i].transform, j + 1);
+
+                pieces[i].transform.position = position;
+
+                if (!IsNear(pieces[i].transform))
+                {
+                    break;
+                }
+            }
+        }
+
+        Vector3 Flee(Transform target, float fleeStrength)
+        {
+            Vector3 fleeDirection = Vector3.zero;
+
+            Vector3 halfSize = 0.5f * target.transform.localScale.x * target.GetComponent<Collider>().bounds.size;
+            float safeDistance = halfSize.x;
+
+            // Iterate through all the objects in the group
+            foreach (BasicObjectPart obj in pieces)
+            {
+                // Calculate the direction vector from the current object to the fleeing object
+                Vector3 directionToObject = target.position - obj.transform.position;
+
+                fleeDirection += directionToObject.normalized;
+
+                // // If the object is within the safe distance, flee from it
+                // if (directionToObject.magnitude < safeDistance)
+                // {
+                //     // Accumulate the flee direction, adding more force the closer we are
+                //     fleeDirection += directionToObject.normalized;
+                // }
+            }
+
+            Debug.Log(fleeDirection * fleeStrength);
+
+            // If there is any flee direction, apply the force to the object
+            if (fleeDirection != Vector3.zero)
+            {
+                // Normalize the flee direction to get a consistent speed, and scale by flee strength
+                fleeDirection.Normalize();
+                return target.position + fleeDirection * fleeStrength;
+            }
+
+
+
+            return target.position + fleeDirection * fleeStrength;
+        }
+
+        bool IsNear(Transform target)
+        {
+            Vector3 halfSize = 0.5f * target.transform.localScale.x * target.GetComponent<Collider>().bounds.size;
+
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                if (pieces[i].transform != target)
+                {
+                    if (Mathf.Abs(pieces[i].transform.position.x - target.position.x) < halfSize.x &&
+                        Mathf.Abs(pieces[i].transform.position.y - target.position.y) < halfSize.y &&
+                        Mathf.Abs(pieces[i].transform.position.z - target.position.z) < halfSize.z
+                    )
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+    }
+
+    bool IsNear(Transform target, Transform[] pieces)
+    {
+        Vector3 halfSize = 0.5f * target.transform.localScale.x * target.GetComponent<Collider>().bounds.size;
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (pieces[i] == null)
+            {
+                continue;
+            }
+
+            if (pieces[i].transform != target)
+            {
+                if (Mathf.Abs(pieces[i].transform.position.x - target.position.x) < halfSize.x &&
+                    Mathf.Abs(pieces[i].transform.position.y - target.position.y) < halfSize.y &&
+                    Mathf.Abs(pieces[i].transform.position.z - target.position.z) < halfSize.z
+                )
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     private void GenerateLevel()
     {
-        Transform piecePrefab = Selection.activeTransform;
-
         int totalPiece = UnityEngine.Random.Range(24, 32);
 
-        totalPiece += (totalPiece % 2);
+        totalPiece += totalPiece % 2;
 
         int halfTotalPiece = totalPiece / 2;
 
         Transform[] generatedPieces = new Transform[totalPiece];
+
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
 
         // MATERIALS
         Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
 
         int tryTime = 0;
         int maxTryTime = 36;
+        bool isFound;
 
         for (int i = 0; i < halfTotalPiece; i++)
         {
             tryTime = 0;
+            isFound = false;
 
-            Transform generatedPiece = Instantiate(piecePrefab, piecePrefab.parent);
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
 
             generatedPiece.name = $"Piece {i + 1}";
 
-            Vector3 position = new Vector3(UnityEngine.Random.Range(3, 9), UnityEngine.Random.Range(-12, 12), UnityEngine.Random.Range(-12, 12));
+            float positionX;
+            Vector3 position = Vector3.zero;
 
-            generatedPiece.position = position;
+            // float positionX = (i / 4f) * UnityEngine.Random.Range(1.5f, 4);
 
-            while (IsOverlapping(position, generatedPiece.gameObject) && tryTime <= maxTryTime)
+            // Vector3 position = new Vector3(positionX, UnityEngine.Random.Range(-8, 8), UnityEngine.Random.Range(-8, 8));
+
+            // generatedPiece.position = position;
+
+            // if (IsNear(generatedPiece, generatedPieces))
+            // {
+            //     positionX = 1.8f * i;
+            // }
+
+            for (int j = 0; j < maxTryTime; j++)
             {
-                position = new Vector3(UnityEngine.Random.Range(1, 12), UnityEngine.Random.Range(-24, 24), UnityEngine.Random.Range(-24, 24));
+                positionX = (i / 4f) * UnityEngine.Random.Range(1.5f, 4);
+
+                position = new Vector3(positionX, UnityEngine.Random.Range(-9, 9), UnityEngine.Random.Range(-9, 9));
 
                 generatedPiece.position = position;
 
-                tryTime++;
+                if (!IsNear(generatedPiece, generatedPieces))
+                {
+                    isFound = true;
+
+                    break;
+                }
             }
+
+            if (!isFound)
+            {
+                position = position.ChangeX(1.8f * i);
+            }
+
+            // for (int j = 0; j < maxTryTime; j++)
+            // {
+            //     position = new Vector3(UnityEngine.Random.Range(1, 12), j * UnityEngine.Random.Range(-1, 1), j * UnityEngine.Random.Range(-1, 1));
+
+            //     generatedPiece.position = position;
+
+            //     Debug.Log("TRY " + generatedPiece.name + "/" + j);
+
+            //     if (!IsOverlapping(position, generatedPiece.gameObject))
+            //     {
+            //         break;
+            //     }
+            // }
+
+            // while (IsOverlapping(position, generatedPiece.gameObject) && tryTime <= maxTryTime)
+            // {
+            //     tryTime++;
+
+            //     position = new Vector3(UnityEngine.Random.Range(1, 12), tryTime * UnityEngine.Random.Range(-1, 1), tryTime * UnityEngine.Random.Range(-1, 1));
+
+            //     generatedPiece.position = position;
+
+            //     Debug.Log("TRY " + generatedPiece.name + "/" + tryTime);
+            // }
 
             Vector3 rotation = 45 * new Vector3(UnityEngine.Random.Range(0, 4), 0, 2 * UnityEngine.Random.Range(-1, 1));
 
             // MATERIAL
             generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 
+            generatedPiece.rotation = Quaternion.Euler(new Vector3(30 * UnityEngine.Random.Range(-3, 3), 0, -90));
             generatedPiece.position = position;
-            generatedPiece.rotation = Quaternion.Euler(rotation);
 
             generatedPieces[i] = generatedPiece;
         }
 
-        // for (int i = halfTotalPiece; i < totalPiece; i++)
-        // {
-        //     Transform generatedPiece = Instantiate(piecePrefab, piecePrefab.parent);
+        for (int i = halfTotalPiece; i < totalPiece; i++)
+        {
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
 
-        //     generatedPiece.name = $"Piece {i + 1}";
+            generatedPiece.name = $"Piece {i + 1}";
 
-        //     // MATERIAL
-        //     generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalPiece].GetComponent<MeshRenderer>().sharedMaterial;
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalPiece].GetComponent<MeshRenderer>().sharedMaterial;
 
-        //     // POSITION
-        //     Vector3 position = generatedPieces[i - halfTotalPiece].position;
+            // POSITION
+            Vector3 position = generatedPieces[i - halfTotalPiece].position;
 
-        //     position.x *= -1;
+            position.x *= -1;
 
-        //     generatedPiece.position = position;
+            generatedPiece.position = position;
 
-        //     // ROTATION
-        //     Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
+            // ROTATION
+            Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
 
-        //     // rotation.y -= 180;
+            rotation.z += 180;
 
-        //     rotation.z *= -1;
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+        }
 
-        //     generatedPiece.rotation = Quaternion.Euler(rotation);
-
-        //     // generatedPiece.Rotate(Vector3.up, 180);
-        // }
-
-        EditorUtility.SetDirty(piecePrefab);
+        EditorUtility.SetDirty(Selection.activeTransform);
 
         bool IsOverlapping(Vector3 spawnPosition, GameObject target)
         {
-            Collider objectCollider = target.GetComponent<Collider>();
-
-            Collider[] colliders = Physics.OverlapBox(spawnPosition, 3 * target.GetComponent<Collider>().bounds.extents, target.transform.rotation);
+            Collider[] colliders = Physics.OverlapBox(spawnPosition, 0.5f * target.transform.localScale, target.transform.rotation);
 
             int totalCollider = 0;
 
             for (int i = 0; i < colliders.Length; i++)
             {
-                if(colliders[i].gameObject == target) {
+                if (colliders[i].gameObject == target)
+                {
 
                 }
-                else {
-                    Debug.Log(spawnPosition + "/" + target.name + "/" + colliders[i].name);
+                else
+                {
+                    totalCollider++;
+
+                    // Debug.Log(spawnPosition + "/" + target.name + "/" + colliders[i].name);
                 }
             }
 
-            
+            Debug.Log(target.name + "/" + totalCollider);
 
-            return totalCollider > 1;
+            return totalCollider > 0;
         }
     }
 
