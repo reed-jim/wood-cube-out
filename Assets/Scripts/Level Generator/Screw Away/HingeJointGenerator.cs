@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -92,6 +93,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Fine Tune Level"))
         {
             FineTuneLevel();
+        }
+
+        if (GUILayout.Button("Generate Screws"))
+        {
+            GenerateScrews();
         }
 
         if (GUILayout.Button("Generate Hinge Joint All"))
@@ -1130,7 +1136,7 @@ public class HingeJointGenerator : EditorWindow
             Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
 
             rotation.x += 180;
-            // rotation.z += 180;
+            rotation.z += 180;
 
             generatedPiece.rotation = Quaternion.Euler(rotation);
         }
@@ -1326,6 +1332,91 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return prefabs.ToArray();
+    }
+    #endregion
+
+    #region GENERATE SCREW
+    private void GenerateScrews()
+    {
+        Transform level = Selection.activeTransform;
+
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            GenerateScrewForPiece(pieces[i]);
+        }
+
+        EditorUtility.SetDirty(level);
+
+        void GenerateScrewForPiece(BasicObjectPart piece)
+        {
+            Vector3 pieceSize = piece.GetComponent<MeshFilter>().sharedMesh.bounds.size / piece.transform.localScale.x;
+            Vector3 halfSize = 0.5f * pieceSize;
+
+            Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+
+            Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
+
+            int numScrew = UnityEngine.Random.Range(2, 6);
+
+            int numScrewFull = numScrew + numScrew % 2;
+
+            int numColumn = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
+            int numRow = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
+
+            numColumn = Mathf.Max(numColumn, 1);
+            numRow = Mathf.Max(numRow, 1);
+
+            for (int i = 0; i < numRow; i++)
+            {
+                for (int j = 0; j < numColumn; j++)
+                {
+                    // if (j + i * numColumn >= numScrew)
+                    // {
+                    //     continue;
+                    // }
+
+                    BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+                    float positionX = (-(numColumn - 1) / 2f + j) * (pieceSize.x / numColumn);
+                    float positionZ = (-(numRow - 1) / 2f + i) * (pieceSize.z / numRow);
+
+                    screw.transform.localPosition = new Vector3(positionX, halfSize.y, positionZ);
+                    screw.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
+                    screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+                }
+            }
+
+            // for (int i = 0; i < numScrew; i++)
+            // {
+            //     BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+            //     screw.transform.localPosition =
+            //         new Vector3(UnityEngine.Random.Range(-halfSize.x, halfSize.x),
+            //         UnityEngine.Random.Range(-halfSize.y, halfSize.y),
+            //         UnityEngine.Random.Range(-halfSize.z, halfSize.z));
+
+            //     // int randomSurface = UnityEngine.Random.Range(0, 3);
+
+            //     // if (randomSurface == 0)
+            //     // {
+            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeX(halfSize.x);
+            //     // }
+            //     // else if (randomSurface == 1)
+            //     // {
+            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeY(halfSize.y);
+            //     // }
+            //     // else if (randomSurface == 2)
+            //     // {
+            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeZ(halfSize.z);
+            //     // }
+
+            //     screw.transform.localPosition = screw.transform.localPosition.ChangeY(halfSize.y);
+
+            //     screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+            // }
+        }
     }
     #endregion
 }
