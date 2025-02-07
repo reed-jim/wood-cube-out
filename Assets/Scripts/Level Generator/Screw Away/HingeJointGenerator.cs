@@ -177,7 +177,7 @@ public class HingeJointGenerator : EditorWindow
 
         if (GUILayout.Button("Set Lossy Scale All Screws"))
         {
-            SetLossyScaleAllScrews(prefabPath);
+            SetLossyScaleAllScrews();
         }
 
         if (GUILayout.Button("Snap Surface"))
@@ -682,11 +682,11 @@ public class HingeJointGenerator : EditorWindow
         PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
     }
 
-    private void SetLossyScaleAllScrews(string path)
+    private void SetLossyScaleAllScrews()
     {
-        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
+        GameObject level = Selection.activeGameObject;
 
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
 
         if (expectedScale <= 0)
         {
@@ -698,9 +698,9 @@ public class HingeJointGenerator : EditorWindow
             screws[i].transform.localScale = TransformUtil.ComponentWiseDivine(expectedScale * screws[i].transform.localScale, screws[i].transform.lossyScale);
         }
 
-        EditorUtility.SetDirty(levelPrefab);
+        EditorUtility.SetDirty(level);
 
-        PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
+        // PrefabUtility.SaveAsPrefabAsset(level, path);
     }
     #endregion
 
@@ -1382,7 +1382,7 @@ public class HingeJointGenerator : EditorWindow
                     float positionX = (-(numColumn - 1) / 2f + j) * (pieceSize.x / numColumn);
                     float positionZ = (-(numRow - 1) / 2f + i) * (pieceSize.z / numRow);
 
-                    screw.transform.localPosition = new Vector3(positionX, halfSize.y, positionZ);
+                    screw.transform.localPosition = new Vector3(positionX, -halfSize.y, positionZ);
                     screw.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
                     screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                 }

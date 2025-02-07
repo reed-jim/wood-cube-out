@@ -5,7 +5,7 @@ using UnityEngine;
 public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 {
     [Header("CUSTOMIZE")]
-    [SerializeField] private string alphaValueReference;
+    [SerializeField] private string alphaValueReference = "_ObjectAlpha";
 
     #region PRIVATE FIELD
     [SerializeField] private List<Tween> _tweens;
