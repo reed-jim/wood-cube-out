@@ -90,6 +90,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevelSimple();
         }
 
+        if (GUILayout.Button("Generate Level Pattern"))
+        {
+            GenerateLevelPattern();
+        }
+
         if (GUILayout.Button("Fine Tune Level"))
         {
             FineTuneLevel();
@@ -1103,7 +1108,8 @@ public class HingeJointGenerator : EditorWindow
             // }
 
             Vector3 position = new Vector3(1.8f * UnityEngine.Random.Range(1, 8), UnityEngine.Random.Range(-12, 12), UnityEngine.Random.Range(-12, 12));
-            Vector3 rotation = 30 * new Vector3(UnityEngine.Random.Range(-3, 3), 0, 2 * UnityEngine.Random.Range(-1, 1));
+            // Vector3 rotation = 30 * new Vector3(0, 3, UnityEngine.Random.Range(-3, 3));
+            Vector3 rotation = new Vector3(0, 180, 90);
 
             generatedPiece.position = position;
 
@@ -1139,6 +1145,162 @@ public class HingeJointGenerator : EditorWindow
             rotation.z += 180;
 
             generatedPiece.rotation = Quaternion.Euler(rotation);
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
+    private void GenerateLevelPattern()
+    {
+        int totalPiece = UnityEngine.Random.Range(24, 32);
+
+        totalPiece += totalPiece % 2;
+
+        int halfTotalPiece = totalPiece / 2;
+
+        Transform[] generatedPieces = new Transform[totalPiece];
+
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Vector3 pieceSize = piecePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * piecePrefab.transform.localScale.x;
+        Vector3 currentPieceSize;
+
+        int totalSpawn = 0;
+        int maxPiecePerXLayer = 4;
+        int pieceInCurrentXLayer;
+
+
+
+        // X
+        for (int i = 2; i < 12; i++)
+        {
+            pieceInCurrentXLayer = 0;
+
+            // Y
+            for (int j = -1; j < 2; j++)
+            {
+                // Z
+                for (int k = -2; k < 2; k++)
+                {
+                    if (totalSpawn >= halfTotalPiece || pieceInCurrentXLayer > maxPiecePerXLayer)
+                    {
+                        break;
+                    }
+
+                    int random = UnityEngine.Random.Range(0, 120 / (8 * (i + 1)));
+
+                    if (random == 0)
+                    {
+                        Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+                        generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+                        Vector3 rotation = new Vector3(0, 180, 90);
+                        generatedPiece.rotation = Quaternion.Euler(rotation);
+
+                        currentPieceSize = generatedPiece.GetComponent<MeshRenderer>().bounds.size;
+
+                        Vector3 position = new Vector3(1.6f * i * currentPieceSize.x, 1.1f * j * currentPieceSize.y, 1.1f * k * currentPieceSize.z);
+                        // Vector3 rotation = 30 * new Vector3(0, 3, UnityEngine.Random.Range(-3, 3));
+
+                        generatedPiece.position = position;
+
+                        // MATERIAL
+                        generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+
+                        generatedPiece.position = position;
+
+                        Debug.Log(currentPieceSize + "/" + Vector3.Scale(pieceSize, generatedPiece.lossyScale));
+
+                        generatedPieces[totalSpawn] = generatedPiece;
+
+                        totalSpawn++;
+                        pieceInCurrentXLayer++;
+                    }
+                }
+            }
+        }
+
+        // Flip
+        for (int i = totalSpawn; i < 2 * totalSpawn; i++)
+        {
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+            generatedPiece.name = $"Piece {i + 1}";
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalPiece].GetComponent<MeshRenderer>().sharedMaterial;
+
+            // POSITION
+            Vector3 position = generatedPieces[i - halfTotalPiece].position;
+
+            position.x *= -1;
+
+            generatedPiece.position = position;
+
+            // ROTATION
+            Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
+
+            rotation.x += 180;
+            rotation.z += 180;
+
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+        }
+
+        maxPiecePerXLayer = 2;
+
+        // Center
+        for (int i = -6; i < 4; i++)
+        {
+            pieceInCurrentXLayer = 0;
+
+            for (int j = -1; j < 2; j++)
+            {
+                if (pieceInCurrentXLayer >= maxPiecePerXLayer)
+                {
+                    break;
+                }
+
+                int random = UnityEngine.Random.Range(0, 4);
+
+                if (random == 0)
+                {
+                    Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+                    generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+                    Vector3 rotation = new Vector3(0, -90, 90);
+                    generatedPiece.rotation = Quaternion.Euler(rotation);
+
+                    currentPieceSize = generatedPiece.GetComponent<MeshRenderer>().bounds.size;
+
+                    Vector3 position = new Vector3(0, 1.1f * j * currentPieceSize.y, 1.6f * i * currentPieceSize.z);
+
+                    generatedPiece.position = position;
+
+                    // MATERIAL
+                    generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+                    generatedPiece.position = position;
+
+                    pieceInCurrentXLayer++;
+                }
+            }
         }
 
         EditorUtility.SetDirty(Selection.activeTransform);
@@ -1199,7 +1361,7 @@ public class HingeJointGenerator : EditorWindow
 
             for (int j = 0; j < maxTryTime; j++)
             {
-                positionX = (j / 12 + 1) * UnityEngine.Random.Range(1.5f, 4);
+                positionX = (j / 12 + 1) * 1.8f * UnityEngine.Random.Range(1, 4);
 
                 float multiplier = j / 12 + 1;
 
@@ -1250,7 +1412,8 @@ public class HingeJointGenerator : EditorWindow
             // MATERIAL
             generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 
-            generatedPiece.rotation = Quaternion.Euler(new Vector3(30 * UnityEngine.Random.Range(-3, 3), 0, -90));
+            // generatedPiece.rotation = Quaternion.Euler(new Vector3(30 * UnityEngine.Random.Range(-3, 3), 0, -90));
+            generatedPiece.rotation = Quaternion.Euler(new Vector3(0, 180, 90));
             generatedPiece.position = position;
 
             generatedPieces[i] = generatedPiece;
