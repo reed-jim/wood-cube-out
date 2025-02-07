@@ -1025,7 +1025,7 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateLevelSimple()
     {
-        int totalPiece = UnityEngine.Random.Range(28, 36);
+        int totalPiece = UnityEngine.Random.Range(20, 28);
 
         totalPiece += totalPiece % 2;
 
@@ -1096,8 +1096,8 @@ public class HingeJointGenerator : EditorWindow
             //     position = position.ChangeX(1.8f * i);
             // }
 
-            Vector3 position = new Vector3(1.8f * UnityEngine.Random.Range(1, 6), UnityEngine.Random.Range(-9, 9), UnityEngine.Random.Range(-9, 9));
-            Vector3 rotation = 45 * new Vector3(UnityEngine.Random.Range(0, 4), 0, 2 * UnityEngine.Random.Range(-1, 1));
+            Vector3 position = new Vector3(1.8f * UnityEngine.Random.Range(1, 8), UnityEngine.Random.Range(-12, 12), UnityEngine.Random.Range(-12, 12));
+            Vector3 rotation = 30 * new Vector3(UnityEngine.Random.Range(-3, 3), 0, 2 * UnityEngine.Random.Range(-1, 1));
 
             generatedPiece.position = position;
 
@@ -1130,7 +1130,7 @@ public class HingeJointGenerator : EditorWindow
             Vector3 rotation = generatedPieces[i - halfTotalPiece].rotation.eulerAngles;
 
             rotation.x += 180;
-            rotation.z += 180;
+            // rotation.z += 180;
 
             generatedPiece.rotation = Quaternion.Euler(rotation);
         }
