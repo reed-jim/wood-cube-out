@@ -23,6 +23,7 @@ public class BuyBoosterPopup : BasePopup
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private BoosterDataObserver boosterDataObserver;
+    [SerializeField] private IntVariable currentLevel;
 
     private BoosterType _boosterType;
     private bool _isBoughtBreakObjectBoosterByCoin;
@@ -161,6 +162,8 @@ public class BuyBoosterPopup : BasePopup
         Hide(onCompletedAction: () =>
         {
             useBoosterEvent?.Invoke(_boosterType);
+
+            SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{_boosterType}");
         });
     }
 
@@ -174,6 +177,8 @@ public class BuyBoosterPopup : BasePopup
         Hide(onCompletedAction: () =>
         {
             unlockScrewBoxEvent?.Invoke();
+
+            SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "UnlockScrewBox");
         });
     }
 

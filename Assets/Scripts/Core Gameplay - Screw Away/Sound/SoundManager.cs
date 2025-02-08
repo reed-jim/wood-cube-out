@@ -15,13 +15,11 @@ public class SoundManager : MonoBehaviour
 
     void Awake()
     {
-        GameSettingManager.enableBackgroundMusicEvent += EnableBackgroundMusic;
-        GameSettingManager.enableGameSoundEvent += EnableGameSound;
-        GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
-
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+
+            return;
         }
         else
         {
@@ -29,6 +27,10 @@ public class SoundManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
+
+        GameSettingManager.enableBackgroundMusicEvent += EnableBackgroundMusic;
+        GameSettingManager.enableGameSoundEvent += EnableGameSound;
+        GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
     }
 
     private void OnDestroy()
