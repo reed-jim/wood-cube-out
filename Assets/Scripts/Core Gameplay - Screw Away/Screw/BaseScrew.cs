@@ -25,6 +25,9 @@ public class BaseScrew : MonoBehaviour, IScrew
     [SerializeField] private float durationMoveToScrewPort = 0.3f;
     [SerializeField] private float durationTightenScrewPort = 0.3f;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] protected GameSetting gameSetting;
+
     #region PRIVATE FIELD
     protected List<Tween> _tweens = new List<Tween>();
     protected int _numberBlockingObjects;

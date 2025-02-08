@@ -10,6 +10,7 @@ public class PausePopup : BasePopup
     [SerializeField] private Button replayLevelButton;
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
+    [SerializeField] private SaferioToggle vibrationToggle;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
@@ -18,12 +19,14 @@ public class PausePopup : BasePopup
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
+    public static event Action<bool> enableVibrationEvent;
     public static event Action replayLevelEvent;
 
     protected override void MoreActionInAwake()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
     }
 
     protected override void RegisterMoreEvent()
@@ -34,6 +37,7 @@ public class PausePopup : BasePopup
         replayLevelButton.onClick.AddListener(Replay);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
+        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
     }
 
     protected override void UnregisterMoreEvent()
@@ -78,9 +82,17 @@ public class PausePopup : BasePopup
         enableGameSoundEvent?.Invoke(isTurnOn);
     }
 
+    private void EnableVibration(bool isTurnOn)
+    {
+        gameSetting.IsVibrate = isTurnOn;
+
+        enableVibrationEvent?.Invoke(isTurnOn);
+    }
+
     private void OnGameSettingLoaded()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
     }
 }

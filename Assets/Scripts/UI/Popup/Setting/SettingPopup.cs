@@ -11,6 +11,7 @@ public class SettingPopup : BasePopup
 {
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
+    [SerializeField] private SaferioToggle vibrationToggle;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -25,12 +26,14 @@ public class SettingPopup : BasePopup
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
+    public static event Action<bool> enableVibrationEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
 
         chooseLanguageContainer.gameObject.SetActive(false);
     }
@@ -41,6 +44,7 @@ public class SettingPopup : BasePopup
 
         turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
+        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
@@ -72,10 +76,18 @@ public class SettingPopup : BasePopup
         enableGameSoundEvent?.Invoke(isTurnOn);
     }
 
+    private void EnableVibration(bool isTurnOn)
+    {
+        gameSetting.IsVibrate = isTurnOn;
+
+        enableVibrationEvent?.Invoke(isTurnOn);
+    }
+
     private void OnGameSettingLoaded()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
     }
 
     #region LANGUAGE
