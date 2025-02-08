@@ -7,6 +7,13 @@ public class NoAdsLoadedPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        showAdNotLoadedPopupEvent += Show;
+
         okButton.onClick.AddListener(Hide);
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        showAdNotLoadedPopupEvent -= Show;
     }
 }

@@ -698,7 +698,8 @@ public enum ActionWatchVideo
     AddHole,
     BreakObject,
     ClearHoles,
-    UnlockScrewBox
+    UnlockScrewBox,
+    SkipLevel
 }
 
 public enum ActionShowInter

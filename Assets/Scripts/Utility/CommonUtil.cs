@@ -17,6 +17,11 @@ public static class CommonUtil
 
     public static void StopAllTweens(List<Tween> tweens)
     {
+        if (tweens == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < tweens.Count; i++)
         {
             if (tweens[i].isAlive)
