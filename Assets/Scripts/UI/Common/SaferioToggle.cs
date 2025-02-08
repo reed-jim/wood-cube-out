@@ -14,6 +14,7 @@ public class SaferioToggle : MonoBehaviour
     [SerializeField] private float transitionDuration;
 
     private bool _isOn;
+    private bool _isInTransition;
 
     private Action<bool> onSwitched;
 
@@ -47,6 +48,15 @@ public class SaferioToggle : MonoBehaviour
 
     public void Switch()
     {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
         _isOn = !_isOn;
 
         float inactiveBackgroundAlpha = 0;
@@ -67,6 +77,8 @@ public class SaferioToggle : MonoBehaviour
         .OnComplete(() =>
         {
             onSwitched?.Invoke(_isOn);
+
+            _isInTransition = false;
         });
     }
 }
