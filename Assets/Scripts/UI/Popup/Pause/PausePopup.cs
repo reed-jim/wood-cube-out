@@ -44,14 +44,10 @@ public class PausePopup : BasePopup
         ScriptableObjectInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
     }
 
-    // protected override void AfterHide()
-    // {
-    //     Time.timeScale = 1;
-    // }
-
     private void ReturnHome()
     {
-        // Time.timeScale = 1;
+        // avoid spamming
+        returnHomeButton.interactable = false;
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 

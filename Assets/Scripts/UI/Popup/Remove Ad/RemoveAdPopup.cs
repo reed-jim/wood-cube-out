@@ -1,4 +1,5 @@
 using System;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -49,6 +50,13 @@ public class RemoveAdPopup : BasePopup
         else
         {
             buyIAPEvent?.Invoke(iapData.ProductId);
+
+            buyButton.interactable = false;
+
+            _tweens.Add(Tween.Delay(1f).OnComplete(() =>
+            {
+                buyButton.interactable = true;
+            }));
         }
     }
 

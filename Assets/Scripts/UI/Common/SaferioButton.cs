@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
     private Button _button;
     private Sequence _sequence;
+    private List<Tween> _tweens;
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -22,6 +24,8 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
 
     private void Awake()
     {
+        _tweens = new List<Tween>();
+
         _button = GetComponent<Button>();
 
         _button.onClick.AddListener(PlaySoundOnClick);
@@ -33,6 +37,8 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
         {
             _sequence.Stop();
         }
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private void PlayAnimationOnClick()

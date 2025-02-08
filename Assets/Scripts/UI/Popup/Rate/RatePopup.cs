@@ -1,4 +1,5 @@
 using System;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class RatePopup : BasePopup
     [SerializeField] private Button rateButton;
 
     private int _numStar;
+    private bool _isDisableOpenReviewPage;
 
     public static event Action launchInAppReviewEvent;
 
@@ -26,7 +28,20 @@ public class RatePopup : BasePopup
     {
         if (_numStar == 5)
         {
-            OpenReviewPage();
+            if (_isDisableOpenReviewPage)
+            {
+                _tweens.Add(Tween.Delay(5f).OnComplete(() =>
+                {
+                    _isDisableOpenReviewPage = false;
+                }));
+            }
+            else
+            {
+                OpenReviewPage();
+
+                _isDisableOpenReviewPage = true;
+            }
+
         }
         else
         {

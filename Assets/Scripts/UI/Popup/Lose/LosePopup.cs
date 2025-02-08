@@ -43,8 +43,6 @@ public class LosePopup : BasePopup
 
     private void OnApplicationQuit()
     {
-        Debug.Log("SAFERIO QUIT");
-
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Quit.ToString());
     }
 
