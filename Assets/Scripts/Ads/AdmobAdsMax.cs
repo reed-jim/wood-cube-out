@@ -150,7 +150,9 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/6300978111";
+    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845";
+    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/2446388915";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
 #endif
     // #elif UNITY_IOS
     // #if TESTER
@@ -242,13 +244,11 @@ public class AdmobAdsMax : MonoBehaviour
         timeReloadBannerCollap = RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 15);
 
         _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false);
-        Debug.Log($"Is show ads collap banner {_isShowAdmobCollap}");
 
         void OnBannerAdLoaded()
         {
             isReloadBannerCollap = false;
             isLoadedCollap = true;
-            Debug.Log("load admob banner collap  success=====");
         }
 
         void OnAdPaid(AdValue adValue)
@@ -271,7 +271,6 @@ public class AdmobAdsMax : MonoBehaviour
 
         void OnBannerAdLoadFailed(LoadAdError error)
         {
-            Debug.LogError("load admob banner collap fail=====");
             isLoadedCollap = false;
             isReloadBannerCollap = true;
             timerReloadBannerCollap = 0;
@@ -291,7 +290,6 @@ public class AdmobAdsMax : MonoBehaviour
             {
                 if (isLoadedCollap)
                 {
-                    Debug.Log("show banner collap===========");
                     _bannerView?.Hide();
                     MaxSdk.HideBanner(BanerAdUnitId);
                     _bannerViewCollap?.Show();
@@ -303,7 +301,6 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void DestroyBannerCollap()
     {
-        Debug.Log("destroy banner admob collap========");
         isShowingCollap = false;
         timerCooldownDestroyCollap = 0;
         _bannerViewCollap?.Hide();

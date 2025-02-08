@@ -18,8 +18,6 @@ public class RemoteConfigController : MonoBehaviour
 {
     private static RemoteConfigController Instance;
 
-    [SerializeField] private Button fetchButton;
-
     FirebaseRemoteConfig _remoteConfig;
 
     private Task FetchAsync()
@@ -95,6 +93,8 @@ public class RemoteConfigController : MonoBehaviour
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+
+            return;
         }
         else
         {
@@ -108,11 +108,9 @@ public class RemoteConfigController : MonoBehaviour
             var dependencyStatus = task.Result;
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
-                // Create and hold a reference to your FirebaseApp,
-                // where app is a Firebase.FirebaseApp property of your application class.
                 var app = Firebase.FirebaseApp.DefaultInstance;
 
-                // Set a flag here to indicate whether Firebase is ready to use by your app.
+                Firebase.Crashlytics.Crashlytics.ReportUncaughtExceptionsAsFatal = true;
 
                 FetchAsync();
             }
