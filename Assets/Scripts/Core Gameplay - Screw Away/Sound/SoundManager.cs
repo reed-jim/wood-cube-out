@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private GameSetting gameSetting;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private bool _isEnableGameSound;
     #endregion
 
@@ -31,6 +33,8 @@ public class SoundManager : MonoBehaviour
         GameSettingManager.enableBackgroundMusicEvent += EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent += EnableGameSound;
         GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
+
+        _tweens = new List<Tween>();
     }
 
     private void OnDestroy()
@@ -38,11 +42,17 @@ public class SoundManager : MonoBehaviour
         GameSettingManager.enableBackgroundMusicEvent -= EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent -= EnableGameSound;
         GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     public void EnableBackgroundMusic(bool isEnable)
     {
-        backgroundMusic.enabled = isEnable;
+        CommonUtil.StopAllTweens(_tweens);
+        
+        _tweens.Add(Tween.AudioVolume(backgroundMusic, isEnable ? 0.2f : 0, duration: 0.3f));
+
+        // backgroundMusic.enabled = isEnable;
     }
 
     public void EnableGameSound(bool isEnable)
