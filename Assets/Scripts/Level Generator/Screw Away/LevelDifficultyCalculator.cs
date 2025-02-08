@@ -336,12 +336,14 @@ public static class LevelDifficultyCalculatorUltility
 
         List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
 
-        int PREDICTED_MAX_LEVEL = 100;
+        int PREDICTED_MAX_LEVEL = 75;
 
         float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
 
+        int validLevel = Mathf.Max(level, 1) % PREDICTED_MAX_LEVEL;
+
         float expectedDifficultyNormalized =
-            DIFFICULTY_MULTIPLIER * WEIGHT_REPEAT_TEMPLATE * weightForModules[(level - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)level / PREDICTED_MAX_LEVEL);
+            DIFFICULTY_MULTIPLIER * WEIGHT_REPEAT_TEMPLATE * weightForModules[(validLevel - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL);
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 
