@@ -152,6 +152,7 @@ public class RevivePopup : BasePopup
             reviveEvent?.Invoke(_currentBoosterOnRevive);
 
             SaferioTracking.TrackReviveEvent(currentLevel.Value, "rewarded_ads", _currentBoosterOnRevive, levelObserver.Progress);
+            SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Revive_{_currentBoosterOnRevive}");
         });
     }
 
