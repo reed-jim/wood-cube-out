@@ -18,6 +18,8 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
     [SerializeField] private Image topBarDivider;
 
+    [SerializeField] private AudioListener menuScreenAudioListener;
+
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private Vector2Variable canvasSize;
 
@@ -169,6 +171,8 @@ public class MenuScreen : MonoBehaviour
     {
         if (scene.name == GameConstants.GAMEPLAY_SCENE)
         {
+            menuScreenAudioListener.enabled = false;
+
             SceneManager.UnloadSceneAsync(GameConstants.MENU_SCENE);
         }
     }
