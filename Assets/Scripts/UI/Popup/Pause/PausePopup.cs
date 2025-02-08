@@ -81,6 +81,8 @@ public class PausePopup : BasePopup
 
     private void OnInterstitialAdToReplayCompleted()
     {
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "replay");
+
         ActualReplay();
     }
 
