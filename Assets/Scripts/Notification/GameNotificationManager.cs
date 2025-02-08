@@ -3,12 +3,27 @@ using UnityEngine;
 
 public class GameNotificationManager : MonoBehaviour
 {
+    public static GameNotificationManager Instance;
+
     private void Awake()
     {
-        // if (Application.platform == RuntimePlatform.Android)
-        // {
-        //     AndroidNotificationCenter.Initialize();
-        // }
+        if (Instance != null && Instance != this)
+        {
+            Destroy(gameObject);
+
+            return;
+        }
+        else
+        {
+            Instance = this;
+
+            DontDestroyOnLoad(gameObject);
+        }
+
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            AndroidNotificationCenter.Initialize();
+        }
 
 #if UNITY_ANDROID
         SendNotification();
@@ -35,8 +50,8 @@ public class GameNotificationManager : MonoBehaviour
         Register();
 
         var notification = new AndroidNotification();
-        notification.Title = "Saferio";
-        notification.Text = "Saferio - Sample Notication";
+        notification.Title = "Time for a Challenge!";
+        notification.Text = "Can you solve the toughest screw puzzle yet? Find out now!";
         notification.FireTime = System.DateTime.Now.AddMinutes(1);
 
         AndroidNotificationCenter.SendNotification(notification, "channel_id");
