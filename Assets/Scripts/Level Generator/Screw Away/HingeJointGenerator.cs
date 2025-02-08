@@ -95,6 +95,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevelPattern();
         }
 
+        if (GUILayout.Button("Generate Level Rubik"))
+        {
+            GenerateLevelRubik();
+        }
+
         if (GUILayout.Button("Fine Tune Level"))
         {
             FineTuneLevel();
@@ -1193,7 +1198,7 @@ public class HingeJointGenerator : EditorWindow
         List<Vector3> coordinators = new List<Vector3>();
 
         // X
-        for (int i = 2; i < 8; i++)
+        for (int i = 2; i < 6; i++)
         {
             pieceInCurrentXLayer = 0;
 
@@ -1261,6 +1266,7 @@ public class HingeJointGenerator : EditorWindow
             }
         }
 
+        // RANDOMIZE
         for (int k = 0; k < possibleSinglePieces.Count; k++)
         {
             Debug.Log(possibleSinglePieces[k].name + "/" + firstMatrix.Count(item => item.x == coordinators[k].x && item.z == coordinators[k].z));
@@ -1366,6 +1372,149 @@ public class HingeJointGenerator : EditorWindow
                 possibleSinglePiece.transform.position += new Vector3(0, 0.5f * currentPieceSize.y * UnityEngine.Random.Range(-2, 2), 0);
             }
         }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
+    private void GenerateLevelRubik()
+    {
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Vector3 pieceSize = piecePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * piecePrefab.transform.localScale.x;
+        Vector3 currentPieceSize;
+
+        int totalSpawn = 0;
+
+        float distanceMultiplier = 1.05f;
+
+        // HINGE
+        GameObject[] piecePrefabs = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels/Common");
+
+        List<GameObject> hinges = new List<GameObject>();
+
+        for (int i = 0; i < piecePrefabs.Length; i++)
+        {
+            if (piecePrefabs[i].name.Contains("Hinge"))
+            {
+                hinges.Add(piecePrefabs[i]);
+            }
+        }
+
+        int numRow = 2;
+
+        // X
+        for (int i = -numRow; i <= numRow; i++)
+        {
+            // Y
+            for (int j = -numRow; j <= numRow; j++)
+            {
+                // Z
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    int random = UnityEngine.Random.Range(0, 3);
+
+                    if (random == 0)
+                    {
+                        Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+                        generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+                        Vector3 rotation = new Vector3(0, 0, 0);
+                        generatedPiece.rotation = Quaternion.Euler(rotation);
+
+                        currentPieceSize = generatedPiece.GetComponent<MeshRenderer>().bounds.size;
+
+                        Vector3 position = new Vector3(
+                            distanceMultiplier * i * currentPieceSize.x, distanceMultiplier * j * currentPieceSize.y, distanceMultiplier * k * currentPieceSize.z);
+
+                        generatedPiece.position = position;
+
+                        // MATERIAL
+                        generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+                        totalSpawn++;
+
+                        // HINGE
+                        random = UnityEngine.Random.Range(0, 20);
+
+                        if (random == 0)
+                        {
+                            Transform hinge =
+                                ((GameObject)PrefabUtility.InstantiatePrefab(hinges[UnityEngine.Random.Range(0, 2)], Selection.activeTransform)).transform;
+
+                            if (hinge.name == "Hinge L-Shaped")
+                            {
+                                hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, currentPieceSize.y, 0);
+                            }
+                            else
+                            {
+                                hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, 0, 0);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // // RANDOMIZE
+        // for (int k = 0; k < possibleSinglePieces.Count; k++)
+        // {
+        //     Debug.Log(possibleSinglePieces[k].name + "/" + firstMatrix.Count(item => item.x == coordinators[k].x && item.z == coordinators[k].z));
+
+        //     if (firstMatrix.Count(item => item.x == coordinators[k].x && item.z == coordinators[k].z) == 1)
+        //     {
+        //         currentPieceSize = possibleSinglePieces[k].GetComponent<MeshRenderer>().bounds.size;
+
+        //         possibleSinglePieces[k].transform.position += new Vector3(0, 0.5f * currentPieceSize.y * RandomWithoutZero(2), 0);
+        //     }
+
+        //     if (firstMatrix.Count(item => item.x == coordinators[k].x && item.y == coordinators[k].y) == 1)
+        //     {
+        //         currentPieceSize = possibleSinglePieces[k].GetComponent<MeshRenderer>().bounds.size;
+
+        //         possibleSinglePieces[k].transform.position += new Vector3(0, 0, 0.5f * currentPieceSize.z * RandomWithoutZero(2));
+        //     }
+        // }
+
+        // // Flip
+        // for (int i = halfTotalSpawn; i < 2 * halfTotalSpawn; i++)
+        // {
+        //     Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+        //     generatedPiece.name = $"Piece {i + 1}";
+
+        //     // MATERIAL
+        //     generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalSpawn].GetComponent<MeshRenderer>().sharedMaterial;
+
+        //     // POSITION
+        //     Vector3 position = generatedPieces[i - halfTotalSpawn].position;
+
+        //     position.x *= -1;
+
+        //     generatedPiece.position = position;
+
+        //     // ROTATION
+        //     Vector3 rotation = generatedPieces[i - halfTotalSpawn].rotation.eulerAngles;
+
+        //     rotation.x += 180;
+        //     rotation.z += 180;
+
+        //     generatedPiece.rotation = Quaternion.Euler(rotation);
+        // }
 
         EditorUtility.SetDirty(Selection.activeTransform);
     }
@@ -1533,6 +1682,32 @@ public class HingeJointGenerator : EditorWindow
 
             return totalCollider > 0;
         }
+    }
+
+    private GameObject[] LoadAllPrefabsInFolder(string folder)
+    {
+        List<GameObject> prefabs = new List<GameObject>();
+
+        string[] prefabGUIDs = AssetDatabase.FindAssets("t:GameObject", new[] { folder });
+
+        // if (prefabGUIDs.Length == 0)
+        // {
+        //     Debug.LogWarning("No prefabs found in folder: " + folder);
+        //     return null;
+        // }
+
+        foreach (string guid in prefabGUIDs)
+        {
+            string path = AssetDatabase.GUIDToAssetPath(guid);
+            GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+
+            if (prefab != null)
+            {
+                prefabs.Add(prefab);
+            }
+        }
+
+        return prefabs.ToArray();
     }
 
     private Material[] LoadAllMaterialsInFolder(string folder)
