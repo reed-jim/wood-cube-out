@@ -19,7 +19,6 @@ public class PausePopup : BasePopup
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
-    public static event Action<bool> enableVibrationEvent;
     public static event Action replayLevelEvent;
 
     protected override void MoreActionInAwake()
@@ -85,8 +84,6 @@ public class PausePopup : BasePopup
     private void EnableVibration(bool isTurnOn)
     {
         gameSetting.IsVibrate = isTurnOn;
-
-        enableVibrationEvent?.Invoke(isTurnOn);
     }
 
     private void OnGameSettingLoaded()

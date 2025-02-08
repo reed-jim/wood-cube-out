@@ -62,7 +62,7 @@ public class MenuScreen : MonoBehaviour
 
         if (UserData.IsFirstTimeOpenApp)
         {
-            await Task.Delay(500);
+            await Task.Delay(1500);
 
             StartGame();
         }

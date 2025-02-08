@@ -46,6 +46,8 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
+        AdmobAdsMax.Instance.ShowBannerCollap();
+
         coinText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
@@ -119,7 +121,7 @@ public class WinPopup : BasePopup
 
         continueButton.interactable = false;
 
-        AdmobAdsMax.Instance.ShowInterstitial(isShowImmediatly: true, actionIniterClose: OnInterstitialAdCompleted);
+        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
     }
 
     private void OnInterstitialAdCompleted()
@@ -130,6 +132,8 @@ public class WinPopup : BasePopup
         }));
 
         goLevelEvent?.Invoke(currentLevel.Value);
+
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
     }
 
     private void ReturnHome()
