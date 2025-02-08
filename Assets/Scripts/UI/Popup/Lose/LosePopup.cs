@@ -124,6 +124,7 @@ public class LosePopup : BasePopup
         skipLevelEvent?.Invoke();
 
         SaferioTracking.TrackSkipLevel(currentLevel.Value);
+        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "SkipLevel");
         TrackLevelWin();
 
         Hide();
