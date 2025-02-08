@@ -56,11 +56,32 @@ public class PausePopup : BasePopup
 
     private void Replay()
     {
+        bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
+
+        if (isShowInterReplayLevel)
+        {
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+        }
+        else
+        {
+            ActualReplay();
+        }
+
+        Hide();
+    }
+
+    private void ActualReplay()
+    {
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         replayLevelEvent?.Invoke();
 
-        Hide();
+        // Hide();
+    }
+
+    private void OnInterstitialAdToReplayCompleted()
+    {
+        ActualReplay();
     }
 
     private void EnableGameMusic(bool isTurnOn)

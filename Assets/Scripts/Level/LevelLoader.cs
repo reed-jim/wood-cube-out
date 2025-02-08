@@ -33,6 +33,7 @@ public class LevelLoader : MonoBehaviour
         DebugPopup.prevLevelEvent += PrevLevel;
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
+        LosePopup.skipLevelEvent += NextLevel;
 
         currentLevel.Load();
 
@@ -50,6 +51,7 @@ public class LevelLoader : MonoBehaviour
         DebugPopup.prevLevelEvent -= PrevLevel;
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
+        LosePopup.skipLevelEvent -= NextLevel;
     }
 
     private async Task LoadLevel()

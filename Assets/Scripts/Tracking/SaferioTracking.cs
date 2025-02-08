@@ -93,6 +93,18 @@ public static class SaferioTracking
 #endif
     }
 
+    public static void TrackSkipLevel(int level)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("level", level.ToString()),
+        };
+
+        FirebaseAnalytics.LogEvent("level_skip", parameters);
+#endif
+    }
+
     public static void TrackIAPEvent(string productId)
     {
 #if !UNITY_EDITOR

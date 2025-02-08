@@ -27,6 +27,7 @@ public class BasePopup : MonoBehaviour
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
     public static event Action<bool> enableSwipingScreenEvent;
+    public static event Action showAdNotLoadedPopupEvent;
 
     private void Awake()
     {
@@ -248,5 +249,10 @@ public class BasePopup : MonoBehaviour
                 Hide();
             }
         }
+    }
+
+    protected void InvokeShowAdNotLoadedPopupEvent()
+    {
+        showAdNotLoadedPopupEvent?.Invoke();
     }
 }

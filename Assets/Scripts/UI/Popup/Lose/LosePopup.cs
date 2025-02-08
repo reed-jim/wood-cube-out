@@ -9,6 +9,7 @@ using static GameEnum;
 public class LosePopup : BasePopup
 {
     [SerializeField] private Button replayButton;
+    [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Slider levelProgress;
     [SerializeField] private TMP_Text progressText;
@@ -22,6 +23,7 @@ public class LosePopup : BasePopup
     [SerializeField] private float transitionDuration;
 
     public static event Action replayLevelEvent;
+    public static event Action skipLevelEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -30,7 +32,15 @@ public class LosePopup : BasePopup
         RevivePopup.reviveRefusedEvent += OnLevelLose;
 
         replayButton.onClick.AddListener(Replay);
+        skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
+
+        bool isShowSkipLevelButton = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
+
+        if (!isShowSkipLevelButton)
+        {
+            skipLevelButton.gameObject.SetActive(false);
+        }
     }
 
     protected override void UnregisterMoreEvent()
@@ -67,7 +77,8 @@ public class LosePopup : BasePopup
         {
             Tween.Custom(0, levelObserver.Progress, duration: transitionDuration, onValueChange: newVal =>
             {
-                levelProgress.value = newVal;
+                // +0.1f for better progress bar visual
+                levelProgress.value = Mathf.Min(newVal + 0.1f, 1);
 
                 progressText.text = $"{(int)(newVal * 100)}%";
             });
@@ -102,8 +113,45 @@ public class LosePopup : BasePopup
         Hide();
     }
 
+    private void SkipLevel()
+    {
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
+    }
+
+    private void OnRewaredAdCompletedToSkipLevel()
+    {
+        skipLevelEvent?.Invoke();
+
+        SaferioTracking.TrackSkipLevel(currentLevel.Value);
+        TrackLevelWin();
+
+        Hide();
+    }
+
+    private void ShowAdsNotLoadedPopup()
+    {
+        InvokeShowAdNotLoadedPopupEvent();
+    }
+
     private void ReturnHome()
     {
         Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
+
+    #region SKIP LEVEL
+    private async void TrackLevelWin()
+    {
+        bool isFirstWinLevel = DataUtility.LoadAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", true);
+
+        if (isFirstWinLevel)
+        {
+            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, levelBoosterObserver);
+
+            DataUtility.SaveAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
+        }
+
+        SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
+    }
+    #endregion  
 }
