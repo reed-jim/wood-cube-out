@@ -99,7 +99,10 @@ public class BasicScrew : BaseScrew
 
                 SoundManager.Instance.PlaySoundLoosenScrewFail();
 
-                HapticFeedback.MediumFeedback();
+                if (gameSetting.IsVibrate)
+                {
+                    HapticFeedback.MediumFeedback();
+                }
 
                 Vector3 hitPointFakeScrewSpace =
                     fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
@@ -135,7 +138,10 @@ public class BasicScrew : BaseScrew
 
             SoundManager.Instance.PlaySoundLoosenScrew();
 
-            HapticFeedback.MediumFeedback();
+            if (gameSetting.IsVibrate)
+            {
+                HapticFeedback.MediumFeedback();
+            }
         }
     }
 

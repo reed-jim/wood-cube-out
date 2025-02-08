@@ -23,6 +23,9 @@ public class ScrewBox : MonoBehaviour
     [SerializeField] private float delayMoveOutDuration;
     [SerializeField] private float moveOutDuration;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] protected GameSetting gameSetting;
+
     #region EVENT
     public static event Action<ScrewBox> screwBoxCompletedEvent;
     public static event Action spawnNewScrewBoxEvent;
@@ -118,14 +121,17 @@ public class ScrewBox : MonoBehaviour
                 shakeCameraEvent?.Invoke();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
 
-                HapticFeedback.HeavyFeedback();
+                if (gameSetting.IsVibrate)
+                {
+                    HapticFeedback.HeavyFeedback();
+                }
             })
             .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
             .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
             {
                 screwBoxCompletedEvent?.Invoke(this);
                 spawnNewScrewBoxEvent?.Invoke();
-                
+
                 transform.position = transform.position.ChangeY(initialPositionY);
                 transform.localScale = _initialScale;
 
