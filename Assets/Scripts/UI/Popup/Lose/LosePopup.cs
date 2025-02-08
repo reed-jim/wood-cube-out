@@ -40,6 +40,14 @@ public class LosePopup : BasePopup
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
     }
 
+
+    private void OnApplicationQuit()
+    {
+        Debug.Log("SAFERIO QUIT");
+
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Quit.ToString());
+    }
+
     private void OnLevelLose()
     {
         levelProgress.value = 0;
@@ -72,9 +80,26 @@ public class LosePopup : BasePopup
 
     private void Replay()
     {
+        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat)
+        {
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+        }
+        else
+        {
+            replayLevelEvent?.Invoke();
+
+            SaferioTracking.TrackReplayLevel(currentLevel.Value);
+
+            Hide();
+        }
+    }
+
+    private void OnInterstitialAdCompleted()
+    {
         replayLevelEvent?.Invoke();
 
         SaferioTracking.TrackReplayLevel(currentLevel.Value);
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "replay");
 
         Hide();
     }

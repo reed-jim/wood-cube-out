@@ -26,7 +26,6 @@ public class SettingPopup : BasePopup
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
-    public static event Action<bool> enableVibrationEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
@@ -79,8 +78,6 @@ public class SettingPopup : BasePopup
     private void EnableVibration(bool isTurnOn)
     {
         gameSetting.IsVibrate = isTurnOn;
-
-        enableVibrationEvent?.Invoke(isTurnOn);
     }
 
     private void OnGameSettingLoaded()

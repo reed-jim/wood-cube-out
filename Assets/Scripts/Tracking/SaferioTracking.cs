@@ -117,4 +117,17 @@ public static class SaferioTracking
         FirebaseAnalytics.LogEvent("rewarded_ad_completed", parameters);
 #endif
     }
+
+    public static void TrackInterstitialAdCompleted(int level, string reason)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("level", level.ToString()),
+            new Parameter("reason", reason),
+        };
+
+        FirebaseAnalytics.LogEvent("interstitial_ad_completed", parameters);
+#endif
+    }
 }

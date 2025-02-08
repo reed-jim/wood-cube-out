@@ -6,15 +6,15 @@ public class GameLeaderboardManager : MonoBehaviour
 {
     [SerializeField] private bool isAdd;
 
-    private void Awake()
-    {
-        GooglePlayGamesSignInManager.userAuthenticatedEvent += AddPlayerScoreToLeaderboard;
-    }
+    // private void Awake()
+    // {
+    //     GooglePlayGamesSignInManager.userAuthenticatedEvent += AddPlayerScoreToLeaderboard;
+    // }
 
-    private void OnDestroy()
-    {
-        GooglePlayGamesSignInManager.userAuthenticatedEvent -= AddPlayerScoreToLeaderboard;
-    }
+    // private void OnDestroy()
+    // {
+    //     GooglePlayGamesSignInManager.userAuthenticatedEvent -= AddPlayerScoreToLeaderboard;
+    // }
 
     private async void GetLeaderboardData()
     {

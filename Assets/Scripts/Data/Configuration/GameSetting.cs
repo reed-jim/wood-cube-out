@@ -73,6 +73,7 @@ public class GameSetting : ScriptableObject
 
         isTurnOnBackgroundMusic = savedGameSetting.isTurnOnBackgroundMusic;
         isTurnOnSound = savedGameSetting.IsTurnOnSound;
+        isVibrate = savedGameSetting.IsVibrate;
         currentLanguage = savedGameSetting.CurrentLanguage;
     }
 }

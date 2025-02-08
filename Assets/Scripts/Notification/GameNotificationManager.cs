@@ -52,7 +52,7 @@ public class GameNotificationManager : MonoBehaviour
         var notification = new AndroidNotification();
         notification.Title = "Time for a Challenge!";
         notification.Text = "Can you solve the toughest screw puzzle yet? Find out now!";
-        notification.FireTime = System.DateTime.Now.AddMinutes(1);
+        notification.FireTime = System.DateTime.Now.AddDays(1);
 
         AndroidNotificationCenter.SendNotification(notification, "channel_id");
     }
