@@ -558,7 +558,7 @@ public class AdmobAdsMax : MonoBehaviour
 
             return false;
         }
-
+        
         if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||

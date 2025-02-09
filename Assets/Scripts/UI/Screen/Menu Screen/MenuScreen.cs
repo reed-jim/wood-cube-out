@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
 using PrimeTween;
@@ -24,6 +25,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Vector2Variable canvasSize;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private float _initialOpenRemoveAdPopupButtonPositionY;
     private Tween _openRemoveAdPopupButtonTween;
     private Tween _topBarDividerTween;
@@ -47,6 +49,8 @@ public class MenuScreen : MonoBehaviour
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
+        _tweens = new List<Tween>();
+
         _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
         topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
 
@@ -54,6 +58,8 @@ public class MenuScreen : MonoBehaviour
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
         }
+
+        // PreventSpammingStartButton();
     }
 
     private async Task Start()
@@ -68,6 +74,8 @@ public class MenuScreen : MonoBehaviour
 
             StartGame();
         }
+
+        PreventSpammingStartButton();
     }
 
     void OnDestroy()
@@ -79,6 +87,32 @@ public class MenuScreen : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
+
+        CommonUtil.StopAllTweens(_tweens);
+    }
+
+    private void PreventSpammingStartButton()
+    {
+        startGameButton.interactable = false;
+
+        _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
+        {
+            startGameButton.interactable = true;
+
+            // startGameButton.gameObject.SetActive(true);
+
+            // startGameButton.transform.localScale = Vector3.one;
+
+            // _tweens.Add(Tween.Scale(startGameButton.transform, 1.1f, duration: 0.3f)
+            // .OnComplete(() =>
+            // {
+            //     _tweens.Add(Tween.Scale(startGameButton.transform, 1f, duration: 0.1f)
+            //     .OnComplete(() =>
+            //     {
+            //         startGameButton.interactable = true;
+            //     }));
+            // }));
+        }));
     }
 
     private void OnLevelTextTranslated()
