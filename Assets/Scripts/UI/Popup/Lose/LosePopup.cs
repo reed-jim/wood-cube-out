@@ -73,6 +73,9 @@ public class LosePopup : BasePopup
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
+        // for better progress bar visual
+        levelProgress.value = 0.1f;
+
         Show(onCompletedAction: () =>
         {
             Tween.Custom(0, levelObserver.Progress, duration: transitionDuration, onValueChange: newVal =>
