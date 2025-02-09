@@ -492,7 +492,7 @@ public class HingeJointGenerator : EditorWindow
 
     private void CheckHingeJointNumberAllLevels()
     {
-        for (int i = 1; i <= 50; i++)
+        for (int i = 1; i <= 75; i++)
         {
             CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
         }
@@ -775,7 +775,7 @@ public class HingeJointGenerator : EditorWindow
 
         RaycastHit hit;
 
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 10))
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 20))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 
