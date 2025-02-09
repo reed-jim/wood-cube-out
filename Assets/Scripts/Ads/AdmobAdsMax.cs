@@ -280,30 +280,22 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowBannerCollap()
     {
-        if (isLoadedCollap)
+        if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
         {
-            _bannerView?.Hide();
-            MaxSdk.HideBanner(BanerAdUnitId);
-            _bannerViewCollap?.Show();
-            isShowingCollap = true;
+            if (UserData.IsRemoveAds)
+                return;
+
+            if (_isShowAdmobCollap)
+            {
+                if (isLoadedCollap)
+                {
+                    _bannerView?.Hide();
+                    MaxSdk.HideBanner(BanerAdUnitId);
+                    _bannerViewCollap?.Show();
+                    isShowingCollap = true;
+                }
+            }
         }
-
-        // if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
-        // {
-        //     if (UserData.IsRemoveAds)
-        //         return;
-
-        //     if (_isShowAdmobCollap)
-        //     {
-        //         if (isLoadedCollap)
-        //         {
-        //             _bannerView?.Hide();
-        //             MaxSdk.HideBanner(BanerAdUnitId);
-        //             _bannerViewCollap?.Show();
-        //             isShowingCollap = true;
-        //         }
-        //     }
-        // }
     }
 
     public void DestroyBannerCollap()
