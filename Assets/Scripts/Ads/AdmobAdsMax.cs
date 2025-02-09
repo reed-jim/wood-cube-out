@@ -150,9 +150,8 @@ public class AdmobAdsMax : MonoBehaviour
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845";
-    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/2446388915";
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
+    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845";
 #endif
     // #elif UNITY_IOS
     // #if TESTER
@@ -281,22 +280,30 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowBannerCollap()
     {
-        if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
+        if (isLoadedCollap)
         {
-            if (UserData.IsRemoveAds)
-                return;
-
-            if (_isShowAdmobCollap)
-            {
-                if (isLoadedCollap)
-                {
-                    _bannerView?.Hide();
-                    MaxSdk.HideBanner(BanerAdUnitId);
-                    _bannerViewCollap?.Show();
-                    isShowingCollap = true;
-                }
-            }
+            _bannerView?.Hide();
+            MaxSdk.HideBanner(BanerAdUnitId);
+            _bannerViewCollap?.Show();
+            isShowingCollap = true;
         }
+
+        // if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
+        // {
+        //     if (UserData.IsRemoveAds)
+        //         return;
+
+        //     if (_isShowAdmobCollap)
+        //     {
+        //         if (isLoadedCollap)
+        //         {
+        //             _bannerView?.Hide();
+        //             MaxSdk.HideBanner(BanerAdUnitId);
+        //             _bannerViewCollap?.Show();
+        //             isShowingCollap = true;
+        //         }
+        //     }
+        // }
     }
 
     public void DestroyBannerCollap()

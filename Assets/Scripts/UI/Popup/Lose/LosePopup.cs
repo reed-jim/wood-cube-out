@@ -85,6 +85,26 @@ public class LosePopup : BasePopup
         });
 
         SoundManager.Instance.PlaySoundLose();
+
+        // COUNT LOSE LEVEL
+        int timeLoseLevel = DataUtility.Load($"Time Lose Level {currentLevel.Value}", 0);
+
+        // -Avoid cheating
+        if (levelObserver.Progress > 0.2f)
+        {
+            timeLoseLevel++;
+
+            DataUtility.Save($"Time Lose Level {currentLevel.Value}", timeLoseLevel);
+        }
+
+        if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
+        {
+            skipLevelButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            skipLevelButton.gameObject.SetActive(false);
+        }
     }
 
     private void Replay()

@@ -338,14 +338,34 @@ public static class LevelDifficultyCalculatorUltility
 
         int PREDICTED_MAX_LEVEL = 75;
 
-        float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
+        // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
+        float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
 
         int validLevel = Mathf.Max(level, 1) % PREDICTED_MAX_LEVEL;
 
         float expectedDifficultyNormalized =
-            DIFFICULTY_MULTIPLIER * WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(level, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL);
+            DIFFICULTY_MULTIPLIER *
+                (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(level, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL));
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
+
+        // TO MATCH OLD VERSION DIFFICULTY
+        expectedDifficultyNormalized *= (0.4f / 1f);
+
+        // // DEBUG
+        // for (int i = 1; i <= 75; i++)
+        // {
+        //     float test =
+        //     DIFFICULTY_MULTIPLIER *
+        //         (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(i, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)i / PREDICTED_MAX_LEVEL));
+
+        //     test *= (0.4f / 1f);
+
+        //     Debug.Log($"SAFERIO LEVEL {i} - Hard Percent: {test * 100}%");
+        // }
+
+        // // RANDOMIZE
+        // maxPhaseIndex = UnityEngine.Random.Range(GameConstants.SCREW_FACTION.Length / 2, GameConstants.SCREW_FACTION.Length - 1);
 
         for (int i = maxPhaseIndex; i >= 0; i--)
         {
@@ -353,22 +373,17 @@ public static class LevelDifficultyCalculatorUltility
 
             float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
 
-            if (progress > 0.1f && progress < 0.9f)
-            {
-                LevelPhase levelPhase = new LevelPhase(phaseIndex: 0, endProgress: 1 - progress);
+            progress = Mathf.Clamp01(progress);
 
-                generatedLevelPhases.Add(levelPhase);
+            LevelPhase levelPhase = new LevelPhase(phaseIndex: 0, endProgress: 1 - progress);
 
-                levelPhase = new LevelPhase(phaseIndex, 1);
+            generatedLevelPhases.Add(levelPhase);
 
-                generatedLevelPhases.Add(levelPhase);
+            levelPhase = new LevelPhase(phaseIndex, 1);
 
-                break;
-            }
-            else
-            {
-                continue;
-            }
+            generatedLevelPhases.Add(levelPhase);
+
+            break;
         }
 
         LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
