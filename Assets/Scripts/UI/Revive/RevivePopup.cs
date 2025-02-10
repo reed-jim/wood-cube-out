@@ -158,6 +158,8 @@ public class RevivePopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
+        InvokeShowAdNotLoadedPopupEvent();
+
+        // switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }
 }
