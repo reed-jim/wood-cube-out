@@ -94,6 +94,10 @@ public class ScrewBox : MonoBehaviour
 
         float scaleWithWidth = (0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
         float scaleWithHeight = (0.113811f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
+
+        scaleWithWidth *= 1.18f;
+        scaleWithHeight *= 1.18f;
+
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
         transform.localScale = finalScale * Vector3.one;
@@ -144,6 +148,8 @@ public class ScrewBox : MonoBehaviour
 
     public void Lock()
     {
+        screwBoxSpriteRenderer.enabled = false;
+
         screwBoxServiceLocator.screwBoxUI.Lock();
 
         isLocked = true;
@@ -151,6 +157,8 @@ public class ScrewBox : MonoBehaviour
 
     public void Unlock()
     {
+        screwBoxSpriteRenderer.enabled = true;
+
         // CLEAR SCREWS
         for (int i = 0; i < screwBoxSlots.Length; i++)
         {

@@ -192,7 +192,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6087756678809849030
 Transform:
   m_ObjectHideFlags: 0
@@ -296,10 +296,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1738942172558580213}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -48, y: -128}
+  m_SizeDelta: {x: 144, y: 124}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3000591637390039830
 CanvasRenderer:
@@ -356,7 +356,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 43.25
+  m_fontSize: 43.15
   m_fontSizeBase: 42
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -994,6 +994,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screwBoxSpriteRenderer: {fileID: 8200636108910568844}
   unlockByAdsButtonRT: {fileID: 1738942172558580213}
+  unlockBoxTextRT: {fileID: 7592591528374037495}
   unlockByAdsButton: {fileID: 3310385434065370710}
   screwBoxCameraObserver: {fileID: 11400000, guid: 1a69e9b3f1a65784d98c141293c992da, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}

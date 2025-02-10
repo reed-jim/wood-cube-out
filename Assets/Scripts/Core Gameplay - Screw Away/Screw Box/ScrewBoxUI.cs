@@ -9,6 +9,7 @@ public class ScrewBoxUI : MonoBehaviour
 {
     [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
     [SerializeField] private RectTransform unlockByAdsButtonRT;
+    [SerializeField] private RectTransform unlockBoxTextRT;
     [SerializeField] private Button unlockByAdsButton;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -64,7 +65,8 @@ public class ScrewBoxUI : MonoBehaviour
 
         float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
 
-        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, 1.08f * ratio * GamePersistentVariable.canvasSize.x);
+        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * GamePersistentVariable.canvasSize.x);
+        UIUtil.SetSize(unlockBoxTextRT, 0.7f * unlockByAdsButtonRT.sizeDelta);
     }
 
     public void SetUnlockByAdsButtonPosition()
