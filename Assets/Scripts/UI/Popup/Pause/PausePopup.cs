@@ -48,6 +48,7 @@ public class PausePopup : BasePopup
     {
         // avoid spamming
         returnHomeButton.interactable = false;
+        replayLevelButton.interactable = false;
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 

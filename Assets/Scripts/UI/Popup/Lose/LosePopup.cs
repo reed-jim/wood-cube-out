@@ -1,4 +1,5 @@
 using System;
+using Firebase.RemoteConfig;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -112,7 +113,9 @@ public class LosePopup : BasePopup
 
     private void Replay()
     {
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat)
+        // GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat
+
+        if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
             AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
