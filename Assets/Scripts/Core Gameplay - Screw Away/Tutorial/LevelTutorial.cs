@@ -314,6 +314,8 @@ public class LevelTutorial : MonoBehaviour
                 lerpProgress = 0;
             }
 
+            timePassed += Time.fixedDeltaTime;
+
             yield return waitForSeconds;
         }
 
