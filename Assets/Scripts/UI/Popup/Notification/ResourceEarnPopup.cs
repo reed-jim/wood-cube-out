@@ -31,9 +31,12 @@ public class ResourceEarnPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        
+
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(Claim);
+
+        // closeButton.onClick.RemoveAllListeners();
+        // closeButton.onClick.AddListener(Claim);
     }
 
     protected override void UnregisterMoreEvent()
@@ -66,7 +69,7 @@ public class ResourceEarnPopup : BasePopup
     private void ShowResourcesEarned(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
     {
         showResourcesEarnPopupEvent?.Invoke(true);
-        
+
         Show();
 
         List<RectTransform> validResourceGroups = new List<RectTransform>();
@@ -114,16 +117,4 @@ public class ResourceEarnPopup : BasePopup
 
         _coinQuantity = coinQuantity;
     }
-
-    // private void Claim()
-    // {
-    //     Hide();
-
-    //     if (_coinQuantity > 0)
-    //     {
-    //         collectCoinEvent?.Invoke(_coinQuantity);
-
-    //         _coinQuantity = 0;
-    //     }
-    // }
 }

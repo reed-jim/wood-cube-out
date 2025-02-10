@@ -10,7 +10,7 @@ public class BasePopup : MonoBehaviour
 {
     [Header("UI")]
     [SerializeField] protected RectTransform container;
-    [SerializeField] private Button closeButton;
+    [SerializeField] protected Button closeButton;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
