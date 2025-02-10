@@ -45,6 +45,7 @@ public class ScrewManager : MonoBehaviour
     public static event Action<BaseScrew[]> setScrewsEvent;
     public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action<bool> enableBoosterEvent;
+    public static event Action levelSetupCompletedEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -117,6 +118,8 @@ public class ScrewManager : MonoBehaviour
 
             // TO SAVE/LOAD LEVEL PROGRESS
             // setScrewsEvent?.Invoke(_screws.ToArray());
+
+            levelSetupCompletedEvent?.Invoke();
         }
     }
 

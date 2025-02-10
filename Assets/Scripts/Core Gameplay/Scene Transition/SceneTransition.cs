@@ -32,11 +32,14 @@ public class SceneTransition : MonoBehaviour
     private Vector2 _canvasSize;
     private List<Tween> _tweens;
     private bool _isFirstTimeEnterScene;
+    private bool _isLevelLoaded;
+    private Coroutine _waitForLevelLoadedCoroutine;
 
 
     private void Awake()
     {
-        LevelLoader.showSceneTransitionEvent += BlackScreenTransition;
+        LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
+        ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
 
         _tweens = new List<Tween>();
 
@@ -61,62 +64,10 @@ public class SceneTransition : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.showSceneTransitionEvent -= BlackScreenTransition;
+        LevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
+        ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
-    }
-
-    private void Transition()
-    {
-        container.gameObject.SetActive(true);
-
-        // _tweens.Add(Tween.Alpha(progressBarFill, 0, 1, duration: 0.2f * startDelay));
-
-        _tweens.Add(Tween.Custom(0, 1, duration: startDelay, ease: Ease.Linear, onValueChange: newVal =>
-        {
-            progressBar.value = newVal;
-            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
-
-            loadingText.text = $"{(int)(newVal * 100)}%";
-        }));
-
-        _tweens.Add(Tween.Delay(startDelay).OnComplete(
-            () =>
-            {
-                _tweens.Add(
-                    Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
-                    {
-                        canvasGroup.alpha = newVal;
-                        loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
-                    })
-                    .OnComplete(() =>
-                    {
-                        container.gameObject.SetActive(false);
-                    })
-                );
-            }
-        ));
-
-        //     SaferioTween.DelayAsync(startDelay, onCompletedAction: (() =>
-        //     {
-        //         _tweens.Add(
-        //             Tween.Custom(1, 0, duration: fadeOutDuration, onValueChange: newVal =>
-        //             {
-        //                 canvasGroup.alpha = newVal;
-        //                 loadingSpine.color = ColorUtil.WithAlpha(loadingSpine.color, newVal);
-        //             })
-        //             .OnComplete(() =>
-        //             {
-        //                 container.gameObject.SetActive(false);
-        //             })
-        //         );
-
-        //         // SaferioTween.LocalPositionAsync(loadingContent, new Vector3(0, -_canvasSize.y), duration: 0.6f * fadeOutDuration);
-        //         // SaferioTween.AlphaAsync(fadeBackground, 0, duration: fadeOutDuration, onCompletedAction: () =>
-        //         // {
-        //         //     container.gameObject.SetActive(false);
-        //         // });
-        //     }));
     }
 
     private void BlackScreenTransition()
@@ -126,6 +77,36 @@ public class SceneTransition : MonoBehaviour
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
+        // if (_isFirstTimeEnterScene)
+        // {
+        //     _isFirstTimeEnterScene = false;
+
+        //     return;
+        // }
+
+        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+
+        blackBackground.gameObject.SetActive(true);
+
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
+        {
+            blackBackground.gameObject.SetActive(false);
+
+            onCompletedAction?.Invoke();
+        }));
+    }
+
+    private void ShowBlackScreenImmediately()
+    {
+        blackBackground.gameObject.SetActive(true);
+
+        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+    }
+
+    private void TransitionOnLevelStarted()
+    {
         if (_isFirstTimeEnterScene)
         {
             _isFirstTimeEnterScene = false;
@@ -133,15 +114,27 @@ public class SceneTransition : MonoBehaviour
             return;
         }
 
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
-
-        blackBackground.gameObject.SetActive(true);
-
-        Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
+        if (_waitForLevelLoadedCoroutine != null)
         {
-            blackBackground.gameObject.SetActive(false);
+            StopCoroutine(_waitForLevelLoadedCoroutine);
+        }
 
-            onCompletedAction?.Invoke();
-        });
+        _waitForLevelLoadedCoroutine = StartCoroutine(WaitForLevelLoaded());
+    }
+
+    private IEnumerator WaitForLevelLoaded()
+    {
+        ShowBlackScreenImmediately();
+
+        yield return new WaitUntil(() => _isLevelLoaded);
+
+        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
+
+        _isLevelLoaded = false;
+    }
+
+    private void SetIsLevelLoaded()
+    {
+        _isLevelLoaded = true;
     }
 }
