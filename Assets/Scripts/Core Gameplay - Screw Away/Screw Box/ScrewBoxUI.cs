@@ -56,22 +56,22 @@ public class ScrewBoxUI : MonoBehaviour
 
     private void OnCameraSet(Camera camera)
     {
-        _screwBoxCamera = camera;
+        // _screwBoxCamera = camera;
 
-        float orthoSize = _screwBoxCamera.orthographicSize;
+        // float orthoSize = _screwBoxCamera.orthographicSize;
 
-        float screenHeightWorld = orthoSize * 2;
-        float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
+        // float screenHeightWorld = orthoSize * 2;
+        // float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
 
-        float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
+        // float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
 
-        UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * GamePersistentVariable.canvasSize.x);
-        UIUtil.SetSize(unlockBoxTextRT, 0.7f * unlockByAdsButtonRT.sizeDelta);
+        // UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * GamePersistentVariable.canvasSize.x);
+        // UIUtil.SetSize(unlockBoxTextRT, 0.7f * unlockByAdsButtonRT.sizeDelta);
     }
 
     public void SetUnlockByAdsButtonPosition()
     {
-        unlockByAdsButtonRT.localPosition = _screwBoxCamera.WorldToScreenPoint(transform.position) - 0.5f * (Vector3)GamePersistentVariable.canvasSize;
+        // unlockByAdsButtonRT.localPosition = _screwBoxCamera.WorldToScreenPoint(transform.position) - 0.5f * (Vector3)GamePersistentVariable.canvasSize;
     }
 
     private void ClickButtonUnlockByAds()
@@ -88,15 +88,10 @@ public class ScrewBoxUI : MonoBehaviour
 
     public void Unlock()
     {
-        Tween.LocalPositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.localPosition.y + 0.5f * GamePersistentVariable.canvasSize.y, duration: 0.3f).OnComplete(() =>
+        Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
         {
             unlockByAdsButton.gameObject.SetActive(false);
         });
-
-        // Tween.Scale(unlockByAdsButtonRT, 0, duration: 0.3f).OnComplete(() =>
-        // {
-        //     unlockByAdsButton.gameObject.SetActive(false);
-        // });
 
         unlockScrewBox?.Invoke(gameObject.GetInstanceID());
 

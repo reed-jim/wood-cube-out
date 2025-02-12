@@ -102,7 +102,7 @@ public class ScrewBoxManager : MonoBehaviour
                         }
                     }
 
-                    ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject);
+                    ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
                 }
             }
         }
@@ -172,11 +172,16 @@ public class ScrewBoxManager : MonoBehaviour
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
-        _screwBoxDistance = 0.213f * worldSize.x;
+        _screwBoxDistance = 0.22f * worldSize.x;
 
-        _screwBoxPositionY = 0.42f * worldSize.y;
+        _screwBoxPositionY = 0.4f * worldSize.y;
 
-        screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
+        // screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
+
+        for (int i = 0; i < screwPorts.Count; i++)
+        {
+            screwPorts[i].transform.position = screwPorts[i].transform.position.ChangeY(0.3042f * worldSize.y);
+        }
     }
 
     private void OnRevived(BoosterType boosterType)
@@ -359,18 +364,20 @@ public class ScrewBoxManager : MonoBehaviour
 
         Direction getInDirection = index > 1 ? Direction.Left : Direction.Right;
 
-        screwBox.transform.position = new Vector3(getInDirection == Direction.Right ? -10 : 10, _screwBoxPositionY, screwBox.transform.position.z);
-
         ResetScrewBoxSlot();
 
-        Vector3 destination = screwBox.transform.position;
+        Vector3 destination = GetScrewBoxNextPosition(screwBox, index);
 
-        destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
-        destination.z = -0.001f * index;
+        screwBox.transform.localPosition = destination.ChangeX(getInDirection == Direction.Right ? -10 : 10);
+
+        // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
+        // destination.z = -0.001f * index;
+
+        Debug.Log("SAFERIO " + destination);
 
         if (_isSpawnScrewBoxFirstTimeInLevel)
         {
-            screwBox.transform.position = destination;
+            screwBox.transform.localPosition = destination;
 
             MoveFromScrewPortToScrewBox(screwBox);
         }
@@ -427,9 +434,9 @@ public class ScrewBoxManager : MonoBehaviour
 
                 int index = i;
 
-                destination = screwBox.transform.position;
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
-                destination.z = -0.001f * index;
+                destination = GetScrewBoxNextPosition(screwBox, index);
+                // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
+                // destination.z = -0.001f * index;
 
                 Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
                 .OnComplete(() =>
@@ -458,14 +465,14 @@ public class ScrewBoxManager : MonoBehaviour
 
                 screwBox.Lock();
 
-                Vector3 destination = screwBox.transform.position;
+                Vector3 destination = GetScrewBoxNextPosition(screwBox, index);
 
-                destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
-                destination.z = -0.001f * index;
+                // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
+                // destination.z = -0.001f * index;
 
                 if (_isSpawnScrewBoxFirstTimeInLevel)
                 {
-                    screwBox.transform.position = destination;
+                    screwBox.transform.localPosition = destination;
 
                     screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
                 }
@@ -751,6 +758,19 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         _isScrewPortsShaking = true;
+    }
+    #endregion
+
+    #region UTIL
+    private Vector3 GetScrewBoxNextPosition(ScrewBox screwBox, int nextIndex)
+    {
+        Vector3 destination = screwBox.transform.position;
+
+        destination.x = (-(maxScrewBox - 1) / 2f + nextIndex) * _screwBoxDistance;
+        destination.y = _screwBoxPositionY;
+        destination.z = -0.001f * nextIndex;
+
+        return destination;
     }
     #endregion
 }

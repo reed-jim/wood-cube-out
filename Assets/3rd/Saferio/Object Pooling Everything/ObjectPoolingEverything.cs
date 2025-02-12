@@ -38,6 +38,11 @@ public class ObjectPoolingEverything : MonoBehaviour
         Instance._poolGroup[key].ReturnPool(pooledGameObject);
     }
 
+    public static void ReturnToPool(string key, GameObject pooledGameObject, Transform parent)
+    {
+        Instance._poolGroup[key].ReturnPool(pooledGameObject, parent);
+    }
+
     public static GameObject SpawnGameObject(GameObject prefab)
     {
         return Instantiate(prefab, Instance.transform);
@@ -97,6 +102,29 @@ public class ObjectPool
         _cachedPrefab = prefab;
     }
 
+    public void Init<T>(GameObject prefab, Transform parent, int poolSize)
+    {
+        _pool = new GameObjectWithComponent[poolSize];
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            GameObject gameObject = ObjectPoolingEverything.SpawnGameObject(prefab);
+
+            GameObjectWithComponent gameObjectWithComponent = new GameObjectWithComponent();
+
+            gameObjectWithComponent.gameObject = gameObject;
+            gameObjectWithComponent.component = gameObject.GetComponent<T>();
+
+            _pool[i] = gameObjectWithComponent;
+
+            gameObject.SetActive(false);
+
+            gameObject.transform.SetParent(parent);
+        }
+
+        _cachedPrefab = prefab;
+    }
+
     public T GetFromPool<T>()
     {
         for (int i = 0; i < _pool.Length; i++)
@@ -142,6 +170,13 @@ public class ObjectPool
     public void ReturnPool(GameObject gameObject)
     {
         gameObject.transform.SetParent(ObjectPoolingEverything.Instance.transform);
+
+        gameObject.SetActive(false);
+    }
+
+    public void ReturnPool(GameObject gameObject, Transform parent)
+    {
+        gameObject.transform.SetParent(parent);
 
         gameObject.SetActive(false);
     }

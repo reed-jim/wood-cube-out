@@ -4,6 +4,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 {
     public static ObjectPoolingEverythingInitializer Instance;
 
+    [Header("CONTAINER")]
+    [SerializeField] private Transform screwBoxContainer;
+
     [SerializeField] private GameObject vehicleEngineSoundPrefab;
     [SerializeField] private GameObject hitObstacleSoundPrefab;
     [SerializeField] private GameObject getInVehicleSoundPrefab;
@@ -53,7 +56,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void InitPool()
     {
-        RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, 5);
+        RegisterPool<ScrewBox>(GameConstants.SCREW_BOX, screwBox, screwBoxContainer, 5);
         RegisterPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT, screwPortPrefab, 3);
         RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
         RegisterPool<BoosterHammer>(GameConstants.HAMMER, hammerPrefab, 3);
@@ -77,6 +80,15 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         ObjectPool pool = new ObjectPool();
 
         pool.Init<T>(prefab, poolSize);
+
+        ObjectPoolingEverything.AddToPool(key, pool);
+    }
+
+    private void RegisterPool<T>(string key, GameObject prefab, Transform parent, int poolSize)
+    {
+        ObjectPool pool = new ObjectPool();
+
+        pool.Init<T>(prefab, parent, poolSize);
 
         ObjectPoolingEverything.AddToPool(key, pool);
     }
