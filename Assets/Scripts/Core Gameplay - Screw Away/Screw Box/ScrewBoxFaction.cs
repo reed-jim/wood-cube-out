@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using static GameEnum;
 
 public class ScrewBoxFaction : MonoBehaviour
@@ -7,6 +8,8 @@ public class ScrewBoxFaction : MonoBehaviour
     [SerializeField] private GameFaction faction;
     [SerializeField] private SpriteRenderer boxSpriteRenderer;
     [SerializeField] private SpriteRenderer boxLidSpriteRenderer;
+    [SerializeField] private Image screwBoxImage;
+    [SerializeField] private Image screwBoxLidImage;
 
     [SerializeField] private ScrewBoxServiceLocator screwBoxServiceLocator;
 
@@ -29,6 +32,9 @@ public class ScrewBoxFaction : MonoBehaviour
 
         boxSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxSprite;
         boxLidSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxLidSprite;
+
+        // screwBoxImage.sprite = screwBoxFactionsData[(int)faction].BoxSprite;
+        // screwBoxLidImage.sprite = screwBoxFactionsData[(int)faction].BoxLidSprite;
 
         // screwBoxServiceLocator.screwBoxMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
     }

@@ -95,12 +95,12 @@ public class ScrewBox : MonoBehaviour
         float scaleWithWidth = (0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
         float scaleWithHeight = (0.113811f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
 
-        scaleWithWidth *= 1.18f;
-        scaleWithHeight *= 1.18f;
+        scaleWithWidth *= 1.25f;
+        scaleWithHeight *= 1.25f;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
-        transform.localScale = finalScale * Vector3.one;
+        transform.localScale = finalScale * Vector3.one * transform.lossyScale.x;
 
         _initialScale = transform.localScale;
     }
@@ -141,7 +141,7 @@ public class ScrewBox : MonoBehaviour
 
                 boxLid.gameObject.SetActive(false);
 
-                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject);
+                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
             })));
         }
     }

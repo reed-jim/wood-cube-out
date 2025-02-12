@@ -227,17 +227,17 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             transform.SetParent(screwBoxSlot.transform);
 
-            if (isSwitchCamera)
-            {
-                gameObject.layer = LayerMask.NameToLayer("UI");
+            // if (isSwitchCamera)
+            // {
+            //     gameObject.layer = LayerMask.NameToLayer("UI");
 
-                foreach (Transform child in transform)
-                {
-                    child.gameObject.layer = LayerMask.NameToLayer("UI");
-                }
+            //     foreach (Transform child in transform)
+            //     {
+            //         child.gameObject.layer = LayerMask.NameToLayer("UI");
+            //     }
 
-                GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
-            }
+            //     GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
+            // }
 
             _isRotating = false;
 
@@ -245,7 +245,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
             _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.Scale(transform, scaleOnScrewBox * Vector3.one, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+            _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
             _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
             .OnComplete(() =>
             {

@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using UnityEngine;
 
@@ -10,6 +11,8 @@ public class GameplayCamera : MonoBehaviour
     private float _targetOrthographicSize;
     private Vector3 _initialBackgroundScale;
     private Vector3 _targetBackgroundScale;
+
+    public static event Action<float> updateCameraZoomRatioEvent;
 
     private void Awake()
     {
@@ -40,6 +43,8 @@ public class GameplayCamera : MonoBehaviour
         gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 0.333f);
 
         background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 0.333f);
+
+        updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }
 
     private void OnLevelStart()

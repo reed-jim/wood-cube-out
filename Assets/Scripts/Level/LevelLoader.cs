@@ -98,6 +98,9 @@ public class LevelLoader : MonoBehaviour
             {
                 GameObject level = Instantiate(op.Result, transform);
 
+                level.transform.position = new Vector3(0, -1, 10);
+                level.transform.rotation = Quaternion.Euler(new Vector3(-15, 30, 0));
+
                 _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
                 if (currentLevel.Value == 1)

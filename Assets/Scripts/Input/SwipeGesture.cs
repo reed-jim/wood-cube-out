@@ -15,6 +15,8 @@ public class SwipeGesture : MonoBehaviour
     private bool _isLastPositionExist;
     private bool _isDisabled;
     private bool _isSwipingLastFrame;
+    private float acceleratedMultiplier;
+    private float _notSwipingDuration;
 
     #region ACTION
     public static event Action<Vector2> swipeGestureEvent;
@@ -26,6 +28,8 @@ public class SwipeGesture : MonoBehaviour
         BasePopup.enableSwipingScreenEvent += EnableSwiping;
         LevelTutorial.enableSwipingEvent += EnableSwiping;
         PinchGesture.enableSwipingEvent += EnableSwiping;
+
+        acceleratedMultiplier = 1;
     }
 
     void OnDestroy()
@@ -56,6 +60,8 @@ public class SwipeGesture : MonoBehaviour
             {
                 _moveDirection = mousePosition - _lastPosition;
 
+                // _moveDirection *= acceleratedMultiplier;
+
                 if (_moveDirection.magnitude < threshold)
                 {
                     return;
@@ -66,6 +72,8 @@ public class SwipeGesture : MonoBehaviour
                 _lastPosition = mousePosition;
 
                 _isSwipingLastFrame = true;
+
+                // acceleratedMultiplier += 0.01f;
             }
         }
         else
@@ -77,6 +85,15 @@ public class SwipeGesture : MonoBehaviour
                 _isSwipingLastFrame = false;
             }
 
+            // _notSwipingDuration += Time.deltaTime;
+
+            // if (_notSwipingDuration > 3)
+            // {
+            //     acceleratedMultiplier = 1;
+            //     _notSwipingDuration = 0;
+            // }
+
+            // acceleratedMultiplier = 1;
             _isLastPositionExist = false;
         }
     }

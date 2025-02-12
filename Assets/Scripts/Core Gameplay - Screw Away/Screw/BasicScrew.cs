@@ -10,6 +10,7 @@ public class BasicScrew : BaseScrew
     // private GameObject obstacle;
 
     private Vector3 _obstacleHitPointWorld;
+    private int stepRotateToCorrectAngleOnScrewBox;
 
     [SerializeField] private LayerMask checkObstacleLayer;
 
@@ -24,11 +25,15 @@ public class BasicScrew : BaseScrew
         {
             transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-30, 180, 0)), 1f / 3);
 
-            if (transform.localRotation == Quaternion.Euler(new Vector3(-30, 180, 0)))
+            stepRotateToCorrectAngleOnScrewBox++;
+
+            if (stepRotateToCorrectAngleOnScrewBox == 3)
             {
                 transform.localRotation = Quaternion.Euler(new Vector3(-30, 180, 0));
 
                 _isRotatingToCorrectAngleOnScrewBox = false;
+
+                stepRotateToCorrectAngleOnScrewBox = 0;
             }
         }
     }

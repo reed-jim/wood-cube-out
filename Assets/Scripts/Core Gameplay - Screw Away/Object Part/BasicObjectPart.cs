@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
@@ -83,10 +84,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
 
+            List<HingeJoint> toRemoveJoints = hingeJoints.ToList();
+
             for (int i = 0; i < hingeJoints.Length; i++)
             {
                 hingeJoints[i].breakForce = 0;
             }
+
+            // foreach (var item in toRemoveJoints)
+            // {
+            //     Destroy(item);
+            // }
 
             minJointToDisableKinematic = 0;
         }
