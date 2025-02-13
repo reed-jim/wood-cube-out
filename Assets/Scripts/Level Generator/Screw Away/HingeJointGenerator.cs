@@ -1406,6 +1406,8 @@ public class HingeJointGenerator : EditorWindow
 
         List<GameObject> hinges = new List<GameObject>();
 
+        Dictionary<Vector3, Transform> tilesWithPiece = new Dictionary<Vector3, Transform>();
+
         for (int i = 0; i < piecePrefabs.Length; i++)
         {
             if (piecePrefabs[i].name.Contains("Hinge"))
@@ -1448,21 +1450,73 @@ public class HingeJointGenerator : EditorWindow
 
                         totalSpawn++;
 
-                        // HINGE
-                        random = UnityEngine.Random.Range(0, 20);
+                        tilesWithPiece.Add(new Vector3(i, j, k), generatedPiece);
+
+                        // // HINGE
+                        // random = UnityEngine.Random.Range(0, 20);
+
+                        // if (random == 0)
+                        // {
+                        //     Transform hinge =
+                        //         ((GameObject)PrefabUtility.InstantiatePrefab(hinges[UnityEngine.Random.Range(0, 2)], Selection.activeTransform)).transform;
+
+                        //     if (hinge.name == "Hinge L-Shaped")
+                        //     {
+                        //         hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, currentPieceSize.y, 0);
+                        //     }
+                        //     else
+                        //     {
+                        //         hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, 0, 0);
+                        //     }
+                        // }
+                    }
+                    else
+                    {
+                        tilesWithPiece.Add(new Vector3(i, j, k), null);
+                    }
+                }
+            }
+        }
+
+        // GENERATE HINGE
+        for (int i = -numRow; i <= numRow; i++)
+        {
+            for (int j = -numRow; j <= numRow; j++)
+            {
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    if (tilesWithPiece[new Vector3(i, j, k)] != null)
+                    {
+                        int random = UnityEngine.Random.Range(0, 1);
+
+                        BlockHinge randomHinge = hinges[UnityEngine.Random.Range(0, hinges.Count)].GetComponent<BlockHinge>();
+
+                        Debug.Log("SAFERIO " + randomHinge);
+
+                        if (randomHinge.name == "Hinge L-Shaped 2")
+                        {
+                            continue;
+                        }
 
                         if (random == 0)
                         {
-                            Transform hinge =
-                                ((GameObject)PrefabUtility.InstantiatePrefab(hinges[UnityEngine.Random.Range(0, 2)], Selection.activeTransform)).transform;
+                            Transform piece = tilesWithPiece[new Vector3(i, j, k)];
 
-                            if (hinge.name == "Hinge L-Shaped")
+                            if (IsValidForHinge(randomHinge, i, j, k))
                             {
-                                hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, currentPieceSize.y, 0);
-                            }
-                            else
-                            {
-                                hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, 0, 0);
+                                Transform hinge =
+                                ((GameObject)PrefabUtility.InstantiatePrefab(randomHinge.gameObject, Selection.activeTransform)).transform;
+
+                                Vector3 size = piece.GetComponent<MeshRenderer>().bounds.size;
+
+                                if (hinge.name == "Hinge L-Shaped")
+                                {
+                                    hinge.transform.position = piece.transform.position + 0.57f * new Vector3(-size.x, size.y, 0);
+                                }
+                                else
+                                {
+                                    hinge.transform.position = piece.transform.position + 0.57f * new Vector3(-size.x, 0, 0);
+                                }
                             }
                         }
                     }
@@ -1470,51 +1524,42 @@ public class HingeJointGenerator : EditorWindow
             }
         }
 
-        // // RANDOMIZE
-        // for (int k = 0; k < possibleSinglePieces.Count; k++)
-        // {
-        //     Debug.Log(possibleSinglePieces[k].name + "/" + firstMatrix.Count(item => item.x == coordinators[k].x && item.z == coordinators[k].z));
+        bool IsValidForHinge(BlockHinge hinge, int x, int y, int z)
+        {
+            if (x - 1 >= 0)
+            {
+                if (tilesWithPiece[new Vector3(x - 1, y, z)] != null)
+                {
+                    return false;
+                }
+            }
 
-        //     if (firstMatrix.Count(item => item.x == coordinators[k].x && item.z == coordinators[k].z) == 1)
-        //     {
-        //         currentPieceSize = possibleSinglePieces[k].GetComponent<MeshRenderer>().bounds.size;
+            for (int i = z - (hinge.size - 1) / 2; i <= z + (hinge.size - 1) / 2; i++)
+            {
+                if (i < 0 || i > numRow)
+                {
+                    return false;
+                }
 
-        //         possibleSinglePieces[k].transform.position += new Vector3(0, 0.5f * currentPieceSize.y * RandomWithoutZero(2), 0);
-        //     }
+                if (tilesWithPiece[new Vector3(x, y, i)] == null)
+                {
+                    return false;
+                }
+            }
 
-        //     if (firstMatrix.Count(item => item.x == coordinators[k].x && item.y == coordinators[k].y) == 1)
-        //     {
-        //         currentPieceSize = possibleSinglePieces[k].GetComponent<MeshRenderer>().bounds.size;
+            // set tile full
+            for (int i = z - (hinge.size - 1) / 2; i <= z + (hinge.size - 1) / 2; i++)
+            {
+                if (i < 0 || i > numRow)
+                {
+                    continue;
+                }
 
-        //         possibleSinglePieces[k].transform.position += new Vector3(0, 0, 0.5f * currentPieceSize.z * RandomWithoutZero(2));
-        //     }
-        // }
+                tilesWithPiece[new Vector3(x, y, i)] = null;
+            }
 
-        // // Flip
-        // for (int i = halfTotalSpawn; i < 2 * halfTotalSpawn; i++)
-        // {
-        //     Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
-
-        //     generatedPiece.name = $"Piece {i + 1}";
-
-        //     // MATERIAL
-        //     generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = generatedPieces[i - halfTotalSpawn].GetComponent<MeshRenderer>().sharedMaterial;
-
-        //     // POSITION
-        //     Vector3 position = generatedPieces[i - halfTotalSpawn].position;
-
-        //     position.x *= -1;
-
-        //     generatedPiece.position = position;
-
-        //     // ROTATION
-        //     Vector3 rotation = generatedPieces[i - halfTotalSpawn].rotation.eulerAngles;
-
-        //     rotation.x += 180;
-        //     rotation.z += 180;
-
-        //     generatedPiece.rotation = Quaternion.Euler(rotation);
-        // }
+            return true;
+        }
 
         EditorUtility.SetDirty(Selection.activeTransform);
     }
