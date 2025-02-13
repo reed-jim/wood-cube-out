@@ -373,8 +373,6 @@ public class ScrewBoxManager : MonoBehaviour
         // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
         // destination.z = -0.001f * index;
 
-        Debug.Log("SAFERIO " + destination);
-
         if (_isSpawnScrewBoxFirstTimeInLevel)
         {
             screwBox.transform.localPosition = destination;
