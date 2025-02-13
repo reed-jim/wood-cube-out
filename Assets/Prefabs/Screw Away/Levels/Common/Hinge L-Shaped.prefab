@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1098919705128288782}
+  - component: {fileID: 8541421931757660414}
   - component: {fileID: 2612514727247547896}
   - component: {fileID: 1591825515162859825}
   - component: {fileID: 8611401401723565606}
@@ -41,6 +42,19 @@ Transform:
   - {fileID: 30515522119396722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
+--- !u!114 &8541421931757660414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6382728960186074408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df83f00c3d9425640aae8798920f3ea3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  size: 1
 --- !u!114 &2612514727247547896
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,7 +197,7 @@ HingeJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6382728960186074408}
   serializedVersion: 3
-  m_ConnectedBody: {fileID: 8807924828976465109}
+  m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: -0.10176831, z: -0.48}
   m_Axis: {x: 0, y: 0.99999994, z: -0.00000011920929}
@@ -222,7 +236,7 @@ HingeJoint:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6382728960186074408}
   serializedVersion: 3
-  m_ConnectedBody: {fileID: 6684525955702423436}
+  m_ConnectedBody: {fileID: 0}
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0, y: -0.484, z: -0.09921732}
   m_Axis: {x: 0, y: 0.0000001685874, z: 1}
@@ -331,11 +345,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 5336527425797375097}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &6684525955702423436 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1642428048320838645, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 5336527425797375097}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7851774628332666656
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -412,10 +421,5 @@ PrefabInstance:
 --- !u!4 &2779941098606745131 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 7851774628332666656}
-  m_PrefabAsset: {fileID: 0}
---- !u!54 &8807924828976465109 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 1642428048320838645, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 7851774628332666656}
   m_PrefabAsset: {fileID: 0}
