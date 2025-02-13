@@ -13,9 +13,11 @@ public class LevelDifficultyCalculator : EditorWindow
     private LevelDataContainer levelDataContainer;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
-    private float expectedDifficultyNormalized;
+    private float expectedDifficulty;
 
     private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
+
+    private LevelDifficultyConfiguration levelDifficultyConfiguration;
 
 
     [MenuItem("Saferio/Tools/Level Difficulty Calculator")]
@@ -36,7 +38,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
         level = EditorGUILayout.IntField("Level", level);
         levelDataContainer = (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
-        expectedDifficultyNormalized = EditorGUILayout.FloatField("Expected Difficulty", expectedDifficultyNormalized);
+        expectedDifficulty = EditorGUILayout.FloatField("Expected Difficulty", expectedDifficulty);
 
         if (GUILayout.Button("Calculate"))
         {
@@ -52,6 +54,8 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             GenerateScrewBoxDifficultyTemplate(level);
         }
+
+        levelDifficultyConfiguration = (LevelDifficultyConfiguration)EditorGUILayout.ObjectField("Result", levelDifficultyConfiguration, typeof(LevelDifficultyConfiguration), true);
 
         GUILayout.EndArea();
     }
@@ -96,7 +100,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
             totalObstacles += numBlockingObjects;
 
-            if (numBlockingObjects > 0)
+            if (numBlockingObjects > 1)
             {
                 numScrewBlocked++;
             }
@@ -169,6 +173,7 @@ public class LevelDifficultyCalculator : EditorWindow
         difficultyText += $" <color=#fff>- Start Game Triple Match Difficulty: <color=#FF7A75>{WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty}";
         difficultyText += $" <color=#9DFF8D>({startGameTripleSameFactionGenerationDifficulty * 100}%)";
         difficultyText += $" <color=#fff>- Total Screws: <color=#FF7A75>({numScrew})";
+        difficultyText += $" <color=#fff>- Total Screws Blocked: <color=#FF7A75>({numScrewBlocked})";
         difficultyText += $" <color=#fff>- Total Obstacles: <color=#FF7A75>({totalObstacles})";
         difficultyText += $" <color=#fff>- Final Difficulty Multiplier: <color=#FF7A75>({finalDifficultyMultiplier})";
         difficultyText += $" <color=#fff>- Final Difficulty: <color=#FF7A75>{finalDifficulty}</color>";
@@ -176,6 +181,44 @@ public class LevelDifficultyCalculator : EditorWindow
         Debug.Log(difficultyText);
 
         EditorGUIUtility.systemCopyBuffer = $"{finalDifficulty}";
+
+
+        List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
+
+        // GENERATE BASED ON EXPECTED DIFFICULTY
+        float remainingDifficulty = expectedDifficulty -
+            WEIGHT_BLOCKED_RATIO_DIFFICULTY * blockedRatioDifficultyNormalized +
+            WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER * screwPortFactionChanceModifierDifficultyNormalized +
+            WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION * startGameTripleSameFactionGenerationDifficulty;
+
+        float remainingDifficultyNormalized = remainingDifficulty / WEIGHT_PHASES_DIFFICULTY;
+
+        Debug.Log(remainingDifficulty + "/" + remainingDifficultyNormalized);
+
+        for (int i = 7; i >= 0; i--)
+        {
+            int phaseIndex = i;
+
+            float progress = remainingDifficultyNormalized;
+
+            progress = Mathf.Clamp01(progress);
+
+            LevelPhase levelPhase = new LevelPhase(phaseIndex: 0, endProgress: 1 - progress);
+
+            generatedLevelPhases.Add(levelPhase);
+
+            levelPhase = new LevelPhase(phaseIndex, 1);
+
+            generatedLevelPhases.Add(levelPhase);
+
+            break;
+        }
+
+        levelDifficultyConfiguration = new LevelDifficultyConfiguration();
+
+        levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
+        levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;
+        levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame = 1;
     }
 
     public static LevelDifficultyConfiguration GenerateScrewBoxDifficultyTemplate(int level)
@@ -257,7 +300,7 @@ public class LevelDifficultyCalculator : EditorWindow
 
         for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
         {
-            if (0.9f * (Mathf.Pow(2, i) / MAX_SCREW_BOXES_GENERATION_DIFFICULTY) > expectedDifficultyNormalized)
+            if (0.9f * (Mathf.Pow(2, i) / MAX_SCREW_BOXES_GENERATION_DIFFICULTY) > expectedDifficulty)
             {
                 validMaxPhaseIndexToRandom.Add(i);
             }
@@ -270,7 +313,7 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             int phaseIndex = i;
 
-            float progress = expectedDifficultyNormalized / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
+            float progress = expectedDifficulty / Mathf.Pow(2, phaseIndex) * MAX_SCREW_BOXES_GENERATION_DIFFICULTY;
 
             if (progress > 0.1f && progress < 0.9f)
             {

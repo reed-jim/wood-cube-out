@@ -1491,8 +1491,6 @@ public class HingeJointGenerator : EditorWindow
 
                         BlockHinge randomHinge = hinges[UnityEngine.Random.Range(0, hinges.Count)].GetComponent<BlockHinge>();
 
-                        Debug.Log("SAFERIO " + randomHinge);
-
                         if (randomHinge.name == "Hinge L-Shaped 2")
                         {
                             continue;

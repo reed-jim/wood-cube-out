@@ -194,9 +194,9 @@ public class BasicScrew : BaseScrew
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
     {
-        float screwRadius = transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x;
+        float screwRadius = transform.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x;
 
-        Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward;
+        Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * meshFilter.sharedMesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
         Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, checkObstacleLayer);
@@ -230,11 +230,11 @@ public class BasicScrew : BaseScrew
                     {
                         RaycastHit hit;
 
-                        float radius = transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x;
+                        float radius = transform.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x;
 
                         Physics.CapsuleCast(
                             pointOne - radius * transform.forward, pointOne - radius * transform.forward + 0.01f * transform.forward,
-                            transform.lossyScale.x * 0.45f * meshFilter.mesh.bounds.size.x, transform.forward, out hit, 10, checkObstacleLayer);
+                            transform.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x, transform.forward, out hit, 10, checkObstacleLayer);
 
                         if (hit.collider != null)
                         {
@@ -249,17 +249,17 @@ public class BasicScrew : BaseScrew
                     // Perpendicular distance
                     Vector3 positionInScrewSpace = transform.InverseTransformPoint(hitPos);
 
-                    float distance = positionInScrewSpace.z - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z;
+                    float distance = positionInScrewSpace.z - transform.lossyScale.z * 1f * meshFilter.sharedMesh.bounds.size.z;
 
                     distance = Mathf.Max(distance, 0);
 
-                    if (distance < transform.lossyScale.z * 0.5f * meshFilter.mesh.bounds.size.z)
+                    if (distance < transform.lossyScale.z * 0.5f * meshFilter.sharedMesh.bounds.size.z)
                     {
                         if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
                         {
                             continue;
                         }
-
+                        
                         number++;
 
                         _obstacleHitPointWorld = hitPos;
