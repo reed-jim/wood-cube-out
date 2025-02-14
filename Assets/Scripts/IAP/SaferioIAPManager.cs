@@ -74,6 +74,23 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         }
 #endif
 
+#if UNITY_ANDROID&& !UNITY_EDITOR
+        try
+        {
+            AndroidJavaClass up = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+            AndroidJavaObject currentActivity = up.GetStatic<AndroidJavaObject>("currentActivity");
+            AndroidJavaClass client = new AndroidJavaClass("com.google.android.gms.ads.identifier.AdvertisingIdClient");
+            AndroidJavaObject adInfo = client.CallStatic<AndroidJavaObject>("getAdvertisingIdInfo", currentActivity);
+
+            var advertisingID = adInfo.Call<string>("getId").ToString();
+            if (!IsInitialized()) builder.Configure<IGooglePlayConfiguration>().SetObfuscatedAccountId(advertisingID);
+        }
+        catch (Exception e)
+        {
+            Debug.Log($"Tracking GetIDFA Android: {e.ToString()}");
+        }
+#endif
+
         UnityPurchasing.Initialize(this, builder);
     }
 
