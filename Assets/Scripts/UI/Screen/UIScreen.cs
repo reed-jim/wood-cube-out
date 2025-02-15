@@ -100,6 +100,11 @@ public class UIScreen : MonoBehaviour
 
     protected virtual void Show()
     {
+        if (!content.gameObject.activeSelf)
+        {
+            content.gameObject.SetActive(true);
+        }
+
         moveSwipingScreenEvent?.Invoke(_initialContainerPosititon.x);
 
         _isShown = true;

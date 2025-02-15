@@ -4,6 +4,20 @@ using static GameEnum;
 
 public static class SaferioTracking
 {
+    public static void TrackLevelStart(int level, int levelPrefab)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("play_mode", "normal"),
+            new Parameter("level", level.ToString()),
+            new Parameter("level_prefab", levelPrefab.ToString()),
+        };
+
+        FirebaseAnalytics.LogEvent("level_start", parameters);
+#endif
+    }
+
     public static void TrackLevelFirstWin(int level, LevelBoosterObserver levelBoosterObserver)
     {
 #if !UNITY_EDITOR
@@ -53,6 +67,22 @@ public static class SaferioTracking
         FirebaseAnalytics.LogEvent("level_lose", parameters);
 #endif
     }
+
+//     public static void TrackLevelEnd(int level, bool isSuccess, string reason)
+//     {
+// #if !UNITY_EDITOR
+//         Parameter[] parameters =
+//         {
+//             new Parameter("play_mode", "normal"),
+//             new Parameter("level", level.ToString()),
+//             new Parameter("success", isSuccess.ToString()),
+//             new Parameter("reason", reason),
+//             new Parameter("ad_duration", levelPrefab.ToString())
+//         };
+
+//         FirebaseAnalytics.LogEvent("level_end", parameters);
+// #endif
+//     }
 
     public static void TrackBoosterUsage(BoosterType boosterType)
     {

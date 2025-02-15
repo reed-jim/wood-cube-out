@@ -113,6 +113,8 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
+
+                SaferioTracking.TrackLevelStart(currentLevel.Value, nextLevel);
             }
         };
 
