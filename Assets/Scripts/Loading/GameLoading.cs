@@ -67,12 +67,12 @@ public class GameLoading : MonoBehaviour
         float avoidInitialLagDuration = 1.5f;
         bool isPlayLoadingAnimation = false;
 
-        yield return new WaitForSeconds(burstReadyDuration);
+        // // WEAK DEVICES
+        // yield return new WaitForSeconds(burstReadyDuration);
+        
+        // WeakDevices();
 
-        // WEAK DEVICES
-        WeakDevices();
-
-        yield break;
+        // yield break;
 
         // SPLASH SCREEN
         _tweens.Add(Tween.Alpha(splashScreenBackground, 0, duration: 0.3f, startDelay: 1.2f));

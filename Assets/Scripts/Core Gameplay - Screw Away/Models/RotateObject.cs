@@ -11,12 +11,24 @@ public class RotateObject : MonoBehaviour
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
 
+    #region ACCELERATE
+    private float _acceleratedMultiplier;
+    private float _resetAccelerationTime;
+    #endregion
+
+    #region CONST
+    private const float ACCELERATE_RATE = 0.04f;
+    private const float MAX_ACCELERATE_MULTIPLIER = 3;
+    private const float MAX_TICK_RESET_ACCELERATE = 10;
+    #endregion
+
     void Awake()
     {
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.06f;
+        _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
         {
@@ -28,8 +40,24 @@ public class RotateObject : MonoBehaviour
 
     void Update()
     {
-        transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-        transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+        if (Mathf.Abs(_pitch) > 0.01f || Mathf.Abs(_yaw) > 0.01f)
+        {
+            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _acceleratedMultiplier * _pitch);
+            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _acceleratedMultiplier * _yaw);
+        }
+        else
+        {
+            if (_acceleratedMultiplier > 1)
+            {
+                _resetAccelerationTime++;
+
+                if (_resetAccelerationTime > MAX_TICK_RESET_ACCELERATE)
+                {
+                    _acceleratedMultiplier = 1;
+                    _resetAccelerationTime = 0;
+                }
+            }
+        }
 
         if (!_isAutoRotating)
         {
@@ -53,6 +81,10 @@ public class RotateObject : MonoBehaviour
 
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
+
+        _acceleratedMultiplier += ACCELERATE_RATE;
+        _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
+        _resetAccelerationTime = 0;
     }
 
     private IEnumerator AutoRotating()

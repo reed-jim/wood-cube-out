@@ -80,6 +80,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         // REMOTE CONFIG ENABLE JOINT
         bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_JOINT, false);
 
+        isEnableJoint = true;
+
         if (!isEnableJoint)
         {
             HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
@@ -97,6 +99,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             // }
 
             minJointToDisableKinematic = 0;
+
+            meshCollider.enabled = false;
         }
         else
         {
@@ -180,6 +184,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             if (_totalJoint == 0)
             {
+                if (meshCollider.enabled)
+                {
+                    meshCollider.enabled = false;
+                }
+
                 _isFree = true;
 
                 Throw();
