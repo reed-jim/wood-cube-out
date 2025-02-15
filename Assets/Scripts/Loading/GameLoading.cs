@@ -15,6 +15,7 @@ public class GameLoading : MonoBehaviour
 {
     [SerializeField] private RectTransform container;
     [SerializeField] private RectTransform loadingScreenContainer;
+    [SerializeField] private Image staticLoadingImage;
     [SerializeField] private Image blackBackground;
     [SerializeField] private Slider progressBar;
     [SerializeField] private Image progressBarFill;
@@ -66,6 +67,12 @@ public class GameLoading : MonoBehaviour
         float avoidInitialLagDuration = 1.5f;
         bool isPlayLoadingAnimation = false;
 
+        yield return new WaitForSeconds(burstReadyDuration);
+
+        // WEAK DEVICES
+        WeakDevices();
+
+        yield break;
 
         // SPLASH SCREEN
         _tweens.Add(Tween.Alpha(splashScreenBackground, 0, duration: 0.3f, startDelay: 1.2f));
@@ -104,6 +111,33 @@ public class GameLoading : MonoBehaviour
         }
 
         BurstTransition();
+    }
+
+    private void WeakDevices()
+    {
+        blackBackground.gameObject.SetActive(false);
+
+        _tweens.Add(Tween.Delay(loadingDuration).OnComplete(
+            () =>
+            {
+                // Black screen
+                blackBackground.gameObject.SetActive(true);
+
+                blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
+
+                _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
+                {
+                    // blackBackground.gameObject.SetActive(false);
+
+                    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                }));
+
+                _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>
+                {
+                    staticLoadingImage.gameObject.SetActive(false);
+                }));
+            }
+        ));
     }
 
     private void BurstTransition()
