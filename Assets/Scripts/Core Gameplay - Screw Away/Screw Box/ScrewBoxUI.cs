@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -71,6 +72,7 @@ public class ScrewBoxUI : MonoBehaviour
 
     public void SetUnlockByAdsButtonPosition()
     {
+        unlockByAdsButtonRT.localPosition = Vector3.zero.ChangeZ(-4);
         // unlockByAdsButtonRT.localPosition = _screwBoxCamera.WorldToScreenPoint(transform.position) - 0.5f * (Vector3)GamePersistentVariable.canvasSize;
     }
 
