@@ -112,7 +112,12 @@ public class HingeJointGenerator : EditorWindow
 
         if (GUILayout.Button("Generate Hinge Joint All"))
         {
-            GenerateHingeJointAll(prefabPath);
+            GenerateHingeJointAll(Selection.activeTransform);
+        }
+
+        if (GUILayout.Button("Generate Hinge Joint All Levels"))
+        {
+            GenerateHingeJointAllLevels();
         }
 
         if (GUILayout.Button("Check HingeJoint Number"))
@@ -378,13 +383,34 @@ public class HingeJointGenerator : EditorWindow
 
         for (int I = 0; I < hingeJoints.Length; I++)
         {
-            DestroyImmediate(hingeJoints[I]);
+            DestroyImmediate(hingeJoints[I], true);
         }
     }
 
-    private void GenerateHingeJointAll(string path)
+    private void GenerateHingeJointAllLevels()
     {
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
+        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
+
+        int level = 1;
+
+        for (int i = 0; i < levels.Length; i++)
+        {
+            RotateObject rotateObject = levels[i].GetComponent<RotateObject>();
+
+            if (rotateObject == null)
+            {
+                continue;
+            }
+
+            GenerateHingeJointAll(levels[i].transform, $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab");
+
+            level++;
+        }
+    }
+
+    private void GenerateHingeJointAll(Transform level, string path = null)
+    {
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
 
         for (int i = 0; i < objectParts.Length; i++)
         {
@@ -392,21 +418,6 @@ public class HingeJointGenerator : EditorWindow
 
             GenerateHingeJoint(objectParts[i].gameObject);
         }
-
-        // for (int i = 0; i < levelPrefab.transform.childCount; i++)
-        // {
-        //     GameObject target = levelPrefab.transform.GetChild(i).gameObject;
-
-        //     BasicObjectPart objectPart = target.transform.GetComponent<BasicObjectPart>();
-
-        //     if (objectPart != null)
-        //     {
-        //         // REMOVE OLD HINGE JOINTS
-        //         RemoveOldHingeJoints(objectPart.gameObject);
-
-        //         GenerateHingeJoint(target);
-        //     }
-        // }
 
         void GenerateHingeJoint(GameObject target)
         {
@@ -419,7 +430,6 @@ public class HingeJointGenerator : EditorWindow
                     HingeJoint joint = target.AddComponent<HingeJoint>();
 
                     // WARNING: HingeJoint axis gizmos may not update correctly, so be sure to double-check it.
-
                     joint.connectedBody = screw.GetComponent<Rigidbody>();
                     joint.anchor = screw.transform.localPosition;
 
@@ -431,29 +441,9 @@ public class HingeJointGenerator : EditorWindow
             }
         }
 
-        // for (int i = 0; i < target.transform.childCount; i++)
-        // {
-        //     BasicScrew screw = target.transform.GetChild(i).GetComponent<BasicScrew>();
+        EditorUtility.SetDirty(level);
 
-        //     if (screw != null)
-        //     {
-        //         HingeJoint joint = target.AddComponent<HingeJoint>();
-
-        //         // WARNING: HingeJoint axis gizmos may not update correctly, so be sure to double-check it.
-
-        //         joint.connectedBody = screw.GetComponent<Rigidbody>();
-        //         joint.anchor = screw.transform.localPosition;
-
-        //         // CRUCIAL
-        //         joint.axis = screw.transform.localRotation * Vector3.forward;
-
-        //         screw.Joint = joint;
-        //     }
-        // }
-
-        EditorUtility.SetDirty(Selection.activeGameObject);
-
-        PrefabUtility.SaveAsPrefabAsset(Selection.activeGameObject, path);
+        PrefabUtility.SaveAsPrefabAsset(level.gameObject, path);
     }
 
     private void CheckHingeJointNumber(string path)

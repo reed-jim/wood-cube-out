@@ -558,7 +558,7 @@ public class AdmobAdsMax : MonoBehaviour
 
             return false;
         }
-        
+
         if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
                 .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
@@ -845,6 +845,13 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         if (SceneManager.GetActiveScene().name == GameConstants.LOADING_SCENE)
+        {
+            return;
+        }
+
+        bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+
+        if (!remoteConfigIsShowBanner)
         {
             return;
         }

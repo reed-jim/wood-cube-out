@@ -407,6 +407,7 @@ public class FirebaseConfig
     #region SAFERIO
     public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
     public const string ENABLE_JOINT = "enable_joint";
+    public const string IS_SHOW_BANNER = "is_show_banner";
     public const string IS_SHOW_SKIP_LEVEL_BUTTON = "is_show_skip_level_button";
     public const string IS_SHOW_INTER_REPLAY_LEVEL = "is_show_inter_replay_level";
     public const string IS_SHOW_INTER_LOSE_LEVEL = "is_show_inter_lose_level";
