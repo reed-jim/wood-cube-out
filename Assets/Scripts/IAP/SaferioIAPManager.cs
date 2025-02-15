@@ -31,6 +31,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent += BuyProduct;
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyIAPEvent += BuyProduct;
+        IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
@@ -60,6 +61,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent -= BuyProduct;
         IAPShopItem.buyIAPEvent -= BuyProduct;
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
+        IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
     }
 
@@ -83,7 +85,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             AndroidJavaObject adInfo = client.CallStatic<AndroidJavaObject>("getAdvertisingIdInfo", currentActivity);
 
             var advertisingID = adInfo.Call<string>("getId").ToString();
-            if (!IsInitialized()) builder.Configure<IGooglePlayConfiguration>().SetObfuscatedAccountId(advertisingID);
+
+            builder.Configure<IGooglePlayConfiguration>().SetObfuscatedAccountId(advertisingID);
         }
         catch (Exception e)
         {

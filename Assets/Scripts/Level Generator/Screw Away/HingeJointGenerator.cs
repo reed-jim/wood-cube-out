@@ -1427,7 +1427,7 @@ public class HingeJointGenerator : EditorWindow
                 // Z
                 for (int k = -numRow; k <= numRow; k++)
                 {
-                    int random = UnityEngine.Random.Range(0, 3);
+                    int random = UnityEngine.Random.Range(0, 2);
 
                     if (random == 0)
                     {

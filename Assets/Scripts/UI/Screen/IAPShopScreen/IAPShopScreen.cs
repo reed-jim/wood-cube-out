@@ -4,6 +4,8 @@ using UnityEngine.UI;
 
 public class IAPShopScreen : UIScreen
 {
+    public static event Action fetchLocalizedPriceIAPEvent;
+
     // [SerializeField] private IAPDataContainer IAPDataContainer;
     // [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -20,5 +22,15 @@ public class IAPShopScreen : UIScreen
     //             break;
     //         }
     //     }
+    // }
+
+    void Start()
+    {
+        fetchLocalizedPriceIAPEvent?.Invoke();
+    }
+
+    // protected override void MoreActionInAwake()
+    // {
+    //     fetchLocalizedPriceIAPEvent?.Invoke();
     // }
 }
