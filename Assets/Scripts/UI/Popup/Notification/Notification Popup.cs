@@ -14,6 +14,7 @@ public class NotificationPopup : BasePopup
         IAPPackageUI.showNotificationEvent += ShowNotification;
         IAPCoinItemUI.showNotificationEvent += ShowNotification;
         RemoveAdPopup.showNotificationEvent += ShowNotification;
+        SaferioIAPManager.showNotificationEvent += ShowNotification;
 
         okButton.onClick.AddListener(Hide);
     }
@@ -24,12 +25,20 @@ public class NotificationPopup : BasePopup
         IAPPackageUI.showNotificationEvent -= ShowNotification;
         IAPCoinItemUI.showNotificationEvent -= ShowNotification;
         RemoveAdPopup.showNotificationEvent -= ShowNotification;
+        SaferioIAPManager.showNotificationEvent -= ShowNotification;
     }
 
     private void ShowNotification(string titleTranslation, string descriptionTranslation)
     {
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
+
+        Show();
+    }
+
+    private void ShowNotification(string description)
+    {
+        localizedDescription.TranslationName = description;
 
         Show();
     }

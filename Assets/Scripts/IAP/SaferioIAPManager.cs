@@ -23,6 +23,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action removeAdsEvent;
+    public static event Action<string> showNotificationEvent;
     #endregion
 
     private void Awake()
@@ -99,7 +100,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void BuyProduct(string productId)
     {
-        controller.InitiatePurchase(productId);
+        if (controller != null)
+        {
+            controller.InitiatePurchase(productId);
+        }
+        else
+        {
+            showNotificationEvent?.Invoke(GamePersistentVariable.iapInitializeFailReason);
+        }
 
         // foreach (var productData in IAPDataContainer.ProductsData)
         // {
@@ -141,7 +149,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        Debug.Log(error);
+        GamePersistentVariable.iapInitializeFailReason = error.ToString();
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
