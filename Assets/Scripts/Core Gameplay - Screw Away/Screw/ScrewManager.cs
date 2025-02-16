@@ -108,6 +108,11 @@ public class ScrewManager : MonoBehaviour
 
     private void AddScrew(BaseScrew screw)
     {
+        if (_screws == null)
+        {
+            _screws = new List<BaseScrew>();
+        }
+
         _screws.Add(screw);
 
         _totalScrewObserved++;
@@ -187,6 +192,9 @@ public class ScrewManager : MonoBehaviour
             int numberBlockObject = _screws[i].NumberBlockingObjects;
 
             numObstacleEachScrewEachFaction[faction].Add(numberBlockObject);
+
+            // FOR Tutorial
+            difficultyLevelByFactions[faction] += _screws[i].ScrewDifficultyModifier;
         }
 
         List<GameFaction> factions = new List<GameFaction>(numObstacleEachScrewEachFaction.Keys);
@@ -194,6 +202,14 @@ public class ScrewManager : MonoBehaviour
         // Calculate difficulty of each faction based on total obstacles of first three most "blocked-less" screws
         foreach (var faction in factions)
         {
+            // not valid faction
+            if (numObstacleEachScrewEachFaction[faction].Count < 3)
+            {
+                difficultyLevelByFactions[faction] += 999;
+
+                continue;
+            }
+
             numObstacleEachScrewEachFaction[faction] = numObstacleEachScrewEachFaction[faction].OrderBy(item => item).ToList();
 
             int totalObstaclesOfThreeMostOpenedScrews = numObstacleEachScrewEachFaction[faction].Take(3).Sum();
