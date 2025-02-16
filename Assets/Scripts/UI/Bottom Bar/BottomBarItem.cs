@@ -84,7 +84,7 @@ public class BottomBarItem : MonoBehaviour
 
     private void Select()
     {
-        SoundManager.Instance.PlaySoundClick();
+        // SoundManager.Instance.PlaySoundClick();
 
         switchRouteEvent?.Invoke(route);
         moveBottomBarHighlightEvent?.Invoke(container.localPosition.x);

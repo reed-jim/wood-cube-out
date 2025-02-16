@@ -37,8 +37,6 @@ public class GameVariableInitializer : MonoBehaviour
 
         LoadGameSetting();
 
-        currentLevelFetchedEvent?.Invoke();
-
         _cachedCanvasSize = canvas.sizeDelta;
     }
 
@@ -48,6 +46,8 @@ public class GameVariableInitializer : MonoBehaviour
         canvasScale.Value = canvas.localScale;
 
         GamePersistentVariable.canvasScale = canvasScale.Value;
+
+        currentLevelFetchedEvent?.Invoke();
     }
 
     void OnDestroy()
@@ -60,6 +60,8 @@ public class GameVariableInitializer : MonoBehaviour
         await gameSetting.LoadAsync();
 
         gameSettingLoadedEvent?.Invoke();
+
+        GamePersistentVariable.IsVibrate = gameSetting.IsVibrate;
     }
 
     private void GetCachedCanvasSize()

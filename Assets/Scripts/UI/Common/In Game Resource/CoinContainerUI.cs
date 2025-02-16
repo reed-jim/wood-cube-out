@@ -49,7 +49,7 @@ public class CoinContainerUI : MonoBehaviour
     {
         userResourcesObserver.Load();
 
-        UpdateCoinText(userResourcesObserver.UserResources.CoinQuantity);
+        UpdateCoinText(userResourcesObserver.UserResources.CoinQuantity, isPlayAnimation: false);
     }
 
     private void OnDestroy()
@@ -71,9 +71,14 @@ public class CoinContainerUI : MonoBehaviour
 
     private void UpdateCoinText(float value)
     {
+        UpdateCoinText(value, isPlayAnimation: true);
+    }
+
+    private void UpdateCoinText(float value, bool isPlayAnimation)
+    {
         coinText.text = $"{(int)value}";
 
-        if (!_isInTransition)
+        if (!_isInTransition && isPlayAnimation)
         {
             _tweens.Add(Tween.Scale(container, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f)
             .OnComplete(() => _isInTransition = false));
