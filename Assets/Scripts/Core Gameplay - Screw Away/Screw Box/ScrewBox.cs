@@ -77,6 +77,8 @@ public class ScrewBox : MonoBehaviour
         _tweens = new List<Tween>();
 
         boxLid.gameObject.SetActive(false);
+
+        gameSetting.LoadAsync();
     }
 
     private void OnDestroy()
@@ -124,7 +126,7 @@ public class ScrewBox : MonoBehaviour
             {
                 shakeCameraEvent?.Invoke();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
-
+                
                 if (gameSetting.IsVibrate)
                 {
                     HapticFeedback.HeavyFeedback();

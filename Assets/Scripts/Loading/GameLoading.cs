@@ -41,7 +41,16 @@ public class GameLoading : MonoBehaviour
 
         _tweens = new List<Tween>();
 
-        _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+        if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        {
+            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
+
+            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
+        }
+        else
+        {
+            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+        }
 
         StartCoroutine(SlowTransititon());
     }
@@ -69,7 +78,7 @@ public class GameLoading : MonoBehaviour
 
         // // WEAK DEVICES
         // yield return new WaitForSeconds(burstReadyDuration);
-        
+
         // WeakDevices();
 
         // yield break;
@@ -175,19 +184,19 @@ public class GameLoading : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
-        {
-            if (scene.name == GameConstants.GAMEPLAY_SCENE)
-            {
-                Addressables.UnloadSceneAsync(_menuSceneHandle);
-            }
-        }
-        else
-        {
-            if (scene.name == GameConstants.MENU_SCENE)
-            {
-                _isMenuSceneLoaded = true;
-            }
-        }
+        // if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        // {
+        //     if (scene.name == GameConstants.GAMEPLAY_SCENE)
+        //     {
+        //         Addressables.UnloadSceneAsync(_menuSceneHandle);
+        //     }
+        // }
+        // else
+        // {
+        //     if (scene.name == GameConstants.MENU_SCENE)
+        //     {
+        //         _isMenuSceneLoaded = true;
+        //     }
+        // }
     }
 }
