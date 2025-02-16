@@ -23,7 +23,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action removeAdsEvent;
-    public static event Action<string> showNotificationEvent;
+    public static event Action<string, string> showNotificationEvent;
     #endregion
 
     private void Awake()
@@ -54,6 +54,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         Init();
 
         DontDestroyOnLoad(gameObject);
+
+        GamePersistentVariable.iapInitializeFailReason = "IAP Init FAILED";
     }
 
     private void OnDestroy()
@@ -106,35 +108,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         }
         else
         {
-            showNotificationEvent?.Invoke(GamePersistentVariable.iapInitializeFailReason);
+            showNotificationEvent?.Invoke(GameConstants.ERROR, GameConstants.PLEASE_TRY_AGAIN);
         }
-
-        // foreach (var productData in IAPDataContainer.ProductsData)
-        // {
-        //     if (productData.ProductId == productId)
-        //     {
-        //         // collectCoinEvent?.Invoke(productData.CoinQuantity);
-
-        //         userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
-        //         userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
-        //         userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
-
-        //         if (productData.IsRemoveAd)
-        //         {
-        //             UserData.IsRemoveAds = true;
-        //         }
-
-        //         int[] boosterQuantites = new int[3] {
-        //                 productData.AddHoleBoosterQuantity,
-        //                 productData.BreakObjectBoosterQuantity,
-        //                 productData.ClearHolesBoosterQuantity
-        //             };
-
-        //         showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
-
-        //         break;
-        //     }
-        // }
     }
 
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)

@@ -59,6 +59,10 @@ public class MenuScreen : MonoBehaviour
             openRemoveAdPopupButton.gameObject.SetActive(false);
         }
 
+        currentLevel.Load();
+
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+
         // PreventSpammingStartButton();
     }
 
