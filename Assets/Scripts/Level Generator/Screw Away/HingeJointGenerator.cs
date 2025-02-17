@@ -1514,7 +1514,7 @@ public class HingeJointGenerator : EditorWindow
 
         bool IsValidForHinge(BlockHinge hinge, int x, int y, int z)
         {
-            if (x - 1 >= 0)
+            if (x - 1 >= -numRow)
             {
                 if (tilesWithPiece[new Vector3(x - 1, y, z)] != null)
                 {
