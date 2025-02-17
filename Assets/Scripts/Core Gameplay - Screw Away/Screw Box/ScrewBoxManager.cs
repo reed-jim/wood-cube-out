@@ -683,11 +683,9 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 if (index == screwPorts.Count - 1)
                 {
-                    Tween.Scale(addedScrewBoxSlot.transform, 1.15f * Vector3.one, duration: 0.3f);
+                    Tween.Scale(addedScrewBoxSlot.transform, Vector3.one, duration: 0.3f);
                 }
             });
-
-            // screwPorts[i].transform.position = position;
         }
     }
 
