@@ -6,6 +6,8 @@ public static class GamePersistentVariable
     public static Vector2 canvasScale;
     public static string iapInitializeFailReason;
 
+    public static Vector2 screenSizeWorld;
+
     #region SETTING
     public static bool IsVibrate;
     #endregion
