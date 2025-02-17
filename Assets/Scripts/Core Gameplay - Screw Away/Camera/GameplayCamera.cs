@@ -27,6 +27,8 @@ public class GameplayCamera : MonoBehaviour
 
         _initialBackgroundScale = background.localScale;
         _targetBackgroundScale = background.localScale;
+
+        GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(gameplayCamera);
     }
 
     private void OnDestroy()
