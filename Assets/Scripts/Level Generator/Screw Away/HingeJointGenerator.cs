@@ -41,10 +41,10 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
 
-    [MenuItem("Saferio/Tools/Hinge Joint Generator")]
+    [MenuItem("Saferio/Tools/Level Tool")]
     public static void ShowWindow()
     {
-        GetWindow<HingeJointGenerator>("Hinge Joint Generator");
+        GetWindow<HingeJointGenerator>("Level Tool");
     }
 
     private void OnGUI()
@@ -55,23 +55,23 @@ public class HingeJointGenerator : EditorWindow
 
         GUILayout.BeginArea(areaRect);
 
-        prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
+        // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
-        target = (GameObject)EditorGUILayout.ObjectField("Target", target, typeof(GameObject), true);
+        // target = (GameObject)EditorGUILayout.ObjectField("Target", target, typeof(GameObject), true);
         screwPrefab = (GameObject)EditorGUILayout.ObjectField("Screw Prefab", screwPrefab, typeof(GameObject), true);
-        targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), true);
+        // targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), true);
         piecePrefab = (GameObject)EditorGUILayout.ObjectField("Piece Prefab", piecePrefab, typeof(GameObject), true);
 
-        dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
-        distance = EditorGUILayout.Vector3Field("Distance", distance);
+        // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
+        // distance = EditorGUILayout.Vector3Field("Distance", distance);
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
 
-        expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
-        expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
+        // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
+        // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
 
-        ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
+        // ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
 
-        expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
+        // expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
 
         scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
@@ -767,9 +767,11 @@ public class HingeJointGenerator : EditorWindow
 
         Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 
+        int maxRaycastDistance = 100;
+
         RaycastHit hit;
 
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 20))
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, maxRaycastDistance))
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
 
@@ -793,7 +795,7 @@ public class HingeJointGenerator : EditorWindow
 
             target.rotation = Quaternion.LookRotation(-direction);
 
-            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 20))
+            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, maxRaycastDistance))
             {
                 IObjectPart recastObjectPart = hit.collider.GetComponent<IObjectPart>();
 
@@ -1856,8 +1858,6 @@ public class HingeJointGenerator : EditorWindow
 
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
 
-            Debug.Log(pieceSize + "/" + screwSize);
-
             int numScrew = UnityEngine.Random.Range(2, 6);
 
             int numScrewFull = numScrew + numScrew % 2;
@@ -1869,7 +1869,7 @@ public class HingeJointGenerator : EditorWindow
             numRow = Mathf.Max(numRow, 1);
 
             // avoid spawn too many
-            if (numColumn * numRow > 10)
+            if (numColumn * numRow > 16)
             {
                 return;
             }
