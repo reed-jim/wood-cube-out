@@ -6580,6 +6580,7 @@ GameObject:
   m_Component:
   - component: {fileID: 536520294808933867}
   - component: {fileID: 4529798804991809351}
+  - component: {fileID: 6324341741222662922}
   m_Layer: 0
   m_Name: Level 4
   m_TagString: Untagged
@@ -6595,10 +6596,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9086942362468818349}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.5, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.13984817, y: 0.48398405, z: -0.06940382, w: 0.8610372}
+  m_LocalPosition: {x: 0, y: -0.84, z: 10}
   m_LocalScale: {x: 0.26, y: 0.26, z: 0.26}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4659653933138778353}
   - {fileID: 4541764996494242302}
@@ -6622,7 +6623,7 @@ Transform:
   - {fileID: 3799443333141217266}
   - {fileID: 8845961938535175105}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 60, z: 0}
+  m_LocalEulerAnglesHint: {x: -10, y: 60, z: -15}
 --- !u!114 &4529798804991809351
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6637,6 +6638,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeedMultiplier: 0.2
   isDisableAutoRotatingAtStart: 0
+--- !u!114 &6324341741222662922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9086942362468818349}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c129a88c452b8714798c6d6342d15619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9181145314353512408
 GameObject:
   m_ObjectHideFlags: 0
