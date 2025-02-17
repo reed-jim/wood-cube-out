@@ -202,9 +202,13 @@ public class HingeJointGenerator : EditorWindow
 
         if (GUILayout.Button("Snap Surface All"))
         {
-            SnapSurfaceAll();
+            SnapSurfaceAll(Selection.activeTransform);
         }
 
+        if (GUILayout.Button("Snap Surface All Pieces Sequentially"))
+        {
+            SnapSurfaceScrewForAllPieceSequentially();
+        }
 
         if (GUILayout.Button("Snap Rotation Surface"))
         {
@@ -771,12 +775,42 @@ public class HingeJointGenerator : EditorWindow
 
             if (objectPart != null)
             {
-                selectedObject.position = hit.point - expectedOffsetRatioAutoSnapSurface * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-
-                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
-
-                selectedObject.rotation = surfaceRotation;
+                Snap();
             }
+            else
+            {
+                RaycastAgain();
+            }
+        }
+        else
+        {
+            RaycastAgain();
+        }
+
+        void RaycastAgain()
+        {
+            Vector3 direction = -target.transform.position + target.parent.position;
+
+            target.rotation = Quaternion.LookRotation(-direction);
+
+            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, 20))
+            {
+                IObjectPart recastObjectPart = hit.collider.GetComponent<IObjectPart>();
+
+                if (recastObjectPart != null)
+                {
+                    Snap();
+                }
+            }
+        }
+
+        void Snap()
+        {
+            selectedObject.position = hit.point - expectedOffsetRatioAutoSnapSurface * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+
+            Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
+
+            selectedObject.rotation = surfaceRotation;
         }
     }
 
@@ -785,13 +819,32 @@ public class HingeJointGenerator : EditorWindow
         SnapSurface(Selection.activeTransform);
     }
 
-    private void SnapSurfaceAll()
+    private void SnapSurfaceAll(Transform target)
     {
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(Selection.activeTransform).ToArray();
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(target).ToArray();
 
         foreach (var screw in screws)
         {
             SnapSurface(screw.transform);
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
+    private void SnapSurfaceScrewForAllPieceSequentially()
+    {
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
+
+        foreach (var piece in pieces)
+        {
+            for (int i = 0; i < pieces.Length; i++)
+            {
+                pieces[i].gameObject.SetActive(false);
+            }
+
+            piece.gameObject.SetActive(true);
+
+            SnapSurfaceAll(piece.transform);
         }
 
         EditorUtility.SetDirty(Selection.activeTransform);
@@ -1775,6 +1828,18 @@ public class HingeJointGenerator : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
+        // Remove old screws
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+
+        List<BaseScrew> toRemoveList = new List<BaseScrew>();
+
+        toRemoveList.AddRange(screws);
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+
         BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
 
         for (int i = 0; i < pieces.Length; i++)
@@ -1789,9 +1854,9 @@ public class HingeJointGenerator : EditorWindow
             Vector3 pieceSize = piece.GetComponent<MeshFilter>().sharedMesh.bounds.size / piece.transform.localScale.x;
             Vector3 halfSize = 0.5f * pieceSize;
 
-            Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+            Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
 
-            Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
+            Debug.Log(pieceSize + "/" + screwSize);
 
             int numScrew = UnityEngine.Random.Range(2, 6);
 
@@ -1802,6 +1867,12 @@ public class HingeJointGenerator : EditorWindow
 
             numColumn = Mathf.Max(numColumn, 1);
             numRow = Mathf.Max(numRow, 1);
+
+            // avoid spawn too many
+            if (numColumn * numRow > 10)
+            {
+                return;
+            }
 
             for (int i = 0; i < numRow; i++)
             {
@@ -1817,7 +1888,26 @@ public class HingeJointGenerator : EditorWindow
                     float positionX = (-(numColumn - 1) / 2f + j) * (pieceSize.x / numColumn);
                     float positionZ = (-(numRow - 1) / 2f + i) * (pieceSize.z / numRow);
 
-                    screw.transform.localPosition = new Vector3(positionX, -halfSize.y, positionZ);
+                    // screw.transform.localPosition = new Vector3(positionX, -halfSize.y, positionZ);
+                    screw.transform.localPosition = new Vector3(UnityEngine.Random.Range(-pieceSize.x, pieceSize.x),
+                        UnityEngine.Random.Range(-pieceSize.y, pieceSize.y),
+                        UnityEngine.Random.Range(-pieceSize.z, pieceSize.z));
+
+                    int random = UnityEngine.Random.Range(0, 3);
+
+                    if (random == 0)
+                    {
+                        screw.transform.localPosition = screw.transform.localPosition.ChangeX(pieceSize.x);
+                    }
+                    else if (random == 1)
+                    {
+                        screw.transform.localPosition = screw.transform.localPosition.ChangeY(pieceSize.y);
+                    }
+                    else if (random == 2)
+                    {
+                        screw.transform.localPosition = screw.transform.localPosition.ChangeZ(pieceSize.z);
+                    }
+
                     screw.transform.localRotation = Quaternion.Euler(new Vector3(90, 0, 0));
                     screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                 }
