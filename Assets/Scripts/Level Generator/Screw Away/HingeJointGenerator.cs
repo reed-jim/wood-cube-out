@@ -873,6 +873,11 @@ public class HingeJointGenerator : EditorWindow
             SnapSurfaceAll(piece.transform);
         }
 
+        foreach (var piece in pieces)
+        {
+            piece.gameObject.SetActive(true);
+        }
+
         EditorUtility.SetDirty(Selection.activeTransform);
     }
 
