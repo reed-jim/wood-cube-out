@@ -64,7 +64,9 @@ public class HingeJointGenerator : EditorWindow
 
         // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         // distance = EditorGUILayout.Vector3Field("Distance", distance);
+        GUI.enabled = false;
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
+        GUI.enabled = true;
 
         // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
         // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
@@ -197,6 +199,14 @@ public class HingeJointGenerator : EditorWindow
         // {
         //     SnapSurface();
         // }
+
+        GUILayout.Space(16);
+        GUILayout.Label("Delete", centeredStyle);
+
+        if (GUILayout.Button("Delete Screws"))
+        {
+            ClearScrews();
+        }
 
         GUILayout.Space(16);
         GUILayout.Label("Snap", centeredStyle);
@@ -1869,6 +1879,24 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region GENERATE SCREW
+    private void ClearScrews()
+    {
+        Transform level = Selection.activeTransform;
+
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+
+        List<BaseScrew> toRemoveList = new List<BaseScrew>();
+
+        toRemoveList.AddRange(screws);
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
     private void GenerateScrews()
     {
         Transform level = Selection.activeTransform;
@@ -1907,62 +1935,67 @@ public class HingeJointGenerator : EditorWindow
 
             int numScrewFull = numScrew + numScrew % 2;
 
-            int numColumn = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
-            int numRow = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
+            int maxScrewX = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
+            int maxScrewY = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
+            int maxScrewZ = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.z / screwSize.z);
 
-            numColumn = Mathf.Max(numColumn, 1);
-            numRow = Mathf.Max(numRow, 1);
+            maxScrewX = Mathf.Max(maxScrewX, 1);
+            maxScrewY = Mathf.Max(maxScrewY, 1);
+            maxScrewZ = Mathf.Max(maxScrewZ, 1);
 
             Debug.Log(pieceSize + "/" + screwSize);
 
             // avoid spawn too many
-            if (numColumn * numRow > 16)
+            if (maxScrewX * maxScrewY * maxScrewZ > 32)
             {
                 return;
             }
 
-            for (int i = 0; i < numRow; i++)
+            for (int i = 0; i < maxScrewX; i++)
             {
-                for (int j = 0; j < numColumn; j++)
+                for (int j = 0; j < maxScrewY; j++)
                 {
-                    // if (j + i * numColumn >= numScrew)
-                    // {
-                    //     continue;
-                    // }
+                    for (int k = 0; k < maxScrewZ; k++)
+                    {
+                        bool isRandomSpawn = UnityEngine.Random.Range(0, 1) == 0;
 
-                    BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+                        if (!isRandomSpawn)
+                        {
+                            continue;
+                        }
 
-                    float positionX = (-(numColumn - 1) / 2f + j) * (pieceSize.x / numColumn);
-                    float positionZ = (-(numRow - 1) / 2f + i) * (pieceSize.z / numRow);
+                        BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
 
-                    // screw.transform.localPosition = new Vector3(positionX, -halfSize.y, positionZ);
-                    screw.transform.position = piece.transform.position +
-                    new Vector3(
-                        (-(numColumn - 1) / 2f + j) * 0.9f * pieceSize.x / numColumn,
-                        UnityEngine.Random.Range(-pieceSize.y, pieceSize.y),
-                        UnityEngine.Random.Range(-0.25f * pieceSize.z, 0.25f * pieceSize.z)
-                        );
+                        FaceDirection faceDirection = GameEnum.GetRandomEnumValue<FaceDirection>();
 
-                    int random = UnityEngine.Random.Range(0, 3);
-                    int direction = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
+                        screw.transform.position = piece.transform.position +
+                        new Vector3(
+                            (-(maxScrewX - 1) / 2f + i) * 0.9f * pieceSize.x / maxScrewX,
+                            (-(maxScrewY - 1) / 2f + j) * 0.9f * pieceSize.y / maxScrewY,
+                            (-(maxScrewZ - 1) / 2f + k) * 0.9f * pieceSize.z / maxScrewZ
+                            );
 
-                    // if (random == 0)
-                    // {
-                    //     screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-                    // }
-                    // else if (random == 1)
-                    // {
-                    //     screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
-                    // }
-                    // else if (random == 2)
-                    // {
-                    //     screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + direction * pieceSize.z);
-                    // }
+                        if (faceDirection == FaceDirection.Front)
+                        {
+                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - pieceSize.z);
+                            screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
+                        }
+                        else if (faceDirection == FaceDirection.Top)
+                        {
+                            screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + pieceSize.y);
+                            screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+                        }
+                        else
+                        {
+                            screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + pieceSize.x);
+                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+                        }
 
-                    screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + pieceSize.y);
+                        int random = UnityEngine.Random.Range(0, 3);
+                        int direction = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
 
-                    screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
-                    screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+                        screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+                    }
                 }
             }
 
@@ -1999,3 +2032,10 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 }
 #endif
+
+enum FaceDirection
+{
+    Front,
+    Top,
+    Rear
+}
