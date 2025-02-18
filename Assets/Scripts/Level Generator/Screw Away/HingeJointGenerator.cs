@@ -1971,7 +1971,26 @@ public class HingeJointGenerator : EditorWindow
 
                         BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
 
-                        FaceDirection faceDirection = GameEnum.GetRandomEnumValue<FaceDirection>();
+                        List<FaceDirection> poolDirection = new List<FaceDirection>();
+
+                        poolDirection.Add(FaceDirection.Front);
+                        poolDirection.Add(FaceDirection.Top);
+                        poolDirection.Add(FaceDirection.Rear);
+
+                        if (screwSize.x > pieceSize.x)
+                        {
+                            poolDirection.Remove(FaceDirection.Front);
+                        }
+                        if (screwSize.y > pieceSize.y)
+                        {
+                            poolDirection.Remove(FaceDirection.Rear);
+                        }
+                        if (screwSize.z > pieceSize.z)
+                        {
+                            poolDirection.Remove(FaceDirection.Top);
+                        }
+
+                        FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
 
                         screw.transform.position = piece.transform.position +
                         new Vector3(
@@ -1980,24 +1999,23 @@ public class HingeJointGenerator : EditorWindow
                             (-(maxScrewZ - 1) / 2f + k) * 0.9f * pieceSize.z / maxScrewZ
                             );
 
+                        int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
+
                         if (faceDirection == FaceDirection.Front)
                         {
-                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - pieceSize.z);
+                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
                         }
                         else if (faceDirection == FaceDirection.Top)
                         {
-                            screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + pieceSize.y);
+                            screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
                         }
                         else
                         {
-                            screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + pieceSize.x);
+                            screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
                         }
-
-                        int random = UnityEngine.Random.Range(0, 3);
-                        int direction = UnityEngine.Random.Range(0, 2) == 0 ? -1 : 1;
 
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                     }
