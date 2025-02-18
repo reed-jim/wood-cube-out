@@ -100,10 +100,10 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevelRubik();
         }
 
-        if (GUILayout.Button("Fine Tune Level"))
-        {
-            FineTuneLevel();
-        }
+        // if (GUILayout.Button("Fine Tune Level"))
+        // {
+        //     FineTuneLevel();
+        // }
 
         if (GUILayout.Button("Generate Screws"))
         {
@@ -120,10 +120,10 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAllLevels();
         }
 
-        if (GUILayout.Button("Check HingeJoint Number"))
-        {
-            CheckHingeJointNumber(prefabPath);
-        }
+        // if (GUILayout.Button("Check HingeJoint Number"))
+        // {
+        //     CheckHingeJointNumber(prefabPath);
+        // }
 
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
@@ -155,10 +155,10 @@ public class HingeJointGenerator : EditorWindow
         //     // AutoAssignScrewFaction(prefabPath);
         // }
 
-        if (GUILayout.Button("Spawn Screw"))
-        {
-            SpawnScrew(prefabPath);
-        }
+        // if (GUILayout.Button("Spawn Screw"))
+        // {
+        //     SpawnScrew(prefabPath);
+        // }
 
         // if (GUILayout.Button("Assign Material"))
         // {
@@ -180,25 +180,25 @@ public class HingeJointGenerator : EditorWindow
         //     GetScrewNumberByPhase(prefabPath);
         // }
 
-        if (GUILayout.Button("Move All Screws"))
-        {
-            MoveAllScrews(prefabPath);
-        }
+        // if (GUILayout.Button("Move All Screws"))
+        // {
+        //     MoveAllScrews(prefabPath);
+        // }
 
-        if (GUILayout.Button("Scale All Screws"))
-        {
-            ScaleAllScrews(prefabPath);
-        }
+        // if (GUILayout.Button("Scale All Screws"))
+        // {
+        //     ScaleAllScrews(prefabPath);
+        // }
 
         if (GUILayout.Button("Set Lossy Scale All Screws"))
         {
             SetLossyScaleAllScrews();
         }
 
-        if (GUILayout.Button("Snap Surface"))
-        {
-            SnapSurface();
-        }
+        // if (GUILayout.Button("Snap Surface"))
+        // {
+        //     SnapSurface();
+        // }
 
         if (GUILayout.Button("Snap Surface All"))
         {
@@ -210,25 +210,25 @@ public class HingeJointGenerator : EditorWindow
             SnapSurfaceScrewForAllPieceSequentially();
         }
 
-        if (GUILayout.Button("Snap Rotation Surface"))
-        {
-            SnapRotationSurface();
-        }
+        // if (GUILayout.Button("Snap Rotation Surface"))
+        // {
+        //     SnapRotationSurface();
+        // }
 
-        if (GUILayout.Button("Magic Snap"))
-        {
-            MagicSnap();
-        }
+        // if (GUILayout.Button("Magic Snap"))
+        // {
+        //     MagicSnap();
+        // }
 
         if (GUILayout.Button("Fold All"))
         {
             FoldAllInPrefabMode();
         }
 
-        if (GUILayout.Button("Overlap"))
-        {
-            IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
-        }
+        // if (GUILayout.Button("Overlap"))
+        // {
+        //     IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
+        // }
 
         GUILayout.EndArea();
         EditorGUILayout.EndScrollView();
@@ -1451,7 +1451,8 @@ public class HingeJointGenerator : EditorWindow
 
         List<GameObject> hinges = new List<GameObject>();
 
-        Dictionary<Vector3, Transform> tilesWithPiece = new Dictionary<Vector3, Transform>();
+        Dictionary<Vector3Int, Transform> tilesWithPiece = new Dictionary<Vector3Int, Transform>();
+        Dictionary<Vector3Int, bool> isTilesForHingeFull = new Dictionary<Vector3Int, bool>();
 
         for (int i = 0; i < piecePrefabs.Length; i++)
         {
@@ -1466,6 +1467,7 @@ public class HingeJointGenerator : EditorWindow
         // X
         for (int i = -numRow; i <= numRow; i++)
         {
+            Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
             // Y
             for (int j = -numRow; j <= numRow; j++)
             {
@@ -1491,11 +1493,12 @@ public class HingeJointGenerator : EditorWindow
                         generatedPiece.position = position;
 
                         // MATERIAL
-                        generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+                        // generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+                        generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = randomMaterial;
 
                         totalSpawn++;
 
-                        tilesWithPiece.Add(new Vector3(i, j, k), generatedPiece);
+                        tilesWithPiece.Add(new Vector3Int(i, j, k), generatedPiece);
 
                         // // HINGE
                         // random = UnityEngine.Random.Range(0, 20);
@@ -1517,11 +1520,26 @@ public class HingeJointGenerator : EditorWindow
                     }
                     else
                     {
-                        tilesWithPiece.Add(new Vector3(i, j, k), null);
+                        tilesWithPiece.Add(new Vector3Int(i, j, k), null);
                     }
+
+                    isTilesForHingeFull.Add(new Vector3Int(i, j, k), false);
                 }
             }
         }
+
+        // for (int i = -numRow; i <= numRow; i++)
+        // {
+        //     // Y
+        //     for (int j = -numRow; j <= numRow; j++)
+        //     {
+        //         // Z
+        //         for (int k = -numRow; k <= numRow; k++)
+        //         {
+        //             Debug.Log(new Vector3(i, j, k) + "/" + tilesWithPiece[new Vector3Int(i, j, k)]);
+        //         }
+        //     }
+        // }
 
         // GENERATE HINGE
         for (int i = -numRow; i <= numRow; i++)
@@ -1530,7 +1548,7 @@ public class HingeJointGenerator : EditorWindow
             {
                 for (int k = -numRow; k <= numRow; k++)
                 {
-                    if (tilesWithPiece[new Vector3(i, j, k)] != null)
+                    if (tilesWithPiece[new Vector3Int(i, j, k)] != null)
                     {
                         int random = UnityEngine.Random.Range(0, 1);
 
@@ -1543,9 +1561,15 @@ public class HingeJointGenerator : EditorWindow
 
                         if (random == 0)
                         {
-                            Transform piece = tilesWithPiece[new Vector3(i, j, k)];
+                            Transform piece = tilesWithPiece[new Vector3Int(i, j, k)];
 
-                            if (IsValidForHinge(randomHinge, i, j, k))
+                            int x = i;
+                            int y = j;
+                            int z = k;
+
+                            Debug.Log(piece.name);
+
+                            if (IsValidForHinge(randomHinge, x, y, z))
                             {
                                 Transform hinge =
                                 ((GameObject)PrefabUtility.InstantiatePrefab(randomHinge.gameObject, Selection.activeTransform)).transform;
@@ -1569,9 +1593,14 @@ public class HingeJointGenerator : EditorWindow
 
         bool IsValidForHinge(BlockHinge hinge, int x, int y, int z)
         {
-            if (x - 1 >= -numRow)
+            Debug.Log(new Vector3(x, y, z));
+            Debug.Log(tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)));
+
+            if (tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)))
             {
-                if (tilesWithPiece[new Vector3(x - 1, y, z)] != null)
+                Debug.Log(tilesWithPiece[new Vector3Int(x - 1, y, z)]);
+
+                if (tilesWithPiece[new Vector3Int(x - 1, y, z)] != null)
                 {
                     return false;
                 }
@@ -1584,7 +1613,7 @@ public class HingeJointGenerator : EditorWindow
                     return false;
                 }
 
-                if (tilesWithPiece[new Vector3(x, y, i)] == null)
+                if (tilesWithPiece[new Vector3Int(x, y, i)] == null || isTilesForHingeFull[new Vector3Int(x, y, i)])
                 {
                     return false;
                 }
@@ -1598,7 +1627,7 @@ public class HingeJointGenerator : EditorWindow
                     continue;
                 }
 
-                tilesWithPiece[new Vector3(x, y, i)] = null;
+                isTilesForHingeFull[new Vector3Int(x, y, i)] = true;
             }
 
             return true;
