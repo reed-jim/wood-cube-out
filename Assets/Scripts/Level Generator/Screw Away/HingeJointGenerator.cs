@@ -1467,7 +1467,7 @@ public class HingeJointGenerator : EditorWindow
         }
 
         // MATERIALS
-        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Gradients/Green");
 
         Vector3 pieceSize = piecePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * piecePrefab.transform.localScale.x;
         Vector3 currentPieceSize;
