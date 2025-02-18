@@ -120,6 +120,9 @@ public class HingeJointGenerator : EditorWindow
             GenerateScrews();
         }
 
+        GUILayout.Space(16);
+        GUILayout.Label("Hinge Joint", centeredStyle);
+
         if (GUILayout.Button("Generate Hinge Joint All"))
         {
             GenerateHingeJointAll(Selection.activeTransform);
@@ -1934,24 +1937,22 @@ public class HingeJointGenerator : EditorWindow
 
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
 
-            int numScrew = UnityEngine.Random.Range(2, 6);
-
-            int numScrewFull = numScrew + numScrew % 2;
-
-            int maxScrewX = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
-            int maxScrewY = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
-            int maxScrewZ = (int)(0.5f * piece.GetComponent<Collider>().bounds.size.z / screwSize.z);
+            int maxScrewX = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
+            int maxScrewY = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
+            int maxScrewZ = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.z / screwSize.z);
 
             maxScrewX = Mathf.Max(maxScrewX, 1);
             maxScrewY = Mathf.Max(maxScrewY, 1);
             maxScrewZ = Mathf.Max(maxScrewZ, 1);
 
-            Debug.Log(pieceSize + "/" + screwSize);
+            Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
 
             // avoid spawn too many
-            if (maxScrewX * maxScrewY * maxScrewZ > 32)
+            if (maxScrewX * maxScrewY * maxScrewZ > 16)
             {
-                return;
+                maxScrewX = Mathf.Min(maxScrewX, 2);
+                maxScrewY = Mathf.Min(maxScrewY, 2);
+                maxScrewZ = Mathf.Min(maxScrewZ, 2);
             }
 
             for (int i = 0; i < maxScrewX; i++)
@@ -1961,6 +1962,8 @@ public class HingeJointGenerator : EditorWindow
                     for (int k = 0; k < maxScrewZ; k++)
                     {
                         bool isRandomSpawn = UnityEngine.Random.Range(0, 1) == 0;
+
+                        isRandomSpawn = true;
 
                         if (!isRandomSpawn)
                         {
@@ -2019,35 +2022,6 @@ public class HingeJointGenerator : EditorWindow
                     }
                 }
             }
-
-            // for (int i = 0; i < numScrew; i++)
-            // {
-            //     BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
-
-            //     screw.transform.localPosition =
-            //         new Vector3(UnityEngine.Random.Range(-halfSize.x, halfSize.x),
-            //         UnityEngine.Random.Range(-halfSize.y, halfSize.y),
-            //         UnityEngine.Random.Range(-halfSize.z, halfSize.z));
-
-            //     // int randomSurface = UnityEngine.Random.Range(0, 3);
-
-            //     // if (randomSurface == 0)
-            //     // {
-            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeX(halfSize.x);
-            //     // }
-            //     // else if (randomSurface == 1)
-            //     // {
-            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeY(halfSize.y);
-            //     // }
-            //     // else if (randomSurface == 2)
-            //     // {
-            //     //     screw.transform.localPosition = screw.transform.localPosition.ChangeZ(halfSize.z);
-            //     // }
-
-            //     screw.transform.localPosition = screw.transform.localPosition.ChangeY(halfSize.y);
-
-            //     screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
-            // }
         }
     }
     #endregion
