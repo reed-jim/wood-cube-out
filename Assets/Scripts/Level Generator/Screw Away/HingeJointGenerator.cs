@@ -470,8 +470,6 @@ public class HingeJointGenerator : EditorWindow
         }
 
         EditorUtility.SetDirty(level);
-
-        PrefabUtility.SaveAsPrefabAsset(level.gameObject, path);
     }
 
     private void CheckHingeJointNumber(string path)
