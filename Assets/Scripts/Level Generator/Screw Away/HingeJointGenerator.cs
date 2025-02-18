@@ -20,7 +20,7 @@ public class HingeJointGenerator : EditorWindow
 
     private Vector3 dimensionSize;
     private Vector3 distance;
-    private float expectedScale;
+    private float expectedScale = 1.2f;
     private float expectedOffsetRatioAutoSnapSurface = 0.55f;
     private Vector3 expectedLocalPositionOffset;
     private Vector3 expectedLocalRotationOffset;
@@ -80,6 +80,14 @@ public class HingeJointGenerator : EditorWindow
         //     Generate(prefabPath);
         // }
 
+        GUIStyle centeredStyle = new GUIStyle(EditorStyles.boldLabel)
+        {
+            alignment = TextAnchor.MiddleCenter,
+            fontSize = 20
+        };
+
+        GUILayout.Label("Generate", centeredStyle);
+
         if (GUILayout.Button("Generate Level"))
         {
             GenerateLevel();
@@ -124,11 +132,6 @@ public class HingeJointGenerator : EditorWindow
         // {
         //     CheckHingeJointNumber(prefabPath);
         // }
-
-        if (GUILayout.Button("Check HingeJoint Number All Levels"))
-        {
-            CheckHingeJointNumberAllLevels();
-        }
 
         // if (GUILayout.Button("Reset Local Rotation"))
         // {
@@ -190,15 +193,13 @@ public class HingeJointGenerator : EditorWindow
         //     ScaleAllScrews(prefabPath);
         // }
 
-        if (GUILayout.Button("Set Lossy Scale All Screws"))
-        {
-            SetLossyScaleAllScrews();
-        }
-
         // if (GUILayout.Button("Snap Surface"))
         // {
         //     SnapSurface();
         // }
+
+        GUILayout.Space(16);
+        GUILayout.Label("Snap", centeredStyle);
 
         if (GUILayout.Button("Snap Surface All"))
         {
@@ -219,6 +220,19 @@ public class HingeJointGenerator : EditorWindow
         // {
         //     MagicSnap();
         // }
+
+        GUILayout.Space(16);
+        GUILayout.Label("Util", centeredStyle);
+
+        if (GUILayout.Button("Set Lossy Scale All Screws"))
+        {
+            SetLossyScaleAllScrews();
+        }
+
+        if (GUILayout.Button("Check HingeJoint Number All Levels"))
+        {
+            CheckHingeJointNumberAllLevels();
+        }
 
         if (GUILayout.Button("Fold All"))
         {
