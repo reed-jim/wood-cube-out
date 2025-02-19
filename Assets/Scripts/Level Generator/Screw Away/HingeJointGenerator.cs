@@ -1984,7 +1984,8 @@ public class HingeJointGenerator : EditorWindow
             maxScrewY = Mathf.Max(maxScrewY, 1);
             maxScrewZ = Mathf.Max(maxScrewZ, 1);
 
-            Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
+            // Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
+            Debug.Log(maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             // avoid spawn too many
             if (maxScrewX * maxScrewY * maxScrewZ > 16)
