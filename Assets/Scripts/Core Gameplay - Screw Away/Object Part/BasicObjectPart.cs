@@ -158,7 +158,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     }
 
     private async void OnJointBreakCallback(int instanceId)
-    {
+    { 
         if (instanceId == gameObject.GetInstanceID())
         {
             await Task.Delay(500);
