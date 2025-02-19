@@ -121,6 +121,14 @@ public class HingeJointGenerator : EditorWindow
         }
 
         GUILayout.Space(16);
+        GUILayout.Label("Screws", centeredStyle);
+
+        if (GUILayout.Button("Count Number of screws"))
+        {
+            CountNumberOfScrews();
+        }
+
+        GUILayout.Space(16);
         GUILayout.Label("Hinge Joint", centeredStyle);
 
         if (GUILayout.Button("Generate Hinge Joint All"))
@@ -780,6 +788,37 @@ public class HingeJointGenerator : EditorWindow
         {
             Debug.Log($"Phase {phase}: {numberScrewByPhase[phase]}");
         }
+    }
+
+    private void CountNumberOfScrews()
+    {
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(Selection.activeTransform).ToArray();
+
+        int screwNumber = screws.Length;
+
+        string output = "";
+
+        output += $"Number of screws: {screws.Length}";
+
+        int screwNumberToAdd = 3 - (screwNumber % 3);
+        int screwNumberToRemove = screwNumber % 3;
+
+        string[] units = new string[2];
+
+        units[0] = screwNumberToAdd > 1 ? "screws" : "screw";
+        units[1] = screwNumberToRemove > 1 ? "screws" : "screw";
+
+        if (screwNumber % 3 == 0)
+        {
+            output += $" -<color=#89FF5B> Valid";
+        }
+        else
+        {
+            output += $" -<color=#FF7878> Invalid - ";
+            output += $"<color=#fff>Need to add <color=#89FF5B>{screwNumberToAdd} {units[0]} <color=#fff>or remove <color=#89FF5B>{screwNumberToRemove} {units[1]}";
+        }
+
+        Debug.Log(output);
     }
     #endregion
 
