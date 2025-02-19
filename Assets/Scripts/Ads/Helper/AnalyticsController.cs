@@ -90,7 +90,6 @@ public class AnalyticsController : MonoBehaviour
                 new Parameter("ad_format",  ad_format ?? ""),
                 new Parameter(FirebaseAnalytics.ParameterValue, value),
                 new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
-
         };
 
         FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);

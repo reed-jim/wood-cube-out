@@ -92,7 +92,8 @@ public class GameEnum : MonoBehaviour
         Lose,
         ReturnHome,
         Replay,
-        Quit
+        Quit,
+        Win
     }
 
     public static T GetRandomEnumValue<T>()
