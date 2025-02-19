@@ -21,6 +21,7 @@ public class HingeJointGenerator : EditorWindow
     private Vector3 dimensionSize;
     private Vector3 distance;
     private float expectedScale = 1.2f;
+    private int maxScrew = 124;
     private float expectedOffsetRatioAutoSnapSurface = 0.55f;
     private Vector3 expectedLocalPositionOffset;
     private Vector3 expectedLocalRotationOffset;
@@ -67,6 +68,8 @@ public class HingeJointGenerator : EditorWindow
         GUI.enabled = false;
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
         GUI.enabled = true;
+
+        maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
 
         // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
         // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
@@ -129,7 +132,7 @@ public class HingeJointGenerator : EditorWindow
             GenerateScrews();
         }
 
-        if (GUILayout.Button("Count Number of screws"))
+        if (GUILayout.Button("Count number of screws"))
         {
             CountNumberOfScrews();
         }
@@ -1534,6 +1537,8 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateLevelRubik()
     {
+        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like.prefab");
+
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
 
@@ -1548,7 +1553,7 @@ public class HingeJointGenerator : EditorWindow
         }
 
         // MATERIALS
-        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Gradients/Green");
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
 
         Vector3 pieceSize = piecePrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * piecePrefab.transform.localScale.x;
         Vector3 currentPieceSize;
@@ -1575,6 +1580,8 @@ public class HingeJointGenerator : EditorWindow
 
         int numRow = 2;
 
+        int numScrewSpawned = 0;
+
         // X
         for (int i = -numRow; i <= numRow; i++)
         {
@@ -1585,6 +1592,13 @@ public class HingeJointGenerator : EditorWindow
                 // Z
                 for (int k = -numRow; k <= numRow; k++)
                 {
+                    if (numScrewSpawned >= maxScrew)
+                    {
+                        tilesWithPiece.Add(new Vector3Int(i, j, k), null);
+
+                        continue;
+                    }
+
                     int random = UnityEngine.Random.Range(0, 2);
 
                     if (random == 0)
@@ -1592,6 +1606,8 @@ public class HingeJointGenerator : EditorWindow
                         Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
 
                         generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+                        numScrewSpawned += generatedPiece.transform.childCount;
 
                         Vector3 rotation = new Vector3(0, 0, 0);
                         generatedPiece.rotation = Quaternion.Euler(rotation);
@@ -1610,24 +1626,6 @@ public class HingeJointGenerator : EditorWindow
                         totalSpawn++;
 
                         tilesWithPiece.Add(new Vector3Int(i, j, k), generatedPiece);
-
-                        // // HINGE
-                        // random = UnityEngine.Random.Range(0, 20);
-
-                        // if (random == 0)
-                        // {
-                        //     Transform hinge =
-                        //         ((GameObject)PrefabUtility.InstantiatePrefab(hinges[UnityEngine.Random.Range(0, 2)], Selection.activeTransform)).transform;
-
-                        //     if (hinge.name == "Hinge L-Shaped")
-                        //     {
-                        //         hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, currentPieceSize.y, 0);
-                        //     }
-                        //     else
-                        //     {
-                        //         hinge.transform.position = position + 0.57f * new Vector3(-currentPieceSize.x, 0, 0);
-                        //     }
-                        // }
                     }
                     else
                     {
@@ -2050,12 +2048,19 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
 
+            int numScrewSpawned = 0;
+
             for (int i = 0; i < maxScrewX; i++)
             {
                 for (int j = 0; j < maxScrewY; j++)
                 {
                     for (int k = 0; k < maxScrewZ; k++)
                     {
+                        if (numScrewSpawned >= maxScrew)
+                        {
+                            break;
+                        }
+
                         if (!IsValidTile(i, j, k, isTilesEmpty))
                         {
                             continue;
@@ -2071,6 +2076,8 @@ public class HingeJointGenerator : EditorWindow
                         // }
 
                         BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+                        numScrewSpawned++;
 
                         List<FaceDirection> poolDirection = new List<FaceDirection>();
 
