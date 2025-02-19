@@ -7,6 +7,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class WinPopup : BasePopup
 {
@@ -134,6 +135,8 @@ public class WinPopup : BasePopup
         goLevelEvent?.Invoke(currentLevel.Value);
 
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+
+        AdsDurationObserver.duration = 0;
     }
 
     private void ReturnHome()
@@ -155,5 +158,11 @@ public class WinPopup : BasePopup
         }
 
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
+
+        // don't track loop level CostCenter
+        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        {
+            SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: true, EndLevelReason.Win.ToString());
+        }
     }
 }
