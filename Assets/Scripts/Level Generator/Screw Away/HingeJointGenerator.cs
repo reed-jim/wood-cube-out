@@ -115,13 +115,19 @@ public class HingeJointGenerator : EditorWindow
         //     FineTuneLevel();
         // }
 
+        GUILayout.Space(16);
+        GUILayout.Label("Screws", centeredStyle);
+
+        if (GUILayout.Button("Generate And Snap Screws"))
+        {
+            GenerateScrews();
+            SnapSurfaceScrewForAllPieceSequentially();
+        }
+
         if (GUILayout.Button("Generate Screws"))
         {
             GenerateScrews();
         }
-
-        GUILayout.Space(16);
-        GUILayout.Label("Screws", centeredStyle);
 
         if (GUILayout.Button("Count Number of screws"))
         {
@@ -136,10 +142,10 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAll(Selection.activeTransform);
         }
 
-        if (GUILayout.Button("Generate Hinge Joint All Levels"))
-        {
-            GenerateHingeJointAllLevels();
-        }
+        // if (GUILayout.Button("Generate Hinge Joint All Levels"))
+        // {
+        //     GenerateHingeJointAllLevels();
+        // }
 
         // if (GUILayout.Button("Check HingeJoint Number"))
         // {
@@ -244,6 +250,11 @@ public class HingeJointGenerator : EditorWindow
 
         GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
+
+        if (GUILayout.Button("Add Required Components To Pieces"))
+        {
+            AddRequiredComponentsToPieces();
+        }
 
         if (GUILayout.Button("Set Lossy Scale All Screws"))
         {
@@ -980,6 +991,37 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region UTIL
+    private void AddRequiredComponentsToPieces()
+    {
+        Transform level = Selection.activeTransform;
+
+        Transform[] pieces = GetComponentsFromAllChildren<Transform>(level).ToArray();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            // Level Container
+            if (pieces[i] == level)
+            {
+                if (pieces[i].GetComponent<RotateObject>() == null)
+                {
+                    pieces[i].AddComponent<RotateObject>();
+                }
+
+                continue;
+            }
+
+            // Pieces
+            pieces[i].AddComponent<BasicObjectPart>();
+            pieces[i].AddComponent<ObjectPartMaterialPropertyBlock>();
+            pieces[i].AddComponent<Rigidbody>();
+            MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
+
+            meshCollider.convex = true;
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
     private void FoldAllInPrefabMode()
     {
         if (PrefabStageUtility.GetCurrentPrefabStage() != null)
@@ -1976,9 +2018,9 @@ public class HingeJointGenerator : EditorWindow
 
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
 
-            int maxScrewX = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
-            int maxScrewY = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
-            int maxScrewZ = (int)(0.36f * piece.GetComponent<Collider>().bounds.size.z / screwSize.z);
+            int maxScrewX = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
+            int maxScrewY = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
+            int maxScrewZ = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.z / screwSize.z);
 
             maxScrewX = Mathf.Max(maxScrewX, 1);
             maxScrewY = Mathf.Max(maxScrewY, 1);
@@ -1995,20 +2037,38 @@ public class HingeJointGenerator : EditorWindow
                 maxScrewZ = Mathf.Min(maxScrewZ, 2);
             }
 
+            Dictionary<Vector3, bool> isTilesEmpty = new Dictionary<Vector3, bool>();
+
             for (int i = 0; i < maxScrewX; i++)
             {
                 for (int j = 0; j < maxScrewY; j++)
                 {
                     for (int k = 0; k < maxScrewZ; k++)
                     {
-                        bool isRandomSpawn = UnityEngine.Random.Range(0, 1) == 0;
+                        isTilesEmpty.Add(new Vector3(i, j, k), true);
+                    }
+                }
+            }
 
-                        isRandomSpawn = true;
-
-                        if (!isRandomSpawn)
+            for (int i = 0; i < maxScrewX; i++)
+            {
+                for (int j = 0; j < maxScrewY; j++)
+                {
+                    for (int k = 0; k < maxScrewZ; k++)
+                    {
+                        if (!IsValidTile(i, j, k, isTilesEmpty))
                         {
                             continue;
                         }
+
+                        // bool isRandomSpawn = UnityEngine.Random.Range(0, 1) == 0;
+
+                        // isRandomSpawn = true;
+
+                        // if (!isRandomSpawn)
+                        // {
+                        //     continue;
+                        // }
 
                         BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
 
@@ -2046,21 +2106,48 @@ public class HingeJointGenerator : EditorWindow
                         {
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
+
+                            for (int m = 0; m < maxScrewZ; m++)
+                            {
+                                isTilesEmpty[new Vector3(i, j, m)] = false;
+                            }
                         }
                         else if (faceDirection == FaceDirection.Top)
                         {
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+
+                            for (int m = 0; m < maxScrewZ; m++)
+                            {
+                                isTilesEmpty[new Vector3(i, m, k)] = false;
+                            }
                         }
                         else
                         {
                             screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+
+                            for (int m = 0; m < maxScrewZ; m++)
+                            {
+                                isTilesEmpty[new Vector3(m, j, k)] = false;
+                            }
                         }
 
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                     }
                 }
+            }
+        }
+
+        bool IsValidTile(int x, int y, int z, Dictionary<Vector3, bool> isTilesEmpty)
+        {
+            if (isTilesEmpty[new Vector3(x, y, z)])
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
