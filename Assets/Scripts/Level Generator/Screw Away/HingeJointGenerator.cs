@@ -65,9 +65,8 @@ public class HingeJointGenerator : EditorWindow
 
         // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         // distance = EditorGUILayout.Vector3Field("Distance", distance);
-        GUI.enabled = false;
+
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
-        GUI.enabled = true;
 
         maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
 
@@ -1676,8 +1675,6 @@ public class HingeJointGenerator : EditorWindow
                             int y = j;
                             int z = k;
 
-                            Debug.Log(piece.name);
-
                             if (IsValidForHinge(randomHinge, x, y, z))
                             {
                                 Transform hinge =
@@ -1702,13 +1699,8 @@ public class HingeJointGenerator : EditorWindow
 
         bool IsValidForHinge(BlockHinge hinge, int x, int y, int z)
         {
-            Debug.Log(new Vector3(x, y, z));
-            Debug.Log(tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)));
-
             if (tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)))
             {
-                Debug.Log(tilesWithPiece[new Vector3Int(x - 1, y, z)]);
-
                 if (tilesWithPiece[new Vector3Int(x - 1, y, z)] != null)
                 {
                     return false;
@@ -2108,6 +2100,9 @@ public class HingeJointGenerator : EditorWindow
                             );
 
                         int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
+
+                        // prevent invalid screw generation
+                        direction = 1;
 
                         if (faceDirection == FaceDirection.Front)
                         {

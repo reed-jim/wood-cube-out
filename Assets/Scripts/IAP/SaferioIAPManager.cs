@@ -4,6 +4,7 @@ using System.Globalization;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
+using UnityEngine.Purchasing.Security;
 
 public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 {
@@ -129,44 +130,75 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)
     {
-        if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
-        {
-            removeAdPurchasedCompletedEvent?.Invoke();
+        bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-            UserData.IsRemoveAds = true;
-        }
-        else
+        // Unity IAP's validation logic is only included on these platforms.
+#if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
+        // Prepare the validator with the secrets we prepared in the Editor
+        // obfuscation window.
+        var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
+            AppleTangle.Data(), Application.identifier);
+
+        try
         {
-            foreach (var productData in IAPDataContainer.ProductsData)
+            // On Google Play, result has a single product ID.
+            // On Apple stores, receipts contain multiple products.
+            var result = validator.Validate(e.purchasedProduct.receipt);
+            // For informational purposes, we list the receipt(s)
+            Debug.Log("Receipt is valid. Contents:");
+            foreach (IPurchaseReceipt productReceipt in result)
             {
-                if (productData.ProductId == e.purchasedProduct.definition.id)
+                Debug.Log(productReceipt.productID);
+                Debug.Log(productReceipt.purchaseDate);
+                Debug.Log(productReceipt.transactionID);
+            }
+        }
+        catch (IAPSecurityException)
+        {
+            Debug.Log("Invalid receipt, not unlocking content");
+            validPurchase = false;
+        }
+#endif
+
+        if (validPurchase)
+        {
+            if (e.purchasedProduct.definition.id == GameConstants.REMOVE_AD_ID)
+            {
+                removeAdPurchasedCompletedEvent?.Invoke();
+
+                UserData.IsRemoveAds = true;
+            }
+            else
+            {
+                foreach (var productData in IAPDataContainer.ProductsData)
                 {
-                    // collectCoinEvent?.Invoke(productData.CoinQuantity);
-
-                    userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
-                    userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
-                    userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
-
-                    if (productData.IsRemoveAd)
+                    if (productData.ProductId == e.purchasedProduct.definition.id)
                     {
-                        UserData.IsRemoveAds = true;
-                    }
+                        // collectCoinEvent?.Invoke(productData.CoinQuantity);
 
-                    int[] boosterQuantites = new int[3] {
+                        userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
+                        userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
+                        userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+
+                        if (productData.IsRemoveAd)
+                        {
+                            UserData.IsRemoveAds = true;
+                        }
+
+                        int[] boosterQuantites = new int[3] {
                         productData.AddHoleBoosterQuantity,
                         productData.BreakObjectBoosterQuantity,
                         productData.ClearHolesBoosterQuantity
                     };
 
-                    SaferioTracking.TrackIAPEvent(productData.ProductId);
+                        SaferioTracking.TrackIAPEvent(productData.ProductId);
 
-                    showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+                        showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
 
-                    break;
+                        break;
+                    }
                 }
             }
-
-            // iapProductPurchasedCompletedEvent?.Invoke();
         }
 
         return PurchaseProcessingResult.Complete;

@@ -68,22 +68,6 @@ public static class SaferioTracking
 #endif
     }
 
-    //     public static void TrackLevelEnd(int level, bool isSuccess, string reason)
-    //     {
-    // #if !UNITY_EDITOR
-    //         Parameter[] parameters =
-    //         {
-    //             new Parameter("play_mode", "normal"),
-    //             new Parameter("level", level.ToString()),
-    //             new Parameter("success", isSuccess.ToString()),
-    //             new Parameter("reason", reason),
-    //             new Parameter("ad_duration", levelPrefab.ToString())
-    //         };
-
-    //         FirebaseAnalytics.LogEvent("level_end", parameters);
-    // #endif
-    //     }
-
     public static void TrackBoosterUsage(BoosterType boosterType)
     {
 #if !UNITY_EDITOR
@@ -224,18 +208,16 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackLevelEnd(int level, float progress, LevelBoosterObserver levelBoosterObserver, string reason)
+    public static void TrackLevelEnd(int level, bool isSuccess, string reason)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
+            new Parameter("play_mode", "normal"),
             new Parameter("level", level.ToString()),
-            new Parameter("progress", progress.ToString()),
-            new Parameter("add_hole_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[0]),
-            new Parameter("break_object_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[1]),
-            new Parameter("clear_holes_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[2]),
-            new Parameter("unlock_screw_box_booster_used", levelBoosterObserver.BoosterQuantitiesUsed[3]),
-            new Parameter("reason", reason)
+            new Parameter("success", isSuccess.ToString()),
+            new Parameter("reason", reason),
+            new Parameter("ad_duration", AdsDurationObserver.duration)
         };
 
         FirebaseAnalytics.LogEvent("level_end", parameters);

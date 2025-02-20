@@ -514,6 +514,8 @@ public class AdmobAdsMax : MonoBehaviour
         //RefeshCloseAds();
         Invoke("RefeshCloseAds", 1);
 
+        AdsDurationObserver.duration += Time.time - AdsDurationObserver.startTime;
+
         //if (GamePlayControl.Instance != null)
         //{
         //    GamePlayControl.Instance.timer = 0;
@@ -526,6 +528,8 @@ public class AdmobAdsMax : MonoBehaviour
         // Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
+
+        AdsDurationObserver.startTime = Time.time;
     }
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -589,6 +593,7 @@ public class AdmobAdsMax : MonoBehaviour
         {
             isShowingAds = true;
             oldTime = DateTime.Now;
+
             if (isInGame)
             {
                 // Debug.Log("show inter ======");
@@ -697,6 +702,8 @@ public class AdmobAdsMax : MonoBehaviour
     {
         // Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
+
+        AdsDurationObserver.startTime = Time.time;
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -722,6 +729,10 @@ public class AdmobAdsMax : MonoBehaviour
         _actionRewardVideo = null;
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
+
+        AdsDurationObserver.duration += Time.time - AdsDurationObserver.startTime;
+
+        Debug.Log("SAFERIO " + AdsDurationObserver.duration);
     }
 
     bool isVideoDone;
