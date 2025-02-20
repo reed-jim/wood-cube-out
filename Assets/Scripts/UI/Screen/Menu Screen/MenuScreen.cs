@@ -60,6 +60,7 @@ public class MenuScreen : MonoBehaviour
         }
 
         currentLevel.Load();
+        canvasSize.Load();
 
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
 
