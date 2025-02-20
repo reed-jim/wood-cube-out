@@ -1675,8 +1675,6 @@ public class HingeJointGenerator : EditorWindow
                             int y = j;
                             int z = k;
 
-                            Debug.Log(piece.name);
-
                             if (IsValidForHinge(randomHinge, x, y, z))
                             {
                                 Transform hinge =
@@ -1701,13 +1699,8 @@ public class HingeJointGenerator : EditorWindow
 
         bool IsValidForHinge(BlockHinge hinge, int x, int y, int z)
         {
-            Debug.Log(new Vector3(x, y, z));
-            Debug.Log(tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)));
-
             if (tilesWithPiece.ContainsKey(new Vector3Int(x - 1, y, z)))
             {
-                Debug.Log(tilesWithPiece[new Vector3Int(x - 1, y, z)]);
-
                 if (tilesWithPiece[new Vector3Int(x - 1, y, z)] != null)
                 {
                     return false;
