@@ -65,9 +65,8 @@ public class HingeJointGenerator : EditorWindow
 
         // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         // distance = EditorGUILayout.Vector3Field("Distance", distance);
-        GUI.enabled = false;
+
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
-        GUI.enabled = true;
 
         maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
 
