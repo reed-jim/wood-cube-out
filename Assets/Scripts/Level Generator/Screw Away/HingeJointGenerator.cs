@@ -2109,6 +2109,9 @@ public class HingeJointGenerator : EditorWindow
 
                         int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
 
+                        // prevent invalid screw generation
+                        direction = 1;
+
                         if (faceDirection == FaceDirection.Front)
                         {
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
