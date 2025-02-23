@@ -11,6 +11,14 @@ using AppsFlyerSDK;
 
 public class AdmobAdsMax : MonoBehaviour
 {
+    #region SAFERIO
+    private bool _isBannerLoaded;
+    #endregion
+
+
+
+
+
     public static AdmobAdsMax Instance;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -62,8 +70,15 @@ public class AdmobAdsMax : MonoBehaviour
     // private const string SlotIpadLeaderId = "aad4cd1a-4473-4ad0-90bb-6947d6c79e73";
     // private const string amazonAppId = "4fb1e5b9-4be3-4da2-9ab0-a5106875f7d4";
 
+    private void OnSceneSwitched(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        RefreshAdmobBanner();
+    }
+
     void Awake()
     {
+        SceneManager.sceneLoaded += OnSceneSwitched;
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
@@ -78,6 +93,11 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         Init();
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneSwitched;
     }
 
     public void Init()
@@ -1070,15 +1090,20 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void Update()
     {
-        if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
+        if (!_isBannerLoaded)
         {
-            if (IsCooldownAdmobBanner)
+            if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
             {
-                _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
-                if (_cooldownAdmobBannerTimer <= 0)
+                if (IsCooldownAdmobBanner)
                 {
-                    RefreshAdmobBanner();
-                    _cooldownAdmobBannerTimer = 30;
+                    _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
+                    if (_cooldownAdmobBannerTimer <= 0)
+                    {
+                        RefreshAdmobBanner();
+                        _cooldownAdmobBannerTimer = 30;
+
+                        _isBannerLoaded = true;
+                    }
                 }
             }
         }
