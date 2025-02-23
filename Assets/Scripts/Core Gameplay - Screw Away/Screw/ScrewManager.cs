@@ -95,6 +95,8 @@ public class ScrewManager : MonoBehaviour
         _isHandlingSpawningScrewBox = false;
         _remainingHandleOutsideScrewCommands = 0;
         _isHandlingOutsideScrews = false;
+
+        GamePersistentVariable.numScrewBoxUnlocked = 0;
     }
 
     #region SCREW
@@ -520,6 +522,12 @@ public class ScrewManager : MonoBehaviour
 
         difficultyLevel += difficultyLevelModifier;
         difficultyLevel = Mathf.Max(difficultyLevel, 0);
+
+        // DIFFICULTY REDUCED AFTER REWARDED ADS
+        if (GamePersistentVariable.numScrewBoxUnlocked >= 1)
+        {
+            difficultyLevel = 0;
+        }
 
         // // SIMPLE ALGORITHM FOR DIFFICULTY BASED ON PROGRESS
         // if (progress < 0.86f)
