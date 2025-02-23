@@ -183,7 +183,8 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
-            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * canvasSize.Value.y, 0.3f);
+            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(
+                openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * GamePersistentVariable.canvasSize.y, 0.3f);
         }
     }
 
