@@ -20,6 +20,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
 
     [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasSizeOfReferenceDevice;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -303,7 +304,12 @@ public class BoosterUI : MonoBehaviour
 
         updateBoosterQuantityEvent?.Invoke(boosterIndex);
 
-        SaferioTracking.TrackBoosterUsage((BoosterType)boosterIndex);
+        BoosterType boosterType = (BoosterType)boosterIndex;
+
+        SaferioTracking.TrackBoosterUsage(boosterType);
+        SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, boosterType.ToString(),
+                    1, (int)userResourcesObserver.UserResources.CoinQuantity, $"Consume_Booster_{boosterType}");
     }
 
     private void UseBreakObjectBooster()
