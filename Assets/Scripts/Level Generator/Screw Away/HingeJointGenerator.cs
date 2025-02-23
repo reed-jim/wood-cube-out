@@ -508,7 +508,19 @@ public class HingeJointGenerator : EditorWindow
 
         for (int i = 0; i < objectParts.Length; i++)
         {
-            int numHingeJointInObjectPart = objectParts[i].GetComponents<HingeJoint>().Length;
+            HingeJoint[] hingeJoints = objectParts[i].GetComponents<HingeJoint>();
+
+            if (hingeJoints.Length == 0)
+            {
+                break;
+            }
+
+            if (hingeJoints[0].connectedBody == null)
+            {
+                break;
+            }
+
+            int numHingeJointInObjectPart = hingeJoints.Length;
 
             numHingeJoint += numHingeJointInObjectPart;
         }
