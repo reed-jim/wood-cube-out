@@ -102,6 +102,10 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
+                SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
+
                 Hide(onCompletedAction: () =>
                 {
                     unlockScrewBoxEvent?.Invoke();
@@ -113,6 +117,10 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+
+                SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
 
                 // // WARNING: DO NOT change User Resource by property more than 1 time. The last one will overwrite the previous one.
                 // UserResources adjustedUserResources = userResourcesObserver.UserResources;
@@ -193,6 +201,10 @@ public class BuyBoosterPopup : BasePopup
         if (_isBoughtBreakObjectBoosterByCoin)
         {
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[(int)_boosterType]);
+
+            SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    boosterDataObserver.BoosterCosts[1], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
 
             _isBoughtBreakObjectBoosterByCoin = false;
         }

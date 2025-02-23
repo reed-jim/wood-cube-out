@@ -104,6 +104,10 @@ public class RevivePopup : BasePopup
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
 
+            SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
+
             // userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)

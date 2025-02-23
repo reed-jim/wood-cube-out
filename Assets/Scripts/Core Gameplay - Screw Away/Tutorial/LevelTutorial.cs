@@ -127,7 +127,7 @@ public class LevelTutorial : MonoBehaviour
                     isScrewOulined = true;
                 }
 
-                targetPosition = screw.position;
+                targetPosition = screw.position - 0.3f * screw.right;
                 targetPosition.z -= 3;
 
                 // targetPosition = screw.position - 1.3f * screw.right;
@@ -143,7 +143,8 @@ public class LevelTutorial : MonoBehaviour
                 }
 
                 targetPosition = screw.position - 3f * screw.right;
-                targetPosition.y -= 2.8f;
+                targetPosition.y -= 3f;
+                targetPosition.z -= 3;
             }
 
             // targetPosition.y += 0.08f * _screenSizeWorld.y;
