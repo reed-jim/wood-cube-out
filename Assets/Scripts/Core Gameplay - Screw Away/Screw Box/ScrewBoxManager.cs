@@ -178,9 +178,15 @@ public class ScrewBoxManager : MonoBehaviour
 
         // screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
 
+        Vector3 screwPortPosition = screwPorts[0].transform.position;
+
+        screwPortPosition.y = 0.3042f * worldSize.y;
+
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPorts[i].transform.position = screwPorts[i].transform.position.ChangeY(0.3042f * worldSize.y);
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+
+            screwPorts[i].transform.position = screwPortPosition;
         }
     }
 

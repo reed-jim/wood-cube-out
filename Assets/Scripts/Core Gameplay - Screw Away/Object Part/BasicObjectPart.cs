@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class BasicObjectPart : MonoBehaviour, IObjectPart
@@ -158,7 +159,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     }
 
     private async void OnJointBreakCallback(int instanceId)
-    { 
+    {
         if (instanceId == gameObject.GetInstanceID())
         {
             await Task.Delay(500);
@@ -295,47 +296,55 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         Vector3 direction;
 
-        if (levelCenter != null)
-        {
-            direction = transform.position - levelCenter.position;
-        }
-        else
-        {
-            direction = transform.position - transform.parent.position;
-        }
-
-        direction = direction.normalized;
-
-        if (direction.x > 0)
-        {
-            direction.x = 1;
-        }
-        else
-        {
-            direction.x = -1;
-        }
-
-        // if (direction.y > 0)
+        // if (levelCenter != null)
         // {
-        //     direction.y = 1;
+        //     direction = transform.position - levelCenter.position;
         // }
         // else
         // {
-        //     direction.y = -1;
+        //     direction = transform.position - transform.parent.position;
         // }
 
-        direction.y = 1;
+        Vector3 virtualOrigin = new Vector3(0, -99, 0);
 
-        if (direction.z > 0)
+        direction = transform.position - virtualOrigin;
+
+        direction = direction.normalized;
+
+        bool isObstacleRight = Physics.Raycast(transform.position, transform.right, maxDistance: 10);
+        bool isObstacleFront = Physics.Raycast(transform.position, transform.forward, maxDistance: 10);
+        bool isObstacleUp = Physics.Raycast(transform.position, transform.up, maxDistance: 10);
+
+        if (isObstacleRight)
         {
-            direction.z = 1;
+            direction += -transform.right;
         }
         else
         {
-            direction.z = -1;
+            direction += transform.right;
         }
 
-        // // direction.y = Mathf.Abs(direction.y);
+        if (isObstacleFront)
+        {
+            direction += -transform.forward;
+        }
+        else
+        {
+            direction += transform.forward;
+        }
+
+        if (isObstacleUp)
+        {
+            direction += -transform.up;
+        }
+        else
+        {
+            direction += transform.up;
+        }
+
+        direction.x = direction.x > 0 ? 1 : -1;
+        direction.y = direction.y > 0 ? 1 : -1;
+        direction.z = direction.z > 0 ? 1 : -1;
 
         // if (Mathf.Abs(direction.x) < 0.01f)
         // {
