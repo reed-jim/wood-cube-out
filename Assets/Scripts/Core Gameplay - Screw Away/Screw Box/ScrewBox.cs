@@ -126,7 +126,7 @@ public class ScrewBox : MonoBehaviour
             {
                 shakeCameraEvent?.Invoke();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
-                
+
                 if (GamePersistentVariable.IsVibrate)
                 {
                     HapticFeedback.HeavyFeedback();
@@ -178,6 +178,8 @@ public class ScrewBox : MonoBehaviour
 
         setFactionForScrewBoxEvent?.Invoke(this);
         screwBoxUnlockedEvent?.Invoke(this);
+
+        GamePersistentVariable.numScrewBoxUnlocked++;
     }
 
     private void Unlock(int instanceId)
