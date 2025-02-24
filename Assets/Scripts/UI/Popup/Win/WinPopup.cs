@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Firebase.RemoteConfig;
 using Lean.Localization;
 using PrimeTween;
 using TMPro;
@@ -13,9 +14,9 @@ public class WinPopup : BasePopup
 {
     [SerializeField] private Button continueButton;
     [SerializeField] private Button returnHomeButton;
+    [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
-    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelCompleted;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -25,10 +26,13 @@ public class WinPopup : BasePopup
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
 
+    private bool _isCollectCoinRemoteConfig;
+    private int _currentCollectedCoin;
+    private bool _isAlreadyWatchRewardedAd;
+
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
-
 
     protected override void RegisterMoreEvent()
     {
@@ -37,6 +41,23 @@ public class WinPopup : BasePopup
 
         continueButton.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
+        x5CoinButton.onClick.AddListener(X5Coin);
+
+        // Remote Config collect coin win level 
+        if (!DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false))
+        {
+            _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
+
+            DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false);
+            DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, _isCollectCoinRemoteConfig);
+        }
+        else
+        {
+            _isCollectCoinRemoteConfig = DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, false);
+        }
+
+        coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
+        x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
     }
 
     protected override void UnregisterMoreEvent()
@@ -54,14 +75,15 @@ public class WinPopup : BasePopup
 
         continueButton.interactable = true;
         returnHomeButton.interactable = true;
+        x5CoinButton.interactable = true;
+
+        x5CoinButton.transform.localScale = Vector3.one;
 
         Show();
 
         SoundManager.Instance.PlaySoundWin();
 
         await Task.Delay(500);
-
-        SetLevelCompletedText();
 
         CollectCoin(10);
 
@@ -75,43 +97,37 @@ public class WinPopup : BasePopup
         currentLevel.Value++;
 
         currentLevel.Save();
+
+        _currentCollectedCoin = 0;
+        _isAlreadyWatchRewardedAd = false;
     }
 
-    public void SetLevelCompletedText()
+    private void CollectCoin(int numCoin, Action onCompletedAction = null)
     {
-        // localizedLevelCompleted.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
-    }
-
-    private void CollectCoin(int numCoin)
-    {
-        int _currentCoin = 0;
-
-        coinText.text = $"{_currentCoin}";
+        coinText.text = $"{_currentCollectedCoin}";
 
         int deltaCoin = (int)(numCoin / 10f);
 
-        _tweens.Add(Tween.Custom(0, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(_currentCollectedCoin, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
         {
             coinText.text = $"{(int)newVal}";
         })
         .OnComplete(() =>
             {
-                // userResourcesObserver.UserResources.CoinQuantity += numCoin;
+                if (_isCollectCoinRemoteConfig)
+                {
+                    userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
 
-                // userResourcesObserver.Save();
+                    userResourcesObserver.Save();
+
+                    _currentCollectedCoin += numCoin;
+                }
 
                 _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
+
+                onCompletedAction?.Invoke();
             })
         );
-
-        // while (_currentCoin < numCoin)
-        // {
-        //     _currentCoin += deltaCoin;
-
-        //     coinText.text = $"{_currentCoin}";
-
-        //     await Task.Delay(100);
-        // }
     }
 
     private async void Continue()
@@ -120,14 +136,21 @@ public class WinPopup : BasePopup
 
         // await Task.Delay(3000);
 
-        continueButton.interactable = false;
+        if (_isAlreadyWatchRewardedAd)
+        {
+            OnInterstitialAdCompleted();
+        }
+        else
+        {
+            continueButton.interactable = false;
 
-        AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+        }
     }
 
     private void OnInterstitialAdCompleted()
     {
-        _tweens.Add(Tween.Delay(1).OnComplete(() =>
+        _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
         {
             HideImmediately();
         }));
@@ -138,6 +161,43 @@ public class WinPopup : BasePopup
 
         AdsDurationObserver.duration = 0;
     }
+
+    #region X5 Coin
+    private void X5Coin()
+    {
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+    }
+
+    private void OnRewaredAdCompleted()
+    {
+        x5CoinButton.interactable = false;
+        continueButton.interactable = false;
+
+        _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
+            .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
+        );
+
+        continueButton.transform.localScale = Vector3.zero;
+
+        _tweens.Add(Tween.Scale(continueButton.transform, 1.1f, duration: 0.3f)
+            .OnComplete(() => _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: 0.15f)
+            .OnComplete(() => continueButton.interactable = true)
+            ))
+        );
+
+        CollectCoin(50);
+
+        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
+
+        _isAlreadyWatchRewardedAd = true;
+    }
+
+    private void ShowAdsNotLoadedPopup()
+    {
+        InvokeShowAdNotLoadedPopupEvent();
+    }
+    #endregion
 
     private void ReturnHome()
     {

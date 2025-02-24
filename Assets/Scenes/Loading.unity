@@ -251,79 +251,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0235ac4ade3d9d847b96493e7a21fa52, type: 3}
---- !u!1 &381405225
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 381405226}
-  - component: {fileID: 381405227}
-  m_Layer: 0
-  m_Name: Error
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &381405226
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381405225}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1733142902}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &381405227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 381405225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: 0
-  entries:
-  - Language: English
-    Text: Error
-    Object: {fileID: 0}
-  - Language: French
-    Text: Erreur
-    Object: {fileID: 0}
-  - Language: German
-    Text: Fehler
-    Object: {fileID: 0}
-  - Language: Italian
-    Text: Errore
-    Object: {fileID: 0}
-  - Language: Japanese
-    Text: "\u30A8\u30E9\u30FC"
-    Object: {fileID: 0}
-  - Language: Korean
-    Text: "\uC624\uB958"
-    Object: {fileID: 0}
-  - Language: Portuguese
-    Text: Erro
-    Object: {fileID: 0}
-  - Language: Russian
-    Text: "\u041E\u0448\u0438\u0431\u043A\u0430"
-    Object: {fileID: 0}
-  - Language: Spanish
-    Text: Error
-    Object: {fileID: 0}
 --- !u!1 &425484462
 GameObject:
   m_ObjectHideFlags: 0
@@ -400,80 +327,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 425484462}
   m_CullTransparentMesh: 1
---- !u!1 &531595763
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 531595764}
-  - component: {fileID: 531595765}
-  m_Layer: 0
-  m_Name: Please try again
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &531595764
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531595763}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1733142902}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &531595765
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 531595763}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  data: 0
-  entries:
-  - Language: English
-    Text: Please try again!
-    Object: {fileID: 0}
-  - Language: French
-    Text: "Veuillez r\xE9essayer!"
-    Object: {fileID: 0}
-  - Language: German
-    Text: Bitte versuchen Sie es erneut!
-    Object: {fileID: 0}
-  - Language: Italian
-    Text: Per favore riprova!
-    Object: {fileID: 0}
-  - Language: Japanese
-    Text: "\u3082\u3046\u4E00\u5EA6\u3084\u308A\u76F4\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
-    Object: {fileID: 0}
-  - Language: Korean
-    Text: "\uB2E4\uC2DC \uC2DC\uB3C4\uD558\uC2ED\uC2DC\uC624!"
-    Object: {fileID: 0}
-  - Language: Portuguese
-    Text: Por favor, tente novamente!
-    Object: {fileID: 0}
-  - Language: Russian
-    Text: "\u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435
-      \u0435\u0449\u0435 \u0440\u0430\u0437!"
-    Object: {fileID: 0}
-  - Language: Spanish
-    Text: "\xA1Vuelve a intentarlo!"
-    Object: {fileID: 0}
 --- !u!1001 &1139578509
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -938,34 +791,15 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2834235113791252431, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
       objectReference: {fileID: 0}
-    - target: {fileID: 8492624515224176491, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-      propertyPath: m_IsActive
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects:
-    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 381405226}
-    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 531595764}
+    m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
---- !u!4 &1733142902 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
-  m_PrefabInstance: {fileID: 1582410615}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &395928970860806824
 GameObject:
   m_ObjectHideFlags: 0

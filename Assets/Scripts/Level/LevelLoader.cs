@@ -431,7 +431,7 @@ public class LevelLoader : MonoBehaviour
         foreach (var pieceMaterial in piecesMaterials)
         {
             newMaterialIndexes.Add(
-                pieceMaterial, UnityEngine.Random.Range(1, materialPool.Count - 1 - NUM_GRADIENT_MATERIAL) % (materialPool.Count - 1 - NUM_GRADIENT_MATERIAL));
+                pieceMaterial, UnityEngine.Random.Range(0, materialPool.Count - NUM_GRADIENT_MATERIAL));
         }
 
         for (int i = 0; i < objectParts.Length; i++)

@@ -101,6 +101,8 @@ public static class GameConstants
     public static string USER_RESOURCES = "User Resources";
     public static string IS_REMOVE_ADS = "Is Remove Ads";
     public static string GAME_SETTING = "GAME_SETTING";
+    public static string IS_COLLECT_COIN_WIN_LEVEL_SET = "IS_COLLECT_COIN_WIN_LEVEL_SET";
+    public static string IS_COLLECT_COIN_WIN_LEVEL = "IS_COLLECT_COIN_WIN_LEVEL";
     #endregion
 
     #region TRACKING

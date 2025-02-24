@@ -412,6 +412,7 @@ public class FirebaseConfig
     public const string IS_SHOW_INTER_REPLAY_LEVEL = "is_show_inter_replay_level";
     public const string IS_SHOW_INTER_LOSE_LEVEL = "is_show_inter_lose_level";
     public const string MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP = "min_time_lose_level_to_allow_skip";
+    public const string IS_COLLECT_COIN_WIN_LEVEL = "is_collect_coin_win_level";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

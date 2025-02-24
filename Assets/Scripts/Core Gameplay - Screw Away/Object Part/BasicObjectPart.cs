@@ -148,7 +148,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.4f)
+        _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
             .OnComplete(() =>
             {
                 _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
