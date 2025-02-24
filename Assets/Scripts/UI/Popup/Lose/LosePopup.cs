@@ -180,7 +180,7 @@ public class LosePopup : BasePopup
 
         if (isFirstWinLevel)
         {
-            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, levelBoosterObserver);
+            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, GamePersistentVariable.levelPrefab, levelBoosterObserver);
 
             DataUtility.SaveAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
         }

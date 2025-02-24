@@ -91,6 +91,8 @@ public class LevelLoader : MonoBehaviour
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
+        GamePersistentVariable.levelPrefab = nextLevel;
+
         setLevelNumberEvent?.Invoke();
 
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Level {nextLevel}");
@@ -120,13 +122,14 @@ public class LevelLoader : MonoBehaviour
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
 
-                // if (isLoopLevel)
-                // {
-                //     RandomizeLevelModelColor(level);
-                // }
-                RandomizeLevelModelColor(level);
-
-                SaferioTracking.TrackLevelStart(currentLevel.Value, nextLevel);
+                if (isLoopLevel)
+                {
+                    RandomizeLevelModelColor(level);
+                }
+                else
+                {
+                    SaferioTracking.TrackLevelStart(currentLevel.Value);
+                }
             }
         };
 
