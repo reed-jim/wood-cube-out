@@ -11,6 +11,7 @@ public static class GamePersistentVariable
     #region LEVEL OBSERVER
     public static int levelPrefab; 
     public static int numScrewBoxUnlocked; 
+    public static bool isAllowedSkipLevel; 
     #endregion
 
     #region SETTING

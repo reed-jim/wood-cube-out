@@ -734,7 +734,6 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
         GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
