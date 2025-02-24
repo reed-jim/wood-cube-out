@@ -52,7 +52,7 @@ public class SceneTransition : MonoBehaviour
 
         if (!DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            BlackScreenTransition();
+            // BlackScreenTransition();
         }
         else
         {
@@ -107,12 +107,12 @@ public class SceneTransition : MonoBehaviour
 
     private void TransitionOnLevelStarted()
     {
-        if (_isFirstTimeEnterScene)
-        {
-            _isFirstTimeEnterScene = false;
+        // if (_isFirstTimeEnterScene)
+        // {
+        //     _isFirstTimeEnterScene = false;
 
-            return;
-        }
+        //     return;
+        // }
 
         if (_waitForLevelLoadedCoroutine != null)
         {
