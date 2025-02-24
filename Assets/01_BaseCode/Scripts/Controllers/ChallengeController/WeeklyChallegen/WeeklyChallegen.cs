@@ -15,7 +15,7 @@ public class WeeklyChallegen : ChallengeBase
             }
         }
 
-        base.InitHome();
+        //base.InitHome();
 
         priovitySugget = SuggetPopupHomeController.PriovitySugget.SuperStarLegendaryShow;
 

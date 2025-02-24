@@ -106,8 +106,8 @@ public class CoinChallenge : ChallengeBase
         if (UseProfile.CurrentLevel < config.level_unlock)
             return false;
 
-        if (data.CurrentIndexReward > requirementsReward.Count - 1) //Đã nhận quà cuối
-            return false;
+//        if (data.CurrentIndexReward > requirementsReward.Count - 1) //Đã nhận quà cuối
+//            return false;
 
         DayOfWeek dayActive = TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()).DayOfWeek;
         if (dayActive != DayOfWeek.Monday && dayActive != DayOfWeek.Tuesday)

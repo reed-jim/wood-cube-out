@@ -234,10 +234,10 @@ public class CoreGameData : BaseDataSegemnt
         public int num_x_reward;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class StartChestData
     {
-        [System.Serializable]
+        [Serializable]
         public class ChestReward
         {
             public List<RewardRandom> rewardData;
@@ -272,7 +272,7 @@ public class CoreGameData : BaseDataSegemnt
         public int num_x_reward;
     }
 
-    [System.Serializable]
+    [Serializable]
     public class LevelChestData
     {
         public int unlockLevel;

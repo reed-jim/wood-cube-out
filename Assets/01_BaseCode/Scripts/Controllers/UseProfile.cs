@@ -1065,9 +1065,10 @@ public class UseProfile : MonoBehaviour
             PlayerPrefs.Save();
         }
     }
-    public static int ConnectBirdTurnFree
-    {
-        get
+
+    public static int ConnectBirdTurnFree;
+    
+       /* get
         {
             return PlayerPrefs.GetInt(StringHelper.CONNECT_BIRD_TURN_FREE, GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.num_turn_free);
         }
@@ -1075,8 +1076,8 @@ public class UseProfile : MonoBehaviour
         {
             PlayerPrefs.SetInt(StringHelper.CONNECT_BIRD_TURN_FREE, value);
             // GameController.Instance.playerData.SaveData();
-        }
-    }
+        }*/
+    
     public static int LimitNumbWatchVideoInDay
     {
         get
