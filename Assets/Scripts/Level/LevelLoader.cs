@@ -120,10 +120,11 @@ public class LevelLoader : MonoBehaviour
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
 
-                if (isLoopLevel)
-                {
-                    RandomizeLevelModelColor(level);
-                }
+                // if (isLoopLevel)
+                // {
+                //     RandomizeLevelModelColor(level);
+                // }
+                RandomizeLevelModelColor(level);
 
                 SaferioTracking.TrackLevelStart(currentLevel.Value, nextLevel);
             }
@@ -395,45 +396,49 @@ public class LevelLoader : MonoBehaviour
     private void RandomizeLevelModelColor(GameObject level)
     {
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
+        Renderer[] objectPartRenderers = new Renderer[objectParts.Length];
 
         // MATERIALS
-        Material[] materialPool = objectPartMaterialContainer.Materials;
+        List<Material> materialPool = objectPartMaterialContainer.Materials.ToList();
 
-        Dictionary<BasicObjectPart, int> piecesWithMaterialIndex = new Dictionary<BasicObjectPart, int>();
-
-        int modifier = UnityEngine.Random.Range(1, materialPool.Length - 1);
+        List<Material> piecesMaterials = new List<Material>();
 
         for (int i = 0; i < objectParts.Length; i++)
         {
-            for (int j = 0; j < materialPool.Length; j++)
+            objectPartRenderers[i] = objectParts[i].GetComponent<MeshRenderer>();
+        }
+
+        Material material = null;
+
+        for (int i = 0; i < objectParts.Length; i++)
+        {
+            if (!materialPool.Contains(objectPartRenderers[i].sharedMaterial))
             {
-                if (objectParts[i].GetComponent<MeshRenderer>().sharedMaterial == materialPool[j])
-                {
-                    piecesWithMaterialIndex.Add(objectParts[i], j);
+                return;
+            }
 
-                    break;
-                }
-
-                if (j == materialPool.Length - 1)
-                {
-                    return;
-                }
+            if (!piecesMaterials.Contains(objectPartRenderers[i].sharedMaterial))
+            {
+                piecesMaterials.Add(objectPartRenderers[i].sharedMaterial);
             }
         }
 
-        Dictionary<int, int> newMaterialIndexes = new Dictionary<int, int>();
+        Dictionary<Material, int> newMaterialIndexes = new Dictionary<Material, int>();
+
+        const int NUM_GRADIENT_MATERIAL = 9;
 
         // Random new material for each material index
-        foreach (var materialIndex in piecesWithMaterialIndex.Values)
+        foreach (var pieceMaterial in piecesMaterials)
         {
-            newMaterialIndexes[materialIndex] = UnityEngine.Random.Range(1, materialPool.Length - 1) % (materialPool.Length - 1);
+            newMaterialIndexes.Add(
+                pieceMaterial, UnityEngine.Random.Range(1, materialPool.Count - 1 - NUM_GRADIENT_MATERIAL) % (materialPool.Count - 1 - NUM_GRADIENT_MATERIAL));
         }
 
         for (int i = 0; i < objectParts.Length; i++)
         {
-            int newMaterialIndex = newMaterialIndexes[piecesWithMaterialIndex[objectParts[i]]];
+            int newMaterialIndex = newMaterialIndexes[objectPartRenderers[i].sharedMaterial];
 
-            objectParts[i].GetComponent<MeshRenderer>().sharedMaterial = materialPool[newMaterialIndex];
+            objectPartRenderers[i].sharedMaterial = materialPool[newMaterialIndex];
         }
     }
 
