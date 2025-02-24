@@ -9,6 +9,7 @@ public static class GamePersistentVariable
     public static Vector2 screenSizeWorld;
 
     #region LEVEL OBSERVER
+    public static int levelPrefab; 
     public static int numScrewBoxUnlocked; 
     #endregion
 

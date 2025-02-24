@@ -30,6 +30,8 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     #region PRIVATE FIELD
     protected List<Tween> _tweens = new List<Tween>();
+    protected Camera _mainCamera;
+    protected Renderer _renderer;
     protected int _numberBlockingObjects;
     protected Vector3 _initialScale;
     protected float _initialRotateSpeed;
@@ -150,8 +152,12 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         AddScrewToList();
 
+        _renderer = GetComponent<Renderer>();
+
         _initialScale = transform.localScale;
         _initialRotateSpeed = rotateSpeed;
+
+        _mainCamera = Camera.main;
 
         MoreLogicInAwake();
     }

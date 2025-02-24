@@ -20,6 +20,7 @@ public class LevelDifficultyConfiguration : ScriptableObject
     public int ScrewPortFactionDifficultyModifier
     {
         get => screwPortFactionDifficultyModifier;
+        set => screwPortFactionDifficultyModifier = value;
     }
 
     public int AdsScrewBoxDifficultyLevelModifier

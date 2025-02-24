@@ -17,9 +17,9 @@ public class RotateObject : MonoBehaviour
     #endregion
 
     #region CONST
-    private const float ACCELERATE_RATE = 0.03f;
+    private const float ACCELERATE_RATE = 0.04f;
     private const float MAX_ACCELERATE_MULTIPLIER = 2.5f;
-    private const float MAX_TICK_RESET_ACCELERATE = 8;
+    private const float MAX_TICK_RESET_ACCELERATE = 6;
     #endregion
 
     void Awake()
