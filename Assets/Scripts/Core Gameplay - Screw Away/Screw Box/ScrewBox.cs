@@ -102,7 +102,7 @@ public class ScrewBox : MonoBehaviour
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
-        transform.localScale = finalScale * Vector3.one * transform.lossyScale.x;
+        transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
 
         _initialScale = transform.localScale;
     }

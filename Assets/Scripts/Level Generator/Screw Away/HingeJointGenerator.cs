@@ -112,6 +112,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevelRubik();
         }
 
+        if (GUILayout.Button("Randomize Level Pieces' Color"))
+        {
+            RandomizeLevelModelColor();
+        }
+
         // if (GUILayout.Button("Fine Tune Level"))
         // {
         //     FineTuneLevel();
@@ -1912,6 +1917,50 @@ public class HingeJointGenerator : EditorWindow
 
             return totalCollider > 0;
         }
+    }
+
+    private void RandomizeLevelModelColor()
+    {
+        GameObject levelPrefab = Selection.activeGameObject;
+
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Dictionary<BasicObjectPart, int> piecesWithMaterialIndex = new Dictionary<BasicObjectPart, int>();
+
+        int modifier = UnityEngine.Random.Range(1, materialPool.Length - 1);
+
+        for (int i = 0; i < objectParts.Length; i++)
+        {
+            for (int j = 0; j < materialPool.Length; j++)
+            {
+                if (objectParts[i].GetComponent<MeshRenderer>().sharedMaterial == materialPool[j])
+                {
+                    piecesWithMaterialIndex.Add(objectParts[i], j);
+
+                    break;
+                }
+            }
+        }
+
+        Dictionary<int, int> newMaterialIndexes = new Dictionary<int, int>();
+
+        // Random new material for each material index
+        foreach (var materialIndex in piecesWithMaterialIndex.Values)
+        {
+            newMaterialIndexes[materialIndex] = UnityEngine.Random.Range(1, materialPool.Length - 1) % (materialPool.Length - 1);
+        }
+
+        for (int i = 0; i < objectParts.Length; i++)
+        {
+            int newMaterialIndex = newMaterialIndexes[piecesWithMaterialIndex[objectParts[i]]];
+
+            objectParts[i].GetComponent<MeshRenderer>().sharedMaterial = materialPool[newMaterialIndex];
+        }
+
+        EditorUtility.SetDirty(levelPrefab);
     }
 
     private GameObject[] LoadAllPrefabsInFolder(string folder)

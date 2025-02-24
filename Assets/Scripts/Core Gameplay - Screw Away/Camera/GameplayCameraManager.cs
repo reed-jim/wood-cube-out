@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 
@@ -8,13 +9,19 @@ public class GameplayCameraManager : MonoBehaviour
     [SerializeField] private Camera mainCamera;
     [SerializeField] private Camera screwBoxCamera;
 
+    private List<Sequence> _tweens;
+
     private void Awake()
     {
         ScrewBox.shakeCameraEvent += ShakeAllCameras;
 
+        _tweens = new List<Sequence>();
+
         if (Instance != null && Instance != this)
         {
             Destroy(gameObject);
+
+            return;
         }
         else
         {
@@ -27,6 +34,8 @@ public class GameplayCameraManager : MonoBehaviour
     void OnDestroy()
     {
         ScrewBox.shakeCameraEvent -= ShakeAllCameras;
+
+        CommonUtil.StopAllSequences(_tweens);
     }
 
     public static void ConvertCameraSpaceSmoothly(Transform target)
@@ -39,7 +48,6 @@ public class GameplayCameraManager : MonoBehaviour
 
     private void ShakeAllCameras()
     {
-        Tween.ShakeCamera(mainCamera, strengthFactor: 0.3f, duration: 0.3f);
-        Tween.ShakeCamera(screwBoxCamera, strengthFactor: 0.3f, duration: 0.3f);
+        _tweens.Add(Tween.ShakeCamera(mainCamera, strengthFactor: 0.3f, duration: 0.3f));
     }
 }
