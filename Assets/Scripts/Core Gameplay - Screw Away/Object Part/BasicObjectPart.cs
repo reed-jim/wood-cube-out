@@ -20,11 +20,13 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private int minJointToDisableKinematic = 1;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private bool _isSelecting;
     private bool _isFree;
     private bool _isImmuneSwipeForce;
     private int _totalJoint;
     private bool _isConcave;
+    private Vector3 _initialScale;
     #endregion
 
     public bool IsConcave
@@ -45,6 +47,9 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         ScrewSelectionInput.mouseUpEvent += Deselect;
         BaseScrew.breakJointEvent += OnJointBreakCallback;
+        ScrewManager.levelSetupCompletedEvent += ScaleBeforeLevel;
+
+        _tweens = new List<Tween>();
 
         partRigidbody = GetComponent<Rigidbody>();
         meshCollider = GetComponent<MeshCollider>();
@@ -116,12 +121,39 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             meshCollider.isTrigger = false;
         }
+
+        // BETTER FEELING
+        HideBeforeLevel();
     }
 
     void OnDestroy()
     {
         ScrewSelectionInput.mouseUpEvent -= Deselect;
         BaseScrew.breakJointEvent -= OnJointBreakCallback;
+        ScrewManager.levelSetupCompletedEvent -= ScaleBeforeLevel;
+
+        CommonUtil.StopAllTweens(_tweens);
+    }
+    #endregion
+
+    #region BETTER FEELING
+    private void HideBeforeLevel()
+    {
+        _initialScale = transform.localScale;
+
+        transform.localScale = Vector3.zero;
+    }
+
+    private void ScaleBeforeLevel()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.4f)
+            .OnComplete(() =>
+            {
+                _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+            })
+        );
     }
     #endregion
 
