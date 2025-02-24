@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Gplay.Notifications;
+using Sirenix.OdinInspector;
 using UnityEngine;
 using UnityEngine.Serialization;
 using static SaleSegemntData;
@@ -78,6 +80,7 @@ public class SegmentData
     public NotificationSegmentData notificationData;
     public SuggetBuyerInGameSegmentData suggetBuyerInGameSegmentData;
     public SuggetBuyItemSegmentData suggetBuyItemSegmentData;
+    public MinigameConnectSegmentData minigameConnectSegmentData;
 
     public void Init(SegmentData dataDefault, int idSegment)
     {
@@ -92,20 +95,22 @@ public class SegmentData
         notificationData.InitSegemnt(dataDefault, idSegment);
         suggetBuyerInGameSegmentData.InitSegemnt(dataDefault, idSegment);
         suggetBuyItemSegmentData.InitSegemnt(dataDefault, idSegment);
+        minigameConnectSegmentData.InitSegemnt(dataDefault, idSegment);
     }
 
     public void ToJsonConfig()
     {
-        // Debug.Log(CoreGameData.Core_Game_Config + " " + coreGameData.ToJsonConfig());
-        // Debug.Log(ReviveData.Revive_Config + " " + reviveData.ToJsonConfig());
-        // Debug.Log(AdsSegmentData.Ads_Config + " " + adsData.ToJsonConfig());
-        // Debug.Log(SaleSegemntData.Sale_Config + " " + saleData.ToJsonConfig());
-        // Debug.Log(SaleVideoData.Sale_Video_Config + " " + saleVideoData.ToJsonConfig());
-        // Debug.Log(ChallengeSegemtData.Challenge_Config + " " + challengeData.ToJsonConfig());
-        // Debug.Log(SkillUserSegemntData.Skill_Config + " " + skillUserData.ToJsonConfig());
-        // Debug.Log(NotificationSegmentData.NOTIFICATIONS_CONFIG + " " + notificationData.ToJsonConfig());
-        // Debug.Log(SuggetBuyerInGameSegmentData.SUGGET_BUYER_CONFIG + " " + suggetBuyerInGameSegmentData.ToJsonConfig());
-        // Debug.Log(SuggetBuyItemSegmentData.SUGGET_BUY_ITEM_CONFIG + " " + suggetBuyItemSegmentData.ToJsonConfig());
+        Debug.Log(CoreGameData.Core_Game_Config + " " + coreGameData.ToJsonConfig());
+        Debug.Log(ReviveData.Revive_Config + " " + reviveData.ToJsonConfig());
+        Debug.Log(AdsSegmentData.Ads_Config + " " + adsData.ToJsonConfig());
+        Debug.Log(SaleSegemntData.Sale_Config + " " + saleData.ToJsonConfig());
+        Debug.Log(SaleVideoData.Sale_Video_Config + " " + saleVideoData.ToJsonConfig());
+        Debug.Log(ChallengeSegemtData.Challenge_Config + " " + challengeData.ToJsonConfig());
+        Debug.Log(SkillUserSegemntData.Skill_Config + " " + skillUserData.ToJsonConfig());
+        Debug.Log(NotificationSegmentData.NOTIFICATIONS_CONFIG + " " + notificationData.ToJsonConfig());
+        Debug.Log(SuggetBuyerInGameSegmentData.SUGGET_BUYER_CONFIG + " " + suggetBuyerInGameSegmentData.ToJsonConfig());
+        Debug.Log(SuggetBuyItemSegmentData.SUGGET_BUY_ITEM_CONFIG + " " + suggetBuyItemSegmentData.ToJsonConfig());
+        Debug.Log(MinigameConnectSegmentData.MiniGameConnectConfig + " " + minigameConnectSegmentData.ToJsonConfig());
     }
 }
 
@@ -164,7 +169,7 @@ public class CoreGameData : BaseDataSegemnt
     [System.Serializable]
     public class BootsConfig
     {
-
+     
 
         [Header("-----------------------BirdSort--------------------------")]
         public BootsData addTime_BirdSort;
@@ -175,6 +180,36 @@ public class CoreGameData : BaseDataSegemnt
         public BootsData shuffle_BirdSort;
         public BootsData breakTheRule_BirdSort;
         public BootsData addBrand_BirdSort;
+    
+
+
+        public BootsData GetBoot(GiftType type)
+        {
+            switch (type)
+            {
+              
+
+                case GiftType.AddTimeItem_BirdSort:
+                    return addTime_BirdSort;
+                case GiftType.BlockBrand_BirdSort:
+                    return blockBrand_BirdSort;
+                case GiftType.ReturnItem_BirdSort:
+                    return return_BirdSort;
+                case GiftType.SuggetItem_BirdSort:
+                    return sugget_BirdSort;
+                case GiftType.IceItem_BirdSort:
+                    return ice_BirdSort;
+                case GiftType.ShuffleItem_BirdSort:
+                    return shuffle_BirdSort;
+                case GiftType.BreakTheRule_BirdSort:
+                    return breakTheRule_BirdSort;
+                case GiftType.AddBrandItem_BirdSort:
+                    return addBrand_BirdSort;
+
+                default:
+                    return null;
+            }
+        }
     }
 
     [System.Serializable]
@@ -205,28 +240,28 @@ public class CoreGameData : BaseDataSegemnt
         [System.Serializable]
         public class ChestReward
         {
-            // public List<RewardRandom> rewardData;
+            public List<RewardRandom> rewardData;
 
-            // public RewardRandom GetReward()
-            // {
-            //     float maxWeight = 0f;
-            //     for (int i = 0; i < rewardData.Count; i++)
-            //     {
-            //         maxWeight += rewardData[i].weight;
-            //     }
+            public RewardRandom GetReward()
+            {
+                float maxWeight = 0f;
+                for (int i = 0; i < rewardData.Count; i++)
+                {
+                    maxWeight += rewardData[i].weight;
+                }
 
-            //     float randomNum = Random.Range(0f, maxWeight);
-            //     float currentWeight = 0f;
-            //     for (int i = 0; i < rewardData.Count; i++)
-            //     {
-            //         int index = i;
-            //         currentWeight += rewardData[index].weight;
-            //         if (currentWeight > randomNum)
-            //             return rewardData[index];
-            //     }
+                float randomNum = Random.Range(0f, maxWeight);
+                float currentWeight = 0f;
+                for (int i = 0; i < rewardData.Count; i++)
+                {
+                    int index = i;
+                    currentWeight += rewardData[index].weight;
+                    if (currentWeight > randomNum)
+                        return rewardData[index];
+                }
 
-            //     return rewardData[0];
-            // }
+                return rewardData[0];
+            }
         }
 
         public int unlockLevel;
@@ -261,20 +296,20 @@ public class CoreGameData : BaseDataSegemnt
     public override void InitSegemnt(SegmentData data, int idSegment)
     {
         CoreGameConfig temp = default;
-
-
-
-
+    
+        
+        
+        
         if (!RemoteConfigController.GetJsonConfig(Core_Game_Config, out temp, true))
         {
             config = data.coreGameData.config;
-
+          
         }
         else
         {
-            config = temp;
-
-
+             config = temp;
+          
+          
         }
     }
 
@@ -409,74 +444,74 @@ public class SaleSegemntData : BaseDataSegemnt
     [System.Serializable]
     public class SaleDataConfig : FuncOnlineConfig
     {
-        // public long lifeTime = -1;
+        public long lifeTime = -1;
 
-        // public bool AllWeek = true;
-        // [Header("Weekdays")]
-        // [HideIf("AllWeek", true)] public bool Monday;
-        // [HideIf("AllWeek", true)] public bool Tuesday;
-        // [HideIf("AllWeek", true)] public bool Wednesday;
-        // [HideIf("AllWeek", true)] public bool Thursday;
-        // [HideIf("AllWeek", true)] public bool Friday;
-        // [HideIf("AllWeek", true)] public bool Saturday;
-        // [HideIf("AllWeek", true)] public bool Sunday;
+        public bool AllWeek = true;
+        [Header("Weekdays")]
+        [HideIf("AllWeek", true)] public bool Monday;
+        [HideIf("AllWeek", true)] public bool Tuesday;
+        [HideIf("AllWeek", true)] public bool Wednesday; 
+        [HideIf("AllWeek", true)] public bool Thursday; 
+        [HideIf("AllWeek", true)] public bool Friday; 
+        [HideIf("AllWeek", true)] public bool Saturday; 
+        [HideIf("AllWeek", true)] public bool Sunday;
 
-        // public float salePercent;
+        public float salePercent;
 
-        // public float[] parmaExtral;
+        public float[] parmaExtral;
 
-        // public bool IsPackReady()
-        // {
-        //     if (AllWeek) return true;
-        //     DayOfWeek dayActive = TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()).DayOfWeek;
-        //     switch (dayActive)
-        //     {
-        //         case DayOfWeek.Monday:
-        //             if (Monday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Tuesday:
-        //             if (Tuesday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Wednesday:
-        //             if (Wednesday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Thursday:
-        //             if (Thursday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Friday:
-        //             if (Friday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Saturday:
-        //             if (Saturday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         case DayOfWeek.Sunday:
-        //             if (Sunday)
-        //             {
-        //                 return true;
-        //             }
-        //             break;
-        //         default: break;
-        //     }
-        //     return false;
-        // }
+        public bool IsPackReady()
+        {
+            if (AllWeek) return true;
+            DayOfWeek dayActive = TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()).DayOfWeek;
+            switch (dayActive)
+            {
+                case DayOfWeek.Monday:
+                    if (Monday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Tuesday:
+                    if (Tuesday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Wednesday:
+                    if (Wednesday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Thursday:
+                    if (Thursday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Friday:
+                    if (Friday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Saturday:
+                    if (Saturday)
+                    {
+                        return true;
+                    }
+                    break;
+                case DayOfWeek.Sunday:
+                    if (Sunday)
+                    {
+                        return true;
+                    }
+                    break;
+                default: break;
+            }
+            return false;
+        }
     }
 
     [System.Serializable]
@@ -515,44 +550,44 @@ public class SaleSegemntData : BaseDataSegemnt
         }
     }
 
-    // public SaleDataConfig GetSaleConfig(TypePackIAP typePackIAP)
-    // {
-    //     switch (typePackIAP)
-    //     {
-    //         case TypePackIAP.BeginnerPack:
-    //             return config.beginerPack;
-    //         case TypePackIAP.RemoveAds:
-    //             return config.removeAdsPack;
-    //         case TypePackIAP.BigRemoveAdsPack:
-    //             return config.bigRemoveAdsPack;
-    //         case TypePackIAP.PickOne_1:
-    //         case TypePackIAP.PickOne_2:
-    //         case TypePackIAP.PickOne_3:
-    //         case TypePackIAP.PickOne_4:
-    //         case TypePackIAP.PickOne_5:
-    //         case TypePackIAP.PickOne_6:
-    //         case TypePackIAP.PickOne_7:
-    //             return config.pickOneChoicePack;
-    //         case TypePackIAP.CoinShopPack_1:
-    //         case TypePackIAP.CoinShopPack_2:
-    //         case TypePackIAP.CoinShopPack_3:
-    //         case TypePackIAP.CoinShopPack_4:
-    //         case TypePackIAP.CoinShopPack_5:
-    //         case TypePackIAP.CoinShopPack_6:
-    //             return config.saleCoinPack;
-    //         case TypePackIAP.WeeklySale:
-    //             return config.weeklySalePack;
-    //         case TypePackIAP.DailyOffer:
-    //             return config.dailyOfferPack;
-    //         case TypePackIAP.SaleItem:
-    //             return config.itemSalePack;
-    //         case TypePackIAP.SaleCoin:
-    //             return config.coinSalePack;
+    public SaleDataConfig GetSaleConfig(TypePackIAP typePackIAP)
+    {
+        switch (typePackIAP)
+        {
+            case TypePackIAP.BeginnerPack:
+                return config.beginerPack;
+            case TypePackIAP.RemoveAds:
+                return config.removeAdsPack;
+            case TypePackIAP.BigRemoveAdsPack:
+                return config.bigRemoveAdsPack;
+            case TypePackIAP.PickOne_1:
+            case TypePackIAP.PickOne_2:
+            case TypePackIAP.PickOne_3:
+            case TypePackIAP.PickOne_4:
+            case TypePackIAP.PickOne_5:
+            case TypePackIAP.PickOne_6:
+            case TypePackIAP.PickOne_7:
+                return config.pickOneChoicePack;
+            case TypePackIAP.CoinShopPack_1:
+            case TypePackIAP.CoinShopPack_2:
+            case TypePackIAP.CoinShopPack_3:
+            case TypePackIAP.CoinShopPack_4:
+            case TypePackIAP.CoinShopPack_5:
+            case TypePackIAP.CoinShopPack_6:
+                return config.saleCoinPack;
+            case TypePackIAP.WeeklySale:
+                return config.weeklySalePack;
+            case TypePackIAP.DailyOffer:
+                return config.dailyOfferPack;
+            case TypePackIAP.SaleItem:
+                return config.itemSalePack;
+            case TypePackIAP.SaleCoin:
+                return config.coinSalePack;
 
-    //     }
+        }
 
-    //     return config.beginerPack;
-    // }
+        return config.beginerPack;
+    }
 
     public override string ToJsonConfig()
     {
@@ -569,34 +604,34 @@ public class SaleVideoData : BaseDataSegemnt
     [System.Serializable]
     public class VideoDataConfig : SaleDataConfig
     {
-        // [System.Serializable]
-        // public class RewardsVideoData
-        // {
-        //     public List<RewardRandom> rewardData;
+        [System.Serializable]
+        public class RewardsVideoData
+        {
+            public List<RewardRandom> rewardData;
 
-        //     public RewardRandom GetReward()
-        //     {
-        //         float maxWeight = 0f;
-        //         for (int i = 0; i < rewardData.Count; i++)
-        //         {
-        //             maxWeight += rewardData[i].weight;
-        //         }
+            public RewardRandom GetReward()
+            {
+                float maxWeight = 0f;
+                for (int i = 0; i < rewardData.Count; i++)
+                {
+                    maxWeight += rewardData[i].weight;
+                }
 
-        //         float randomNum = Random.Range(0f, maxWeight);
-        //         float currentWeight = 0f;
-        //         for (int i = 0; i < rewardData.Count; i++)
-        //         {
-        //             int index = i;
-        //             currentWeight += rewardData[index].weight;
-        //             if (currentWeight > randomNum)
-        //                 return rewardData[index];
-        //         }
+                float randomNum = Random.Range(0f, maxWeight);
+                float currentWeight = 0f;
+                for (int i = 0; i < rewardData.Count; i++)
+                {
+                    int index = i;
+                    currentWeight += rewardData[index].weight;
+                    if (currentWeight > randomNum)
+                        return rewardData[index];
+                }
 
-        //         return rewardData[0];
-        //     }
-        // }
+                return rewardData[0];
+            }
+        }
 
-        // public List<RewardsVideoData> rewards;
+        public List<RewardsVideoData> rewards;
     }
 
     [System.Serializable]
@@ -622,18 +657,18 @@ public class SaleVideoData : BaseDataSegemnt
         }
     }
 
-    // public VideoDataConfig GetSaleConfig(TypePackVideo typePacVideo)
-    // {
-    //     switch (typePacVideo)
-    //     {
-    //         case TypePackVideo.VideoGirl:
-    //             return config.videoGirl;
-    //         case TypePackVideo.VideoXCoinWinGame:
-    //             return config.xCoinWinLevel;
-    //     }
+    public VideoDataConfig GetSaleConfig(TypePackVideo typePacVideo)
+    {
+        switch (typePacVideo)
+        {
+            case TypePackVideo.VideoGirl:
+                return config.videoGirl;
+            case TypePackVideo.VideoXCoinWinGame:
+                return config.xCoinWinLevel;
+        }
 
-    //     return config.videoGirl;
-    // }
+        return config.videoGirl;
+    }
 
     public override string ToJsonConfig()
     {
@@ -649,29 +684,29 @@ public class ChallengeSegemtData : BaseDataSegemnt
     [System.Serializable]
     public class ChallengeReward
     {
-        // public int numItemRequire;//Item require cộng dồn//VD: Mốc 1 = 30, mốc 2 = mốc 1 + 10, mốc 3 = mốc 1 + mốc 2 + 10
-        // public List<RewardRandom> rewardData;
+        public int numItemRequire;//Item require cộng dồn//VD: Mốc 1 = 30, mốc 2 = mốc 1 + 10, mốc 3 = mốc 1 + mốc 2 + 10
+        public List<RewardRandom> rewardData;
 
-        // public RewardRandom GetReward()
-        // {
-        //     float maxWeight = 0f;
-        //     for (int i = 0; i < rewardData.Count; i++)
-        //     {
-        //         maxWeight += rewardData[i].weight;
-        //     }
+        public RewardRandom GetReward()
+        {
+            float maxWeight = 0f;
+            for (int i = 0; i < rewardData.Count; i++)
+            {
+                maxWeight += rewardData[i].weight;
+            }
 
-        //     float randomNum = Random.Range(0f, maxWeight);
-        //     float currentWeight = 0f;
-        //     for (int i = 0; i < rewardData.Count; i++)
-        //     {
-        //         int index = i;
-        //         currentWeight += rewardData[index].weight;
-        //         if (currentWeight > randomNum)
-        //             return rewardData[index];
-        //     }
+            float randomNum = Random.Range(0f, maxWeight);
+            float currentWeight = 0f;
+            for (int i = 0; i < rewardData.Count; i++)
+            {
+                int index = i;
+                currentWeight += rewardData[index].weight;
+                if (currentWeight > randomNum)
+                    return rewardData[index];
+            }
 
-        //     return rewardData[0];
-        // }
+            return rewardData[0];
+        }
     }
 
     [System.Serializable]
@@ -724,24 +759,24 @@ public class ChallengeSegemtData : BaseDataSegemnt
     public ChallengeConfig config;
 
 
-    // public ChallengeConfigData GetChallengeConfig(ChallengeType type)
-    // {
-    //     switch (type)
-    //     {
-    //         case ChallengeType.WeeklyChallenge:
-    //             return config.weeklyChallenge;
-    //         case ChallengeType.RoyalPass:
-    //             return config.royalPass;
-    //         case ChallengeType.CoinChallenge:
-    //             return config.coinChallenge;
-    //         case ChallengeType.DiamodChallenge:
-    //             return config.diamodChallenge;
-    //         case ChallengeType.RaceSpaceChallenge:
-    //             return config.raceSpaceChallenge;
-    //     }
+    public ChallengeConfigData GetChallengeConfig(ChallengeType type)
+    {
+        switch (type)
+        {
+            case ChallengeType.WeeklyChallenge:
+                return config.weeklyChallenge;
+            case ChallengeType.RoyalPass:
+                return config.royalPass;
+            case ChallengeType.CoinChallenge:
+                return config.coinChallenge;
+            case ChallengeType.DiamodChallenge:
+                return config.diamodChallenge;
+            case ChallengeType.RaceSpaceChallenge:
+                return config.raceSpaceChallenge;
+        }
 
-    //     return config.weeklyChallenge;
-    // }
+        return config.weeklyChallenge;
+    }
 
     public override void InitSegemnt(SegmentData data, int idSegment)
     {
@@ -772,7 +807,7 @@ public class SkillUserSegemntData : BaseDataSegemnt
     {
         public bool isActive;
         public int level_start;
-        // public SkillUserController.SkillUserData[] datas;
+        public SkillUserController.SkillUserData[] datas;
     }
 
     public SkillUserConfig config;
@@ -946,30 +981,30 @@ public class SuggetBuyItemSegmentData : BaseDataSegemnt
         return JsonUtility.ToJson(config);
     }
 }
-// [Serializable]
-// public class MinigameConnectSegmentData : BaseDataSegemnt
-// {
-//     public const string MiniGameConnectConfig = "minigame_connect_config";
+[Serializable]
+public class MinigameConnectSegmentData : BaseDataSegemnt
+{
+    public const string MiniGameConnectConfig = "minigame_connect_config";
+    
 
+    public MiniGameConfig config;
 
-//     // public MiniGameConfig config;
-
-//     public override void InitSegemnt(SegmentData data, int idSegment)
-//     {
-//         // MiniGameConfig temp = default;
-//         // if (!RemoteConfigController.GetJsonConfig(MiniGameConnectConfig, out temp))
-//         // {
-//         //     config = data.minigameConnectSegmentData.config;
-//         //     DateTime.TryParse(this.config.str_start_date,out this.config.start_date);
-//         //     DateTime.TryParse(this.config.str_end_date,out this.config.end_date);
-//         // }
-//         // else
-//         // {
-//         //     config = temp;
-//         // }
-//     }
-//     public override string ToJsonConfig()
-//     {
-//         return JsonUtility.ToJson(config);
-//     }
-// }
+    public override void InitSegemnt(SegmentData data, int idSegment)
+    {
+        MiniGameConfig temp = default;
+        if (!RemoteConfigController.GetJsonConfig(MiniGameConnectConfig, out temp))
+        {
+            config = data.minigameConnectSegmentData.config;
+            DateTime.TryParse(this.config.str_start_date,out this.config.start_date);
+            DateTime.TryParse(this.config.str_end_date,out this.config.end_date);
+        }
+        else
+        {
+            config = temp;
+        }
+    }
+    public override string ToJsonConfig()
+    {
+        return JsonUtility.ToJson(config);
+    }
+}

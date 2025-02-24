@@ -170,7 +170,7 @@ public class LosePopup : BasePopup
 
     private void ReturnHome()
     {
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        Addressables.LoadSceneAsync(GameConstants.HomeScene);
     }
 
     #region SKIP LEVEL

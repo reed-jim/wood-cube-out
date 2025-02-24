@@ -211,7 +211,7 @@ public class MenuScreen : MonoBehaviour
         {
             menuScreenAudioListener.enabled = false;
 
-            SceneManager.UnloadSceneAsync(GameConstants.MENU_SCENE);
+            SceneManager.UnloadSceneAsync(GameConstants.HomeScene);
         }
     }
 }

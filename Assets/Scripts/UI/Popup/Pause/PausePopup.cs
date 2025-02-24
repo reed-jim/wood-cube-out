@@ -59,7 +59,7 @@ public class PausePopup : BasePopup
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
         }
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        Addressables.LoadSceneAsync(GameConstants.HomeScene);
     }
 
     private void Replay()

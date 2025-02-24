@@ -143,7 +143,7 @@ public class WinPopup : BasePopup
     {
         returnHomeButton.interactable = false;
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        Addressables.LoadSceneAsync(GameConstants.HomeScene);
     }
 
     private async void TrackLevelWin()

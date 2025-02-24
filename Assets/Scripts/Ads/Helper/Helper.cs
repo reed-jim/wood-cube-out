@@ -749,20 +749,20 @@ public static bool IsSixteenNineAspect()
         return (b == 0) ? a : gcd(b, a % b);
     }
     
-    // public async static void GetCountryByIP()
-    // {
-    //     IpInfo ipInfo = new IpInfo();
-    //     string url = "http://ipinfo.io";
-    //     string json = "{}";
+    public async static void GetCountryByIP()
+    {
+        IpInfo ipInfo = new IpInfo();
+        string url = "http://ipinfo.io";
+        string json = "{}";
 
-    //     using (var client = new WebClient())
-    //     {
-    //         json = await client.DownloadStringTaskAsync(url);
-    //         Debug.Log("================ json " + json);
-    //         ipInfo = JsonUtility.FromJson<IpInfo>(json);
-    //         UserData.FlagLink = string.Format(Config.FLAG_API, ipInfo.country);
-    //     }
-    // }
+        using (var client = new WebClient())
+        {
+            json = await client.DownloadStringTaskAsync(url);
+            Debug.Log("================ json " + json);
+            ipInfo = JsonUtility.FromJson<IpInfo>(json);
+            UserData.FlagLink = string.Format(Config.FLAG_API, ipInfo.country);
+        }
+    }
 
     public static string StartAction(UnityAction action)
     {

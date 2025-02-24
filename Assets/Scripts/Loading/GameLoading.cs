@@ -49,7 +49,7 @@ public class GameLoading : MonoBehaviour
         }
         else
         {
-            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.HomeScene, LoadSceneMode.Additive);
         }
 
         StartCoroutine(SlowTransititon());
