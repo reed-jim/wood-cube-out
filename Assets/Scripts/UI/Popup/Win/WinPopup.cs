@@ -58,6 +58,11 @@ public class WinPopup : BasePopup
 
         coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
+
+        if (!_isCollectCoinRemoteConfig)
+        {
+            continueButton.GetComponent<RectTransform>().localPosition += new Vector3(0, 80, 0);
+        }
     }
 
     protected override void UnregisterMoreEvent()
@@ -212,7 +217,7 @@ public class WinPopup : BasePopup
 
         if (isFirstWinLevel)
         {
-            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, levelBoosterObserver);
+            SaferioTracking.TrackLevelFirstWin(currentLevel.Value, GamePersistentVariable.levelPrefab, levelBoosterObserver);
 
             DataUtility.SaveAsync($"{GameConstants.IS_FIRST_WIN_LEVEL}_{currentLevel.Value}", false);
         }

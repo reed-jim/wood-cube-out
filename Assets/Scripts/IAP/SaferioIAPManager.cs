@@ -145,17 +145,9 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             // On Apple stores, receipts contain multiple products.
             var result = validator.Validate(e.purchasedProduct.receipt);
             // For informational purposes, we list the receipt(s)
-            Debug.Log("Receipt is valid. Contents:");
-            foreach (IPurchaseReceipt productReceipt in result)
-            {
-                Debug.Log(productReceipt.productID);
-                Debug.Log(productReceipt.purchaseDate);
-                Debug.Log(productReceipt.transactionID);
-            }
         }
         catch (IAPSecurityException)
         {
-            Debug.Log("Invalid receipt, not unlocking content");
             validPurchase = false;
         }
 #endif
