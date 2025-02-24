@@ -113,13 +113,13 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             if (meshCollider.convex)
             {
                 minJointToDisableKinematic = 1;
+
+                meshCollider.isTrigger = false;
             }
             else
             {
                 minJointToDisableKinematic = 0;
             }
-
-            meshCollider.isTrigger = false;
         }
 
         // BETTER FEELING

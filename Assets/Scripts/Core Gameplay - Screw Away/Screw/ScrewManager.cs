@@ -90,6 +90,11 @@ public class ScrewManager : MonoBehaviour
         // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
+        _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier =
+            RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
+
+        _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier = -80;
+
         _totalScrewBoxesSpawned = 0;
         _remainingSpawnScrewBoxCommands = 0;
         _isHandlingSpawningScrewBox = false;
