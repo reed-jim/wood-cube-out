@@ -31,6 +31,22 @@ public static class CommonUtil
         }
     }
 
+    public static void StopAllSequences(List<Sequence> tweens)
+    {
+        if (tweens == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < tweens.Count; i++)
+        {
+            if (tweens[i].isAlive)
+            {
+                tweens[i].Stop();
+            }
+        }
+    }
+
     public static void OnHitColorEffect(
         Renderer meshRenderer,
         MaterialPropertyBlock materialPropertyBlock,
