@@ -24,6 +24,10 @@ public class LosePopup : BasePopup
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionDuration;
 
+    #region PRIVATE FIELD
+    private bool _isAllowedSkipLevel;
+    #endregion
+
     public static event Action replayLevelEvent;
     public static event Action skipLevelEvent;
 
@@ -32,14 +36,15 @@ public class LosePopup : BasePopup
         // GameStateLose.loseLevelEvent += OnLevelLose;
         GameStateLose.loseLevelEvent += OnLevelLose;
         RevivePopup.reviveRefusedEvent += OnLevelLose;
+        GameplayScreen.skipLevelEvent += SkipLevel;
 
         replayButton.onClick.AddListener(Replay);
         skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
 
-        bool isShowSkipLevelButton = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
+        _isAllowedSkipLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
 
-        if (!isShowSkipLevelButton)
+        if (!_isAllowedSkipLevel)
         {
             skipLevelButton.gameObject.SetActive(false);
         }
@@ -50,8 +55,8 @@ public class LosePopup : BasePopup
         // GameStateLose.loseLevelEvent -= OnLevelLose;
         GameStateLose.loseLevelEvent -= OnLevelLose;
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
+        GameplayScreen.skipLevelEvent -= SkipLevel;
     }
-
 
     private void OnApplicationQuit()
     {
@@ -108,9 +113,18 @@ public class LosePopup : BasePopup
             DataUtility.Save($"Time Lose Level {currentLevel.Value}", timeLoseLevel);
         }
 
+        GamePersistentVariable.isAllowedSkipLevel = false;
+
+        if (!_isAllowedSkipLevel)
+        {
+            return;
+        }
+
         if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
         {
             skipLevelButton.gameObject.SetActive(true);
+
+            GamePersistentVariable.isAllowedSkipLevel = true;
         }
         else
         {

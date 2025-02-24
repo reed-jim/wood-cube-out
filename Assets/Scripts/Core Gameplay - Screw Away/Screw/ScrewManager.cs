@@ -38,6 +38,10 @@ public class ScrewManager : MonoBehaviour
     private bool _isHandlingOutsideScrews;
     #endregion
 
+    #region REMOTE CONFIG
+    private bool _isReducedDifficultyAfterRewardedAds;
+    #endregion
+
     #region EVENT
     public static event Action<GameFaction> spawnScrewBoxEvent;
     public static event Action spawnAdsScrewBoxesEvent;
@@ -64,6 +68,8 @@ public class ScrewManager : MonoBehaviour
 
         // StartCoroutine(QueueSpawningScrewBoxes());
         StartCoroutine(HandlingOutsideScrews());
+
+        _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
     }
 
     void OnDestroy()
@@ -92,8 +98,6 @@ public class ScrewManager : MonoBehaviour
 
         _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier =
             RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
-
-        _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier = -80;
 
         _totalScrewBoxesSpawned = 0;
         _remainingSpawnScrewBoxCommands = 0;
@@ -189,9 +193,16 @@ public class ScrewManager : MonoBehaviour
         // Find the number of obstacles for each screw in each faction.
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsDone || _screws[i].IsLocked)
+            if (_screws[i].IsInScrewPort)
             {
-                continue;
+
+            }
+            else
+            {
+                if (_screws[i].IsDone || _screws[i].IsLocked)
+                {
+                    continue;
+                }
             }
 
             GameFaction faction = _screws[i].Faction;
@@ -308,7 +319,9 @@ public class ScrewManager : MonoBehaviour
         {
             if (screwBoxManager.ScrewPorts[i].IsFilled)
             {
-                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] += _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
+                // override old value
+                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] =
+                    _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
             }
         }
 
@@ -529,9 +542,12 @@ public class ScrewManager : MonoBehaviour
         difficultyLevel = Mathf.Max(difficultyLevel, 0);
 
         // DIFFICULTY REDUCED AFTER REWARDED ADS
-        if (GamePersistentVariable.numScrewBoxUnlocked >= 1)
+        if (_isReducedDifficultyAfterRewardedAds)
         {
-            difficultyLevel = 0;
+            if (GamePersistentVariable.numScrewBoxUnlocked >= 1)
+            {
+                difficultyLevel = 0;
+            }
         }
 
         // // SIMPLE ALGORITHM FOR DIFFICULTY BASED ON PROGRESS
@@ -554,13 +570,13 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
-        // Debug.Log("---------------------------------------");
+        // Debug.Log("SAFERIO ---------------------------------------");
 
         // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
         // {
         //     GameFaction faction = factionSortedByDifficulty[i];
 
-        //     string debugString = $"{faction} Remaining: {remainingScrewByFaction[faction]}";
+        //     string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
 
         //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
         //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";

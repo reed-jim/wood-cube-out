@@ -9,6 +9,7 @@ using static GameEnum;
 public class GameplayScreen : MonoBehaviour
 {
     [SerializeField] private Button pauseButton;
+    [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
@@ -21,14 +22,17 @@ public class GameplayScreen : MonoBehaviour
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
+    public static event Action skipLevelEvent;
 
     void Awake()
     {
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
+        LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
+        skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         debugNextLevelButton.onClick.AddListener(NextLevel);
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
@@ -37,11 +41,14 @@ public class GameplayScreen : MonoBehaviour
         {
             openDebugPopupButton.gameObject.SetActive(false);
         }
+
+        skipLevelButton.gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
+        LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
@@ -68,6 +75,25 @@ public class GameplayScreen : MonoBehaviour
     private void PrevLevel()
     {
         prevLevelEvent?.Invoke();
+    }
+
+    private void SkipLevel()
+    {
+        skipLevelEvent?.Invoke();
+
+        GamePersistentVariable.isAllowedSkipLevel = false;
+    }
+
+    private void OnLevelStarted()
+    {
+        if (GamePersistentVariable.isAllowedSkipLevel)
+        {
+            skipLevelButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            skipLevelButton.gameObject.SetActive(false);
+        }
     }
 
     private void OnLevelTextTranslated()

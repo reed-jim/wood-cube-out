@@ -176,10 +176,10 @@ public class ScrewBox : MonoBehaviour
 
         isLocked = false;
 
+        GamePersistentVariable.numScrewBoxUnlocked++;
+
         setFactionForScrewBoxEvent?.Invoke(this);
         screwBoxUnlockedEvent?.Invoke(this);
-
-        GamePersistentVariable.numScrewBoxUnlocked++;
     }
 
     private void Unlock(int instanceId)
