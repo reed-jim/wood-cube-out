@@ -12,6 +12,7 @@ using AppsFlyerSDK;
 public class AdmobAdsMax : MonoBehaviour
 {
     #region SAFERIO
+    private int _loadBannerRetryTime;
     private bool _isBannerLoaded;
     #endregion
 
@@ -72,7 +73,10 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnSceneSwitched(Scene scene, LoadSceneMode loadSceneMode)
     {
-        RefreshAdmobBanner();
+        _loadBannerRetryTime = 0;
+        _isBannerLoaded = false;
+
+        // RefreshAdmobBanner();
     }
 
     void Awake()
@@ -534,7 +538,9 @@ public class AdmobAdsMax : MonoBehaviour
         //RefeshCloseAds();
         Invoke("RefeshCloseAds", 1);
 
-        AdsDurationObserver.duration += Time.time - AdsDurationObserver.startTime;
+        TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
+
+        AdsDurationObserver.duration += adDuration.TotalSeconds;
 
         //if (GamePlayControl.Instance != null)
         //{
@@ -548,8 +554,6 @@ public class AdmobAdsMax : MonoBehaviour
         // Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
-
-        AdsDurationObserver.startTime = Time.time;
     }
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
@@ -642,7 +646,11 @@ public class AdmobAdsMax : MonoBehaviour
             {
                 actionInterstitialClose = actionIniterClose;
                 IsCooldownAdmobBanner = false;
+
+                AdsDurationObserver.startTime = DateTime.Now;
+
                 MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+
                 countdownAds = 0;
                 GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 
@@ -722,8 +730,6 @@ public class AdmobAdsMax : MonoBehaviour
     {
         // Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
-
-        AdsDurationObserver.startTime = Time.time;
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -750,9 +756,9 @@ public class AdmobAdsMax : MonoBehaviour
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
 
-        AdsDurationObserver.duration += Time.time - AdsDurationObserver.startTime;
+        TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
 
-        Debug.Log("SAFERIO " + AdsDurationObserver.duration);
+        AdsDurationObserver.duration += adDuration.TotalSeconds;
     }
 
     bool isVideoDone;
@@ -824,7 +830,10 @@ public class AdmobAdsMax : MonoBehaviour
             this._actionClose = actionClose;
             this._actionRewardVideo = actionReward;
 
+            AdsDurationObserver.startTime = DateTime.Now;
+
             MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
+
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                 UserData.CurrentLevel.ToString());
             GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
@@ -840,7 +849,7 @@ public class AdmobAdsMax : MonoBehaviour
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                     UserData.CurrentLevel.ToString());
-                // Debug.Log("ShowInterstitial !!!");
+
                 countdownAds = 0;
                 try
                 {
@@ -1102,7 +1111,12 @@ public class AdmobAdsMax : MonoBehaviour
                         RefreshAdmobBanner();
                         _cooldownAdmobBannerTimer = 30;
 
-                        _isBannerLoaded = true;
+                        _loadBannerRetryTime++;
+
+                        if (_loadBannerRetryTime >= 2)
+                        {
+                            _isBannerLoaded = true;
+                        }
                     }
                 }
             }
