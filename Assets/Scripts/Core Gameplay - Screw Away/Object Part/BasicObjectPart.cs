@@ -84,9 +84,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         partRigidbody.mass = 100;
 
         // REMOTE CONFIG ENABLE JOINT
-        bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_JOINT, false);
-
-        isEnableJoint = true;
+        bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_ENABLE_HINGE_JOINT, true);
 
         if (!isEnableJoint)
         {
