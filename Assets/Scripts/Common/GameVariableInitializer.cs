@@ -46,6 +46,7 @@ public class GameVariableInitializer : MonoBehaviour
         canvasScale.Value = canvas.localScale;
 
         GamePersistentVariable.canvasScale = canvasScale.Value;
+        GamePersistentVariable.canvasSizeAfterCanvasScaler = canvas.sizeDelta;
 
         currentLevelFetchedEvent?.Invoke();
     }

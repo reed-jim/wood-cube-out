@@ -51,8 +51,8 @@ public class SwipingScreen : MonoBehaviour
 
     private void SetupUI()
     {
-        iapShopScreen.SetInitialPosition(new Vector3(-GamePersistentVariable.canvasSize.x, 0, 0));
-        leaderboardScreen.SetInitialPosition(new Vector3(GamePersistentVariable.canvasSize.x, 0, 0));
+        iapShopScreen.SetInitialPosition(new Vector3(-GamePersistentVariable.canvasSizeAfterCanvasScaler.x, 0, 0));
+        leaderboardScreen.SetInitialPosition(new Vector3(GamePersistentVariable.canvasSizeAfterCanvasScaler.x, 0, 0));
     }
 
     private void OnSwipe(Vector2 direction)
@@ -62,7 +62,7 @@ public class SwipingScreen : MonoBehaviour
             return;
         }
 
-        if (Mathf.Abs(container.localPosition.x + direction.x) <= 0.5f * screenNumber * GamePersistentVariable.canvasSize.x)
+        if (Mathf.Abs(container.localPosition.x + direction.x) <= 0.5f * screenNumber * GamePersistentVariable.canvasSizeAfterCanvasScaler.x)
         {
             container.localPosition += new Vector3(direction.x, 0, 0);
         }
@@ -75,9 +75,9 @@ public class SwipingScreen : MonoBehaviour
             return;
         }
 
-        float ratio = (container.localPosition.x % GamePersistentVariable.canvasSize.x) / GamePersistentVariable.canvasSize.x;
+        float ratio = (container.localPosition.x % GamePersistentVariable.canvasSizeAfterCanvasScaler.x) / GamePersistentVariable.canvasSizeAfterCanvasScaler.x;
 
-        int factor = (int)(container.localPosition.x / GamePersistentVariable.canvasSize.x);
+        int factor = (int)(container.localPosition.x / GamePersistentVariable.canvasSizeAfterCanvasScaler.x);
 
         if (Mathf.Abs(ratio) >= 0.5f)
         {
@@ -92,7 +92,7 @@ public class SwipingScreen : MonoBehaviour
         }
 
         Tween.StopAll(container);
-        Tween.LocalPositionX(container, factor * GamePersistentVariable.canvasSize.x, duration: 0.3f)
+        Tween.LocalPositionX(container, factor * GamePersistentVariable.canvasSizeAfterCanvasScaler.x, duration: 0.3f)
         .OnComplete(() =>
         {
             hideOutsideScreenEvent?.Invoke(container.localPosition.x);
