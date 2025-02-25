@@ -82,7 +82,7 @@ public class BasicScrew : BaseScrew
 
             // avoid loose screw that is covering by other objects
             bool isNotVisible = Physics.Raycast(
-                transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 10);
+                transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
 
             if (isNotVisible)
             {

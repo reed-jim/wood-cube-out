@@ -308,8 +308,8 @@ public class BoosterUI : MonoBehaviour
 
         SaferioTracking.TrackBoosterUsage(boosterType);
         SaferioTracking.TrackResourceSink(
-                    currentLevel.Value, boosterType.ToString(),
-                    1, (int)userResourcesObserver.UserResources.CoinQuantity, $"Consume_Booster_{boosterType}");
+            currentLevel.Value, boosterType.ToString(),
+            1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
     }
 
     private void UseBreakObjectBooster()
