@@ -31,6 +31,7 @@ public class SceneTransition : MonoBehaviour
 
     private Vector2 _canvasSize;
     private List<Tween> _tweens;
+    private bool _isFirstTimeOpenApp;
     private bool _isFirstTimeEnterScene;
     private bool _isLevelLoaded;
     private Coroutine _waitForLevelLoadedCoroutine;
@@ -49,8 +50,9 @@ public class SceneTransition : MonoBehaviour
         progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
+        _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
 
-        if (!DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        if (!_isFirstTimeOpenApp)
         {
             // BlackScreenTransition();
         }
@@ -77,12 +79,12 @@ public class SceneTransition : MonoBehaviour
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     _isFirstTimeEnterScene = false;
+        if (_isFirstTimeOpenApp)
+        {
+            _isFirstTimeOpenApp = false;
 
-        //     return;
-        // }
+            return;
+        }
 
         blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
 
