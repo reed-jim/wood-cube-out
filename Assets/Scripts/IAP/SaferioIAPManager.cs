@@ -11,6 +11,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     [SerializeField] private GooglePlayStoreProduct[] googlePlayStoreProducts;
     [SerializeField] private IAPDataContainer IAPDataContainer;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
+    [SerializeField] private IntVariable currentLevel;
 
     [SerializeField] private string removeAdsProductId;
 
@@ -184,6 +185,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                     };
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
+                        SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
 
                         showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
 

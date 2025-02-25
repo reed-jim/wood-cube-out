@@ -4,7 +4,7 @@ using static GameEnum;
 
 public static class SaferioTracking
 {
-    public static void TrackLevelFirstWin(int level, int levelPrefab,  LevelBoosterObserver levelBoosterObserver)
+    public static void TrackLevelFirstWin(int level, int levelPrefab, LevelBoosterObserver levelBoosterObserver)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
@@ -221,6 +221,22 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("level_end", parameters);
+#endif
+    }
+
+    public static void TrackIAPEventCostCenter(int level, double value, string currency, string productId)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("play_mode", "normal"),
+            new Parameter("level", level.ToString()),
+            new Parameter("value", value),
+            new Parameter("currency", currency),
+            new Parameter("product_id", productId)
+        };
+
+        FirebaseAnalytics.LogEvent("iap_sdk", parameters);
 #endif
     }
     #endregion

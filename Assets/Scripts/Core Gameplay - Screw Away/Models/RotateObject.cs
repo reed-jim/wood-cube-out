@@ -92,7 +92,7 @@ public class RotateObject : MonoBehaviour
         float timePerCycle = 0.3f;
 
         WaitForSeconds waitForSeconds = new WaitForSeconds(timePerCycle);
-
+        
         while (true)
         {
             if (_isAutoRotating)
@@ -100,7 +100,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.01f;
+                    _yaw = 0.011f;
                     // _yaw = -normalizedDirection.x;
                 }
             }
