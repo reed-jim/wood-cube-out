@@ -525,6 +525,14 @@ public class HingeJointGenerator : EditorWindow
                 break;
             }
 
+            // Check DUPLICATE components
+            BasicObjectPart[] basicObjectParts = objectParts[i].GetComponents<BasicObjectPart>();
+
+            if (basicObjectParts.Length > 1)
+            {
+                break;
+            }
+
             int numHingeJointInObjectPart = hingeJoints.Length;
 
             numHingeJoint += numHingeJointInObjectPart;

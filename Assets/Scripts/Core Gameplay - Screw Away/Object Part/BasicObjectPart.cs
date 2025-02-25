@@ -65,10 +65,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             attachedScrews[i] = transform.GetChild(i).GetComponent<BaseScrew>();
         }
 
-        // if (_totalJoint > 1)
-        // {
-        //     partRigidbody.isKinematic = true;
-        // }
+
+
 
         partRigidbody.isKinematic = true;
 
