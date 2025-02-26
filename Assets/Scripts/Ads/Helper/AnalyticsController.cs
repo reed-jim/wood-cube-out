@@ -591,30 +591,30 @@ public class AnalyticsController : MonoBehaviour
         }
     }
 
-    public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
-    {
-        AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
-    }
-    public static void LogAdRevenueAppsflyer(MaxSdk.AdInfo impressionData)
-    {
-        Dictionary<string, string> afParams = new Dictionary<string, string>
-        {
-            { "ad_unit_name", impressionData.AdUnitIdentifier },
-            { "ad_format", impressionData.AdFormat }
-        };
+    // public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
+    // {
+    //     AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
+    // }
+    // public static void LogAdRevenueAppsflyer(MaxSdk.AdInfo impressionData)
+    // {
+    //     Dictionary<string, string> afParams = new Dictionary<string, string>
+    //     {
+    //         { "ad_unit_name", impressionData.AdUnitIdentifier },
+    //         { "ad_format", impressionData.AdFormat }
+    //     };
 
-        AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
-    }
-    public static void LogAdMaxRevenueAppsflyer(MaxSdk.AdInfo impressionData)
-    {
-        Dictionary<string, string> afParams = new Dictionary<string, string>
-        {
-            { "ad_unit_name", impressionData.AdUnitIdentifier },
-            { "ad_format", impressionData.AdFormat }
-        };
+    //     AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
+    // }
+    // public static void LogAdMaxRevenueAppsflyer(MaxSdk.AdInfo impressionData)
+    // {
+    //     Dictionary<string, string> afParams = new Dictionary<string, string>
+    //     {
+    //         { "ad_unit_name", impressionData.AdUnitIdentifier },
+    //         { "ad_format", impressionData.AdFormat }
+    //     };
 
-        AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
-    }
+    //     AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
+    // }
     //public static void LogAdRevenueAppsflyer(IronSourceImpressionData impressionData)
     //{
     //    Dictionary<string, string> afParams = new Dictionary<string, string>

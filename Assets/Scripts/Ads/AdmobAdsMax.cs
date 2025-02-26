@@ -34,13 +34,13 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "948e190d8c5cd11d";
     private const string RewardedAdUnitId = "34ea7232532db3db";
     private const string BanerAdUnitId = "efc1069b84f4656f";
-    // #elif UNITY_IOS
-    //     private const string MaxSdkKey =
-    // "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
-    //     private const string InterstitialAdUnitId = "e62bc78796e8e537";
-    //     private const string RewardedAdUnitId = "1ef401adad30de04";
-    //     private const string BanerAdUnitId = "faa58304689e5d2b";
-    // #endif
+    #elif UNITY_IOS
+        private const string MaxSdkKey =
+    "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
+        private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
+        private const string RewardedAdUnitId = "5a5d29ce1c57f419";
+        private const string BanerAdUnitId = "515e33c5e1389ee4";
+    #endif
     // #if UNITY_ANDROID
     //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
     //     private string _adUnitIdMedium = "ca-app-pub-8467610367562059/2324932310";
@@ -50,9 +50,9 @@ public class AdmobAdsMax : MonoBehaviour
     //     private string _adUnitIdMedium = "ca-app-pub-3940256099942544/6978759866";
     //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/4180939469";
     private string REWARD_INTER_ID = "test";
-#else
-  private string _adUnitId = "unused";
-#endif
+// #else
+//   private string _adUnitId = "unused";
+// #endif
     private RewardedInterstitialAd rewardedInterstitialAd;
     public float countdownAds;
     bool isShowingAds;
@@ -177,17 +177,17 @@ public class AdmobAdsMax : MonoBehaviour
     // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845";
 #endif
-    // #elif UNITY_IOS
-    // #if TESTER
-    //     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
-    // #else
-    //     private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
-    // #endif
-    // #if TESTER
-    //     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
-    // #else
-    //     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
-    // #endif
+    #elif UNITY_IOS
+    #if TESTER
+        private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
+    #else
+        private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/4521130713";
+    #endif
+    #if TESTER
+        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
+    #else
+        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/7255105261";
+    #endif
 #endif
     private bool _isShowAdmobBanner;
     private bool _isShowAdmobCollap;
