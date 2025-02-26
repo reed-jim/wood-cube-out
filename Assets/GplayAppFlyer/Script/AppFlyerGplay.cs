@@ -32,15 +32,14 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
 
     public void Start()
     {
-        AppsFlyerAdRevenue.setIsDebug(isDebug);
+        // AppsFlyerAdRevenue.setIsDebug(isDebug);
+
         AppsFlyer.setIsDebug(isDebug);
         AppsFlyer.initSDK(devKey, appId, getConversionData ? this : null);
 #if UNITY_IOS && !UNITY_EDITOR
         AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
 #endif
-        AppsFlyerAdRevenue.start();
         AppsFlyer.startSDK();
-        Debug.Log("Start AppFlyer");
     }
 
     // Mark AppsFlyer CallBacks
@@ -86,7 +85,7 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
         additionalParams.Add(AdRevenueScheme.PLACEMENT, placement);
 
         var logRevenue = new AFAdRevenueData("monetizationNetworkEx", Parser(), currency, value);
-        
+
         AppsFlyer.logAdRevenue(logRevenue, additionalParams);
 
         // Dictionary<string, string> addParams = new Dictionary<string, string>()

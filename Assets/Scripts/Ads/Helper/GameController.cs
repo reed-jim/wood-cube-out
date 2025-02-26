@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
-#if UNITY_IOS
-using Unity.Advertisement.IosSupport;
-#endif
+// #if UNITY_IOS
+// using Unity.Advertisement.IosSupport;
+// #endif
 
 public class GameController : MonoBehaviour
 {

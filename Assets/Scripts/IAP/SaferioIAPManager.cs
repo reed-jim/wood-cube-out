@@ -119,6 +119,23 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         this.controller = controller;
         this.extensions = extensions;
 
+
+        // Restore transactions
+        extensions.GetExtension<IAppleExtensions>().RestoreTransactions((result, error) =>
+        {
+            if (result)
+            {
+                // This does not mean anything was restored,
+                // merely that the restoration process succeeded.
+            }
+            else
+            {
+                // Restoration failed. `error` contains the failure reason.
+            }
+        });
+
+
+
         FetchLocalizedPrice();
 
         CheckRestoredRemoveAds();
