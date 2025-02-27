@@ -28,13 +28,13 @@ namespace GplayAppFlyer.Editor
             rootDict.SetString("NSAdvertisingAttributionReportEndpoint", "https://appsflyer-skadnetwork.com/");
             File.WriteAllText(plistPath, plist.WriteToString());
             
-            // Framework
-            var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
-            var project = new PBXProject();
-            project.ReadFromFile(projectPath);
-            var targetName = project.GetUnityFrameworkTargetGuid(); // note, not "project." ...
-            var targetGUID = project.TargetGuidByName(targetName);
-            project.AddFrameworkToProject(targetGUID, "AppTrackingTransparency.framework", true);
+            // // Framework
+            // var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
+            // var project = new PBXProject();
+            // project.ReadFromFile(projectPath);
+            // var targetName = project.GetUnityFrameworkTargetGuid(); // note, not "project." ...
+            // var targetGUID = project.TargetGuidByName(targetName);
+            // project.AddFrameworkToProject(targetGUID, "AppTrackingTransparency.framework", true);
         }
     }
 }
