@@ -154,4 +154,9 @@ public static class GameConstants
     #region SWIPE
     public static int TYPICAL_FRAME_MILISECOND = 13;
     #endregion
+
+    #region DAILY REWARD
+    public static string LAST_DAY_CLAIM_DAILY_REWARD = "LAST_DAY_CLAIM_DAILY_REWARD";
+    public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
+    #endregion
 }
