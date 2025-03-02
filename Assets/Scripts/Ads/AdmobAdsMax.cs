@@ -635,6 +635,9 @@ public class AdmobAdsMax : MonoBehaviour
 
                 actionInterstitialClose = actionIniterClose;
                 IsCooldownAdmobBanner = false;
+                
+                AdsDurationObserver.startTime = DateTime.Now;
+
                 MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
                 countdownAds = 0;
                 GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
