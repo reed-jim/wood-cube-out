@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class SaferioSceneOpener : EditorWindow
 {
+    [MenuItem("Tools/Open Scene/Bootstrap")]
+    public static void OpenBootstrapScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/Bootstrap.unity");
+    }
+
     [MenuItem("Tools/Open Scene/Loading")]
     public static void OpenLoadingScene()
     {
