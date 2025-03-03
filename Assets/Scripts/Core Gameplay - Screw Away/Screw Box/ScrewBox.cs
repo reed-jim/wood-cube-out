@@ -94,11 +94,11 @@ public class ScrewBox : MonoBehaviour
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
-        float scaleWithWidth = (0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
-        float scaleWithHeight = (0.113811f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
+        float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
+        float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
 
-        scaleWithWidth *= 1.25f;
-        scaleWithHeight *= 1.25f;
+        // scaleWithWidth *= 1.25f;
+        // scaleWithHeight *= 1.25f;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 

@@ -23,8 +23,6 @@ public class GameController : MonoBehaviour
     }
     public void Init()
     {
-        Application.targetFrameRate = 60;
-
         UserData.CurrentLevelPlay = UserData.CurrentLevel;
 
         //notificationController.Initialize();
