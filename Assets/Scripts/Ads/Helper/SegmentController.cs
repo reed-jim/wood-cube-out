@@ -82,16 +82,17 @@ public class SegmentData
     public void Init(SegmentData dataDefault, int idSegment)
     {
         SegmentController.CurrentSegment = RemoteConfigController.GetIntConfig("current_segment", 0);
-        coreGameData.InitSegemnt(dataDefault, idSegment);
-        reviveData.InitSegemnt(dataDefault, idSegment);
+
+        // coreGameData.InitSegemnt(dataDefault, idSegment);
+        // reviveData.InitSegemnt(dataDefault, idSegment);
         adsData.InitSegemnt(dataDefault, idSegment);
-        saleData.InitSegemnt(dataDefault, idSegment);
-        saleVideoData.InitSegemnt(dataDefault, idSegment);
-        challengeData.InitSegemnt(dataDefault, idSegment);
-        skillUserData.InitSegemnt(dataDefault, idSegment);
-        notificationData.InitSegemnt(dataDefault, idSegment);
-        suggetBuyerInGameSegmentData.InitSegemnt(dataDefault, idSegment);
-        suggetBuyItemSegmentData.InitSegemnt(dataDefault, idSegment);
+        // saleData.InitSegemnt(dataDefault, idSegment);
+        // saleVideoData.InitSegemnt(dataDefault, idSegment);
+        // challengeData.InitSegemnt(dataDefault, idSegment);
+        // skillUserData.InitSegemnt(dataDefault, idSegment);
+        // notificationData.InitSegemnt(dataDefault, idSegment);
+        // suggetBuyerInGameSegmentData.InitSegemnt(dataDefault, idSegment);
+        // suggetBuyItemSegmentData.InitSegemnt(dataDefault, idSegment);
     }
 
     public void ToJsonConfig()

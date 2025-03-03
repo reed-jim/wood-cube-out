@@ -738,7 +738,7 @@ MonoBehaviour:
   m_Version: 2
   m_TaaSettings:
     m_Quality: 3
-    m_FrameInfluence: 0.1
+    m_FrameInfluence: 0.100000024
     m_JitterScale: 1
     m_MipBias: 0
     m_VarianceClampScale: 0.9
@@ -791,6 +791,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2835213765105283550, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: looseScrewFxPrefab
+      value: 
+      objectReference: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
@@ -999,7 +1003,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 2
+  m_SortingOrder: 3
   m_TargetDisplay: 0
 --- !u!222 &2459147085056684688
 CanvasRenderer:

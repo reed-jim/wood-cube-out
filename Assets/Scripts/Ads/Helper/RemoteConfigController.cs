@@ -116,8 +116,6 @@ public class RemoteConfigController : MonoBehaviour
             }
             else
             {
-                UnityEngine.Debug.LogError(System.String.Format(
-                  "Could not resolve all Firebase dependencies: {0}", dependencyStatus));
                 // Firebase Unity SDK is not safe to use here.
             }
         });
@@ -178,7 +176,6 @@ public class RemoteConfigController : MonoBehaviour
         }
     }
 
-
     public static int GetIntConfig(string key, int defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
@@ -196,7 +193,6 @@ public class RemoteConfigController : MonoBehaviour
     public static bool GetJsonConfig<T>(string key, out T result, bool debug = false)
     {
         string input;
-
 
         if (!firebaseRemoteKeys.Contains(key) ||
             string.IsNullOrEmpty(input = Instance._remoteConfig.GetValue(key).StringValue))

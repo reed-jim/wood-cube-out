@@ -35,8 +35,6 @@ public class GameVariableInitializer : MonoBehaviour
 
         GamePersistentVariable.canvasSize = canvas.sizeDelta;
 
-        // canvasSize.Save();
-
         currentLevel.Load();
         userResourcesObserver.Load();
 
