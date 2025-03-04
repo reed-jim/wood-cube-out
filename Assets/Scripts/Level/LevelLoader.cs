@@ -96,7 +96,24 @@ public class LevelLoader : MonoBehaviour
 
         setLevelNumberEvent?.Invoke();
 
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Level {nextLevel}");
+        string levelPrefab = $"Level {nextLevel}";
+
+        // A/B TEST LEVEL 4
+        if (nextLevel == 4)
+        {
+            int random = UnityEngine.Random.Range(0, 3);
+
+            if (random == 1)
+            {
+                levelPrefab = $"Level {nextLevel} - Variant 1";
+            }
+            else if (random == 2)
+            {
+                levelPrefab = $"Level {nextLevel} - Variant 2";
+            }
+        }
+
+        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
 
         handle.Completed += (op) =>
         {

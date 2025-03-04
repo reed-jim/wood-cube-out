@@ -18,6 +18,7 @@ public static class GameConstants
     public static string GET_IN_VEHICLE_SOUND = "Get In Vehicle Sound";
     public static string VEHICLE_MOVE_OUT_SOUND = "Vehicle Move Out Sound";
     public static string DESTROY_OBJECT_PART_FX = "Destroy Object Part Fx";
+    public static string LOOSE_SCREW_FX = "LOOSE_SCREW_FX";
     #endregion
 
     #region COMMON TEXT
@@ -153,5 +154,10 @@ public static class GameConstants
 
     #region SWIPE
     public static int TYPICAL_FRAME_MILISECOND = 13;
+    #endregion
+
+    #region DAILY REWARD
+    public static string LAST_DAY_CLAIM_DAILY_REWARD = "LAST_DAY_CLAIM_DAILY_REWARD";
+    public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
     #endregion
 }

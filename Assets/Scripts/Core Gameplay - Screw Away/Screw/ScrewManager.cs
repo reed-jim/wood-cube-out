@@ -310,7 +310,7 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 999;
+                difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 9999;
             }
         }
 
