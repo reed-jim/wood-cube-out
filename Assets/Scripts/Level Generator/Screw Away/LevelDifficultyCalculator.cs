@@ -426,7 +426,8 @@ public static class LevelDifficultyCalculatorUltility
             break;
         }
 
-        LevelDifficultyConfiguration levelDifficultyConfiguration = ScriptableObject.CreateInstance<LevelDifficultyConfiguration>();
+        LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
+        // LevelDifficultyConfiguration levelDifficultyConfiguration = ScriptableObject.CreateInstance<LevelDifficultyConfiguration>();
 
         levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
         levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;

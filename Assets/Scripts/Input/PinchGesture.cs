@@ -62,14 +62,14 @@ public class PinchGesture : MonoBehaviour
         if (!_isZoomByPinching)
         {
             enableSwipingEvent?.Invoke(false);
-
-            CommonUtil.StopAllTweens(_tweens);
-
-            _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
-            {
-                enableSwipingEvent?.Invoke(true);
-            }));
         }
+
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
+        {
+            enableSwipingEvent?.Invoke(true);
+        }));
 
         _lastZoomPercent = value;
     }
