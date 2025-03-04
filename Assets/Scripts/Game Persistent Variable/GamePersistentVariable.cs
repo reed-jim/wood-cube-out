@@ -19,4 +19,8 @@ public static class GamePersistentVariable
     #region SETTING
     public static bool IsVibrate;
     #endregion
+
+    #region FIREBASE
+    public static bool isFirebaseAvailable;
+    #endregion
 }
