@@ -352,8 +352,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 502db255a52d6c5459d5d64a05a0d0d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ironsourceController: {fileID: 7286113651586834027}
-  countdownAds: 0
 --- !u!1 &328507052888982425
 GameObject:
   m_ObjectHideFlags: 0
@@ -3231,7 +3229,7 @@ MonoBehaviour:
           minimumLevel: 0
         interstitials:
           minimumLevel: 3
-          minimumInterval: 90
+          minimumInterval: 10
           showAfterDefeat: 1
           showAfterQuit: 1
           showOnAppResume: 1
@@ -3385,7 +3383,8 @@ MonoBehaviour:
           Saturday: 1
           Sunday: 1
           salePercent: 50
-          parmaExtral: []
+          parmaExtral:
+          - 3
         dailyOfferPack:
           version: 0
           version_accept: 0
@@ -3409,6 +3408,7 @@ MonoBehaviour:
           Sunday: 0
           salePercent: 60
           parmaExtral:
+          - 3
           - 1
         itemSalePack:
           version: 0
@@ -3432,7 +3432,8 @@ MonoBehaviour:
           Saturday: 0
           Sunday: 0
           salePercent: 50
-          parmaExtral: []
+          parmaExtral:
+          - 3
         coinSalePack:
           version: 0
           version_accept: 0
@@ -3455,7 +3456,8 @@ MonoBehaviour:
           Saturday: 0
           Sunday: 0
           salePercent: 50
-          parmaExtral: []
+          parmaExtral:
+          - 3
         noelSalePack:
           version: 0
           version_accept: 0

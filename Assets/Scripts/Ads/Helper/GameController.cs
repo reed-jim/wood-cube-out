@@ -46,6 +46,7 @@ public class GameController : MonoBehaviour
         playerData = new PlayerData();
         useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
 
+        segmentController.Init();
         musicManager.Init();
         iapController.Init();
         packController.Init();

@@ -235,18 +235,18 @@ public class PlayerData : BaseData
         raceSpaceData = RaceSpaceSyncData.GetData();
         
         //MiniGame
-        ConnectBirdTurnBuy = UseProfile.ConnectBirdTurnBuy;
-        Version = UseProfile.Version;
-        PointConnectBirdMiniGame = UseProfile.PointConnectBirdMiniGame;
-        lsRewardConnectBirdMNGOfPlayer = UseProfile.lsRewardConnectBirdMNGOfPlayer;
-        WasCommpleteConnectBirdMiniGame = UseProfile.WasCommpleteConnectBirdMiniGame;
-        ConnectBirdTurnFree = UseProfile.ConnectBirdTurnFree;
-        LimitNumbWatchVideoInDay = UseProfile.LimitNumbWatchVideoInDay;
-        FirstOpenConnectBirdMNGame = UseProfile.FirstOpenConnectBirdMNGame;
-        FirstShowHand = UseProfile.FirstShowHand;
-        CurrentNumWatchVideoInDay = UseProfile.CurrentNumWatchVideoInDay;
-        DataToResetMiniGame = UseProfile.DataToResetMiniGame.ToBinary();
-        FirstWeek = UseProfile.FirstWeek;
+        // ConnectBirdTurnBuy = UseProfile.ConnectBirdTurnBuy;
+        // Version = UseProfile.Version;
+        // PointConnectBirdMiniGame = UseProfile.PointConnectBirdMiniGame;
+        // lsRewardConnectBirdMNGOfPlayer = UseProfile.lsRewardConnectBirdMNGOfPlayer;
+        // WasCommpleteConnectBirdMiniGame = UseProfile.WasCommpleteConnectBirdMiniGame;
+        // ConnectBirdTurnFree = UseProfile.ConnectBirdTurnFree;
+        // LimitNumbWatchVideoInDay = UseProfile.LimitNumbWatchVideoInDay;
+        // FirstOpenConnectBirdMNGame = UseProfile.FirstOpenConnectBirdMNGame;
+        // FirstShowHand = UseProfile.FirstShowHand;
+        // CurrentNumWatchVideoInDay = UseProfile.CurrentNumWatchVideoInDay;
+        // DataToResetMiniGame = UseProfile.DataToResetMiniGame.ToBinary();
+        // FirstWeek = UseProfile.FirstWeek;
 
         // salePack
         dailyBought = UseProfile.DailyBought;

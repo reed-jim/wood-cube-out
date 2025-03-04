@@ -34,7 +34,9 @@ public class SaleItemPackController : PackBaseController
             UseProfile.ItemSaleTimeEnd = newDayEndTime;
         }
 
-        return base.CheckActive() && segement.IsPackReady() && UseProfile.ItemBought < segement.parmaExtral[0];
+        if (segement.parmaExtral.Length > 0)
+            return base.CheckActive() && segement.IsPackReady() && UseProfile.ItemBought < segement.parmaExtral[0];
+        else return base.CheckActive() && segement.IsPackReady();
     }
 
     public override bool IsCanShowSugget()
@@ -52,7 +54,7 @@ public class SaleItemPackController : PackBaseController
         if (UseProfile.CurrentLevel < segement.level_unlock)
             return false;
 
-        if (UseProfile.ItemBought < segement.parmaExtral[0] &&TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
+        if (/*UseProfile.ItemBought < segement.parmaExtral[0] &&*/TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
         {
             return true;
         }
