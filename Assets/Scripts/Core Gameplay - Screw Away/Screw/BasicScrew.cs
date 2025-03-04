@@ -235,7 +235,7 @@ public class BasicScrew : BaseScrew
                         continue;
                     }
 
-                    Vector3 hitPos = hits[i].ClosestPoint(pointOne);
+                    Vector3 hitPos;
 
                     // Concave
                     if (objectPart.IsConcave)
@@ -256,6 +256,10 @@ public class BasicScrew : BaseScrew
                         {
                             continue;
                         }
+                    }
+                    else
+                    {
+                        hitPos = hits[i].ClosestPoint(pointOne);
                     }
 
                     // Perpendicular distance

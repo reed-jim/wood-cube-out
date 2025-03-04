@@ -227,6 +227,19 @@ public class BaseScrew : MonoBehaviour, IScrew
         // // FOR ROTATING
         // await Task.Delay(100);
 
+        // LOOSE FX
+        if (!_isInScrewPort)
+        {
+            ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+
+            looseScrewFx.gameObject.SetActive(true);
+
+            looseScrewFx.transform.position = transform.position + 1.2f * screwSize.z * transform.forward;
+
+            looseScrewFx.Play();
+        }
+        //
+
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             // _isRotating = false;

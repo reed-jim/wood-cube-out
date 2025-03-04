@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,11 +27,13 @@ public class GameVariableInitializer : MonoBehaviour
     {
         ScriptableObjectInitializer.getCachedCanvasSizeEvent += GetCachedCanvasSize;
 
+        PrimeTweenConfig.warnTweenOnDisabledTarget = false;
+        PrimeTweenConfig.warnEndValueEqualsCurrent = false;
+        PrimeTweenConfig.warnZeroDuration = false;
+
         canvasSize.Value = canvas.sizeDelta;
 
         GamePersistentVariable.canvasSize = canvas.sizeDelta;
-
-        // canvasSize.Save();
 
         currentLevel.Load();
         userResourcesObserver.Load();

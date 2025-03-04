@@ -7,10 +7,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [Header("CONTAINER")]
     [SerializeField] private Transform screwBoxContainer;
 
-    [SerializeField] private GameObject vehicleEngineSoundPrefab;
-    [SerializeField] private GameObject hitObstacleSoundPrefab;
-    [SerializeField] private GameObject getInVehicleSoundPrefab;
-    [SerializeField] private GameObject vehicleMoveOutSoundPrefab;
     [SerializeField] private GameObject screwBox;
     [SerializeField] private GameObject screwPortPrefab;
     [SerializeField] private GameObject fakeScrewPrefab;
@@ -27,6 +23,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject unlockAdsScrewBoxSoundPrefab;
     [SerializeField] private GameObject clearScrewPortsSoundPrefab;
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
+    [SerializeField] private GameObject looseScrewFxPrefab;
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
@@ -73,6 +70,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND, clearScrewPortsSoundPrefab, 3);
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
+        RegisterPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX, looseScrewFxPrefab, 5);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
