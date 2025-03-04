@@ -179,10 +179,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         }
 
                         int[] boosterQuantites = new int[3] {
-                        productData.AddHoleBoosterQuantity,
-                        productData.BreakObjectBoosterQuantity,
-                        productData.ClearHolesBoosterQuantity
-                    };
+                            productData.AddHoleBoosterQuantity,
+                            productData.BreakObjectBoosterQuantity,
+                            productData.ClearHolesBoosterQuantity
+                        };
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);

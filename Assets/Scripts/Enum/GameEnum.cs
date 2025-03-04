@@ -29,7 +29,9 @@ public class GameEnum : MonoBehaviour
         IAPShopPopup,
         NoInternet,
         Notification,
-        ResourcesEarn
+        ResourcesEarn,
+        LevelComingSoon,
+        BoosterSuggest
     }
 
     public enum GameFaction
