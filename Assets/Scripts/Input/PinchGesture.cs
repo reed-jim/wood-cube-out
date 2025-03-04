@@ -62,14 +62,14 @@ public class PinchGesture : MonoBehaviour
         if (!_isZoomByPinching)
         {
             enableSwipingEvent?.Invoke(false);
+
+            CommonUtil.StopAllTweens(_tweens);
+
+            _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
+            {
+                enableSwipingEvent?.Invoke(true);
+            }));
         }
-
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
-        {
-            enableSwipingEvent?.Invoke(true);
-        }));
 
         _lastZoomPercent = value;
     }
@@ -131,10 +131,10 @@ public class PinchGesture : MonoBehaviour
     private void OnLevelStarted()
     {
         _isDisabled = false;
-        
+
         zoomSlider.value = 0;
 
-        OnZoomSliderValueChanged(0);
+        // OnZoomSliderValueChanged(0);
 
         // pinchGestureEvent?.Invoke(maxZoom);
     }
