@@ -361,6 +361,7 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         _isTryLoadAdmobBanner = true;
+
         _bannerView.LoadAd(bannerHomeLoadRequest);
     }
 
