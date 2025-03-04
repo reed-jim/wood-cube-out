@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Firebase.RemoteConfig;
 using PrimeTween;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -101,13 +102,13 @@ public class LevelLoader : MonoBehaviour
         // A/B TEST LEVEL 4
         if (nextLevel == 4)
         {
-            int random = UnityEngine.Random.Range(0, 3);
+            int level4Variant = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_4_VARIANT, 0);
 
-            if (random == 1)
+            if (level4Variant == 1)
             {
                 levelPrefab = $"Level {nextLevel} - Variant 1";
             }
-            else if (random == 2)
+            else if (level4Variant == 2)
             {
                 levelPrefab = $"Level {nextLevel} - Variant 2";
             }

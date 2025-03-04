@@ -353,7 +353,13 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void RefreshAdmobBanner()
     {
-        // Debug.Log("refresh banner admob =====");
+        bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+
+        if (!remoteConfigIsShowBanner)
+        {
+            return;
+        }
+
         _isTryLoadAdmobBanner = true;
         _bannerView.LoadAd(bannerHomeLoadRequest);
     }
@@ -538,9 +544,13 @@ public class AdmobAdsMax : MonoBehaviour
         //RefeshCloseAds();
         Invoke("RefeshCloseAds", 1);
 
+        // Ad Duration
         TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
 
-        AdsDurationObserver.duration += adDuration.TotalSeconds;
+        if (adDuration.TotalSeconds < 1000)
+        {
+            AdsDurationObserver.duration += adDuration.TotalSeconds;
+        }
 
         //if (GamePlayControl.Instance != null)
         //{
@@ -635,7 +645,7 @@ public class AdmobAdsMax : MonoBehaviour
 
                 actionInterstitialClose = actionIniterClose;
                 IsCooldownAdmobBanner = false;
-                
+
                 AdsDurationObserver.startTime = DateTime.Now;
 
                 MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
@@ -758,9 +768,13 @@ public class AdmobAdsMax : MonoBehaviour
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
 
+        // Ad Duration
         TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
 
-        AdsDurationObserver.duration += adDuration.TotalSeconds;
+        if (adDuration.TotalSeconds < 1000)
+        {
+            AdsDurationObserver.duration += adDuration.TotalSeconds;
+        }
     }
 
     bool isVideoDone;
@@ -887,13 +901,6 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         if (SceneManager.GetActiveScene().name == GameConstants.LOADING_SCENE)
-        {
-            return;
-        }
-
-        bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
-
-        if (!remoteConfigIsShowBanner)
         {
             return;
         }

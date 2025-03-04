@@ -8,8 +8,6 @@ public class RotateObject : MonoBehaviour
 
     private float _pitch;
     private float _yaw;
-    private float _currentPitch;
-    private float _currentYaw;
     private Quaternion _targetRotation;
     private bool _isRotating;
     private int _rotateLerpStep;
@@ -32,7 +30,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.35f;
+        rotateSpeedMultiplier = 0.16f;
         _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
@@ -57,8 +55,6 @@ public class RotateObject : MonoBehaviour
 
             _rotateLerpStep = 0;
             _isRotating = true;
-
-            // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, _currentYaw, _currentPitch), 1 / 3f);
         }
         else
         {
@@ -76,11 +72,11 @@ public class RotateObject : MonoBehaviour
 
         if (_isRotating)
         {
-            transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 8f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
 
             _rotateLerpStep++;
 
-            if (_rotateLerpStep >= 8)
+            if (_rotateLerpStep >= 3)
             {
                 _rotateLerpStep = 0;
                 _isRotating = false;
@@ -107,9 +103,6 @@ public class RotateObject : MonoBehaviour
         _pitch = normalizedDirection.y;
         _yaw = -normalizedDirection.x;
 
-        _currentPitch += 8f * _pitch;
-        _currentYaw += 8f * _yaw;
-
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
 
@@ -131,7 +124,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.011f;
+                    _yaw = 0.018f;
                     // _yaw = -normalizedDirection.x;
                 }
             }

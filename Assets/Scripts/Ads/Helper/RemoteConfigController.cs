@@ -106,6 +106,7 @@ public class RemoteConfigController : MonoBehaviour
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(async task =>
         {
             var dependencyStatus = task.Result;
+
             if (dependencyStatus == Firebase.DependencyStatus.Available)
             {
                 var app = Firebase.FirebaseApp.DefaultInstance;
@@ -113,6 +114,8 @@ public class RemoteConfigController : MonoBehaviour
                 Firebase.Crashlytics.Crashlytics.ReportUncaughtExceptionsAsFatal = true;
 
                 FetchAsync();
+
+                GamePersistentVariable.isFirebaseAvailable = true;
             }
             else
             {
