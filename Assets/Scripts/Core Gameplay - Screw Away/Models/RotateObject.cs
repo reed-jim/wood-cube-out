@@ -8,6 +8,11 @@ public class RotateObject : MonoBehaviour
 
     private float _pitch;
     private float _yaw;
+    private float _currentPitch;
+    private float _currentYaw;
+    private Quaternion _targetRotation;
+    private bool _isRotating;
+    private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
 
@@ -27,7 +32,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.06f;
+        rotateSpeedMultiplier = 0.35f;
         _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
@@ -42,8 +47,18 @@ public class RotateObject : MonoBehaviour
     {
         if (Mathf.Abs(_pitch) > 0.01f || Mathf.Abs(_yaw) > 0.01f)
         {
+            Quaternion cachedRotation = transform.rotation;
+
             transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _acceleratedMultiplier * _pitch);
             transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _acceleratedMultiplier * _yaw);
+
+            _targetRotation = transform.rotation;
+            transform.rotation = cachedRotation;
+
+            _rotateLerpStep = 0;
+            _isRotating = true;
+
+            // transform.rotation = Quaternion.Lerp(transform.rotation, Quaternion.Euler(0, _currentYaw, _currentPitch), 1 / 3f);
         }
         else
         {
@@ -56,6 +71,19 @@ public class RotateObject : MonoBehaviour
                     _acceleratedMultiplier = 1;
                     _resetAccelerationTime = 0;
                 }
+            }
+        }
+
+        if (_isRotating)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 8f);
+
+            _rotateLerpStep++;
+
+            if (_rotateLerpStep >= 8)
+            {
+                _rotateLerpStep = 0;
+                _isRotating = false;
             }
         }
 
@@ -79,6 +107,9 @@ public class RotateObject : MonoBehaviour
         _pitch = normalizedDirection.y;
         _yaw = -normalizedDirection.x;
 
+        _currentPitch += 8f * _pitch;
+        _currentYaw += 8f * _yaw;
+
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
 
@@ -92,7 +123,7 @@ public class RotateObject : MonoBehaviour
         float timePerCycle = 0.3f;
 
         WaitForSeconds waitForSeconds = new WaitForSeconds(timePerCycle);
-        
+
         while (true)
         {
             if (_isAutoRotating)

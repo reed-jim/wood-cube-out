@@ -41,6 +41,11 @@ public class GameVariableInitializer : MonoBehaviour
         LoadGameSetting();
 
         _cachedCanvasSize = canvas.sizeDelta;
+
+        if (currentLevel.Value > 1)
+        {
+            GamePersistentVariable.isPassedStepOneTutorial = true;
+        }
     }
 
     private void Start()
