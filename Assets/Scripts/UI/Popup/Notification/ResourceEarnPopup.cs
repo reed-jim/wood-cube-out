@@ -31,6 +31,7 @@ public class ResourceEarnPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        BoosterSuggestPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(Claim);
@@ -42,6 +43,7 @@ public class ResourceEarnPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        BoosterSuggestPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 
     private void Claim()

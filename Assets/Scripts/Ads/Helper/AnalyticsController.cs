@@ -699,7 +699,8 @@ public enum ActionWatchVideo
     ClearHoles,
     UnlockScrewBox,
     SkipLevel,
-    MultiplyCoinWinLevel
+    MultiplyCoinWinLevel,
+    BoosterSuggestion
 }
 
 public enum ActionShowInter

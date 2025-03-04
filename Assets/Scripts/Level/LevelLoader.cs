@@ -18,6 +18,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
+    private List<Tween> _tweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
 
@@ -26,6 +27,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     private void Awake()
     {
@@ -37,6 +39,8 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
+
+        _tweens = new List<Tween>();
 
         currentLevel.Load();
 
@@ -55,11 +59,15 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private async Task LoadLevel()
     {
         int nextLevel = 1;
+
+        bool isLoopLevel = false;
 
         if (!UserData.IsLoopLevel)
         {
@@ -87,9 +95,16 @@ public class LevelLoader : MonoBehaviour
             {
                 nextLevel = currentLevel.Value - UserData.NumLevelLoop;
             }
+
+            isLoopLevel = true;
         }
 
-        bool isLoopLevel = nextLevel > _maxLevel;
+        // if (isLoopLevel)
+        // {
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+
+        //     return;
+        // }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -148,6 +163,11 @@ public class LevelLoader : MonoBehaviour
                 else
                 {
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
+                }
+
+                if (IsShowBoosterSuggestion(nextLevel))
+                {
+                    DelayShowBoosterSuggest();
                 }
             }
         };
@@ -415,6 +435,36 @@ public class LevelLoader : MonoBehaviour
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
 
+    #region BOOSTER SUGGESTION
+    private bool IsShowBoosterSuggestion(int level)
+    {
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+
+        if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (level < 3 || level % 2 == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void DelayShowBoosterSuggest()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
+        }));
+    }
+    #endregion
+
+    #region UTIL
     private void RandomizeLevelModelColor(GameObject level)
     {
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
@@ -478,4 +528,5 @@ public class LevelLoader : MonoBehaviour
             list[n] = value;
         }
     }
+    #endregion
 }
