@@ -439,13 +439,14 @@ public class LevelLoader : MonoBehaviour
     private bool IsShowBoosterSuggestion(int level)
     {
         bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
         if (!remoteConfigIsShowBoosterSuggestion)
         {
             return false;
         }
 
-        if (level < 3 || level % 2 == 0)
+        if (level <= 3 || level % numLevelShowBoosterSuggestion == 0)
         {
             return false;
         }

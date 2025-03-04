@@ -30,7 +30,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.16f;
+        rotateSpeedMultiplier = 0.003f;
         _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
@@ -47,11 +47,11 @@ public class RotateObject : MonoBehaviour
         {
             Quaternion cachedRotation = transform.rotation;
 
-            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _acceleratedMultiplier * _pitch);
-            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _acceleratedMultiplier * _yaw);
+            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
 
-            _targetRotation = transform.rotation;
-            transform.rotation = cachedRotation;
+            // _targetRotation = transform.rotation;
+            // transform.rotation = cachedRotation;
 
             _rotateLerpStep = 0;
             _isRotating = true;
@@ -70,18 +70,18 @@ public class RotateObject : MonoBehaviour
             }
         }
 
-        if (_isRotating)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
+        // if (_isRotating)
+        // {
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 8f);
 
-            _rotateLerpStep++;
+        //     _rotateLerpStep++;
 
-            if (_rotateLerpStep >= 3)
-            {
-                _rotateLerpStep = 0;
-                _isRotating = false;
-            }
-        }
+        //     if (_rotateLerpStep >= 8)
+        //     {
+        //         _rotateLerpStep = 0;
+        //         _isRotating = false;
+        //     }
+        // }
 
         if (!_isAutoRotating)
         {
@@ -100,8 +100,8 @@ public class RotateObject : MonoBehaviour
     {
         Vector2 normalizedDirection = direction.normalized;
 
-        _pitch = normalizedDirection.y;
-        _yaw = -normalizedDirection.x;
+        _pitch = direction.y;
+        _yaw = -direction.x * 1.25f;
 
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
@@ -124,7 +124,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.018f;
+                    _yaw = 1f;
                     // _yaw = -normalizedDirection.x;
                 }
             }

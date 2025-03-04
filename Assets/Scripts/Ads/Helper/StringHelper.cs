@@ -418,6 +418,7 @@ public class FirebaseConfig
     public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
     public const string LEVEL_4_VARIANT = "level_4_variant";
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
+    public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
