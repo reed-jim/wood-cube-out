@@ -13,6 +13,7 @@ public class SoundManager : MonoBehaviour
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private bool _isEnableGameSound;
+    private bool _isEnableGameMusic;
     #endregion
 
     void Awake()
@@ -49,10 +50,12 @@ public class SoundManager : MonoBehaviour
     public void EnableBackgroundMusic(bool isEnable)
     {
         CommonUtil.StopAllTweens(_tweens);
-        
+
         _tweens.Add(Tween.AudioVolume(backgroundMusic, isEnable ? 0.2f : 0, duration: 0.3f));
 
         // backgroundMusic.enabled = isEnable;
+
+        _isEnableGameMusic = isEnable;
     }
 
     public void EnableGameSound(bool isEnable)
@@ -198,25 +201,30 @@ public class SoundManager : MonoBehaviour
 
     private void FadeOutBackgroundMusic()
     {
-        Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0.2f, 0, duration: 0.3f, onValueChange: newVal =>
         {
             backgroundMusic.volume = newVal;
-        });
+        }));
     }
 
     private void FadeInBackgroundMusic()
     {
-        Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0, 0.2f, duration: 0.3f, onValueChange: newVal =>
         {
             backgroundMusic.volume = newVal;
-        });
+        }));
     }
 
     private void TemporarilyDisableBackgroundMusic()
     {
+        if (!_isEnableGameMusic)
+        {
+            return;
+        }
+
         FadeOutBackgroundMusic();
 
-        Tween.Delay(5).OnComplete(() => FadeInBackgroundMusic());
+        _tweens.Add(Tween.Delay(5).OnComplete(() => FadeInBackgroundMusic()));
     }
 
     private void OnGameSettingLoaded()
