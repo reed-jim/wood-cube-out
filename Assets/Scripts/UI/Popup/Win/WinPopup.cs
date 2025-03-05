@@ -55,14 +55,6 @@ public class WinPopup : BasePopup
         {
             _isCollectCoinRemoteConfig = DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, false);
         }
-
-        coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
-        x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
-
-        if (!_isCollectCoinRemoteConfig)
-        {
-            continueButton.GetComponent<RectTransform>().localPosition += new Vector3(0, 80, 0);
-        }
     }
 
     protected override void UnregisterMoreEvent()
@@ -83,6 +75,16 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = true;
 
         x5CoinButton.transform.localScale = Vector3.one;
+
+        // REMOTE CONFIG IS COLLECT COIN
+        coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
+        x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
+
+        if (!_isCollectCoinRemoteConfig)
+        {
+            continueButton.GetComponent<RectTransform>().localPosition += new Vector3(0, 80, 0);
+        }
+        //
 
         Show();
 
