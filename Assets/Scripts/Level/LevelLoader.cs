@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Firebase.RemoteConfig;
 using PrimeTween;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
+    private List<Tween> _tweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
 
@@ -25,6 +27,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     private void Awake()
     {
@@ -36,6 +39,8 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
+
+        _tweens = new List<Tween>();
 
         currentLevel.Load();
 
@@ -54,11 +59,15 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private async Task LoadLevel()
     {
         int nextLevel = 1;
+
+        bool isLoopLevel = false;
 
         if (!UserData.IsLoopLevel)
         {
@@ -86,9 +95,16 @@ public class LevelLoader : MonoBehaviour
             {
                 nextLevel = currentLevel.Value - UserData.NumLevelLoop;
             }
+
+            isLoopLevel = true;
         }
 
-        bool isLoopLevel = nextLevel > _maxLevel;
+        // if (isLoopLevel)
+        // {
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+
+        //     return;
+        // }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -101,13 +117,13 @@ public class LevelLoader : MonoBehaviour
         // A/B TEST LEVEL 4
         if (nextLevel == 4)
         {
-            int random = UnityEngine.Random.Range(0, 3);
+            int level4Variant = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_4_VARIANT, 0);
 
-            if (random == 1)
+            if (level4Variant == 1)
             {
                 levelPrefab = $"Level {nextLevel} - Variant 1";
             }
-            else if (random == 2)
+            else if (level4Variant == 2)
             {
                 levelPrefab = $"Level {nextLevel} - Variant 2";
             }
@@ -147,6 +163,11 @@ public class LevelLoader : MonoBehaviour
                 else
                 {
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
+                }
+
+                if (IsShowBoosterSuggestion(nextLevel))
+                {
+                    DelayShowBoosterSuggest();
                 }
             }
         };
@@ -414,6 +435,37 @@ public class LevelLoader : MonoBehaviour
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
 
+    #region BOOSTER SUGGESTION
+    private bool IsShowBoosterSuggestion(int level)
+    {
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+
+        if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (level <= 3 || level % numLevelShowBoosterSuggestion == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private void DelayShowBoosterSuggest()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
+        }));
+    }
+    #endregion
+
+    #region UTIL
     private void RandomizeLevelModelColor(GameObject level)
     {
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
@@ -477,4 +529,5 @@ public class LevelLoader : MonoBehaviour
             list[n] = value;
         }
     }
+    #endregion
 }

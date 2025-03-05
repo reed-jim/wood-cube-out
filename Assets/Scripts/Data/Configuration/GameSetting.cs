@@ -69,6 +69,9 @@ public class GameSetting : ScriptableObject
     {
         GameSetting defaultGameSetting = new GameSetting(GameConstants.DEFAULT_LANGUAGE);
 
+        // GameSetting defaultGameSetting = ScriptableObject.CreateInstance<GameSetting>();
+        // defaultGameSetting.currentLanguage = GameConstants.DEFAULT_LANGUAGE;
+
         GameSetting savedGameSetting = DataUtility.LoadAsync(GameConstants.GAME_SETTING, defaultGameSetting);
 
         isTurnOnBackgroundMusic = savedGameSetting.isTurnOnBackgroundMusic;

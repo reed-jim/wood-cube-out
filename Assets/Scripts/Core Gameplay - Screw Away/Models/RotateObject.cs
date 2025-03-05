@@ -8,6 +8,9 @@ public class RotateObject : MonoBehaviour
 
     private float _pitch;
     private float _yaw;
+    private Quaternion _targetRotation;
+    private bool _isRotating;
+    private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
 
@@ -27,7 +30,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.06f;
+        rotateSpeedMultiplier = 0.0036f;
         _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
@@ -42,8 +45,16 @@ public class RotateObject : MonoBehaviour
     {
         if (Mathf.Abs(_pitch) > 0.01f || Mathf.Abs(_yaw) > 0.01f)
         {
-            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _acceleratedMultiplier * _pitch);
-            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _acceleratedMultiplier * _yaw);
+            Quaternion cachedRotation = transform.rotation;
+
+            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+
+            // _targetRotation = transform.rotation;
+            // transform.rotation = cachedRotation;
+
+            _rotateLerpStep = 0;
+            _isRotating = true;
         }
         else
         {
@@ -58,6 +69,19 @@ public class RotateObject : MonoBehaviour
                 }
             }
         }
+
+        // if (_isRotating)
+        // {
+        //     transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 8f);
+
+        //     _rotateLerpStep++;
+
+        //     if (_rotateLerpStep >= 8)
+        //     {
+        //         _rotateLerpStep = 0;
+        //         _isRotating = false;
+        //     }
+        // }
 
         if (!_isAutoRotating)
         {
@@ -76,8 +100,8 @@ public class RotateObject : MonoBehaviour
     {
         Vector2 normalizedDirection = direction.normalized;
 
-        _pitch = normalizedDirection.y;
-        _yaw = -normalizedDirection.x;
+        _pitch = direction.y;
+        _yaw = -direction.x * 1.15f;
 
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
@@ -92,7 +116,7 @@ public class RotateObject : MonoBehaviour
         float timePerCycle = 0.3f;
 
         WaitForSeconds waitForSeconds = new WaitForSeconds(timePerCycle);
-        
+
         while (true)
         {
             if (_isAutoRotating)
@@ -100,7 +124,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.011f;
+                    _yaw = 1f;
                     // _yaw = -normalizedDirection.x;
                 }
             }

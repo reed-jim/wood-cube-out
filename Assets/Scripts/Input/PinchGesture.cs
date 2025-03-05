@@ -131,10 +131,10 @@ public class PinchGesture : MonoBehaviour
     private void OnLevelStarted()
     {
         _isDisabled = false;
-        
+
         zoomSlider.value = 0;
 
-        OnZoomSliderValueChanged(0);
+        // OnZoomSliderValueChanged(0);
 
         // pinchGestureEvent?.Invoke(maxZoom);
     }

@@ -69,11 +69,11 @@ public class LevelTutorial : MonoBehaviour
         _initialRotateIconRotation = rotateIconWorld.transform.eulerAngles;
     }
 
-    private void Start()
-    {
-        enableSwipingEvent?.Invoke(false);
-        enablePinchingEvent?.Invoke(false);
-    }
+    // private void Start()
+    // {
+    //     enableSwipingEvent?.Invoke(false);
+    //     enablePinchingEvent?.Invoke(false);
+    // }
 
     void Update()
     {
@@ -165,6 +165,8 @@ public class LevelTutorial : MonoBehaviour
         screwOutline.HideOutline();
 
         StartCoroutine(TutorialStepTwo());
+
+        GamePersistentVariable.isPassedStepOneTutorial = true;
     }
 
     private IEnumerator TutorialStepTwo()
