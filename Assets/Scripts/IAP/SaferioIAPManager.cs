@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private IStoreController controller;
     private IExtensionProvider extensions;
+    private IAppleExtensions m_AppleExtensions;
 
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
@@ -74,6 +76,9 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         var builder = ConfigurationBuilder.Instance(StandardPurchasingModule.Instance());
 
+        builder.Configure<IAppleConfiguration>().
+            SetApplePromotionalPurchaseInterceptorCallback(OnPromotionalPurchase);
+
 #if UNITY_ANDROID
         foreach (var product in googlePlayStoreProducts)
         {
@@ -102,6 +107,26 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnityPurchasing.Initialize(this, builder);
     }
 
+    // PROMOTIONAL
+    private void OnPromotionalPurchase(Product item)
+    {
+        Debug.Log("Attempted promotional purchase: " + item.definition.id);
+        // Promotional purchase has been detected.
+        // Handle this event by, e.g. presenting a parental gate.
+        // Here, for demonstration purposes only, we will wait five seconds before continuing
+        // the purchase.
+        StartCoroutine(ContinuePromotionalPurchases());
+    }
+
+    private IEnumerator ContinuePromotionalPurchases()
+    {
+        Debug.Log("Continuing promotional purchases in 5 seconds");
+        yield return new WaitForSeconds(5);
+        Debug.Log("Continuing promotional purchases now");
+        m_AppleExtensions.ContinuePromotionalPurchases(); // iOS and tvOS only
+    }
+    //
+
     public void BuyProduct(string productId)
     {
         if (controller != null)
@@ -119,9 +144,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         this.controller = controller;
         this.extensions = extensions;
 
+        m_AppleExtensions = extensions.GetExtension<IAppleExtensions>();
 
         // Restore transactions
-        extensions.GetExtension<IAppleExtensions>().RestoreTransactions((result, error) =>
+        m_AppleExtensions.RestoreTransactions((result, error) =>
         {
             if (result)
             {
@@ -134,7 +160,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             }
         });
 
-
+        foreach (var item in controller.products.all)
+        {
+            if (item.availableToPurchase)
+            {
+                // Set all these products to be visible in the user's App Store
+                m_AppleExtensions.SetStorePromotionVisibility(item, AppleStorePromotionVisibility.Show);
+            }
+        }
 
         FetchLocalizedPrice();
 
