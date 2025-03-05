@@ -174,13 +174,13 @@ public class ScrewBoxManager : MonoBehaviour
 
         _screwBoxDistance = 0.19f * worldSize.x;
 
-        _screwBoxPositionY = 0.33f * worldSize.y;
+        _screwBoxPositionY = 0.34f * worldSize.y;
 
         // screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
 
         Vector3 screwPortPosition = screwPorts[0].transform.position;
 
-        screwPortPosition.y = 0.25f * worldSize.y;
+        screwPortPosition.y = 0.26f * worldSize.y;
 
         for (int i = 0; i < screwPorts.Count; i++)
         {

@@ -231,10 +231,20 @@ public class BaseScrew : MonoBehaviour, IScrew
         if (!_isInScrewPort)
         {
             ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+            var looseScrewFxMain = looseScrewFx.main;
+            var ringFxMain = ringFx.main;
+
+            Color factionColor = FactionUtility.GetColorForFaction(Faction);
+
+            looseScrewFxMain.startColor = factionColor;
+            ringFxMain.startColor = factionColor;
 
             looseScrewFx.gameObject.SetActive(true);
 
             looseScrewFx.transform.position = transform.position + 1.2f * screwSize.z * transform.forward;
+            looseScrewFx.transform.rotation = transform.rotation;
 
             looseScrewFx.Play();
         }
