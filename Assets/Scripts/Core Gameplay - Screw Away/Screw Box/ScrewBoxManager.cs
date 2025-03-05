@@ -172,7 +172,14 @@ public class ScrewBoxManager : MonoBehaviour
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
-        _screwBoxDistance = 0.19f * worldSize.x;
+        if (0.19f * worldSize.x < 0.11f * worldSize.y)
+        {
+            _screwBoxDistance = 0.19f * worldSize.x;
+        }
+        else
+        {
+            _screwBoxDistance = 0.11f * worldSize.y;
+        }
 
         _screwBoxPositionY = 0.34f * worldSize.y;
 

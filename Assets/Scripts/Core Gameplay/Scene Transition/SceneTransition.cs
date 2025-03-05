@@ -41,6 +41,7 @@ public class SceneTransition : MonoBehaviour
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
+        LevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
 
         _tweens = new List<Tween>();
 
@@ -68,6 +69,7 @@ public class SceneTransition : MonoBehaviour
     {
         LevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
+        LevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
     }
