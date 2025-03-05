@@ -20,6 +20,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button[] chooseLanguageButtons;
     [SerializeField] private Image[] chooseLanguageButtonBackground;
     [SerializeField] private Button rateButton;
+    [SerializeField] private Button openReviewIAPPopupButton;
     #endregion
 
     [SerializeField] private GameSetting gameSetting;
@@ -45,6 +46,7 @@ public class SettingPopup : BasePopup
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
+        openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
 
@@ -153,6 +155,13 @@ public class SettingPopup : BasePopup
     private void Rate()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Rate);
+    }
+    #endregion
+
+    #region Review IAP
+    private void OpenReviewIAPPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
     }
     #endregion
 }
