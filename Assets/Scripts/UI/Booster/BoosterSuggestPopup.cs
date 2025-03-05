@@ -1,4 +1,5 @@
 using System;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -23,6 +24,33 @@ public class BoosterSuggestPopup : BasePopup
     {
         claimButton.onClick.AddListener(ClaimReward);
         noThanksButton.onClick.AddListener(Hide);
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        closeButton.interactable = false;
+        claimButton.interactable = false;
+        noThanksButton.interactable = false;
+
+        closeButton.transform.localScale = Vector3.zero;
+        claimButton.transform.localScale = Vector3.zero;
+        noThanksButton.transform.localScale = Vector3.zero;
+
+        base.Show(ShowButtons);
+
+        void ShowButtons()
+        {
+            _tweens.Add(Tween.Scale(closeButton.transform, 1, duration: 0.3f));
+            _tweens.Add(Tween.Scale(claimButton.transform, 1, duration: 0.3f));
+            _tweens.Add(Tween.Scale(noThanksButton.transform, 1, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                closeButton.interactable = true;
+                claimButton.interactable = true;
+                noThanksButton.interactable = true;
+            })
+            );
+        }
     }
 
     private void ClaimReward()
