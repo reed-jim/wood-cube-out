@@ -28,6 +28,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action setIsLevelLoadedEvent;
 
     private void Awake()
     {
@@ -81,6 +82,8 @@ public class LevelLoader : MonoBehaviour
 
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+
+                isLoopLevel = true;
             }
         }
         else
@@ -101,6 +104,8 @@ public class LevelLoader : MonoBehaviour
 
         // if (isLoopLevel)
         // {
+        //     showSceneTransitionEvent?.Invoke();
+        //     setIsLevelLoadedEvent?.Invoke();
         //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
         //     return;
@@ -165,7 +170,7 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                if (IsShowBoosterSuggestion(nextLevel))
+                if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
                 {
                     DelayShowBoosterSuggest();
                 }
@@ -436,8 +441,13 @@ public class LevelLoader : MonoBehaviour
     }
 
     #region BOOSTER SUGGESTION
-    private bool IsShowBoosterSuggestion(int level)
+    private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
     {
+        // if (isLoopLevel)
+        // {
+        //     return false;
+        // }
+
         bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
         int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
