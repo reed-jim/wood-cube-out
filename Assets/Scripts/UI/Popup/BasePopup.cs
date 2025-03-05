@@ -223,6 +223,11 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
+        if (_isInTransition)
+        {
+            return;
+        }
+
         if (Input.GetMouseButtonDown(0))
         {
             PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
