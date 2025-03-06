@@ -23,13 +23,13 @@ public class BasicScrew : BaseScrew
 
         if (_isRotatingToCorrectAngleOnScrewBox)
         {
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(new Vector3(-30, 180, 0)), 1f / 3);
+            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_localRotationOnScrewSlot), 1f / 3);
 
             stepRotateToCorrectAngleOnScrewBox++;
 
             if (stepRotateToCorrectAngleOnScrewBox == 3)
             {
-                transform.localRotation = Quaternion.Euler(new Vector3(-30, 180, 0));
+                transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
 
                 _isRotatingToCorrectAngleOnScrewBox = false;
 

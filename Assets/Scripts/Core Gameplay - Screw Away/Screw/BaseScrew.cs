@@ -38,6 +38,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected bool _isMoving;
     protected bool _isRotating;
     protected bool _isRotatingToCorrectAngleOnScrewBox;
+    protected Vector3 _localRotationOnScrewSlot;
     protected bool _isInteractable = true;
     protected bool _isDone;
     protected bool _isOutsideWithNoScrewBox;
@@ -252,73 +253,62 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
-            // _isRotating = false;
-
-            transform.SetParent(screwBoxSlot.transform);
-
-            // if (isSwitchCamera)
-            // {
-            //     gameObject.layer = LayerMask.NameToLayer("UI");
-
-            //     foreach (Transform child in transform)
-            //     {
-            //         child.gameObject.layer = LayerMask.NameToLayer("UI");
-            //     }
-
-            //     GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
-            // }
-
-            _isRotating = false;
-
-            float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
-            timeMultiplier = Mathf.Min(timeMultiplier, 8);
-
-            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
-            .OnComplete(() =>
+            _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
             {
-                // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationDelay, ease: Ease.Linear));
-                _tweens.Add(Tween.Delay(duration: durationDelay)
+                transform.SetParent(screwBoxSlot.transform);
+
+                _isRotating = false;
+
+                float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
+                timeMultiplier = Mathf.Min(timeMultiplier, 8);
+
+                _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
+                Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
+
+                if (screwBoxSlot.IsScrewPort)
+                {
+                    _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
+                    finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
+                }
+
+                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
-                    _isRotating = true;
-                    rotateSpeed *= 2;
-
-                    SoundManager.Instance.PlaySoundTightenScrew();
-
-                    _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
+                    // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationDelay, ease: Ease.Linear));
+                    _tweens.Add(Tween.Delay(duration: 0)
                     .OnComplete(() =>
                     {
-                        _isRotating = false;
-                        rotateSpeed = _initialRotateSpeed;
-                        _isRotatingToCorrectAngleOnScrewBox = true;
-                    }));
-                    // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationTightenScrewPort, ease: Ease.Linear));
-                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort, ease: Ease.Linear)
+                        _isRotating = true;
+                        rotateSpeed *= 2;
+
+                        SoundManager.Instance.PlaySoundTightenScrew();
+
+                        _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                         .OnComplete(() =>
                         {
-                            screwBoxSlot.CompleteFill();
+                            _isRotating = false;
+                            rotateSpeed = _initialRotateSpeed;
+                            _isRotatingToCorrectAngleOnScrewBox = true;
+                        }));
+                        // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationTightenScrewPort, ease: Ease.Linear));
+                        _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.Linear)
+                            .OnComplete(() =>
+                            {
+                                screwBoxSlot.CompleteFill();
 
-                            _isDone = true;
-                            _isInScrewPort = screwBoxSlot.IsScrewPort;
-                            _isMoving = false;
+                                _isDone = true;
+                                _isInScrewPort = screwBoxSlot.IsScrewPort;
+                                _isMoving = false;
 
-                            InvokeScrewLoosenedEvent();
-                            screwMovedCompletedEvent?.Invoke(this);
+                                InvokeScrewLoosenedEvent();
+                                screwMovedCompletedEvent?.Invoke(this);
 
-                            onCompleteAction?.Invoke();
-                        })
-                    );
-
-                    // screwBoxSlot.CompleteFill();
-
-                    // _isDone = true;
-                    // _isInScrewPort = screwBoxSlot.IsScrewPort;
-
-                    // InvokeScrewLoosenedEvent();
-
-                    // onCompleteAction?.Invoke();
+                                onCompleteAction?.Invoke();
+                            })
+                        );
+                    }));
                 }));
             }));
         }));
