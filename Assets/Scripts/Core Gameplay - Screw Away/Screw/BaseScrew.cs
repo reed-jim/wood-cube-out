@@ -244,7 +244,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             looseScrewFx.gameObject.SetActive(true);
 
-            looseScrewFx.transform.position = transform.position + 1.2f * screwSize.z * transform.forward;
+            looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
             looseScrewFx.transform.rotation = transform.rotation;
 
             looseScrewFx.Play();
