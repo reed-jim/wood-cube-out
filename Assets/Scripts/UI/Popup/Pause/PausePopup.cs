@@ -8,6 +8,7 @@ public class PausePopup : BasePopup
 {
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Button replayLevelButton;
+    [SerializeField] private Button openReviewIAPPopupButton;
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
     [SerializeField] private SaferioToggle vibrationToggle;
@@ -21,6 +22,7 @@ public class PausePopup : BasePopup
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
     public static event Action replayLevelEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -35,6 +37,7 @@ public class PausePopup : BasePopup
 
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
+        openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
@@ -125,4 +128,11 @@ public class PausePopup : BasePopup
         turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
         vibrationToggle.SetState(gameSetting.IsVibrate);
     }
+
+    #region Review IAP
+    private void OpenReviewIAPPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
+    }
+    #endregion
 }

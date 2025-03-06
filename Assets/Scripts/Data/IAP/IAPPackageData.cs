@@ -4,6 +4,7 @@ using UnityEngine;
 public class IAPPackageData : ScriptableObject
 {
     [SerializeField] private string productId;
+    [SerializeField] private string productName;
     [SerializeField] private int coinQuantity;
     [SerializeField] private int addHoleBoosterQuantity;
     [SerializeField] private int breakObjectBoosterQuantity;
@@ -14,6 +15,11 @@ public class IAPPackageData : ScriptableObject
     public string ProductId
     {
         get => productId;
+    }
+
+    public string ProductName
+    {
+        get => productName;
     }
 
     public int CoinQuantity

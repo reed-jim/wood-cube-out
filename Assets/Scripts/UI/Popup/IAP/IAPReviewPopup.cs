@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class IAPReviewPopup : BasePopup
 {
     [SerializeField] private TMP_Text packNameText;
+    [SerializeField] private TMP_Text priceText;
     [SerializeField] private Image icon;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button nextButton;
@@ -32,7 +33,8 @@ public class IAPReviewPopup : BasePopup
 
     private void ShowPack(int packIndex)
     {
-        packNameText.text = packagesIAP[packIndex].ProductId;
+        packNameText.text = packagesIAP[packIndex].ProductName;
+        priceText.text = $"${packagesIAP[packIndex].Price}";
         icon.sprite = packIcons[packIndex];
 
         UIUtil.SetSizeKeepRatioX(icon, 0.35f * container.sizeDelta.x);
