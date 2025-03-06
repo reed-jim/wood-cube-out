@@ -40,7 +40,7 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
     {
         meshRenderer.material = materials[(int)faction];
 
-        meshRenderer.material.SetColor("_SecondaryColor", meshRenderer.material.GetColor("_Color") * 0.3f);
+        // meshRenderer.material.SetColor("_SecondaryColor", meshRenderer.material.GetColor("_Color") * 0.3f);
 
         return;
     }
