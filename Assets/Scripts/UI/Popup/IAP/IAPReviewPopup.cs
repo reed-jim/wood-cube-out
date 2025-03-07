@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,6 +19,8 @@ public class IAPReviewPopup : BasePopup
     #region PRIVATE FIELD
     private int _currentPackIndex;
     #endregion
+
+    public static event Action<string> buyIAPEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -42,19 +45,33 @@ public class IAPReviewPopup : BasePopup
 
     private void ReviewBuy()
     {
-
+        buyIAPEvent?.Invoke(packagesIAP[_currentPackIndex].ProductId);
     }
 
     private void Next()
     {
-        _currentPackIndex++;
+        if (_currentPackIndex + 1 >= packagesIAP.Length)
+        {
+            _currentPackIndex = 0;
+        }
+        else
+        {
+            _currentPackIndex++;
+        }
 
         ShowPack(_currentPackIndex);
     }
 
     private void Prev()
     {
-        _currentPackIndex--;
+        if (_currentPackIndex - 1 < 0)
+        {
+            _currentPackIndex = packagesIAP.Length - 1;
+        }
+        else
+        {
+            _currentPackIndex--;
+        }
 
         ShowPack(_currentPackIndex);
     }
