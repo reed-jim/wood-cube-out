@@ -197,7 +197,7 @@ public static class SaferioTracking
 
     public static void TrackLevelStart(int level)
     {
-        if (GamePersistentVariable.isFirebaseAvailable)
+        if (!GamePersistentVariable.isFirebaseAvailable)
         {
             return;
         }
