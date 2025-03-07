@@ -372,11 +372,11 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             if (transform.position.x > 0)
             {
-                destination.x = 10;
+                destination.x = 15;
             }
             else
             {
-                destination.x = -10;
+                destination.x = -15;
             }
 
             destination.y = 0;

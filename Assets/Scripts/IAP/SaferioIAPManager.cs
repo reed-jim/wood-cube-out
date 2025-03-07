@@ -36,6 +36,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent += BuyProduct;
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyIAPEvent += BuyProduct;
+        IAPReviewPopup.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
 
@@ -68,6 +69,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPCoinItemUI.buyIAPEvent -= BuyProduct;
         IAPShopItem.buyIAPEvent -= BuyProduct;
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
+        IAPReviewPopup.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
     }
@@ -79,12 +81,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         builder.Configure<IAppleConfiguration>().
             SetApplePromotionalPurchaseInterceptorCallback(OnPromotionalPurchase);
 
-#if UNITY_ANDROID
         foreach (var product in googlePlayStoreProducts)
         {
             builder.AddProduct(product.Id, product.ProductType);
         }
-#endif
 
 #if UNITY_ANDROID&& !UNITY_EDITOR
         try
@@ -183,19 +183,24 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
 
-        // Unity IAP's validation logic is only included on these platforms.
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
-        // Prepare the validator with the secrets we prepared in the Editor
-        // obfuscation window.
+        // Choose one Apple certificate. NOTE AppleStoreKitTestTangle requires
+        // the active Xcode Scheme set to use a StoreKit Configuration file.
+        // Here we use a symbol, defined either in code or Project Settings >
+        // Player > Scripting Define Symbols, to choose which Apple IAP system
+        // we intend to test with in Xcode, next.
+
+#if !DEBUG_STOREKIT_TEST
         var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
             AppleTangle.Data(), Application.identifier);
+#else
+    var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
+        AppleStoreKitTestTangle.Data(), Application.identifier);
+#endif
 
         try
         {
-            // On Google Play, result has a single product ID.
-            // On Apple stores, receipts contain multiple products.
-            var result = validator.Validate(e.purchasedProduct.receipt);
-            // For informational purposes, we list the receipt(s)
+            validator.Validate(e.purchasedProduct.receipt);
         }
         catch (IAPSecurityException)
         {
