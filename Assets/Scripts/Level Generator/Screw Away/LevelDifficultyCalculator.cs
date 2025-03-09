@@ -103,19 +103,28 @@ public class LevelDifficultyCalculator : EditorWindow
 
         Dictionary<string, List<string>> obstaclesOfPieces = new Dictionary<string, List<string>>();
 
+        bool isLevelRubik = false;
+
         for (int i = 0; i < numScrew; i++)
         {
             string pieceName = screws[i].transform.parent.name;
 
-            List<string> obstacleInstanceIds = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
+            if (pieceName.Contains("L-Shaped"))
+            {
+                isLevelRubik = true;
+
+                break;
+            }
+
+            List<string> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
 
             if (!obstaclesOfPieces.ContainsKey(pieceName))
             {
-                obstaclesOfPieces.Add(pieceName, obstacleInstanceIds);
+                obstaclesOfPieces.Add(pieceName, obstacleName);
             }
             else
             {
-                foreach (var item in obstacleInstanceIds)
+                foreach (var item in obstacleName)
                 {
                     if (!obstaclesOfPieces[pieceName].Contains(item))
                     {
@@ -135,6 +144,13 @@ public class LevelDifficultyCalculator : EditorWindow
 
         //     Debug.Log("SAFERIO ----------------");
         // }
+
+        if (isLevelRubik)
+        {
+            Debug.Log($"SAFERIO <color=#73FF83>Level {level}: Rubik<color=#fff>");
+
+            return;
+        }
 
         bool isValid = true;
 
@@ -442,9 +458,9 @@ public class LevelDifficultyCalculator : EditorWindow
     {
         MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
 
-        float screwRadius = screw.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x;
+        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
 
-        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
+        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
         Vector3 pointTwo = pointOne + 10f * screw.forward;
 
         Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
@@ -476,11 +492,11 @@ public class LevelDifficultyCalculator : EditorWindow
                     {
                         RaycastHit hit;
 
-                        float radius = screw.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x;
+                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
 
                         Physics.CapsuleCast(
                             pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
-                            screw.lossyScale.x * 0.45f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
+                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
 
                         if (hit.collider != null)
                         {
@@ -499,11 +515,11 @@ public class LevelDifficultyCalculator : EditorWindow
                     // Perpendicular distance
                     Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
 
-                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * meshFilter.sharedMesh.bounds.size.z;
+                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
 
                     distance = Mathf.Max(distance, 0);
 
-                    if (distance < screw.lossyScale.z * 0.5f * meshFilter.sharedMesh.bounds.size.z)
+                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
                     {
                         if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
                         {
