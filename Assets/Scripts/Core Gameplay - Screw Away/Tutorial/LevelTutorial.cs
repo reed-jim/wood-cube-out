@@ -54,6 +54,12 @@ public class LevelTutorial : MonoBehaviour
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
+        GamePersistentVariable.isPassedStepOneTutorial = true;
+
+        gameObject.SetActive(false);
+
+        return;
+
         StartCoroutine(TutorialStepOne());
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
