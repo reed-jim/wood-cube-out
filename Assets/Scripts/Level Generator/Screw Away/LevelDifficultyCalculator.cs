@@ -10,6 +10,10 @@ using UnityEditor;
 public class LevelDifficultyCalculator : EditorWindow
 {
     private int level;
+    private int startLevel;
+    private int endLevel;
+    private Transform levelContainer;
+
     private LevelDataContainer levelDataContainer;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -36,7 +40,11 @@ public class LevelDifficultyCalculator : EditorWindow
 
         // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
-        level = EditorGUILayout.IntField("Level", level);
+        // level = EditorGUILayout.IntField("Level", level);
+        startLevel = EditorGUILayout.IntField("Start Level", startLevel);
+        endLevel = EditorGUILayout.IntField("End Level", endLevel);
+        levelContainer = (Transform)EditorGUILayout.ObjectField("Level Container", levelContainer, typeof(Transform), true);
+
         levelDataContainer = (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
         expectedDifficulty = EditorGUILayout.FloatField("Expected Difficulty", expectedDifficulty);
 
@@ -45,9 +53,9 @@ public class LevelDifficultyCalculator : EditorWindow
             Calculate();
         }
 
-        if (GUILayout.Button("Calculate Fast"))
+        if (GUILayout.Button("Calculate Fast Range"))
         {
-            CalulateFast();
+            CalculateFastAll();
         }
 
         if (GUILayout.Button("Generate Screw Box Difficulty"))
@@ -65,11 +73,31 @@ public class LevelDifficultyCalculator : EditorWindow
         GUILayout.EndArea();
     }
 
-    private void CalulateFast()
+    private void CalculateFastAll()
     {
-        Transform level = Selection.activeTransform;
+        for (int i = startLevel; i <= endLevel; i++)
+        {
+            CalulateFast(i);
+        }
+    }
 
-        BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(level).ToArray();
+    private void CalulateFast(int level)
+    {
+        // Transform level = Selection.activeTransform;
+
+        // Auto load level into current scene for simulating Physics
+        string prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
+
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(prefabPath);
+
+        if (levelContainer.childCount > 0)
+        {
+            DestroyImmediate(levelContainer.GetChild(0).gameObject);
+        }
+
+        Transform sceneLevel = Instantiate(levelPrefab, levelContainer).transform;
+
+        BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(sceneLevel).ToArray();
 
         int numScrew = screws.Length;
 
@@ -108,6 +136,8 @@ public class LevelDifficultyCalculator : EditorWindow
         //     Debug.Log("SAFERIO ----------------");
         // }
 
+        bool isValid = true;
+
         // CHECK LEVEL DESIGN ISSUES
         foreach (var obstaclesOfPiece in obstaclesOfPieces)
         {
@@ -115,14 +145,19 @@ public class LevelDifficultyCalculator : EditorWindow
             {
                 if (obstaclesOfPieces[obstacle].Contains(obstaclesOfPiece.Key))
                 {
-                    Debug.Log($"SAFERIO {obstaclesOfPiece.Key} {obstacle} <color=#FF7A75>INVALID<color=#fff>");
+                    Debug.Log($"SAFERIO <color=#73FF83>Level {level}:<color=#fff> {obstaclesOfPiece.Key} {obstacle} <color=#FF7A75>INVALID<color=#fff>");
+
+                    isValid = false;
 
                     break;
                 }
 
             }
+        }
 
-            Debug.Log("SAFERIO ----------------");
+        if (isValid)
+        {
+            Debug.Log($"SAFERIO <color=#73FF83>Level {level}: VALID<color=#fff>");
         }
     }
 
