@@ -58,7 +58,7 @@ public class RatePopup : BasePopup
 
     public void OpenReviewPage()
     {
-        string url = "https://play.google.com/store/apps/details?id=com.gplay.wood.cube.out";
+        string url = "itms-apps://itunes.apple.com/app/id6742124552";
 
         Application.OpenURL(url);
     }
