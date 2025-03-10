@@ -146,7 +146,7 @@ public class LevelLoader : MonoBehaviour
                 {
                     level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
                     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+                    level.transform.rotation = Quaternion.Euler(new Vector3(-0, -45, 0));
                 }
 
                 _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);

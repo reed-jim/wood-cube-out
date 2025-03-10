@@ -105,6 +105,8 @@ public class LevelDifficultyCalculator : EditorWindow
 
         bool isLevelRubik = false;
 
+        int totalBlockedScrew = 0;
+
         for (int i = 0; i < numScrew; i++)
         {
             string pieceName = screws[i].transform.parent.name;
@@ -117,6 +119,11 @@ public class LevelDifficultyCalculator : EditorWindow
             }
 
             List<string> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
+
+            if (obstacleName.Count > 0)
+            {
+                totalBlockedScrew++;
+            }
 
             if (!obstaclesOfPieces.ContainsKey(pieceName))
             {
@@ -133,6 +140,9 @@ public class LevelDifficultyCalculator : EditorWindow
                 }
             }
         }
+
+        Debug.Log(
+            $"SAFERIO <color=#73FF83>Level {level}: <color=#FF7A75>{totalBlockedScrew}/{numScrew} ({(float)totalBlockedScrew / numScrew * 100}%<color=#fff>)");
 
         // // DEBUG
         // foreach (var piece in obstaclesOfPieces)
