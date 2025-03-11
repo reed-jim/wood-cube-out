@@ -120,6 +120,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         // BETTER FEELING
         HideBeforeLevel();
+
+        AutoAssignPhysicsMaterial();
     }
 
     void OnDestroy()
@@ -150,6 +152,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
             })
         );
+    }
+
+    private void AutoAssignPhysicsMaterial()
+    {
+        PhysicsMaterial physicsMaterial = new PhysicsMaterial();
+
+        physicsMaterial.staticFriction = 0;
+        physicsMaterial.dynamicFriction = 0;
+        physicsMaterial.frictionCombine = PhysicsMaterialCombine.Minimum;
+
+        meshCollider.material = physicsMaterial;
     }
     #endregion
 
@@ -213,14 +226,19 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             if (_totalJoint == 0)
             {
-                if (meshCollider.enabled)
+                if (meshCollider.enabled && !meshCollider.convex)
                 {
                     meshCollider.enabled = false;
                 }
 
                 _isFree = true;
 
-                Throw();
+                if (_isConcave)
+                {
+                    Throw();
+                }
+
+                DetachFromParent();
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
@@ -389,6 +407,18 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
 
+        // transform.SetParent(LevelGarbageBin.GarbageBin);
+    }
+
+    private void DetachFromParent()
+    {
         transform.SetParent(LevelGarbageBin.GarbageBin);
     }
+
+    #region UTIL
+    private bool IsMeshConcave()
+    {
+        return !meshCollider.convex;
+    }
+    #endregion
 }
