@@ -26,8 +26,9 @@ namespace GplayAppFlyer.Editor
             plist.ReadFromString(File.ReadAllText(plistPath));
             var rootDict = plist.root;
             rootDict.SetString("NSAdvertisingAttributionReportEndpoint", "https://appsflyer-skadnetwork.com/");
+            rootDict.SetString("NSUserTrackingUsageDescription", "Your data will be used to provide you a better and personalized ad experience.");
             File.WriteAllText(plistPath, plist.WriteToString());
-            
+
             // // Framework
             // var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
             // var project = new PBXProject();
