@@ -120,6 +120,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         // BETTER FEELING
         HideBeforeLevel();
+
+        AutoAssignPhysicsMaterial();
     }
 
     void OnDestroy()
@@ -151,7 +153,23 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             })
         );
     }
+
+    private void AutoAssignPhysicsMaterial()
+    {
+        PhysicsMaterial physicsMaterial = new PhysicsMaterial();
+
+        physicsMaterial.staticFriction = 0;
+        physicsMaterial.dynamicFriction = 0;
+        physicsMaterial.frictionCombine = PhysicsMaterialCombine.Minimum;
+
+        meshCollider.material = physicsMaterial;
+    }
     #endregion
+
+    private void DetachFromParent()
+    {
+        transform.SetParent(LevelGarbageBin.GarbageBin);
+    }
 
     public void Select()
     {
@@ -213,14 +231,19 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             if (_totalJoint == 0)
             {
-                if (meshCollider.enabled)
+                if (meshCollider.enabled && !meshCollider.convex)
                 {
                     meshCollider.enabled = false;
                 }
 
                 _isFree = true;
 
-                Throw();
+                if (_isConcave)
+                {
+                    Throw();
+                }
+
+                DetachFromParent();
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }

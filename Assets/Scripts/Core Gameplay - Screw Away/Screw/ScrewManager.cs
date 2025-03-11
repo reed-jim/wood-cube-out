@@ -518,7 +518,7 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: false);
+                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
             }
         }
 
