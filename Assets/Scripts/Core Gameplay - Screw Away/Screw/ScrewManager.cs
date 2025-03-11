@@ -518,7 +518,7 @@ public class ScrewManager : MonoBehaviour
             }
             else
             {
-                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: false);
+                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
             }
         }
 
@@ -570,6 +570,7 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
+        // // DEBUG
         // Debug.Log("SAFERIO ---------------------------------------");
 
         // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
