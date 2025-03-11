@@ -142,6 +142,13 @@ public class LevelLoader : MonoBehaviour
             {
                 GameObject level = Instantiate(op.Result, transform);
 
+                // Find Dependency
+                // delay for pieces scaling before level
+                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+
+                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
+                //
+
                 if (level.GetComponent<LevelTransformManualModifier>() == null)
                 {
                     level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);

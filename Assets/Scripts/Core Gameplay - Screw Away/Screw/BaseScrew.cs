@@ -60,6 +60,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         set => joint = value;
     }
 
+    public MeshFilter MeshFilter
+    {
+        get => meshFilter;
+    }
+
     public ScrewBoxSlot ScrewBoxSlot
     {
         get => _screwBoxSlot;
