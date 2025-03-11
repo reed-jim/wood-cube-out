@@ -866,6 +866,7 @@ public class HingeJointGenerator : EditorWindow
         Transform selectedObject = target;
 
         Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+        screwSize.z *= 0.779f;
 
         Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
 

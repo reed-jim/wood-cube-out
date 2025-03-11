@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class GamePersistentVariable
@@ -14,6 +15,7 @@ public static class GamePersistentVariable
     public static int numScrewBoxUnlocked; 
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial; 
+    public static Dictionary<int, List<Transform>> pieceDependencies;
     #endregion
 
     #region SETTING

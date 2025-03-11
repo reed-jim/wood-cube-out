@@ -40,6 +40,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     public static event Action<BaseScrew> loosenScrewOnObjectBrokenEvent;
     public static event Action shakeCameraEvent;
     public static event Action<int> dissolveObjectPartEvent;
+    public static event Action<int> pieceCompleteEvent;
     #endregion
 
     #region LIFECYCLE
@@ -119,7 +120,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
 
         // BETTER FEELING
-        HideBeforeLevel();
+        // HideBeforeLevel();
 
         AutoAssignPhysicsMaterial();
     }
@@ -145,6 +146,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private void ScaleBeforeLevel()
     {
         CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(0.3f).OnComplete(() =>
+        {
+            HideBeforeLevel();
+        }));
 
         _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
             .OnComplete(() =>
@@ -239,6 +245,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 }
 
                 DetachFromParent();
+
+                pieceCompleteEvent?.Invoke(transform.GetInstanceID());
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
