@@ -214,9 +214,11 @@ public class BasicScrew : BaseScrew
 
                 if (objectPart != null)
                 {
+                    int totalScrewOfPiece = hits[i].transform.childCount;
+
                     if (isIncludeHiddenScrew)
                     {
-                        number++;
+                        number += totalScrewOfPiece;
 
                         continue;
                     }
@@ -262,7 +264,7 @@ public class BasicScrew : BaseScrew
                             continue;
                         }
 
-                        number++;
+                        number += totalScrewOfPiece;
 
                         _obstacleHitPointWorld = hitPos;
 
