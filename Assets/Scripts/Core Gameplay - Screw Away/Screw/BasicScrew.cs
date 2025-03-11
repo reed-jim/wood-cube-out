@@ -80,20 +80,20 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
-            // avoid loose screw that is covering by other objects
-            bool isNotVisible = Physics.Raycast(
-                transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
-
-            if (isNotVisible)
-            {
-                _isInteractable = true;
-
-                return;
-            }
-            //
-
             if (isCheckObstacles)
             {
+                // avoid loose screw that is covering by other objects
+                bool isNotVisible = Physics.Raycast(
+                    transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
+                //
+
+                if (isNotVisible)
+                {
+                    _isInteractable = true;
+
+                    return;
+                }
+
                 CountBlockingObjects();
             }
             else
@@ -228,9 +228,11 @@ public class BasicScrew : BaseScrew
 
                 if (objectPart != null)
                 {
+                    int totalScrewOfPiece = hits[i].transform.childCount;
+
                     if (isIncludeHiddenScrew)
                     {
-                        number++;
+                        number += totalScrewOfPiece;
 
                         continue;
                     }
@@ -276,7 +278,7 @@ public class BasicScrew : BaseScrew
                             continue;
                         }
 
-                        number++;
+                        number += totalScrewOfPiece;
 
                         _obstacleHitPointWorld = hitPos;
 
