@@ -66,20 +66,20 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
-            // avoid loose screw that is covering by other objects
-            bool isNotVisible = Physics.Raycast(
-                transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
-
-            if (isNotVisible)
-            {
-                _isInteractable = true;
-
-                return;
-            }
-            //
-
             if (isCheckObstacles)
             {
+                // avoid loose screw that is covering by other objects
+                bool isNotVisible = Physics.Raycast(
+                    transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
+
+                if (isNotVisible)
+                {
+                    _isInteractable = true;
+
+                    return;
+                }
+                //
+
                 CountBlockingObjects();
             }
             else
@@ -107,22 +107,35 @@ public class BasicScrew : BaseScrew
                     HapticFeedback.MediumFeedback();
                 }
 
-                Vector3 hitPointFakeScrewSpace =
-                    fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
+                _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
+               .OnComplete(() =>
+               {
+                   fakeScrew.IsRotating = false;
 
-                _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 1.3f * hitPointFakeScrewSpace.z * (fakeScrew.transform.localRotation * Vector3.forward),
-                    cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
-                .OnComplete(() =>
-                {
-                    fakeScrew.IsRotating = false;
+                   ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+                   // fakeScrew.gameObject.SetActive(false);
 
-                    ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
-                    // fakeScrew.gameObject.SetActive(false);
+                   GetComponent<MeshRenderer>().enabled = true;
 
-                    GetComponent<MeshRenderer>().enabled = true;
+                   _isInteractable = true;
+               }));
 
-                    _isInteractable = true;
-                }));
+                // Vector3 hitPointFakeScrewSpace =
+                //     fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
+
+                // _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 1.3f * hitPointFakeScrewSpace.z * (fakeScrew.transform.localRotation * Vector3.forward),
+                //     cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
+                // .OnComplete(() =>
+                // {
+                //     fakeScrew.IsRotating = false;
+
+                //     ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+                //     // fakeScrew.gameObject.SetActive(false);
+
+                //     GetComponent<MeshRenderer>().enabled = true;
+
+                //     _isInteractable = true;
+                // }));
 
                 return;
             }
@@ -205,7 +218,7 @@ public class BasicScrew : BaseScrew
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].transform == transform.parent)
+                if (hits[i].transform.GetInstanceID() == transform.parent.GetInstanceID())
                 {
                     continue;
                 }
