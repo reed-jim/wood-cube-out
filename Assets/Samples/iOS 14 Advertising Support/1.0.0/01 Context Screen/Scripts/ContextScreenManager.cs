@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Unity.Advertisement.IosSupport.Components;
+using Unity.Notifications.iOS;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -48,6 +49,31 @@ namespace Unity.Advertisement.IosSupport.Samples
                 status = ATTrackingStatusBinding.GetAuthorizationTrackingStatus();
 
                 yield return null;
+            }
+#endif
+
+            StartCoroutine(RequestNotificationAuthorization());
+
+            yield return null;
+        }
+
+        IEnumerator RequestNotificationAuthorization()
+        {
+#if UNITY_IOS && !UNITY_EDITOR
+            var authorizationOption = AuthorizationOption.Alert | AuthorizationOption.Badge;
+            using (var req = new AuthorizationRequest(authorizationOption, true))
+            {
+                while (!req.IsFinished)
+                {
+                    yield return null;
+                }
+
+                string res = "\n RequestAuthorization:";
+                res += "\n finished: " + req.IsFinished;
+                res += "\n granted :  " + req.Granted;
+                res += "\n error:  " + req.Error;
+                res += "\n deviceToken:  " + req.DeviceToken;
+                Debug.Log(res);
             }
 #endif
 

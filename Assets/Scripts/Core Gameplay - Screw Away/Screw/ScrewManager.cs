@@ -223,7 +223,7 @@ public class ScrewManager : MonoBehaviour
             // not valid faction
             if (numObstacleEachScrewEachFaction[faction].Count < 3)
             {
-                difficultyLevelByFactions[faction] += 999;
+                difficultyLevelByFactions[faction] += 99999;
 
                 continue;
             }
@@ -234,59 +234,6 @@ public class ScrewManager : MonoBehaviour
 
             difficultyLevelByFactions[faction] += totalObstaclesOfThreeMostOpenedScrews;
         }
-
-        // for (int i = 0; i < _screws.Count; i++)
-        // {
-        //     if (_screws[i].IsDone || _screws[i].IsLocked)
-        //     {
-        //         continue;
-        //     }
-
-        //     GameFaction faction = _screws[i].Faction;
-
-        //     int numberBlockObject = _screws[i].NumberBlockingObjects;
-
-        //     if (numberBlockObject == 0)
-        //     {
-        //         if (totalNotBlockedScrewByFaction.ContainsKey(faction))
-        //         {
-        //             totalNotBlockedScrewByFaction[faction]++;
-        //         }
-        //         else
-        //         {
-        //             totalNotBlockedScrewByFaction.Add(faction, 1);
-        //         }
-        //     }
-
-        //     difficultyLevelByFactions[faction] += numberBlockObject;
-
-        //     // FOR Tutorial
-        //     difficultyLevelByFactions[faction] += _screws[i].ScrewDifficultyModifier;
-        // }
-
-        // // TRIPLE SAME FACTION + NO BLOCKED
-        // int totalTripleSameFactionNoBlocked = 0;
-
-        // foreach (var faction in totalNotBlockedScrewByFaction.Keys)
-        // {
-        //     // Debug.Log(faction + "/" + 3 * (totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX) * GameConstants.SCREW_FACTION.Length);
-        //     int numTriple = totalNotBlockedScrewByFaction[faction] / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
-
-        //     difficultyLevelByFactions[faction] -= 3 * numTriple * GameConstants.SCREW_FACTION.Length;
-
-        //     if (numTriple > 0)
-        //     {
-        //         totalTripleSameFactionNoBlocked++;
-        //     }
-        // }
-
-        // if (totalTripleSameFactionNoBlocked == 0)
-        // {
-        //     foreach (var faction in totalNotBlockedScrewByFaction.Keys)
-        //     {
-        //         difficultyLevelByFactions[faction] -= GameConstants.SCREW_FACTION.Length;
-        //     }
-        // }
 
         // DECREASE Chance of factions that are already available in screw boxes
         for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
@@ -700,14 +647,24 @@ public class ScrewManager : MonoBehaviour
 
         while (true)
         {
-            if (_remainingHandleOutsideScrewCommands > 0)
-            {
-                if (!_isHandlingOutsideScrews)
-                {
-                    _isHandlingOutsideScrews = true;
+            bool isAnyScrewOutside = false;
 
-                    HandleOutsideScrews();
+            if (_screws != null)
+            {
+                for (int i = 0; i < _screws.Count; i++)
+                {
+                    if (_screws[i].IsOutsideWithNoScrewBox)
+                    {
+                        isAnyScrewOutside = true;
+
+                        break;
+                    }
                 }
+            }
+
+            if (isAnyScrewOutside)
+            {
+                HandleOutsideScrews();
             }
 
             yield return waitForSeconds;

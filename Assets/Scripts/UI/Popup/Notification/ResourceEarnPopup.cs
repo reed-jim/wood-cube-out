@@ -32,6 +32,7 @@ public class ResourceEarnPopup : BasePopup
     {
         SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
         BoosterSuggestPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        // IAPReviewPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
         okButton.onClick.AddListener(Claim);
@@ -44,6 +45,7 @@ public class ResourceEarnPopup : BasePopup
     {
         SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         BoosterSuggestPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        // IAPReviewPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 
     private void Claim()
