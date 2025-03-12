@@ -29,6 +29,7 @@ public class ScrewBoxManager : MonoBehaviour
     }
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private float _screwBoxPositionY = 10;
     private bool _isSpawnScrewBoxFirstTimeInLevel;
     private float _screwBoxDistance;
@@ -61,6 +62,8 @@ public class ScrewBoxManager : MonoBehaviour
         BasicObjectPart.loosenScrewOnObjectBrokenEvent += LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
+
+        _tweens = new List<Tween>();
     }
 
     void OnDestroy()
@@ -79,6 +82,8 @@ public class ScrewBoxManager : MonoBehaviour
         BasicObjectPart.loosenScrewOnObjectBrokenEvent -= LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
+
+        CommonUtil.StopAllTweens(_tweens);
 
         ReturnScrewBoxesToPool();
     }
@@ -329,9 +334,16 @@ public class ScrewBoxManager : MonoBehaviour
 
             if (numScrewPortsEmpty == 1)
             {
-                loseLevelEvent?.Invoke();
+                _tweens.Add(Tween.Delay(4).OnComplete(() =>
+                {
+                    if (GetNumScrewPortsEmpty() == 0)
+                    {
+                        loseLevelEvent?.Invoke();
+                    }
+                }));
             }
-            else
+
+            if (numScrewPortsEmpty > 0)
             {
                 screwBoxesObserver.NumScrewInScrewPorts++;
 
@@ -340,6 +352,21 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         return null;
+    }
+
+    private int GetNumScrewPortsEmpty()
+    {
+        int numScrewPortsEmpty = 0;
+
+        foreach (var screwPort in screwPorts)
+        {
+            if (!screwPort.IsFilled)
+            {
+                numScrewPortsEmpty++;
+            }
+        }
+
+        return numScrewPortsEmpty;
     }
 
     #region SPAWN SCREW BOX
