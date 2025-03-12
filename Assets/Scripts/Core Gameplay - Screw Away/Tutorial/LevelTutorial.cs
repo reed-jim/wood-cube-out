@@ -56,7 +56,7 @@ public class LevelTutorial : MonoBehaviour
 
         GamePersistentVariable.isPassedStepOneTutorial = true;
 
-        gameObject.SetActive(false);
+        // gameObject.SetActive(false);
 
         StartCoroutine(TutorialStepOne());
 
@@ -73,11 +73,11 @@ public class LevelTutorial : MonoBehaviour
         _initialRotateIconRotation = rotateIconWorld.transform.eulerAngles;
     }
 
-    // private void Start()
-    // {
-    //     enableSwipingEvent?.Invoke(false);
-    //     enablePinchingEvent?.Invoke(false);
-    // }
+    private void Start()
+    {
+        enableSwipingEvent?.Invoke(false);
+        enablePinchingEvent?.Invoke(false);
+    }
 
     void Update()
     {

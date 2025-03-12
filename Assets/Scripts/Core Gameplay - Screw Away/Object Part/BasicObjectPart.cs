@@ -147,17 +147,27 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(0.3f).OnComplete(() =>
+        _tweens.Add(Tween.Delay(0.4f).OnComplete(() =>
         {
             HideBeforeLevel();
         }));
 
-        _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
-            .OnComplete(() =>
-            {
-                _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
-            })
-        );
+        _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
+        {
+            _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+                })
+            );
+        }));
+
+        // _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
+        //     .OnComplete(() =>
+        //     {
+        //         _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+        //     })
+        // );
     }
 
     private void AutoAssignPhysicsMaterial()

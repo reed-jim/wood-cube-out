@@ -124,7 +124,7 @@ public class RotateObject : MonoBehaviour
                 if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 1f;
+                    _yaw = 0.5f;
                     // _yaw = -normalizedDirection.x;
                 }
             }
