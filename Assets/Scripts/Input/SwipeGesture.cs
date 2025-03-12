@@ -84,16 +84,6 @@ public class SwipeGesture : MonoBehaviour
 
                 _isSwipingLastFrame = false;
             }
-
-            // _notSwipingDuration += Time.deltaTime;
-
-            // if (_notSwipingDuration > 3)
-            // {
-            //     acceleratedMultiplier = 1;
-            //     _notSwipingDuration = 0;
-            // }
-
-            // acceleratedMultiplier = 1;
             _isLastPositionExist = false;
         }
     }

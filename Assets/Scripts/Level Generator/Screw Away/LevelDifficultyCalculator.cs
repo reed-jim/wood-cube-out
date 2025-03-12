@@ -395,21 +395,6 @@ public static class LevelDifficultyCalculatorUltility
         // TO MATCH OLD VERSION DIFFICULTY
         expectedDifficultyNormalized *= (0.4f / 1f);
 
-        // // DEBUG
-        // for (int i = 1; i <= 75; i++)
-        // {
-        //     float test =
-        //     DIFFICULTY_MULTIPLIER *
-        //         (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(i, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)i / PREDICTED_MAX_LEVEL));
-
-        //     test *= (0.4f / 1f);
-
-        //     Debug.Log($"SAFERIO LEVEL {i} - Hard Percent: {test * 100}%");
-        // }
-
-        // // RANDOMIZE
-        // maxPhaseIndex = UnityEngine.Random.Range(GameConstants.SCREW_FACTION.Length / 2, GameConstants.SCREW_FACTION.Length - 1);
-
         for (int i = maxPhaseIndex; i >= 0; i--)
         {
             int phaseIndex = i;

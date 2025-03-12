@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 
 public class HomePage : PageBase
 {
@@ -26,38 +29,51 @@ public class HomePage : PageBase
         saleHomeController.Init();
         startChestController.Init();
         levelChestController.Init();
-        
+
 
         base.Init(controller);
 
         playBtn.onClick.AddListener(OnClickPlay);
         //LongTH
         string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
-        //string pathLevel = StringHelper.PATH_CONFIG_LEVEL_BIRD1;
-        //--------------------------------------------------------------------------
-        //if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_TEST_LEVEL, true))
-        //pathLevel = StringHelper.PATH_CONFIG_LEVEL_TEST;
+        AsyncOperationHandle<GameObject> handle =
+            Addressables.LoadAssetAsync<GameObject>($"Level {UseProfile.CurrentLevel}");
 
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
-        if (lvJson != null)
+        handle.Completed += (op) =>
         {
-            levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
-            levelTxt.text = GameController.Instance.useProfile.CurrentLevelPlay.ToString();
-            int idHardMode = levelConfig.idHardMode;
-
-            if (idHardMode > 0)
+            if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                for (int i = 0; i < hardModeObj.Length; i++)
-                {
-                    hardModeObj[i].gameObject.SetActive(false);
-                }
-                hardModeObj[idHardMode - 1].gameObject.SetActive(true);
-                playBtn.GetComponent<Image>().sprite = hardModeSprt[idHardMode];
-                playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(43f, 7);
-                playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[idHardMode];
+                GameObject level = op.Result;
+                levelTxt.text = GameController.Instance.useProfile.CurrentLevelPlay.ToString();
+                // int idHardMode = levelConfig.idHardMode;
+                //
+                // if (idHardMode > 0)
+                // {
+                //     for (int i = 0; i < hardModeObj.Length; i++)
+                //     {
+                //         hardModeObj[i].gameObject.SetActive(false);
+                //     }
+                //
+                //     hardModeObj[idHardMode - 1].gameObject.SetActive(true);
+                //     playBtn.GetComponent<Image>().sprite = hardModeSprt[idHardMode];
+                //     playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(43f, 7);
+                //     playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[idHardMode];
+                // }
+                // else
+                // {
+                //     for (int i = 0; i < hardModeObj.Length; i++)
+                //     {
+                //         hardModeObj[i].gameObject.SetActive(false);
+                //     }
+                //
+                //     playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 7);
+                //     playBtn.GetComponent<Image>().sprite = hardModeSprt[0];
+                //     playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[0];
+                // }
             }
             else
             {
+                levelTxt.text = Localization.Get("s_comming_soon");
                 for (int i = 0; i < hardModeObj.Length; i++)
                 {
                     hardModeObj[i].gameObject.SetActive(false);
@@ -67,20 +83,9 @@ public class HomePage : PageBase
                 playBtn.GetComponent<Image>().sprite = hardModeSprt[0];
                 playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[0];
             }
-        }    
-        else
-        {
-            levelTxt.text = Localization.Get("s_comming_soon");
-            for (int i = 0; i < hardModeObj.Length; i++)
-            {
-                hardModeObj[i].gameObject.SetActive(false);
-            }
-            playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 7);
-            playBtn.GetComponent<Image>().sprite = hardModeSprt[0];
-            playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[0];
-        }
 
-    
+
+        };
     }
 
     public override void InitState()
@@ -109,24 +114,28 @@ public class HomePage : PageBase
 
     private void OnClickPlay()
     {
-        if (levelConfig != null)
-        {
-            UseProfile.IsClickTutPlayHome = true;
-            //PlayCampainBox.Setup().Show(levelConfig.idHardMode);
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
-        }
-        else
-        {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                   (
-                   playBtn.transform.position,
-                   Localization.Get("s_comming_soon"),
-                   Color.white,
-                   isSpawnItemPlayer: true
-                   );
-        }
-        GameController.Instance.musicManager.PlayClickSound();
-    }    
+        AsyncOperationHandle<GameObject> handle =
+            Addressables.LoadAssetAsync<GameObject>($"Level {UseProfile.CurrentLevel}");
 
-    
+        handle.Completed += (op) =>
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            { 
+                UseProfile.IsClickTutPlayHome = true;
+                Addressables.LoadSceneAsync(SceneName.GAME_PLAY, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            }
+            else
+            {
+                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                (
+                    playBtn.transform.position,
+                    Localization.Get("s_comming_soon"),
+                    Color.white,
+                    isSpawnItemPlayer: true
+                );
+            }
+
+            GameController.Instance.musicManager.PlayClickSound();
+        };
+    }    
 }

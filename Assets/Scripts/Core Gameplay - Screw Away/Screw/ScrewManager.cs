@@ -12,7 +12,6 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private ScrewBoxManager screwBoxManager;
 
     [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
 
@@ -86,9 +85,8 @@ public class ScrewManager : MonoBehaviour
         _screws = new List<BaseScrew>();
 
         _totalScrewObserved = 0;
-
-        // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
-        _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+        
+        _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(UseProfile.CurrentLevel);
 
         _totalScrewBoxesSpawned = 0;
         _remainingSpawnScrewBoxCommands = 0;

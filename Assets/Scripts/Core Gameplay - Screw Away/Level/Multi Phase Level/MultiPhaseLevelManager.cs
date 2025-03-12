@@ -11,8 +11,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
     private int _totalScrewObserved;
     private int _totalScrewLoosened;
     private bool _isCameraZoomed;
-
-    [SerializeField] private IntVariable currentLevel;
+    
     [SerializeField] private MultiPhaseLevelDataContainer multiPhaseLevelDataContainer;
 
     public static event Action<int> phaseCompletedEvent;
@@ -108,7 +107,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
             for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
             {
-                if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)
+                if (multiPhaseLevelDataContainer.Items[i].Level == UseProfile.CurrentLevel)
                 {
                     for (int j = 0; j < multiPhaseLevelDataContainer.Items[i].PhasesData.Length; j++)
                     {

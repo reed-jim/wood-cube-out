@@ -1,4 +1,6 @@
-﻿namespace BirdSort2
+﻿using Unity.VisualScripting;
+
+namespace BirdSort2
 {
     using Crystal;
     using DG.Tweening;
@@ -23,7 +25,7 @@
 
     public class GamePlayController_BirdSort : Singleton<GamePlayController_BirdSort>
     {
-        public PlayerContain_BirdSort playerContain;
+        public PlayerContain playerContain;
         public GameScene_BirdSort gameScene;
         public ScoreController scoreController;
         public ExtralPlayController_BirdSort extralPlayController;
@@ -45,6 +47,10 @@
 
         public SuggetBuyerInGame suggetBuyerInGame;
         public SuggetBuyItemController suggetBuyItemController;
+
+        public ObjectPoolingEverythingInitializer ObjectPoolingEverythingInitializer;
+
+        public ObjectPoolingEverything ObjectPoolingEverything;
         //public TutorialFunController tutWeeklyChallengeController;
         public StateGame state;
         public bool isTempPauseLevel;
@@ -64,7 +70,8 @@
 
         public void Init()
         {
-
+            ObjectPoolingEverythingInitializer.Init();
+            ObjectPoolingEverything.Init();
             playerContain.Init();
             level.Init();
             returnController.Init();

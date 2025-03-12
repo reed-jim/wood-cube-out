@@ -75,15 +75,7 @@ public class GameLoading : MonoBehaviour
 
         float avoidInitialLagDuration = 1.5f;
         bool isPlayLoadingAnimation = false;
-
-        // // WEAK DEVICES
-        // yield return new WaitForSeconds(burstReadyDuration);
-
-        // WeakDevices();
-
-        // yield break;
-
-        // SPLASH SCREEN
+        
         _tweens.Add(Tween.Alpha(splashScreenBackground, 0, duration: 0.3f, startDelay: 1.2f));
         _tweens.Add(Tween.Alpha(splashScreen, 0, duration: 0.3f, startDelay: 1.2f).OnComplete(() =>
         {
@@ -169,8 +161,6 @@ public class GameLoading : MonoBehaviour
 
                 _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
                 {
-                    // blackBackground.gameObject.SetActive(false);
-
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));
 
@@ -184,19 +174,5 @@ public class GameLoading : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
-        // {
-        //     if (scene.name == GameConstants.GAMEPLAY_SCENE)
-        //     {
-        //         Addressables.UnloadSceneAsync(_menuSceneHandle);
-        //     }
-        // }
-        // else
-        // {
-        //     if (scene.name == GameConstants.MENU_SCENE)
-        //     {
-        //         _isMenuSceneLoaded = true;
-        //     }
-        // }
     }
 }

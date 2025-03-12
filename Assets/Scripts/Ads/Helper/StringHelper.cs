@@ -343,7 +343,7 @@ public class SceneName
 {
     public const string LOADING_SCENE = "LoadingScene";
     public const string HOME_SCENE = "HomeScene";
-    public const string GAME_PLAY = "GamePlay";
+    public const string GAME_PLAY = "Gameplay";
     public const string HOME_SCENE_PVP = "HomeScenePvP";
     public const string GAME_PLAY_PVP1 = "GamePlayPvP1";
     public const string HOME_SCENE_HOME_DECOR = "HomeSceneHomeDecor";

@@ -32,7 +32,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private bool _isInitialized;
 
-    private void Awake()
+    public void Init()
     {
         if (Instance != null && Instance != this)
         {

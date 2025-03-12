@@ -11,7 +11,6 @@ using static GameEnum;
 public class LevelLoader : MonoBehaviour
 {
     [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
@@ -34,12 +33,11 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
-
-        currentLevel.Load();
+        //currenlevel = levelplay
 
         _maxLevel = levelDataContainer.MaxLevel;
 
-        GoLevel(currentLevel.Value);
+        GoLevel(UseProfile.CurrentLevel);
     }
 
     void OnDestroy()
@@ -60,9 +58,9 @@ public class LevelLoader : MonoBehaviour
 
         if (!UserData.IsLoopLevel)
         {
-            if (currentLevel.Value <= _maxLevel)
+            if (UseProfile.CurrentLevel <= _maxLevel)
             {
-                nextLevel = currentLevel.Value;
+                nextLevel = UseProfile.CurrentLevel;
             }
             else
             {
@@ -74,7 +72,7 @@ public class LevelLoader : MonoBehaviour
         }
         else
         {
-            if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+            if (UseProfile.CurrentLevel - UserData.NumLevelLoop >= _maxLevel)
             {
                 nextLevel = UnityEngine.Random.Range(6, _maxLevel);
 
@@ -82,7 +80,7 @@ public class LevelLoader : MonoBehaviour
             }
             else
             {
-                nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+                nextLevel = UseProfile.CurrentLevel - UserData.NumLevelLoop;
             }
         }
 
@@ -104,9 +102,9 @@ public class LevelLoader : MonoBehaviour
                     level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                 }
 
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(UseProfile.CurrentLevel);
 
-                if (currentLevel.Value == 1)
+                if (UseProfile.CurrentLevel == 1)
                 {
                     AutoAssignScrewFactionLevelManualGroup(level);
                 }
@@ -117,7 +115,7 @@ public class LevelLoader : MonoBehaviour
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
 
-                SaferioTracking.TrackLevelStart(currentLevel.Value, nextLevel);
+                SaferioTracking.TrackLevelStart(UseProfile.CurrentLevel, nextLevel);
             }
         };
 
@@ -133,9 +131,7 @@ public class LevelLoader : MonoBehaviour
             Destroy(gameObject.transform.GetChild(0).gameObject);
         }
 
-        currentLevel.Value = level;
-
-        currentLevel.Save();
+        UseProfile.CurrentLevel = level;
 
         levelBoosterObserver.Reset();
 
@@ -146,17 +142,17 @@ public class LevelLoader : MonoBehaviour
 
     private void NextLevel()
     {
-        GoLevel(currentLevel.Value + 1);
+        GoLevel(UseProfile.CurrentLevel + 1);
     }
 
     private void PrevLevel()
     {
-        GoLevel(currentLevel.Value - 1);
+        GoLevel(UseProfile.CurrentLevel - 1);
     }
 
     private void Replay()
     {
-        GoLevel(currentLevel.Value);
+        GoLevel(UseProfile.CurrentLevel);
     }
 
     private void AutoAssignScrewFactionMultiPhaseLevel(GameObject level)
