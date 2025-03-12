@@ -210,7 +210,9 @@ public class BasicScrew : BaseScrew
         Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, checkObstacleLayer);
+        Collider[] hits = new Collider[16];
+
+        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, checkObstacleLayer);
 
         int number = 0;
 
@@ -218,6 +220,11 @@ public class BasicScrew : BaseScrew
         {
             for (int i = 0; i < hits.Length; i++)
             {
+                if (hits[i] == null)
+                {
+                    continue;
+                }
+
                 if (hits[i].transform.GetInstanceID() == transform.parent.GetInstanceID())
                 {
                     continue;
