@@ -149,15 +149,15 @@ public class ScrewManager : MonoBehaviour
             {
                 obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
 
-                foreach (var item in obstaclesOfPieces)
-                {
-                    Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
+                // foreach (var item in obstaclesOfPieces)
+                // {
+                //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
 
-                    // for (int i = 0; i < item.Value.Count; i++)
-                    // {
-                    //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
-                    // }
-                }
+                //     // for (int i = 0; i < item.Value.Count; i++)
+                //     // {
+                //     //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
+                //     // }
+                // }
 
                 SpawnFirstScrewBoxes();
             });
@@ -244,8 +244,6 @@ public class ScrewManager : MonoBehaviour
             Vector3 pointTwo = pointOne + 10f * _screws[i].transform.forward;
 
             Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
-
-            Debug.Log("SAFERIO " + _screws[i].name + " / " + hits.Length);
 
             if (hits != null)
             {
@@ -607,20 +605,20 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
-        // DEBUG
-        Debug.Log("SAFERIO ---------------------------------------");
+        // // DEBUG
+        // Debug.Log("SAFERIO ---------------------------------------");
 
-        for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        {
-            GameFaction faction = factionSortedByDifficulty[i];
+        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        // {
+        //     GameFaction faction = factionSortedByDifficulty[i];
 
-            string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
+        //     string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
 
-            debugString += $" Available: {screwPortAvailableByFaction[faction]}";
-            debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
+        //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
+        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
 
-            Debug.Log(debugString);
-        }
+        //     Debug.Log(debugString);
+        // }
 
         for (int i = difficultyLevel; i >= 0; i--)
         {

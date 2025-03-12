@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class DebugPopup : BasePopup
 {
     [SerializeField] private TMP_InputField levelInput;
+    [SerializeField] private TMP_InputField backgroundColorInput;
 
     [SerializeField] private Button debugPlayLevelButton;
     [SerializeField] private Button debugNextLevelButton;
@@ -15,6 +16,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugAdsButton;
     [SerializeField] private Button debugAddBoostersButton;
     [SerializeField] private Button debugAddCoinButton;
+    [SerializeField] private Button changeBackgroundColorButton;
     [SerializeField] private TMP_Text debugAdsText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -33,6 +35,8 @@ public class DebugPopup : BasePopup
         debugAdsButton.onClick.AddListener(DebugAdsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
+
+        changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
     }
 
     protected override void MoreActionInAwake()
@@ -110,5 +114,17 @@ public class DebugPopup : BasePopup
         userResourcesObserver.UserResources.CoinQuantity += 9999;
 
         userResourcesObserver.Save();
+    }
+
+    private void ChangeBackgroundColor()
+    {
+        if (backgroundColorInput.text.Length != 6)
+        {
+            return;
+        }
+
+        Camera camera = Camera.main;
+
+        camera.backgroundColor = ColorUtil.GetColorFromHex(backgroundColorInput.text);
     }
 }
