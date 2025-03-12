@@ -615,20 +615,20 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
-        // DEBUG
-        Debug.Log("SAFERIO ---------------------------------------");
+        // // DEBUG
+        // Debug.Log("SAFERIO ---------------------------------------");
 
-        for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        {
-            GameFaction faction = factionSortedByDifficulty[i];
+        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
+        // {
+        //     GameFaction faction = factionSortedByDifficulty[i];
 
-            string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
+        //     string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
 
-            debugString += $" Available: {screwPortAvailableByFaction[faction]}";
-            debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
+        //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
+        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
 
-            Debug.Log(debugString);
-        }
+        //     Debug.Log(debugString);
+        // }
 
         for (int i = difficultyLevel; i >= 0; i--)
         {
