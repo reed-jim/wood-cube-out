@@ -21,6 +21,7 @@ public class NotificationPopup : BasePopup
         IAPCoinItemUI.showNotificationEvent += ShowNotification;
         RemoveAdPopup.showNotificationEvent += ShowNotification;
         SaferioIAPManager.showNotificationEvent += ShowNotification;
+        IAPReviewPopup.showNotificationEvent += ShowNotification;
 
         okButton.onClick.AddListener(Hide);
     }
@@ -32,6 +33,7 @@ public class NotificationPopup : BasePopup
         IAPCoinItemUI.showNotificationEvent -= ShowNotification;
         RemoveAdPopup.showNotificationEvent -= ShowNotification;
         SaferioIAPManager.showNotificationEvent -= ShowNotification;
+        IAPReviewPopup.showNotificationEvent -= ShowNotification;
     }
 
     protected override void Show(Action onCompletedAction = null)

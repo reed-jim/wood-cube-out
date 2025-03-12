@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -18,34 +19,69 @@ public class IAPReviewPopup : BasePopup
 
     #region PRIVATE FIELD
     private int _currentPackIndex;
+    private Dictionary<string, string> localizedPrices;
     #endregion
 
     public static event Action<string> buyIAPEvent;
+    public static event Action requestFetchIAPPrice;
+    public static event Action<string, string> showNotificationEvent;
+
+
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
 
     protected override void MoreActionInAwake()
     {
+        localizedPrices = new Dictionary<string, string>();
+
+        for (int i = 0; i < packagesIAP.Length; i++)
+        {
+            if (!localizedPrices.ContainsKey(packagesIAP[i].ProductId))
+            {
+                localizedPrices.Add(packagesIAP[i].ProductId, $"${packagesIAP[i].Price}");
+            }
+        }
+
+        requestFetchIAPPrice?.Invoke();
+
         ShowPack(0);
     }
 
     protected override void RegisterMoreEvent()
     {
+        SaferioIAPManager.updatePriceEvent += UpdatePrice;
+
         buyButton.onClick.AddListener(ReviewBuy);
         nextButton.onClick.AddListener(Next);
         prevButton.onClick.AddListener(Prev);
     }
 
+    protected override void UnregisterMoreEvent()
+    {
+        SaferioIAPManager.updatePriceEvent -= UpdatePrice;
+    }
+
     private void ShowPack(int packIndex)
     {
         packNameText.text = packagesIAP[packIndex].ProductName;
-        priceText.text = $"${packagesIAP[packIndex].Price}";
+        priceText.text = localizedPrices[packagesIAP[packIndex].ProductId];
         icon.sprite = packIcons[packIndex];
 
-        UIUtil.SetSizeKeepRatioX(icon, 0.35f * container.sizeDelta.x);
+        UIUtil.SetSizeKeepRatioX(icon, 0.3f * container.sizeDelta.x);
     }
 
     private void ReviewBuy()
     {
-        buyIAPEvent?.Invoke(packagesIAP[_currentPackIndex].ProductId);
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+        }
+        else
+        {
+            buyIAPEvent?.Invoke(packagesIAP[_currentPackIndex].ProductId);
+        }
+
+        // DEBUG
+        // showResourcesEarnPopupEvent?.Invoke(7500, new int[3], false);
     }
 
     private void Next()
@@ -74,5 +110,27 @@ public class IAPReviewPopup : BasePopup
         }
 
         ShowPack(_currentPackIndex);
+    }
+
+    private void UpdatePrice(string productId, string price)
+    {
+        if (localizedPrices == null)
+        {
+            localizedPrices = new Dictionary<string, string>();
+        }
+
+        if (!localizedPrices.ContainsKey(productId))
+        {
+            localizedPrices.Add(productId, price);
+        }
+        else
+        {
+            localizedPrices[productId] = price;
+        }
+
+        if (packagesIAP[_currentPackIndex].ProductId == productId)
+        {
+            priceText.text = localizedPrices[productId];
+        }
     }
 }
