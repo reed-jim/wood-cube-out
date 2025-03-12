@@ -4372,6 +4372,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2187068927864805548}
   - component: {fileID: 1691666597307081555}
+  - component: {fileID: 3718487378384800648}
   m_Layer: 0
   m_Name: Level 16
   m_TagString: Untagged
@@ -4387,10 +4388,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3989043945897771147}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3, z: 0}
+  m_LocalRotation: {x: -0.3266407, y: -0.2951603, z: 0.13529907, w: 0.8876263}
+  m_LocalPosition: {x: 0, y: -0.84, z: 10}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5300639983181636462}
   - {fileID: 5293401442545626242}
@@ -4423,7 +4424,7 @@ Transform:
   - {fileID: 776526717912153728}
   - {fileID: 2969282648726139525}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: -30, y: -45, z: 30}
 --- !u!114 &1691666597307081555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4438,6 +4439,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateSpeedMultiplier: 0.2
   isDisableAutoRotatingAtStart: 0
+--- !u!114 &3718487378384800648
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3989043945897771147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c129a88c452b8714798c6d6342d15619, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4384409244044102789
 GameObject:
   m_ObjectHideFlags: 0
