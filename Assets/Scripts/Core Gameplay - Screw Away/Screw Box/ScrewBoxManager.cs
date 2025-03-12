@@ -661,7 +661,11 @@ public class ScrewBoxManager : MonoBehaviour
 
         if (screwBoxSlot != null)
         {
-            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot, isCheckObstacles: false);
+
+            screwBoxSlot.Fill(screw);
+            
+            // looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
         }
         else
         {

@@ -2,9 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Firebase.RemoteConfig;
 using PrimeTween;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -102,6 +100,7 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
+        // // NOT LOOP
         // if (isLoopLevel)
         // {
         //     showSceneTransitionEvent?.Invoke();
