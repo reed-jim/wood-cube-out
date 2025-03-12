@@ -243,12 +243,19 @@ public class ScrewManager : MonoBehaviour
                 _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
             Vector3 pointTwo = pointOne + 10f * _screws[i].transform.forward;
 
-            Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
+            Collider[] hits = new Collider[16];
+
+            Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
 
             if (hits != null)
             {
                 for (int j = 0; j < hits.Length; j++)
                 {
+                    if (hits[j] == null)
+                    {
+                        continue;
+                    }
+
                     if (hits[j].transform.GetInstanceID() == _screws[i].transform.parent.GetInstanceID())
                     {
                         continue;
@@ -306,7 +313,7 @@ public class ScrewManager : MonoBehaviour
             // not valid faction
             if (numObstacleEachScrewEachFaction[faction].Count < 3)
             {
-                difficultyLevelByFactions[faction] += 999;
+                difficultyLevelByFactions[faction] += 99999;
 
                 continue;
             }

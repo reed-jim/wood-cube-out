@@ -473,7 +473,9 @@ public class LevelDifficultyCalculator : EditorWindow
         Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
         Vector3 pointTwo = pointOne + 10f * screw.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
+        Collider[] hits = new Collider[16];
+
+        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
 
         List<string> obstacleInstanceIds = new List<string>();
 
@@ -481,6 +483,11 @@ public class LevelDifficultyCalculator : EditorWindow
         {
             for (int i = 0; i < hits.Length; i++)
             {
+                if (hits[i] == null)
+                {
+                    continue;
+                }
+
                 if (hits[i].transform == screw.parent)
                 {
                     continue;
