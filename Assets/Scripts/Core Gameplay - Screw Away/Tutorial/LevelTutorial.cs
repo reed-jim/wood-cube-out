@@ -58,8 +58,6 @@ public class LevelTutorial : MonoBehaviour
 
         gameObject.SetActive(false);
 
-        return;
-
         StartCoroutine(TutorialStepOne());
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
