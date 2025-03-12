@@ -39,6 +39,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPReviewPopup.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
+        IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -72,6 +73,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPReviewPopup.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
+        IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
     }
 
     private void Init()
