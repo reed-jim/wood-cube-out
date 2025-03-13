@@ -22,6 +22,10 @@ public static class GamePersistentVariable
     public static bool IsVibrate;
     #endregion
 
+    #region SOUND
+    public static bool isSoundTightenScrewPlaying;
+    #endregion
+
     #region FIREBASE
     public static bool isFirebaseAvailable;
     #endregion

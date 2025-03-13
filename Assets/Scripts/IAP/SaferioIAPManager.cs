@@ -183,6 +183,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         bool validPurchase = true; // Presume valid for platforms with no R.V.
 
+#if !UNITY_EDITOR
 #if UNITY_ANDROID || UNITY_IOS || UNITY_STANDALONE_OSX
         // Choose one Apple certificate. NOTE AppleStoreKitTestTangle requires
         // the active Xcode Scheme set to use a StoreKit Configuration file.
@@ -196,6 +197,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 #else
     var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
         AppleStoreKitTestTangle.Data(), Application.identifier);
+#endif
 #endif
 
         try
@@ -227,6 +229,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
                         userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
                         userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+
+                        userResourcesObserver.ChangeCoin(productData.CoinQuantity);
 
                         if (productData.IsRemoveAd)
                         {

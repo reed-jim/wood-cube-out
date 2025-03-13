@@ -180,7 +180,12 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsDone || _screws[i].IsLocked)
+            if (_screws[i].IsLocked)
+            {
+                continue;
+            }
+
+            if (_screws[i].IsDone && !_screws[i].IsInScrewPort)
             {
                 continue;
             }
@@ -188,16 +193,16 @@ public class ScrewManager : MonoBehaviour
             remainingScrewByFaction[_screws[i].Faction]++;
         }
 
-        // CHECK SCREW PORTS
-        for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
-        {
-            ScrewBoxSlot screwBoxSlot = screwBoxManager.ScrewPorts[i];
+        // // CHECK SCREW PORTS
+        // for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
+        // {
+        //     ScrewBoxSlot screwBoxSlot = screwBoxManager.ScrewPorts[i];
 
-            if (screwBoxSlot.IsFilled)
-            {
-                remainingScrewByFaction[screwBoxSlot.Screw.Faction]++;
-            }
-        }
+        //     if (screwBoxSlot.IsFilled)
+        //     {
+        //         remainingScrewByFaction[screwBoxSlot.Screw.Faction]++;
+        //     }
+        // }
 
         // int remainingScrew = remainingScrewByFaction.Sum(item => item.Value);
 
@@ -361,16 +366,16 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        // Modify chance of factions of screw port
-        for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
-        {
-            if (screwBoxManager.ScrewPorts[i].IsFilled)
-            {
-                // override old value
-                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] =
-                    _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
-            }
-        }
+        // // Modify chance of factions of screw port
+        // for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
+        // {
+        //     if (screwBoxManager.ScrewPorts[i].IsFilled)
+        //     {
+        //         // override old value
+        //         difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] =
+        //             _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
+        //     }
+        // }
 
         return difficultyLevelByFactions;
     }
