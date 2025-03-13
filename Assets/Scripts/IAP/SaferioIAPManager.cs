@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Extension;
@@ -196,8 +197,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
             AppleTangle.Data(), Application.identifier);
 #else
-    var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
-        AppleStoreKitTestTangle.Data(), Application.identifier);
+            var validator = new CrossPlatformValidator(GooglePlayTangle.Data(),
+                AppleStoreKitTestTangle.Data(), Application.identifier);
 #endif
 
         try
@@ -230,6 +231,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
                         userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
 
+                        userResourcesObserver.ChangeCoin(productData.CoinQuantity);
+
                         if (productData.IsRemoveAd)
                         {
                             UserData.IsRemoveAds = true;
@@ -243,6 +246,12 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
+
+                        // // Simulate DELAY on iOS    
+                        // Tween.Delay(3).OnComplete(() =>
+                        // {
+                        //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+                        // });
 
                         showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
 
