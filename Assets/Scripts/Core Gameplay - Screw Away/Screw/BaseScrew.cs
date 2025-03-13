@@ -288,7 +288,12 @@ public class BaseScrew : MonoBehaviour, IScrew
                         _isRotating = true;
                         rotateSpeed *= 2;
 
-                        SoundManager.Instance.PlaySoundTightenScrew();
+                        if (!GamePersistentVariable.isSoundTightenScrewPlaying)
+                        {
+                            SoundManager.Instance.PlaySoundTightenScrew();
+
+                            GamePersistentVariable.isSoundTightenScrewPlaying = true;
+                        }
 
                         _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                         .OnComplete(() =>
@@ -311,6 +316,8 @@ public class BaseScrew : MonoBehaviour, IScrew
                                 screwMovedCompletedEvent?.Invoke(this);
 
                                 onCompleteAction?.Invoke();
+
+                                GamePersistentVariable.isSoundTightenScrewPlaying = false;
                             })
                         );
                     }));

@@ -35,7 +35,9 @@ public class RotateObject : MonoBehaviour
 
         if (!isDisableAutoRotatingAtStart)
         {
-            _isAutoRotating = true;
+            // _isAutoRotating = true;
+
+            _remainingTimeToAutoRotate = 2;
 
             StartCoroutine(AutoRotating());
         }
