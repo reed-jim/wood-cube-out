@@ -349,6 +349,10 @@ public class ScrewBoxManager : MonoBehaviour
 
                 return emptyScrewPort;
             }
+            else
+            {
+                ShakeAllScrewPorts();
+            }
         }
 
         return null;
@@ -783,14 +787,14 @@ public class ScrewBoxManager : MonoBehaviour
         {
             bool isLast = i == screwPorts.Count - 1;
 
-            Tween.PunchScale(screwPorts[i].transform, strength: 0.3f * Vector3.one, duration: 0.4f)
+            _tweens.Add(Tween.PunchScale(screwPorts[i].transform, strength: 0.3f * Vector3.one, duration: 0.3f)
             .OnComplete(() =>
             {
                 if (isLast)
                 {
                     _isScrewPortsShaking = false;
                 }
-            });
+            }));
         }
 
         _isScrewPortsShaking = true;
