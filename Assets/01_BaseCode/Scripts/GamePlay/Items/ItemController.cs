@@ -18,10 +18,6 @@ public class ItemController : MonoBehaviour
         {
             foreach (var item in lsBlockBrands)
             {
-                if (item.typeStand == BirdSort2.GamePlayController_BirdSort.Instance.level.typeStandInLevel)
-                {
-                    return item.sprite;
-                }
             }
             return null;
         }
@@ -98,7 +94,7 @@ public class ItemController : MonoBehaviour
 
     private IEnumerator ActiveItemSellectLevelHandle()
     {
-        yield return new WaitUntil(() => BirdSort2.GamePlayController_BirdSort.Instance.extralPlayController.IsExtralsReady());
+        yield return new WaitUntil(() => true);
         for (int i = 0; i < items.Count; i++)
         {
             int index = i;
@@ -149,7 +145,6 @@ public class ItemController : MonoBehaviour
 [System.Serializable]
 public class BlockBrand
 {
-    public TypeStand typeStand;
     public Sprite sprite;
 
 

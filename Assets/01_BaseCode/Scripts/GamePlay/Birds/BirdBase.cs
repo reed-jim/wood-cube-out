@@ -141,9 +141,7 @@ public class BirdBase : MonoBehaviour
     [HideInInspector] public bool isDie;
     [HideInInspector] public bool isMatch3Done;
     public CheckPointTran checkPointIn;
-
-    public List<ExtralLayer> extralsLayer;
-
+    
     protected IEnumerator flyInitCroutine;
     protected Action<object> onCatchBird;
     protected Action<object> onExitBird;
@@ -381,28 +379,11 @@ public class BirdBase : MonoBehaviour
     }
 
     #region Layer
-    public virtual void AddLayerExtral(params ExtralLayer[] layers)
-    {
-        if (extralsLayer == null)
-            extralsLayer = new List<ExtralLayer>();
-
-        for (int i = 0; i < layers.Length; i++)
-        {
-            int index = i;
-            extralsLayer.Add(layers[index]);
-        }
-    }
 
     public virtual void ChangeLayer(int layer, string layerName)
     {
         meshRenderer.sortingLayerName = layerName;
         meshRenderer.sortingOrder = layer;
-
-        for (int i = 0; i < extralsLayer.Count; i++)
-        {
-            int index = i;
-            extralsLayer[index].SetLayer(layer, layerName);
-        }
 
     }
 
@@ -799,9 +780,6 @@ public class BirdBase : MonoBehaviour
         if (!GamePlayController.Instance.level.isClickToScreen)
             return;
 
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
-            return;
-
         if (!isBirdInGadern)
             return;
         if (isDie)
@@ -827,8 +805,7 @@ public class BirdBase : MonoBehaviour
 
     public bool IsCanSellect()
     {
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
-            return false;
+      
         if (!isBirdInGadern)
             return false;
         if (isDie)
@@ -845,8 +822,7 @@ public class BirdBase : MonoBehaviour
     {
         if (GamePlayController.Instance.state != StateGame.Playing)
             return;
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
-            return;
+        
         if (!isBirdInGadern)
             return;
         if (isDie)
@@ -878,7 +854,6 @@ public class BirdBase : MonoBehaviour
             fsm.lockFSM = true;
 
             bool isHasMatch3 = GamePlayController.Instance.level.CheckMatch3Bird(isCheck: true);
-            GamePlayController.Instance.extralPlayController.CheckExtrals(this, null, isHasMatch3, isUseManget: isUseManget);
             EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.EXIT_BIRD, this);
 
             GamePlayController.Instance.tutCoreGameController.NextTut();
@@ -901,8 +876,6 @@ public class BirdBase : MonoBehaviour
     public void OnNoneSellect()
     {
         if (GamePlayController.Instance.state != StateGame.Playing)
-            return;
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
             return;
 
         if (!isBirdInGadern)

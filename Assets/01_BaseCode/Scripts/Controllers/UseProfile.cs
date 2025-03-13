@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using System.Globalization;
 using BestHTTP.Extensions;
-//using MoreMountains.NiceVibrations;
 using Newtonsoft.Json;
 using Facebook.Unity;
 using PlayFab;
@@ -1380,6 +1379,19 @@ public class UseProfile : MonoBehaviour
     }
     #endregion
 
+    #region GamePersistentVariable
+    public static Vector2 canvasSize;
+    public static Vector2 canvasSizeAfterCanvasScaler;
+    public static Vector2 canvasScale;
+    
+    public static Vector2 screenSizeWorld;
+    
+    public static int levelPrefab; 
+    public static int numScrewBoxUnlocked; 
+    public static bool isAllowedSkipLevel;
+    public static bool isPassedStepOneTutorial; 
+    public static Dictionary<int, List<Transform>> pieceDependencies;
+    #endregion
 }
 
 

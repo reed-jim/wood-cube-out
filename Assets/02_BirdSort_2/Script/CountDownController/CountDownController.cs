@@ -22,8 +22,7 @@
 
         public void HandleCoolDown()
         {
-            timeSpan = new TimeSpan(0, level.levelConfig.min, level.levelConfig.second);
-
+           
             HandelShowTime();
             wasCoolDown = true;
             if (coroutineCoolDown != null)

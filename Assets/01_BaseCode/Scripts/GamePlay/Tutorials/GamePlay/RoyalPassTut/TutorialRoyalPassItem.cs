@@ -8,8 +8,6 @@ public class TutorialRoyalPassItem : TutorialBase
     public const string TUT_ROYAL_PASS_ITEM_1 = "tut_royal_pass_item_1";
 
     [SerializeField] private Image blindPanel;
-    public BirdSort2.StandingBase stand_1;
-    public BirdSort2.StandingBase stand_2;
     public int countClick;
     public ChallengeType challengeType;
 
@@ -46,10 +44,6 @@ public class TutorialRoyalPassItem : TutorialBase
 
         handTut.gameObject.SetActive(true);
         blindPanel.gameObject.SetActive(true);
-        stand_1 = BirdSort2.GamePlayController_BirdSort.Instance.level.standsInLevel_Real[0];
-        stand_2 = BirdSort2.GamePlayController_BirdSort.Instance.level.standsInLevel_Real[1];
-        stand_1.transform.parent = blindPanel.transform;
-        handTut.transform.position = stand_1.slots[stand_1.slots.Count - 1].transform.position;
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_CLICK_STANDING, OnClickPanel);
 
 
@@ -59,8 +53,6 @@ public class TutorialRoyalPassItem : TutorialBase
     {
         if (countClick == 0)
         {
-            stand_2.transform.parent = blindPanel.transform;
-            handTut.transform.DOMove(stand_2.slots[stand_2.slots.Count - 1].transform.position, 0.7f);
             countClick += 1;
         }
         else
@@ -78,8 +70,6 @@ public class TutorialRoyalPassItem : TutorialBase
     public override void OnEndTut()
     {
         base.OnEndTut();
-        stand_1.transform.parent = BirdSort2.GamePlayController_BirdSort.Instance.level.leftStandParent_Real;
-        stand_2.transform.parent = BirdSort2.GamePlayController_BirdSort.Instance.level.rightStandParent_Real;
         EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_CLICK_STANDING, OnClickPanel);
         handTut.gameObject.SetActive(false);
         blindPanel.gameObject.SetActive(false);

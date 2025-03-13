@@ -223,10 +223,8 @@ namespace BirdSort2
 
             if (currentLevelPlay == 1)
             {
-                var stand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real[0];
+             
                 m_handTutGamePlay.gameObject.SetActive(true);
-                m_handTutGamePlay.transform.position = stand.posTut.position;
-                //GameController.Instance.AnalyticsController.LogTutLevelStart(currentLevelPlay);
             }
         }
 
@@ -253,10 +251,9 @@ namespace BirdSort2
                     indexStand = 0;
                 }
 
-                var stand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real[indexStand];
+               
                 m_handTutGamePlay.gameObject.SetActive(true);
-                m_handTutGamePlay.transform.position = stand.posTut.position;
-                isTutLevelExtral = true;
+               isTutLevelExtral = true;
             }
         }
 
@@ -271,17 +268,7 @@ namespace BirdSort2
 
             if (currentLevelPlay == 1)
             {
-                var standTarget = GamePlayController_BirdSort.Instance.hintController.GetPosHint(StandChoice.ID);
-                if (standTarget != null)
-                {
-                    m_handTutGamePlay.gameObject.SetActive(true);
-                    m_handTutGamePlay.transform.DOKill();
-                    m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                }
-                else
-                {
-                    // m_handTut.gameObject.SetActive(false);
-                }
+                
             }
         }
 
@@ -292,26 +279,7 @@ namespace BirdSort2
             int currentLevelPlay = UseProfile.CurrentLevelPlay;
             if (currentLevelPlay == 1)
             {
-                if (currentStand.isTargetHint)
-                {
-                    ActiveTutGamePlay(currentStand);
-                    currentStand.isTargetHint = false;
-                    return;
-                }
-
-                var standTarget = GamePlayController_BirdSort.Instance.hintController.GetPosCanHint();
-
-                if (standTarget != null)
-                {
-                    standTarget.isTargetHint = true;
-                    m_handTutGamePlay.gameObject.SetActive(true);
-                    m_handTutGamePlay.transform.DOKill();
-                    m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                }
-                else
-                {
-                    // m_handTut.gameObject.SetActive(false);
-                }
+               
             }
         }
 
@@ -319,20 +287,7 @@ namespace BirdSort2
         {
 
 
-            int currentLevelPlay = UseProfile.CurrentLevelPlay;
-            if (isTutLevelExtral && (currentLevelPlay == LEVEL_START_TUT_CAGE || currentLevelPlay == LEVEL_START_TUT_SLEEP))
-            {
-                if (!doneTutExtral)
-                {
-                    var standTarget = GamePlayController_BirdSort.Instance.hintController.GetStandCanSort(currentStand.ID);
-                    if (standTarget != null)
-                    {
-                        m_handTutGamePlay.gameObject.SetActive(true);
-                        m_handTutGamePlay.transform.DOKill();
-                        m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                    }
-                }
-            }
+            
         }
 
         private int numClickStand;
@@ -346,43 +301,18 @@ namespace BirdSort2
                  currentLevelPlay == LEVEL_START_TUT_EGG || currentLevelPlay == LEVEL_START_TUT_LOCKSTAND) &&
                 !doneTutExtral)
             {
-                if (currentLevelPlay == LEVEL_START_TUT_LOCKSTAND)
-                {
-                    var standTarget = GamePlayController_BirdSort.Instance.hintController.GetStandCanSort2(currentStand.ID);
-                    if (standTarget != null)
-                    {
-                        m_handTutGamePlay.gameObject.SetActive(true);
-                        m_handTutGamePlay.transform.DOKill();
-                        m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                    }
-                }
-                else if (currentLevelPlay == LEVEL_START_TUT_EGG)
-                {
-                    var standTarget =
-                        GamePlayController_BirdSort.Instance.hintController.GetStandCanSort2(currentStand.ID,
-                            numClickStand < 2 ? false : true);
-                    if (standTarget != null)
-                    {
-                        m_handTutGamePlay.gameObject.SetActive(true);
-                        m_handTutGamePlay.transform.DOKill();
-                        m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                    }
-                }
-                else
-                {
-                    var standTarget = GamePlayController_BirdSort.Instance.hintController.GetPosHint2(currentStand.ID);
-                    if (standTarget != null)
-                    {
-                        m_handTutGamePlay.gameObject.SetActive(true);
-                        m_handTutGamePlay.transform.DOKill();
-                        m_handTutGamePlay.transform.DOMove(standTarget.posTut.position, 0.5f);
-                    }
-                }
+                
             }
-
-            numClickStand++;
+            else if (currentLevelPlay == LEVEL_START_TUT_EGG)
+            {
+                   
+            }
+            else
+            {
+                    
+            }
         }
-
+        
         public void DoneTutExtral()
         {
 

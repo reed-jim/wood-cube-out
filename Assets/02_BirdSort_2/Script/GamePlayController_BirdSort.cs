@@ -33,7 +33,6 @@ namespace BirdSort2
         public Level_BirdSort_2 level;
         public ReturnController returnController;
         public SuggetItem_BirdSort suggetBoosterController;
-        public BreakRuleController breakRuleController;
         public ShuffleController shuffleController;
         public ThemeController themeController;
 
@@ -75,8 +74,6 @@ namespace BirdSort2
             playerContain.Init();
             level.Init();
             returnController.Init();
-            extralPlayController.Init();
-            breakRuleController.Init();
             shuffleController.Init();
             themeController.Init();
             gameScene.Init();

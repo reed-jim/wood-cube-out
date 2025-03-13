@@ -15,7 +15,7 @@ public class TutorialExtralController : TutorialFunController
 
     private IEnumerator OnAllExtralReady()
     {
-        yield return new WaitUntil(() => GamePlayController.Instance.extralPlayController.IsAllExtralReady);
+        yield return new WaitUntil(() => true);
         
         StartTut();
     }

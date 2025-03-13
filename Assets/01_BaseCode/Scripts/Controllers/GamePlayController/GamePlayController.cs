@@ -25,7 +25,6 @@ public class GamePlayController : Singleton<GamePlayController>
     public ReturnController returnController;
     public ItemController itemController;
     public CameraFit cameraFit;
-    public ExtralPlayController extralPlayController;
     public ScoreIQController scoreController;
     public IQScoreController iqScoreController;
     public ChallengeGameplayController challengeGameplayController;
@@ -71,7 +70,6 @@ if (safeArea != null)
         InitLevel();
         returnController.Init();
         itemController.Init();
-        extralPlayController.Init();
         scoreController.Init();
         iqScoreController.Init();
         itemShowFarmeController.Init();

@@ -179,8 +179,6 @@ public class FlockController : MonoBehaviour
             return;
         if (GamePlayController.Instance.state != StateGame.Playing)
             return;
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
-            return;
 
         UpdateFlocking();
     }

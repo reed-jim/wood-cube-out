@@ -58,19 +58,7 @@ public class ShuffleItem_BirdSort : ItemBase
             //         return false;
             //     }               
             // }
-            var standChosing = BirdSort2.GamePlayController_BirdSort.Instance.level.standChosing;
-            if (standChosing != null)
-            {
-                foreach (var item in standChosing.birdsOnArray)
-                {
-                    item.DisableOutLine();
-                }
-                BirdSort2.GamePlayController_BirdSort.Instance.level.standChosing = null;
-            }
-            if (!BirdSort2.GamePlayController_BirdSort.Instance.extralPlayController.IsExtralsReady())
-            {
-                return false;
-            }
+           
             HandleShuffle();
             return true;
         }
@@ -78,10 +66,7 @@ public class ShuffleItem_BirdSort : ItemBase
     public void HandleShuffle()
     {
       
-        foreach (var item in level.standsInLevel_Real)
-        {
-            item.ShuffleStack();
-        }
+        
 
         GamePlayController_BirdSort.Instance.returnController.ResetReturn();
         BirdSort2.GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();

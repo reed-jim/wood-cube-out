@@ -17,9 +17,7 @@ public class LevelConfig
     public List<BirdLevelData> birdLevelData;
     public List<CheckPointConfig> specialPoints;
     public List<RequriemntData> requirements;
-
-    [Header("========= Extrals Config ============")]
-    public List<ExtralPlayData> extralsConfig;
+    
 
     public int GetTotalBird()
     {
@@ -157,7 +155,6 @@ public class Level : MonoBehaviour
         if (lvJson != null)
         {
             levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
-            isHasExtral = levelConfig.extralsConfig != null && levelConfig.extralsConfig.Count > 0;
             //Debug.Log("isHasExtral " + isHasExtral);
         }
         else
@@ -617,7 +614,6 @@ public class Level : MonoBehaviour
             //isTempPauseLevel = true;
             GamePlayController.Instance.state = StateGame.Playing;
             GamePlayController.Instance.itemController.ActiveItemSellectLevel();
-            SpawnExtral();
             GamePlayController.Instance.challengeGameplayController.SpawnItems();
             isBirdFlying = false;
            
@@ -1029,31 +1025,7 @@ public class Level : MonoBehaviour
 
         StartCoroutine(Helper.StartAction(() => { ReviveBox.Setup().Show(type, GetItemYouMiss(), isLoseExtral); }, 0.45f));
     }
-
-    public virtual void SpawnExtral()
-    {
-        if (levelConfig != null)
-        {
-            GamePlayController.Instance.extralPlayController.SpawnExtrals(levelConfig.extralsConfig);
-            //spawnExtralCorutine = Helper.StartAction(() =>
-           // {
-                var gameplayController = GamePlayController.Instance;
-
-                gameplayController.extralPlayController.AppearExtral();
-
-                gameplayController.tutCoreGameController.OnBirdReady();
-                gameplayController.tutItemsController.OnBirdReady();
-                gameplayController.tutExtralController.OnBirdReady();
-
-                gameplayController.tutCoreGameController.StartTut();
-                gameplayController.tutItemsController.StartTut();
-
-               
-                // gameplayController.tutExtralController.StartTut();
-            //}, () => GamePlayController.Instance.state == StateGame.Playing);
-           // StartCoroutine(spawnExtralCorutine);
-        }
-    }
+    
 
     public IEnumerator WaringTime()
     {
@@ -1081,7 +1053,6 @@ public class Level : MonoBehaviour
 
         if (isReviveLoseExtral)
         {
-            GamePlayController.Instance.extralPlayController.ReviveExtral();
         }
 
         if (isResetSlot)
@@ -1177,8 +1148,6 @@ public class Level : MonoBehaviour
         if (isTempPauseLevel)
             return;
         if (GamePlayController.Instance.state != StateGame.Playing)
-            return;
-        if (!GamePlayController.Instance.extralPlayController.IsAllExtralReady)
             return;
 
         if (Input.GetMouseButtonDown(0))

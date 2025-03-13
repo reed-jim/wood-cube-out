@@ -103,7 +103,7 @@ public class ReturnController : MonoBehaviour
 
                         }
                     }
-                    GamePlayController.Instance.extralPlayController.ReturnExtrals();
+                    ;
                     GamePlayController.Instance.itemController.suggetUseItemInGame.ResetSugget();
                     return true;
                 }

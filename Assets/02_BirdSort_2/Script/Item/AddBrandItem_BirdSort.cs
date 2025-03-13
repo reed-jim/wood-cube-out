@@ -23,14 +23,6 @@ public class AddBrandItem_BirdSort : ItemBase
         {
             return false;
         }
-
-
-
-        if (BirdSort2.GamePlayController_BirdSort.Instance.level.standsInLevel_Real.Count >= 22)
-        {
-            return false;
-        }
-
         if (isAddedBranch)
             return false;
 
@@ -51,7 +43,7 @@ public class AddBrandItem_BirdSort : ItemBase
         //           );
         //    return false;
         //}
-        bool isAdd = BirdSort2.GamePlayController_BirdSort.Instance.level.AddStandHandleBool();
+        bool isAdd = true;
         if (!isAdd)
         {
             GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp

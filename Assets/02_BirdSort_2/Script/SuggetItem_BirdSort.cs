@@ -37,24 +37,7 @@
         {
             get
             {
-                switch (GamePlayController_BirdSort.Instance.level.typeStandInLevel)
-                {
-                    case TypeStand.Slot_4:
-                        return 4;
-                        break;
-                    case TypeStand.Slot_5:
-                        return 5;
-                        break;
-                    case TypeStand.Slot_6:
-                        return 6;
-                        break;
-                    case TypeStand.Slot_7:
-                        return 7;
-                        break;
-                    case TypeStand.Slot_8:
-                        return 8;
-                        break;
-                }
+                
                 return 4;
             }
         }
@@ -70,16 +53,9 @@
             lsStandingBase = new List<StandingBase>();
       
 
-            for (int i = 0; i < level.standsInLevel_Real.Count; i++)
-            {
-                if (level.standsInLevel_Real[i].btnCick.activeSelf)
-                {
-                    lsStandingBase.Add(level.standsInLevel_Real[i]);
-                }
-            }
+           
             for (int i = 0; i < lsStandingBase.Count; i++)
             {
-                lsCloneData.Add(new CloneData() { id = lsStandingBase[i].ID, data = lsStandingBase[i].CompareBirdToId });
             }
             isSolved = false;
             lsSolutions = new List<Solution>();
@@ -87,11 +63,7 @@
             FindSolution(lsCloneData);
             if (lsSolutions.Count > 0)
             {
-                standFrom = level.GetStandingBaseReal(lsSolutions[0].From);
-                standTo = level.GetStandingBaseReal(lsSolutions[0].To);
-                standFrom.birdsOnArray[0].HandleOnActionSuggetBooster();
-                standTo.HandleOnActionSuggetBooster();
-                SpawnHand();
+               SpawnHand();
                 tempAction = (param) => OnClickBrand((int)param);
                 EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_CLICK_STANDING, tempAction);
 
@@ -119,8 +91,6 @@
             if (standFrom != null && standTo != null)
             {
                 hand.gameObject.SetActive(false);
-                standFrom.birdsOnArray[0].HandleOffActionSuggetBooster();
-                standTo.HandleOffActionSuggetBooster();
             }
         }
         private void FindSolution(List<CloneData> param)
@@ -156,8 +126,6 @@
         private void SpawnHand()
         {
             hand.gameObject.SetActive(true);
-            hand.transform.position = standFrom.birdsOnArray[0].gameObject.transform.position;
-            // hand.transform.parent = standFrom.birdsOnArray[0].gameObject.transform;
 
         }
         private void OnClickBrand(int idBrand)
@@ -168,48 +136,7 @@
 
             if (standFrom != null && standTo != null)
             {
-                if (handInBird && idBrand != standTo.ID)
-                {
-                    hand.gameObject.SetActive(false);
-                    standTo.HandleOffActionSuggetBooster();
-                    standFrom.birdsOnArray[0].HandleOffActionSuggetBooster();
-                    EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_CLICK_STANDING, tempAction);
-                    BirdSort2.GamePlayController_BirdSort.Instance.gameScene.GetItem(GiftType.ShuffleItem_BirdSort).OffUseButton(true);
-                    return;
-                }
-
-                if (idBrand != standFrom.ID && idBrand != standTo.ID && !handInBird)
-                {
-                    hand.gameObject.SetActive(false);
-                    standFrom.birdsOnArray[0].HandleOffActionSuggetBooster();
-                    standTo.HandleOffActionSuggetBooster();
-                    EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_CLICK_STANDING, tempAction);
-                    BirdSort2.GamePlayController_BirdSort.Instance.gameScene.GetItem(GiftType.ShuffleItem_BirdSort).OffUseButton(true);
-                    return;
-                }
-
-                if (idBrand == standTo.ID && handInBird)
-                {
-                    hand.gameObject.SetActive(false);
-                    standTo.HandleOffActionSuggetBooster();
-                    EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_CLICK_STANDING, tempAction);
-                    BirdSort2.GamePlayController_BirdSort.Instance.gameScene.GetItem(GiftType.ShuffleItem_BirdSort).OffUseButton(true);
-                    return;
-                }
-
-
-
-                if (idBrand == standFrom.ID && !handInBird)
-                {
-                    // hand.transform.parent = standTo.slots[standTo.slots.Count - 1].gameObject.transform;
-                    hand.transform.DOMove(standTo.slots[standTo.slots.Count - 1].gameObject.transform.position, 0.5f);
-                    handInBird = true;
-                    return;
-                }
-
-
-
-
+                
 
             }
 
@@ -224,37 +151,7 @@
 
             get
             {
-                foreach (var item in level.standsInLevel_Real)
-                {
-                    if (!item.AllBirdIsInStand)
-                    {
-                        return false;
-                    }
-                }
-                var standChosing = BirdSort2.GamePlayController_BirdSort.Instance.level.standChosing;
-                if (standChosing != null)
-                {
-                    foreach (var item in standChosing.birdsOnArray)
-                    {
-                        item.DisableOutLine();
-                    }
-                    BirdSort2.GamePlayController_BirdSort.Instance.level.standChosing = null;
-                }
-
-                if (hand.activeSelf)
-                {
-                    return false;
-                }
-                
-                if(BirdSort2.GamePlayController_BirdSort.Instance.tutorialController.isHasTutInLevel)
-                {
-                    return false;
-                }
-                
-
-                BirdSort2.GamePlayController_BirdSort.Instance.gameScene.GetItem(GiftType.ShuffleItem_BirdSort).OffUseButton(false);
-                HandleSugget();
-                return true;
+                return false;
             }
         }
 

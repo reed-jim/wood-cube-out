@@ -44,13 +44,7 @@ public class ReturnItem_BirdSort : ItemBase
 
         get
         {
-            foreach (var item in BirdSort2.GamePlayController_BirdSort.Instance.level.standsInLevel_Real)
-            {
-                if (!item.AllBirdIsInStand)
-                {
-                    return false;
-                }
-            }
+          
             if (BirdSort2.GamePlayController_BirdSort.Instance.returnController.stackReturn.Count <= 0)
             {
 

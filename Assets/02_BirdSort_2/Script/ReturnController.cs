@@ -80,55 +80,7 @@ namespace BirdSort2
         public void Return()
         {
            
-            var data = stackReturn.Pop();
-
-            if (data != null)
-            {
-                IsLockReturn = true;
-                GamePlayController_BirdSort.Instance.tutorialController.OnClickHintReturnBtn();
-                GamePlayController_BirdSort.Instance.extralPlayController.ReturnExtrals();
-                bool isReturnScore = false;
-                int idBirdBack = -1;
-                int idStandBack = -1;
-                for (int i = 0; i < data.data.Count; i++)
-                {
-                    int index = i;
-
-                    //  Debug.Log("============data.data ========= " + data.data[index].bird.gameObject.GetInstanceID());
-                    if (data.data[index].newStand != null)
-                    {
-                        if (data.data[index].newStand.birdsOn.Count > 0)
-                        {
-                            var birdFly = data.data[index].newStand.birdsOn.Pop();
-                            if (birdFly != null)
-                            {
-                                if (data.data[index].oldStand != null)
-                                    data.data[index].oldStand.BackTurn(birdFly, isOldStand: true);
-                            }
-                        }
-                        else
-                        {
-                            if (data.data[index].oldStand != null)
-                                data.data[index].oldStand.BackTurn(data.data[index].bird, isOldStand: true);
-                        }
-                    }
-                    else
-                    {
-                        if (data.data[index].oldStand != null)
-                        {
-                            data.data[index].oldStand.BackTurn(data.data[index].bird, isOldStand: true);
-                            isReturnScore = true;
-                            idBirdBack = data.data[index].bird.id;
-                            idStandBack = data.data[index].oldStand.ID;
-                        }
-                    }
-                }
-                if (isReturnScore)
-                {
-                    GamePlayController_BirdSort.Instance.extralPlayController.ReAppearExtrals(idBirdBack, idStandBack);
-                }
-               
-            }
+           
        
         }
 

@@ -12,8 +12,7 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
     public Dictionary<ChallengeType, int> PredictItems = new Dictionary<ChallengeType, int>();
 
     private Dictionary<ChallengeType, int> numItemAppearDoneDict = new Dictionary<ChallengeType, int>();
-
-    public List<BirdSort2.BirdBase> lsBird;
+    
 
     public void Init()
     {
@@ -23,19 +22,6 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
     public void SpawnItems()
     {
         itemsChallenge = new Dictionary<ChallengeType, List<ItemChallenge>>(GameController.Instance.challengeController.SpawnChallengeGamePlay(parentItem));
-
-        lsBird = new List<BirdSort2.BirdBase>();
-        var tempLsStand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real;
-
-        foreach (var item in tempLsStand)
-        {
-           for(int i = 0; i < item.lsBirdNoExtra.Count; i ++)
-            {
-                lsBird.Add(item.lsBirdNoExtra[i]);
-            }
-
-        }
-
         foreach (var lstItem in itemsChallenge)
         {
             if (!PredictItems.ContainsKey(lstItem.Key))
@@ -48,33 +34,14 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
             }
             for (int i = 0; i < lstItem.Value.Count; i++)
             {
-                int index = i;
-                BirdSort2.BirdBase birdRandom = randomBird();
-                birdRandom.lsItemChallenges.Add(lstItem.Value[index]);
-                //lstItem.Value[index].checkPointIn = checkPoints[index];
-                lstItem.Value[index].Init( birdRandom.gameObject.transform, () =>
-                {
-                    numItemAppearDoneDict[lstItem.Key]++;
-      
-                    CheckItemAppearDone(lstItem.Key, ()=>
-                    {
-                   
-                    });
-                        
-                }, false);
+              
             }
 
             scoreItems.Add(lstItem.Key, 0);
             BirdSort2.GamePlayController_BirdSort.Instance.itemShowFarmeController.SetUpFrame(lstItem.Key);
         }
         //GetItemChallengeWinLevel();
-        BirdSort2.BirdBase randomBird ()
-        {
-            var ran = Random.Range(0, lsBird.Count);
-            var bird = lsBird[ran];
-            lsBird.RemoveAt(ran);
-            return bird;
-        }
+      
     }
 
 

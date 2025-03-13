@@ -56,7 +56,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
         DontDestroyOnLoad(gameObject);
 
-        GamePersistentVariable.iapInitializeFailReason = "IAP Init FAILED";
+        //GamePersistentVariable.iapInitializeFailReason = "IAP Init FAILED";
     }
 
     private void OnDestroy()
@@ -125,7 +125,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
-        GamePersistentVariable.iapInitializeFailReason = error.ToString();
+        //GamePersistentVariable.iapInitializeFailReason = error.ToString();
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs e)

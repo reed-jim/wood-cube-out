@@ -422,4 +422,171 @@ public static class LevelDifficultyCalculatorUltility
 
         return levelDifficultyConfiguration;
     }
+    public static Dictionary<int, List<Transform>> FindPieceDependency(BasicObjectPart[] pieces)
+    {
+        Dictionary<int, List<Transform>> obstaclesOfPieces = new Dictionary<int, List<Transform>>();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            List<Transform> dependency = GetPieceDependency(pieces[i].transform);
+
+            obstaclesOfPieces.Add(pieces[i].transform.GetInstanceID(), dependency);
+        }
+
+        GamePersistentVariable.pieceDependencies = obstaclesOfPieces;
+
+        // int totalBlockedScrew = 0;
+
+        // for (int i = 0; i < numScrew; i++)
+        // {
+        //     int pieceName = screws[i].transform.parent.GetInstanceID();
+
+        //     List<Transform> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: true);
+
+        //     if (obstacleName.Count > 0)
+        //     {
+        //         totalBlockedScrew++;
+        //     }
+
+        //     if (!obstaclesOfPieces.ContainsKey(pieceName))
+        //     {
+        //         obstaclesOfPieces.Add(pieceName, obstacleName);
+        //     }
+        //     else
+        //     {
+        //         foreach (var item in obstacleName)
+        //         {
+        //             if (!obstaclesOfPieces[pieceName].Contains(item))
+        //             {
+        //                 obstaclesOfPieces[pieceName].Add(item);
+        //             }
+        //         }
+        //     }
+        // }
+
+        return obstaclesOfPieces;
+    }
+    public static List<Transform> GetPieceDependency(Transform piece)
+    {
+        List<Transform> dependency = new List<Transform>();
+
+        Queue<Transform> toProcessPieces = new Queue<Transform>();
+
+        List<int> checkedList = new List<int>();
+
+        toProcessPieces.Enqueue(piece);
+
+        checkedList.Add(piece.GetInstanceID());
+
+        while (toProcessPieces.Count > 0)
+        {
+            Transform nextPiece = toProcessPieces.Dequeue();
+
+            for (int i = 0; i < nextPiece.childCount; i++)
+            {
+                BaseScrew screw = nextPiece.GetChild(i).GetComponent<BaseScrew>();
+
+                List<Transform> newFoundPieces = GetScrewObstacles(screw.transform, true);
+
+                foreach (var item in newFoundPieces)
+                {
+                    if (!checkedList.Contains(item.GetInstanceID()))
+                    {
+                        toProcessPieces.Enqueue(item);
+
+                        if (!dependency.Contains(item))
+                        {
+                            dependency.Add(item);
+                        }
+
+                        checkedList.Add(item.GetInstanceID());
+                    }
+                }
+            }
+        }
+
+        return dependency;
+    }
+    public static List<Transform> GetScrewObstacles(Transform screw, bool isIncludeHiddenScrew)
+    {
+        MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
+
+        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
+        Vector3 pointTwo = pointOne + 10f * screw.forward;
+
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
+
+        List<Transform> obstacleInstanceIds = new List<Transform>();
+
+        if (hits != null)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform == screw.parent)
+                {
+                    continue;
+                }
+
+                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    // obstacleInstanceIds.Add(hits[i].transform);
+
+                    // if (isIncludeHiddenScrew)
+                    // {
+                    //     continue;
+                    // }
+
+                    Vector3 hitPos;
+
+                    // Concave
+                    if (objectPart.IsConcave)
+                    {
+                        RaycastHit hit;
+
+                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+                        Physics.CapsuleCast(
+                            pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
+                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
+
+                        if (hit.collider != null)
+                        {
+                            hitPos = hit.point;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        hitPos = hits[i].ClosestPoint(pointOne);
+                    }
+
+                    // Perpendicular distance
+                    Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
+
+                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
+
+                    distance = Mathf.Max(distance, 0);
+
+                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
+                    {
+                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
+                        {
+                            continue;
+                        }
+
+                        obstacleInstanceIds.Add(hits[i].transform);
+                    }
+                }
+            }
+        }
+
+        return obstacleInstanceIds;
+    }
 }

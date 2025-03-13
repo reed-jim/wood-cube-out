@@ -15,10 +15,7 @@ using UnityEngine;
         }
         public void HandleShuffle()
         {
-            foreach (var item in level.standsInLevel_Real)
-            {
-                item.ShuffleStack();
-            }
+            
         }
     }
   

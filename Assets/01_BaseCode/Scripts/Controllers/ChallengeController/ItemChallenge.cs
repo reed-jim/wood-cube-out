@@ -12,7 +12,6 @@ public class ItemChallenge : SerializedMonoBehaviour
     public const string IDLE = "idle";
     public ChallengeType typeChallenge;
     [SerializeField] protected int LayerBase;
-    [SerializeField] protected ExtralLayer fxIdleLayer;
     ChallengeGameplayController challengeGameplayController;
 
     public Sprite icon;
