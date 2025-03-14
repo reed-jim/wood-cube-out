@@ -1,4 +1,5 @@
 using System;
+using BirdSort2;
 using PrimeTween;
 using UnityEngine;
 
@@ -28,7 +29,7 @@ public class GameplayCamera : MonoBehaviour
         _initialBackgroundScale = background.localScale;
         _targetBackgroundScale = background.localScale;
 
-        GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(gameplayCamera);
+        GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld = CommonUtil.GetScreenSizeWorld(gameplayCamera);
     }
 
     private void OnDestroy()

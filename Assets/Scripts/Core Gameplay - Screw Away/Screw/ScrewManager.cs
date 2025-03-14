@@ -50,7 +50,7 @@ public class ScrewManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStart;
+        
         LevelLoader.setLevelScrewNumberEvent += SetLevelScrewNumber;
         BaseScrew.addScrewToListEvent += AddScrew;
         ScrewBox.spawnNewScrewBoxEvent += SpawnNewScrewBox;
@@ -67,7 +67,6 @@ public class ScrewManager : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStart;
         LevelLoader.setLevelScrewNumberEvent -= SetLevelScrewNumber;
         BaseScrew.addScrewToListEvent -= AddScrew;
         ScrewBox.spawnNewScrewBoxEvent -= SpawnNewScrewBox;
@@ -80,7 +79,7 @@ public class ScrewManager : MonoBehaviour
     }
     #endregion
 
-    private void OnLevelStart()
+    public void Init()
     {
         _screws = new List<BaseScrew>();
 

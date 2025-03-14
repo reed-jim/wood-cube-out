@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using BirdSort2;
 using Unity.Mathematics;
 using UnityEngine;
 using static GameEnum;
@@ -433,7 +434,7 @@ public static class LevelDifficultyCalculatorUltility
             obstaclesOfPieces.Add(pieces[i].transform.GetInstanceID(), dependency);
         }
 
-        GamePersistentVariable.pieceDependencies = obstaclesOfPieces;
+        GamePlayController_BirdSort.Instance.level.pieceDependencies = obstaclesOfPieces;
 
         // int totalBlockedScrew = 0;
 

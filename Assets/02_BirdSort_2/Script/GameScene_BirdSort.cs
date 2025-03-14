@@ -12,7 +12,8 @@ namespace BirdSort2
     using Sirenix.OdinInspector;
     public class GameScene_BirdSort : BaseScene
     {
-        [Header("UI")]
+        [Header("UI")] 
+        [SerializeField] private RectTransform canvas;
         [SerializeField] private Button pauseBtn;
         [SerializeField] private Text levelTxt;
         [SerializeField] private Button shopBtn;
@@ -55,8 +56,13 @@ namespace BirdSort2
         [Header("Star Cooldown")]
         [SerializeField] private GameObject[] starsActive;
         [SerializeField] private Image progessCoolDownStarImg;
-
-
+        
+        //Variable
+        public Vector2 canvasSize;
+        public Vector2 canvasSizeAfterCanvasScaler;
+        public Vector2 canvasScale;
+        public Vector2 screenSizeWorld;
+        
         public ItemUI GetItem(GiftType type)
         {
             foreach (var item in itemsUI)
@@ -110,6 +116,8 @@ namespace BirdSort2
             //GameController.Instance.musicManager.PlayBGMusic();
             actionOpenShop = (sender) => { OpenShop(); };
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.OPEN_SHOP, actionOpenShop);
+            canvasSize = canvas.sizeDelta;
+            canvasScale = canvas.localScale;
         }
 
 
@@ -205,8 +213,7 @@ namespace BirdSort2
                 itemUI.InteractBtnUse(false);
                 itemsUI.Add(lstItem[index].typeItem, itemUI);
             }
-
-
+            
         }
         public void OnCheat()
         {

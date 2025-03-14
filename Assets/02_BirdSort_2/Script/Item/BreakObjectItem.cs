@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 
-public class BreakTheRuleItem_BirdSort : ItemBase
+public class BreakObjectItem : ItemBase
 {
     BirdSort2.Level_BirdSort_2 level;
     public GameObject handTut;
@@ -20,7 +20,7 @@ public class BreakTheRuleItem_BirdSort : ItemBase
     }
     public override bool IsCanUseItem()
     {
-        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.BreakTheRule_BirdSort).unlockLevel)
+        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.BreakObject).unlockLevel)
         {
             return false;
         }

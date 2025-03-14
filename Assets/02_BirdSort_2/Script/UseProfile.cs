@@ -359,7 +359,7 @@
 
         public static bool IsUnlimitedItem(GiftType typeItem)
         {
-            if (typeItem == GiftType.ReturnItem_BirdSort || typeItem == GiftType.AddBrandItem_BirdSort || typeItem == GiftType.ShuffleItem_BirdSort || typeItem == GiftType.BreakTheRule_BirdSort)
+            if (typeItem == GiftType.ReturnItem_BirdSort || typeItem == GiftType.ClearHole || typeItem == GiftType.AddHole || typeItem == GiftType.BreakObject)
                 return false;
 
             return GetTimeEndUnlimitedItem(typeItem) > UnbiasedTime.Instance.Now();

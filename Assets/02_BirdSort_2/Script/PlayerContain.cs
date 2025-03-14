@@ -74,14 +74,15 @@ namespace BirdSort2
 
             minZoom = 0.85f * cameraToZoom.orthographicSize;
             maxZoom = 1.15f * cameraToZoom.orthographicSize;
+            OnLevelStarted();
         }
 
         private void Update()
         {
-            if (_isDisabled)
-            {
-                return;
-            }
+            //if (_isDisabled)
+            //{
+            //    return;
+            //}
 
             if (Input.touchCount == 2)
             {
@@ -369,10 +370,10 @@ namespace BirdSort2
 
         private void OnZoomSliderValueChanged(float value)
         {
-            if (_isDisabled)
-            {
-                return;
-            }
+            //if (_isDisabled)
+            //{
+            //    return;
+            //}
 
             pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
@@ -396,7 +397,7 @@ namespace BirdSort2
 
             zoomSlider.value = 0;
 
-            // OnZoomSliderValueChanged(0);
+            OnZoomSliderValueChanged(0);
 
             // pinchGestureEvent?.Invoke(maxZoom);
         }

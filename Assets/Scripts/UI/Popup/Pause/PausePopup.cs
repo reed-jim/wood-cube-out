@@ -116,8 +116,7 @@ public class PausePopup : BasePopup
     {
         gameSetting.IsVibrate = isTurnOn;
 
-        GamePersistentVariable.IsVibrate = isTurnOn;
-    }
+        }
 
     private void OnGameSettingLoaded()
     {

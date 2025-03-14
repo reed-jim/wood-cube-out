@@ -12,8 +12,20 @@ public class ScrewBoxManager : MonoBehaviour
     [SerializeField] private List<ScrewBoxSlot> screwPorts;
     [SerializeField] private Transform screwPortsContainer;
 
-    [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
+    private int _numLockedScrewBoxes;
+    private int _numScrewInScrewPorts;
+
+    public int NumLockedScrewBoxes
+    {
+        get => _numLockedScrewBoxes;
+        set => _numLockedScrewBoxes = value;
+    }
+
+    public int NumScrewInScrewPorts
+    {
+        get => _numScrewInScrewPorts;
+        set => _numScrewInScrewPorts = value;
+    }
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int maxScrewBox;
@@ -36,7 +48,6 @@ public class ScrewBoxManager : MonoBehaviour
     #endregion
 
     #region EVENT
-    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingObstaclesEvent;
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
@@ -47,7 +58,6 @@ public class ScrewBoxManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStart;
         BaseScrew.selectScrewEvent += OnScrewSelected;
         BaseScrew.screwMovedCompletedEvent += MoveSingleScrewFromHoleToScrewBox;
         ScrewManager.spawnScrewBoxEvent += SpawnScrewBox;
@@ -65,7 +75,6 @@ public class ScrewBoxManager : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStart;
         BaseScrew.selectScrewEvent -= OnScrewSelected;
         BaseScrew.screwMovedCompletedEvent -= MoveSingleScrewFromHoleToScrewBox;
         ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
@@ -156,12 +165,12 @@ public class ScrewBoxManager : MonoBehaviour
             screwPorts[i].transform.position = screwPortPosition;
         }
 
-        screwBoxesObserver.NumLockedScrewBoxes = GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
-        screwBoxesObserver.NumScrewInScrewPorts = 0;
+        NumLockedScrewBoxes = GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
+        NumScrewInScrewPorts = 0;
     }
 
     #region CALLBACK
-    private void OnLevelStart()
+    public void Init()
     {
         ResetScrewBoxes();
 
@@ -243,7 +252,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
-        screwBoxesObserver.NumLockedScrewBoxes = numLockedScrewBoxes;
+        NumLockedScrewBoxes = numLockedScrewBoxes;
     }
 
     private void OnRewardedAdUnlockScrewBoxCompleted()
@@ -320,7 +329,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
             else
             {
-                screwBoxesObserver.NumScrewInScrewPorts++;
+                NumScrewInScrewPorts++;
 
                 return emptyScrewPort;
             }
@@ -538,7 +547,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
-        screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
+        NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
 
         if (!isFound)
         {
@@ -712,7 +721,7 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
-        screwBoxesObserver.NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
+        NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
 
         screwPortsClearedEvent?.Invoke(numScrewCleared);
     }

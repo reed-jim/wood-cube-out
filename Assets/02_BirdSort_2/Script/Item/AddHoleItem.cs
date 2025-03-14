@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShuffleItem_BirdSort : ItemBase
+public class AddHoleItem : ItemBase
 {
      BirdSort2.Level_BirdSort_2 level;
     public override void Init()
@@ -22,7 +22,7 @@ public class ShuffleItem_BirdSort : ItemBase
 
     public override bool IsCanUseItem()
     {
-        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ShuffleItem_BirdSort).unlockLevel)
+        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.AddHole).unlockLevel)
         {
             return false;
         }

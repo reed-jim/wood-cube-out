@@ -74,13 +74,13 @@ public class GiftDatabase : SerializedScriptableObject
             case GiftType.IceItem_BirdSort:
                 AddItem(giftType, amount, isUnlimited);
                 break;
-            case GiftType.ShuffleItem_BirdSort:
+            case GiftType.AddHole:
                 AddItem(giftType, amount, isUnlimited);
                 break;
-            case GiftType.BreakTheRule_BirdSort:
+            case GiftType.BreakObject:
                 AddItem(giftType, amount, isUnlimited);
                 break;
-            case GiftType.AddBrandItem_BirdSort:
+            case GiftType.ClearHole:
                 AddItem(giftType, amount, isUnlimited);
                 break;
             case GiftType.ConnectBirdMiniGame_Egg:
@@ -115,10 +115,10 @@ public class GiftDatabase : SerializedScriptableObject
     {
         { GiftType.Coin, 150 },
          { GiftType.ReturnItem_BirdSort, 4 },
-         { GiftType.ShuffleItem_BirdSort, 4 },
-         { GiftType.BreakTheRule_BirdSort, 4 },
+         { GiftType.AddHole, 4 },
+         { GiftType.BreakObject, 4 },
          { GiftType.IceItem_BirdSort, 4 },
-         { GiftType.AddBrandItem_BirdSort, 4 },
+         { GiftType.ClearHole, 4 },
          { GiftType.AddTimeItem_BirdSort, 2 },
         { GiftType.Health, 20 },
     };
@@ -182,9 +182,9 @@ public enum GiftType
     ReturnItem_BirdSort = 1002,
     SuggetItem_BirdSort = 1003,
     IceItem_BirdSort = 1004,
-    ShuffleItem_BirdSort = 1005,
-    BreakTheRule_BirdSort = 1006,
-    AddBrandItem_BirdSort = 1007,
+    AddHole = 1005,
+    BreakObject = 1006,
+    ClearHole = 1007,
     
     //Item MiniGame
     ConnectBirdMiniGame_Egg = 79,

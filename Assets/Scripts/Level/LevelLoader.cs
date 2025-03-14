@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BirdSort2;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -98,7 +99,7 @@ public class LevelLoader : MonoBehaviour
 
                 if (level.GetComponent<LevelTransformManualModifier>() == null)
                 {
-                    level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
+                    level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 10);
                     level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                 }
 

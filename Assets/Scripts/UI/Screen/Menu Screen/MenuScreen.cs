@@ -36,7 +36,6 @@ public class MenuScreen : MonoBehaviour
 
     private void Awake()
     {
-        GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
@@ -84,7 +83,6 @@ public class MenuScreen : MonoBehaviour
 
     void OnDestroy()
     {
-        GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;

@@ -199,11 +199,11 @@ public class CoreGameData : BaseDataSegemnt
                     return sugget_BirdSort;
                 case GiftType.IceItem_BirdSort:
                     return ice_BirdSort;
-                case GiftType.ShuffleItem_BirdSort:
+                case GiftType.AddHole:
                     return shuffle_BirdSort;
-                case GiftType.BreakTheRule_BirdSort:
+                case GiftType.BreakObject:
                     return breakTheRule_BirdSort;
-                case GiftType.AddBrandItem_BirdSort:
+                case GiftType.ClearHole:
                     return addBrand_BirdSort;
 
                 default:

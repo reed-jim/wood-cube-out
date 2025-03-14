@@ -127,7 +127,7 @@ public class ScrewBox : MonoBehaviour
                 shakeCameraEvent?.Invoke();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
                 
-                if (GamePersistentVariable.IsVibrate)
+                if (GameController.Instance.useProfile.OnVibration)
                 {
                     HapticFeedback.HeavyFeedback();
                 }

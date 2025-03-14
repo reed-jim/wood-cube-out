@@ -50,9 +50,9 @@ public class VideoGirlPackController : PackVideoBase
         if (
             (Level.isHasBeenWinLevel && 
             (UseProfile.GetNumItem(GiftType.ReturnItem_BirdSort) <= 0
-            || UseProfile.GetNumItem(GiftType.ShuffleItem_BirdSort) <= 0
+            || UseProfile.GetNumItem(GiftType.AddHole) <= 0
             || UseProfile.GetNumItem(GiftType.IceItem_BirdSort) <= 0
-            || UseProfile.GetNumItem(GiftType.BreakTheRule_BirdSort) <= 0))
+            || UseProfile.GetNumItem(GiftType.BreakObject) <= 0))
             
             && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= controller.packVideoData.config.videoGirl.time_delay_show)
         {

@@ -44,26 +44,26 @@ public class SuggetUseItemInGame : MonoBehaviour
                 return;
            
 
-            if (itemController.IsCanUseItem(GiftType.AddBrandItem_BirdSort))
+            if (itemController.IsCanUseItem(GiftType.ClearHole))
             {
-                itemsInGame[GiftType.AddBrandItem_BirdSort].hightLightItem = highlightAddBranch;
-                itemsInGame[GiftType.AddBrandItem_BirdSort].SuggetUseItem(true);
+                itemsInGame[GiftType.ClearHole].hightLightItem = highlightAddBranch;
+                itemsInGame[GiftType.ClearHole].SuggetUseItem(true);
                 isSuggeting = true;
                 return;
             }
 
-            if (itemController.IsCanUseItem(GiftType.ShuffleItem_BirdSort))
+            if (itemController.IsCanUseItem(GiftType.AddHole))
             {
-                itemsInGame[GiftType.ShuffleItem_BirdSort].hightLightItem = highlightShuffer;
-                itemsInGame[GiftType.ShuffleItem_BirdSort].SuggetUseItem(true);
+                itemsInGame[GiftType.AddHole].hightLightItem = highlightShuffer;
+                itemsInGame[GiftType.AddHole].SuggetUseItem(true);
                 isSuggeting = true;
                 return;
             }
 
-            if (itemController.IsCanUseItem(GiftType.BreakTheRule_BirdSort))
+            if (itemController.IsCanUseItem(GiftType.BreakObject))
             {
-                itemsInGame[GiftType.BreakTheRule_BirdSort].hightLightItem = highlightBreakRule;
-                itemsInGame[GiftType.BreakTheRule_BirdSort].SuggetUseItem(true);
+                itemsInGame[GiftType.BreakObject].hightLightItem = highlightBreakRule;
+                itemsInGame[GiftType.BreakObject].SuggetUseItem(true);
                 isSuggeting = true;
                 return;
             }
@@ -83,9 +83,9 @@ public class SuggetUseItemInGame : MonoBehaviour
         else
         {
             itemsInGame[GiftType.ReturnItem_BirdSort].SuggetUseItem(false);
-            itemsInGame[GiftType.AddBrandItem_BirdSort].SuggetUseItem(false);
-            itemsInGame[GiftType.ShuffleItem_BirdSort].SuggetUseItem(false);
-            itemsInGame[GiftType.BreakTheRule_BirdSort].SuggetUseItem(false);
+            itemsInGame[GiftType.ClearHole].SuggetUseItem(false);
+            itemsInGame[GiftType.AddHole].SuggetUseItem(false);
+            itemsInGame[GiftType.BreakObject].SuggetUseItem(false);
         }
     }
 

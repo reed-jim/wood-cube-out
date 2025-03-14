@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BirdSort2;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -248,7 +249,7 @@ public class BoosterUI : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
-        if (screwBoxesObserver.NumScrewInScrewPorts == 0)
+        if (GamePlayController_BirdSort.Instance.level.screwBoxManager.NumScrewInScrewPorts == 0)
         {
             // shakeScrewPortsEvent?.Invoke();
             showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);

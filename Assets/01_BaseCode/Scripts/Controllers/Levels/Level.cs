@@ -1068,7 +1068,7 @@ public class Level : MonoBehaviour
             int numTurn = numElectricUse / 3;
             for (int i = 0; i < numTurn; i++)
             {
-                if (GamePlayController.Instance.itemController.UseItem(GiftType.AddBrandItem_BirdSort))
+                if (GamePlayController.Instance.itemController.UseItem(GiftType.ClearHole))
                 {
                     //  GameController.Instance.dataContain.giftDatabase.Claim(GiftType.LightElectricItem, -1, Reason.in_campain_level);
                 }

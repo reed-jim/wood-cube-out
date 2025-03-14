@@ -11,19 +11,7 @@ public class ItemController : MonoBehaviour
     public SuggetUseItemInGame suggetUseItemInGame;
     public bool isUsedItem;
     public List<BlockBrand> lsBlockBrands;
-
-    public Sprite BlockBrand
-    {
-        get
-        {
-            foreach (var item in lsBlockBrands)
-            {
-            }
-            return null;
-        }
-
-    }
-
+    
     public void Init()
     {
         isUsedItem = false;
@@ -38,8 +26,6 @@ public class ItemController : MonoBehaviour
         }
 
         suggetUseItemInGame.Init();
-
-        //    GamePlayController.Instance.gameScene.SpawnItemsUI(lstItemGamePlayUI);
         BirdSort2.GamePlayController_BirdSort.Instance.gameScene.SpawnItemsUI(lstItemGamePlayUI);
         view.Init();
     }
@@ -100,7 +86,7 @@ public class ItemController : MonoBehaviour
             int index = i;
             if (items[index].getPlace == ItemBase.GetPlace.SellectLevel)
             {
-                if (items[index].typeItem == GiftType.AddBrandItem_BirdSort)
+                if (items[index].typeItem == GiftType.ClearHole)
                 {
                     int currentLevel = UseProfile.CurrentLevel;
                     if (currentLevel == BirdSort2.TutorialController.LEVEL_START_TUT_BOOM

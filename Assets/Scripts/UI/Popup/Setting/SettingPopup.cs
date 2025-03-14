@@ -39,8 +39,7 @@ public class SettingPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
-
+        
         turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
@@ -58,7 +57,7 @@ public class SettingPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
-        GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
+       
     }
 
     private void SettingGameMusic(bool isTurnOn)

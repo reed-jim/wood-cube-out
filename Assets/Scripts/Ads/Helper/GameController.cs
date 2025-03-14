@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using BirdSort2;
 using GPlay.GplayGoogleUMP;
 using Gplay.Notifications;
+using PrimeTween;
 #if UNITY_IOS
 using Unity.Advertisement.IosSupport;
 #endif
@@ -38,6 +39,9 @@ public class GameController : MonoBehaviour
     {
         Instance = this;
         DontDestroyOnLoad(this);
+        PrimeTweenConfig.warnTweenOnDisabledTarget = false;
+        PrimeTweenConfig.warnEndValueEqualsCurrent = false;
+        PrimeTweenConfig.warnZeroDuration = false;
         Init();
     }
     public void Init()

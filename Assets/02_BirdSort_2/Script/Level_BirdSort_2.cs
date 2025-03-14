@@ -16,7 +16,8 @@ namespace BirdSort2
     public class Level_BirdSort_2 : MonoBehaviour
     {
         public LevelConfig levelConfig;
-        
+        public ScrewBoxManager screwBoxManager;
+        public ScrewManager screwManager;
         
         //[HideInInspector] public float timePlayLevel;
         //[HideInInspector] public float timePlayRequire;
@@ -44,7 +45,6 @@ namespace BirdSort2
         public int numStandsInited;
 
         [HideInInspector] public bool isHasExtral;
-        public Transform extralShowParent;
         public Transform parentPanelGamePlay;
 
         public bool isInited;
@@ -53,13 +53,11 @@ namespace BirdSort2
         public AudioSource dropAudioLeft;
         public AudioSource dropAudioRight;
         public AudioClip audioClipDrop;
-
-        
-        public List<StandingBase> LsStandingBasesLeft;
-        public List<StandingBase> LsStandingBasesRight;
         private bool checkLsStandLeft;
         private bool checkLsStandRight;
         [HideInInspector] public bool isTempPauseLevel;
+        
+        public Dictionary<int, List<Transform>> pieceDependencies;
         
         private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
@@ -105,12 +103,12 @@ namespace BirdSort2
                     Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                     if (level.GetComponent<LevelTransformManualModifier>() == null)
                     {
-                        level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
+                        level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 10);
                         // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                         level.transform.rotation = Quaternion.Euler(new Vector3(-0, -45, 0));
                     }
 
-                    _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+                    _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(UseProfile.CurrentLevel);
 
                     if (UseProfile.CurrentLevel == 1)
                     {
@@ -122,20 +120,21 @@ namespace BirdSort2
                     }
 
                     AutoAssignScrewFactionMultiPhaseLevel(level);
-
-                    if (isLoopLevel)
-                    {
+                    screwBoxManager.Init();
+                    screwManager.Init();
+                    //if (isLoopLevel)
+                    //{
                         //RandomizeLevelModelColor(level);
-                    }
-                    else
-                    {
+                    //}
+                    //else
+                    //{
                         //SaferioTracking.TrackLevelStart(UseProfile.CurrentLevel);
-                    }
+                    //}
 
-                    if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
-                    {
-                        DelayShowBoosterSuggest();
-                    }
+                    //if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
+                    //{
+                    //    DelayShowBoosterSuggest();
+                    //}
                 }
                 else
                 {
@@ -377,141 +376,205 @@ namespace BirdSort2
             GameController.Instance.musicManager.PauseCoolDownSoundSource();
         }
         private void AutoAssignScrewFaction(GameObject level)
-    {
-        BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
-
-        int numScrew = screws.Length;
-
-        List<BaseScrew> noBlockedScrews = new List<BaseScrew>();
-        List<BaseScrew> blockedScrews = new List<BaseScrew>();
-
-        for (int i = 0; i < screws.Length; i++)
         {
-            int numBlockedObject = screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
+            BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
 
-            if (numBlockedObject == 0)
+            int numScrew = screws.Length;
+
+            List<BaseScrew> noBlockedScrews = new List<BaseScrew>();
+            List<BaseScrew> blockedScrews = new List<BaseScrew>();
+
+            for (int i = 0; i < screws.Length; i++)
             {
-                noBlockedScrews.Add(screws[i]);
-            }
-            else
-            {
-                blockedScrews.Add(screws[i]);
-            }
-        }
+                int numBlockedObject = screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
 
-        // SHUFFLE SCREW LISTS
-        ShuffleList(noBlockedScrews);
-        ShuffleList(blockedScrews);
-
-        List<BaseScrew> shuffledScrews = new List<BaseScrew>();
-
-        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
-        // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
-        //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
-        int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
-        int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
-
-        // EASY SCREWS
-        for (int i = 0; i < numNoBlockedScrewsToGetSameFaction; i++)
-        {
-            BaseScrew nextScrew = noBlockedScrews.First();
-
-            shuffledScrews.Add(nextScrew);
-
-            noBlockedScrews.Remove(nextScrew);
-        }
-
-        // REMAINING SCREWS
-        int currentIndex = 0;
-
-        for (int i = 0; i < numRemainingScrews; i++)
-        {
-            BaseScrew nextScrew;
-
-            if (currentIndex % (GameConstants.NUMBER_SLOT_PER_SCREW_BOX - 1) == 0)
-            {
-                if (noBlockedScrews.Count > 0)
+                if (numBlockedObject == 0)
                 {
-                    nextScrew = noBlockedScrews.First();
-
-                    noBlockedScrews.Remove(nextScrew);
+                    noBlockedScrews.Add(screws[i]);
                 }
                 else
                 {
-                    nextScrew = blockedScrews.First();
-
-                    blockedScrews.Remove(nextScrew);
+                    blockedScrews.Add(screws[i]);
                 }
             }
-            else
-            {
-                if (blockedScrews.Count > 0)
-                {
-                    nextScrew = blockedScrews.First();
 
-                    blockedScrews.Remove(nextScrew);
+            // SHUFFLE SCREW LISTS
+            ShuffleList(noBlockedScrews);
+            ShuffleList(blockedScrews);
+
+            List<BaseScrew> shuffledScrews = new List<BaseScrew>();
+
+            float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+
+            // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
+            //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+
+            int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
+            int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
+
+            // EASY SCREWS
+            for (int i = 0; i < numNoBlockedScrewsToGetSameFaction; i++)
+            {
+                BaseScrew nextScrew = noBlockedScrews.First();
+
+                shuffledScrews.Add(nextScrew);
+
+                noBlockedScrews.Remove(nextScrew);
+            }
+
+            // REMAINING SCREWS
+            int currentIndex = 0;
+
+            for (int i = 0; i < numRemainingScrews; i++)
+            {
+                BaseScrew nextScrew;
+
+                if (currentIndex % (GameConstants.NUMBER_SLOT_PER_SCREW_BOX - 1) == 0)
+                {
+                    if (noBlockedScrews.Count > 0)
+                    {
+                        nextScrew = noBlockedScrews.First();
+
+                        noBlockedScrews.Remove(nextScrew);
+                    }
+                    else
+                    {
+                        nextScrew = blockedScrews.First();
+
+                        blockedScrews.Remove(nextScrew);
+                    }
                 }
                 else
                 {
-                    nextScrew = noBlockedScrews.First();
+                    if (blockedScrews.Count > 0)
+                    {
+                        nextScrew = blockedScrews.First();
 
-                    noBlockedScrews.Remove(nextScrew);
+                        blockedScrews.Remove(nextScrew);
+                    }
+                    else
+                    {
+                        nextScrew = noBlockedScrews.First();
+
+                        noBlockedScrews.Remove(nextScrew);
+                    }
                 }
+
+                shuffledScrews.Add(nextScrew);
+
+                currentIndex++;
             }
 
-            shuffledScrews.Add(nextScrew);
+            int currentFaction = 0;
 
-            currentIndex++;
-        }
+            List<GameEnum.GameFaction> remainingFactionForBlockedScrews = new List<GameEnum.GameFaction>();
 
-        int currentFaction = 0;
-
-        List<GameEnum.GameFaction> remainingFactionForBlockedScrews = new List<GameEnum.GameFaction>();
-
-        for (int i = 0; i < shuffledScrews.Count; i++)
-        {
-            remainingFactionForBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
-
-            if (i > 0 && (i + 1) % 3 == 0)
+            for (int i = 0; i < shuffledScrews.Count; i++)
             {
-                currentFaction++;
+                remainingFactionForBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
 
-                if (currentFaction >= GameConstants.SCREW_FACTION.Length)
+                if (i > 0 && (i + 1) % 3 == 0)
                 {
-                    currentFaction = 0;
+                    currentFaction++;
+
+                    if (currentFaction >= GameConstants.SCREW_FACTION.Length)
+                    {
+                        currentFaction = 0;
+                    }
                 }
             }
-        }
 
-        for (int i = 0; i < shuffledScrews.Count; i++)
+            for (int i = 0; i < shuffledScrews.Count; i++)
+            {
+                GameEnum.GameFaction nextFaction = remainingFactionForBlockedScrews.First();
+
+                shuffledScrews[i].ScrewId = i;
+                shuffledScrews[i].Faction = nextFaction;
+
+                shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+
+                remainingFactionForBlockedScrews.Remove(nextFaction);
+            }
+
+            // RAMDOMIZE
+            // for (int i = 0; i < shuffledScrews.Count; i++)
+            // {
+            //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
+
+            //     shuffledScrews[i].ScrewId = i;
+            //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
+
+            //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+
+            //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
+            // }
+
+            //setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
+        }
+        void ShuffleList<T>(List<T> list)
         {
-            GameEnum.GameFaction nextFaction = remainingFactionForBlockedScrews.First();
+            System.Random rand = new System.Random();
+            int n = list.Count;
 
-            shuffledScrews[i].ScrewId = i;
-            shuffledScrews[i].Faction = nextFaction;
-
-            shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-            remainingFactionForBlockedScrews.Remove(nextFaction);
+            while (n > 1)
+            {
+                n--;
+                int k = rand.Next(n + 1);
+                T value = list[k];
+                list[k] = list[n];
+                list[n] = value;
+            }
         }
+        private void AutoAssignScrewFactionMultiPhaseLevel(GameObject level)
+        {
+            MultiPhaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<MultiPhaseScrew>(level.transform).ToArray();
 
-        // RAMDOMIZE
-        // for (int i = 0; i < shuffledScrews.Count; i++)
-        // {
-        //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
+            Dictionary<int, List<GameEnum.GameFaction>> remainingFactionForScrewsByPhase = new Dictionary<int, List<GameEnum.GameFaction>>();
 
-        //     shuffledScrews[i].ScrewId = i;
-        //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
+            Dictionary<int, int> currentFactionByPhase = new Dictionary<int, int>();
 
-        //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+            for (int i = 0; i < screws.Length; i++)
+            {
+                int phase = screws[i].Phase;
 
-        //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
-        // }
+                if (!remainingFactionForScrewsByPhase.ContainsKey(phase))
+                {
+                    currentFactionByPhase.Add(phase, 0);
 
-        //setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
-    }
+                    remainingFactionForScrewsByPhase.Add(phase, new List<GameEnum.GameFaction>() { GameConstants.SCREW_FACTION[currentFactionByPhase[phase]] });
+                }
+                else
+                {
+                    remainingFactionForScrewsByPhase[phase].Add(GameConstants.SCREW_FACTION[currentFactionByPhase[phase]]);
+
+                    if (i > 0 && (i + 1) % 3 == 0)
+                    {
+                        currentFactionByPhase[phase]++;
+
+                        if (currentFactionByPhase[phase] >= GameConstants.SCREW_FACTION.Length)
+                        {
+                            currentFactionByPhase[phase] = 0;
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < screws.Length; i++)
+            {
+                int phase = screws[i].Phase;
+
+                int randomIndex = UnityEngine.Random.Range(0, remainingFactionForScrewsByPhase[phase].Count);
+
+                screws[i].ScrewId = i;
+                screws[i].Faction = remainingFactionForScrewsByPhase[phase][randomIndex];
+
+                screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
+
+                remainingFactionForScrewsByPhase[phase].RemoveAt(randomIndex);
+            }
+
+            //setMultiPhaseLevelScrewNumberEvent?.Invoke(screws.Length);
+        }
     }
 
    
