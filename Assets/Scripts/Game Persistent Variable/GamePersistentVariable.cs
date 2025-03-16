@@ -16,6 +16,7 @@ public static class GamePersistentVariable
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial; 
     public static Dictionary<int, List<Transform>> pieceDependencies;
+    public static Vector3 levelOffset;
     #endregion
 
     #region SETTING
