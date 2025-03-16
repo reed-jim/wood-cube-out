@@ -139,7 +139,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
     }
 
-    private void Deselect()
+    public void Deselect()
     {
         if (_isSelecting)
         {

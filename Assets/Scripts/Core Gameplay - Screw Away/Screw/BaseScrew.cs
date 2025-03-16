@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BirdSort2;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -132,8 +133,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     #endregion
 
     #region EVENT
-    public static event Action<int, GameFaction> selectScrewEvent;
-    public static event Action<BaseScrew> addScrewToListEvent;
+    
     public static event Action<BaseScrew> screwMovedCompletedEvent;
     public static event Action<int> breakJointEvent;
     public static event Action<int> screwStartLoosenedEvent;
@@ -184,7 +184,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     public void Select()
     {
-        selectScrewEvent?.Invoke(screwId, Faction);
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.OnScrewSelected(screwId, Faction);
     }
 
     public virtual void Loose(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
@@ -299,7 +299,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         await Task.Delay(200);
 
-        addScrewToListEvent?.Invoke(this);
+        GamePlayController_BirdSort.Instance.level.screwManager.AddScrew(this);
     }
 
     public bool IsValidToLoose()

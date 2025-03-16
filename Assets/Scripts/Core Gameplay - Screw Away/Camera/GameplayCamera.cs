@@ -17,8 +17,6 @@ public class GameplayCamera : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStart;
-        PinchGesture.pinchGestureEvent += Zoom;
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
         MultiPhaseLevelManager.resetCameraEvent += Reset;
@@ -34,8 +32,6 @@ public class GameplayCamera : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStart;
-        PinchGesture.pinchGestureEvent -= Zoom;
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
@@ -61,7 +57,7 @@ public class GameplayCamera : MonoBehaviour
         // _targetBackgroundScale = _initialBackgroundScale;
     }
 
-    private void Zoom(float orthographicSize)
+    public void Zoom(float orthographicSize)
     {
         _targetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;

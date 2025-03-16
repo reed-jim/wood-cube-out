@@ -3,14 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BirdSort2;
 using UnityEditor;
 using UnityEngine;
 using static GameEnum;
 
 public class ScrewManager : MonoBehaviour
 {
-    [SerializeField] private ScrewBoxManager screwBoxManager;
-
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
@@ -19,7 +18,7 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private float delayShowPopupWin;
 
     #region PRIVATE FIELD
-    private List<BaseScrew> _screws;
+    [SerializeField]private List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -38,26 +37,15 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region EVENT
-    public static event Action<GameFaction> spawnScrewBoxEvent;
-    public static event Action spawnAdsScrewBoxesEvent;
     public static event Action winLevelEvent;
-    public static event Action<BaseScrew[]> setScrewsEvent;
     public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action<bool> enableBoosterEvent;
-    public static event Action levelSetupCompletedEvent;
     #endregion
 
     #region LIFE CYCLE
     void Awake()
     {
-        
-        LevelLoader.setLevelScrewNumberEvent += SetLevelScrewNumber;
-        BaseScrew.addScrewToListEvent += AddScrew;
-        ScrewBox.spawnNewScrewBoxEvent += SpawnNewScrewBox;
-        ScrewBox.setFactionForScrewBoxEvent += AssignFactionForNewAdsScrewBox;
-        ScrewBox.screwBoxUnlockedEvent += OnScrewBoxUnlocked;
         BaseScrew.screwLoosenedEvent += OnScrewLoosed;
-        ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
 
@@ -67,13 +55,7 @@ public class ScrewManager : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.setLevelScrewNumberEvent -= SetLevelScrewNumber;
-        BaseScrew.addScrewToListEvent -= AddScrew;
-        ScrewBox.spawnNewScrewBoxEvent -= SpawnNewScrewBox;
-        ScrewBox.setFactionForScrewBoxEvent -= AssignFactionForNewAdsScrewBox;
-        ScrewBox.screwBoxUnlockedEvent -= OnScrewBoxUnlocked;
         BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
-        ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
     }
@@ -95,7 +77,7 @@ public class ScrewManager : MonoBehaviour
     }
 
     #region SCREW
-    private void SetLevelScrewNumber(int screwNumber)
+    public void SetLevelScrewNumber(int screwNumber)
     {
         _totalScrew = screwNumber;
         _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
@@ -103,7 +85,7 @@ public class ScrewManager : MonoBehaviour
         updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
     }
 
-    private void AddScrew(BaseScrew screw)
+    public void AddScrew(BaseScrew screw)
     {
         if (_screws == null)
         {
@@ -121,7 +103,7 @@ public class ScrewManager : MonoBehaviour
             // TO SAVE/LOAD LEVEL PROGRESS
             // setScrewsEvent?.Invoke(_screws.ToArray());
 
-            levelSetupCompletedEvent?.Invoke();
+            //levelSetupCompletedEvent?.Invoke();
         }
     }
 
@@ -145,9 +127,9 @@ public class ScrewManager : MonoBehaviour
         }
 
         // CHECK SCREW PORTS
-        for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts.Count; i++)
         {
-            ScrewBoxSlot screwBoxSlot = screwBoxManager.ScrewPorts[i];
+            ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts[i];
 
             if (screwBoxSlot.IsFilled)
             {
@@ -268,9 +250,9 @@ public class ScrewManager : MonoBehaviour
         // }
 
         // DECREASE Chance of factions that are already available in screw boxes
-        for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs.Length; i++)
         {
-            if (screwBoxManager.ScrewBoxs[i] == null || screwBoxManager.ScrewBoxs[i].IsLocked)
+            if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i] == null || GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].IsLocked)
             {
                 continue;
             }
@@ -280,25 +262,25 @@ public class ScrewManager : MonoBehaviour
             {
                 if (levelPhase == GameConstants.SCREW_FACTION.Length - 1)
                 {
-                    difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] -= 999;
+                    difficultyLevelByFactions[GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].Faction] -= 999;
                 }
                 else
                 {
-                    difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 999;
+                    difficultyLevelByFactions[GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].Faction] += 999;
                 }
             }
             else
             {
-                difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 999;
+                difficultyLevelByFactions[GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].Faction] += 999;
             }
         }
 
         // Modify chance of factions of screw port
-        for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts.Count; i++)
         {
-            if (screwBoxManager.ScrewPorts[i].IsFilled)
+            if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts[i].IsFilled)
             {
-                difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] += _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
+                difficultyLevelByFactions[GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts[i].Screw.Faction] += _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
             }
         }
 
@@ -347,7 +329,7 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region MANAGE SCREW BOX
-    private async void SpawnFirstScrewBoxes()
+    public async void SpawnFirstScrewBoxes()
     {
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
@@ -356,15 +338,15 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            spawnScrewBoxEvent?.Invoke(faction);
+            GamePlayController_BirdSort.Instance.level.screwBoxManager.SpawnScrewBox(faction);
         }
 
         _totalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
 
-        spawnAdsScrewBoxesEvent?.Invoke();
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.SpawnAdsScrewBoxes();
     }
 
-    private async void SpawnFirstScrewBoxesNewPhase(int phase)
+    public async void SpawnFirstScrewBoxesNewPhase(int phase)
     {
         await Task.Delay(2000);
 
@@ -372,9 +354,9 @@ public class ScrewManager : MonoBehaviour
 
         int numberScrewBoxToSpawn = 0;
 
-        for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs.Length; i++)
         {
-            if (screwBoxManager.ScrewBoxs[i] == null)
+            if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i] == null)
             {
                 numberScrewBoxToSpawn++;
             }
@@ -384,11 +366,11 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            spawnScrewBoxEvent?.Invoke(faction);
+            GamePlayController_BirdSort.Instance.level.screwBoxManager.SpawnScrewBox(faction);
         }
     }
 
-    private void SpawnNewScrewBox()
+    public void SpawnNewScrewBox()
     {
         if (_totalScrewBoxesSpawned >= _totalScrewBoxes)
         {
@@ -402,7 +384,7 @@ public class ScrewManager : MonoBehaviour
             return;
         }
 
-        spawnScrewBoxEvent?.Invoke(faction);
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.SpawnScrewBox(faction);
 
         _totalScrewBoxesSpawned++;
         // _remainingSpawnScrewBoxCommands--;
@@ -410,7 +392,7 @@ public class ScrewManager : MonoBehaviour
         // _isHandlingSpawningScrewBox = false;
     }
 
-    private void OnScrewBoxUnlocked(ScrewBox screwBox)
+    public void OnScrewBoxUnlocked(ScrewBox screwBox)
     {
         _totalScrewBoxesSpawned++;
     }
@@ -440,7 +422,7 @@ public class ScrewManager : MonoBehaviour
         }
     }
 
-    private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
+    public void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
     {
         AssignFactionForNewScrewBox(screwBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
     }
@@ -471,7 +453,7 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
+        Dictionary<GameFaction, int> screwPortAvailableByFaction = GamePlayController_BirdSort.Instance.level.screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
         Dictionary<GameFaction, int> difficultyLevelByFaction = GetDifficultyLevelByFaction();
 
@@ -528,7 +510,7 @@ public class ScrewManager : MonoBehaviour
         //     difficultyLevel = GameConstants.SCREW_FACTION.Length - 1;
         // }
 
-        Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
+        Dictionary<GameFaction, int> screwPortAvailableByFaction = GamePlayController_BirdSort.Instance.level.screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = GetDifficultyLevelByFaction(difficultyLevel);
 
@@ -692,7 +674,7 @@ public class ScrewManager : MonoBehaviour
             {
                 GameFaction faction = screw.Faction;
 
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
+                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
 
                 if (screwBoxSlot != null)
                 {

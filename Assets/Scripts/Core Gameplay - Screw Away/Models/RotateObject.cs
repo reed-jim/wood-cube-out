@@ -72,7 +72,7 @@ public class RotateObject : MonoBehaviour
         SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
-    private void Rotate(Vector2 direction)
+    public void Rotate(Vector2 direction)
     {
         Vector2 normalizedDirection = direction.normalized;
 
@@ -119,7 +119,7 @@ public class RotateObject : MonoBehaviour
         }
     }
 
-    private void DisableAutoRotating()
+    public void DisableAutoRotating()
     {
         _isAutoRotating = false;
     }

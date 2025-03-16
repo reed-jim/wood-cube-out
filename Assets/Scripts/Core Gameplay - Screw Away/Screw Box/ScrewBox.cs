@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BirdSort2;
 using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -27,10 +28,6 @@ public class ScrewBox : MonoBehaviour
     [SerializeField] protected GameSetting gameSetting;
 
     #region EVENT
-    public static event Action<ScrewBox> screwBoxCompletedEvent;
-    public static event Action spawnNewScrewBoxEvent;
-    public static event Action<ScrewBox> setFactionForScrewBoxEvent;
-    public static event Action<ScrewBox> screwBoxUnlockedEvent;
     public static event Action shakeCameraEvent;
     #endregion
 
@@ -135,8 +132,8 @@ public class ScrewBox : MonoBehaviour
             .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
             .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
             {
-                screwBoxCompletedEvent?.Invoke(this);
-                spawnNewScrewBoxEvent?.Invoke();
+                GamePlayController_BirdSort.Instance.level.screwBoxManager.OnScrewBoxCompleted(this);
+                GamePlayController_BirdSort.Instance.level.screwManager.SpawnNewScrewBox();
 
                 transform.position = transform.position.ChangeY(initialPositionY);
                 transform.localScale = _initialScale;
@@ -176,8 +173,9 @@ public class ScrewBox : MonoBehaviour
 
         isLocked = false;
 
-        setFactionForScrewBoxEvent?.Invoke(this);
-        screwBoxUnlockedEvent?.Invoke(this);
+        GamePlayController_BirdSort.Instance.level.screwManager.AssignFactionForNewAdsScrewBox(this);
+        GamePlayController_BirdSort.Instance.level.screwManager.OnScrewBoxUnlocked(this);
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.OnScrewBoxUnlocked(this);
     }
 
     private void Unlock(int instanceId)

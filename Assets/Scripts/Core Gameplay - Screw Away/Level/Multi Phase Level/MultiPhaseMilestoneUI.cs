@@ -21,7 +21,7 @@ public class MultiPhaseMilestoneUI : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
+        //Anhtusz MultiPhase LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.phaseCompletedEvent += OnPhaseCompleted;
 
         _tweens = new List<Tween>();
@@ -31,7 +31,7 @@ public class MultiPhaseMilestoneUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
+        //Anhtusz MultiPhase LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.phaseCompletedEvent -= OnPhaseCompleted;
 
         CommonUtil.StopAllTweens(_tweens);

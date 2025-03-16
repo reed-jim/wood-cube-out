@@ -22,43 +22,20 @@ namespace BirdSort2
         //[HideInInspector] public float timePlayLevel;
         //[HideInInspector] public float timePlayRequire;
         [HideInInspector] public int starWin;
-        [Header("Bird Data")] public List<BirdBase> birdsPrefab;
-        public BirdBase GetBirdWithId(int param)
-        {
-            foreach(var item in birdsPrefab)
-            {
-                if(item.id == param)
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-        public Transform birdParent;
         private int numBirdCount;
         private int numBirdInLevel;
-        [HideInInspector] public bool isBirdFlying;
-
-        [Header("Stand Parent")] public StandParent StandParentLeft;
-        public StandParent StandParentRight;
-        [HideInInspector] public int sideAddStand;
-        public int numStandsInited;
-
-        [HideInInspector] public bool isHasExtral;
         public Transform parentPanelGamePlay;
 
         public bool isInited;
         public float timePlayLevel;
         [HideInInspector] public float timePlayRequire;
-        public AudioSource dropAudioLeft;
-        public AudioSource dropAudioRight;
-        public AudioClip audioClipDrop;
         private bool checkLsStandLeft;
         private bool checkLsStandRight;
         [HideInInspector] public bool isTempPauseLevel;
         
         public Dictionary<int, List<Transform>> pieceDependencies;
-        
+        public List<BasicObjectPart> pieces = new List<BasicObjectPart>();
+        public RotateObject levelParent;
         private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
         public List<RewardRandom> GetItemYouMiss()
@@ -89,7 +66,6 @@ namespace BirdSort2
             if (UseProfile.CurrentLevel > Context.MAX_LEVEL)
                 return;
             numBirdCount = 0;
-            isBirdFlying = true;
             string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
             AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>($"Level {UseProfile.CurrentLevel}");
 
@@ -98,8 +74,8 @@ namespace BirdSort2
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
                     GameObject level = Instantiate(op.Result, transform);
-                    List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
-
+                    pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+                    levelParent = level.GetComponent<RotateObject>();
                     Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                     if (level.GetComponent<LevelTransformManualModifier>() == null)
                     {
@@ -198,7 +174,7 @@ namespace BirdSort2
                 screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
             }
 
-            //setLevelScrewNumberEvent?.Invoke(numScrew);
+            screwManager.SetLevelScrewNumber(numScrew);
         }
 
         public bool IsWin()
@@ -236,8 +212,7 @@ namespace BirdSort2
         
 
         public  IEnumerator WinHandle()
-        {
-            isBirdFlying = true;
+        { 
             yield return new WaitForSeconds(0.75f);
             //Hiện popup win
             GameController.Instance.musicManager.PlayWinSound();
@@ -509,7 +484,7 @@ namespace BirdSort2
             //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
             // }
 
-            //setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
+            screwManager.SetLevelScrewNumber(shuffledScrews.Count);
         }
         void ShuffleList<T>(List<T> list)
         {

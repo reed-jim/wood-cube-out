@@ -53,18 +53,16 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
+
+    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
+        
     #endregion
 
     #region LIFE CYCLE
     void Awake()
     {
-        BaseScrew.selectScrewEvent += OnScrewSelected;
         BaseScrew.screwMovedCompletedEvent += MoveSingleScrewFromHoleToScrewBox;
-        ScrewManager.spawnScrewBoxEvent += SpawnScrewBox;
         ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
-        ScrewManager.spawnAdsScrewBoxesEvent += SpawnAdsScrewBoxes;
-        ScrewBox.screwBoxCompletedEvent += OnScrewBoxCompleted;
-        ScrewBox.screwBoxUnlockedEvent += OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent += AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent += ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent += ShakeAllScrewPorts;
@@ -75,13 +73,8 @@ public class ScrewBoxManager : MonoBehaviour
 
     void OnDestroy()
     {
-        BaseScrew.selectScrewEvent -= OnScrewSelected;
         BaseScrew.screwMovedCompletedEvent -= MoveSingleScrewFromHoleToScrewBox;
         ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
-        ScrewManager.spawnScrewBoxEvent -= SpawnScrewBox;
-        ScrewManager.spawnAdsScrewBoxesEvent -= SpawnAdsScrewBoxes;
-        ScrewBox.screwBoxCompletedEvent -= OnScrewBoxCompleted;
-        ScrewBox.screwBoxUnlockedEvent -= OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent -= AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent -= ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent -= ShakeAllScrewPorts;
@@ -213,7 +206,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void OnScrewSelected(int screwId, GameFaction selectedFaction)
+    public void OnScrewSelected(int screwId, GameFaction selectedFaction)
     {
         ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(selectedFaction);
 
@@ -223,7 +216,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void OnScrewBoxCompleted(ScrewBox screwBox)
+    public void OnScrewBoxCompleted(ScrewBox screwBox)
     {
         for (int i = 0; i < screwBoxs.Length; i++)
         {
@@ -236,7 +229,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void OnScrewBoxUnlocked(ScrewBox screwBox)
+    public void OnScrewBoxUnlocked(ScrewBox screwBox)
     {
         MoveFromScrewPortToScrewBox(screwBox);
 
@@ -458,7 +451,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void SpawnAdsScrewBoxes()
+    public void SpawnAdsScrewBoxes()
     {
         for (int i = 0; i < screwBoxs.Length; i++)
         {

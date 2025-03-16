@@ -46,21 +46,11 @@ namespace BirdSort2
         public float changeThreshold;
         public float delayToEnableSwipeGesture;
         private List<Tween> _tweens;
-        //private bool _isDisabled;
+        private bool _pinchIsDisabled;
         private float _zoomPercent;
         private float _lastZoomPercent;
         private bool _isZoomByPinching;
         
-        #region ACTION
-        public static event Action<Vector2> swipeGestureEvent;
-        public static event Action stopSwipeGestureEvent;
-        
-        public event Action mouseUpEvent;
-        public event Action selectScrewEvent;
-        public event Action breakObjectEvent;
-        public static event Action<float> pinchGestureEvent;
-        public static event Action<bool> enableSwipingEvent;
-        #endregion
 
         public void Init()
         {
@@ -79,12 +69,7 @@ namespace BirdSort2
 
         private void Update()
         {
-            //if (_isDisabled)
-            //{
-            //    return;
-            //}
-
-            if (Input.touchCount == 2)
+            if (Input.touchCount == 2 && !_pinchIsDisabled)
             {
                 Touch touch1 = Input.GetTouch(0);
                 Touch touch2 = Input.GetTouch(1);
@@ -114,6 +99,19 @@ namespace BirdSort2
 
                 // zoomSlider.value = _zoomPercent;
                 // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
+            }
+            if (_isZoomByPinching)
+            {
+                if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
+                {
+                    zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
+                }
+                else
+                {
+                    zoomSlider.interactable = true;
+
+                    _isZoomByPinching = false;
+                }
             }
             if (Input.touchCount == 2)
             {
@@ -156,7 +154,10 @@ namespace BirdSort2
                     }
                 }
 
-                mouseUpEvent?.Invoke();
+                foreach (var i in GamePlayController_BirdSort.Instance.level.pieces)
+                {
+                    i.Deselect();
+                }
 
                 twoTouchPoints.Clear();
 
@@ -196,7 +197,7 @@ namespace BirdSort2
                         return;
                     }
 
-                    swipeGestureEvent?.Invoke(_moveDirection);
+                    GamePlayController_BirdSort.Instance.level.levelParent.Rotate(_moveDirection);
 
                     _lastPosition = mousePosition;
 
@@ -209,7 +210,7 @@ namespace BirdSort2
             {
                 if (_isSwipingLastFrame)
                 {
-                    stopSwipeGestureEvent?.Invoke();
+                    //stopSwipeGestureEvent?.Invoke();
 
                     _isSwipingLastFrame = false;
                 }
@@ -257,7 +258,7 @@ namespace BirdSort2
                 {
                     screw.Select();
 
-                    selectScrewEvent?.Invoke();
+                    GamePlayController_BirdSort.Instance.level.levelParent.DisableAutoRotating();
 
                     return;
                 }
@@ -293,7 +294,7 @@ namespace BirdSort2
                 {
                     objectPart.Break(hit.point);
 
-                    breakObjectEvent?.Invoke();
+                    //breakObjectEvent?.Invoke();//Anhtusz BreakObject Booster
 
                     _inputMode = GameEnum.InputMode.Disabled;
 
@@ -375,36 +376,36 @@ namespace BirdSort2
             //    return;
             //}
 
-            pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
+            GamePlayController_BirdSort.Instance.gamePlayCamera.Zoom(maxZoom - value * (maxZoom - minZoom));
 
             if (!_isZoomByPinching)
             {
-                enableSwipingEvent?.Invoke(false);
+                EnableSwiping(false);
             }
 
             CommonUtil.StopAllTweens(_tweens);
 
             _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
             {
-                enableSwipingEvent?.Invoke(true);
+                EnableSwiping(true);
             }));
 
             _lastZoomPercent = value;
         }
         private void OnLevelStarted()
         {
-            _isDisabled = false;
+            _pinchIsDisabled = false;
 
             zoomSlider.value = 0;
 
-            OnZoomSliderValueChanged(0);
+            // OnZoomSliderValueChanged(0);
 
             // pinchGestureEvent?.Invoke(maxZoom);
         }
 
-        private void EnablePinching(bool isEnable)
+        public void EnablePinching(bool isEnable)
         {
-            _isDisabled = !isEnable;
+            _pinchIsDisabled = !isEnable;
         }
 
         #endregion

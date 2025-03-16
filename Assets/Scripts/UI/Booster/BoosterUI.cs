@@ -54,7 +54,6 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
-        LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
@@ -83,7 +82,6 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
-        LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;

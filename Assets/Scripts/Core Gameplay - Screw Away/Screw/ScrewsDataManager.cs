@@ -3,30 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BirdSort2;
 using UnityEngine;
 using static GameEnum;
 
 public class ScrewsDataManager : MonoBehaviour
 {
     [SerializeField] private BaseScrew[] _screws;
-
-    [SerializeField] private ScrewBoxManager screwBoxManager;
-
-    [SerializeField] private IntVariable currentLevel;
-
-    public static event Action spawnFreshLevelScrewBoxesEvent;
-
-
+    
     void Awake()
     {
-        ScrewManager.setScrewsEvent += OnAllLevelScrewsObservered;
 
         // StartCoroutine(PeriodicallySaving());
     }
 
     void OnDestroy()
     {
-        ScrewManager.setScrewsEvent -= OnAllLevelScrewsObservered;
     }
 
     private IEnumerator PeriodicallySaving()
@@ -43,12 +35,12 @@ public class ScrewsDataManager : MonoBehaviour
 
     private async void LoadLevelData()
     {
-        LevelProgressData levelProgressData = DataUtility.Load<LevelProgressData>($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", new LevelProgressData());
+        LevelProgressData levelProgressData = DataUtility.Load<LevelProgressData>($"{GameConstants.SCREWS_DATA}_{UseProfile.CurrentLevel}", new LevelProgressData());
 
         // No data for current level
         if (levelProgressData.ScrewsData == null)
         {
-            spawnFreshLevelScrewBoxesEvent?.Invoke();
+            GamePlayController_BirdSort.Instance.level.screwManager.SpawnFirstScrewBoxes();
 
             return;
         }
@@ -58,7 +50,7 @@ public class ScrewsDataManager : MonoBehaviour
 
         for (int i = 0; i < screwBoxesData.Length; i++)
         {
-            screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
+            GamePlayController_BirdSort.Instance.level.screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
         }
 
         await Task.Delay(2000);
@@ -99,14 +91,14 @@ public class ScrewsDataManager : MonoBehaviour
 
             if (screwData.IsInScrewPort)
             {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
 
                 screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
             }
 
             if (screwData.IsDone)
             {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
 
                 screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
             }
@@ -115,21 +107,21 @@ public class ScrewsDataManager : MonoBehaviour
 
     private ScrewBoxData[] GetScrewBoxesData()
     {
-        ScrewBoxData[] screwBoxesData = new ScrewBoxData[screwBoxManager.ScrewBoxs.Length];
+        ScrewBoxData[] screwBoxesData = new ScrewBoxData[GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs.Length];
 
-        for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs.Length; i++)
         {
             screwBoxesData[i] = new ScrewBoxData();
 
-            if (screwBoxManager.ScrewBoxs[i] == null)
+            if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i] == null)
             {
                 screwBoxesData[i].IsLocked = true;
 
                 continue;
             }
 
-            screwBoxesData[i].Faction = screwBoxManager.ScrewBoxs[i].Faction;
-            screwBoxesData[i].IsLocked = screwBoxManager.ScrewBoxs[i].IsLocked;
+            screwBoxesData[i].Faction = GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].Faction;
+            screwBoxesData[i].IsLocked = GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs[i].IsLocked;
         }
 
         return screwBoxesData;
@@ -183,7 +175,7 @@ public class ScrewsDataManager : MonoBehaviour
         levelProgressData.ScrewsData = screwsData;
         levelProgressData.ScrewBoxesData = screwBoxesData;
 
-        DataUtility.SaveAsync($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", levelProgressData);
+        DataUtility.SaveAsync($"{GameConstants.SCREWS_DATA}_{UseProfile.CurrentLevel}", levelProgressData);
     }
 
     private void OnAllLevelScrewsObservered(BaseScrew[] screws)

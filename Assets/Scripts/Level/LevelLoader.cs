@@ -17,10 +17,8 @@ public class LevelLoader : MonoBehaviour
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
-
-    public static event Action startLevelEvent;
+    
     public static event Action setLevelNumberEvent;
-    public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
     public static event Action showSceneTransitionEvent;
 
@@ -135,9 +133,7 @@ public class LevelLoader : MonoBehaviour
         UseProfile.CurrentLevel = level;
 
         levelBoosterObserver.Reset();
-
-        startLevelEvent?.Invoke();
-
+        
         LoadLevel();
     }
 
@@ -240,8 +236,7 @@ public class LevelLoader : MonoBehaviour
 
             screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
         }
-
-        setLevelScrewNumberEvent?.Invoke(numScrew);
+        
     }
 
     private void AutoAssignScrewFaction(GameObject level)
@@ -377,8 +372,7 @@ public class LevelLoader : MonoBehaviour
 
         //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
         // }
-
-        setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
+        
     }
 
     void ShuffleList<T>(List<T> list)

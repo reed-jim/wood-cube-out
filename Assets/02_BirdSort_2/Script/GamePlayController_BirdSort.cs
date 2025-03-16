@@ -50,6 +50,8 @@ namespace BirdSort2
         public ObjectPoolingEverythingInitializer ObjectPoolingEverythingInitializer;
 
         public ObjectPoolingEverything ObjectPoolingEverything;
+
+        public GameplayCamera gamePlayCamera;
         //public TutorialFunController tutWeeklyChallengeController;
         public StateGame state;
         public bool isTempPauseLevel;

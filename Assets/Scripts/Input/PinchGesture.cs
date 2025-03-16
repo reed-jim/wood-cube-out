@@ -29,7 +29,6 @@ public class PinchGesture : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
@@ -43,7 +42,6 @@ public class PinchGesture : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
@@ -134,9 +132,9 @@ public class PinchGesture : MonoBehaviour
         
         zoomSlider.value = 0;
 
-        OnZoomSliderValueChanged(0);
+        //OnZoomSliderValueChanged(0);
 
-        // pinchGestureEvent?.Invoke(maxZoom);
+        //pinchGestureEvent?.Invoke(maxZoom);
     }
 
     private void EnablePinching(bool isEnable)
