@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -21,6 +22,9 @@ public class LevelLoader : MonoBehaviour
     private List<Tween> _tweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
+    private BasicObjectPart[] _pieces;
+    private Transform _currentLevelContainer;
+    private Transform _pivotAdjust;
 
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
@@ -40,6 +44,7 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
+        BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
 
         _tweens = new List<Tween>();
 
@@ -60,6 +65,7 @@ public class LevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
+        BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -142,22 +148,57 @@ public class LevelLoader : MonoBehaviour
             {
                 GameObject level = Instantiate(op.Result, transform);
 
-                // Find Dependency
+                _currentLevelContainer = level.transform;
+
+                // FIND DEPENDENCY
                 // delay for pieces scaling before level
                 List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+
+                _pieces = pieces.ToArray();
 
                 Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                 //
 
-                if (level.GetComponent<LevelTransformManualModifier>() == null)
+                // if (level.GetComponent<LevelTransformManualModifier>() == null)
+                // {
+                //     level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
+                //     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
+                //     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+                // }
+
+
+
+                // AUTO CENTER LEVEL
+                for (int i = 0; i < level.transform.childCount; i++)
                 {
-                    level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
-                    // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+                    Transform pivotAdjust = level.transform.GetChild(i);
+
+                    if (pivotAdjust.name.Contains("Pivot Adjust"))
+                    {
+                        _pivotAdjust = pivotAdjust;
+
+                        pivotAdjust.position = Vector3.zero;
+                    }
                 }
+
+                GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
+
+                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+
+                if (_pivotAdjust == null)
+                {
+                    _pivotAdjust = new GameObject().transform;
+                }
+
+                _pivotAdjust.position = -center;
+                level.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                // 
+
+
 
                 _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
+                // ASSIGN SCREW FACTIONS
                 if (currentLevel.Value == 1)
                 {
                     AutoAssignScrewFactionLevelManualGroup(level);
@@ -186,6 +227,22 @@ public class LevelLoader : MonoBehaviour
         };
 
         showSceneTransitionEvent?.Invoke();
+    }
+
+    private void OnPieceCompleted(int pieceInstanceId)
+    {
+        Vector3 currentPosition = _pivotAdjust.transform.position;
+        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+
+        _pivotAdjust.transform.position = Vector3.zero;
+        _pivotAdjust.transform.eulerAngles = Vector3.zero;
+
+        Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+
+        _pivotAdjust.transform.position = currentPosition;
+        _pivotAdjust.transform.eulerAngles = currentRotation;
+
+        _tweens.Add(Tween.LocalPosition(_pivotAdjust, -center / _currentLevelContainer.transform.localScale.x, duration: 0.3f));
     }
 
     private async void GoLevel(int level)
@@ -447,6 +504,72 @@ public class LevelLoader : MonoBehaviour
 
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
+
+    #region AUTO CENTER LEVEL
+    Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
+    {
+        if (objects.Length == 0)
+        {
+            return Vector3.zero;
+        }
+
+        float minX = 0;
+        float maxX = 0;
+
+        float minY = 0;
+        float maxY = 0;
+
+        float minZ = 0;
+        float maxZ = 0;
+
+        if (_pivotAdjust == null)
+        {
+            return Vector3.zero;
+        }
+
+        foreach (BasicObjectPart obj in objects)
+        {
+            if (!obj.transform.IsChildOf(_pivotAdjust))
+            {
+                continue;
+            }
+
+            Vector3 objectPosition = obj.transform.position;
+
+            if (objectPosition.x < minX)
+            {
+                minX = objectPosition.x;
+            }
+
+            if (objectPosition.x > maxX)
+            {
+                maxX = objectPosition.x;
+            }
+
+            if (objectPosition.y < minY)
+            {
+                minY = objectPosition.y;
+            }
+
+            if (objectPosition.y > maxY)
+            {
+                maxY = objectPosition.y;
+            }
+
+            if (objectPosition.z < minZ)
+            {
+                minZ = objectPosition.z;
+            }
+
+            if (objectPosition.z > maxZ)
+            {
+                maxZ = objectPosition.z;
+            }
+        }
+
+        return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
+    }
+    #endregion
 
     #region BOOSTER SUGGESTION
     private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
