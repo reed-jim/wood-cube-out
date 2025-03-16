@@ -25,6 +25,7 @@ public class LevelLoader : MonoBehaviour
     private BasicObjectPart[] _pieces;
     private Transform _currentLevelContainer;
     private Transform _pivotAdjust;
+    private bool _isNotAutoCenterLevel;
 
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
@@ -159,39 +160,65 @@ public class LevelLoader : MonoBehaviour
                 Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                 //
 
-                // if (level.GetComponent<LevelTransformManualModifier>() == null)
-                // {
-                //     level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
-                //     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                //     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                // }
+                if (level.GetComponent<LevelTransformManualModifier>() == null)
+                {
+                    // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
+                    level.transform.position = Vector3.zero;
+                    // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
+                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+                }
 
 
 
                 // AUTO CENTER LEVEL
-                for (int i = 0; i < level.transform.childCount; i++)
+                _isNotAutoCenterLevel = false;
+
+                foreach (BasicObjectPart obj in pieces)
                 {
-                    Transform pivotAdjust = level.transform.GetChild(i);
+                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
 
-                    if (pivotAdjust.name.Contains("Pivot Adjust"))
+                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
                     {
-                        _pivotAdjust = pivotAdjust;
+                        _isNotAutoCenterLevel = true;
 
-                        pivotAdjust.position = Vector3.zero;
+                        break;
                     }
                 }
 
-                GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
-
-                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
-
-                if (_pivotAdjust == null)
+                if (!_isNotAutoCenterLevel)
                 {
-                    _pivotAdjust = new GameObject().transform;
-                }
+                    for (int i = 0; i < level.transform.childCount; i++)
+                    {
+                        Transform pivotAdjust = level.transform.GetChild(i);
 
-                _pivotAdjust.position = -center;
-                level.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                        if (pivotAdjust.name.Contains("Pivot Adjust"))
+                        {
+                            _pivotAdjust = pivotAdjust;
+
+                            _pivotAdjust.transform.position = Vector3.zero;
+                        }
+                    }
+
+                    foreach (BasicObjectPart piece in pieces)
+                    {
+                        if (_pivotAdjust == null)
+                        {
+                            _pivotAdjust = new GameObject().transform;
+                            _pivotAdjust.SetParent(_currentLevelContainer);
+                        }
+
+                        if (!piece.transform.IsChildOf(_pivotAdjust))
+                        {
+                            piece.transform.SetParent(_pivotAdjust);
+                        }
+                    }
+
+                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
+
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+
+                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+                }
                 // 
 
 
@@ -231,18 +258,25 @@ public class LevelLoader : MonoBehaviour
 
     private void OnPieceCompleted(int pieceInstanceId)
     {
-        Vector3 currentPosition = _pivotAdjust.transform.position;
-        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+        if (_isNotAutoCenterLevel)
+        {
+            return;
+        }
 
-        _pivotAdjust.transform.position = Vector3.zero;
-        _pivotAdjust.transform.eulerAngles = Vector3.zero;
+        // Vector3 currentPosition = _pivotAdjust.transform.position;
+        // Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+
+        // _pivotAdjust.transform.position = Vector3.zero;
+        // _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
         Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
-        _pivotAdjust.transform.position = currentPosition;
-        _pivotAdjust.transform.eulerAngles = currentRotation;
+        // _pivotAdjust.transform.position = currentPosition;
+        // _pivotAdjust.transform.eulerAngles = currentRotation;
 
-        _tweens.Add(Tween.LocalPosition(_pivotAdjust, -center / _currentLevelContainer.transform.localScale.x, duration: 0.3f));
+        Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
+
+        _tweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
     }
 
     private async void GoLevel(int level)
@@ -513,19 +547,21 @@ public class LevelLoader : MonoBehaviour
             return Vector3.zero;
         }
 
-        float minX = 0;
-        float maxX = 0;
+        float minX = float.MaxValue;
+        float maxX = float.MinValue;
 
-        float minY = 0;
-        float maxY = 0;
+        float minY = float.MaxValue;
+        float maxY = float.MinValue;
 
-        float minZ = 0;
-        float maxZ = 0;
+        float minZ = float.MaxValue;
+        float maxZ = float.MinValue;
 
-        if (_pivotAdjust == null)
-        {
-            return Vector3.zero;
-        }
+        // temp set pivot adjust
+        Vector3 currentPosition = _pivotAdjust.transform.position;
+        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+
+        _pivotAdjust.transform.position = Vector3.zero;
+        _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
         foreach (BasicObjectPart obj in objects)
         {
@@ -534,38 +570,53 @@ public class LevelLoader : MonoBehaviour
                 continue;
             }
 
-            Vector3 objectPosition = obj.transform.position;
+            MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+            MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
 
-            if (objectPosition.x < minX)
+            Vector3 objectPosition = (obj.transform.position + meshRenderer.bounds.center) / 2;
+
+            objectPosition = obj.transform.position;
+
+            float boundXMin = obj.transform.position.x - 0.5f * obj.BoundSize.x;
+            float boundXMax = obj.transform.position.x + 0.5f * obj.BoundSize.x;
+            float boundYMin = obj.transform.position.y - 0.5f * obj.BoundSize.y;
+            float boundYMax = obj.transform.position.y + 0.5f * obj.BoundSize.y;
+            float boundZMin = obj.transform.position.z - 0.5f * obj.BoundSize.z;
+            float boundZMax = obj.transform.position.z + 0.5f * obj.BoundSize.z;
+
+            if (boundXMin < minX)
             {
-                minX = objectPosition.x;
+                minX = boundXMin;
             }
 
-            if (objectPosition.x > maxX)
+            if (boundXMax > maxX)
             {
-                maxX = objectPosition.x;
+                maxX = boundXMax;
             }
 
-            if (objectPosition.y < minY)
+            if (boundYMin < minY)
             {
-                minY = objectPosition.y;
+                minY = boundYMin;
             }
 
-            if (objectPosition.y > maxY)
+            if (boundYMax > maxY)
             {
-                maxY = objectPosition.y;
+                maxY = boundYMax;
             }
 
-            if (objectPosition.z < minZ)
+            if (boundZMin < minZ)
             {
-                minZ = objectPosition.z;
+                minZ = boundZMin;
             }
 
-            if (objectPosition.z > maxZ)
+            if (boundZMax > maxZ)
             {
-                maxZ = objectPosition.z;
+                maxZ = boundZMax;
             }
         }
+
+        _pivotAdjust.transform.position = currentPosition;
+        _pivotAdjust.transform.eulerAngles = currentRotation;
 
         return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
     }

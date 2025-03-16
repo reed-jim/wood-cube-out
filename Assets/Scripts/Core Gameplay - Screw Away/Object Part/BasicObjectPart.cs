@@ -27,11 +27,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private int _totalJoint;
     private bool _isConcave;
     private Vector3 _initialScale;
+    private Vector3 _boundSize;
     #endregion
 
     public bool IsConcave
     {
         get => _isConcave;
+    }
+
+    public Vector3 BoundSize
+    {
+        get => _boundSize;
     }
 
     #region EVENT
@@ -121,6 +127,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         // BETTER FEELING
         // HideBeforeLevel();
+
+        _boundSize = GetComponent<MeshRenderer>().bounds.size;
 
         AutoAssignPhysicsMaterial();
     }
