@@ -10,6 +10,10 @@ using UnityEditor;
 public class LevelDifficultyCalculator : EditorWindow
 {
     private int level;
+    private int startLevel;
+    private int endLevel;
+    private Transform levelContainer;
+
     private LevelDataContainer levelDataContainer;
 
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -36,13 +40,22 @@ public class LevelDifficultyCalculator : EditorWindow
 
         // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
-        level = EditorGUILayout.IntField("Level", level);
+        // level = EditorGUILayout.IntField("Level", level);
+        startLevel = EditorGUILayout.IntField("Start Level", startLevel);
+        endLevel = EditorGUILayout.IntField("End Level", endLevel);
+        levelContainer = (Transform)EditorGUILayout.ObjectField("Level Container", levelContainer, typeof(Transform), true);
+
         levelDataContainer = (LevelDataContainer)EditorGUILayout.ObjectField("Level Data Container", levelDataContainer, typeof(LevelDataContainer), true);
         expectedDifficulty = EditorGUILayout.FloatField("Expected Difficulty", expectedDifficulty);
 
         if (GUILayout.Button("Calculate"))
         {
             Calculate();
+        }
+
+        if (GUILayout.Button("Calculate Fast Range"))
+        {
+            CalculateFastAll();
         }
 
         if (GUILayout.Button("Generate Screw Box Difficulty"))
@@ -58,6 +71,120 @@ public class LevelDifficultyCalculator : EditorWindow
         levelDifficultyConfiguration = (LevelDifficultyConfiguration)EditorGUILayout.ObjectField("Result", levelDifficultyConfiguration, typeof(LevelDifficultyConfiguration), true);
 
         GUILayout.EndArea();
+    }
+
+    private void CalculateFastAll()
+    {
+        for (int i = startLevel; i <= endLevel; i++)
+        {
+            CalulateFast(i);
+        }
+    }
+
+    private void CalulateFast(int level)
+    {
+        // Transform level = Selection.activeTransform;
+
+        // Auto load level into current scene for simulating Physics
+        string prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
+
+        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(prefabPath);
+
+        if (levelContainer.childCount > 0)
+        {
+            DestroyImmediate(levelContainer.GetChild(0).gameObject);
+        }
+
+        Transform sceneLevel = Instantiate(levelPrefab, levelContainer).transform;
+
+        BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(sceneLevel).ToArray();
+
+        int numScrew = screws.Length;
+
+        Dictionary<string, List<string>> obstaclesOfPieces = new Dictionary<string, List<string>>();
+
+        bool isLevelRubik = false;
+
+        int totalBlockedScrew = 0;
+
+        for (int i = 0; i < numScrew; i++)
+        {
+            string pieceName = screws[i].transform.parent.name;
+
+            if (pieceName.Contains("L-Shaped"))
+            {
+                isLevelRubik = true;
+
+                break;
+            }
+
+            List<string> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
+
+            if (obstacleName.Count > 0)
+            {
+                totalBlockedScrew++;
+            }
+
+            if (!obstaclesOfPieces.ContainsKey(pieceName))
+            {
+                obstaclesOfPieces.Add(pieceName, obstacleName);
+            }
+            else
+            {
+                foreach (var item in obstacleName)
+                {
+                    if (!obstaclesOfPieces[pieceName].Contains(item))
+                    {
+                        obstaclesOfPieces[pieceName].Add(item);
+                    }
+                }
+            }
+        }
+
+        Debug.Log(
+            $"SAFERIO <color=#73FF83>Level {level}: <color=#FF7A75>{totalBlockedScrew}/{numScrew} ({(float)totalBlockedScrew / numScrew * 100}%<color=#fff>)");
+
+        // // DEBUG
+        // foreach (var piece in obstaclesOfPieces)
+        // {
+        //     foreach (var obstacle in piece.Value)
+        //     {
+        //         Debug.Log("SAFERIO " + piece.Key + " / " + obstacle);
+        //     }
+
+        //     Debug.Log("SAFERIO ----------------");
+        // }
+
+        if (isLevelRubik)
+        {
+            Debug.Log($"SAFERIO <color=#73FF83>Level {level}: Rubik<color=#fff>");
+
+            return;
+        }
+
+        bool isValid = true;
+
+        // CHECK LEVEL DESIGN ISSUES
+        foreach (var obstaclesOfPiece in obstaclesOfPieces)
+        {
+            foreach (var obstacle in obstaclesOfPiece.Value)
+            {
+                if (obstaclesOfPieces[obstacle].Contains(obstaclesOfPiece.Key))
+                {
+                    Debug.Log($"SAFERIO <color=#73FF83>Level {level}:<color=#fff> {obstaclesOfPiece.Key} {obstacle} <color=#FF7A75>INVALID<color=#fff>");
+
+                    isValid = false;
+
+                    break;
+                }
+
+            }
+        }
+
+        if (isValid)
+        {
+            Debug.Log($"SAFERIO <color=#73FF83>Level {level}: VALID<color=#fff>");
+        }
     }
 
     private void Calculate()
@@ -336,6 +463,96 @@ public class LevelDifficultyCalculator : EditorWindow
         levelDataContainer.SetLevelDifficultyConfiguration(level, generatedLevelPhases.ToArray());
     }
 
+    #region SCREW
+    public List<string> GetScrewObstacles(Transform screw, bool isIncludeHiddenScrew)
+    {
+        MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
+
+        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
+        Vector3 pointTwo = pointOne + 10f * screw.forward;
+
+        Collider[] hits = new Collider[16];
+
+        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
+
+        List<string> obstacleInstanceIds = new List<string>();
+
+        if (hits != null)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i] == null)
+                {
+                    continue;
+                }
+
+                if (hits[i].transform == screw.parent)
+                {
+                    continue;
+                }
+
+                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    if (isIncludeHiddenScrew)
+                    {
+                        continue;
+                    }
+
+                    Vector3 hitPos;
+
+                    // Concave
+                    if (objectPart.IsConcave)
+                    {
+                        RaycastHit hit;
+
+                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+                        Physics.CapsuleCast(
+                            pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
+                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
+
+                        if (hit.collider != null)
+                        {
+                            hitPos = hit.point;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        hitPos = hits[i].ClosestPoint(pointOne);
+                    }
+
+                    // Perpendicular distance
+                    Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
+
+                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
+
+                    distance = Mathf.Max(distance, 0);
+
+                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
+                    {
+                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
+                        {
+                            continue;
+                        }
+
+                        obstacleInstanceIds.Add(hits[i].transform.name);
+                    }
+                }
+            }
+        }
+
+        return obstacleInstanceIds;
+    }
+    #endregion
+
     #region UTIL
     public List<T> GetComponentsFromAllChildren<T>(Transform parent) where T : Component
     {
@@ -434,5 +651,175 @@ public static class LevelDifficultyCalculatorUltility
         levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame = 1;
 
         return levelDifficultyConfiguration;
+    }
+
+    public static Dictionary<int, List<Transform>> FindPieceDependency(BasicObjectPart[] pieces)
+    {
+        Dictionary<int, List<Transform>> obstaclesOfPieces = new Dictionary<int, List<Transform>>();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            List<Transform> dependency = GetPieceDependency(pieces[i].transform);
+
+            obstaclesOfPieces.Add(pieces[i].transform.GetInstanceID(), dependency);
+        }
+
+        GamePersistentVariable.pieceDependencies = obstaclesOfPieces;
+
+        // int totalBlockedScrew = 0;
+
+        // for (int i = 0; i < numScrew; i++)
+        // {
+        //     int pieceName = screws[i].transform.parent.GetInstanceID();
+
+        //     List<Transform> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: true);
+
+        //     if (obstacleName.Count > 0)
+        //     {
+        //         totalBlockedScrew++;
+        //     }
+
+        //     if (!obstaclesOfPieces.ContainsKey(pieceName))
+        //     {
+        //         obstaclesOfPieces.Add(pieceName, obstacleName);
+        //     }
+        //     else
+        //     {
+        //         foreach (var item in obstacleName)
+        //         {
+        //             if (!obstaclesOfPieces[pieceName].Contains(item))
+        //             {
+        //                 obstaclesOfPieces[pieceName].Add(item);
+        //             }
+        //         }
+        //     }
+        // }
+
+        return obstaclesOfPieces;
+    }
+
+    public static List<Transform> GetPieceDependency(Transform piece)
+    {
+        List<Transform> dependency = new List<Transform>();
+
+        Queue<Transform> toProcessPieces = new Queue<Transform>();
+
+        List<int> checkedList = new List<int>();
+
+        toProcessPieces.Enqueue(piece);
+
+        checkedList.Add(piece.GetInstanceID());
+
+        while (toProcessPieces.Count > 0)
+        {
+            Transform nextPiece = toProcessPieces.Dequeue();
+
+            for (int i = 0; i < nextPiece.childCount; i++)
+            {
+                BaseScrew screw = nextPiece.GetChild(i).GetComponent<BaseScrew>();
+
+                List<Transform> newFoundPieces = GetScrewObstacles(screw.transform, true);
+
+                foreach (var item in newFoundPieces)
+                {
+                    if (!checkedList.Contains(item.GetInstanceID()))
+                    {
+                        toProcessPieces.Enqueue(item);
+
+                        if (!dependency.Contains(item))
+                        {
+                            dependency.Add(item);
+                        }
+
+                        checkedList.Add(item.GetInstanceID());
+                    }
+                }
+            }
+        }
+
+        return dependency;
+    }
+
+    public static List<Transform> GetScrewObstacles(Transform screw, bool isIncludeHiddenScrew)
+    {
+        MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
+
+        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
+        Vector3 pointTwo = pointOne + 10f * screw.forward;
+
+        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, LayerMask.GetMask("Default"));
+
+        List<Transform> obstacleInstanceIds = new List<Transform>();
+
+        if (hits != null)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].transform == screw.parent)
+                {
+                    continue;
+                }
+
+                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    // obstacleInstanceIds.Add(hits[i].transform);
+
+                    // if (isIncludeHiddenScrew)
+                    // {
+                    //     continue;
+                    // }
+
+                    Vector3 hitPos;
+
+                    // Concave
+                    if (objectPart.IsConcave)
+                    {
+                        RaycastHit hit;
+
+                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+                        Physics.CapsuleCast(
+                            pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
+                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
+
+                        if (hit.collider != null)
+                        {
+                            hitPos = hit.point;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        hitPos = hits[i].ClosestPoint(pointOne);
+                    }
+
+                    // Perpendicular distance
+                    Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
+
+                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
+
+                    distance = Mathf.Max(distance, 0);
+
+                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
+                    {
+                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
+                        {
+                            continue;
+                        }
+
+                        obstacleInstanceIds.Add(hits[i].transform);
+                    }
+                }
+            }
+        }
+
+        return obstacleInstanceIds;
     }
 }

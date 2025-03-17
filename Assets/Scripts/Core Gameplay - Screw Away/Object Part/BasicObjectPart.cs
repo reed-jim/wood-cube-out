@@ -27,11 +27,17 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private int _totalJoint;
     private bool _isConcave;
     private Vector3 _initialScale;
+    private Vector3 _boundSize;
     #endregion
 
     public bool IsConcave
     {
         get => _isConcave;
+    }
+
+    public Vector3 BoundSize
+    {
+        get => _boundSize;
     }
 
     #region EVENT
@@ -40,6 +46,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     public static event Action<BaseScrew> loosenScrewOnObjectBrokenEvent;
     public static event Action shakeCameraEvent;
     public static event Action<int> dissolveObjectPartEvent;
+    public static event Action<int> pieceCompleteEvent;
     #endregion
 
     #region LIFECYCLE
@@ -119,7 +126,9 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
 
         // BETTER FEELING
-        HideBeforeLevel();
+        // HideBeforeLevel();
+
+        _boundSize = GetComponent<MeshRenderer>().bounds.size;
 
         AutoAssignPhysicsMaterial();
     }
@@ -146,12 +155,27 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
-            .OnComplete(() =>
-            {
-                _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
-            })
-        );
+        _tweens.Add(Tween.Delay(0.4f).OnComplete(() =>
+        {
+            HideBeforeLevel();
+        }));
+
+        _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
+        {
+            _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+                })
+            );
+        }));
+
+        // _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
+        //     .OnComplete(() =>
+        //     {
+        //         _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+        //     })
+        // );
     }
 
     private void AutoAssignPhysicsMaterial()
@@ -165,11 +189,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         meshCollider.material = physicsMaterial;
     }
     #endregion
-
-    private void DetachFromParent()
-    {
-        transform.SetParent(LevelGarbageBin.GarbageBin);
-    }
 
     public void Select()
     {
@@ -244,6 +263,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 }
 
                 DetachFromParent();
+
+                pieceCompleteEvent?.Invoke(transform.GetInstanceID());
 
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
@@ -412,6 +433,18 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
 
+        // transform.SetParent(LevelGarbageBin.GarbageBin);
+    }
+
+    private void DetachFromParent()
+    {
         transform.SetParent(LevelGarbageBin.GarbageBin);
     }
+
+    #region UTIL
+    private bool IsMeshConcave()
+    {
+        return !meshCollider.convex;
+    }
+    #endregion
 }

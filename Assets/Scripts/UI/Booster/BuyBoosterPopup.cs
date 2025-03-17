@@ -183,7 +183,10 @@ public class BuyBoosterPopup : BasePopup
 
     private void UnlockScrewBoxWithAds()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
+        isAbleToHideOnClickOutside = false;
+
+        AdmobAdsMax.Instance.ShowVideoReward(
+            OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
     }
 
     private void OnRewaredAdCompletedToUnlockBox()
@@ -193,6 +196,8 @@ public class BuyBoosterPopup : BasePopup
             unlockScrewBoxEvent?.Invoke();
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "UnlockScrewBox");
+
+            isAbleToHideOnClickOutside = true;
         });
     }
 
@@ -213,5 +218,7 @@ public class BuyBoosterPopup : BasePopup
     private void ShowAdsNotLoadedPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
+
+        isAbleToHideOnClickOutside = true;
     }
 }

@@ -60,6 +60,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         set => joint = value;
     }
 
+    public MeshFilter MeshFilter
+    {
+        get => meshFilter;
+    }
+
     public ScrewBoxSlot ScrewBoxSlot
     {
         get => _screwBoxSlot;
@@ -239,8 +244,8 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             Color factionColor = FactionUtility.GetColorForFaction(Faction);
 
-            looseScrewFxMain.startColor = factionColor;
-            ringFxMain.startColor = factionColor;
+            looseScrewFxMain.startColor = 1.5f * factionColor;
+            ringFxMain.startColor = 1.5f * factionColor;
 
             looseScrewFx.gameObject.SetActive(true);
 
@@ -283,7 +288,12 @@ public class BaseScrew : MonoBehaviour, IScrew
                         _isRotating = true;
                         rotateSpeed *= 2;
 
-                        SoundManager.Instance.PlaySoundTightenScrew();
+                        if (!GamePersistentVariable.isSoundTightenScrewPlaying)
+                        {
+                            SoundManager.Instance.PlaySoundTightenScrew();
+
+                            GamePersistentVariable.isSoundTightenScrewPlaying = true;
+                        }
 
                         _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                         .OnComplete(() =>
@@ -306,6 +316,8 @@ public class BaseScrew : MonoBehaviour, IScrew
                                 screwMovedCompletedEvent?.Invoke(this);
 
                                 onCompleteAction?.Invoke();
+
+                                GamePersistentVariable.isSoundTightenScrewPlaying = false;
                             })
                         );
                     }));

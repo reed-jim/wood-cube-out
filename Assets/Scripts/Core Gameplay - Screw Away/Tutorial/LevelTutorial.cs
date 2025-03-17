@@ -54,6 +54,10 @@ public class LevelTutorial : MonoBehaviour
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
+        GamePersistentVariable.isPassedStepOneTutorial = true;
+
+        // gameObject.SetActive(false);
+
         StartCoroutine(TutorialStepOne());
 
         _screenSizeWorld = CommonUtil.GetScreenSizeWorld(Camera.main);
@@ -69,11 +73,11 @@ public class LevelTutorial : MonoBehaviour
         _initialRotateIconRotation = rotateIconWorld.transform.eulerAngles;
     }
 
-    // private void Start()
-    // {
-    //     enableSwipingEvent?.Invoke(false);
-    //     enablePinchingEvent?.Invoke(false);
-    // }
+    private void Start()
+    {
+        enableSwipingEvent?.Invoke(false);
+        enablePinchingEvent?.Invoke(false);
+    }
 
     void Update()
     {
