@@ -41,6 +41,7 @@ public class AddHoleItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.AddMoreScrewPort();
         return CanShuffle;
     }
 

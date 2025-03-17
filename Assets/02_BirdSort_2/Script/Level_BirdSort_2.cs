@@ -98,13 +98,14 @@ namespace BirdSort2
                     AutoAssignScrewFactionMultiPhaseLevel(level);
                     screwBoxManager.Init();
                     screwManager.Init();
+                    GamePlayController_BirdSort.Instance.state = StateGame.Playing;
                     //if (isLoopLevel)
                     //{
-                        //RandomizeLevelModelColor(level);
+                    //RandomizeLevelModelColor(level);
                     //}
                     //else
                     //{
-                        //SaferioTracking.TrackLevelStart(UseProfile.CurrentLevel);
+                    //SaferioTracking.TrackLevelStart(UseProfile.CurrentLevel);
                     //}
 
                     //if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
@@ -286,7 +287,21 @@ namespace BirdSort2
             float percentTimeRemming = ((timePlayRequire - timePlayLevel) / timePlayRequire);
             GamePlayController_BirdSort.Instance.gameScene.ShowCoolDownStar(percentTimeRemming);
         }
+        public virtual void Lose(int type, bool isLoseExtral = false)
+        {
+            if (isLose)
+                return;
+            isLose = true;
+            Debug.Log("========== Lose ============");
+            GamePlayController_BirdSort.Instance.state = StateGame.Lose;
 
+            //AnalyticsController.LogLevelEnd(UseProfile.CurrentLevel, UnlockCondition.Normal, false, "FullHangCho", timePlayLevel);
+
+            GameController.Instance.musicManager.PlayLoseSound();
+
+            StartCoroutine(Helper.StartAction(() => { ReviveBox.Setup().Show(type, GetItemYouMiss(), isLoseExtral); },
+                0.45f));
+        }
 
         public void PauseLevel(bool isPause)
         {
@@ -331,7 +346,7 @@ namespace BirdSort2
 
             BirdSort2.GamePlayController_BirdSort.Instance.state = StateGame.Playing;
 
-            GamePlayController.Instance.itemController.suggetUseItemInGame.ResetSugget();
+            GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();
         }
 
 

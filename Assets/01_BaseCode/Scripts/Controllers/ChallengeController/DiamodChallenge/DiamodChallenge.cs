@@ -23,7 +23,8 @@ public class DiamodChallenge : CoinChallenge
     {
         if (UseProfile.CurrentLevel < config.level_unlock)
             return false;
-
+        if (!config.IsActive)
+            return false;
         DayOfWeek dayActive = TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()).DayOfWeek;
         if (dayActive != DayOfWeek.Wednesday && dayActive != DayOfWeek.Thursday)
         {

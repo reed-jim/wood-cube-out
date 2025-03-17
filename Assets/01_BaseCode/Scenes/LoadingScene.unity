@@ -1394,7 +1394,7 @@ MonoBehaviour:
           is_active: 0
           time_start: 
           time_end: 
-          level_unlock: 0
+          level_unlock: 10
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
@@ -1410,7 +1410,7 @@ MonoBehaviour:
           is_active: 0
           time_start: 
           time_end: 
-          level_unlock: 0
+          level_unlock: 10
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
@@ -1426,7 +1426,7 @@ MonoBehaviour:
           is_active: 0
           time_start: 
           time_end: 
-          level_unlock: 0
+          level_unlock: 10
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
@@ -1810,6 +1810,18 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 183405004, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: winMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: cd7c1b72b869a784d85897d937b645e6, type: 3}
+    - target: {fileID: 183405004, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: loseMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 87202e522ef8f094ca4438f8b7f2d24f, type: 3}
+    - target: {fileID: 183405004, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 183405004, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 183405004, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -1822,130 +1834,199 @@ PrefabInstance:
       value: GameController
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: winMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: cd7c1b72b869a784d85897d937b645e6, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: loseMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 87202e522ef8f094ca4438f8b7f2d24f, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: serializationData.PrefabModifications.Array.size
-      value: 9
+      value: 27
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[0]'
-      value: '"path":"clips","add_keys":{"$id":0,"$type":"System.Object[], mscorlib","$rlength":5,"$rcontent":[{"$id":1,"$type":"BirdSort2.NameMusic,
-        Assembly-CSharp",8},{"$id":2,"$type":"BirdSort2.NameMusic, Assembly-CSharp",8},{"$id":3,"$type":"BirdSort2.NameMusic,
-        Assembly-CSharp",9},{"$id":4,"$type":"BirdSort2.NameMusic, Assembly-CSharp",8},{"$id":5,"$type":"BirdSort2.NameMusic,
-        Assembly-CSharp",9}]},"remove_keys":null'
+      value: '"path":"clips","add_keys":{"$id":0,"$type":"System.Object[], mscorlib","$rlength":12,"$rcontent":[{"$id":1,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",6},{"$id":2,"$type":"BirdSort2.NameMusic, Assembly-CSharp",7},{"$id":3,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",10},{"$id":4,"$type":"BirdSort2.NameMusic, Assembly-CSharp",11},{"$id":5,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",6},{"$id":6,"$type":"BirdSort2.NameMusic, Assembly-CSharp",7},{"$id":7,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",10},{"$id":8,"$type":"BirdSort2.NameMusic, Assembly-CSharp",11},{"$id":9,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",6},{"$id":10,"$type":"BirdSort2.NameMusic, Assembly-CSharp",7},{"$id":11,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",10},{"$id":12,"$type":"BirdSort2.NameMusic, Assembly-CSharp",11}]},"remove_keys":{"$id":13,"$type":"System.Object[],
+        mscorlib","$rlength":3,"$rcontent":[{"$id":14,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",8},{"$id":15,"$type":"BirdSort2.NameMusic, Assembly-CSharp",8},{"$id":16,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",9}]}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[1]'
-      value: '"path":"clips.{8es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
-        Assembly-CSharp","name":8,"spaceDelayTime":0.12,"timmer":0,"isActiving":false,"audioClip":null}'
+      value: '"path":"clips.{10es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":10,"spaceDelayTime":0,"timmer":0,"isActiving":false,"audioClip":$eref:0}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[2]'
-      value: '"path":"clips.{8es}.audioClip","value":null'
+      value: '"path":"clips.{10es}.audioClip","value":$eref:0'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[3]'
-      value: '"path":"clips.{8es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
-        Assembly-CSharp",8}'
+      value: '"path":"clips.{10es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",10}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[4]'
-      value: '"path":"clips.{8es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
-        mscorlib",0.12}'
+      value: '"path":"clips.{10es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[5]'
-      value: '"path":"clips.{9es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
-        Assembly-CSharp","name":9,"spaceDelayTime":0.12,"timmer":0,"isActiving":false,"audioClip":null}'
+      value: '"path":"clips.{11es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":11,"spaceDelayTime":0,"timmer":0,"isActiving":false,"audioClip":$eref:1}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[6]'
-      value: '"path":"clips.{9es}.audioClip","value":null'
+      value: '"path":"clips.{11es}.audioClip","value":$eref:1'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[7]'
-      value: '"path":"clips.{9es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
-        Assembly-CSharp",9}'
+      value: '"path":"clips.{11es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",11}'
       objectReference: {fileID: 0}
     - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: 'serializationData.PrefabModifications.Array.data[8]'
-      value: '"path":"clips.{9es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
-        mscorlib",0.12}'
+      value: '"path":"clips.{11es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
       objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[9]'
+      value: '"path":"clips.{1es}.audioClip","value":$eref:2'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[10]'
+      value: '"path":"clips.{1es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[11]'
+      value: '"path":"clips.{2es}.audioClip","value":$eref:3'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[12]'
+      value: '"path":"clips.{2es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[13]'
+      value: '"path":"clips.{3es}.audioClip","value":$eref:4'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[14]'
+      value: '"path":"clips.{3es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[15]'
+      value: '"path":"clips.{4es}.audioClip","value":$eref:5'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[16]'
+      value: '"path":"clips.{4es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[17]'
+      value: '"path":"clips.{5es}.audioClip","value":$eref:6'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[18]'
+      value: '"path":"clips.{5es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[19]'
+      value: '"path":"clips.{6es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":6,"spaceDelayTime":0,"timmer":0,"isActiving":false,"audioClip":$eref:7}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[20]'
+      value: '"path":"clips.{6es}.audioClip","value":$eref:7'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[21]'
+      value: '"path":"clips.{6es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",6}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[22]'
+      value: '"path":"clips.{6es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[23]'
+      value: '"path":"clips.{7es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":7,"spaceDelayTime":0,"timmer":0,"isActiving":false,"audioClip":$eref:8}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[24]'
+      value: '"path":"clips.{7es}.audioClip","value":$eref:8'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[25]'
+      value: '"path":"clips.{7es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",7}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModifications.Array.data[26]'
+      value: '"path":"clips.{7es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[0]'
+      value: 
+      objectReference: {fileID: 8300000, guid: bd2ce56d363707a49b0c5780e212a705, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[1]'
+      value: 
+      objectReference: {fileID: 8300000, guid: de17fc3b8e0b0104498e3196a40fa9a7, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[2]'
+      value: 
+      objectReference: {fileID: 8300000, guid: e06b27f481153af4698474d4895a04be, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[3]'
+      value: 
+      objectReference: {fileID: 8300000, guid: f105959f7d91bc945a3fcef70219dfca, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[4]'
+      value: 
+      objectReference: {fileID: 8300000, guid: ffb159a21c8a04135a5616979c828fab, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[5]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 7e9ee6dc04a5d40d1a5dfc4beb9865e7, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[6]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 8e737fff0f8822c438a052f9ea42a414, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[7]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 4db263fcc233f2e449b50ff7cf896596, type: 3}
+    - target: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'serializationData.PrefabModificationsReferencedUnityObjects.Array.data[8]'
+      value: 
+      objectReference: {fileID: 8300000, guid: 1ddfb92009a5fcc41965feec41651b91, type: 3}
     - target: {fileID: 6194580446896483798, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.coinSalePack.CanBuy
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.itemSalePack.CanBuy
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.dailyOfferPack.CanBuy
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.weeklySalePack.CanBuy
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].adsData.config.interstitials.minimumInterval
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].minigameConnectSegmentData.config.str_start_date
-      value: 2024/12/1 00:00:00
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.coinSalePack.parmaExtral.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.itemSalePack.parmaExtral.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.dailyOfferPack.parmaExtral.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: segments.Array.data[0].saleData.config.weeklySalePack.parmaExtral.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: 'segments.Array.data[0].saleData.config.coinSalePack.parmaExtral.Array.data[0]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: 'segments.Array.data[0].saleData.config.itemSalePack.parmaExtral.Array.data[0]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: 'segments.Array.data[0].saleData.config.dailyOfferPack.parmaExtral.Array.data[0]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: 'segments.Array.data[0].saleData.config.dailyOfferPack.parmaExtral.Array.data[1]'
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7673977240581075682, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: 'segments.Array.data[0].saleData.config.weeklySalePack.parmaExtral.Array.data[0]'
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 8381228605252940545, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: admobAds
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8381228605252940545, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-      propertyPath: startLoading
-      value: 
-      objectReference: {fileID: 316155898}
     - target: {fileID: 8893301431322861509, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1992,7 +2073,8 @@ PrefabInstance:
     - {fileID: 2054987287612453848, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
     - {fileID: 1642105878, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
     - {fileID: 7749172273767947542, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 183405002, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5451924456029150767, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}

@@ -105,7 +105,8 @@ public class CoinChallenge : ChallengeBase
     {
         if (UseProfile.CurrentLevel < config.level_unlock)
             return false;
-
+        if (!config.IsActive)
+            return false;
 //        if (data.CurrentIndexReward > requirementsReward.Count - 1) //Đã nhận quà cuối
 //            return false;
 

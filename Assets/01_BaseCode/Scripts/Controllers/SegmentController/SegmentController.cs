@@ -177,9 +177,9 @@ public class CoreGameData : BaseDataSegemnt
         public BootsData return_BirdSort;
         public BootsData sugget_BirdSort;
         public BootsData ice_BirdSort;
-        public BootsData shuffle_BirdSort;
-        public BootsData breakTheRule_BirdSort;
-        public BootsData addBrand_BirdSort;
+        public BootsData AddHole;
+        public BootsData BreakObject;
+        public BootsData ClearHole;
     
 
 
@@ -200,11 +200,11 @@ public class CoreGameData : BaseDataSegemnt
                 case GiftType.IceItem_BirdSort:
                     return ice_BirdSort;
                 case GiftType.AddHole:
-                    return shuffle_BirdSort;
+                    return AddHole;
                 case GiftType.BreakObject:
-                    return breakTheRule_BirdSort;
+                    return BreakObject;
                 case GiftType.ClearHole:
-                    return addBrand_BirdSort;
+                    return ClearHole;
 
                 default:
                     return null;

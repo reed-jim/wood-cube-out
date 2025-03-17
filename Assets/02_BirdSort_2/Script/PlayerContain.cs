@@ -113,16 +113,10 @@ namespace BirdSort2
                     _isZoomByPinching = false;
                 }
             }
-            if (Input.touchCount == 2)
-            {
-                return;
-            }
-
             if (Input.GetMouseButtonDown(0))
             {
                 twoTouchPoints.Add(Input.mousePosition);
             }
-
             if (Input.GetMouseButton(0))
             {
                 _timeHold += Time.deltaTime;
@@ -131,6 +125,7 @@ namespace BirdSort2
                 {
                     if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
                     {
+                        Debug.Log("SelectObjectPart");
                         SelectObjectPart();
 
                         _isSelectingObjectPart = true;
@@ -141,7 +136,6 @@ namespace BirdSort2
                     SelectObjectPart();
                 }
             }
-
             if (Input.GetMouseButtonUp(0))
             {
                 twoTouchPoints.Add(Input.mousePosition);
@@ -241,11 +235,11 @@ namespace BirdSort2
                 return;
             }
 
-            if (IsClickedOnUI())
-            {
-                return;
-            }
-
+            // if (IsClickedOnUI())
+            // {
+            //     return;
+            // }
+            Debug.Log("SelectScrew");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
@@ -256,6 +250,7 @@ namespace BirdSort2
 
                 if (screw != null)
                 {
+                    Debug.Log("sCREWSewlected");
                     screw.Select();
 
                     GamePlayController_BirdSort.Instance.level.levelParent.DisableAutoRotating();
@@ -264,96 +259,97 @@ namespace BirdSort2
                 }
             }
         }
-         private async void SelectObjectPart()
-    {
-        _isSelectObjectPart = false;
-
-        if (_inputMode == GameEnum.InputMode.Disabled)
+        private async void SelectObjectPart()
         {
-            return;
-        }
-
-        if (IsClickedOnUI())
-        {
-            return;
-        }
-
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-
-        Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
-
-        if (hit.collider != null)
-        {
-            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-            if (objectPart != null)
+            _isSelectObjectPart = false;
+            Debug.Log("CheckingObjCondition : "+ IsClickedOnUI());
+            if (_inputMode == GameEnum.InputMode.Disabled)
             {
-                _isSelectObjectPart = true;
-
-                if (_inputMode == GameEnum.InputMode.BreakObject)
-                {
-                    objectPart.Break(hit.point);
-
-                    //breakObjectEvent?.Invoke();//Anhtusz BreakObject Booster
-
-                    _inputMode = GameEnum.InputMode.Disabled;
-
-                    // avoid click screw immediately
-                    await Task.Delay(500);
-
-                    _inputMode = GameEnum.InputMode.Select;
-                }
-                else
-                {
-                    objectPart.Select();
-                }
-
                 return;
             }
+
+            // if (IsClickedOnUI())
+            // {
+            //     return;
+            // }
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+            Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
+
+            if (hit.collider != null)
+            {
+                IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    _isSelectObjectPart = true;
+
+                    if (_inputMode == GameEnum.InputMode.BreakObject)
+                    {
+                        objectPart.Break(hit.point);
+
+                        DisableBreakObjectMode();
+
+                        _inputMode = GameEnum.InputMode.Disabled;
+
+                        // avoid click screw immediately
+                        await Task.Delay(500);
+
+                        _inputMode = GameEnum.InputMode.Select;
+                    }
+                    else
+                    {
+                        Debug.Log("SelectedObjectPart");
+                        objectPart.Select();
+                    }
+
+                    return;
+                }
+            }
         }
-    }
 
-    private void EnableBreakObjectMode()
-    {
-        _inputMode = GameEnum.InputMode.BreakObject;
-    }
+        public void EnableBreakObjectMode()
+        {
+            _inputMode = GameEnum.InputMode.BreakObject;
+        }
 
-    private void DisableBreakObjectMode()
-    {
-        _inputMode = GameEnum.InputMode.Select;
-    }
-
-    private void EnableInput(bool isEnable)
-    {
-        if (isEnable)
+        public void DisableBreakObjectMode()
         {
             _inputMode = GameEnum.InputMode.Select;
         }
-        else
-        {
-            _inputMode = GameEnum.InputMode.Disabled;
-        }
-    }
 
-    private bool IsClickedOnUI()
-    {
-        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        private void EnableInput(bool isEnable)
         {
-            position = Input.mousePosition
-        };
-
-        var raycastResults = new System.Collections.Generic.List<RaycastResult>();
-        EventSystem.current.RaycastAll(pointerData, raycastResults);
-
-        if (raycastResults.Count > 0)
-        {
-            return true;
+            if (isEnable)
+            {
+                _inputMode = GameEnum.InputMode.Select;
+            }
+            else
+            {
+                _inputMode = GameEnum.InputMode.Disabled;
+            }
         }
-        else
+
+        private bool IsClickedOnUI()
         {
-            return false;
+            PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+            if (raycastResults.Count > 0)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
-    }
         
 
         #endregion

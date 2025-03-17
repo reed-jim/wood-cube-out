@@ -27,19 +27,12 @@ public class ScrewBoxUI : MonoBehaviour
 
     private void Awake()
     {
-        ScrewBoxCameraManager.setCameraEvent += OnCameraSet;
-
         unlockByAdsButton.gameObject.SetActive(false);
-
         unlockByAdsButton.onClick.AddListener(ClickButtonUnlockByAds);
-
         SetupUI();
     }
 
-    void OnDestroy()
-    {
-        ScrewBoxCameraManager.setCameraEvent -= OnCameraSet;
-    }
+   
 
     private async void SetupUI()
     {

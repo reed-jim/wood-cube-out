@@ -133,18 +133,13 @@ public class BaseScrew : MonoBehaviour, IScrew
     #endregion
 
     #region EVENT
-    
-    public static event Action<BaseScrew> screwMovedCompletedEvent;
     public static event Action<int> breakJointEvent;
     public static event Action<int> screwStartLoosenedEvent;
-    public static event Action screwLoosenedEvent;
     #endregion
 
     #region LIFE CYCLE
     protected virtual void Awake()
     {
-        ScrewBoxManager.looseScrewEvent += Loose;
-        ScrewBoxManager.looseScrewWithoutCheckingObstaclesEvent += LooseWithoutCheckingObstacles;
 
         RegisterMoreEvent();
 
@@ -158,8 +153,6 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     void OnDestroy()
     {
-        ScrewBoxManager.looseScrewEvent -= Loose;
-        ScrewBoxManager.looseScrewWithoutCheckingObstaclesEvent -= LooseWithoutCheckingObstacles;
 
         UnregisterMoreEvent();
 
@@ -255,8 +248,8 @@ public class BaseScrew : MonoBehaviour, IScrew
                 {
                     _isRotating = true;
                     rotateSpeed *= 2;
-
-                    SoundManager.Instance.PlaySoundTightenScrew();
+                    
+                    GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.TightenScrew);
 
                     _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                     .OnComplete(() =>
@@ -276,7 +269,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                             _isMoving = false;
 
                             InvokeScrewLoosenedEvent();
-                            screwMovedCompletedEvent?.Invoke(this);
+                            GamePlayController_BirdSort.Instance.level.screwBoxManager.MoveSingleScrewFromHoleToScrewBox(this);
 
                             onCompleteAction?.Invoke();
                         })
@@ -386,7 +379,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     protected void InvokeScrewLoosenedEvent()
     {
-        screwLoosenedEvent?.Invoke();
+        GamePlayController_BirdSort.Instance.level.screwManager.OnScrewLoosed();
     }
 
     protected void InvokeBreakJointEvent()

@@ -210,7 +210,7 @@ namespace BirdSort2
                 int index = i;
                 var itemUI = Instantiate(itemUIPrefab, parentItem);
                 itemUI.Init(lstItem[index].typeItem);
-                itemUI.InteractBtnUse(false);
+                itemUI.InteractBtnUse(true);
                 itemsUI.Add(lstItem[index].typeItem, itemUI);
             }
             

@@ -272,8 +272,7 @@ public class BoosterUI : MonoBehaviour
         }
 
         clearAllScrewPortsEvent?.Invoke();
-
-        SoundManager.Instance.PlaySoundClearScrewPorts();
+        GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.ClearScrew);
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

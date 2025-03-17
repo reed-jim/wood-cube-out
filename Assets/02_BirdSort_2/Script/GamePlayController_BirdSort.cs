@@ -62,8 +62,7 @@ namespace BirdSort2
 
         protected override void OnAwake()
         {
-            //
-            //GameController.Instance.currentScene = SceneType.GamePlay;
+            GameController.Instance.currentScene = SceneType.GamePlay;
 
             Init();
 

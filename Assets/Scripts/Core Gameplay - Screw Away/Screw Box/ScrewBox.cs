@@ -33,7 +33,7 @@ public class ScrewBox : MonoBehaviour
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
-    private Vector3 _initialScale;
+    [SerializeField]public Vector3 _initialScale;
     private bool _isInTransition;
     #endregion
 
@@ -67,50 +67,25 @@ public class ScrewBox : MonoBehaviour
 
     private void Awake()
     {
-        ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
-        ScrewBoxSlot.screwBoxCompleteEvent += OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox += Unlock;
 
         _tweens = new List<Tween>();
 
         boxLid.gameObject.SetActive(false);
-
-        gameSetting.LoadAsync();
+        
     }
 
     private void OnDestroy()
     {
-        ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
-        ScrewBoxSlot.screwBoxCompleteEvent -= OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox -= Unlock;
-
         CommonUtil.StopAllTweens(_tweens);
     }
-
-    private void OnScrewBoxCameraSet(Camera screwBoxCamera)
-    {
-        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
-
-        float scaleWithWidth = (0.17f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
-        float scaleWithHeight = (0.113811f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
-
-        scaleWithWidth *= 1.25f;
-        scaleWithHeight *= 1.25f;
-
-        float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
-
-        transform.localScale = finalScale * Vector3.one * transform.lossyScale.x;
-
-        _initialScale = transform.localScale;
-    }
-
-    private async void OnScrewBoxCompleted(int instanceId)
+    public async void OnScrewBoxCompleted(int instanceId)
     {
         if (instanceId == gameObject.GetInstanceID())
         {
             await Task.Delay((int)(delayMoveInDuration * 1000));
-
-            SoundManager.Instance.PlaySoundScrewBoxDone();
+            GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.ScrewBoxDone);
 
             float initialPositionY = transform.position.y;
 

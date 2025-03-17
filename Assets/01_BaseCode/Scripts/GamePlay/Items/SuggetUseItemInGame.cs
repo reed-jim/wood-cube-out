@@ -82,7 +82,6 @@ public class SuggetUseItemInGame : MonoBehaviour
         }
         else
         {
-            itemsInGame[GiftType.ReturnItem_BirdSort].SuggetUseItem(false);
             itemsInGame[GiftType.ClearHole].SuggetUseItem(false);
             itemsInGame[GiftType.AddHole].SuggetUseItem(false);
             itemsInGame[GiftType.BreakObject].SuggetUseItem(false);

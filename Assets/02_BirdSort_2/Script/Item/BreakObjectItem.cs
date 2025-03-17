@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using BirdSort2;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
@@ -36,11 +37,12 @@ public class BreakObjectItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
-        return CanBreakTheRule;
+        GamePlayController_BirdSort.Instance.playerContain.EnableBreakObjectMode();
+        return CanBreakObject;
     }
 
 
-    public bool CanBreakTheRule
+    public bool CanBreakObject
     {
         get
         {

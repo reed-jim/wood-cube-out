@@ -26,7 +26,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
         //Anhtusz MultiPhase LevelLoader.startLevelEvent += Reset;
         LevelLoader.setMultiPhaseLevelScrewNumberEvent += SetLevelScrewNumber;
         MultiPhaseScrew.manageScrewEvent += ManageScrew;
-        BaseScrew.screwLoosenedEvent += OnScrewLoosened;
+        //BaseScrew.screwLoosenedEvent += OnScrewLoosened;
 
         _screws = new List<MultiPhaseScrew>();
     }
@@ -36,7 +36,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
         //Anhtusz MultiPhase LevelLoader.startLevelEvent -= Reset;
         LevelLoader.setMultiPhaseLevelScrewNumberEvent -= SetLevelScrewNumber;
         MultiPhaseScrew.manageScrewEvent -= ManageScrew;
-        BaseScrew.screwLoosenedEvent -= OnScrewLoosened;
+        //BaseScrew.screwLoosenedEvent -= OnScrewLoosened;
     }
 
     private void Reset()

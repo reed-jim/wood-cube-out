@@ -10,15 +10,17 @@
     public enum NameMusic
     {
         None = 0,
-        Fly = 1,
-        FlyOut = 2,
-        Idle = 3,
-        Beep = 4,
-        BranchDrop = 5,
-        AppearStar = 6,
-        StarClaim = 7,
+        BreakObject = 1,
+        ClearScrew = 2,
+        Click = 3,
+        ClosePopUp = 4,
+        LoosenScrewFail = 5,
+        LoosenScrew = 6,
+        ScrewBoxDone = 7,
         AppearItem = 8,
-        MoveItem = 9
+        MoveItem = 9,
+        TightenScrew = 10,
+        UnlockAdsScrewBox = 11
     }
     public class MusicData
     {

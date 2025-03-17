@@ -18,7 +18,7 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private float delayShowPopupWin;
 
     #region PRIVATE FIELD
-    [SerializeField]private List<BaseScrew> _screws;
+    [SerializeField]public List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -45,19 +45,14 @@ public class ScrewManager : MonoBehaviour
     #region LIFE CYCLE
     void Awake()
     {
-        BaseScrew.screwLoosenedEvent += OnScrewLoosed;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
-        ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
-
         // StartCoroutine(QueueSpawningScrewBoxes());
         StartCoroutine(HandlingOutsideScrews());
     }
 
     void OnDestroy()
     {
-        BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
-        ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
     }
     #endregion
 
@@ -287,7 +282,7 @@ public class ScrewManager : MonoBehaviour
         return difficultyLevelByFactions;
     }
 
-    private void OnScrewLoosed()
+    public void OnScrewLoosed()
     {
         CheckWin();
     }
@@ -321,7 +316,7 @@ public class ScrewManager : MonoBehaviour
 
             await Task.Delay((int)(delayShowPopupWin * 1000));
 
-            winLevelEvent?.Invoke();
+            GamePlayController_BirdSort.Instance.level.Win();
         }
 
         levelObserver.Progress = 1 - (float)remainingScrew / _totalScrew;
@@ -614,7 +609,7 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
-    private void OnScrewBoxSpawned(ScrewBox screwBox)
+    public void OnScrewBoxSpawned(ScrewBox screwBox)
     {
         // for (int i = 0; i < _screws.Count; i++)
         // {

@@ -101,8 +101,7 @@ public class BasicScrew : BaseScrew
                 GetComponent<MeshRenderer>().enabled = false;
 
                 fakeScrew.IsRotating = true;
-
-                SoundManager.Instance.PlaySoundLoosenScrewFail();
+                GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.LoosenScrewFail);
 
                 if (gameSetting.IsVibrate)
                 {
@@ -140,8 +139,8 @@ public class BasicScrew : BaseScrew
             screwBoxSlot.Fill(this);
 
             UnscrewAnimationAsync(screwBoxSlot);
-
-            SoundManager.Instance.PlaySoundLoosenScrew();
+            
+            GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.LoosenScrew);
 
             if (gameSetting.IsVibrate)
             {

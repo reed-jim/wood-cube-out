@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using BirdSort2;
 using UnityEngine;
 
 public class ClearHoleItem : ItemBase
 {
-    private bool isAddedBranch;
+    private bool isClearHole;
 
     public override void EndItem()
     {
@@ -23,7 +24,7 @@ public class ClearHoleItem : ItemBase
         {
             return false;
         }
-        if (isAddedBranch)
+        if (isClearHole)
             return false;
 
         return true;
@@ -32,33 +33,8 @@ public class ClearHoleItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
-        //if (isAddedBranch)
-        //{
-        //    GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-        //           (
-        //             BirdSort2.GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem].transform.position,
-        //           Localization.Get("s_use_item_on_next_turn_play"),
-        //           Color.white,
-        //           isSpawnItemPlayer: true
-        //           );
-        //    return false;
-        //}
-        bool isAdd = true;
-        if (!isAdd)
-        {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                   (
-                     BirdSort2.GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem].transform.position,
-                   Localization.Get("s_add_max_branch"),
-                   Color.white,
-                   isSpawnItemPlayer: true
-                   );
-        }
-        else
-        {
-            BirdSort2.GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();
-        }    
-        return isAdd;
+        GamePlayController_BirdSort.Instance.level.screwBoxManager.ClearAllScrewPorts();
+        return isClearHole;
     }
     public ItemUI GetTranformUIButton
     {

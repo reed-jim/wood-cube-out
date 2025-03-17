@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using BirdSort2;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -45,24 +46,21 @@ public class ScrewBoxManager : MonoBehaviour
     private bool _isSpawnScrewBoxFirstTimeInLevel;
     private float _screwBoxDistance;
     private bool _isScrewPortsShaking;
+    [SerializeField] private Vector3 screwBoxInitialScale;
+    [SerializeField] private Sprite boxSprt;
+    
     #endregion
 
     #region EVENT
-    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingObstaclesEvent;
-    public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
-
-    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
         
     #endregion
 
     #region LIFE CYCLE
     void Awake()
     {
-        BaseScrew.screwMovedCompletedEvent += MoveSingleScrewFromHoleToScrewBox;
-        ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
         BoosterUI.addMoreScrewPortEvent += AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent += ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent += ShakeAllScrewPorts;
@@ -73,8 +71,6 @@ public class ScrewBoxManager : MonoBehaviour
 
     void OnDestroy()
     {
-        BaseScrew.screwMovedCompletedEvent -= MoveSingleScrewFromHoleToScrewBox;
-        ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         BoosterUI.addMoreScrewPortEvent -= AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent -= ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent -= ShakeAllScrewPorts;
@@ -168,21 +164,30 @@ public class ScrewBoxManager : MonoBehaviour
         ResetScrewBoxes();
 
         _isSpawnScrewBoxFirstTimeInLevel = true;
+        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(Camera.main);
+
+        float scaleWithWidth = (0.18f * worldSize.x) / boxSprt.bounds.size.x;
+        float scaleWithHeight = (0.11f * worldSize.y) / boxSprt.bounds.size.y;
+
+        //scaleWithWidth *= 1.25f;
+        //scaleWithHeight *= 1.25f;
+
+        float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
+        
+        screwBoxInitialScale = finalScale * Vector3.one;
+        
+        _screwBoxDistance = 0.22f * worldSize.x;
+
+        _screwBoxPositionY = 0.4f * worldSize.y;
     }
 
     private void OnScrewBoxCameraSet(Camera screwBoxCamera)
     {
-        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
-
-        _screwBoxDistance = 0.22f * worldSize.x;
-
-        _screwBoxPositionY = 0.4f * worldSize.y;
 
         // screwPortsContainer.localPosition = screwPortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
-
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPorts[i].transform.position = screwPorts[i].transform.position.ChangeY(0.3042f * worldSize.y);
+            //screwPorts[i].transform.position = screwPorts[i].transform.position.ChangeY(0.3042f * worldSize.y);
         }
     }
 
@@ -212,7 +217,10 @@ public class ScrewBoxManager : MonoBehaviour
 
         if (screwBoxSlot != null)
         {
-            looseScrewEvent?.Invoke(screwId, selectedFaction, screwBoxSlot);
+            foreach (var i in GamePlayController_BirdSort.Instance.level.screwManager._screws)
+            {
+                i.Loose(screwId, selectedFaction, screwBoxSlot);
+            }
         }
     }
 
@@ -233,7 +241,7 @@ public class ScrewBoxManager : MonoBehaviour
     {
         MoveFromScrewPortToScrewBox(screwBox);
 
-        screwBoxSpawnedEvent?.Invoke(screwBox);
+        GamePlayController_BirdSort.Instance.level.screwManager.OnScrewBoxSpawned(screwBox);
 
         int numLockedScrewBoxes = 0;
 
@@ -318,7 +326,7 @@ public class ScrewBoxManager : MonoBehaviour
 
             if (numScrewPortsEmpty == 1)
             {
-                loseLevelEvent?.Invoke();
+                GamePlayController_BirdSort.Instance.level.Lose(1);
             }
             else
             {
@@ -357,13 +365,13 @@ public class ScrewBoxManager : MonoBehaviour
             if (screwBoxs[i] == null)
             {
                 screwBoxs[i] = screwBox;
-
+                screwBoxs[i]._initialScale = screwBoxInitialScale;
                 index = i;
 
                 break;
             }
         }
-
+        
         Direction getInDirection = index > 1 ? Direction.Left : Direction.Right;
 
         ResetScrewBoxSlot();
@@ -371,7 +379,6 @@ public class ScrewBoxManager : MonoBehaviour
         Vector3 destination = GetScrewBoxNextPosition(screwBox, index);
 
         screwBox.transform.localPosition = destination.ChangeX(getInDirection == Direction.Right ? -10 : 10);
-
         // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
         // destination.z = -0.001f * index;
 
@@ -390,8 +397,7 @@ public class ScrewBoxManager : MonoBehaviour
                 screwBox.IsInTransition = false;
 
                 MoveFromScrewPortToScrewBox(screwBox);
-
-                screwBoxSpawnedEvent?.Invoke(screwBox);
+                GamePlayController_BirdSort.Instance.level.screwManager.OnScrewBoxSpawned(screwBox);
             });
         }
 
@@ -548,7 +554,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void MoveSingleScrewFromHoleToScrewBox(BaseScrew screw)
+    public void MoveSingleScrewFromHoleToScrewBox(BaseScrew screw)
     {
         if (!screw.ScrewBoxSlot.IsScrewPort)
         {
@@ -650,7 +656,10 @@ public class ScrewBoxManager : MonoBehaviour
 
         if (screwBoxSlot != null)
         {
-            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            foreach (var i in GamePlayController_BirdSort.Instance.level.screwManager._screws)
+            {
+                i.LooseWithoutCheckingObstacles(screw.ScrewId, screw.Faction, screwBoxSlot);
+            }
         }
         else
         {
@@ -691,7 +700,7 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    private void ClearAllScrewPorts()
+    public void ClearAllScrewPorts()
     {
         int numScrewCleared = 0;
 

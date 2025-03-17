@@ -263,7 +263,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         await Task.Delay(950);
 
-        SoundManager.Instance.PlaySoundBreakObject();
+        GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.BreakObject);
 
         // hammer.PlayHitFx();
 

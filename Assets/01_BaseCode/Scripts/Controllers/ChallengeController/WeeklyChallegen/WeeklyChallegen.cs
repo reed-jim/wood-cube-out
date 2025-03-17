@@ -50,8 +50,8 @@ public class WeeklyChallegen : ChallengeBase
 
     public override bool IsChallengeActive()
     {
-        //if (!config.IsActive)
-        //    return false;
+        if (!config.IsActive)
+            return false;
         if (UseProfile.CurrentLevel < config.level_unlock)
             return false;
 

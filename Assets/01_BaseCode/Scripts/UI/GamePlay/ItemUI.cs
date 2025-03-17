@@ -97,8 +97,7 @@ public class ItemUI : MonoBehaviour
         {
             if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
             {
-                if (typeItem != GiftType.BreakObject)
-                    GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
+                GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
 
                 InitState();
 
