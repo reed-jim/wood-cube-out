@@ -231,6 +231,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             _totalJoint--;
 
+            if (partRigidbody == null)
+            {
+                return;
+            }
+
             if (partRigidbody.isKinematic)
             {
                 if (_totalJoint <= 1 && _totalJoint <= minJointToDisableKinematic)
