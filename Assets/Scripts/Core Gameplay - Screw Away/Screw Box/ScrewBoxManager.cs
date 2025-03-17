@@ -339,7 +339,7 @@ public class ScrewBoxManager : MonoBehaviour
                 {
                     if (GetNumScrewPortsEmpty() == 0)
                     {
-                        loseLevelEvent?.Invoke(); 
+                        loseLevelEvent?.Invoke();
                     }
 
                     _isCheckingLose = false;
@@ -432,14 +432,14 @@ public class ScrewBoxManager : MonoBehaviour
         {
             screwBox.IsInTransition = true;
 
-            Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
+            _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
             {
                 screwBox.IsInTransition = false;
 
                 MoveFromScrewPortToScrewBox(screwBox);
 
                 screwBoxSpawnedEvent?.Invoke(screwBox);
-            });
+            }));
         }
 
         void ResetScrewBoxSlot()
@@ -485,11 +485,11 @@ public class ScrewBoxManager : MonoBehaviour
                 // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
                 // destination.z = -0.001f * index;
 
-                Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
                 .OnComplete(() =>
                 {
                     screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
-                });
+                }));
 
                 screwBoxs[i] = screwBox;
 
@@ -525,11 +525,11 @@ public class ScrewBoxManager : MonoBehaviour
                 }
                 else
                 {
-                    Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                    _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
                     .OnComplete(() =>
                     {
                         screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
-                    });
+                    }));
                 }
 
                 screwBoxs[i] = screwBox;
@@ -697,9 +697,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         if (screwBoxSlot != null)
         {
-            screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot, isCheckObstacles: false);
-
-            // looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
         }
         else
         {
@@ -794,14 +792,16 @@ public class ScrewBoxManager : MonoBehaviour
         {
             bool isLast = i == screwPorts.Count - 1;
 
-            Tween.PunchScale(screwPorts[i].transform, strength: 0.3f * Vector3.one, duration: 0.4f)
+            _tweens.Add(Tween.PunchScale(screwPorts[i].transform, strength: 0.3f * Vector3.one, duration: 0.3f)
             .OnComplete(() =>
             {
                 if (isLast)
                 {
                     _isScrewPortsShaking = false;
                 }
-            });
+            }));
+
+            SoundManager.Instance.PlaySoundLoosenScrewFail();
         }
 
         _isScrewPortsShaking = true;

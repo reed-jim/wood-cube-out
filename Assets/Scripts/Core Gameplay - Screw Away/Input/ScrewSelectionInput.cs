@@ -13,6 +13,7 @@ public class ScrewSelectionInput : MonoBehaviour
     [SerializeField] private float timeToConfirmSelectObjectPart;
 
     #region PRIVATE FIELD
+    private Camera _mainCamera;
     [SerializeField] private InputMode _inputMode;
     private List<Vector3> twoTouchPoints;
     private bool _isSelectObjectPart;
@@ -31,6 +32,8 @@ public class ScrewSelectionInput : MonoBehaviour
         BoosterUI.enableBreakObjectModeEvent += EnableBreakObjectMode;
         BoosterUI.disableBreakObjectModeEvent += DisableBreakObjectMode;
         GameStateMachine.enableInputEvent += EnableInput;
+
+        _mainCamera = Camera.main;
 
         twoTouchPoints = new List<Vector3>();
     }
@@ -112,7 +115,7 @@ public class ScrewSelectionInput : MonoBehaviour
             return;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
         Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
 
@@ -145,7 +148,7 @@ public class ScrewSelectionInput : MonoBehaviour
             return;
         }
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
         Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrimeTween;
 using UnityEditor;
 using UnityEngine;
 using static GameEnum;
@@ -20,6 +21,7 @@ public class ScrewManager : MonoBehaviour
     [SerializeField] private float delayShowPopupWin;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
@@ -53,6 +55,11 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
+
+    #region Very important - PIECE DEPENDENCY DIAGRAM
+    Dictionary<int, List<Transform>> obstaclesOfPieces = new Dictionary<int, List<Transform>>();
+    #endregion
+
     void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStart;
@@ -65,6 +72,9 @@ public class ScrewManager : MonoBehaviour
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent += SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
+        BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
+
+        _tweens = new List<Tween>();
 
         // StartCoroutine(QueueSpawningScrewBoxes());
         StartCoroutine(HandlingOutsideScrews());
@@ -84,6 +94,9 @@ public class ScrewManager : MonoBehaviour
         ScrewsDataManager.spawnFreshLevelScrewBoxesEvent -= SpawnFirstScrewBoxes;
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
+        BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
     #endregion
 
@@ -124,18 +137,35 @@ public class ScrewManager : MonoBehaviour
             _screws = new List<BaseScrew>();
         }
 
+        screw.name = $"Screw 3D {_screws.Count}";
+
         _screws.Add(screw);
 
         _totalScrewObserved++;
 
         if (_totalScrewObserved == _totalScrew)
         {
-            SpawnFirstScrewBoxes();
-
             // TO SAVE/LOAD LEVEL PROGRESS
             // setScrewsEvent?.Invoke(_screws.ToArray());
 
             levelSetupCompletedEvent?.Invoke();
+
+            _tweens.Add(Tween.Delay(0.1f).OnComplete(() =>
+            {
+                obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
+
+                // foreach (var item in obstaclesOfPieces)
+                // {
+                //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
+
+                //     // for (int i = 0; i < item.Value.Count; i++)
+                //     // {
+                //     //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
+                //     // }
+                // }
+
+                SpawnFirstScrewBoxes();
+            }));
         }
     }
 
@@ -212,9 +242,74 @@ public class ScrewManager : MonoBehaviour
 
             GameFaction faction = _screws[i].Faction;
 
-            int numberBlockObject = _screws[i].NumberBlockingObjects;
+            // int numberBlockObject = _screws[i].NumberBlockingObjects;
 
-            numObstacleEachScrewEachFaction[faction].Add(numberBlockObject);
+            // Find closest obstacle
+            Transform obstaclePiece = null;
+
+            float screwRadius = _screws[i].transform.lossyScale.x * 0.45f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.x;
+
+            Vector3 pointOne =
+                _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
+            Vector3 pointTwo = pointOne + 10f * _screws[i].transform.forward;
+
+            Collider[] hits = new Collider[16];
+
+            Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
+
+            if (hits != null)
+            {
+                for (int j = 0; j < hits.Length; j++)
+                {
+                    if (hits[j] == null)
+                    {
+                        continue;
+                    }
+
+                    if (hits[j].transform.GetInstanceID() == _screws[i].transform.parent.GetInstanceID())
+                    {
+                        continue;
+                    }
+
+                    IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
+
+                    if (objectPart != null)
+                    {
+                        int instanceId = hits[j].transform.GetInstanceID();
+
+                        if (obstaclesOfPieces.ContainsKey(instanceId))
+                        {
+                            obstaclePiece = hits[j].transform;
+
+                            break;
+                        }
+                    }
+                }
+            }
+            //
+
+            if (obstaclePiece != null)
+            {
+                int numScrewLeftToReachCurrentScrew = obstaclePiece.childCount;
+
+                if (obstaclesOfPieces.ContainsKey(obstaclePiece.GetInstanceID()))
+                {
+                    foreach (var obstacle in obstaclesOfPieces[obstaclePiece.GetInstanceID()])
+                    {
+                        numScrewLeftToReachCurrentScrew += obstacle.childCount;
+                    }
+
+                    numObstacleEachScrewEachFaction[faction].Add(numScrewLeftToReachCurrentScrew);
+                }
+                else
+                {
+                    numObstacleEachScrewEachFaction[faction].Add(0);
+                }
+            }
+            else
+            {
+                numObstacleEachScrewEachFaction[faction].Add(0);
+            }
 
             // FOR Tutorial
             difficultyLevelByFactions[faction] += _screws[i].ScrewDifficultyModifier;
@@ -234,6 +329,11 @@ public class ScrewManager : MonoBehaviour
             }
 
             numObstacleEachScrewEachFaction[faction] = numObstacleEachScrewEachFaction[faction].OrderBy(item => item).ToList();
+
+            // foreach (var item in numObstacleEachScrewEachFaction[faction])
+            // {
+            //     Debug.Log("SAFERIO " + faction + " / " + item);
+            // }
 
             int totalObstaclesOfThreeMostOpenedScrews = numObstacleEachScrewEachFaction[faction].Take(3).Sum();
 
@@ -468,10 +568,10 @@ public class ScrewManager : MonoBehaviour
             {
                 doneScrew++;
             }
-            else
-            {
-                _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
-            }
+            // else
+            // {
+            //     _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
+            // }
         }
 
         progress = (float)doneScrew / _totalScrew;
@@ -502,15 +602,13 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        // // SIMPLE ALGORITHM FOR DIFFICULTY BASED ON PROGRESS
-        // if (progress < 0.86f)
-        // {
-        //     difficultyLevel = 0;
-        // }
-        // else
-        // {
-        //     difficultyLevel = GameConstants.SCREW_FACTION.Length - 1;
-        // }
+        // FREE LEVELS
+        int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
+
+        if (currentLevel.Value <= minFreeLevel)
+        {
+            difficultyLevel = 0;
+        }
 
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
@@ -522,6 +620,7 @@ public class ScrewManager : MonoBehaviour
 
         bool isFound = false;
 
+        // // DEBUG
         // Debug.Log("SAFERIO ---------------------------------------");
 
         // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
@@ -652,24 +751,14 @@ public class ScrewManager : MonoBehaviour
 
         while (true)
         {
-            bool isAnyScrewOutside = false;
-
-            if (_screws != null)
+            if (_remainingHandleOutsideScrewCommands > 0)
             {
-                for (int i = 0; i < _screws.Count; i++)
+                if (!_isHandlingOutsideScrews)
                 {
-                    if (_screws[i].IsOutsideWithNoScrewBox)
-                    {
-                        isAnyScrewOutside = true;
+                    _isHandlingOutsideScrews = true;
 
-                        break;
-                    }
+                    HandleOutsideScrews();
                 }
-            }
-
-            if (isAnyScrewOutside)
-            {
-                HandleOutsideScrews();
             }
 
             yield return waitForSeconds;
@@ -705,6 +794,18 @@ public class ScrewManager : MonoBehaviour
 
         _remainingHandleOutsideScrewCommands--;
         _isHandlingOutsideScrews = false;
+    }
+    #endregion
+
+    #region Very Important: PIECE - BLOCK PIECES Dictionary
+    private void OnPieceCompleted(int instanceId)
+    {
+        obstaclesOfPieces.Remove(instanceId);
+    }
+
+    private void SetPieceDependencies(Dictionary<int, List<Transform>> dependencies)
+    {
+        obstaclesOfPieces = dependencies;
     }
     #endregion
 }

@@ -35,7 +35,9 @@ public class RotateObject : MonoBehaviour
 
         if (!isDisableAutoRotatingAtStart)
         {
-            _isAutoRotating = true;
+            // _isAutoRotating = true;
+
+            _remainingTimeToAutoRotate = 2;
 
             StartCoroutine(AutoRotating());
         }
@@ -121,10 +123,10 @@ public class RotateObject : MonoBehaviour
         {
             if (_isAutoRotating)
             {
-                if (_yaw != 0.7f)
+                if (_yaw != 1)
                 {
                     // _pitch = 1;
-                    _yaw = 0.7f;
+                    _yaw = 0.5f;
                     // _yaw = -normalizedDirection.x;
                 }
             }

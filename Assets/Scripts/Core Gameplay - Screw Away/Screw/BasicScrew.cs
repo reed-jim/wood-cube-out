@@ -38,20 +38,6 @@ public class BasicScrew : BaseScrew
         }
     }
 
-    // private void OnDrawGizmos()
-    // {
-    //     // Vector3 pointOne = transform.position + transform.lossyScale.z * 0.75f * meshFilter.mesh.bounds.size.z * transform.forward;
-    //     // Vector3 pointTwo = pointOne + 10f * transform.forward;
-
-    //     // Gizmos.DrawLine(pointOne, pointTwo);
-
-    //     if (obstacle != null)
-    //     {
-    //         // Gizmos.DrawWireSphere(transform.position + 0.75f * meshFilter.mesh.bounds.size.z * transform.forward, transform.lossyScale.x * 0.5f * meshFilter.mesh.bounds.size.x);
-    //         Gizmos.DrawWireSphere(_obstacleHitPointWorld, 0.1f);
-    //     }
-    // }
-
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
         Loose(screwId, faction, screwBoxSlot, isCheckObstacles: true);
@@ -85,7 +71,6 @@ public class BasicScrew : BaseScrew
                 // avoid loose screw that is covering by other objects
                 bool isNotVisible = Physics.Raycast(
                     transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
-                //
 
                 if (isNotVisible)
                 {
@@ -93,6 +78,7 @@ public class BasicScrew : BaseScrew
 
                     return;
                 }
+                //
 
                 CountBlockingObjects();
             }
@@ -122,18 +108,17 @@ public class BasicScrew : BaseScrew
                 }
 
                 _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
-                    .OnComplete(() =>
-                    {
-                        fakeScrew.IsRotating = false;
+               .OnComplete(() =>
+               {
+                   fakeScrew.IsRotating = false;
 
-                        ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
-                        // fakeScrew.gameObject.SetActive(false);
+                   ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+                   // fakeScrew.gameObject.SetActive(false);
 
-                        GetComponent<MeshRenderer>().enabled = true;
+                   GetComponent<MeshRenderer>().enabled = true;
 
-                        _isInteractable = true;
-                    })
-                );
+                   _isInteractable = true;
+               }));
 
                 // Vector3 hitPointFakeScrewSpace =
                 //     fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
@@ -225,7 +210,9 @@ public class BasicScrew : BaseScrew
         Vector3 pointOne = transform.position + transform.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * transform.forward;
         Vector3 pointTwo = pointOne + 10f * transform.forward;
 
-        Collider[] hits = Physics.OverlapCapsule(pointOne, pointTwo, screwRadius, checkObstacleLayer);
+        Collider[] hits = new Collider[16];
+
+        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, checkObstacleLayer);
 
         int number = 0;
 
@@ -233,7 +220,12 @@ public class BasicScrew : BaseScrew
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].transform == transform.parent)
+                if (hits[i] == null)
+                {
+                    continue;
+                }
+
+                if (hits[i].transform.GetInstanceID() == transform.parent.GetInstanceID())
                 {
                     continue;
                 }
