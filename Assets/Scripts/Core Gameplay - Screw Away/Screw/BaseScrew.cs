@@ -234,7 +234,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         // await Task.Delay(100);
 
         // LOOSE FX
-        if (!_isInScrewPort)
+        if (!_isInScrewPort && !IsOutsideWithNoScrewBox)
         {
             ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
             ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
@@ -288,7 +288,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                         _isRotating = true;
                         rotateSpeed *= 2;
 
-                        if (!GamePersistentVariable.isSoundTightenScrewPlaying)
+                        if (!GamePersistentVariable.isSoundTightenScrewPlaying && !IsInScrewPort && !IsOutsideWithNoScrewBox)
                         {
                             SoundManager.Instance.PlaySoundTightenScrew();
 
@@ -356,6 +356,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         else
         {
             _isMoving = true;
+        }
+
+        if (_isDone && !IsInScrewPort)
+        {
+            return;
         }
 
         if (joint != null)

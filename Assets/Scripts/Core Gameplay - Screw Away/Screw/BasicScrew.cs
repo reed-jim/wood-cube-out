@@ -66,7 +66,7 @@ public class BasicScrew : BaseScrew
                 return;
             }
 
-            if (isCheckObstacles)
+            if (isCheckObstacles && !IsOutsideWithNoScrewBox)
             {
                 // avoid loose screw that is covering by other objects
                 bool isNotVisible = Physics.Raycast(
@@ -152,7 +152,10 @@ public class BasicScrew : BaseScrew
 
             UnscrewAnimationAsync(screwBoxSlot);
 
-            SoundManager.Instance.PlaySoundLoosenScrew();
+            if (!IsInScrewPort && !IsOutsideWithNoScrewBox)
+            {
+                SoundManager.Instance.PlaySoundLoosenScrew();
+            }
 
             if (gameSetting.IsVibrate)
             {
