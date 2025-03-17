@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEditor;
 using UnityEngine;
 using static GameEnum;
@@ -25,6 +26,7 @@ public class ScrewManager : MonoBehaviour
     private List<BaseScrew> _screws;
     private int _totalScrewObserved;
     private int _totalScrew;
+    private Coroutine _handlingOutsideScrewCoroutine;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     #endregion
 
@@ -77,7 +79,6 @@ public class ScrewManager : MonoBehaviour
         _tweens = new List<Tween>();
 
         // StartCoroutine(QueueSpawningScrewBoxes());
-        StartCoroutine(HandlingOutsideScrews());
 
         _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
     }
@@ -119,6 +120,13 @@ public class ScrewManager : MonoBehaviour
         _isHandlingOutsideScrews = false;
 
         GamePersistentVariable.numScrewBoxUnlocked = 0;
+
+        if (_handlingOutsideScrewCoroutine != null)
+        {
+            StopCoroutine(_handlingOutsideScrewCoroutine);
+        }
+
+        _handlingOutsideScrewCoroutine = StartCoroutine(HandlingOutsideScrews());
     }
 
     #region SCREW
@@ -154,18 +162,19 @@ public class ScrewManager : MonoBehaviour
             {
                 obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
 
-                // foreach (var item in obstaclesOfPieces)
-                // {
-                //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
-
-                //     // for (int i = 0; i < item.Value.Count; i++)
-                //     // {
-                //     //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
-                //     // }
-                // }
-
                 SpawnFirstScrewBoxes();
             }));
+
+            // // AUTO TEST
+            // _tweens.Add(Tween.Delay(3f).OnComplete(async () =>
+            // {
+            //     for (int i = 0; i < _screws.Count; i++)
+            //     {
+            //         _screws[i].ForceUnscrew();
+
+            //         await Task.Delay(33);
+            //     }
+            // }));
         }
     }
 
@@ -747,11 +756,11 @@ public class ScrewManager : MonoBehaviour
 
     private IEnumerator HandlingOutsideScrews()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
         while (true)
         {
-            if (_remainingHandleOutsideScrewCommands > 0)
+            if (_remainingHandleOutsideScrewCommands >= -990)
             {
                 if (!_isHandlingOutsideScrews)
                 {
@@ -767,6 +776,11 @@ public class ScrewManager : MonoBehaviour
 
     private void HandleOutsideScrews()
     {
+        if (_screws == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < _screws.Count; i++)
         {
             BaseScrew screw = _screws[i];
@@ -779,11 +793,13 @@ public class ScrewManager : MonoBehaviour
 
                 if (screwBoxSlot != null)
                 {
-                    screwBoxSlot.Fill(screw);
+                    // screwBoxSlot.Fill(screw);
 
                     screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
                     screw.IsInteractable = true;
+
+                    // screw.transform.position = screw.transform.position.ChangeY(0);
 
                     screw.Loose(screw.ScrewId, faction, screwBoxSlot);
 
