@@ -43,18 +43,18 @@ public class WinPopup : BasePopup
         returnHomeButton.onClick.AddListener(ReturnHome);
         x5CoinButton.onClick.AddListener(X5Coin);
 
-        // Remote Config collect coin win level 
-        if (!DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false))
-        {
-            _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
+        // // Remote Config collect coin win level 
+        // if (!DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false))
+        // {
+        //     _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
 
-            DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false);
-            DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, _isCollectCoinRemoteConfig);
-        }
-        else
-        {
-            _isCollectCoinRemoteConfig = DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, false);
-        }
+        //     DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, true);
+        //     DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, _isCollectCoinRemoteConfig);
+        // }
+        // else
+        // {
+        //     _isCollectCoinRemoteConfig = DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, false);
+        // }
     }
 
     protected override void UnregisterMoreEvent()
@@ -75,6 +75,8 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = true;
 
         x5CoinButton.transform.localScale = Vector3.one;
+
+        _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
 
         // REMOTE CONFIG IS COLLECT COIN
         coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
