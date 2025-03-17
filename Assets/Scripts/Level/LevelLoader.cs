@@ -204,7 +204,12 @@ public class LevelLoader : MonoBehaviour
                         if (_pivotAdjust == null)
                         {
                             _pivotAdjust = new GameObject().transform;
+                            _pivotAdjust.name = "Pivot Adjust";
                             _pivotAdjust.SetParent(_currentLevelContainer);
+
+                            _pivotAdjust.transform.localPosition = Vector3.zero;
+                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                            _pivotAdjust.transform.localScale = Vector3.one;
                         }
 
                         if (!piece.transform.IsChildOf(_pivotAdjust))
