@@ -134,6 +134,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     {
         if (controller != null)
         {
+            SaferioTracking.TrackStartIAPEvent(productId);
+
             controller.InitiatePurchase(productId);
         }
         else
@@ -209,6 +211,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         }
         catch (IAPSecurityException)
         {
+            // SaferioTracking.TrackInvalidIAPEvent(e.message);
+
             validPurchase = false;
         }
 #endif

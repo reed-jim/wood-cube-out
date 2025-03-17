@@ -37,6 +37,7 @@ public class LosePopup : BasePopup
         GameStateLose.loseLevelEvent += OnLevelLose;
         RevivePopup.reviveRefusedEvent += OnLevelLose;
         GameplayScreen.skipLevelEvent += SkipLevel;
+        Application.quitting += OnAppClosed;
 
         replayButton.onClick.AddListener(Replay);
         skipLevelButton.onClick.AddListener(SkipLevel);
@@ -56,12 +57,18 @@ public class LosePopup : BasePopup
         GameStateLose.loseLevelEvent -= OnLevelLose;
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
         GameplayScreen.skipLevelEvent -= SkipLevel;
+        Application.quitting -= OnAppClosed;
     }
 
-    private void OnApplicationQuit()
+    private void OnAppClosed()
     {
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Quit.ToString());
     }
+
+    // private void OnApplicationQuit()
+    // {
+    //     SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Quit.ToString());
+    // }
 
     private void OnLevelLose()
     {

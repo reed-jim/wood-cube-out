@@ -11,8 +11,8 @@ public class ObjectPartHolder : MonoBehaviour
 
         if (objectPart != null)
         {
-            dissolveObjectPartEvent?.Invoke(other.gameObject.GetInstanceID());
-            // other.gameObject.SetActive(false);
+            // dissolveObjectPartEvent?.Invoke(other.gameObject.GetInstanceID());
+            other.gameObject.SetActive(false);
         }
     }
 }
