@@ -188,8 +188,8 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnAllLevelScrewsObservered(BaseScrew[] screws)
     {
-        _screws = screws;
+        // _screws = screws;
 
-        LoadLevelData();
+        // LoadLevelData();
     }
 }
