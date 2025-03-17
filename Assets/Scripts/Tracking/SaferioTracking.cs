@@ -118,6 +118,30 @@ public static class SaferioTracking
 #endif
     }
 
+    public static void TrackStartIAPEvent(string productId)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("product_id", productId),
+        };
+
+        FirebaseAnalytics.LogEvent("start_buy_iap", parameters);
+#endif
+    }
+
+    public static void TrackInvalidIAPEvent(string error)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("error", error),
+        };
+
+        FirebaseAnalytics.LogEvent("invalid_iap", parameters);
+#endif
+    }
+
     public static void TrackRewardedAdCompleted(int level, string reason)
     {
 #if !UNITY_EDITOR
