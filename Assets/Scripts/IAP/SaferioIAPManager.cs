@@ -308,6 +308,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         }
         else
         {
+            if (Application.internetReachability != NetworkReachability.NotReachable)
+            {
+                Init();
+            }
+
             return new List<Product>();
         }
     }
