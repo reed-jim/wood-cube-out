@@ -6,6 +6,12 @@ using UnityEngine;
 
 public class SaferioSceneOpener : EditorWindow
 {
+    [MenuItem("Tools/Open Scene/Tracking Consent")]
+    public static void OpenTrackingConsentScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Samples/iOS 14 Advertising Support/1.0.0/01 Context Screen/Context Screen Sample.unity");
+    }
+
     [MenuItem("Tools/Open Scene/Bootstrap")]
     public static void OpenBootstrapScene()
     {

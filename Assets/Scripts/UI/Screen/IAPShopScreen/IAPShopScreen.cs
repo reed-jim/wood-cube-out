@@ -24,10 +24,17 @@ public class IAPShopScreen : UIScreen
     //     }
     // }
 
-    void Start()
+    protected override void Show()
     {
+        base.Show();
+
         fetchLocalizedPriceIAPEvent?.Invoke();
     }
+
+    // void Start()
+    // {
+    //     fetchLocalizedPriceIAPEvent?.Invoke();
+    // }
 
     // protected override void MoreActionInAwake()
     // {
