@@ -169,6 +169,7 @@ public class WinPopup : BasePopup
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
 
         AdsDurationObserver.duration = 0;
+        GamePersistentVariable.isAutoTestingLevel = false;
     }
 
     #region X5 Coin

@@ -17,6 +17,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugAddBoostersButton;
     [SerializeField] private Button debugAddCoinButton;
     [SerializeField] private Button changeBackgroundColorButton;
+    [SerializeField] private Button startAutoTestLevelButton;
     [SerializeField] private TMP_Text debugAdsText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -25,6 +26,7 @@ public class DebugPopup : BasePopup
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
+    public static event Action startAutoTestLevelEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -35,6 +37,7 @@ public class DebugPopup : BasePopup
         debugAdsButton.onClick.AddListener(DebugAdsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
+        startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
 
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
     }
@@ -81,6 +84,15 @@ public class DebugPopup : BasePopup
         await Task.Delay(500);
 
         winLevelEvent?.Invoke();
+    }
+
+    private void StartAutoTestLevel()
+    {
+        AddCoin();
+        
+        startAutoTestLevelEvent?.Invoke();
+
+        Hide();
     }
 
     private async void DebugAdsButton()

@@ -19,6 +19,10 @@ public static class GamePersistentVariable
     public static Vector3 levelOffset;
     #endregion
 
+    #region AUTO TEST
+    public static bool isAutoTestingLevel;
+    #endregion
+
     #region SETTING
     public static bool IsVibrate;
     #endregion
