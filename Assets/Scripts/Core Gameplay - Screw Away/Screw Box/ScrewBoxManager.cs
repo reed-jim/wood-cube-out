@@ -39,6 +39,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
+    public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingVisibilityEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingObstaclesEvent;
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
     public static event Action loseLevelEvent;
@@ -51,6 +52,7 @@ public class ScrewBoxManager : MonoBehaviour
     {
         LevelLoader.startLevelEvent += OnLevelStart;
         BaseScrew.selectScrewEvent += OnScrewSelected;
+        BaseScrew.autoSelectScrewEvent += OnScrewAutoSelected;
         BaseScrew.screwMovedCompletedEvent += MoveSingleScrewFromHoleToScrewBox;
         ScrewManager.spawnScrewBoxEvent += SpawnScrewBox;
         ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
@@ -71,6 +73,7 @@ public class ScrewBoxManager : MonoBehaviour
     {
         LevelLoader.startLevelEvent -= OnLevelStart;
         BaseScrew.selectScrewEvent -= OnScrewSelected;
+        BaseScrew.autoSelectScrewEvent -= OnScrewAutoSelected;
         BaseScrew.screwMovedCompletedEvent -= MoveSingleScrewFromHoleToScrewBox;
         ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         ScrewManager.spawnScrewBoxEvent -= SpawnScrewBox;
@@ -224,6 +227,16 @@ public class ScrewBoxManager : MonoBehaviour
     }
 
     private void OnScrewSelected(int screwId, GameFaction selectedFaction)
+    {
+        ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(selectedFaction);
+
+        if (screwBoxSlot != null)
+        {
+            looseScrewEvent?.Invoke(screwId, selectedFaction, screwBoxSlot);
+        }
+    }
+
+    private void OnScrewAutoSelected(int screwId, GameFaction selectedFaction)
     {
         ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(selectedFaction);
 

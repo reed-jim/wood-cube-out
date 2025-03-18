@@ -66,17 +66,20 @@ public class BasicScrew : BaseScrew
 
             if (isCheckObstacles && !IsOutsideWithNoScrewBox)
             {
-                // avoid loose screw that is covering by other objects
-                bool isNotVisible = Physics.Raycast(
-                    transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
-
-                if (isNotVisible)
+                if (!GamePersistentVariable.isAutoTestingLevel)
                 {
-                    _isInteractable = true;
+                    // avoid loose screw that is covering by other objects
+                    bool isNotVisible = Physics.Raycast(
+                        transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
 
-                    return;
+                    if (isNotVisible)
+                    {
+                        _isInteractable = true;
+
+                        return;
+                    }
+                    //
                 }
-                //
 
                 CountBlockingObjects();
             }
@@ -147,6 +150,12 @@ public class BasicScrew : BaseScrew
             }
 
             screwBoxSlot.Fill(this);
+
+            // confirm done screw soon
+            if (!screwBoxSlot.IsScrewPort)
+            {
+                _isDone = true;
+            }
 
             UnscrewAnimationAsync(screwBoxSlot);
 
