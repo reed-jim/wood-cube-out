@@ -75,6 +75,7 @@ public class ScrewManager : MonoBehaviour
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
+        DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
 
         _tweens = new List<Tween>();
 
@@ -97,6 +98,7 @@ public class ScrewManager : MonoBehaviour
         MultiPhaseLevelManager.switchPhaseEvent -= SpawnFirstScrewBoxesNewPhase;
         ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
+        DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -175,24 +177,6 @@ public class ScrewManager : MonoBehaviour
 
                 SpawnFirstScrewBoxes();
             }));
-
-            if (_autoTestingCoroutine != null)
-            {
-                StopCoroutine(_autoTestingCoroutine);
-            }
-
-            _autoTestingCoroutine = StartCoroutine(AutoTesting());
-
-            // // AUTO TEST
-            // _tweens.Add(Tween.Delay(3f).OnComplete(async () =>
-            // {
-            //     for (int i = 0; i < _screws.Count; i++)
-            //     {
-            //         _screws[i].ForceUnscrew();
-
-            //         await Task.Delay(33);
-            //     }
-            // }));
         }
     }
 
@@ -212,7 +196,7 @@ public class ScrewManager : MonoBehaviour
                 continue;
             }
 
-            if (_screws[i].IsDone && !_screws[i].IsInScrewPort)
+            if (_screws[i].IsDone)
             {
                 continue;
             }
@@ -255,16 +239,9 @@ public class ScrewManager : MonoBehaviour
         // Find the number of obstacles for each screw in each faction.
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsInScrewPort)
+            if (_screws[i].IsDone || _screws[i].IsLocked)
             {
-
-            }
-            else
-            {
-                if (_screws[i].IsDone || _screws[i].IsLocked)
-                {
-                    continue;
-                }
+                continue;
             }
 
             GameFaction faction = _screws[i].Faction;
@@ -418,7 +395,7 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsDone && !_screws[i].IsInScrewPort)
+            if (_screws[i].IsDone)
             {
                 continue;
             }
@@ -444,11 +421,21 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region AUTO TESTING
+    private void StartAutoTesting()
+    {
+        if (_autoTestingCoroutine != null)
+        {
+            StopCoroutine(_autoTestingCoroutine);
+        }
+
+        GamePersistentVariable.isAutoTestingLevel = true;
+
+        _autoTestingCoroutine = StartCoroutine(AutoTesting());
+    }
+
     private IEnumerator AutoTesting()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.05f);
-
-        yield return new WaitForSeconds(2);
 
         while (true)
         {
@@ -656,7 +643,9 @@ public class ScrewManager : MonoBehaviour
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = GetDifficultyLevelByFaction(difficultyLevel);
 
-        GameFaction[] factionSortedByDifficulty = totalBlockObjectsByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
+        Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
+
+        GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
 
         GameFaction nextFaction = GameFaction.None;
 
@@ -764,18 +753,15 @@ public class ScrewManager : MonoBehaviour
 
     private IEnumerator HandlingOutsideScrews()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
 
         while (true)
         {
-            if (_remainingHandleOutsideScrewCommands > -999)
+            if (!_isHandlingOutsideScrews)
             {
-                if (!_isHandlingOutsideScrews)
-                {
-                    _isHandlingOutsideScrews = true;
+                _isHandlingOutsideScrews = true;
 
-                    HandleOutsideScrews();
-                }
+                HandleOutsideScrews();
             }
 
             yield return waitForSeconds;
@@ -812,7 +798,7 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        _remainingHandleOutsideScrewCommands--;
+        // _remainingHandleOutsideScrewCommands--;
         _isHandlingOutsideScrews = false;
     }
     #endregion

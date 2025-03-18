@@ -60,7 +60,14 @@ public class RevivePopup : BasePopup
 
     private void ShowRevivePopup(BoosterType boosterType)
     {
-        Show(onCompletedAction: () => ReviveByDiamond());
+        if (GamePersistentVariable.isAutoTestingLevel)
+        {
+            Show(onCompletedAction: () => ReviveByDiamond());
+        }
+        else
+        {
+            Show();
+        }
 
         SoundManager.Instance.PlaySoundLose();
 
