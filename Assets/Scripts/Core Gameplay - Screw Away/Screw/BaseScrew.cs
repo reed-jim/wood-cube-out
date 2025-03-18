@@ -142,6 +142,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     #region EVENT
     public static event Action<int, GameFaction> selectScrewEvent;
+    public static event Action<int, GameFaction> autoSelectScrewEvent;
     public static event Action<BaseScrew> addScrewToListEvent;
     public static event Action<BaseScrew> screwMovedCompletedEvent;
     public static event Action<int> breakJointEvent;
@@ -198,6 +199,11 @@ public class BaseScrew : MonoBehaviour, IScrew
     public void Select()
     {
         selectScrewEvent?.Invoke(screwId, Faction);
+    }
+
+    public void AutoSelect()
+    {
+        autoSelectScrewEvent?.Invoke(screwId, Faction);
     }
 
     public virtual void Loose(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
@@ -375,6 +381,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         _isDone = false;
         _isOutsideWithNoScrewBox = true;
+        _isInScrewPort = false;
     }
 
     public virtual void ThrowOutside()
