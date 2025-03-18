@@ -9,10 +9,11 @@ public class BaseScrew : MonoBehaviour, IScrew
 {
     [SerializeField] protected int screwId;
 
+    #region COMPONENT
     [SerializeField] protected ScrewServiceLocator screwServiceLocator;
-
     [SerializeField] protected MeshFilter meshFilter;
     [SerializeField] protected HingeJoint joint;
+    #endregion
 
     [Header("CUSTOMIZE")]
     [SerializeField] protected float scaleOnScrewBox;
@@ -214,7 +215,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
     }
 
-    public async Task UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
+    public void UnscrewAnimationAsync(ScrewBoxSlot screwBoxSlot, Action onCompleteAction = null, bool isSwitchCamera = true)
     {
         if (_isMoving)
         {
@@ -234,7 +235,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         // await Task.Delay(100);
 
         // LOOSE FX
-        if (!_isInScrewPort && !IsOutsideWithNoScrewBox)
+        if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
         {
             ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
             ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
@@ -288,7 +289,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                         _isRotating = true;
                         rotateSpeed *= 2;
 
-                        if (!GamePersistentVariable.isSoundTightenScrewPlaying && !IsInScrewPort && !IsOutsideWithNoScrewBox)
+                        if (!GamePersistentVariable.isSoundTightenScrewPlaying && !_isInScrewPort && !_isOutsideWithNoScrewBox)
                         {
                             SoundManager.Instance.PlaySoundTightenScrew();
 
@@ -308,9 +309,13 @@ public class BaseScrew : MonoBehaviour, IScrew
                             {
                                 screwBoxSlot.CompleteFill();
 
-                                _isDone = true;
                                 _isInScrewPort = screwBoxSlot.IsScrewPort;
                                 _isMoving = false;
+
+                                if (!_isInScrewPort)
+                                {
+                                    _isDone = true;
+                                }
 
                                 InvokeScrewLoosenedEvent();
                                 screwMovedCompletedEvent?.Invoke(this);
@@ -356,11 +361,6 @@ public class BaseScrew : MonoBehaviour, IScrew
         else
         {
             _isMoving = true;
-        }
-
-        if (_isDone && !IsInScrewPort)
-        {
-            return;
         }
 
         if (joint != null)

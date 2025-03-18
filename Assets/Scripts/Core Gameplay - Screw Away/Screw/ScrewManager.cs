@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
-using Saferio.Util.SaferioTween;
 using UnityEditor;
 using UnityEngine;
 using static GameEnum;
@@ -27,6 +26,7 @@ public class ScrewManager : MonoBehaviour
     private int _totalScrewObserved;
     private int _totalScrew;
     private Coroutine _handlingOutsideScrewCoroutine;
+    private Coroutine _autoTestingCoroutine;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     #endregion
 
@@ -79,6 +79,7 @@ public class ScrewManager : MonoBehaviour
         _tweens = new List<Tween>();
 
         // StartCoroutine(QueueSpawningScrewBoxes());
+        // StartCoroutine(HandlingOutsideScrews());
 
         _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
     }
@@ -162,8 +163,25 @@ public class ScrewManager : MonoBehaviour
             {
                 obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
 
+                // foreach (var item in obstaclesOfPieces)
+                // {
+                //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
+
+                //     // for (int i = 0; i < item.Value.Count; i++)
+                //     // {
+                //     //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
+                //     // }
+                // }
+
                 SpawnFirstScrewBoxes();
             }));
+
+            if (_autoTestingCoroutine != null)
+            {
+                StopCoroutine(_autoTestingCoroutine);
+            }
+
+            _autoTestingCoroutine = StartCoroutine(AutoTesting());
 
             // // AUTO TEST
             // _tweens.Add(Tween.Delay(3f).OnComplete(async () =>
@@ -339,11 +357,6 @@ public class ScrewManager : MonoBehaviour
 
             numObstacleEachScrewEachFaction[faction] = numObstacleEachScrewEachFaction[faction].OrderBy(item => item).ToList();
 
-            // foreach (var item in numObstacleEachScrewEachFaction[faction])
-            // {
-            //     Debug.Log("SAFERIO " + faction + " / " + item);
-            // }
-
             int totalObstaclesOfThreeMostOpenedScrews = numObstacleEachScrewEachFaction[faction].Take(3).Sum();
 
             difficultyLevelByFactions[faction] += totalObstaclesOfThreeMostOpenedScrews;
@@ -430,6 +443,51 @@ public class ScrewManager : MonoBehaviour
     }
     #endregion
 
+    #region AUTO TESTING
+    private IEnumerator AutoTesting()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.05f);
+
+        yield return new WaitForSeconds(2);
+
+        while (true)
+        {
+            List<BaseScrew> validScrews = new List<BaseScrew>();
+
+            for (int i = 0; i < _screws.Count; i++)
+            {
+                if (_screws[i].IsDone)
+                {
+                    continue;
+                }
+
+                if (_screws[i].IsOutsideWithNoScrewBox || _screws[i].IsInScrewPort)
+                {
+                    continue;
+                }
+
+                else
+                {
+                    validScrews.Add(_screws[i]);
+                }
+            }
+
+            int randomIndex = UnityEngine.Random.Range(0, validScrews.Count);
+
+            if (validScrews.Count > 0)
+            {
+                validScrews[randomIndex].Select();
+            }
+            else
+            {
+                break;
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+    #endregion
+
     #region MANAGE SCREW BOX
     private async void SpawnFirstScrewBoxes()
     {
@@ -497,31 +555,6 @@ public class ScrewManager : MonoBehaviour
     private void OnScrewBoxUnlocked(ScrewBox screwBox)
     {
         _totalScrewBoxesSpawned++;
-    }
-
-    private void OnSpawnNewScrewBoxRequested()
-    {
-        _remainingSpawnScrewBoxCommands++;
-    }
-
-    private IEnumerator QueueSpawningScrewBoxes()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
-
-        while (true)
-        {
-            if (_remainingSpawnScrewBoxCommands > 0 && _totalScrewBoxesSpawned <= _totalScrewBoxes)
-            {
-                if (!_isHandlingSpawningScrewBox)
-                {
-                    _isHandlingSpawningScrewBox = true;
-
-                    SpawnNewScrewBox();
-                }
-            }
-
-            yield return waitForSeconds;
-        }
     }
 
     private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
@@ -726,41 +759,16 @@ public class ScrewManager : MonoBehaviour
     #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     private void OnScrewBoxSpawned(ScrewBox screwBox)
     {
-        // for (int i = 0; i < _screws.Count; i++)
-        // {
-        //     BaseScrew screw = _screws[i];
-
-        //     if (screw.IsOutsideWithNoScrewBox)
-        //     {
-        //         GameFaction faction = screw.Faction;
-
-        //         ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
-
-        //         if (screwBoxSlot != null)
-        //         {
-        //             screwBoxSlot.Fill(screw);
-
-        //             screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
-
-        //             screw.IsInteractable = true;
-
-        //             screw.Loose(screw.ScrewId, faction, screwBoxSlot);
-
-        //             screw.IsOutsideWithNoScrewBox = false;
-        //         }
-        //     }
-        // }
-
         _remainingHandleOutsideScrewCommands++;
     }
 
     private IEnumerator HandlingOutsideScrews()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
 
         while (true)
         {
-            if (_remainingHandleOutsideScrewCommands >= -990)
+            if (_remainingHandleOutsideScrewCommands > -999)
             {
                 if (!_isHandlingOutsideScrews)
                 {
@@ -793,13 +801,9 @@ public class ScrewManager : MonoBehaviour
 
                 if (screwBoxSlot != null)
                 {
-                    // screwBoxSlot.Fill(screw);
-
                     screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
                     screw.IsInteractable = true;
-
-                    // screw.transform.position = screw.transform.position.ChangeY(0);
 
                     screw.Loose(screw.ScrewId, faction, screwBoxSlot);
 
@@ -817,11 +821,6 @@ public class ScrewManager : MonoBehaviour
     private void OnPieceCompleted(int instanceId)
     {
         obstaclesOfPieces.Remove(instanceId);
-    }
-
-    private void SetPieceDependencies(Dictionary<int, List<Transform>> dependencies)
-    {
-        obstaclesOfPieces = dependencies;
     }
     #endregion
 }

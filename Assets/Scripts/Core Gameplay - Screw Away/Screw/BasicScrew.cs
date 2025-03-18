@@ -1,18 +1,16 @@
-using System;
-using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
 using PrimeTween;
 using UnityEngine;
 
 public class BasicScrew : BaseScrew
 {
-    // private Vector3 hitPoint;
-    // private GameObject obstacle;
-
-    private Vector3 _obstacleHitPointWorld;
-    private int stepRotateToCorrectAngleOnScrewBox;
-
+    [Header("BASIC SCREW - CUSTOMIZE")]
     [SerializeField] private LayerMask checkObstacleLayer;
+
+    #region  PRIVATE FIELD
+    private int stepRotateToCorrectAngleOnScrewBox;
+    private Vector3 _obstacleHitPointWorld;
+    #endregion
 
     private void Update()
     {
@@ -152,58 +150,16 @@ public class BasicScrew : BaseScrew
 
             UnscrewAnimationAsync(screwBoxSlot);
 
-            if (!IsInScrewPort && !IsOutsideWithNoScrewBox)
+            if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
             {
                 SoundManager.Instance.PlaySoundLoosenScrew();
-            }
 
-            if (gameSetting.IsVibrate)
-            {
-                HapticFeedback.MediumFeedback();
-            }
-        }
-    }
-
-    public int CountBlockingObjectsPrefabMode(bool isIncludeHiddenScrew)
-    {
-        const int MAX_OBSTACLE_ARRAY_SIZE = 10;
-
-        Vector3 start = transform.position + transform.forward;
-
-        Collider[] obstacles = new Collider[MAX_OBSTACLE_ARRAY_SIZE];
-
-        // int numObstacle = gameObject.scene.GetPhysicsScene().OverlapCapsule(start, start + 10 * transform.forward, 0.2f, obstacles);
-
-        RaycastHit hit;
-
-        gameObject.scene.GetPhysicsScene().CapsuleCast(start, start + 0.1f * transform.forward, 0.2f, transform.forward, out hit);
-
-        int number = 0;
-
-        if (hit.collider != null)
-        {
-            if (hit.transform == transform.parent)
-            {
-                return 0;
-            }
-
-            if (hit.transform.GetComponent<IObjectPart>() != null)
-            {
-                float distance = Vector3.Distance(hit.point, transform.position);
-
-                if (distance < 0.9f)
+                if (gameSetting.IsVibrate)
                 {
-                    number++;
+                    HapticFeedback.MediumFeedback();
                 }
             }
         }
-
-        // for (int i = 0; i < numObstacle; i++)
-        // {
-
-        // }
-
-        return number;
     }
 
     public override int CountBlockingObjects(bool isIncludeHiddenScrew)
@@ -302,72 +258,4 @@ public class BasicScrew : BaseScrew
 
         return number;
     }
-
-    // public override int CountBlockingObjects(bool isIncludeHiddenScrew)
-    // {
-    //     // Vector3 pointOne = transform.position + 0.5f * meshRenderer.bounds.size.z * transform.forward;
-    //     Vector3 pointOne = transform.position;
-    //     Vector3 pointTwo = pointOne + 0.01f * transform.forward;
-
-    //     // DON'T cast too big capsule --> point 2 param is start + 0.1f * transform.forward
-    //     RaycastHit[] hits = Physics.CapsuleCastAll(pointOne, pointTwo, transform.lossyScale.x * 0.5f * meshRenderer.bounds.size.x, transform.forward, 10);
-
-    //     int number = 0;
-
-    //     float minBlockedDistance = float.MaxValue;
-
-    //     if (hits != null)
-    //     {
-    //         for (int i = 0; i < hits.Length; i++)
-    //         {
-    //             if (hits[i].transform == transform.parent)
-    //             {
-    //                 continue;
-    //             }
-
-    //             if (hits[i].transform.GetComponent<IObjectPart>() != null)
-    //             {
-    //                 if (isIncludeHiddenScrew)
-    //                 {
-    //                     number++;
-
-    //                     continue;
-    //                 }
-
-    //                 // Perpendicular distance
-    //                 Vector3 positionInScrewSpace = transform.InverseTransformPoint(hits[i].point);
-
-    //                 if (positionInScrewSpace.z < 0)
-    //                 {
-    //                     continue;
-    //                 }
-
-    //                 float distance = Mathf.Abs(positionInScrewSpace.z);
-
-    //                 // float distance = Vector3.Distance(hits[i].point, transform.position);
-
-    //                 if (distance < minBlockedDistance)
-    //                 {
-    //                     minBlockedDistance = distance;
-
-    //                     hitPoint = hits[i].point;
-    //                     obstacle = hits[i].collider.gameObject;
-    //                 }
-
-    //                 if (distance < transform.lossyScale.x * 1.75f * meshRenderer.bounds.size.z)
-    //                 {
-    //                     number++;
-
-    //                     hitPoint = hits[i].point;
-    //                     obstacle = hits[i].collider.gameObject;
-    //                 }
-    //             }
-    //         }
-    //     }
-
-    //     _numberBlockingObjects = number;
-    //     _distanceBlocked = minBlockedDistance;
-
-    //     return number;
-    // }
 }

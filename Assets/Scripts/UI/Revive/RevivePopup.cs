@@ -60,7 +60,7 @@ public class RevivePopup : BasePopup
 
     private void ShowRevivePopup(BoosterType boosterType)
     {
-        Show();
+        Show(onCompletedAction: () => ReviveByDiamond());
 
         SoundManager.Instance.PlaySoundLose();
 
