@@ -168,6 +168,21 @@ public static class SaferioTracking
 #endif
     }
 
+    #region COMPENSATE
+    public static void TrackClaimCompensateReward(string code, string deviceId)
+    {
+#if !UNITY_EDITOR
+        Parameter[] parameters =
+        {
+            new Parameter("code", code),
+            new Parameter("device_id", deviceId),
+        };
+
+        FirebaseAnalytics.LogEvent("claim_compensate_reward", parameters);
+#endif
+    }
+    #endregion
+
     #region COSTCENTER
     public static void TrackResourceSource(
         int level,
