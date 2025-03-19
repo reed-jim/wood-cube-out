@@ -20,6 +20,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
     private List<Tween> _tweens;
+    private Tween _autoCenterLevelTween;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
     private BasicObjectPart[] _pieces;
@@ -69,6 +70,7 @@ public class LevelLoader : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
+        CommonUtil.StopTween(_autoCenterLevelTween);
     }
 
     private async Task LoadLevel()
@@ -185,6 +187,8 @@ public class LevelLoader : MonoBehaviour
                     }
                 }
 
+                _isNotAutoCenterLevel = false;
+
                 if (!_isNotAutoCenterLevel)
                 {
                     for (int i = 0; i < level.transform.childCount; i++)
@@ -263,25 +267,30 @@ public class LevelLoader : MonoBehaviour
 
     private void OnPieceCompleted(int pieceInstanceId)
     {
-        if (_isNotAutoCenterLevel)
-        {
-            return;
-        }
+        // if (_isNotAutoCenterLevel)
+        // {
+        //     return;
+        // }
 
-        // Vector3 currentPosition = _pivotAdjust.transform.position;
-        // Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+        Vector3 currentPosition = _pivotAdjust.transform.position;
+        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
 
-        // _pivotAdjust.transform.position = Vector3.zero;
-        // _pivotAdjust.transform.eulerAngles = Vector3.zero;
+        _pivotAdjust.transform.position = Vector3.zero;
+        _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
         Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
-        // _pivotAdjust.transform.position = currentPosition;
-        // _pivotAdjust.transform.eulerAngles = currentRotation;
+        _pivotAdjust.transform.position = currentPosition;
+        _pivotAdjust.transform.eulerAngles = currentRotation;
 
         Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
 
-        _tweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+        if (_autoCenterLevelTween.isAlive)
+        {
+            _autoCenterLevelTween.Stop();
+        }
+
+        _autoCenterLevelTween = Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f);
     }
 
     private async void GoLevel(int level)
