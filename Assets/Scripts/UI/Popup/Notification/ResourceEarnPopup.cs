@@ -67,6 +67,9 @@ public class ResourceEarnPopup : BasePopup
             removeAdsEvent?.Invoke();
 
             _isRemoveAds = false;
+
+            // AdmobAdsMax.Instance.HideBanner();
+            // AdmobAdsMax.Instance.DestroyBanner();
         }
     }
 

@@ -34,13 +34,13 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "948e190d8c5cd11d";
     private const string RewardedAdUnitId = "34ea7232532db3db";
     private const string BanerAdUnitId = "efc1069b84f4656f";
-    #elif UNITY_IOS
-        private const string MaxSdkKey =
-    "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
-        private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
-        private const string RewardedAdUnitId = "5a5d29ce1c57f419";
-        private const string BanerAdUnitId = "515e33c5e1389ee4";
-    #endif
+#elif UNITY_IOS
+    private const string MaxSdkKey =
+"eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
+    private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
+    private const string RewardedAdUnitId = "5a5d29ce1c57f419";
+    private const string BanerAdUnitId = "515e33c5e1389ee4";
+#endif
     // #if UNITY_ANDROID
     //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
     //     private string _adUnitIdMedium = "ca-app-pub-8467610367562059/2324932310";
@@ -50,9 +50,9 @@ public class AdmobAdsMax : MonoBehaviour
     //     private string _adUnitIdMedium = "ca-app-pub-3940256099942544/6978759866";
     //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/4180939469";
     private string REWARD_INTER_ID = "test";
-// #else
-//   private string _adUnitId = "unused";
-// #endif
+    // #else
+    //   private string _adUnitId = "unused";
+    // #endif
     private RewardedInterstitialAd rewardedInterstitialAd;
     public float countdownAds;
     bool isShowingAds;
@@ -177,17 +177,17 @@ public class AdmobAdsMax : MonoBehaviour
     // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845";
 #endif
-    #elif UNITY_IOS
-    #if TESTER
+#elif UNITY_IOS
+#if TESTER
         private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
-    #else
+#else
         private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/4521130713";
-    #endif
-    #if TESTER
+#endif
+#if TESTER
         private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
-    #else
+#else
         private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/7255105261";
-    #endif
+#endif
 #endif
     private bool _isShowAdmobBanner;
     private bool _isShowAdmobCollap;
@@ -353,6 +353,11 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void RefreshAdmobBanner()
     {
+        if (UserData.IsRemoveAds)
+        {
+            return;
+        }
+
         bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
 
         if (!remoteConfigIsShowBanner)
@@ -940,12 +945,24 @@ public class AdmobAdsMax : MonoBehaviour
         TryHideBannerCollap();
     }
 
-    public void DestroyBanner()
+    public void HideBanner()
     {
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Hide();
 
         TryHideBannerCollap();
+    }
+
+    public void DestroyBanner()
+    {
+        MaxSdk.DestroyBanner(BanerAdUnitId);
+
+        // Admob
+        if (_bannerView != null)
+        {
+            _bannerView.Destroy();
+            _bannerView = null;
+        }
     }
 
     private void TryHideBannerCollap()
