@@ -12,6 +12,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SaferioToggle turnMusicToggle;
     [SerializeField] private SaferioToggle turnSoundToggle;
     [SerializeField] private SaferioToggle vibrationToggle;
+    [SerializeField] private Button openCompensatePopupButton;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -47,6 +48,7 @@ public class SettingPopup : BasePopup
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
         openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
+        openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
 
@@ -162,6 +164,13 @@ public class SettingPopup : BasePopup
     private void OpenReviewIAPPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
+    }
+    #endregion
+
+    #region Compensate
+    private void OpenCompensatePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.Compensate);
     }
     #endregion
 }

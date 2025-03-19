@@ -32,7 +32,8 @@ public class GameEnum : MonoBehaviour
         ResourcesEarn,
         LevelComingSoon,
         BoosterSuggest,
-        IAPReview
+        IAPReview,
+        Compensate
     }
 
     public enum GameFaction

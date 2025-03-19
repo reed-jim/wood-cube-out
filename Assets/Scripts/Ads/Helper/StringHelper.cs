@@ -420,6 +420,9 @@ public class FirebaseConfig
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
     public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
     public const string MIN_FREE_LEVEL = "min_free_level";
+    public const string REMOVE_ADS_CODE = "remove_ads_code";
+    public const string BIG_REWARD_CODE = "big_reward_code";
+    public const string VALID_DEVICE_UNIQUE_IDENTIFIERS = "valid_device_unique_identifiers";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
