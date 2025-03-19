@@ -14,7 +14,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &8115178826921894898
 RectTransform:
@@ -35,7 +35,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 290}
+  m_AnchoredPosition: {x: 0, y: 280}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1610687507187498070
@@ -57,7 +57,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &3236533477099306494
 RectTransform:
@@ -203,7 +203,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &2083142087864825251
 RectTransform:
@@ -355,7 +355,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &949448805878904118
 RectTransform:
@@ -506,7 +506,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1169143574866467718
 RectTransform:
@@ -581,7 +581,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &4691125696244298152
 RectTransform:
@@ -653,13 +653,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1701801352705855816}
+  - component: {fileID: 2233743913031636425}
   - component: {fileID: 4720967594307153870}
   m_Layer: 5
   m_Name: Booster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!224 &1701801352705855816
 RectTransform:
@@ -682,6 +683,19 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2233743913031636425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6753653686871864712}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e09569afa75b9549bcbd03536337c4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
 --- !u!114 &4720967594307153870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -723,6 +737,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 1a8143b3100e6bc4b8a987aa5b556271, type: 3}
+    - target: {fileID: 2360439373552220417, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2554412321378500558, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_SizeDelta.x
       value: 88
@@ -731,13 +749,37 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 96
       objectReference: {fileID: 0}
+    - target: {fileID: 2645978322408802174, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2788240546379362232, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_Name
       value: Break Object Button
       objectReference: {fileID: 0}
+    - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: translationName
       value: Break Object
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104400914125921900, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7388838201020903326, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 7443728272882612845, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: boosterIndex
@@ -860,9 +902,37 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8115178826921894898}
     m_Modifications:
+    - target: {fileID: 2360439373552220417, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2645978322408802174, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2788240546379362232, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_Name
       value: Add More Screw Port Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104400914125921900, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7388838201020903326, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_Pivot.x
@@ -989,6 +1059,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: f06b4b5af6390cf4796288e07dc28181, type: 3}
+    - target: {fileID: 2360439373552220417, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2554412321378500558, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_SizeDelta.x
       value: 76
@@ -997,13 +1071,37 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 96
       objectReference: {fileID: 0}
+    - target: {fileID: 2645978322408802174, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2788240546379362232, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_Name
       value: Clear Screw Ports Button
       objectReference: {fileID: 0}
+    - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: translationName
       value: Clear Holes
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7104400914125921900, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 7388838201020903326, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
       objectReference: {fileID: 0}
     - target: {fileID: 7443728272882612845, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: boosterIndex

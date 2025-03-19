@@ -241,6 +241,9 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         if (productData.IsRemoveAd)
                         {
+                            AdmobAdsMax.Instance.HideBanner();
+                            AdmobAdsMax.Instance.DestroyBanner();
+
                             UserData.IsRemoveAds = true;
                         }
 
@@ -346,7 +349,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void CheckRestoredRemoveAds()
     {
-        UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
+        if (!UserData.IsRemoveAds)
+        {
+            UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
+        }
 
         if (UserData.IsRemoveAds)
         {
