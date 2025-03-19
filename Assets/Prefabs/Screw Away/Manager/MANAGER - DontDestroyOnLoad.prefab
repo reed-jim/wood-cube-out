@@ -2341,6 +2341,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Eliminar anuncios
     Object: {fileID: 0}
+--- !u!1 &3155650079755898493
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1442228164817286484}
+  - component: {fileID: 1963424763312808471}
+  m_Layer: 0
+  m_Name: The code has already been claimed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1442228164817286484
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3155650079755898493}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1963424763312808471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3155650079755898493}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: The code has already been claimed!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Le code a d\xE9j\xE0 \xE9t\xE9 r\xE9clam\xE9!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Der Code wurde bereits behauptet!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Il codice \xE8 gi\xE0 stato rivendicato!"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B3\u30FC\u30C9\u306F\u3059\u3067\u306B\u8ACB\u6C42\u3055\u308C\u3066\u3044\u307E\u3059\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uCF54\uB4DC\uB294 \uC774\uBBF8 \uC8FC\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "O c\xF3digo j\xE1 foi reivindicado!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041A\u043E\u0434 \u0443\u0436\u0435 \u0431\u044B\u043B \u0437\u0430\u044F\u0432\u043B\u0435\u043D!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1El c\xF3digo ya ha sido reclamado!"
+    Object: {fileID: 0}
 --- !u!1 &3163359327322680955
 GameObject:
   m_ObjectHideFlags: 0
@@ -3678,6 +3751,7 @@ Transform:
   - {fileID: 5143082378998638560}
   - {fileID: 8209887054358523460}
   - {fileID: 5015691724766041214}
+  - {fileID: 1442228164817286484}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

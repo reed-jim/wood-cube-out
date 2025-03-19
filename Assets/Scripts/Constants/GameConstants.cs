@@ -160,4 +160,9 @@ public static class GameConstants
     public static string LAST_DAY_CLAIM_DAILY_REWARD = "LAST_DAY_CLAIM_DAILY_REWARD";
     public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
     #endregion
+
+    #region COMPENSATE
+    public static string IS_CLAIMED_COMPENSATE_REMOVE_ADS = "IS_CLAIMED_COMPENSATE_REMOVE_ADS";
+    public static string IS_CLAIMED_COMPENSATE_BIG_REWARD = "IS_CLAIMED_COMPENSATE_BIG_REWARD";
+    #endregion  
 }

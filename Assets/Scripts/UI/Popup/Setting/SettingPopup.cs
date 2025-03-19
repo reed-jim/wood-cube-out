@@ -47,7 +47,6 @@ public class SettingPopup : BasePopup
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
-        openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
 
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
@@ -157,13 +156,6 @@ public class SettingPopup : BasePopup
     private void Rate()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Rate);
-    }
-    #endregion
-
-    #region Review IAP
-    private void OpenReviewIAPPopup()
-    {
-        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
     }
     #endregion
 

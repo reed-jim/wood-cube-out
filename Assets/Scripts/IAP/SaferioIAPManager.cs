@@ -349,10 +349,10 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     private void CheckRestoredRemoveAds()
     {
-        if (!UserData.IsRemoveAds)
-        {
-            UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
-        }
+        // if (!UserData.IsRemoveAds)
+        // {
+        //     UserData.IsRemoveAds = IsProductPurchased(removeAdsProductId);
+        // }
 
         if (UserData.IsRemoveAds)
         {

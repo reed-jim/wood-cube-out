@@ -12,6 +12,8 @@ public class CompensatePopup : BasePopup
 
     [SerializeField] private Button redeemButton;
 
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
+
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action<string, string> showNotificationEvent;
 
@@ -36,11 +38,18 @@ public class CompensatePopup : BasePopup
         string removeAdCode = RemoteConfigController.GetStringConfig(FirebaseConfig.REMOVE_ADS_CODE, "INVALID");
         string bigRewardCode = RemoteConfigController.GetStringConfig(FirebaseConfig.BIG_REWARD_CODE, "INVALID");
 
-        ValidUniqueDeviceIdentifierContainer validUniqueDeviceIdentifierContainer = default;
+        ValidUniqueDeviceIdentifierContainer validUniqueDeviceIdentifierContainer = new ValidUniqueDeviceIdentifierContainer();
 
         RemoteConfigController.GetJsonConfig(FirebaseConfig.VALID_DEVICE_UNIQUE_IDENTIFIERS, out validUniqueDeviceIdentifierContainer);
 
-        if (!validUniqueDeviceIdentifierContainer.ValidIdentifiers.Contains(SystemInfo.deviceUniqueIdentifier))
+        if (validUniqueDeviceIdentifierContainer.validIdentifiers == null)
+        {
+            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
+
+            return;
+        }
+
+        if (!validUniqueDeviceIdentifierContainer.validIdentifiers.Contains(SystemInfo.deviceUniqueIdentifier))
         {
             showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
 
@@ -51,32 +60,70 @@ public class CompensatePopup : BasePopup
         int[] boosterQuantites = new int[3];
         bool isRemoveAd = false;
 
+        bool isClaimCompensateRemoveAd = DataUtility.Load(GameConstants.IS_CLAIMED_COMPENSATE_REMOVE_ADS, false);
+        bool isClaimCompensateBigReward = DataUtility.Load(GameConstants.IS_CLAIMED_COMPENSATE_BIG_REWARD, false);
+
         if (string.Equals(codeInput.text, removeAdCode, StringComparison.OrdinalIgnoreCase))
         {
-            isRemoveAd = true;
+            if (!isClaimCompensateRemoveAd)
+            {
+                isRemoveAd = true;
 
-            showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, isRemoveAd);
+                AdmobAdsMax.Instance.HideBanner();
+                AdmobAdsMax.Instance.DestroyBanner();
+
+                UserData.IsRemoveAds = true;
+
+                Hide();
+
+                showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, isRemoveAd);
+
+                DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_REMOVE_ADS, true);
+
+                SaferioTracking.TrackClaimCompensateReward(removeAdCode, SystemInfo.deviceUniqueIdentifier);
+            }
+            else
+            {
+                showNotificationEvent?.Invoke(GameConstants.WARNING, "The code has already been claimed");
+            }
         }
-
-        if (string.Equals(codeInput.text, removeAdCode, StringComparison.OrdinalIgnoreCase))
+        else if (string.Equals(codeInput.text, bigRewardCode, StringComparison.OrdinalIgnoreCase))
         {
-            coinValue = 9999;
-            boosterQuantites[0] = 9;
-            boosterQuantites[1] = 9;
-            boosterQuantites[2] = 9;
+            if (!isClaimCompensateBigReward)
+            {
+                coinValue = 9999;
+                boosterQuantites[0] = 9;
+                boosterQuantites[1] = 9;
+                boosterQuantites[2] = 9;
 
-            showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, true);
+                userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+                userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+                userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+
+                userResourcesObserver.ChangeCoin(coinValue);
+
+                Hide();
+
+                showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, isRemoveAd);
+
+                DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_BIG_REWARD, true);
+
+                SaferioTracking.TrackClaimCompensateReward(bigRewardCode, SystemInfo.deviceUniqueIdentifier);
+            }
+            else
+            {
+                showNotificationEvent?.Invoke(GameConstants.WARNING, "The code has already been claimed");
+            }
+        }
+        else
+        {
+            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
         }
     }
 
     [System.Serializable]
     public class ValidUniqueDeviceIdentifierContainer
     {
-        private string[] validIdentifiers;
-
-        public string[] ValidIdentifiers
-        {
-            get => validIdentifiers;
-        }
+        public string[] validIdentifiers;
     }
 }
