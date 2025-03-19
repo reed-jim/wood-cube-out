@@ -388,6 +388,8 @@ public class RemoteConfigController : MonoBehaviour
         {
             firebaseRemoteKeys.Add(key);
         }
+
+        GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
     }
 
     //static Dictionary<string, object> defaults = new Dictionary<string, object>();

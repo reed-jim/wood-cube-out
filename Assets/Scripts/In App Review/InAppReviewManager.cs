@@ -1,54 +1,54 @@
-// using System.Collections;
+using System.Collections;
 // using Google.Play.Review;
-// using Unity.VisualScripting;
-// using UnityEngine;
+using Unity.VisualScripting;
+using UnityEngine;
 
-// public class InAppReviewManager : MonoBehaviour
-// {
-//     private ReviewManager _reviewManager;
-//     private PlayReviewInfo _playReviewInfo;
+public class InAppReviewManager : MonoBehaviour
+{
+    // private ReviewManager _reviewManager;
+    // private PlayReviewInfo _playReviewInfo;
 
-//     private void Awake()
-//     {
-//         RatePopup.launchInAppReviewEvent += LaunchInAppReview;
+    // private void Awake()
+    // {
+    //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
 
-//         _reviewManager = new ReviewManager();
-//     }
+    //     _reviewManager = new ReviewManager();
+    // }
 
-//     private void OnDestroy()
-//     {
-//         RatePopup.launchInAppReviewEvent += LaunchInAppReview;
-//     }
+    // private void OnDestroy()
+    // {
+    //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
+    // }
 
-//     private void LaunchInAppReview()
-//     {
-//         StartCoroutine(LaunchingInAppReview());
-//     }
+    // private void LaunchInAppReview()
+    // {
+    //     StartCoroutine(LaunchingInAppReview());
+    // }
 
-//     private IEnumerator LaunchingInAppReview()
-//     {
-//         var requestFlowOperation = _reviewManager.RequestReviewFlow();
+    // private IEnumerator LaunchingInAppReview()
+    // {
+    //     var requestFlowOperation = _reviewManager.RequestReviewFlow();
 
-//         yield return requestFlowOperation;
+    //     yield return requestFlowOperation;
 
-//         if (requestFlowOperation.Error != ReviewErrorCode.NoError)
-//         {
-//             yield break;
-//         }
+    //     if (requestFlowOperation.Error != ReviewErrorCode.NoError)
+    //     {
+    //         yield break;
+    //     }
 
-//         _playReviewInfo = requestFlowOperation.GetResult();
+    //     _playReviewInfo = requestFlowOperation.GetResult();
 
 
 
-//         var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
+    //     var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
 
-//         yield return launchFlowOperation;
+    //     yield return launchFlowOperation;
 
-//         _playReviewInfo = null;
+    //     _playReviewInfo = null;
 
-//         if (launchFlowOperation.Error != ReviewErrorCode.NoError)
-//         {
-//             yield break;
-//         }
-//     }
-// }
+    //     if (launchFlowOperation.Error != ReviewErrorCode.NoError)
+    //     {
+    //         yield break;
+    //     }
+    // }
+}

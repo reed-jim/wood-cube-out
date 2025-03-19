@@ -33,5 +33,6 @@ public static class GamePersistentVariable
 
     #region FIREBASE
     public static bool isFirebaseAvailable;
+    public static bool isFirebaseRemoteConfigLoaded;
     #endregion
 }

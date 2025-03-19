@@ -22,6 +22,7 @@ public class NotificationPopup : BasePopup
         RemoveAdPopup.showNotificationEvent += ShowNotification;
         SaferioIAPManager.showNotificationEvent += ShowNotification;
         IAPReviewPopup.showNotificationEvent += ShowNotification;
+        CompensatePopup.showNotificationEvent += ShowNotification;
 
         okButton.onClick.AddListener(Hide);
     }
@@ -34,6 +35,7 @@ public class NotificationPopup : BasePopup
         RemoveAdPopup.showNotificationEvent -= ShowNotification;
         SaferioIAPManager.showNotificationEvent -= ShowNotification;
         IAPReviewPopup.showNotificationEvent -= ShowNotification;
+        CompensatePopup.showNotificationEvent -= ShowNotification;
     }
 
     protected override void Show(Action onCompletedAction = null)
