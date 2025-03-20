@@ -1,10 +1,8 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
-using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class BasicObjectPart : MonoBehaviour, IObjectPart
@@ -21,6 +19,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
+    private List<Sequence> _sequences;
     private bool _isSelecting;
     private bool _isFree;
     private bool _isImmuneSwipeForce;
@@ -57,6 +56,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         ScrewManager.levelSetupCompletedEvent += ScaleBeforeLevel;
 
         _tweens = new List<Tween>();
+        _sequences = new List<Sequence>();
 
         partRigidbody = GetComponent<Rigidbody>();
         meshCollider = GetComponent<MeshCollider>();
@@ -140,6 +140,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         ScrewManager.levelSetupCompletedEvent -= ScaleBeforeLevel;
 
         CommonUtil.StopAllTweens(_tweens);
+        CommonUtil.StopAllSequences(_sequences);
     }
     #endregion
 
@@ -276,76 +277,39 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
     }
 
-    public async void Break(Vector3 touchPosition)
+    public async void Break(Vector3 touchPosition, RaycastHit hit)
     {
         BoosterHammer hammer = ObjectPoolingEverything.GetFromPool<BoosterHammer>(GameConstants.HAMMER);
 
-        Vector3 position1 = transform.position + 5 * transform.forward;
-        Vector3 position2 = transform.position - 5 * transform.forward;
+        hammer.transform.rotation = Quaternion.identity;
 
-        float expectedYDirection;
-        float expectedZDirection;
+        Quaternion surfaceRotation = Quaternion.LookRotation(hit.normal);
 
-        Vector3 expectedPosition;
+        hammer.transform.rotation = surfaceRotation;
+        hammer.transform.position = touchPosition - new Vector3(0, 0.5f, 0) + 2f * hit.normal;
 
+        Vector3 rotationInitialAngles = hammer.transform.eulerAngles;
 
+        _sequences.Add(Tween.Scale(hammer.transform, 6, duration: 0.4f).Chain
+        (
+            Tween.Scale(hammer.transform, 3, duration: 0.2f)
+        ));
 
-        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
-        // hammer.transform.rotation = Quaternion.LookRotation(transform.forward);
-        // hammer.transform.Rotate(new Vector3(0, 90, 0));
-
-        if (Vector3.Distance(position1, Vector3.zero) < Vector3.Distance(position2, Vector3.zero))
-        {
-            // expectedPosition = position2 - 0.8f * transform.up;
-
-            expectedZDirection = -1;
-        }
-        else
-        {
-            // expectedPosition = position1 - 0.8f * transform.up;
-
-            expectedZDirection = 1;
-        }
-
-        // hammer.transform.position = transform.position + 5 * expectedZDirection * transform.forward + 0 * transform.up;
-
-        if (Vector3.Distance(hammer.transform.position + hammer.transform.up, transform.position) < Vector3.Distance(hammer.transform.position - hammer.transform.up, transform.position))
-        {
-            expectedYDirection = 1;
-        }
-        else
-        {
-            expectedYDirection = -1;
-        }
-
-        hammer.transform.rotation = Quaternion.Euler(12, 90, 0);
-        hammer.transform.position = touchPosition + 4 * hammer.transform.right;
-
-        // Tween.Position(hammer.transform, transform.position + 2f * expectedZDirection * transform.forward + 0 * expectedYDirection * hammer.transform.up, duration: 0.2f)
-
-        // Tween.Position(hammer.transform, touchPosition, duration: 0.2f)
-        // .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, expectedZDirection * 60), duration: 0.6f))
-        // .Chain(Tween.Rotation(hammer.transform, hammer.transform.rotation.eulerAngles + new Vector3(0, 0, -expectedZDirection * 30), duration: 0.2f)
-        // .OnComplete(() =>
-        // {
-        //     Tween.Position(hammer.transform, 50f * expectedZDirection * transform.forward, startDelay: 0.3f, duration: 0.3f);
-        // }));
-
-        Tween.Position(hammer.transform, touchPosition + 1f * hammer.transform.right, duration: 0.2f)
-        .Chain(Tween.Rotation(hammer.transform, Quaternion.Euler(0, 78, -60), duration: 0.6f))
-        .Chain(Tween.Rotation(hammer.transform, Quaternion.Euler(0, 78, 45), duration: 0.2f)
+        _sequences.Add(Tween.Rotation(hammer.transform, rotationInitialAngles + new Vector3(120, 30, 0), duration: 0.4f)
+        .Chain(
+        Tween.Rotation(hammer.transform, rotationInitialAngles - new Vector3(30, 0, 10), duration: 0.2f)
         .OnComplete(() =>
         {
+            hammer.PlayHitFx();
+
             hammer.Dissolve();
-        }));
 
-        await Task.Delay(950);
+            shakeCameraEvent?.Invoke();
 
-        SoundManager.Instance.PlaySoundBreakObject();
+            GetComponent<Renderer>().enabled = false;
+        })));
 
-        // hammer.PlayHitFx();
-
-        shakeCameraEvent?.Invoke();
+        await Task.Delay(600);
 
         // BE CAREFUL OF USING childCount
         List<BaseScrew> screws = new List<BaseScrew>();
@@ -366,21 +330,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             await Task.Delay(33);
         }
 
-        Throw(forceBoost: 2);
+        // Throw(forceBoost: 2);
     }
 
     private void Throw(float forceBoost = 1)
     {
         Vector3 direction;
-
-        // if (levelCenter != null)
-        // {
-        //     direction = transform.position - levelCenter.position;
-        // }
-        // else
-        // {
-        //     direction = transform.position - transform.parent.position;
-        // }
 
         Vector3 virtualOrigin = new Vector3(0, -99, 0);
 
@@ -422,19 +377,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         direction.x = direction.x > 0 ? 1 : -1;
         direction.y = direction.y > 0 ? 1 : -1;
         direction.z = direction.z > 0 ? 1 : -1;
-
-        // if (Mathf.Abs(direction.x) < 0.01f)
-        // {
-        //     direction.x = 1f;
-        // }
-        // if (Mathf.Abs(direction.y) < 0.01f)
-        // {
-        //     direction.y = 1f;
-        // }
-        // if (Mathf.Abs(direction.z) < 0.01f)
-        // {
-        //     direction.z = 1f;
-        // }
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
 

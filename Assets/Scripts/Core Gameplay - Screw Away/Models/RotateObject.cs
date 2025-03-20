@@ -33,14 +33,14 @@ public class RotateObject : MonoBehaviour
         rotateSpeedMultiplier = 0.0036f;
         _acceleratedMultiplier = 1;
 
-        if (!isDisableAutoRotatingAtStart)
-        {
-            // _isAutoRotating = true;
+        // if (!isDisableAutoRotatingAtStart)
+        // {
+        //     // _isAutoRotating = true;
 
-            _remainingTimeToAutoRotate = 2;
+        //     _remainingTimeToAutoRotate = 2;
 
-            StartCoroutine(AutoRotating());
-        }
+        //     StartCoroutine(AutoRotating());
+        // }
     }
 
     void Update()
