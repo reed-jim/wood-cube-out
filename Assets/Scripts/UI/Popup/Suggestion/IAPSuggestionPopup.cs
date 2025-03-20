@@ -17,6 +17,7 @@ public class IAPSuggestionPopup : BasePopup
     [SerializeField] private Button noThanksButton;
 
     [Header("CUSTOMIZE")]
+    [SerializeField] private IAPDataContainer IAPDataContainer;
     [SerializeField] private IAPPackageData packageData;
 
     private int _coinQuantity;
@@ -51,6 +52,15 @@ public class IAPSuggestionPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        int packageIndex = RemoteConfigController.GetIntConfig(FirebaseConfig.IAP_SUGGESTION_PACKAGE_INDEX, 1);
+
+        packageData = IAPDataContainer.ProductsData[packageIndex];
+
+        if (packageData == null)
+        {
+            return;
+        }
+
         int coinQuantity = packageData.CoinQuantity;
 
         int[] boosterQuantites = new int[3] {

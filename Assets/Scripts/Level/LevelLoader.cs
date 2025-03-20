@@ -651,7 +651,7 @@ public class LevelLoader : MonoBehaviour
         //     return false;
         // }
 
-        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, false);
         int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
         if (!remoteConfigIsShowBoosterSuggestion)
@@ -676,22 +676,16 @@ public class LevelLoader : MonoBehaviour
             return false;
         }
 
-        return level > 10;
-
-        // if (isLoopLevel)
-        // {
-        //     return false;
-        // }
-
-        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+        bool remoteConfigIsShowIAPSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_IAP_SUGGESTION, true);
+        int minLevelShow = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_LEVEL_SHOW_IAP_SUGGESTION, 10);
         int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
-        if (!remoteConfigIsShowBoosterSuggestion)
+        if (!remoteConfigIsShowIAPSuggestion)
         {
             return false;
         }
 
-        if (level <= 3 || level % numLevelShowBoosterSuggestion == 0)
+        if (level < minLevelShow || level % numLevelShowBoosterSuggestion == 0)
         {
             return false;
         }

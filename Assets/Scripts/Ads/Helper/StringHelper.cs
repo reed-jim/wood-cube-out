@@ -419,7 +419,10 @@ public class FirebaseConfig
     public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
     public const string LEVEL_4_VARIANT = "level_4_variant";
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
+    public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
+    public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
     public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
+    public const string IAP_SUGGESTION_PACKAGE_INDEX = "iap_suggestion_package_index";
     public const string MIN_FREE_LEVEL = "min_free_level";
     public const string REMOVE_ADS_CODE = "remove_ads_code";
     public const string BIG_REWARD_CODE = "big_reward_code";
