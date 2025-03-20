@@ -34,8 +34,8 @@ public class GameplayScreen : MonoBehaviour
         pauseButton.onClick.AddListener(Pause);
         skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
-        debugNextLevelButton.onClick.AddListener(NextLevel);
-        debugPrevLevelButton.onClick.AddListener(PrevLevel);
+        // debugNextLevelButton.onClick.AddListener(NextLevel);
+        // debugPrevLevelButton.onClick.AddListener(PrevLevel);
 
         if (!gameSetting.IsDebug)
         {

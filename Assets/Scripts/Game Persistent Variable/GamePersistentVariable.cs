@@ -13,6 +13,7 @@ public static class GamePersistentVariable
     #region LEVEL OBSERVER
     public static int levelPrefab; 
     public static int numScrewBoxUnlocked; 
+    public static int numOutsideScrew;
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial; 
     public static Dictionary<int, List<Transform>> pieceDependencies;
