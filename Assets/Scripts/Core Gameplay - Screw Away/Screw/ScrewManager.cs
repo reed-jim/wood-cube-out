@@ -163,6 +163,11 @@ public class ScrewManager : MonoBehaviour
 
             levelSetupCompletedEvent?.Invoke();
 
+            if (_tweens == null)
+            {
+                _tweens = new List<Tween>();
+            }
+
             _tweens.Add(Tween.Delay(0.1f).OnComplete(() =>
             {
                 obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
@@ -412,7 +417,7 @@ public class ScrewManager : MonoBehaviour
         if (remainingScrew == 0)
         {
             GamePersistentVariable.numOutsideScrew = 0;
-            
+
             updateOutsideScrewNumberEvent?.Invoke();
             enableBoosterEvent?.Invoke(false);
 

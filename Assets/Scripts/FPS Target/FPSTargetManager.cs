@@ -4,6 +4,6 @@ public class FPSTargetManager : MonoBehaviour
 {
     private void Awake()
     {
-        Application.targetFrameRate = 90;
+        Application.targetFrameRate = 120;
     }
 }

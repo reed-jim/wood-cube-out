@@ -302,6 +302,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             hammer.PlayHitFx();
 
+            SoundManager.Instance.PlaySoundBreakObject();
+
             hammer.Dissolve();
 
             shakeCameraEvent?.Invoke();

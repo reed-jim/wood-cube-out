@@ -357,9 +357,10 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     private async void AddScrewToList()
     {
-        await Task.Delay(200);
-
-        addScrewToListEvent?.Invoke(this);
+        _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
+        {
+            addScrewToListEvent?.Invoke(this);
+        }));
     }
 
     public bool IsValidToLoose()
