@@ -45,6 +45,11 @@ public class BoxForOutsideScrew : MonoBehaviour
 
     private void UpdateNumber()
     {
+        if (GamePersistentVariable.numOutsideScrew == 0 && !gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (!gameObject.activeInHierarchy)
         {
             gameObject.SetActive(true);

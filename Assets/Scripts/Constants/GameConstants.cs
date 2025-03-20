@@ -82,6 +82,7 @@ public static class GameConstants
     public static string COMPLETE_LEVEL_TRANSLATION_NAME = "Complete Level Task Description";
     public static string LEVEL_COMPLETED = "Level Completed";
     public static string LEVEL_PARAMETER = "level";
+    public static string VALUE_PARAMETER = "value";
     #endregion
 
     #region IAP
