@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -148,6 +149,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     public static event Action<int> breakJointEvent;
     public static event Action<int> screwStartLoosenedEvent;
     public static event Action screwLoosenedEvent;
+    public static event Action updateOutsideScrewNumberEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -263,11 +265,22 @@ public class BaseScrew : MonoBehaviour, IScrew
         }
         //
 
+        if (IsOutsideWithNoScrewBox)
+        {
+            Vector3 initialScale = transform.localScale;
+
+            transform.localScale = Vector3.zero;
+
+            _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
+        }
+
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
             {
                 transform.SetParent(screwBoxSlot.transform);
+
+                transform.localPosition = transform.localPosition.ChangeZ(-10);
 
                 _isRotating = false;
 
@@ -405,9 +418,16 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             destination.y = 0;
 
+            destination.x = 0.5f * GamePersistentVariable.screenSizeWorld.x;
+            destination.y = 0.22f * GamePersistentVariable.screenSizeWorld.y;
+
             _tweens.Add(Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>
             {
                 // InvokeScrewLoosenedEvent();
+
+                GamePersistentVariable.numOutsideScrew++;
+
+                updateOutsideScrewNumberEvent?.Invoke();
 
                 screwServiceLocator.screwMeshRenderer.enabled = false;
 

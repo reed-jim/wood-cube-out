@@ -54,6 +54,7 @@ public class ScrewManager : MonoBehaviour
     public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action<bool> enableBoosterEvent;
     public static event Action levelSetupCompletedEvent;
+    public static event Action updateOutsideScrewNumberEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -123,6 +124,9 @@ public class ScrewManager : MonoBehaviour
         _isHandlingOutsideScrews = false;
 
         GamePersistentVariable.numScrewBoxUnlocked = 0;
+        GamePersistentVariable.numOutsideScrew = 0;
+
+        updateOutsideScrewNumberEvent.Invoke();
 
         if (_handlingOutsideScrewCoroutine != null)
         {
@@ -409,6 +413,9 @@ public class ScrewManager : MonoBehaviour
 
         if (remainingScrew == 0)
         {
+            GamePersistentVariable.numOutsideScrew = 0;
+            
+            updateOutsideScrewNumberEvent?.Invoke();
             enableBoosterEvent?.Invoke(false);
 
             await Task.Delay((int)(delayShowPopupWin * 1000));
@@ -775,6 +782,8 @@ public class ScrewManager : MonoBehaviour
             return;
         }
 
+        bool isFound = false;
+
         for (int i = 0; i < _screws.Count; i++)
         {
             BaseScrew screw = _screws[i];
@@ -794,8 +803,20 @@ public class ScrewManager : MonoBehaviour
                     screw.Loose(screw.ScrewId, faction, screwBoxSlot);
 
                     screw.IsOutsideWithNoScrewBox = false;
+
+                    if (!isFound)
+                    {
+                        isFound = true;
+                    }
+
+                    GamePersistentVariable.numOutsideScrew--;
                 }
             }
+        }
+
+        if (isFound)
+        {
+            updateOutsideScrewNumberEvent?.Invoke();
         }
 
         // _remainingHandleOutsideScrewCommands--;
