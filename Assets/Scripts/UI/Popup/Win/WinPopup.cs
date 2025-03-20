@@ -17,6 +17,7 @@ public class WinPopup : BasePopup
     [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -27,6 +28,7 @@ public class WinPopup : BasePopup
     [SerializeField] private float timeCollectCoin;
 
     private bool _isCollectCoinRemoteConfig;
+    private int _multiplierCoinWinLevel;
     private int _currentCollectedCoin;
     private bool _isAlreadyWatchRewardedAd;
 
@@ -38,29 +40,18 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent += OnLevelWinAsync;
         DebugPopup.winLevelEvent += OnLevelWinAsync;
+        localizedMultiplyCoinText.textTranslatedEvent += OnMultiplyCoinTextTranslated;
 
         continueButton.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
         x5CoinButton.onClick.AddListener(X5Coin);
-
-        // // Remote Config collect coin win level 
-        // if (!DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, false))
-        // {
-        //     _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
-
-        //     DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL_SET, true);
-        //     DataUtility.Save(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, _isCollectCoinRemoteConfig);
-        // }
-        // else
-        // {
-        //     _isCollectCoinRemoteConfig = DataUtility.Load(GameConstants.IS_COLLECT_COIN_WIN_LEVEL, false);
-        // }
     }
 
     protected override void UnregisterMoreEvent()
     {
         GameStateWin.winLevelEvent -= OnLevelWinAsync;
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
+        localizedMultiplyCoinText.textTranslatedEvent -= OnMultiplyCoinTextTranslated;
     }
 
     private async void OnLevelWinAsync()
@@ -76,15 +67,20 @@ public class WinPopup : BasePopup
 
         x5CoinButton.transform.localScale = Vector3.one;
 
-        _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
-
         // REMOTE CONFIG IS COLLECT COIN
+        _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, false);
+        _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 5);
+
         coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
 
         if (!_isCollectCoinRemoteConfig)
         {
             continueButton.GetComponent<RectTransform>().localPosition += new Vector3(0, 80, 0);
+        }
+        else
+        {
+            localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
         }
         //
 
@@ -196,7 +192,7 @@ public class WinPopup : BasePopup
             ))
         );
 
-        CollectCoin(50);
+        CollectCoin(_multiplierCoinWinLevel * 10);
 
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
@@ -206,6 +202,11 @@ public class WinPopup : BasePopup
     private void ShowAdsNotLoadedPopup()
     {
         InvokeShowAdNotLoadedPopupEvent();
+    }
+
+    private void OnMultiplyCoinTextTranslated()
+    {
+        localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
     }
     #endregion
 

@@ -303,7 +303,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                 }
 
                 _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-                _tweens.Add(Tween.Scale(transform, 1.2f * scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
                 _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
                 .OnComplete(() =>
                 {

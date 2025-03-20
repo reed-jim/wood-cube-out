@@ -68,8 +68,6 @@ namespace Lean.Localization
 				textMeshPro.text = LeanTranslation.FormatText(FallbackText, textMeshPro.text, this, gameObject);
 			}
 
-
-
 			StringBuilder pattern = new StringBuilder();
 
 			pattern.Append("{");
