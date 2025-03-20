@@ -19,6 +19,7 @@ public static class GamePersistentVariable
     public static Dictionary<int, List<Transform>> pieceDependencies;
     public static Vector3 levelOffset;
     public static Vector3 boxForOutsideScrewScreenPosition;
+    public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
     #region AUTO TEST

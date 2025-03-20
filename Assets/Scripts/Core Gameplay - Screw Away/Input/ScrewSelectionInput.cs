@@ -117,7 +117,9 @@ public class ScrewSelectionInput : MonoBehaviour
 
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
+        RaycastHit hit;
+
+        Physics.Raycast(ray, out hit, maxDistance: 999);
 
         if (hit.collider != null)
         {
@@ -125,6 +127,15 @@ public class ScrewSelectionInput : MonoBehaviour
 
             if (screw != null)
             {
+                RaycastHit surfaceHit;
+
+                Physics.Raycast(hit.transform.position + hit.transform.forward, -hit.transform.forward, out surfaceHit, 3, LayerMask.GetMask("Default"));
+
+                if (surfaceHit.collider != null)
+                {
+                    GamePersistentVariable.lastScrewSelectedSurfaceHit = surfaceHit;
+                }
+
                 screw.Select();
 
                 selectScrewEvent?.Invoke();
@@ -150,7 +161,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
+        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMask: LayerMask.GetMask("Default"));
 
         if (hit.collider != null)
         {
