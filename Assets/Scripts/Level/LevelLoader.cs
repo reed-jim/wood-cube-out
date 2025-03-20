@@ -262,7 +262,10 @@ public class LevelLoader : MonoBehaviour
                     DelayShowBoosterSuggest();
                 }
 
-                DelayShowIAPSuggestion();
+                if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                {
+                    DelayShowIAPSuggestion();
+                }
             }
         };
 
@@ -643,6 +646,38 @@ public class LevelLoader : MonoBehaviour
     #region BOOSTER SUGGESTION
     private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
     {
+        // if (isLoopLevel)
+        // {
+        //     return false;
+        // }
+
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, true);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+
+        if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (level <= 3 || level % numLevelShowBoosterSuggestion == 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsShowIAPSuggestion(int level, bool isLoopLevel)
+    {
+        bool isBoughtHotDeal = DataUtility.Load(GameConstants.IS_BOUGHT_HOT_DEAL, false);
+
+        if (isBoughtHotDeal)
+        {
+            return false;
+        }
+
+        return level > 10;
+
         // if (isLoopLevel)
         // {
         //     return false;
