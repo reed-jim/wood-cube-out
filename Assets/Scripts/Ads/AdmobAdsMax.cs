@@ -367,7 +367,10 @@ public class AdmobAdsMax : MonoBehaviour
 
         _isTryLoadAdmobBanner = true;
 
-        _bannerView.LoadAd(bannerHomeLoadRequest);
+        if (_bannerView != null)
+        {
+            _bannerView.LoadAd(bannerHomeLoadRequest);
+        }
     }
 
     public void LoadBannerAdmob()

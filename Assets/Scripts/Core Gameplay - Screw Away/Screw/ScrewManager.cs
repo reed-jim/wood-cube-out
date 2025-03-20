@@ -126,8 +126,6 @@ public class ScrewManager : MonoBehaviour
         GamePersistentVariable.numScrewBoxUnlocked = 0;
         GamePersistentVariable.numOutsideScrew = 0;
 
-        updateOutsideScrewNumberEvent.Invoke();
-
         if (_handlingOutsideScrewCoroutine != null)
         {
             StopCoroutine(_handlingOutsideScrewCoroutine);

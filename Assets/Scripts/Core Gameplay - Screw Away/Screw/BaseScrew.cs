@@ -267,11 +267,17 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         if (IsOutsideWithNoScrewBox)
         {
-            Vector3 initialScale = transform.localScale;
+            Vector3 destination = _mainCamera.ScreenToWorldPoint(GamePersistentVariable.boxForOutsideScrewScreenPosition);
 
-            transform.localScale = Vector3.zero;
+            destination.z = transform.position.z;
 
-            _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
+            transform.position = destination;
+
+            // Vector3 initialScale = transform.localScale;
+
+            // transform.localScale = Vector3.zero;
+
+            // _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
         }
 
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
@@ -280,7 +286,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             {
                 transform.SetParent(screwBoxSlot.transform);
 
-                transform.localPosition = transform.localPosition.ChangeZ(-10);
+                transform.localPosition = transform.localPosition.ChangeZ(-6);
 
                 _isRotating = false;
 
@@ -405,21 +411,9 @@ public class BaseScrew : MonoBehaviour, IScrew
         _tweens.Add(Tween.Position(transform, transform.position + 3f * transform.forward, duration: 0.3f)
         .OnComplete(() =>
         {
-            Vector3 destination = transform.position;
+            Vector3 destination = _mainCamera.ScreenToWorldPoint(GamePersistentVariable.boxForOutsideScrewScreenPosition);
 
-            if (transform.position.x > 0)
-            {
-                destination.x = 15;
-            }
-            else
-            {
-                destination.x = -15;
-            }
-
-            destination.y = 0;
-
-            destination.x = 0.5f * GamePersistentVariable.screenSizeWorld.x;
-            destination.y = 0.22f * GamePersistentVariable.screenSizeWorld.y;
+            destination.z = transform.position.z;
 
             _tweens.Add(Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>
             {
