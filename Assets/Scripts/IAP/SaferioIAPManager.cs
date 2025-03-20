@@ -276,7 +276,13 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             }
         }
 
-        GamePersistentVariable.IAPAddition = 0;
+
+        if (GamePersistentVariable.IAPAddition > 0)
+        {
+            DataUtility.Save(GameConstants.IS_BOUGHT_HOT_DEAL, true);
+
+            GamePersistentVariable.IAPAddition = 0;
+        }
 
         return PurchaseProcessingResult.Complete;
     }

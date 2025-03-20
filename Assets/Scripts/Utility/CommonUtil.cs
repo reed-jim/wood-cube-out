@@ -131,4 +131,13 @@ public static class CommonUtil
 
         return new Vector2(screenWidth, screenHeight);
     }
+
+    public static Vector2 GetScreenSizeWorld(Camera camera, float orthographicSize)
+    {
+        float orthoSize = orthographicSize;
+        float screenHeight = orthoSize * 2;
+        float screenWidth = screenHeight * camera.aspect;
+
+        return new Vector2(screenWidth, screenHeight);
+    }
 }
