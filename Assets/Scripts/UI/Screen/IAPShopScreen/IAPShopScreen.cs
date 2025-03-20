@@ -29,6 +29,8 @@ public class IAPShopScreen : UIScreen
         base.Show();
 
         fetchLocalizedPriceIAPEvent?.Invoke();
+
+        GamePersistentVariable.IAPLocation = "IAP Screen Menu";
     }
 
     // void Start()

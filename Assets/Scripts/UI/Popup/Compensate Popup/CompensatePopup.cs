@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using TMPro;
-using Unity.Android.Gradle;
 using UnityEngine;
 using UnityEngine.UI;
 

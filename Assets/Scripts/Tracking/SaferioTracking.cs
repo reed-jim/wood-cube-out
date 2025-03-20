@@ -112,6 +112,7 @@ public static class SaferioTracking
         Parameter[] parameters =
         {
             new Parameter("product_id", productId),
+            new Parameter("iap_location", GamePersistentVariable.IAPLocation)
         };
 
         FirebaseAnalytics.LogEvent("buy_iap", parameters);
@@ -124,6 +125,7 @@ public static class SaferioTracking
         Parameter[] parameters =
         {
             new Parameter("product_id", productId),
+            new Parameter("iap_location", GamePersistentVariable.IAPLocation)
         };
 
         FirebaseAnalytics.LogEvent("start_buy_iap", parameters);
@@ -277,7 +279,8 @@ public static class SaferioTracking
             new Parameter("level", level.ToString()),
             new Parameter("value", value),
             new Parameter("currency", currency),
-            new Parameter("product_id", productId)
+            new Parameter("product_id", productId),
+            new Parameter("iap_location", GamePersistentVariable.IAPLocation)
         };
 
         FirebaseAnalytics.LogEvent("iap_sdk", parameters);

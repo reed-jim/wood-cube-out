@@ -38,6 +38,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPShopItem.buyIAPEvent += BuyProduct;
         RemoveAdPopup.buyIAPEvent += BuyProduct;
         IAPReviewPopup.buyIAPEvent += BuyProduct;
+        IAPSuggestionPopup.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
@@ -72,6 +73,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPShopItem.buyIAPEvent -= BuyProduct;
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
         IAPReviewPopup.buyIAPEvent -= BuyProduct;
+        IAPSuggestionPopup.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
@@ -233,11 +235,21 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                     {
                         // collectCoinEvent?.Invoke(productData.CoinQuantity);
 
-                        userResourcesObserver.ChangeBoosterQuantity(0, productData.AddHoleBoosterQuantity);
-                        userResourcesObserver.ChangeBoosterQuantity(1, productData.BreakObjectBoosterQuantity);
-                        userResourcesObserver.ChangeBoosterQuantity(2, productData.ClearHolesBoosterQuantity);
+                        int multiplier = 1 + GamePersistentVariable.IAPAddition;
 
-                        userResourcesObserver.ChangeCoin(productData.CoinQuantity);
+                        int coinQuantity = multiplier * productData.CoinQuantity;
+
+                        int[] boosterQuantites = new int[3] {
+                            multiplier * productData.AddHoleBoosterQuantity,
+                            multiplier * productData.BreakObjectBoosterQuantity,
+                            multiplier * productData.ClearHolesBoosterQuantity
+                        };
+
+                        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+                        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+                        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+
+                        userResourcesObserver.ChangeCoin(coinQuantity);
 
                         if (productData.IsRemoveAd)
                         {
@@ -246,12 +258,6 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                             UserData.IsRemoveAds = true;
                         }
-
-                        int[] boosterQuantites = new int[3] {
-                            productData.AddHoleBoosterQuantity,
-                            productData.BreakObjectBoosterQuantity,
-                            productData.ClearHolesBoosterQuantity
-                        };
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
@@ -262,13 +268,15 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                         //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
                         // });
 
-                        showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+                        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
 
                         break;
                     }
                 }
             }
         }
+
+        GamePersistentVariable.IAPAddition = 0;
 
         return PurchaseProcessingResult.Complete;
     }

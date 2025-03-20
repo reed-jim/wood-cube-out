@@ -26,7 +26,7 @@ public class UserResourcesObserver : ScriptableObject
 
         defaultUserResources.CoinQuantity = 100;
         defaultUserResources.BoosterQuantities = new int[3];
-        
+
         for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
         {
             defaultUserResources.BoosterQuantities[i] = 1;
@@ -40,6 +40,7 @@ public class UserResourcesObserver : ScriptableObject
         Load();
 
         userResources.CoinQuantity += value;
+        userResources.CoinQuantity = Mathf.Max(userResources.CoinQuantity, 0);
 
         Save();
     }
