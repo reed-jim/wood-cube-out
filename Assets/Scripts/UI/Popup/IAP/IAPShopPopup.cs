@@ -42,6 +42,8 @@ public class IAPShopPopup : BasePopup
         base.Show(onCompletedAction);
 
         fetchLocalizedPriceIAPEvent?.Invoke();
+
+        GamePersistentVariable.IAPLocation = "IAP Shop Gameplay";
     }
 
     private void ShowAndScrollToCoinPack(ScreenRoute prevRoute)

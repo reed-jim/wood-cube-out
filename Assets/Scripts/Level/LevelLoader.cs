@@ -111,14 +111,14 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // if (isLoopLevel)
-        // {
-        //     showSceneTransitionEvent?.Invoke();
-        //     setIsLevelLoadedEvent?.Invoke();
-        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        if (isLoopLevel)
+        {
+            showSceneTransitionEvent?.Invoke();
+            setIsLevelLoadedEvent?.Invoke();
+            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-        //     return;
-        // }
+            return;
+        }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -188,6 +188,8 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 _isNotAutoCenterLevel = false;
+
+                level.transform.position = Vector3.zero;
 
                 if (!_isNotAutoCenterLevel)
                 {
@@ -259,6 +261,8 @@ public class LevelLoader : MonoBehaviour
                 {
                     DelayShowBoosterSuggest();
                 }
+
+                DelayShowIAPSuggestion();
             }
         };
 
@@ -667,6 +671,16 @@ public class LevelLoader : MonoBehaviour
         _tweens.Add(Tween.Delay(3).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
+        }));
+    }
+
+    private void DelayShowIAPSuggestion()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
         }));
     }
     #endregion

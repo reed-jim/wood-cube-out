@@ -33,7 +33,8 @@ public class GameEnum : MonoBehaviour
         LevelComingSoon,
         BoosterSuggest,
         IAPReview,
-        Compensate
+        Compensate,
+        IAPSuggestion
     }
 
     public enum GameFaction
