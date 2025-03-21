@@ -80,7 +80,14 @@ public class WinPopup : BasePopup
         }
         else
         {
-            localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
+            localizedMultiplyCoinText.transform.localScale = Vector3.zero;
+
+            _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
+            {
+                localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
+
+                _tweens.Add(Tween.Scale(localizedMultiplyCoinText.transform, 1, duration: 0.3f));
+            }));
         }
         //
 
@@ -206,7 +213,7 @@ public class WinPopup : BasePopup
 
     private void OnMultiplyCoinTextTranslated()
     {
-        localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
+        // localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
     }
     #endregion
 
