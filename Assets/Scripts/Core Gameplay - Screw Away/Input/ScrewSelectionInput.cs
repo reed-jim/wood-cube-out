@@ -15,6 +15,7 @@ public class ScrewSelectionInput : MonoBehaviour
     #region PRIVATE FIELD
     private Camera _mainCamera;
     [SerializeField] private InputMode _inputMode;
+    private InputMode _prevInputMode;
     private List<Vector3> twoTouchPoints;
     private bool _isSelectObjectPart;
     private bool _isSelectingObjectPart;
@@ -183,6 +184,7 @@ public class ScrewSelectionInput : MonoBehaviour
                     await Task.Delay(500);
 
                     _inputMode = InputMode.Select;
+                    _prevInputMode = _inputMode;
                 }
                 else
                 {
@@ -197,18 +199,20 @@ public class ScrewSelectionInput : MonoBehaviour
     private void EnableBreakObjectMode()
     {
         _inputMode = InputMode.BreakObject;
+        _prevInputMode = _inputMode;
     }
 
     private void DisableBreakObjectMode()
     {
         _inputMode = InputMode.Select;
+        _prevInputMode = _inputMode;
     }
 
     private void EnableInput(bool isEnable)
     {
         if (isEnable)
         {
-            _inputMode = InputMode.Select;
+            _inputMode = _prevInputMode;
         }
         else
         {
