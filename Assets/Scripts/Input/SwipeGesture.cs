@@ -65,8 +65,6 @@ public class SwipeGesture : MonoBehaviour
             {
                 _moveDirection = mousePosition - _lastPosition;
 
-                // _moveDirection *= acceleratedMultiplier;
-
                 if (_moveDirection.magnitude < threshold)
                 {
                     return;
@@ -77,8 +75,6 @@ public class SwipeGesture : MonoBehaviour
                 _lastPosition = mousePosition;
 
                 _isSwipingLastFrame = true;
-
-                // acceleratedMultiplier += 0.01f;
             }
         }
         else
@@ -90,15 +86,6 @@ public class SwipeGesture : MonoBehaviour
                 _isSwipingLastFrame = false;
             }
 
-            // _notSwipingDuration += Time.deltaTime;
-
-            // if (_notSwipingDuration > 3)
-            // {
-            //     acceleratedMultiplier = 1;
-            //     _notSwipingDuration = 0;
-            // }
-
-            // acceleratedMultiplier = 1;
             _isLastPositionExist = false;
         }
     }
