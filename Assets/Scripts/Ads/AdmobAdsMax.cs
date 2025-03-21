@@ -987,11 +987,14 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
-        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
+        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "Gameplay")
         {
             if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
             {
                 // COMPLETE: Show an app open ad if available.
+
+                GamePersistentVariable.currentLevel = currentLevel.Value;
+
                 AppOpenAdManager.Instance.ShowAdIfAvailable();
                 oldTime = DateTime.Now;
                 countdownAds = 0;
