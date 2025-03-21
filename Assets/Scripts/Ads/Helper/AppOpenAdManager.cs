@@ -92,7 +92,7 @@ public class AppOpenAdManager
     }
 
     public void ShowAdIfAvailable()
-    {  
+    {
         if (UserData.IsRemoveAds)
         {
             return;
@@ -146,33 +146,13 @@ public class AppOpenAdManager
 
     private void HandlePaidEvent(AdValue adValue)
     {
-        Debug.LogFormat("Received paid event. (currency: {0}, value: {1}",
-            adValue.CurrencyCode, adValue.Value);
+        var revenue = adValue.Value / 1000000d;
 
-        //try
-        //{
-        //    if (adValue == null) return;
-        //    double value = adValue.Value * 0.000001f;
+        AppFlyerGplay.LogRevenue("app_open", "admob", "app_open_ads", "app_open_ads", revenue, "USD");
 
-        //    Firebase.Analytics.Parameter[] adParameters =
-        //    {
-        //             new Firebase.Analytics.Parameter("ad_source", "admob"),
-        //             new Firebase.Analytics.Parameter("ad_format", "app_open_ads"),
-        //             new Firebase.Analytics.Parameter("currency","USD"),
-        //             new Firebase.Analytics.Parameter("value", value)
-        //        };
-        //    FirebaseAnalytics.LogEvent("ad_impression", adParameters);
-
-        //    var dic = new Dictionary<string, string>
-        //        {
-        //            { "ad_format", "app_open_ads" }
-        //        };
-        //    AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob, value, "USD", dic);
-        //}
-        //catch
-        //{
-
-        //}
-
+        AnalyticsController.LogAdsRevenue("ad_impression", GamePersistentVariable.currentLevel, "admob", "app_open_ads",
+            "app_open_ads", revenue, "USD");
+        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", GamePersistentVariable.currentLevel, "admob".ToLower(),
+            "app_open_ads", "app_open_ads", revenue, "USD");
     }
 }
