@@ -253,15 +253,16 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             Color factionColor = FactionUtility.GetColorForFaction(Faction);
 
-            looseScrewFxMain.startColor = 1.5f * factionColor;
-            ringFxMain.startColor = 1.5f * factionColor;
+            looseScrewFxMain.startColor = 1.2f * factionColor;
+            ringFxMain.startColor = 1.2f * factionColor;
 
             looseScrewFx.gameObject.SetActive(true);
 
-            looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
+            // looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
             looseScrewFx.transform.rotation = transform.rotation;
 
-            ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.02f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
+            looseScrewFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
+            ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
 
             looseScrewFx.Play();
         }
