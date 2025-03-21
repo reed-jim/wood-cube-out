@@ -32,6 +32,7 @@ public class ScrewBox : MonoBehaviour
     public static event Action<ScrewBox> setFactionForScrewBoxEvent;
     public static event Action<ScrewBox> screwBoxUnlockedEvent;
     public static event Action shakeCameraEvent;
+    public static event Action<Color> playFullscreenEffectEvent;
     #endregion
 
     #region PRIVATE FIELD
@@ -131,6 +132,8 @@ public class ScrewBox : MonoBehaviour
                 {
                     HapticFeedback.HeavyFeedback();
                 }
+
+                playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
             })
             .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
             .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
