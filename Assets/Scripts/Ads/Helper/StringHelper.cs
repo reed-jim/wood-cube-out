@@ -427,6 +427,7 @@ public class FirebaseConfig
     public const string REMOVE_ADS_CODE = "remove_ads_code";
     public const string BIG_REWARD_CODE = "big_reward_code";
     public const string VALID_DEVICE_UNIQUE_IDENTIFIERS = "valid_device_unique_identifiers";
+    public const string TARGET_FPS = "target_fps";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

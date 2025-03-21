@@ -10,11 +10,11 @@ public class FirebaseCloudMessagingManager : MonoBehaviour
 
     public void OnTokenReceived(object sender, Firebase.Messaging.TokenReceivedEventArgs token)
     {
-        UnityEngine.Debug.Log("SAFERIO Received Registration Token: " + token.Token);
+        // UnityEngine.Debug.Log("SAFERIO Received Registration Token: " + token.Token);
     }
 
     public void OnMessageReceived(object sender, Firebase.Messaging.MessageReceivedEventArgs e)
     {
-        UnityEngine.Debug.Log("SAFERIO Received a new message from: " + e.Message.From);
+        // UnityEngine.Debug.Log("SAFERIO Received a new message from: " + e.Message.From);
     }
 }

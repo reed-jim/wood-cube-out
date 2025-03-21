@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class FPSTargetManager : MonoBehaviour
 {
-    private void Awake()
+    void Start()
     {
-        Application.targetFrameRate = 120;
+        Application.targetFrameRate = 90;
     }
 }
