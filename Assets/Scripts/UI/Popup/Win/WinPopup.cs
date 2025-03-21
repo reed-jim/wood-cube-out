@@ -97,6 +97,8 @@ public class WinPopup : BasePopup
 
         await Task.Delay(500);
 
+        _currentCollectedCoin = 0;
+
         CollectCoin(10);
 
         TrackLevelWin();
@@ -110,7 +112,6 @@ public class WinPopup : BasePopup
 
         currentLevel.Save();
 
-        _currentCollectedCoin = 0;
         _isAlreadyWatchRewardedAd = false;
     }
 

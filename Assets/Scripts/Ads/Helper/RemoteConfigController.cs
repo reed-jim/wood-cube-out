@@ -391,7 +391,7 @@ public class RemoteConfigController : MonoBehaviour
 
         GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
 
-        int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 90);
+        int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);
 
         Application.targetFrameRate = targetFPS;
     }

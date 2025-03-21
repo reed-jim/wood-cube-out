@@ -28,6 +28,7 @@
     <type fullname="FirebaseManager" preserve="all" />
     <type fullname="FPSTargetManager" preserve="all" />
     <type fullname="GameController" preserve="all" />
+    <type fullname="GameGraphicSetting" preserve="all" />
     <type fullname="GameLeaderboardManager" preserve="all" />
     <type fullname="GameLoading" preserve="all" />
     <type fullname="GameNotificationManager" preserve="all" />
@@ -38,21 +39,18 @@
     <type fullname="GameSetting" preserve="all" />
     <type fullname="GameSettingManager" preserve="all" />
     <type fullname="GameStateMachine" preserve="all" />
-    <type fullname="GameTaskManager" preserve="all" />
     <type fullname="GameVariableInitializer" preserve="all" />
     <type fullname="IAPCoinItemUI" preserve="all" />
     <type fullname="IAPDataContainer" preserve="all" />
     <type fullname="IAPPackageData" preserve="all" />
     <type fullname="IAPPackageUI" preserve="all" />
     <type fullname="IAPReviewPopup" preserve="all" />
-    <type fullname="IAPShopItem" preserve="all" />
     <type fullname="IAPShopPopup" preserve="all" />
     <type fullname="IAPShopScreen" preserve="all" />
     <type fullname="IAPSuggestionPopup" preserve="all" />
     <type fullname="InAppReviewManager" preserve="all" />
     <type fullname="IntVariable" preserve="all" />
     <type fullname="LevelBoosterObserver" preserve="all" />
-    <type fullname="LevelComingSoonPopup" preserve="all" />
     <type fullname="LevelDataContainer" preserve="all" />
     <type fullname="LevelDifficultyConfiguration" preserve="all" />
     <type fullname="LevelDiffucultyCalculatorObject" preserve="all" />
@@ -62,7 +60,6 @@
     <type fullname="LevelTransformManualModifier" preserve="all" />
     <type fullname="LevelTutorial" preserve="all" />
     <type fullname="LosePopup" preserve="all" />
-    <type fullname="LuckyWheelScreen" preserve="all" />
     <type fullname="MenuScreen" preserve="all" />
     <type fullname="MultiPhaseLevelData" preserve="all" />
     <type fullname="MultiPhaseLevelDataContainer" preserve="all" />
@@ -117,7 +114,6 @@
     <type fullname="ScriptableObjectInitializer" preserve="all" />
     <type fullname="SegmentController" preserve="all" />
     <type fullname="SettingPopup" preserve="all" />
-    <type fullname="SimpleSceneTransition" preserve="all" />
     <type fullname="SingletonManager" preserve="all" />
     <type fullname="SlideTransition" preserve="all" />
     <type fullname="SoundManager" preserve="all" />
@@ -227,7 +223,13 @@
   <assembly fullname="Unity.RenderPipelines.Universal.Runtime, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.Rendering.Universal.UniversalAdditionalCameraData" preserve="all" />
     <type fullname="UnityEngine.Rendering.Universal.UniversalAdditionalLightData" preserve="all" />
+    <type fullname="UnityEngine.Rendering.Universal.UniversalRendererData" preserve="all" />
+    <type fullname="UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset" preserve="all" />
     <type fullname="UnityEngine.Rendering.Universal.TemporalAA/Settings" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.Universal.ScriptableRendererData/DebugShaderResources" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.Universal.ScriptableRendererData/ProbeVolumeResources" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.Universal.StencilStateData" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.Universal.UniversalRenderPipelineAsset/TextureResources" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="Unity.ResourceManager, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null" preserve="all">
     <type fullname="UnityEngine.ResourceManagement.ResourceProviders.AssetBundleProvider" preserve="all" />
@@ -278,6 +280,7 @@
     <type fullname="UnityEngine.Transform" preserve="all" />
     <type fullname="UnityEngine.Events.PersistentCallGroup" preserve="nothing" serialized="true" />
     <type fullname="UnityEngine.RectOffset" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Bounds" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="UnityEngine.ParticleSystemModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null">
     <type fullname="UnityEngine.ParticleSystem" preserve="all" />
@@ -320,6 +323,13 @@
     <type fullname="UnityEngine.Canvas" preserve="all" />
     <type fullname="UnityEngine.CanvasGroup" preserve="all" />
     <type fullname="UnityEngine.CanvasRenderer" preserve="all" />
+  </assembly>
+  <assembly fullname="Unity.RenderPipelines.Core.Runtime">
+    <type fullname="UnityEngine.Rendering.ProbeVolumeBlendingTextureMemoryBudget" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.ProbeVolumeSceneData" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.ProbeVolumeSHBands" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.ProbeVolumeTextureMemoryBudget" preserve="nothing" serialized="true" />
+    <type fullname="UnityEngine.Rendering.SerializedDictionary`2" preserve="nothing" serialized="true" />
   </assembly>
   <assembly fullname="UnityEngine.TextCoreFontEngineModule">
     <type fullname="UnityEngine.TextCore.FaceInfo" preserve="nothing" serialized="true" />
