@@ -30,7 +30,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.0048f;
+        rotateSpeedMultiplier = 0.0042f;
         _acceleratedMultiplier = 1;
 
         // if (!isDisableAutoRotatingAtStart)

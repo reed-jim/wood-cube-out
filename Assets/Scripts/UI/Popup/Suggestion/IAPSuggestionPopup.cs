@@ -105,7 +105,7 @@ public class IAPSuggestionPopup : BasePopup
     {
         List<RectTransform> validResourceGroups = new List<RectTransform>();
 
-        if (isRemoveAd)
+        if (isRemoveAd && !UserData.IsRemoveAds)
         {
             validResourceGroups.Add(resourceGroups[0]);
         }

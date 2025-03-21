@@ -4,6 +4,6 @@ public class FPSTargetManager : MonoBehaviour
 {
     void Start()
     {
-        Application.targetFrameRate = 90;
+        Application.targetFrameRate = 120;
     }
 }
