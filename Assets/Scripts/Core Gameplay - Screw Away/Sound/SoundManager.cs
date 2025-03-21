@@ -51,7 +51,7 @@ public class SoundManager : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.AudioVolume(backgroundMusic, isEnable ? 0.2f : 0, duration: 0.3f));
+        _tweens.Add(Tween.AudioVolume(backgroundMusic, isEnable ? 0.5f : 0, duration: 0.3f));
 
         // backgroundMusic.enabled = isEnable;
 
@@ -201,7 +201,7 @@ public class SoundManager : MonoBehaviour
 
     private void FadeOutBackgroundMusic()
     {
-        _tweens.Add(Tween.Custom(0.2f, 0, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0.5f, 0, duration: 0.3f, onValueChange: newVal =>
         {
             backgroundMusic.volume = newVal;
         }));
@@ -209,7 +209,7 @@ public class SoundManager : MonoBehaviour
 
     private void FadeInBackgroundMusic()
     {
-        _tweens.Add(Tween.Custom(0, 0.2f, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0, 0.5f, duration: 0.3f, onValueChange: newVal =>
         {
             backgroundMusic.volume = newVal;
         }));
