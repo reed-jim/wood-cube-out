@@ -30,7 +30,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.0042f;
+        rotateSpeedMultiplier = 0.0048f;
         _acceleratedMultiplier = 1;
 
         // if (!isDisableAutoRotatingAtStart)
@@ -45,15 +45,10 @@ public class RotateObject : MonoBehaviour
 
     void Update()
     {
-        if (Mathf.Abs(_pitch) > 0.01f || Mathf.Abs(_yaw) > 0.01f)
+        if (Mathf.Abs(_pitch) > 0.001f || Mathf.Abs(_yaw) > 0.001f)
         {
-            Quaternion cachedRotation = transform.rotation;
-
             transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
             transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
-
-            // _targetRotation = transform.rotation;
-            // transform.rotation = cachedRotation;
 
             _rotateLerpStep = 0;
             _isRotating = true;

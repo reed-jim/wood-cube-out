@@ -120,7 +120,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
         RaycastHit hit;
 
-        Physics.Raycast(ray, out hit, maxDistance: 999);
+        Physics.Raycast(ray, out hit, maxDistance: 999, LayerMask.GetMask("Screw"));
 
         if (hit.collider != null)
         {
