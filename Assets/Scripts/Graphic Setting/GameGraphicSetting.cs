@@ -34,6 +34,15 @@ public class GameGraphicSetting : MonoBehaviour
                 {
                     urpAsset.msaaSampleCount = 0;
                 }
+
+                if (SystemInfo.systemMemorySize > 5000)
+                {
+                    urpAsset.renderScale = 0.9f;
+                }
+                else
+                {
+                    urpAsset.renderScale = 0.7f;
+                }
             }
         }
         catch (System.Exception e)

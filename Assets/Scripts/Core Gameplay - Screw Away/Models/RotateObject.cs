@@ -31,7 +31,7 @@ public class RotateObject : MonoBehaviour
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.0042f;
-        _acceleratedMultiplier = 1;
+        // _acceleratedMultiplier = 1;
 
         // if (!isDisableAutoRotatingAtStart)
         // {
@@ -53,30 +53,17 @@ public class RotateObject : MonoBehaviour
             _rotateLerpStep = 0;
             _isRotating = true;
         }
-        else
-        {
-            if (_acceleratedMultiplier > 1)
-            {
-                _resetAccelerationTime++;
-
-                if (_resetAccelerationTime > MAX_TICK_RESET_ACCELERATE)
-                {
-                    _acceleratedMultiplier = 1;
-                    _resetAccelerationTime = 0;
-                }
-            }
-        }
-
-        // if (_isRotating)
+        // else
         // {
-        //     transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 8f);
-
-        //     _rotateLerpStep++;
-
-        //     if (_rotateLerpStep >= 8)
+        //     if (_acceleratedMultiplier > 1)
         //     {
-        //         _rotateLerpStep = 0;
-        //         _isRotating = false;
+        //         _resetAccelerationTime++;
+
+        //         if (_resetAccelerationTime > MAX_TICK_RESET_ACCELERATE)
+        //         {
+        //             _acceleratedMultiplier = 1;
+        //             _resetAccelerationTime = 0;
+        //         }
         //     }
         // }
 
@@ -100,11 +87,14 @@ public class RotateObject : MonoBehaviour
         _pitch = direction.y;
         _yaw = -direction.x * 1.15f;
 
+        _pitch = Mathf.Clamp(_pitch, -100, 100);
+        _yaw = Mathf.Clamp(_yaw, -100, 100);
+
         _isAutoRotating = false;
         _remainingTimeToAutoRotate = 20;
 
-        _acceleratedMultiplier += ACCELERATE_RATE;
-        _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
+        // _acceleratedMultiplier += ACCELERATE_RATE;
+        // _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
         _resetAccelerationTime = 0;
     }
 

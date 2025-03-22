@@ -707,29 +707,6 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        // int currentSortedFactionIndex = 0;
-
-        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        // {
-        // GameFaction faction = factionSortedByDifficulty[i];
-
-        // if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
-        // {
-        //     continue;
-        // }
-
-        // if (difficultyLevel == currentSortedFactionIndex)
-        // {
-        //     nextFaction = faction;
-
-        //     isFound = true;
-
-        //     break;
-        // }
-
-        //     currentSortedFactionIndex++;
-        // }
-
         if (!isFound)
         {
             for (int i = 0; i < factionSortedByDifficulty.Length; i++)
@@ -771,14 +748,14 @@ public class ScrewManager : MonoBehaviour
             {
                 _isHandlingOutsideScrews = true;
 
-                HandleOutsideScrews();
+                yield return HandleOutsideScrews();
             }
 
             yield return waitForSeconds;
         }
     }
 
-    private void HandleOutsideScrews()
+    private async Task HandleOutsideScrews()
     {
         if (_screws == null)
         {
@@ -789,31 +766,43 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            BaseScrew screw = _screws[i];
-
-            if (screw.IsOutsideWithNoScrewBox && !screw.IsMoving)
+            if (i % 6 == 0 && i > 0)
             {
-                GameFaction faction = screw.Faction;
+                await Task.Delay(100);
+            }
 
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
+            try
+            {
+                BaseScrew screw = _screws[i];
 
-                if (screwBoxSlot != null)
+                if (screw.IsOutsideWithNoScrewBox && !screw.IsMoving)
                 {
-                    screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
+                    GameFaction faction = screw.Faction;
 
-                    screw.IsInteractable = true;
+                    ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
 
-                    screw.Loose(screw.ScrewId, faction, screwBoxSlot);
-
-                    screw.IsOutsideWithNoScrewBox = false;
-
-                    if (!isFound)
+                    if (screwBoxSlot != null)
                     {
-                        isFound = true;
-                    }
+                        screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
-                    GamePersistentVariable.numOutsideScrew--;
+                        screw.IsInteractable = true;
+
+                        screw.Loose(screw.ScrewId, faction, screwBoxSlot);
+
+                        screw.IsOutsideWithNoScrewBox = false;
+
+                        if (!isFound)
+                        {
+                            isFound = true;
+                        }
+
+                        GamePersistentVariable.numOutsideScrew--;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+
             }
         }
 
