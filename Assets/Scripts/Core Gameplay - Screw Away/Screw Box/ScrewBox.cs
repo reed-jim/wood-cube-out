@@ -36,7 +36,7 @@ public class ScrewBox : MonoBehaviour
     #endregion
 
     #region PRIVATE FIELD
-    private List<Tween> _tweens;
+    private List<Sequence> _sequences;
     private Vector3 _initialScale;
     private bool _isInTransition;
     #endregion
@@ -75,7 +75,7 @@ public class ScrewBox : MonoBehaviour
         ScrewBoxSlot.screwBoxCompleteEvent += OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox += Unlock;
 
-        _tweens = new List<Tween>();
+        _sequences = new List<Sequence>();
 
         boxLid.gameObject.SetActive(false);
 
@@ -88,7 +88,7 @@ public class ScrewBox : MonoBehaviour
         ScrewBoxSlot.screwBoxCompleteEvent -= OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox -= Unlock;
 
-        CommonUtil.StopAllTweens(_tweens);
+        CommonUtil.StopAllSequences(_sequences);
     }
 
     private void OnScrewBoxCameraSet(Camera screwBoxCamera)
@@ -122,32 +122,65 @@ public class ScrewBox : MonoBehaviour
 
             boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
-            Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
-            .OnComplete(() =>
-            {
-                shakeCameraEvent?.Invoke();
-                // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
-
-                if (GamePersistentVariable.IsVibrate)
+            _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
+                .OnComplete(() =>
                 {
-                    HapticFeedback.HeavyFeedback();
-                }
+                    shakeCameraEvent?.Invoke();
+                    // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
 
-                playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
-            })
-            .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
-            .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
-            {
-                screwBoxCompletedEvent?.Invoke(this);
-                spawnNewScrewBoxEvent?.Invoke();
+                    if (GamePersistentVariable.IsVibrate)
+                    {
+                        HapticFeedback.HeavyFeedback();
+                    }
 
-                transform.position = transform.position.ChangeY(initialPositionY);
-                transform.localScale = _initialScale;
+                    // FX
+                    try
+                    {
+                        ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
 
-                boxLid.gameObject.SetActive(false);
+                        if (rippleFx != null)
+                        {
+                            Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
 
-                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
-            })));
+                            ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                            rippleFxMain.startColor = factionColor;
+
+                            for (int i = 0; i < rippleFx.transform.childCount; i++)
+                            {
+                                ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+
+                                ParticleSystem.MainModule childFxMain = childFx.main;
+
+                                childFxMain.startColor = factionColor;
+                            }
+
+                            rippleFx.gameObject.SetActive(true);
+                            rippleFx.transform.position = transform.position.ChangeZ(-9);
+                            rippleFx.Play();
+                        }
+                    }
+                    catch (System.Exception e)
+                    {
+
+                    }
+
+                    playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                })
+                .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
+                .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
+                {
+                    screwBoxCompletedEvent?.Invoke(this);
+                    spawnNewScrewBoxEvent?.Invoke();
+
+                    transform.position = transform.position.ChangeY(initialPositionY);
+                    transform.localScale = _initialScale;
+
+                    boxLid.gameObject.SetActive(false);
+
+                    ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+                })))
+            );
         }
     }
 
