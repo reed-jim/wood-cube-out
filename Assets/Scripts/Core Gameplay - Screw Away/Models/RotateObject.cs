@@ -13,6 +13,7 @@ public class RotateObject : MonoBehaviour
     private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
+    public Transform cloneToCalculateRotation;
 
     #region ACCELERATE
     private float _acceleratedMultiplier;
@@ -30,7 +31,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.0042f;
+        rotateSpeedMultiplier = 0.012f;
         // _acceleratedMultiplier = 1;
 
         // if (!isDisableAutoRotatingAtStart)
@@ -41,38 +42,113 @@ public class RotateObject : MonoBehaviour
 
         //     StartCoroutine(AutoRotating());
         // }
+
+        StartCoroutine(Rotating());
     }
 
-    void Update()
+    public void AssignDummyClone(Transform clone)
     {
-        if (Mathf.Abs(_pitch) > 0.001f || Mathf.Abs(_yaw) > 0.001f)
+        cloneToCalculateRotation = clone;
+    }
+
+    private IEnumerator Rotating()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 60f);
+
+        while (true)
         {
-            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+            if (Mathf.Abs(_pitch) > 0.005f || Mathf.Abs(_yaw) > 0.005f)
+            {
+                // Quaternion cachedRotation = transform.rotation;
 
-            _rotateLerpStep = 0;
-            _isRotating = true;
-        }
-        // else
-        // {
-        //     if (_acceleratedMultiplier > 1)
-        //     {
-        //         _resetAccelerationTime++;
+                // transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+                // transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
 
-        //         if (_resetAccelerationTime > MAX_TICK_RESET_ACCELERATE)
-        //         {
-        //             _acceleratedMultiplier = 1;
-        //             _resetAccelerationTime = 0;
-        //         }
-        //     }
-        // }
+                // _targetRotation = transform.rotation;
+                // transform.rotation = cachedRotation;
 
-        if (!_isAutoRotating)
-        {
-            _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
-            _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+                cloneToCalculateRotation.rotation = transform.rotation;
+
+                cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+                cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+
+                _targetRotation = cloneToCalculateRotation.rotation;
+
+                _rotateLerpStep = 0;
+                _isRotating = true;
+            }
+
+            if (_isRotating)
+            {
+                transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
+
+                _rotateLerpStep++;
+
+                if (_rotateLerpStep >= 3)
+                {
+                    _rotateLerpStep = 0;
+                    _isRotating = false;
+                }
+            }
+
+            if (!_isAutoRotating)
+            {
+                _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
+                _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+            }
+
+            yield return waitForSeconds;
         }
     }
+
+    // void Update()
+    // {
+    //     if (Mathf.Abs(_pitch) > 0.005f || Mathf.Abs(_yaw) > 0.005f)
+    //     {
+    //         Quaternion cachedRotation = transform.rotation;
+
+    //         transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+    //         transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+
+    //         _targetRotation = transform.rotation;
+    //         transform.rotation = cachedRotation;
+
+    //         _rotateLerpStep = 0;
+    //         _isRotating = true;
+    //     }
+
+    //     if (_isRotating)
+    //     {
+    //         if (_rotateLerpStep % 6 == 0)
+    //         {
+    //             transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
+
+    //             Debug.Log("SAFERIO " + _targetRotation + "/" + transform.rotation);
+
+    //             // _rotateLerpStep++;
+
+    //             // if (_rotateLerpStep >= 3)
+    //             // {
+    //             //     _rotateLerpStep = 0;
+    //             //     _isRotating = false;
+    //             // }
+    //         }
+
+    //         _rotateLerpStep++;
+
+    //         if (_rotateLerpStep >= 18)
+    //         {
+    //             _rotateLerpStep = 0;
+    //             _isRotating = false;
+    //         }
+    //     }
+
+    //     if (!_isAutoRotating)
+    //     {
+    //         _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
+    //         _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+    //     }
+    // }
 
     void OnDestroy()
     {
@@ -82,20 +158,18 @@ public class RotateObject : MonoBehaviour
 
     private void Rotate(Vector2 direction)
     {
-        Vector2 normalizedDirection = direction.normalized;
-
         _pitch = direction.y;
         _yaw = -direction.x * 1.15f;
 
-        _pitch = Mathf.Clamp(_pitch, -100, 100);
-        _yaw = Mathf.Clamp(_yaw, -100, 100);
+        // _pitch = Mathf.Clamp(_pitch, -100, 100);
+        // _yaw = Mathf.Clamp(_yaw, -100, 100);
 
         _isAutoRotating = false;
-        _remainingTimeToAutoRotate = 20;
 
-        // _acceleratedMultiplier += ACCELERATE_RATE;
-        // _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
-        _resetAccelerationTime = 0;
+        // _remainingTimeToAutoRotate = 20;
+        // // _acceleratedMultiplier += ACCELERATE_RATE;
+        // // _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
+        // _resetAccelerationTime = 0;
     }
 
     private IEnumerator AutoRotating()

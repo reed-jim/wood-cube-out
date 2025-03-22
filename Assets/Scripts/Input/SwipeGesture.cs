@@ -28,6 +28,7 @@ public class SwipeGesture : MonoBehaviour
         BasePopup.enableSwipingScreenEvent += EnableSwiping;
         LevelTutorial.enableSwipingEvent += EnableSwiping;
         PinchGesture.enableSwipingEvent += EnableSwiping;
+        LevelLoader.enableSwipingEvent += EnableSwiping;
 
         acceleratedMultiplier = 1;
     }
@@ -37,6 +38,7 @@ public class SwipeGesture : MonoBehaviour
         BasePopup.enableSwipingScreenEvent -= EnableSwiping;
         LevelTutorial.enableSwipingEvent -= EnableSwiping;
         PinchGesture.enableSwipingEvent -= EnableSwiping;
+        LevelLoader.enableSwipingEvent -= EnableSwiping;
     }
 
     private void Update()
