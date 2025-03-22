@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
+using Firebase.RemoteConfig;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -39,6 +40,7 @@ public class ScrewBox : MonoBehaviour
     private List<Sequence> _sequences;
     private Vector3 _initialScale;
     private bool _isInTransition;
+    private bool _isPlayBoxCompleteFx;
     #endregion
 
     public GameFaction Faction
@@ -106,6 +108,8 @@ public class ScrewBox : MonoBehaviour
         transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
 
         _initialScale = transform.localScale;
+
+        _isPlayBoxCompleteFx = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_PLAY_BOX_COMPLETE_FX, true);
     }
 
     private async void OnScrewBoxCompleted(int instanceId)
@@ -134,38 +138,41 @@ public class ScrewBox : MonoBehaviour
                     }
 
                     // FX
-                    try
+                    if (_isPlayBoxCompleteFx)
                     {
-                        ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
-
-                        if (rippleFx != null)
+                        try
                         {
-                            Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+                            ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
 
-                            ParticleSystem.MainModule rippleFxMain = rippleFx.main;
-
-                            rippleFxMain.startColor = factionColor;
-
-                            for (int i = 0; i < rippleFx.transform.childCount; i++)
+                            if (rippleFx != null)
                             {
-                                ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+                                Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
 
-                                ParticleSystem.MainModule childFxMain = childFx.main;
+                                ParticleSystem.MainModule rippleFxMain = rippleFx.main;
 
-                                childFxMain.startColor = factionColor;
+                                rippleFxMain.startColor = factionColor;
+
+                                for (int i = 0; i < rippleFx.transform.childCount; i++)
+                                {
+                                    ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+
+                                    ParticleSystem.MainModule childFxMain = childFx.main;
+
+                                    childFxMain.startColor = factionColor;
+                                }
+
+                                rippleFx.gameObject.SetActive(true);
+                                rippleFx.transform.position = transform.position.ChangeZ(-9);
+                                rippleFx.Play();
                             }
-
-                            rippleFx.gameObject.SetActive(true);
-                            rippleFx.transform.position = transform.position.ChangeZ(-9);
-                            rippleFx.Play();
                         }
-                    }
-                    catch (System.Exception e)
-                    {
+                        catch (System.Exception e)
+                        {
 
-                    }
+                        }
 
-                    playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                        playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                    }
                 })
                 .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
                 .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
