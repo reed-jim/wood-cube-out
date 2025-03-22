@@ -24,6 +24,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject clearScrewPortsSoundPrefab;
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
     [SerializeField] private GameObject looseScrewFxPrefab;
+    [SerializeField] private GameObject boxCompletedFxPrefab;
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
@@ -71,6 +72,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX, looseScrewFxPrefab, 5);
+        RegisterPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX, boxCompletedFxPrefab, 5);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
