@@ -13,6 +13,10 @@ using static GameEnum;
 
 public class LevelLoader : MonoBehaviour
 {
+    [Header("Clone to calculate level rotation")]
+    [SerializeField] private Transform cloneToCalculateRotation;
+
+
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
@@ -20,7 +24,7 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
     private List<Tween> _tweens;
-    private Tween _autoCenterLevelTween;
+    private List<Tween> _autoCenterLevelTweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
     private BasicObjectPart[] _pieces;
@@ -35,6 +39,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action showSceneTransitionEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
+    public static event Action<bool> enableSwipingEvent;
 
     private void Awake()
     {
@@ -49,6 +54,7 @@ public class LevelLoader : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
 
         _tweens = new List<Tween>();
+        _autoCenterLevelTweens = new List<Tween>();
 
         currentLevel.Load();
 
@@ -70,7 +76,7 @@ public class LevelLoader : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
-        CommonUtil.StopTween(_autoCenterLevelTween);
+        CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
 
     private async Task LoadLevel()
@@ -153,6 +159,14 @@ public class LevelLoader : MonoBehaviour
                 GameObject level = Instantiate(op.Result, transform);
 
                 _currentLevelContainer = level.transform;
+
+                #region ASSIGN CLONE TO CALC ROTATION
+                try
+                {
+                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
+                }
+                catch (System.Exception e) { }
+                #endregion
 
                 // FIND DEPENDENCY
                 // delay for pieces scaling before level
@@ -293,12 +307,28 @@ public class LevelLoader : MonoBehaviour
 
         Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
 
-        if (_autoCenterLevelTween.isAlive)
-        {
-            _autoCenterLevelTween.Stop();
-        }
+        CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
-        _autoCenterLevelTween = Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f);
+        _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+
+        // _autoCenterLevelTweens.Add(
+        //     Tween.Delay(1.7f).OnComplete(() =>
+        //     {
+        //         if (GamePersistentVariable.levelPrefab != 1)
+        //         {
+        //             enableSwipingEvent?.Invoke(false);
+        //         }
+
+        //         _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f)
+        //         .OnComplete(() =>
+        //         {
+        //             if (GamePersistentVariable.levelPrefab != 1)
+        //             {
+        //                 enableSwipingEvent?.Invoke(true);
+        //             }
+        //         }));
+        //     })
+        // );
     }
 
     private async void GoLevel(int level)
