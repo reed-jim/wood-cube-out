@@ -132,17 +132,13 @@ public class BaseScrew : MonoBehaviour, IScrew
     }
     #endregion
 
-    #region EVENT
-    public static event Action<int> breakJointEvent;
-    public static event Action<int> screwStartLoosenedEvent;
-    #endregion
-
     #region LIFE CYCLE
-    protected virtual void Awake()
+
+    private bool inited;
+    public void OnEnable()
     {
-
-        RegisterMoreEvent();
-
+        if (inited) return;
+        inited = true;
         AddScrewToList();
 
         _initialScale = transform.localScale;
@@ -163,11 +159,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
 
     }
-
-    protected virtual void RegisterMoreEvent()
-    {
-
-    }
+    
 
     protected virtual void UnregisterMoreEvent()
     {
@@ -202,7 +194,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             return;
         }
 
-        screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
+        GetComponent<ScrewOutline>().OnScrewStartLoosed(gameObject.GetInstanceID());
 
         _isMoving = true;
         _isRotating = true;
@@ -288,7 +280,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         }));
     }
 
-    private async void AddScrewToList()
+    public async void AddScrewToList()
     {
         await Task.Delay(200);
 
@@ -324,8 +316,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         {
             Destroy(joint);
             // joint.breakForce = 0;
-
-            breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
+            foreach (var i in GamePlayController_BirdSort.Instance.level.pieces)
+            {
+                i.OnJointBreakCallback(joint.gameObject.GetInstanceID());
+            }
+            
         }
 
         ThrowOutside();
@@ -384,6 +379,9 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     protected void InvokeBreakJointEvent()
     {
-        breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
+        foreach (var i in GamePlayController_BirdSort.Instance.level.pieces)
+        {
+            i.OnJointBreakCallback(joint.gameObject.GetInstanceID());
+        }
     }
 }

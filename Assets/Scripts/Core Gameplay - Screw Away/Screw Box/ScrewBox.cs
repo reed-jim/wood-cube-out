@@ -67,8 +67,6 @@ public class ScrewBox : MonoBehaviour
 
     private void Awake()
     {
-        ScrewBoxUI.unlockScrewBox += Unlock;
-
         _tweens = new List<Tween>();
 
         boxLid.gameObject.SetActive(false);
@@ -77,7 +75,6 @@ public class ScrewBox : MonoBehaviour
 
     private void OnDestroy()
     {
-        ScrewBoxUI.unlockScrewBox -= Unlock;
         CommonUtil.StopAllTweens(_tweens);
     }
     public async void OnScrewBoxCompleted(int instanceId)
@@ -153,7 +150,7 @@ public class ScrewBox : MonoBehaviour
         GamePlayController_BirdSort.Instance.level.screwBoxManager.OnScrewBoxUnlocked(this);
     }
 
-    private void Unlock(int instanceId)
+    public void Unlock(int instanceId)
     {
         if (instanceId == gameObject.GetInstanceID())
         {

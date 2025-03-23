@@ -329,7 +329,7 @@ public class ReviveBox : BaseBox
 
         if (currentType == 0)
         {
-            BirdSort2.GamePlayController_BirdSort.Instance.level.Revive(isAddTime: false, isResetSlot: true, this.isLoseExtral, isUseElectric: _isUseElectric, numElectricUse: numElectricLightBonnus);
+            BirdSort2.GamePlayController_BirdSort.Instance.level.Revive(isAddBox: false, this.isLoseExtral, isUseElectric: _isUseElectric, numElectricUse: numElectricLightBonnus);
         }
         else
         {
@@ -339,7 +339,7 @@ public class ReviveBox : BaseBox
                 BirdSort2.GamePlayController_BirdSort.Instance.level.timePlayRequire += reviveData.config.timeAddedReviveVideo;
 
 
-            BirdSort2.GamePlayController_BirdSort.Instance.level.Revive(isAddTime: true, isResetSlot: false, this.isLoseExtral, isUseElectric: _isUseElectric, numElectricUse: numElectricLightBonnus);
+            BirdSort2.GamePlayController_BirdSort.Instance.level.Revive(isAddBox: true, this.isLoseExtral, isUseElectric: _isUseElectric, numElectricUse: numElectricLightBonnus);
         }
     }
 

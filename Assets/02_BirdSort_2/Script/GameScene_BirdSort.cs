@@ -22,7 +22,7 @@ namespace BirdSort2
         public Button removeADSBtn;
         [SerializeField] private Button skipBtn;
         public Transform birdParent;
-
+        public Text remainingScrewText;
         private bool isShowSetting;
 
 
@@ -50,6 +50,7 @@ namespace BirdSort2
         [Header("BarItem")]
         [SerializeField] private ItemUI itemUIPrefab;
         [SerializeField] private Transform parentItem;
+        [SerializeField] private Transform hammerPanel;
         public Dictionary<GiftType, ItemUI> itemsUI;
         public LayoutGroup layoutGroup;
 
@@ -98,6 +99,7 @@ namespace BirdSort2
 
         public void Init()
         {
+            boosterPos = parentItem.transform.position;
             levelTxt.text = Localization.Get("s_level_tile") + " " + UseProfile.CurrentLevelPlay;
             replayBtn.onClick.AddListener(OnClickReplay);
             removeADSBtn.onClick.AddListener(OnClickRemoveAds);
@@ -215,6 +217,39 @@ namespace BirdSort2
             }
             
         }
+
+        private bool _isTransition;
+        private Vector3 boosterPos;
+        public void EnableHammer()
+        {
+            if (_isTransition)
+            {
+                return;
+            }
+            _isTransition = true;
+            PrimeTween.Tween.LocalPositionY(parentItem, -Screen.height, 0.4f);
+            PrimeTween.Tween.LocalPositionY(hammerPanel, boosterPos.y, 0.4f).OnComplete((() =>
+            {
+                GamePlayController_BirdSort.Instance.playerContain.EnableBreakObjectMode();
+                _isTransition = false;
+            }));
+        }
+
+        public void DisableHammer()
+        {
+            if (_isTransition)
+            {
+                return;
+            }
+            _isTransition = true;
+            PrimeTween.Tween.LocalPositionY(parentItem, boosterPos.y, 0.4f);
+            PrimeTween.Tween.LocalPositionY(hammerPanel, -Screen.height, 0.4f).OnComplete((() =>
+            {
+                GamePlayController_BirdSort.Instance.playerContain.DisableBreakObjectMode();
+                _isTransition = false;
+            }));
+        }
+        
         public void OnCheat()
         {
             testObj.SetActive(true);
@@ -317,6 +352,10 @@ namespace BirdSort2
                 Configs.SetCurrLevel(GamePlayController_BirdSort.Instance.levelInd + 1);
                 Configs.currSelectLevel = Configs.currLevel;
             }
+        }
+        public void UpdateRemainingScrew(int remainingScrew, int totalScrew)
+        {
+            remainingScrewText.text = $"{remainingScrew}/{totalScrew}";
         }
     }
 

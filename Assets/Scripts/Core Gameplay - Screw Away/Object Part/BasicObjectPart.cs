@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BirdSort2;
 using PrimeTween;
 using UnityEngine;
 
@@ -19,32 +20,25 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private int minJointToDisableKinematic = 1;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private bool _isSelecting;
     private bool _isFree;
     private bool _isImmuneSwipeForce;
     private int _totalJoint;
     private bool _isConcave;
+    private Vector3 _initialScale;
     #endregion
 
     public bool IsConcave
     {
         get => _isConcave;
     }
-
-    #region EVENT
-    public static event Action<int> selectObjectPartEvent;
-    public static event Action<int> deselectObjectPartEvent;
-    public static event Action<BaseScrew> loosenScrewOnObjectBrokenEvent;
-    public static event Action shakeCameraEvent;
-    public static event Action<int> dissolveObjectPartEvent;
-    #endregion
+    
 
     #region LIFECYCLE
-    void Awake()
+    public void Init()
     {
-        ScrewSelectionInput.mouseUpEvent += Deselect;
-        BaseScrew.breakJointEvent += OnJointBreakCallback;
-
+        _tweens = new List<Tween>();
         partRigidbody = GetComponent<Rigidbody>();
         meshCollider = GetComponent<MeshCollider>();
 
@@ -78,10 +72,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         partRigidbody.mass = 100;
 
         // REMOTE CONFIG ENABLE JOINT
-        bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_JOINT, false);
-
-        isEnableJoint = true;
-
+        bool isEnableJoint = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_JOINT, true);
+        
         if (!isEnableJoint)
         {
             HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
@@ -100,33 +92,27 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             minJointToDisableKinematic = 0;
 
-            meshCollider.enabled = false;
+            //meshCollider.enabled = false;
         }
         else
         {
             if (meshCollider.convex)
             {
                 minJointToDisableKinematic = 1;
+                meshCollider.isTrigger = false;
             }
             else
             {
                 minJointToDisableKinematic = 0;
             }
-
-            meshCollider.isTrigger = false;
         }
-    }
-
-    void OnDestroy()
-    {
-        ScrewSelectionInput.mouseUpEvent -= Deselect;
-        BaseScrew.breakJointEvent -= OnJointBreakCallback;
+        HideBeforeLevel();
     }
     #endregion
 
     public void Select()
     {
-        selectObjectPartEvent?.Invoke(gameObject.GetInstanceID());
+        GetComponent<ObjectPartMaterialPropertyBlock>().OnObjectPartSelected(gameObject.GetInstanceID());
 
         _isSelecting = true;
 
@@ -143,7 +129,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         if (_isSelecting)
         {
-            deselectObjectPartEvent?.Invoke(gameObject.GetInstanceID());
+            GetComponent<ObjectPartMaterialPropertyBlock>().OnObjectPartDeselected(gameObject.GetInstanceID());
 
             _isSelecting = false;
 
@@ -157,7 +143,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         }
     }
 
-    private async void OnJointBreakCallback(int instanceId)
+    public async void OnJointBreakCallback(int instanceId)
     { 
         if (instanceId == gameObject.GetInstanceID())
         {
@@ -184,7 +170,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
             if (_totalJoint == 0)
             {
-                if (meshCollider.enabled)
+                if (meshCollider.enabled && !meshCollider.convex)
                 {
                     meshCollider.enabled = false;
                 }
@@ -201,7 +187,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     public async void Break(Vector3 touchPosition)
     {
         BoosterHammer hammer = ObjectPoolingEverything.GetFromPool<BoosterHammer>(GameConstants.HAMMER);
-
+        Debug.Log("Breaking");
         Vector3 position1 = transform.position + 5 * transform.forward;
         Vector3 position2 = transform.position - 5 * transform.forward;
 
@@ -267,7 +253,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         // hammer.PlayHitFx();
 
-        shakeCameraEvent?.Invoke();
+        GamePlayController_BirdSort.Instance.gamePlayCamera.Shake();
 
         // BE CAREFUL OF USING childCount
         List<BaseScrew> screws = new List<BaseScrew>();
@@ -283,7 +269,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             BaseScrew screw = screws[i];
 
-            loosenScrewOnObjectBrokenEvent?.Invoke(screw);
+           GamePlayController_BirdSort.Instance.level.screwBoxManager.LoosenScrewOnObjectBroken(screw);
 
             await Task.Delay(33);
         }
@@ -354,4 +340,40 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         transform.SetParent(LevelGarbageBin.GarbageBin);
     }
+    
+    #region BETTER FEELING
+    private void HideBeforeLevel()
+    {
+        _initialScale = transform.localScale;
+
+        transform.localScale = Vector3.zero;
+    }
+
+    public void ScaleBeforeLevel()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(0.4f).OnComplete(() =>
+        {
+            //HideBeforeLevel();
+        }));
+
+        _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
+        {
+            _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+                })
+            );
+        }));
+
+        // _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
+        //     .OnComplete(() =>
+        //     {
+        //         _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
+        //     })
+        // );
+    }
+    #endregion
 }

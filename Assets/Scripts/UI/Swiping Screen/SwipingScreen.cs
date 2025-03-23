@@ -26,10 +26,9 @@ public class SwipingScreen : MonoBehaviour
 
     private void Awake()
     {
-        SwipeGesture.swipeGestureEvent += OnSwipe;
+        //SwipeGesture.swipeGestureEvent += OnSwipe;
         SwipeGesture.stopSwipeGestureEvent += OnStopSwiping;
         UIScreen.moveSwipingScreenEvent += MoveSwipingScreen;
-        BasePopup.enableSwipingScreenEvent += EnableSwiping;
 
         _isEnabledSwiping = true;
     }
@@ -43,10 +42,9 @@ public class SwipingScreen : MonoBehaviour
 
     private void OnDestroy()
     {
-        SwipeGesture.swipeGestureEvent -= OnSwipe;
+        //SwipeGesture.swipeGestureEvent -= OnSwipe;
         SwipeGesture.stopSwipeGestureEvent -= OnStopSwiping;
         UIScreen.moveSwipingScreenEvent -= MoveSwipingScreen;
-        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
     }
 
     private void SetupUI()

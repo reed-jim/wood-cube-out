@@ -76,11 +76,12 @@ namespace BirdSort2
                     GameObject level = Instantiate(op.Result, transform);
                     pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
                     levelParent = level.GetComponent<RotateObject>();
+                    levelParent.Init();
+                    timePlayRequire = levelParent.timePlayLevel;
                     Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                     if (level.GetComponent<LevelTransformManualModifier>() == null)
                     {
-                        level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 10);
-                        // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
+                        level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 101);
                         level.transform.rotation = Quaternion.Euler(new Vector3(-0, -45, 0));
                     }
 
@@ -98,6 +99,10 @@ namespace BirdSort2
                     AutoAssignScrewFactionMultiPhaseLevel(level);
                     screwBoxManager.Init();
                     screwManager.Init();
+                    foreach (var i in pieces)
+                    {
+                        i.Init();
+                    }
                     GamePlayController_BirdSort.Instance.state = StateGame.Playing;
                     //if (isLoopLevel)
                     //{
@@ -326,24 +331,27 @@ namespace BirdSort2
             //GameController.Instance.musicManager.PlayCoolDownSoundSource();
         }
 
-        public void Revive(bool isAddTime, bool isResetSlot, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
+        public void Revive(bool isAddBox, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
         {
             isLose = false;
             if (reviveCorutine != null)
                 StopCoroutine(reviveCorutine);
 
-            reviveCorutine = ReviveHandle(isAddTime, isResetSlot, isReviveLoseExtral, isUseElectric, numElectricUse);
+            reviveCorutine = ReviveHandle(isAddBox, isReviveLoseExtral, isUseElectric, numElectricUse);
             StartCoroutine(reviveCorutine);
         }
 
-        private IEnumerator ReviveHandle(bool isAddTime, bool isResetSlot, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
+        private IEnumerator ReviveHandle(bool isAddBox, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
         {
             yield return new WaitForSeconds(0.5f);
-            if (isAddTime)
+            if (isAddBox)
             {
-                StartCoroutine(waringTimePlayCorutine);
+                GamePlayController_BirdSort.Instance.level.screwBoxManager.OnRevived(GiftType.AddBox);
             }
-
+            else
+            {
+                GamePlayController_BirdSort.Instance.level.screwBoxManager.OnRevived(GiftType.ClearHole);
+            }
             BirdSort2.GamePlayController_BirdSort.Instance.state = StateGame.Playing;
 
             GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();

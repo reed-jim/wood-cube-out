@@ -57,7 +57,7 @@ public class SettingBox : BaseBox
     [SerializeField] private Button restorePurchaseBtn;
     [SerializeField] private Button privacyOptionBtn;
 
-    [SerializeField] private ToggleUIHandle toggleTargetAds;
+    //[SerializeField] private ToggleUIHandle toggleTargetAds;
 
     [SerializeField] private Text versionTxt;
     [SerializeField] private Text idTxt;
@@ -100,25 +100,25 @@ public class SettingBox : BaseBox
         restorePurchaseBtn.gameObject.SetActive(true);
 #endif
 
-        toggleTargetAds.Init(
-            actionOn: () =>
-            {
-                UseProfile.GDPRContentValue = true;
-            },
-        actionOff: () =>
-        {
-            //var trB = TrackingBox.Setup();
-            //trB.Show();
-
-            //trB.OnCloseBox = () =>
-            //{
-            //    if (UseProfile.GDPRContentValue)
-            //        toggleTargetAds.OnClickChoice();
-            //    trB.OnCloseBox = null;
-            //};
-            UseProfile.GDPRContentValue = false;
-
-        }, UseProfile.GDPRContentValue);
+        // toggleTargetAds.Init(
+        //     actionOn: () =>
+        //     {
+        //         UseProfile.GDPRContentValue = true;
+        //     },
+        // actionOff: () =>
+        // {
+        //     //var trB = TrackingBox.Setup();
+        //     //trB.Show();
+        //
+        //     //trB.OnCloseBox = () =>
+        //     //{
+        //     //    if (UseProfile.GDPRContentValue)
+        //     //        toggleTargetAds.OnClickChoice();
+        //     //    trB.OnCloseBox = null;
+        //     //};
+        //     UseProfile.GDPRContentValue = false;
+        //
+        // }, UseProfile.GDPRContentValue);
 
         versionTxt.text = "Version: " + Config.versionName.ToString();
         idTxt.text = UseProfile.PlayFabId;

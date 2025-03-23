@@ -29,7 +29,7 @@ public class PinchGesture : MonoBehaviour
 
     private void Awake()
     {
-        BasePopup.enableSwipingScreenEvent += EnablePinching;
+     
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
         zoomSlider.onValueChanged.AddListener(OnZoomSliderValueChanged);
@@ -42,7 +42,7 @@ public class PinchGesture : MonoBehaviour
 
     void OnDestroy()
     {
-        BasePopup.enableSwipingScreenEvent -= EnablePinching;
+        
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
         CommonUtil.StopAllTweens(_tweens);

@@ -731,7 +731,7 @@ public class UseProfile : MonoBehaviour
 
     public static bool IsUnlimitedItem(GiftType typeItem)
     {
-        if (typeItem == GiftType.SuggetItem_BirdSort || typeItem == GiftType.ReturnItem_BirdSort || typeItem == GiftType.AddHole || typeItem == GiftType.IceItem_BirdSort || typeItem == GiftType.BreakObject)
+        if (typeItem == GiftType.SuggetItem_BirdSort || typeItem == GiftType.ReturnItem_BirdSort || typeItem == GiftType.AddHole || typeItem == GiftType.AddBox || typeItem == GiftType.BreakObject)
             return false;
 
         return GetTimeEndUnlimitedItem(typeItem) > UnbiasedTime.Instance.Now();

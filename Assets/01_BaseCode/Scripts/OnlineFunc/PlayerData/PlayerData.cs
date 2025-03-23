@@ -166,7 +166,7 @@ public class PlayerData : BaseData
         hintItem = UseProfile.GetNumItem(GiftType.SuggetItem_BirdSort);
         shuffleItem = UseProfile.GetNumItem(GiftType.AddHole);
         breakRuleItem = UseProfile.GetNumItem(GiftType.BreakObject);
-        iceItem = UseProfile.GetNumItem(GiftType.IceItem_BirdSort);
+        iceItem = UseProfile.GetNumItem(GiftType.AddBox);
         addTimeItem = UseProfile.GetNumItem(GiftType.AddTimeItem_BirdSort);
         blockBrandItem = UseProfile.GetNumItem(GiftType.BlockBrand_BirdSort);
         addBrandItem = UseProfile.GetNumItem(GiftType.ClearHole);
@@ -177,7 +177,7 @@ public class PlayerData : BaseData
         timeEndUlimited_HintItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.SuggetItem_BirdSort).ToBinary();
         timeEndUlimited_ShuffleItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.AddHole).ToBinary();
         timeEndUlimited_BreakRuleItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.BreakObject).ToBinary();
-        timeEndUlimited_IceItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.IceItem_BirdSort).ToBinary();
+        timeEndUlimited_IceItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.AddBox).ToBinary();
         timeEndUlimited_AddTimeItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.AddTimeItem_BirdSort).ToBinary();
         timeEndUlimited_BlockBrandItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.BlockBrand_BirdSort).ToBinary();
         timeEndUlimited_AddBrandItem = UseProfile.GetTimeEndUnlimitedItem(GiftType.AddTimeItem_BirdSort).ToBinary();
@@ -205,7 +205,7 @@ public class PlayerData : BaseData
         isTutItem_returnItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.ReturnItem_BirdSort, 0);
         isTutItem_shuffleItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddHole, 0);
         isTutItem_breakRuleItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.BreakObject, 0);
-        isTutItem_iceItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.IceItem_BirdSort, 0);
+        isTutItem_iceItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddBox, 0);
         isTutItem_addTimeItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddTimeItem_BirdSort, 0);
         isTutItem_blockBrandItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.BlockBrand_BirdSort, 0);
         isTutItem_addBrandItem = GPlayerPrefs.GetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.ClearHole, 0);
@@ -332,7 +332,7 @@ public class PlayerData : BaseData
         UseProfile.SetItem(GiftType.SuggetItem_BirdSort, data.hintItem);
         UseProfile.SetItem(GiftType.ReturnItem_BirdSort, data.returnItem);
         UseProfile.SetItem(GiftType.AddHole, data.shuffleItem);
-        UseProfile.SetItem(GiftType.IceItem_BirdSort, data.iceItem);
+        UseProfile.SetItem(GiftType.AddBox, data.iceItem);
         UseProfile.SetItem(GiftType.AddTimeItem_BirdSort, data.addTimeItem);
         UseProfile.SetItem(GiftType.BlockBrand_BirdSort, data.blockBrandItem);
         UseProfile.SetItem(GiftType.ClearHole, data.addBrandItem);
@@ -341,7 +341,7 @@ public class PlayerData : BaseData
         UseProfile.SetTimeEndUnlimitedItem(GiftType.SuggetItem_BirdSort, data.timeEndUlimited_HintItem);
         UseProfile.SetTimeEndUnlimitedItem(GiftType.ReturnItem_BirdSort, data.timeEndUlimited_ReturnItem);
         UseProfile.SetTimeEndUnlimitedItem(GiftType.AddHole, data.timeEndUlimited_ShuffleItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.IceItem_BirdSort, data.timeEndUlimited_IceItem);
+        UseProfile.SetTimeEndUnlimitedItem(GiftType.AddBox, data.timeEndUlimited_IceItem);
         UseProfile.SetTimeEndUnlimitedItem(GiftType.AddTimeItem_BirdSort, data.timeEndUlimited_AddTimeItem);
         UseProfile.SetTimeEndUnlimitedItem(GiftType.BlockBrand_BirdSort, data.timeEndUlimited_BlockBrandItem);
         UseProfile.SetTimeEndUnlimitedItem(GiftType.ClearHole, data.timeEndUlimited_AddBrandItem);
@@ -371,7 +371,7 @@ public class PlayerData : BaseData
         GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.ReturnItem_BirdSort, data.isTutItem_returnItem);
         GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.SuggetItem_BirdSort, data.isTutItem_hintItem);
         GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddHole, data.isTutItem_shuffleItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.IceItem_BirdSort, data.isTutItem_iceItem);
+        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddBox, data.isTutItem_iceItem);
         GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.BreakObject, data.isTutItem_breakRuleItem);
         GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialWeeklyItem.TUT_WEEKLY_ITEM_1, data.isTutWeeklyChallenge);
 

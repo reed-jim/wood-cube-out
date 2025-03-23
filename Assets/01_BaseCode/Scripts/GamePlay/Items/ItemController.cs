@@ -106,8 +106,6 @@ public class ItemController : MonoBehaviour
                 }
             }
         }
-        GamePlayController_BirdSort.Instance.returnController.IsLockReturn = false;
-        //GamePlayController.Instance.extralPlayController.IsExtralsReady()
     }
 
     public void InteractButton(bool isInteract)

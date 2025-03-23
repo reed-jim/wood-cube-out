@@ -44,13 +44,6 @@ public class ReturnItem_BirdSort : ItemBase
 
         get
         {
-          
-            if (BirdSort2.GamePlayController_BirdSort.Instance.returnController.stackReturn.Count <= 0)
-            {
-
-                return false;
-            }
-            BirdSort2.GamePlayController_BirdSort.Instance.returnController.Return();
             BirdSort2.GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();
             return true;
         }

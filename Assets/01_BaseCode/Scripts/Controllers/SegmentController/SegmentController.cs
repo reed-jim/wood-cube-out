@@ -197,7 +197,7 @@ public class CoreGameData : BaseDataSegemnt
                     return return_BirdSort;
                 case GiftType.SuggetItem_BirdSort:
                     return sugget_BirdSort;
-                case GiftType.IceItem_BirdSort:
+                case GiftType.AddBox:
                     return ice_BirdSort;
                 case GiftType.AddHole:
                     return AddHole;

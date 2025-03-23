@@ -21,8 +21,6 @@ public class ObjectPoolingEverything : MonoBehaviour
         else
         {
             Instance = this;
-
-            DontDestroyOnLoad(gameObject);
         }
 
         _poolGroup = new Dictionary<string, ObjectPool>();

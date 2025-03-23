@@ -40,7 +40,6 @@ public class ScrewBoxSlot : MonoBehaviour
     {
         if (transform.GetSiblingIndex() == 2)
         {
-            
             foreach (var i in GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs)
             {
                 if (i != null) i.OnScrewBoxCompleted((transform.parent.gameObject.GetInstanceID()));

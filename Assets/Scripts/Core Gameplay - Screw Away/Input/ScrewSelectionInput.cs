@@ -21,7 +21,6 @@ public class ScrewSelectionInput : MonoBehaviour
     #endregion
 
     #region EVENT
-    public static event Action mouseUpEvent;
     public static event Action selectScrewEvent;
     public static event Action breakObjectEvent;
     #endregion
@@ -84,8 +83,7 @@ public class ScrewSelectionInput : MonoBehaviour
                     SelectScrew();
                 }
             }
-
-            mouseUpEvent?.Invoke();
+            
 
             twoTouchPoints.Clear();
 

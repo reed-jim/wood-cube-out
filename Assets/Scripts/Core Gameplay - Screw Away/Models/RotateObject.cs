@@ -5,9 +5,12 @@ public class RotateObject : MonoBehaviour
 {
     [SerializeField] private float rotateSpeedMultiplier;
     [SerializeField] private bool isDisableAutoRotatingAtStart;
-
+    public float timePlayLevel;
     private float _pitch;
     private float _yaw;
+    private Quaternion _targetRotation;
+    private bool _isRotating;
+    private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
 
@@ -18,15 +21,12 @@ public class RotateObject : MonoBehaviour
 
     #region CONST
     private const float ACCELERATE_RATE = 0.04f;
-    private const float MAX_ACCELERATE_MULTIPLIER = 3;
-    private const float MAX_TICK_RESET_ACCELERATE = 10;
+    private const float MAX_ACCELERATE_MULTIPLIER = 2.5f;
+    private const float MAX_TICK_RESET_ACCELERATE = 6;
     #endregion
 
-    void Awake()
+    public void Init()
     {
-        ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
-        SwipeGesture.swipeGestureEvent += Rotate;
-
         rotateSpeedMultiplier = 0.06f;
         _acceleratedMultiplier = 1;
 
@@ -42,8 +42,16 @@ public class RotateObject : MonoBehaviour
     {
         if (Mathf.Abs(_pitch) > 0.01f || Mathf.Abs(_yaw) > 0.01f)
         {
-            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _acceleratedMultiplier * _pitch);
-            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _acceleratedMultiplier * _yaw);
+            Quaternion cachedRotation = transform.rotation;
+
+            transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+            transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+
+            // _targetRotation = transform.rotation;
+            // transform.rotation = cachedRotation;
+
+            _rotateLerpStep = 0;
+            _isRotating = true;
         }
         else
         {
@@ -69,7 +77,6 @@ public class RotateObject : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
-        SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
     public void Rotate(Vector2 direction)

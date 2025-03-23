@@ -10,14 +10,12 @@ public class InAppReviewManager : MonoBehaviour
 
     private void Awake()
     {
-        RatePopup.launchInAppReviewEvent += LaunchInAppReview;
 
         _reviewManager = new ReviewManager();
     }
 
     private void OnDestroy()
     {
-        RatePopup.launchInAppReviewEvent += LaunchInAppReview;
     }
 
     private void LaunchInAppReview()

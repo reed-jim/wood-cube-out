@@ -25,20 +25,10 @@ public class GameStateMachine : MonoBehaviour
 
     private void Awake()
     {
-        //LevelLoader.startLevelEvent += EnterPlayingState;
-        ScrewManager.winLevelEvent += EnterWinState;
-        ScrewBoxManager.loseLevelEvent += EnterLoseState;
-        RevivePopup.reviveEvent += OnRevived;
-
-        ChangeState(new GameStatePlaying());
     }
 
     void OnDestroy()
     {
-        //LevelLoader.startLevelEvent -= EnterPlayingState;
-        ScrewManager.winLevelEvent -= EnterWinState;
-        ScrewBoxManager.loseLevelEvent -= EnterLoseState;
-        RevivePopup.reviveEvent -= OnRevived;
     }
 
     // void Update()
@@ -88,8 +78,5 @@ public class GameStateMachine : MonoBehaviour
         ChangeState(new GameStateLose(this));
     }
 
-    private void OnRevived(BoosterType boosterType)
-    {
-        EnterPlayingState();
-    }
+    
 }

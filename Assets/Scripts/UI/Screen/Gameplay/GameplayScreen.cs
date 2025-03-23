@@ -27,7 +27,6 @@ public class GameplayScreen : MonoBehaviour
     {
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
         LevelLoader.setLevelNumberEvent += SetLevelText;
-        ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
@@ -44,7 +43,6 @@ public class GameplayScreen : MonoBehaviour
     {
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
         LevelLoader.setLevelNumberEvent -= SetLevelText;
-        ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
     private async void Pause()

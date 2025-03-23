@@ -51,7 +51,7 @@ public class LevelTutorial : MonoBehaviour
     {
         ScrewSelectionInput.selectScrewEvent += OnScrewSelected;
         ScrewSelectionInput.breakObjectEvent += OnScrewSelected;
-        SwipeGesture.swipeGestureEvent += OnScreenSwiped;
+        //SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
         StartCoroutine(TutorialStepOne());
@@ -93,7 +93,7 @@ public class LevelTutorial : MonoBehaviour
     {
         ScrewSelectionInput.selectScrewEvent -= OnScrewSelected;
         ScrewSelectionInput.breakObjectEvent -= OnScrewSelected;
-        SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
+        //SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
         PinchGesture.pinchGestureEvent -= OnScreenZoomed;
     }
 

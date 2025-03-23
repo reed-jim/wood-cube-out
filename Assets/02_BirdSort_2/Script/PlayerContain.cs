@@ -125,7 +125,6 @@ namespace BirdSort2
                 {
                     if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
                     {
-                        Debug.Log("SelectObjectPart");
                         SelectObjectPart();
 
                         _isSelectingObjectPart = true;
@@ -239,7 +238,6 @@ namespace BirdSort2
             // {
             //     return;
             // }
-            Debug.Log("SelectScrew");
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
@@ -250,7 +248,6 @@ namespace BirdSort2
 
                 if (screw != null)
                 {
-                    Debug.Log("sCREWSewlected");
                     screw.Select();
 
                     GamePlayController_BirdSort.Instance.level.levelParent.DisableAutoRotating();
@@ -262,7 +259,6 @@ namespace BirdSort2
         private async void SelectObjectPart()
         {
             _isSelectObjectPart = false;
-            Debug.Log("CheckingObjCondition : "+ IsClickedOnUI());
             if (_inputMode == GameEnum.InputMode.Disabled)
             {
                 return;
@@ -275,38 +271,43 @@ namespace BirdSort2
 
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            Physics.Raycast(ray, out RaycastHit hit, layerMaskCheck);
-
-            if (hit.collider != null)
+            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMaskCheck);
+            if (hits.Length > 0)
             {
-                IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-                if (objectPart != null)
+                foreach (RaycastHit i in hits)
                 {
-                    _isSelectObjectPart = true;
-
-                    if (_inputMode == GameEnum.InputMode.BreakObject)
+                    if (i.collider != null)
                     {
-                        objectPart.Break(hit.point);
+                        IObjectPart objectPart = i.collider.GetComponent<IObjectPart>();
+                        Debug.Log("Anhtusz: " + i.collider.name);
+                        if (objectPart != null)
+                        {
+                            _isSelectObjectPart = true;
 
-                        DisableBreakObjectMode();
+                            if (_inputMode == GameEnum.InputMode.BreakObject)
+                            {
+                                objectPart.Break(i.point);
+                                
+                                _inputMode = GameEnum.InputMode.Disabled;
 
-                        _inputMode = GameEnum.InputMode.Disabled;
+                                // avoid click screw immediately
+                                await Task.Delay(500);
+                                
+                                GamePlayController_BirdSort.Instance.gameScene.DisableHammer();
+                            }
+                            else
+                            {
+                                Debug.Log("SelectedObjectPart");
+                                objectPart.Select();
+                            }
 
-                        // avoid click screw immediately
-                        await Task.Delay(500);
-
-                        _inputMode = GameEnum.InputMode.Select;
+                            return;
+                        }
                     }
-                    else
-                    {
-                        Debug.Log("SelectedObjectPart");
-                        objectPart.Select();
-                    }
-
-                    return;
                 }
+                
             }
+            
         }
 
         public void EnableBreakObjectMode()

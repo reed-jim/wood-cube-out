@@ -37,7 +37,7 @@ public class BreakObjectItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
-        GamePlayController_BirdSort.Instance.playerContain.EnableBreakObjectMode();
+        GamePlayController_BirdSort.Instance.gameScene.EnableHammer();
         return CanBreakObject;
     }
 

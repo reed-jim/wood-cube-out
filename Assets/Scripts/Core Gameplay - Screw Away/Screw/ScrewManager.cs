@@ -19,8 +19,8 @@ public class ScrewManager : MonoBehaviour
 
     #region PRIVATE FIELD
     [SerializeField]public List<BaseScrew> _screws;
-    private int _totalScrewObserved;
-    private int _totalScrew;
+    [SerializeField]private int _totalScrewObserved;
+    [SerializeField]private int _totalScrew;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     #endregion
 
@@ -38,7 +38,6 @@ public class ScrewManager : MonoBehaviour
 
     #region EVENT
     public static event Action winLevelEvent;
-    public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action<bool> enableBoosterEvent;
     #endregion
 
@@ -77,7 +76,7 @@ public class ScrewManager : MonoBehaviour
         _totalScrew = screwNumber;
         _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
 
-        updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
+       GamePlayController_BirdSort.Instance.gameScene.UpdateRemainingScrew(_totalScrew, _totalScrew);
     }
 
     public void AddScrew(BaseScrew screw)
@@ -94,11 +93,10 @@ public class ScrewManager : MonoBehaviour
         if (_totalScrewObserved == _totalScrew)
         {
             SpawnFirstScrewBoxes();
-
-            // TO SAVE/LOAD LEVEL PROGRESS
-            // setScrewsEvent?.Invoke(_screws.ToArray());
-
-            //levelSetupCompletedEvent?.Invoke();
+            foreach (var i in GamePlayController_BirdSort.Instance.level.pieces)
+            {
+                i.ScaleBeforeLevel();
+            }
         }
     }
 
@@ -308,7 +306,7 @@ public class ScrewManager : MonoBehaviour
 
         int remainingScrew = remainingScrewByFaction.Sum(item => item.Value);
 
-        updateRemainingScrewEvent?.Invoke(remainingScrew, _totalScrew);
+        GamePlayController_BirdSort.Instance.gameScene.UpdateRemainingScrew(remainingScrew, _totalScrew);
 
         if (remainingScrew == 0)
         {

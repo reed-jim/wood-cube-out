@@ -71,7 +71,7 @@ public class GiftDatabase : SerializedScriptableObject
             case GiftType.SuggetItem_BirdSort:
                 AddItem(giftType, amount, isUnlimited);
                 break;
-            case GiftType.IceItem_BirdSort:
+            case GiftType.AddBox:
                 AddItem(giftType, amount, isUnlimited);
                 break;
             case GiftType.AddHole:
@@ -117,7 +117,7 @@ public class GiftDatabase : SerializedScriptableObject
          { GiftType.ReturnItem_BirdSort, 4 },
          { GiftType.AddHole, 4 },
          { GiftType.BreakObject, 4 },
-         { GiftType.IceItem_BirdSort, 4 },
+         { GiftType.AddBox, 4 },
          { GiftType.ClearHole, 4 },
          { GiftType.AddTimeItem_BirdSort, 2 },
         { GiftType.Health, 20 },
@@ -181,7 +181,7 @@ public enum GiftType
     BlockBrand_BirdSort = 1001,
     ReturnItem_BirdSort = 1002,
     SuggetItem_BirdSort = 1003,
-    IceItem_BirdSort = 1004,
+    AddBox = 1004,
     AddHole = 1005,
     BreakObject = 1006,
     ClearHole = 1007,

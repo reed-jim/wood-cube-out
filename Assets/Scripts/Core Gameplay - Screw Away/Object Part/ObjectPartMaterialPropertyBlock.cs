@@ -17,11 +17,6 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 
     private void Awake()
     {
-        BasicObjectPart.selectObjectPartEvent += OnObjectPartSelected;
-        BasicObjectPart.deselectObjectPartEvent += OnObjectPartDeselected;
-        ObjectPartHolder.dissolveObjectPartEvent += Dissolve;
-        BasicObjectPart.dissolveObjectPartEvent += Dissolve;
-
         _tweens = new List<Tween>();
 
         Init();
@@ -29,11 +24,6 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 
     void OnDestroy()
     {
-        BasicObjectPart.selectObjectPartEvent -= OnObjectPartSelected;
-        BasicObjectPart.deselectObjectPartEvent -= OnObjectPartDeselected;
-        ObjectPartHolder.dissolveObjectPartEvent -= Dissolve;
-        BasicObjectPart.dissolveObjectPartEvent -= Dissolve;
-
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopTween(_currentAlphaTransition);
     }
@@ -94,7 +84,7 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
         }
     }
 
-    private void Dissolve(int instanceId)
+    public void Dissolve(int instanceId)
     {
         if (instanceId != gameObject.GetInstanceID() || _isDissolving)
         {

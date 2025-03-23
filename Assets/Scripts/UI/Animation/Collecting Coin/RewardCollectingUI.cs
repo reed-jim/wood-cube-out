@@ -21,7 +21,6 @@ public class RewardCollectingUI : MonoBehaviour
     private void Awake()
     {
         CoinContainerUI.collectCoinEvent += Collect;
-        WinPopup.collectCoinEvent += Collect;
 
         CreatePool();
     }
@@ -29,7 +28,6 @@ public class RewardCollectingUI : MonoBehaviour
     private void OnDestroy()
     {
         CoinContainerUI.collectCoinEvent -= Collect;
-        WinPopup.collectCoinEvent -= Collect;
     }
 
     private void CreatePool()

@@ -20,7 +20,6 @@ public class SuggetUseItemInGame : MonoBehaviour
     private Action<object> onBuyItem;
 
     
-    [SerializeField] private Sprite highlightReturn;
     [SerializeField] private Sprite highlightAddBranch;
     [SerializeField] private Sprite highlightShuffer;
     [SerializeField] private Sprite highlightBreakRule;

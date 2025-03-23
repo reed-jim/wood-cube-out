@@ -10,16 +10,9 @@ public class ScrewOutline : MonoBehaviour
     private Tween _outlineTween;
     private bool _isOutlined;
     private bool _isScrewLoosed;
-
-    private void Awake()
-    {
-        BaseScrew.screwStartLoosenedEvent += OnScrewStartLoosed;
-    }
-
+    
     void OnDestroy()
     {
-        BaseScrew.screwStartLoosenedEvent -= OnScrewStartLoosed;
-
         CommonUtil.StopTween(_outlineTween);
     }
 
@@ -52,7 +45,7 @@ public class ScrewOutline : MonoBehaviour
         });
     }
 
-    private void OnScrewStartLoosed(int instanceId)
+    public void OnScrewStartLoosed(int instanceId)
     {
         if (instanceId == gameObject.GetInstanceID())
         {

@@ -29,10 +29,10 @@ public class MultiPhaseScrew : BasicScrew
         }
     }
 
-    protected override void RegisterMoreEvent()
-    {
-        MultiPhaseLevelManager.switchPhaseEvent += OnPhaseSwitched;
-    }
+    // protected override void RegisterMoreEvent()
+    // {
+    //     MultiPhaseLevelManager.switchPhaseEvent += OnPhaseSwitched;
+    // }
 
     protected override void UnregisterMoreEvent()
     {

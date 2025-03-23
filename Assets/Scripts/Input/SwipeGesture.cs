@@ -19,13 +19,12 @@ public class SwipeGesture : MonoBehaviour
     private float _notSwipingDuration;
 
     #region ACTION
-    public static event Action<Vector2> swipeGestureEvent;
     public static event Action stopSwipeGestureEvent;
     #endregion
 
     void Awake()
     {
-        BasePopup.enableSwipingScreenEvent += EnableSwiping;
+      
         LevelTutorial.enableSwipingEvent += EnableSwiping;
         PinchGesture.enableSwipingEvent += EnableSwiping;
 
@@ -34,7 +33,6 @@ public class SwipeGesture : MonoBehaviour
 
     void OnDestroy()
     {
-        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
         LevelTutorial.enableSwipingEvent -= EnableSwiping;
         PinchGesture.enableSwipingEvent -= EnableSwiping;
     }
@@ -66,8 +64,7 @@ public class SwipeGesture : MonoBehaviour
                 {
                     return;
                 }
-
-                swipeGestureEvent?.Invoke(_moveDirection);
+                
 
                 _lastPosition = mousePosition;
 

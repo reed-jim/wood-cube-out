@@ -13,16 +13,12 @@ public class PopupFadeBackground : MonoBehaviour
 
     void Awake()
     {
-        BasePopup.popupShowEvent += OnPopupShow;
-        BasePopup.popupHideEvent += OnPopupClose;
 
         fadeBackground.gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
-        BasePopup.popupShowEvent -= OnPopupShow;
-        BasePopup.popupHideEvent -= OnPopupClose;
 
         CommonUtil.StopTween(_transitionTween);
     }

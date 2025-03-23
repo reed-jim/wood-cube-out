@@ -24,14 +24,7 @@ public class LevelLoader : MonoBehaviour
 
     private void Awake()
     {
-        PausePopup.replayLevelEvent += Replay;
-        LosePopup.replayLevelEvent += Replay;
-        DebugPopup.toLevelEvent += GoLevel;
-        DebugPopup.nextLevelEvent += NextLevel;
-        DebugPopup.prevLevelEvent += PrevLevel;
-        WinPopup.nextLevelEvent += NextLevel;
-        WinPopup.goLevelEvent += GoLevel;
-        LosePopup.skipLevelEvent += NextLevel;
+      
         //currenlevel = levelplay
 
         _maxLevel = levelDataContainer.MaxLevel;
@@ -41,14 +34,7 @@ public class LevelLoader : MonoBehaviour
 
     void OnDestroy()
     {
-        PausePopup.replayLevelEvent -= Replay;
-        LosePopup.replayLevelEvent -= Replay;
-        DebugPopup.toLevelEvent -= GoLevel;
-        DebugPopup.nextLevelEvent -= NextLevel;
-        DebugPopup.prevLevelEvent -= PrevLevel;
-        WinPopup.nextLevelEvent -= NextLevel;
-        WinPopup.goLevelEvent -= GoLevel;
-        LosePopup.skipLevelEvent -= NextLevel;
+        
     }
 
     private async Task LoadLevel()

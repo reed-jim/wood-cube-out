@@ -121,7 +121,7 @@ public class IceItem_BirdSort : ItemBase
     public override bool IsCanUseItem()
     {
         if (UseProfile.CurrentLevel
-            < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.IceItem_BirdSort).unlockLevel)
+            < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.AddBox).unlockLevel)
             return false;
 
         if (UseProfile.GetNumItem(typeItem) <= 0)

@@ -26,7 +26,6 @@ public class IAPPackageUI : MonoBehaviour
     private void Awake()
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
-        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
 
         buyButton.onClick.AddListener(Buy);
 
@@ -36,7 +35,6 @@ public class IAPPackageUI : MonoBehaviour
     void OnDestroy()
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
-        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
     }
 
     public void Setup(IAPPackageData data)

@@ -37,7 +37,6 @@ public class MenuScreen : MonoBehaviour
     private void Awake()
     {
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
-        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -84,7 +83,6 @@ public class MenuScreen : MonoBehaviour
     void OnDestroy()
     {
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
-        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         SceneManager.sceneLoaded -= OnSceneLoaded;
 

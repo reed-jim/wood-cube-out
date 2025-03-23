@@ -66,10 +66,6 @@ public class AddHoleItem : ItemBase
     }
     public void HandleShuffle()
     {
-      
-        
-
-        GamePlayController_BirdSort.Instance.returnController.ResetReturn();
         BirdSort2.GamePlayController_BirdSort.Instance.itemController.suggetUseItemInGame.ResetSugget();
     }
 

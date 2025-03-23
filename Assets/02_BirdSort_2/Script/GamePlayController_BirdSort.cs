@@ -28,16 +28,10 @@ namespace BirdSort2
         public PlayerContain playerContain;
         public GameScene_BirdSort gameScene;
         public ScoreController scoreController;
-        public ExtralPlayController_BirdSort extralPlayController;
         public TutorialController tutorialController;
         public Level_BirdSort_2 level;
-        public ReturnController returnController;
         public SuggetItem_BirdSort suggetBoosterController;
-        public ShuffleController shuffleController;
         public ThemeController themeController;
-
-        public HintController hintController;
-      
         public IQScoreController iqScoreController;
         public ChallengeGameplayController challengeGameplayController;
         public ItemController itemController;
@@ -73,10 +67,9 @@ namespace BirdSort2
             ObjectPoolingEverythingInitializer.Init();
             ObjectPoolingEverything.Init();
             playerContain.Init();
+            gamePlayCamera.Init();
             level.Init();
-            returnController.Init();
-            shuffleController.Init();
-            themeController.Init();
+            //themeController.Init();
             gameScene.Init();
         
             scoreController.Init();

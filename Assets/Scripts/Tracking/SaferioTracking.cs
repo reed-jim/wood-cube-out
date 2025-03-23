@@ -68,7 +68,7 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackBoosterUsage(BoosterType boosterType)
+    public static void TrackBoosterUsage(GiftType boosterType)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
@@ -80,7 +80,7 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackReviveEvent(int level, string method, BoosterType boosterType, float progress)
+    public static void TrackReviveEvent(int level, string method, GiftType boosterType, float progress)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =

@@ -29,7 +29,7 @@ public class StartLoading : MonoBehaviour
         // we start loading the scene
         //scene_name = GameUtils.SceneName.HOME_SCENE;
         string sceneLoad = SceneName.HOME_SCENE;
-        if(UseProfile.CurrentLevel <= RemoteConfigController.GetIntConfig(FirebaseConfig.START_LEVEL_BACK_TO_HOME, 5))
+        if(UseProfile.CurrentLevel <= RemoteConfigController.GetIntConfig(FirebaseConfig.START_LEVEL_BACK_TO_HOME, 2))
             sceneLoad = SceneName.GAME_PLAY;
 
         var _asyncOperation = Addressables.LoadSceneAsync(sceneLoad);
