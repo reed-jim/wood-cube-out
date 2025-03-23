@@ -23,6 +23,7 @@ public class ScrewBox : MonoBehaviour
     [SerializeField] private float scaleDownDuration;
     [SerializeField] private float delayMoveOutDuration;
     [SerializeField] private float moveOutDuration;
+    public bool isFreezeddddd;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] protected GameSetting gameSetting;
@@ -222,7 +223,7 @@ public class ScrewBox : MonoBehaviour
         GamePersistentVariable.numScrewBoxUnlocked++;
 
         setFactionForScrewBoxEvent?.Invoke(this);
-        screwBoxUnlockedEvent?.Invoke(this);
+        // screwBoxUnlockedEvent?.Invoke(this);
     }
 
     private void Unlock(int instanceId)
@@ -231,5 +232,10 @@ public class ScrewBox : MonoBehaviour
         {
             Unlock();
         }
+    }
+
+    public void InvokeScrewBoxUnlockedEvent()
+    {
+        screwBoxUnlockedEvent?.Invoke(this);
     }
 }

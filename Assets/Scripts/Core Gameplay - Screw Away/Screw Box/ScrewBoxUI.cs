@@ -90,9 +90,20 @@ public class ScrewBoxUI : MonoBehaviour
 
     public void Unlock()
     {
-        Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
+        ScrewBox screwBox = GetComponent<ScrewBox>();
+
+        screwBox.IsInTransition = true;
+
+        Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 1f).OnComplete(() =>
         {
-            unlockByAdsButton.gameObject.SetActive(false);
+            Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
+            {
+                unlockByAdsButton.gameObject.SetActive(false);
+
+                screwBox.IsInTransition = false;
+
+                screwBox.InvokeScrewBoxUnlockedEvent();
+            });
         });
 
         unlockScrewBox?.Invoke(gameObject.GetInstanceID());

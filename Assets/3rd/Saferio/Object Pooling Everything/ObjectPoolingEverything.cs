@@ -89,6 +89,8 @@ public class ObjectPool
         {
             GameObject gameObject = ObjectPoolingEverything.SpawnGameObject(prefab);
 
+            gameObject.name = $"{prefab.name} {i}";
+
             GameObjectWithComponent gameObjectWithComponent = new GameObjectWithComponent();
 
             gameObjectWithComponent.gameObject = gameObject;
@@ -109,6 +111,8 @@ public class ObjectPool
         for (int i = 0; i < poolSize; i++)
         {
             GameObject gameObject = ObjectPoolingEverything.SpawnGameObject(prefab);
+
+            gameObject.name = $"{prefab.name} {i}";
 
             GameObjectWithComponent gameObjectWithComponent = new GameObjectWithComponent();
 
@@ -132,6 +136,8 @@ public class ObjectPool
             if (_pool[i].gameObject == null)
             {
                 GameObject gameObject = ObjectPoolingEverything.SpawnGameObject(_cachedPrefab);
+
+                gameObject.name = $"{_cachedPrefab.name} {i}";
 
                 GameObjectWithComponent gameObjectWithComponent = new GameObjectWithComponent();
 
