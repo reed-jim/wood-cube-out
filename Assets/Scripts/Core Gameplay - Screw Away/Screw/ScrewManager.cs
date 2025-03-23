@@ -227,7 +227,7 @@ public class ScrewManager : MonoBehaviour
         return remainingScrewByFaction;
     }
 
-    private Dictionary<GameFaction, int> GetDifficultyLevelByFaction(int? levelPhase = null)
+    private async Task<Dictionary<GameFaction, int>> GetDifficultyLevelByFaction(int? levelPhase = null)
     {
         // RULE: The more difficulty point, the less chance to spawn for a faction
 
@@ -246,9 +246,19 @@ public class ScrewManager : MonoBehaviour
         // Find the number of obstacles for each screw in each faction.
         for (int i = 0; i < _screws.Count; i++)
         {
+            if (_screws[i] == null)
+            {
+                continue;
+            }
+
             if (_screws[i].IsDone || _screws[i].IsLocked)
             {
                 continue;
+            }
+
+            if (i > 0 && i % 9 == 0)
+            {
+                await Task.Delay(20);
             }
 
             GameFaction faction = _screws[i].Faction;
@@ -527,14 +537,14 @@ public class ScrewManager : MonoBehaviour
         }
     }
 
-    private void SpawnNewScrewBox()
+    private async void SpawnNewScrewBox()
     {
         if (_totalScrewBoxesSpawned >= _totalScrewBoxes)
         {
             return;
         }
 
-        GameFaction faction = GetFactionForNewScrewBox();
+        GameFaction faction = await GetFactionForNewScrewBox();
 
         if (faction == GameFaction.None)
         {
@@ -559,9 +569,9 @@ public class ScrewManager : MonoBehaviour
         AssignFactionForNewScrewBox(screwBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
     }
 
-    private void AssignFactionForNewScrewBox(ScrewBox screwBox, int difficultyLevelModifier)
+    private async Task AssignFactionForNewScrewBox(ScrewBox screwBox, int difficultyLevelModifier)
     {
-        GameFaction faction = GetFactionForNewScrewBox(difficultyLevelModifier);
+        GameFaction faction = await GetFactionForNewScrewBox(difficultyLevelModifier);
 
         if (faction == GameFaction.None)
         {
@@ -587,7 +597,7 @@ public class ScrewManager : MonoBehaviour
 
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
-        Dictionary<GameFaction, int> difficultyLevelByFaction = GetDifficultyLevelByFaction();
+        Dictionary<GameFaction, int> difficultyLevelByFaction = await GetDifficultyLevelByFaction();
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(difficultyLevelByFaction);
 
@@ -596,7 +606,7 @@ public class ScrewManager : MonoBehaviour
         return factionSortedByDifficulty;
     }
 
-    private GameFaction GetFactionForNewScrewBox(int difficultyLevelModifier = 0)
+    private async Task<GameFaction> GetFactionForNewScrewBox(int difficultyLevelModifier = 0)
     {
         float progress;
         int doneScrew = 0;
@@ -651,7 +661,7 @@ public class ScrewManager : MonoBehaviour
 
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
-        Dictionary<GameFaction, int> totalBlockObjectsByFaction = GetDifficultyLevelByFaction(difficultyLevel);
+        Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
 

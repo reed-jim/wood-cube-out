@@ -212,6 +212,11 @@ public class ScrewBoxManager : MonoBehaviour
         {
             for (int i = 0; i < screwBoxs.Length; i++)
             {
+                if (screwBoxs[i] == null)
+                {
+                    continue;
+                }
+
                 if (screwBoxs[i].IsLocked)
                 {
                     screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
@@ -269,6 +274,11 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwBoxs.Length; i++)
         {
+            if (screwBoxs[i] == null)
+            {
+                continue;
+            }
+
             if (screwBoxs[i].IsLocked)
             {
                 numLockedScrewBoxes++;
@@ -412,6 +422,8 @@ public class ScrewBoxManager : MonoBehaviour
 
         int index = 0;
 
+        bool isFound = false;
+
         for (int i = 0; i < screwBoxs.Length; i++)
         {
             if (screwBoxs[i] == null)
@@ -420,8 +432,15 @@ public class ScrewBoxManager : MonoBehaviour
 
                 index = i;
 
+                isFound = true;
+
                 break;
             }
+        }
+        
+        if (!isFound)
+        {
+            return;
         }
 
         Direction getInDirection = index > 1 ? Direction.Left : Direction.Right;
