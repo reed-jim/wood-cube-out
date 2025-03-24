@@ -690,7 +690,7 @@ public class LevelLoader : MonoBehaviour
             return false;
         }
 
-        if (level <= 3 || level % numLevelShowBoosterSuggestion == 0)
+        if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
         {
             return false;
         }
@@ -716,7 +716,7 @@ public class LevelLoader : MonoBehaviour
             return false;
         }
 
-        if (level < minLevelShow || level % numLevelShowBoosterSuggestion == 0)
+        if (level < minLevelShow || level % numLevelShowBoosterSuggestion != 0)
         {
             return false;
         }
