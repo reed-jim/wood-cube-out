@@ -111,9 +111,7 @@ public class ScrewManager : MonoBehaviour
 
         _totalScrewObserved = 0;
 
-        // _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(currentLevel.Value);
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-
         _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier =
             RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
 
@@ -158,8 +156,8 @@ public class ScrewManager : MonoBehaviour
 
         if (_totalScrewObserved == _totalScrew)
         {
-            // TO SAVE/LOAD LEVEL PROGRESS
-            // setScrewsEvent?.Invoke(_screws.ToArray());
+            // TO SAVE/LOAD LEVEL PROGRESS, uncomment this
+            setScrewsEvent?.Invoke(_screws.ToArray());
 
             levelSetupCompletedEvent?.Invoke();
 
@@ -256,7 +254,7 @@ public class ScrewManager : MonoBehaviour
                 continue;
             }
 
-            if (i > 0 && i % 9 == 0)
+            if (i > 0 && i % 16 == 0)
             {
                 await Task.Delay(20);
             }

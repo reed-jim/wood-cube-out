@@ -218,6 +218,18 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     }
 
+    public void LooseImmediately(ScrewBoxSlot screwBoxSlot)
+    {
+        if (joint != null)
+        {
+            Destroy(joint);
+
+            InvokeBreakJointEvent();
+        }
+
+        screwBoxSlot.Fill(this);
+    }
+
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
         Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
