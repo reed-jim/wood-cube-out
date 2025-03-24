@@ -16,12 +16,14 @@ public class ScrewsDataManager : MonoBehaviour
 
     public static event Action spawnFreshLevelScrewBoxesEvent;
 
+    private bool _isOldDataLoaded;
+
 
     void Awake()
     {
         ScrewManager.setScrewsEvent += OnAllLevelScrewsObservered;
 
-        // StartCoroutine(PeriodicallySaving());
+        StartCoroutine(PeriodicallySaving());
     }
 
     void OnDestroy()
@@ -31,13 +33,16 @@ public class ScrewsDataManager : MonoBehaviour
 
     private IEnumerator PeriodicallySaving()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(3f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(2f);
 
         while (true)
         {
             yield return waitForSeconds;
 
-            SaveLevelData();
+            if (_isOldDataLoaded)
+            {
+                SaveLevelData();
+            }
         }
     }
 
@@ -90,27 +95,39 @@ public class ScrewsDataManager : MonoBehaviour
                 continue;
             }
 
-            if (screwData.IsDestroyed)
-            {
-                screw.ForceUnscrew();
+            screw.IsMoving = screwData.IsMoving();
+            screw.IsDone = screwData.IsDone();
+            screw.IsInScrewPort = screwData.IsInScrewPort();
+            screw.IsOutsideWithNoScrewBox = screwData.IsOutside();
 
-                continue;
-            }
+            // if (screwData.IsDone())
+            // {
+            //     screw.LooseImmediately();
+            // }
 
-            if (screwData.IsInScrewPort)
-            {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+            // if (screwData.IsDestroyed)
+            // {
+            //     screw.ForceUnscrew();
 
-                screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
-            }
+            //     continue;
+            // }
 
-            if (screwData.IsDone)
-            {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+            // if (screwData.IsInScrewPort)
+            // {
+            //     ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
 
-                screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
-            }
+            //     screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
+            // }
+
+            // if (screwData.IsDone)
+            // {
+            //     ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+
+            //     screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
+            // }
         }
+
+        _isOldDataLoaded = true;
     }
 
     private ScrewBoxData[] GetScrewBoxesData()
@@ -167,13 +184,17 @@ public class ScrewsDataManager : MonoBehaviour
 
             screwsData[i].ScrewId = _screws[i].ScrewId;
             screwsData[i].Faction = _screws[i].Faction;
-            screwsData[i].IsDone = _screws[i].IsDone;
-            screwsData[i].IsInScrewPort = _screws[i].IsInScrewPort;
 
-            if (!_screws[i].gameObject.activeSelf)
-            {
-                screwsData[i].IsDestroyed = true;
-            }
+            screwsData[i].SetState(
+                _screws[i].IsDone, _screws[i].IsMoving, _screws[i].IsOutsideWithNoScrewBox, _screws[i].IsInScrewPort, _screws[i].gameObject.activeInHierarchy);
+
+            // screwsData[i].IsDone = _screws[i].IsDone;
+            // screwsData[i].IsInScrewPort = _screws[i].IsInScrewPort;
+
+            // if (!_screws[i].gameObject.activeSelf)
+            // {
+            //     screwsData[i].IsDestroyed = true;
+            // }
         }
 
         ScrewBoxData[] screwBoxesData = GetScrewBoxesData();
@@ -188,8 +209,8 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnAllLevelScrewsObservered(BaseScrew[] screws)
     {
-        // _screws = screws;
+        _screws = screws;
 
-        // LoadLevelData();
+        LoadLevelData();
     }
 }
