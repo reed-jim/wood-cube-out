@@ -61,6 +61,11 @@ public class ScrewData
         if (isActive) stateFlags |= IsActiveBit;
     }
 
+    public bool IsActive()
+    {
+        return (stateFlags & IsActiveBit) != 0;
+    }
+
     public bool IsMoving()
     {
         return (stateFlags & IsMovingBit) != 0;

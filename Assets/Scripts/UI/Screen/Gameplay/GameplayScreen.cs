@@ -30,6 +30,7 @@ public class GameplayScreen : MonoBehaviour
         LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
+        ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
         skipLevelButton.onClick.AddListener(SkipLevel);
@@ -51,6 +52,7 @@ public class GameplayScreen : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
     private async void Pause()

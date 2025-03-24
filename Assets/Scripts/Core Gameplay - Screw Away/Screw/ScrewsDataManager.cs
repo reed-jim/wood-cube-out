@@ -15,6 +15,8 @@ public class ScrewsDataManager : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
 
     public static event Action spawnFreshLevelScrewBoxesEvent;
+    public static event Action<int, int> updateRemainingScrewEvent;
+    public static event Action updateOutsideScrewNumberEvent;
 
     private bool _isOldDataLoaded;
 
@@ -39,7 +41,7 @@ public class ScrewsDataManager : MonoBehaviour
         {
             yield return waitForSeconds;
 
-            if (_isOldDataLoaded)
+            if (!GamePersistentVariable.isFreshLevel)
             {
                 SaveLevelData();
             }
@@ -48,12 +50,14 @@ public class ScrewsDataManager : MonoBehaviour
 
     private async void LoadLevelData()
     {
-        LevelProgressData levelProgressData = DataUtility.Load<LevelProgressData>($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", new LevelProgressData());
+        LevelProgressData levelProgressData = DataUtility.Load($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", new LevelProgressData());
+
+        GamePersistentVariable.isFreshLevel = levelProgressData.ScrewsData == null;
 
         // No data for current level
         if (levelProgressData.ScrewsData == null)
         {
-            spawnFreshLevelScrewBoxesEvent?.Invoke();
+            _isOldDataLoaded = true;
 
             return;
         }
@@ -66,25 +70,17 @@ public class ScrewsDataManager : MonoBehaviour
             screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
         }
 
-        await Task.Delay(2000);
+        await Task.Delay(1000);
 
         Dictionary<BaseScrew, ScrewData> screwsWithData = new Dictionary<BaseScrew, ScrewData>();
 
         for (int i = 0; i < _screws.Length; i++)
         {
-            for (int j = 0; j < screwsData.Length; j++)
-            {
-                BaseScrew screw = _screws[i];
-                ScrewData screwData = screwsData[j];
-
-                if (screwData.ScrewId == screw.ScrewId)
-                {
-                    screwsWithData.Add(screw, screwData);
-
-                    break;
-                }
-            }
+            screwsWithData.Add(_screws[i], screwsData[i]);
         }
+
+        int totalScrew = _screws.Length;
+        int remainingScrew = totalScrew;
 
         foreach (var screw in screwsWithData.Keys)
         {
@@ -95,29 +91,50 @@ public class ScrewsDataManager : MonoBehaviour
                 continue;
             }
 
+            screw.Faction = screwData.Faction;
+            screw.ScrewServiceLocator.screwFaction.SetColorByFaction();
+
             screw.IsMoving = screwData.IsMoving();
             screw.IsDone = screwData.IsDone();
             screw.IsInScrewPort = screwData.IsInScrewPort();
             screw.IsOutsideWithNoScrewBox = screwData.IsOutside();
 
-            // if (screwData.IsDone())
-            // {
-            //     screw.LooseImmediately();
-            // }
+            if (!screwData.IsActive())
+            {
+                screw.InvokeBreakJointEvent();
 
-            // if (screwData.IsDestroyed)
-            // {
-            //     screw.ForceUnscrew();
+                screw.gameObject.SetActive(false);
 
-            //     continue;
-            // }
+                screw.IsDone = true;
 
-            // if (screwData.IsInScrewPort)
-            // {
-            //     ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                remainingScrew--;
 
-            //     screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
-            // }
+                continue;
+            }
+
+            if (screwData.IsDone())
+            {
+                ScrewBoxSlot screwBoxSlot = ScrewBoxManager.Instance.CheckAvailableScrewBoxes(screw.Faction);
+
+                if (screwBoxSlot != null)
+                {
+                    screw.LooseImmediately(screwBoxSlot);
+                }
+
+                remainingScrew--;
+            }
+
+            if (screwData.IsInScrewPort())
+            {
+                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+
+                screw.LooseImmediately(screwBoxSlot);
+            }
+
+            if (screwData.IsOutside())
+            {
+                screw.ForceUnscrew();
+            }
 
             // if (screwData.IsDone)
             // {
@@ -126,6 +143,10 @@ public class ScrewsDataManager : MonoBehaviour
             //     screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
             // }
         }
+
+        // UPDATE UI
+        updateRemainingScrewEvent?.Invoke(remainingScrew, totalScrew);
+        updateOutsideScrewNumberEvent?.Invoke();
 
         _isOldDataLoaded = true;
     }
@@ -187,14 +208,6 @@ public class ScrewsDataManager : MonoBehaviour
 
             screwsData[i].SetState(
                 _screws[i].IsDone, _screws[i].IsMoving, _screws[i].IsOutsideWithNoScrewBox, _screws[i].IsInScrewPort, _screws[i].gameObject.activeInHierarchy);
-
-            // screwsData[i].IsDone = _screws[i].IsDone;
-            // screwsData[i].IsInScrewPort = _screws[i].IsInScrewPort;
-
-            // if (!_screws[i].gameObject.activeSelf)
-            // {
-            //     screwsData[i].IsDestroyed = true;
-            // }
         }
 
         ScrewBoxData[] screwBoxesData = GetScrewBoxesData();
@@ -211,6 +224,16 @@ public class ScrewsDataManager : MonoBehaviour
     {
         _screws = screws;
 
-        LoadLevelData();
+        System.Array.Sort(_screws, (go1, go2) => go2.GetInstanceID().CompareTo(go1.GetInstanceID()));
+
+        if (!GamePersistentVariable.isPreventLoadLevelData)
+        {
+            LoadLevelData();
+        }
+        else
+        {
+            GamePersistentVariable.isPreventLoadLevelData = false;
+            GamePersistentVariable.isFreshLevel = true;
+        }
     }
 }
