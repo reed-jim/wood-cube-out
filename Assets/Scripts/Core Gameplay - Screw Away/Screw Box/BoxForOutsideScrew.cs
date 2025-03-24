@@ -16,6 +16,7 @@ public class BoxForOutsideScrew : MonoBehaviour
         LevelLoader.startLevelEvent += OnLevelStarted;
         BaseScrew.updateOutsideScrewNumberEvent += UpdateNumber;
         ScrewManager.updateOutsideScrewNumberEvent += UpdateNumber;
+        ScrewsDataManager.updateOutsideScrewNumberEvent += UpdateNumber;
 
         _tweens = new List<Sequence>();
 
@@ -34,6 +35,7 @@ public class BoxForOutsideScrew : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         BaseScrew.updateOutsideScrewNumberEvent -= UpdateNumber;
         ScrewManager.updateOutsideScrewNumberEvent -= UpdateNumber;
+        ScrewsDataManager.updateOutsideScrewNumberEvent -= UpdateNumber;
 
         CommonUtil.StopAllSequences(_tweens);
     }

@@ -180,7 +180,10 @@ public class ScrewManager : MonoBehaviour
                 //     // }
                 // }
 
-                SpawnFirstScrewBoxes();
+                if (GamePersistentVariable.isFreshLevel)
+                {
+                    SpawnFirstScrewBoxes();
+                }
             }));
         }
     }

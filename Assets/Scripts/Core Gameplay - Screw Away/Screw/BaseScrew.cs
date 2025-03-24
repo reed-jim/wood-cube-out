@@ -225,6 +225,21 @@ public class BaseScrew : MonoBehaviour, IScrew
             Destroy(joint);
 
             InvokeBreakJointEvent();
+
+            transform.SetParent(screwBoxSlot.transform);
+
+            Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
+            _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
+
+            if (screwBoxSlot.IsScrewPort)
+            {
+                finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
+                _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
+            }
+
+            transform.localScale = scaleOnScrewBox * Vector3.one;
+            transform.localPosition = finalLocalPosition;
+            transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
         }
 
         screwBoxSlot.Fill(this);
@@ -306,13 +321,13 @@ public class BaseScrew : MonoBehaviour, IScrew
                 float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
                 timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
-                _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
                 Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
+                _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
 
                 if (screwBoxSlot.IsScrewPort)
                 {
-                    _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
                     finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
+                    _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
                 }
 
                 _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
@@ -459,7 +474,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         screwLoosenedEvent?.Invoke();
     }
 
-    protected void InvokeBreakJointEvent()
+    public void InvokeBreakJointEvent()
     {
         breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
     }

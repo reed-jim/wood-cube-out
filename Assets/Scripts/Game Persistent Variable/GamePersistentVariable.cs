@@ -12,7 +12,9 @@ public static class GamePersistentVariable
 
     #region LEVEL OBSERVER
     public static int currentLevel; 
-    public static int levelPrefab; 
+    public static int levelPrefab;
+    public static bool isFreshLevel; 
+    public static bool isPreventLoadLevelData; 
     public static int numScrewBoxUnlocked; 
     public static int numOutsideScrew;
     public static bool isAllowedSkipLevel;

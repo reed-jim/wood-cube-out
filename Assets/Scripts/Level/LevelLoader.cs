@@ -363,6 +363,8 @@ public class LevelLoader : MonoBehaviour
 
     private void Replay()
     {
+        GamePersistentVariable.isPreventLoadLevelData = true;
+
         GoLevel(currentLevel.Value);
     }
 
