@@ -41,6 +41,10 @@ public class HingeJointGenerator : EditorWindow
     private GameObject piecePrefab;
     #endregion
 
+    #region RANDOMIZE MODEL COLOR
+    private Dictionary<Renderer, Material> _cachedMaterialDictionary;
+    #endregion
+
 
     [MenuItem("Saferio/Tools/Level Tool")]
     public static void ShowWindow()
@@ -115,6 +119,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Randomize Level Pieces' Color"))
         {
             RandomizeLevelModelColor();
+        }
+
+        if (GUILayout.Button("Revert Original Model Color"))
+        {
+            RevertOriginalModelColor();
         }
 
         // if (GUILayout.Button("Fine Tune Level"))
@@ -1967,6 +1976,14 @@ public class HingeJointGenerator : EditorWindow
 
         const int NUM_GRADIENT_MATERIAL = 9;
 
+        // Cache old materials
+        _cachedMaterialDictionary = new Dictionary<Renderer, Material>();
+
+        for (int i = 0; i < objectPartRenderers.Length; i++)
+        {
+            _cachedMaterialDictionary.Add(objectPartRenderers[i], objectPartRenderers[i].sharedMaterial);
+        }
+
         // Random new material for each material index
         foreach (var pieceMaterial in piecesMaterials)
         {
@@ -1982,6 +1999,22 @@ public class HingeJointGenerator : EditorWindow
         }
 
         EditorUtility.SetDirty(levelPrefab);
+    }
+
+    private void RevertOriginalModelColor()
+    {
+        if (_cachedMaterialDictionary == null)
+        {
+            return;
+        }
+
+        for (int i = 0; i < _cachedMaterialDictionary.Count; i++)
+        {
+            Renderer renderer = _cachedMaterialDictionary.Keys.ToArray()[i];
+            Material material = _cachedMaterialDictionary.Values.ToArray()[i];
+
+            renderer.sharedMaterial = material;
+        }
     }
 
     private GameObject[] LoadAllPrefabsInFolder(string folder)
