@@ -66,47 +66,6 @@ public static class DataUtility
 
         string fileText = "{}";
 
-
-        // try
-        // {
-        //     using (var file = File.Open(filePath, FileMode.OpenOrCreate))
-        //     {
-        //         byte[] fileBytes = new byte[file.Length];
-        //         file.Read(fileBytes, 0, (int)file.Length);
-        //         fileText = Encoding.UTF8.GetString(fileBytes);
-
-        //         JObject json = JObject.Parse(fileText);
-
-        //         if (json.ContainsKey(key))
-        //         {
-        //             json[key] = JsonConvert.SerializeObject(data);
-        //             // json[key] = JsonUtility.ToJson(data);
-        //         }
-        //         else
-        //         {
-        //             json.Add(key, JsonConvert.SerializeObject(data));
-        //             // json.Add(key, JsonUtility.ToJson(data));
-        //         }
-
-        //         Debug.Log("SAFERIO " + json.ToString());
-
-        //         File.WriteAllText(filePath, json.ToString());
-        //     }
-        // }
-        // catch (IOException ioEx)
-        // {
-        //     Debug.LogError($"SAFERIO File I/O Error: {ioEx.Message}");
-        // }
-        // catch (JsonException jsonEx)
-        // {
-        //     Debug.LogError($"SAFERIO  JSON Error: {jsonEx.Message}");
-        // }
-        // catch (Exception ex)
-        // {
-        //     Debug.LogError($"SAFERIO Unexpected Error: {ex.Message}");
-        // }
-
-
         int attempt = 0;
         int maxRetries = 3;
 
@@ -141,44 +100,6 @@ public static class DataUtility
                 attempt++;
             }
         }
-
-
-
-
-
-        // if (File.Exists(filePath))
-        // {
-        //     fileText = File.ReadAllText(filePath);
-        // }
-
-        // try
-        // {
-        //     JObject json = JObject.Parse(fileText);
-
-        //     if (json.ContainsKey(key))
-        //     {
-        //         json[key] = JsonConvert.SerializeObject(data);
-        //         // json[key] = JsonUtility.ToJson(data);
-        //     }
-        //     else
-        //     {
-        //         json.Add(key, JsonConvert.SerializeObject(data));
-        //         // json.Add(key, JsonUtility.ToJson(data));
-        //     }
-
-        //     Debug.Log("SAFERIO " + json.ToString());
-
-        //     if (json.ToString() == "")
-        //     {
-        //         return;
-        //     }
-
-        //     File.WriteAllText(filePath, json.ToString());
-        // }
-        // catch (Exception e)
-        // {
-        //     Debug.Log("SAFERIO " + e.Message);
-        // }
     }
 
     public static void Save<T>(string key, T data)
@@ -303,8 +224,39 @@ public static class DataUtility
         return Load(GameConstants.SAVE_FILE_NAME, key, defaultValue);
     }
 
-    // public static async Task<T> LoadAsync<T>(string key, T defaultValue)
-    // {
-    //     return await LoadAsync(GameConstants.SAVE_FILE_NAME, key, defaultValue);
-    // }
+    public static void RemoveKey(string key)
+    {
+        string filePath = Application.persistentDataPath + $"/{GameConstants.SAVE_FILE_NAME}.json";
+
+        string fileText = "{}";
+
+        int attempt = 0;
+        int maxRetries = 3;
+
+        while (attempt < maxRetries)
+        {
+            try
+            {
+                if (File.Exists(filePath))
+                {
+                    fileText = File.ReadAllText(filePath);
+                }
+
+                JObject json = JObject.Parse(fileText);
+
+                if (json.ContainsKey(key))
+                {
+                    json.Remove(key);
+                }
+
+                File.WriteAllText(filePath, json.ToString());
+
+                break;
+            }
+            catch (Exception e)
+            {
+                attempt++;
+            }
+        }
+    }
 }

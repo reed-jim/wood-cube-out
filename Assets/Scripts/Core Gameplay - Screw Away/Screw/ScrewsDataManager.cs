@@ -14,16 +14,20 @@ public class ScrewsDataManager : MonoBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
+    #region PRIVATE FIELD
+    private string _currentSaveLevelDataKey;
+    private bool _isOldDataLoaded;
+    #endregion
+
     public static event Action spawnFreshLevelScrewBoxesEvent;
     public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action updateOutsideScrewNumberEvent;
-
-    private bool _isOldDataLoaded;
 
 
     void Awake()
     {
         ScrewManager.setScrewsEvent += OnAllLevelScrewsObservered;
+        GameStateWin.winLevelEvent += OnLevelWon;
 
         StartCoroutine(PeriodicallySaving());
     }
@@ -31,6 +35,7 @@ public class ScrewsDataManager : MonoBehaviour
     void OnDestroy()
     {
         ScrewManager.setScrewsEvent -= OnAllLevelScrewsObservered;
+        GameStateWin.winLevelEvent -= OnLevelWon;
     }
 
     private IEnumerator PeriodicallySaving()
@@ -217,7 +222,11 @@ public class ScrewsDataManager : MonoBehaviour
         levelProgressData.ScrewsData = screwsData;
         levelProgressData.ScrewBoxesData = screwBoxesData;
 
-        DataUtility.SaveAsync($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", levelProgressData);
+        string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value}";
+
+        DataUtility.SaveAsync(key, levelProgressData);
+
+        _currentSaveLevelDataKey = key;
     }
 
     private void OnAllLevelScrewsObservered(BaseScrew[] screws)
@@ -232,8 +241,30 @@ public class ScrewsDataManager : MonoBehaviour
         }
         else
         {
-            GamePersistentVariable.isPreventLoadLevelData = false;
-            GamePersistentVariable.isFreshLevel = true;
+            SetFreshLevel(_currentSaveLevelDataKey);
+
+            // GamePersistentVariable.isPreventLoadLevelData = false;
+            // GamePersistentVariable.isFreshLevel = true;
+
+            // DataUtility.RemoveKey($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}");
         }
     }
+
+    private void OnLevelWon()
+    {
+        GamePersistentVariable.isPreventLoadLevelData = false;
+        GamePersistentVariable.isFreshLevel = true;
+
+        SetFreshLevel(_currentSaveLevelDataKey);
+    }
+
+    #region UTIL
+    private void SetFreshLevel(string levelSaveKey)
+    {
+        GamePersistentVariable.isPreventLoadLevelData = false;
+        GamePersistentVariable.isFreshLevel = true;
+
+        DataUtility.RemoveKey(levelSaveKey);
+    }
+    #endregion
 }
