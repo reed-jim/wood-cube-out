@@ -33,6 +33,7 @@ public class ResourceEarnPopup : BasePopup
         SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
         BoosterSuggestPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
         CompensatePopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        DailyRewardItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
@@ -47,6 +48,7 @@ public class ResourceEarnPopup : BasePopup
         SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         BoosterSuggestPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         CompensatePopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        DailyRewardItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 

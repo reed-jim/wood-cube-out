@@ -7,10 +7,17 @@ public class DailyRewardItem : MonoBehaviour
 {
     [SerializeField] private Button claimButton;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private DailyRewardDataContainer dailyRewardDataContainer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private int dayIndex;
 
     private int _day;
+
+    #region EVENT
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    #endregion
 
     void Awake()
     {
@@ -37,6 +44,11 @@ public class DailyRewardItem : MonoBehaviour
         {
             Tween.Scale(claimButton.transform, 0, duration: 0.3f).OnComplete(() =>
             {
+                int coinQuantity = dailyRewardDataContainer.Items[dayIndex].CoinQuantity;
+                int[] boosterQuantites = dailyRewardDataContainer.Items[dayIndex].BoosterQuantities;
+
+                showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+
                 claimButton.gameObject.SetActive(false);
             });
         });
