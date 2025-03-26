@@ -120,4 +120,12 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 
         _isDissolving = true;
     }
+
+    public void SetWorldBound(float minY, float maxY)
+    {
+        _propertyBlock.SetFloat("_WorldMinY", minY);
+        _propertyBlock.SetFloat("_WorldMaxY", maxY);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
 }
