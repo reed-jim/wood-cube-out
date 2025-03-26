@@ -13,6 +13,7 @@ public class MenuScreen : MonoBehaviour
 {
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button openRemoveAdPopupButton;
+    [SerializeField] private Button openDailyRewardPopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
@@ -46,6 +47,7 @@ public class MenuScreen : MonoBehaviour
 
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
+        openDailyRewardPopupButton.onClick.AddListener(OpenDailyRewardPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -133,6 +135,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenRemoveAdPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
+    }
+
+    private void OpenDailyRewardPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.DailyReward);
     }
 
     private void OpenLuckyWheelScreen()

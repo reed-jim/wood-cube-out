@@ -10,7 +10,7 @@ public class DailyRewardPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        base.RegisterMoreEvent();
+        claimButton.onClick.AddListener(Claim);
     }
 
     private void Claim()
