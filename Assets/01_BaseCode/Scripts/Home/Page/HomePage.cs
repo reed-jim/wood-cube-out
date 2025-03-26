@@ -122,7 +122,7 @@ public class HomePage : PageBase
             if (op.Status == AsyncOperationStatus.Succeeded)
             { 
                 UseProfile.IsClickTutPlayHome = true;
-                Addressables.LoadSceneAsync(SceneName.GAME_PLAY, UnityEngine.SceneManagement.LoadSceneMode.Single);
+                GameController.Instance.LoadScene(SceneName.GAME_PLAY);
             }
             else
             {

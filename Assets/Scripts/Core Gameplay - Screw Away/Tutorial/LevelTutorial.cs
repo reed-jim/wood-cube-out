@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using BirdSort2;
 using Dreamteck.Splines;
 using Lean.Localization;
 using PrimeTween;
@@ -42,17 +43,10 @@ public class LevelTutorial : MonoBehaviour
     private Vector3 _initialRotateIconRotation;
     #endregion
 
-    #region EVENT
-    public static event Action<bool> enableSwipingEvent;
-    public static event Action<bool> enablePinchingEvent;
-    #endregion
+   
 
     void Awake()
     {
-        ScrewSelectionInput.selectScrewEvent += OnScrewSelected;
-        ScrewSelectionInput.breakObjectEvent += OnScrewSelected;
-        //SwipeGesture.swipeGestureEvent += OnScreenSwiped;
-        PinchGesture.pinchGestureEvent += OnScreenZoomed;
 
         StartCoroutine(TutorialStepOne());
 
@@ -71,8 +65,8 @@ public class LevelTutorial : MonoBehaviour
 
     private void Start()
     {
-        enableSwipingEvent?.Invoke(false);
-        enablePinchingEvent?.Invoke(false);
+        GamePlayController_BirdSort.Instance.playerContain.EnableSwiping(false);
+        GamePlayController_BirdSort.Instance.playerContain.EnablePinching(false);
     }
 
     void Update()
@@ -91,10 +85,7 @@ public class LevelTutorial : MonoBehaviour
 
     void OnDestroy()
     {
-        ScrewSelectionInput.selectScrewEvent -= OnScrewSelected;
-        ScrewSelectionInput.breakObjectEvent -= OnScrewSelected;
-        //SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
-        PinchGesture.pinchGestureEvent -= OnScreenZoomed;
+      
     }
 
     private IEnumerator TutorialStepOne()
@@ -188,7 +179,7 @@ public class LevelTutorial : MonoBehaviour
 
         float percent = 0;
 
-        enableSwipingEvent?.Invoke(true);
+        GamePlayController_BirdSort.Instance.playerContain.EnableSwiping(true);
 
         while (_step == 1)
         {
@@ -278,7 +269,7 @@ public class LevelTutorial : MonoBehaviour
         Tween.Alpha(scaleIconHand, 1, duration: 0.3f)
         .OnComplete(() =>
         {
-            enablePinchingEvent?.Invoke(true);
+           GamePlayController_BirdSort.Instance.playerContain.EnablePinching(true);
         });
 
         int phase = 0;
@@ -337,11 +328,11 @@ public class LevelTutorial : MonoBehaviour
             gameObject.SetActive(false);
         });
 
-        enableSwipingEvent?.Invoke(true);
+        GamePlayController_BirdSort.Instance.playerContain.EnableSwiping(true);
     }
 
     #region CALLBACK
-    private void OnScrewSelected()
+    public void OnScrewSelected()
     {
         if (_step == 0)
         {
@@ -349,7 +340,7 @@ public class LevelTutorial : MonoBehaviour
         }
     }
 
-    private void OnScreenSwiped(Vector2 swipeDirection)
+    public void OnScreenSwiped(Vector2 swipeDirection)
     {
         if (_step == 1)
         {
@@ -357,7 +348,7 @@ public class LevelTutorial : MonoBehaviour
         }
     }
 
-    private void OnScreenZoomed(float orthographicSize)
+    public void OnScreenZoomed(float orthographicSize)
     {
         if (_step == 2)
         {

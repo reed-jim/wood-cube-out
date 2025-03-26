@@ -52,7 +52,6 @@ public class ScrewBoxManager : MonoBehaviour
     #endregion
 
     #region EVENT
-    public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
         
     #endregion
@@ -159,7 +158,7 @@ public class ScrewBoxManager : MonoBehaviour
         
         _screwBoxDistance = 0.22f * worldSize.x;
 
-        _screwBoxPositionY = 0.33f * worldSize.y;
+        _screwBoxPositionY = 0.31f * worldSize.y;
         Vector3 screwPortPosition = screwPorts[0].transform.localPosition;
         Debug.Log("Anhtuszz dbg: " + screwPortPosition.y + " " + screwPorts[0].transform.localPosition.y);
         for (int i = 0; i < screwPorts.Count; i++)
@@ -711,7 +710,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         NumScrewInScrewPorts = GetNumScrewsInScrewPorts();
 
-        screwPortsClearedEvent?.Invoke(numScrewCleared);
+        
     }
 
     private int GetNumScrewsInScrewPorts()

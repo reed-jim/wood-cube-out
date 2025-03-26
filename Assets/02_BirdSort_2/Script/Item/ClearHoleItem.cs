@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ClearHoleItem : ItemBase
 {
-    private bool isClearHole;
+    public bool isClearHole;
 
     public override void EndItem()
     {
@@ -19,22 +19,46 @@ public class ClearHoleItem : ItemBase
             return false;
         }
 
-
         if (UseProfile.GetNumItem(typeItem) <= 0)
         {
             return false;
         }
-        if (isClearHole)
-            return false;
 
+        bool checkAvailable = false;
+        foreach (var i in GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts)
+        {
+            if (i.IsFilled)
+            {
+                checkAvailable = true;
+            }
+        }
+
+        if (isClearHole)
+        {
+            return false;
+        }
+
+        if (!checkAvailable)
+        {
+            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.ClearHole].transform.position, "Hole Cleared", Color.red);
+            return false;
+        }
         return true;
 
     }
 
     protected override bool ActiveItemHandle()
     {
+        isClearHole = true;
         GamePlayController_BirdSort.Instance.level.screwBoxManager.ClearAllScrewPorts();
+        StartCoroutine(DelayItem());
         return isClearHole;
+    }
+
+    private IEnumerator DelayItem()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isClearHole = false;
     }
     public ItemUI GetTranformUIButton
     {

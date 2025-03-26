@@ -24,8 +24,7 @@ public class SwipeGesture : MonoBehaviour
 
     void Awake()
     {
-      
-        LevelTutorial.enableSwipingEvent += EnableSwiping;
+        
         PinchGesture.enableSwipingEvent += EnableSwiping;
 
         acceleratedMultiplier = 1;
@@ -33,7 +32,6 @@ public class SwipeGesture : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelTutorial.enableSwipingEvent -= EnableSwiping;
         PinchGesture.enableSwipingEvent -= EnableSwiping;
     }
 

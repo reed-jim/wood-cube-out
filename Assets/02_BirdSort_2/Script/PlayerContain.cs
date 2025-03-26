@@ -191,6 +191,10 @@ namespace BirdSort2
                     }
 
                     GamePlayController_BirdSort.Instance.level.levelParent.Rotate(_moveDirection);
+                    if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
+                    {
+                        GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScreenSwiped(_moveDirection);
+                    }
 
                     _lastPosition = mousePosition;
 
@@ -249,9 +253,12 @@ namespace BirdSort2
                 if (screw != null)
                 {
                     screw.Select();
-
+                    
                     GamePlayController_BirdSort.Instance.level.levelParent.DisableAutoRotating();
-
+                    if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
+                    {
+                        GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScrewSelected();
+                    }
                     return;
                 }
             }
@@ -287,6 +294,11 @@ namespace BirdSort2
                             if (_inputMode == GameEnum.InputMode.BreakObject)
                             {
                                 objectPart.Break(i.point);
+                                
+                                if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
+                                {
+                                    GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScrewSelected();
+                                }
                                 
                                 _inputMode = GameEnum.InputMode.Disabled;
 
@@ -357,7 +369,7 @@ namespace BirdSort2
 
         #region SwipeGesture
 
-        private void EnableSwiping(bool isEnable)
+        public void EnableSwiping(bool isEnable)
         {
             _isDisabled = !isEnable;
         }
@@ -374,6 +386,10 @@ namespace BirdSort2
             //}
 
             GamePlayController_BirdSort.Instance.gamePlayCamera.Zoom(maxZoom - value * (maxZoom - minZoom));
+            if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
+            {
+                GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScreenZoomed(maxZoom - value * (maxZoom - minZoom));
+            }
 
             if (!_isZoomByPinching)
             {

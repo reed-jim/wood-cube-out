@@ -42,7 +42,7 @@ public class UILocalizeEditor : Editor
         //var url = "https://docs.google.com/spreadsheets/d/16mLAT8_u2_FuPTp93H9JLC3b4sPFtOqvSXZigblFC1A/export?format=csv&id=16mLAT8_u2_FuPTp93H9JLC3b4sPFtOqvSXZigblFC1A&gid=345164090";
       //  var url = "https://docs.google.com/spreadsheets/d/1tFhDfMsmb7hkTJAPdcRHZjc8uz7J4haklIXH5o8GcRw/export?format=csv&gid=0";
       var url =
-          "https://docs.google.com/spreadsheets/d/13sunMUm86puO9uRpXQap4W9oLeBfFOpRySI0xFoTyZo/export?format=csv&gid=0";
+          "https://docs.google.com/spreadsheets/d/10P6hjwdy7c1XJJiIpg5kZnP8vaaEjz3dTp92FP-1DpU/export?format=csv&gid=0";
         var www = new WWW(url);
         float time = 0;
         while (!www.isDone)

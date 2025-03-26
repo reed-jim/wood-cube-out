@@ -5,6 +5,7 @@ public class RotateObject : MonoBehaviour
 {
     [SerializeField] private float rotateSpeedMultiplier;
     [SerializeField] private bool isDisableAutoRotatingAtStart;
+    public LevelTutorial tut;
     public float timePlayLevel;
     private float _pitch;
     private float _yaw;
@@ -76,7 +77,6 @@ public class RotateObject : MonoBehaviour
 
     void OnDestroy()
     {
-        ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
     }
 
     public void Rotate(Vector2 direction)

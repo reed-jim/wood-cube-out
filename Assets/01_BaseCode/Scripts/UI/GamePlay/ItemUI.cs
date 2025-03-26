@@ -95,16 +95,23 @@ public class ItemUI : MonoBehaviour
 
         if (numItem > 0 || isUnlimited)
         {
-            if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
+            if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.IsCanUseItem(typeItem))
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
-
-                InitState();
-
-                if (BirdSort2.GamePlayController_BirdSort.Instance != null)
+                if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
                 {
-                    BirdSort2.GamePlayController_BirdSort.Instance.tutItemInGameController.NextTut();
+                    GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
+
+                    InitState();
+
+                    if (BirdSort2.GamePlayController_BirdSort.Instance != null)
+                    {
+                        BirdSort2.GamePlayController_BirdSort.Instance.tutItemInGameController.NextTut();
+                    }
                 }
+            }
+            else
+            {
+                
             }
             if (!BirdSort2.UseProfile.hadBuySuggest)
                 BirdSort2.GamePlayController_BirdSort.Instance.suggetBuyItemController.OnUseItem(typeItem);

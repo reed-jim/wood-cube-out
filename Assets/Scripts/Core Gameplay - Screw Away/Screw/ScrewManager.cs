@@ -22,6 +22,7 @@ public class ScrewManager : MonoBehaviour
     [SerializeField]private int _totalScrewObserved;
     [SerializeField]private int _totalScrew;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    public bool _inited;
     #endregion
 
     #region QUEUE SPAWN SCREW BOXES
@@ -46,7 +47,6 @@ public class ScrewManager : MonoBehaviour
     {
         MultiPhaseLevelManager.switchPhaseEvent += SpawnFirstScrewBoxesNewPhase;
         // StartCoroutine(QueueSpawningScrewBoxes());
-        StartCoroutine(HandlingOutsideScrews());
     }
 
     void OnDestroy()
@@ -68,6 +68,8 @@ public class ScrewManager : MonoBehaviour
         _isHandlingSpawningScrewBox = false;
         _remainingHandleOutsideScrewCommands = 0;
         _isHandlingOutsideScrews = false;
+        _inited = true;
+        StartCoroutine(HandlingOutsideScrews());
     }
 
     #region SCREW
@@ -85,7 +87,6 @@ public class ScrewManager : MonoBehaviour
         {
             _screws = new List<BaseScrew>();
         }
-
         _screws.Add(screw);
 
         _totalScrewObserved++;

@@ -6,6 +6,7 @@ using UnityEngine;
 public class AddHoleItem : ItemBase
 {
      BirdSort2.Level_BirdSort_2 level;
+     public bool isUsing;
     public override void Init()
     {
         base.Init();
@@ -22,11 +23,18 @@ public class AddHoleItem : ItemBase
 
     public override bool IsCanUseItem()
     {
+        if (isUsing) return false;
         if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.AddHole).unlockLevel)
         {
             return false;
         }
 
+        if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts.Count >= 8)
+        {
+            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.AddHole].transform.position, "Max Hole Reached", Color.red);
+            return false;
+        }
+           
 
         if (UseProfile.GetNumItem(typeItem) <= 0)
         {
@@ -41,11 +49,17 @@ public class AddHoleItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
+        isUsing = true;
         GamePlayController_BirdSort.Instance.level.screwBoxManager.AddMoreScrewPort();
+        StartCoroutine(DelayItem());
         return CanShuffle;
     }
 
- 
+    private IEnumerator DelayItem()
+    {
+        yield return new WaitForSeconds(0.5f);
+        isUsing = false;
+    }
 
     public bool CanShuffle
     {

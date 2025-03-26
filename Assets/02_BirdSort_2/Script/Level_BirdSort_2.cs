@@ -73,17 +73,16 @@ namespace BirdSort2
             {
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
+                    screwBoxManager.Init();
+                    screwManager.Init();
                     GameObject level = Instantiate(op.Result, transform);
                     pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
                     levelParent = level.GetComponent<RotateObject>();
                     levelParent.Init();
                     timePlayRequire = levelParent.timePlayLevel;
                     Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                    if (level.GetComponent<LevelTransformManualModifier>() == null)
-                    {
-                        level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 101);
+                        level.transform.position = new Vector3(0, -0.03f * GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld.y, 150);
                         level.transform.rotation = Quaternion.Euler(new Vector3(-0, -45, 0));
-                    }
 
                     _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(UseProfile.CurrentLevel);
 
@@ -97,8 +96,6 @@ namespace BirdSort2
                     }
 
                     AutoAssignScrewFactionMultiPhaseLevel(level);
-                    screwBoxManager.Init();
-                    screwManager.Init();
                     foreach (var i in pieces)
                     {
                         i.Init();

@@ -139,7 +139,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         if (inited) return;
         inited = true;
-        AddScrewToList();
+        if(GamePlayController_BirdSort.Instance.level.screwManager._inited) AddScrewToList();
 
         _initialScale = transform.localScale;
         _initialRotateSpeed = rotateSpeed;
@@ -205,7 +205,28 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         // // FOR ROTATING
         // await Task.Delay(100);
+        
+        if (!_isInScrewPort)
+        {
+            ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
 
+            var looseScrewFxMain = looseScrewFx.main;
+            var ringFxMain = ringFx.main;
+
+            Color factionColor = FactionUtility.GetColorForFaction(Faction);
+
+            looseScrewFxMain.startColor = factionColor;
+            ringFxMain.startColor = factionColor;
+
+            looseScrewFx.gameObject.SetActive(true);
+
+            looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
+            looseScrewFx.transform.rotation = transform.rotation;
+
+            looseScrewFx.Play();
+        }
+        
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             // _isRotating = false;
@@ -283,7 +304,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     public async void AddScrewToList()
     {
         await Task.Delay(200);
-
+        
         GamePlayController_BirdSort.Instance.level.screwManager.AddScrew(this);
     }
 

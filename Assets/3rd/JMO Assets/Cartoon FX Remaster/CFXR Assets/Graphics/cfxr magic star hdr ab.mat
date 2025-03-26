@@ -8,14 +8,16 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: cfxr magic star hdr ab
-  m_Shader: {fileID: -6465566751694194690, guid: 1a29b4d27eb8b04479ef89c00dea533d,
-    type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: 1a29b4d27eb8b04479ef89c00dea533d, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _ALPHABLEND_ON
   - _CFXR_DITHERED_SHADOWS_ON
   - _FADING_ON
   m_InvalidKeywords:
   - _
+  - _CFXR_GLOW_POW_P0
   - _CFXR_HDR_BOOST
   - _CFXR_OVERLAYBLEND_RGBA
   - _CFXR_OVERLAYTEX_OFF
@@ -27,6 +29,7 @@ Material:
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -51,10 +54,14 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 081073d8f2209c949819e1e5872845b3, type: 3}
+        m_Texture: {fileID: 2800000, guid: 2d890239defb33943a2d8b9ca0c3d474, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _OverlayTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ScreenDistortionTex:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
@@ -68,9 +75,11 @@ Material:
     - _BlendingType: 0
     - _BumpScale: 1
     - _CFXR_DITHERED_SHADOWS: 1
+    - _CFXR_GLOW_POW: 0
     - _CFXR_OVERLAYBLEND: 0
     - _CFXR_OVERLAYTEX: 0
     - _Cutoff: 0.1
+    - _DebugVisualize: 0
     - _DirLightScreenAtten: 1
     - _DirectLightingRamp: 1
     - _DissolveSmooth: 0.1
@@ -79,13 +88,18 @@ Material:
     - _DstBlend: 10
     - _EdgeFadePow: 1
     - _FadeAlongU: 0
+    - _GlowMax: 1
+    - _GlowMin: 0
     - _HdrBoost: 1
     - _HdrMultiply: 10
     - _IndirectLightingMix: 0.5
     - _InvertDissolveTex: 0
     - _LightingWorldPosStrength: 0.2
+    - _MaxValue: 10
     - _OVERLAYBLEND: 0
     - _OVERLAYTEX: 0
+    - _RingTopOffset: 0.05
+    - _ScreenDistortionScale: 0.1
     - _SecondColorSmooth: 0.2
     - _ShadowStrength: 0.5
     - _SingleChannel: 1
@@ -105,10 +119,12 @@ Material:
     - _UseLighting: 0
     - _UseLightingWorldPosOffset: 0
     - _UseNormalMap: 0
+    - _UseRadialUV: 0
     - _UseSP: 1
     - _UseSecondColor: 0
     - _UseUV2Distortion: 0
     - _UseUVDistortion: 0
+    - _WorldSpaceRing: 0
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 3.8792846, g: 3.8792846, b: 3.8792846, a: 0}
@@ -118,3 +134,4 @@ Material:
     - _OverlayTex_Scroll: {r: 0.1, g: 0.1, b: 1, a: 1}
     - _ShadowColor: {r: 0, g: 0, b: 0, a: 1}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

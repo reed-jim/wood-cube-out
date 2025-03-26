@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -78,7 +79,7 @@ public class Fader : MonoBehaviour
                 if (alpha == 1 && !startedLoading)
                 {
                     startedLoading = true;
-                    SceneManager.LoadScene(fadeScene);
+                    Addressables.LoadSceneAsync(fadeScene, LoadSceneMode.Single);
                 }
 
             }
