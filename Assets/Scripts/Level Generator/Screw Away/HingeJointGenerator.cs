@@ -1954,7 +1954,7 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateLevelRubikQuarter()
     {
-        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like.prefab");
+        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like (3 Screws).prefab");
 
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
@@ -1994,14 +1994,14 @@ public class HingeJointGenerator : EditorWindow
             for (int j = 0; j <= numRow + additional.y; j++)
             {
                 // Z
-                for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
+                for (int k = 0; k <= numRow + additional.z; k++)
                 {
                     if (numScrewSpawned >= maxScrew)
                     {
                         continue;
                     }
 
-                    int random = UnityEngine.Random.Range(0, 4);
+                    int random = UnityEngine.Random.Range(0, 3);
 
                     Vector3Int coordinator = new Vector3Int(i, j, k);
 
@@ -2024,24 +2024,31 @@ public class HingeJointGenerator : EditorWindow
 
         // GENERATE SECOND QUARTER
         // X
-        for (int i = 0; i <= numRow + additional.x; i++)
+        for (int i = -numRow - additional.x; i <= numRow + additional.x; i++)
         {
             // Y
-            for (int j = -numRow - additional.y; j <= -1; j++)
+            for (int j = -numRow - additional.y; j <= numRow + additional.y; j++)
             {
                 // Z
                 for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
                 {
-                    Vector3Int coordinator = new Vector3Int(i, j, k);
-                    Vector3Int cachedCoordinator = new Vector3Int(i, -j, k);
-
-                    if (isTilesContainPiece[cachedCoordinator])
+                    if (i >= 0 && j >= 0 && k >= 0)
                     {
-                        SpawnBlock(coordinator, cachedMaterials[cachedCoordinator]);
+                        continue;
+                    }
+
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3Int absoluteCoordinator = GetAbsoluteVector3(coordinator);
+
+                    if (isTilesContainPiece[absoluteCoordinator])
+                    {
+                        SpawnBlock(coordinator, cachedMaterials[absoluteCoordinator]);
                     }
                 }
             }
         }
+
+        return;
 
         // GENERATE THIRD QUARTER
         // X
