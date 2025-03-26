@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using BirdSort2;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -33,7 +34,6 @@ public class CoinContainerUI : MonoBehaviour
         // SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
         SaferioIAPManager.collectCoinEvent += CollectCoin;
-        ResourceEarnPopup.collectCoinEvent += CollectCoin;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -57,7 +57,6 @@ public class CoinContainerUI : MonoBehaviour
         // SaferioIAPManager.iapProductPurchasedCompletedEvent -= OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
         SaferioIAPManager.collectCoinEvent -= CollectCoin;
-        ResourceEarnPopup.collectCoinEvent -= CollectCoin;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -99,7 +98,7 @@ public class CoinContainerUI : MonoBehaviour
             return;
         }
 
-        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePlayController_BirdSort.Instance.gameScene.canvasSize) / GamePlayController_BirdSort.Instance.gameScene.canvasScale;
 
         collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
     }

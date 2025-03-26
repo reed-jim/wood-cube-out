@@ -1,0 +1,5339 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &183405002
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 183405003}
+  - component: {fileID: 183405004}
+  m_Layer: 0
+  m_Name: MusicManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &183405003
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183405002}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 3267874926611148880}
+  - {fileID: 3267874927748736296}
+  - {fileID: 5176389275374967235}
+  - {fileID: 7234140137212001780}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &183405004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183405002}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d6b864faee28e08458649786a2079482, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: clips
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[NameMusic, Assembly-CSharp],[MusicData,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[NameMusic, Assembly-CSharp]],
+        mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 4
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 2|MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 1
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.12
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 3|MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 2
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.15
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 4|MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 3
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.08
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 7
+      Data: 5|MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 4
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.05
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  mixer: {fileID: 24100000, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  effectSource: {fileID: 3267874927748736297}
+  musicSource: {fileID: 3267874926611148879}
+  soundUISource: {fileID: 4534501698705747075}
+  coolDownLevelSource: {fileID: 6892226742897621025}
+  lowPitchRange: 0.95
+  highPitchRange: 1.05
+  delayTime: 0.5
+  winMusic: {fileID: 8300000, guid: 02a957812ed08634c8539dcf72d41eb7, type: 3}
+  loseMusic: {fileID: 8300000, guid: bd24c0e455aa34147a63660886f615df, type: 3}
+  BGMusicHome: {fileID: 8300000, guid: e88416c8c5ef7214abe823488a541c58, type: 3}
+  BGMusicLevel: {fileID: 8300000, guid: 2023e2e74297ba84c87d703eec7e2e42, type: 3}
+  clickSound: {fileID: 8300000, guid: 0697fa9b253cec84b8cbdae0d92ca8b5, type: 3}
+--- !u!1 &270821050
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 270821051}
+  m_Layer: 0
+  m_Name: Adjust
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &270821051
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270821050}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6545023522743761019}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1391500964
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1391500965}
+  - component: {fileID: 1391500966}
+  m_Layer: 0
+  m_Name: NotificationController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1391500965
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391500964}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -26.833477, y: 33.07824, z: -29.762218}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1391500966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1391500964}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b4d1040fa6ba5e48b1c852b198f46b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  notificationSettings: {fileID: 11400000, guid: 23fe85a37b4d58c4189ab1fc0195af05, type: 2}
+  _initialized: 0
+--- !u!1 &1642105876
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1642105877}
+  - component: {fileID: 2054987287612453848}
+  - component: {fileID: 1642105878}
+  m_Layer: 0
+  m_Name: AdmobAds
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1642105877
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642105876}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 568014531814706443}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2054987287612453848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642105876}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 95a9d2aedc62f2a4faf85596f9866890, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  countdownAds: 0
+--- !u!114 &1642105878
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1642105876}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 502db255a52d6c5459d5d64a05a0d0d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &328507052888982425
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2316344742622055056}
+  - component: {fileID: 8847893056021820602}
+  m_Layer: 0
+  m_Name: BossRace2
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2316344742622055056
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328507052888982425}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8082665084758918016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8847893056021820602
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 328507052888982425}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5973552c510f52c44a773f9d30dd5838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalTimeFinishRace: 0
+  isMe: 0
+  ID: 2
+  idBoss: 2
+--- !u!1 &340694600864684880
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6545023522743761019}
+  - component: {fileID: 7749172273767947542}
+  m_Layer: 0
+  m_Name: AnalyticController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6545023522743761019
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340694600864684880}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7879544644765736363}
+  - {fileID: 270821051}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7749172273767947542
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 340694600864684880}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d630ca840c7a05a468ac0ab9a7c10e6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &352776996149846438
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5873745754716865784}
+  - component: {fileID: 1447582119096776369}
+  m_Layer: 0
+  m_Name: WeeklyChallegen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5873745754716865784
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352776996149846438}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7888241272021265489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1447582119096776369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 352776996149846438}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f38fef7e41f75c44891993d84540763, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeChallenge: 0
+  reasonClaimReward: 7
+  data:
+    currentNumItemSync: 0
+    currentIndexRewardSync: 0
+    rememberCurrentNumItemSync: 0
+    timeEndChallengeSync: 0
+  config:
+    version: 0
+    version_accept: 0
+    is_active: 0
+    time_start: 
+    time_end: 
+    level_unlock: 0
+    time_delay_show: 0
+    str_start_date: 
+    str_end_date: 
+    is_video_x_reward: 0
+    num_x_reward: 0
+    rewards: []
+    percentSpawnItems: []
+    parmaExtral: []
+    timeLife: 0
+  view: {fileID: 0}
+  itemChallengePrefab: {fileID: 7084627558242646595, guid: 52e2cb8b097e8804b97ae8af2c002585, type: 3}
+  iconItem: {fileID: 21300000, guid: 15920e4af2013404b8cad3aafd40820c, type: 3}
+--- !u!1 &607423231157960214
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 142720288088751475}
+  m_Layer: 0
+  m_Name: AppsFlyerTrackerCallbacks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &142720288088751475
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 607423231157960214}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7879544644765736363}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1069487438033953965
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7234140137212001780}
+  - component: {fileID: 6892226742897621025}
+  m_Layer: 0
+  m_Name: CoolDownLevelSource
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7234140137212001780
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069487438033953965}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 183405003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &6892226742897621025
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1069487438033953965}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 0c305b68a5d1c604ca34cf1851cdb2e5, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &1079823800203909659
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6115978707864182917}
+  - component: {fileID: 5581476497067441216}
+  m_Layer: 0
+  m_Name: WeeklyPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6115978707864182917
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079823800203909659}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5581476497067441216
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1079823800203909659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 440566ce01147a24693b3062205ae660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &1528767307658167387
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5176389275374967235}
+  - component: {fileID: 4534501698705747075}
+  m_Layer: 0
+  m_Name: SoundUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5176389275374967235
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528767307658167387}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 183405003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &4534501698705747075
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1528767307658167387}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &1547903765480459930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1820856732356943012}
+  - component: {fileID: 7684137763770977537}
+  m_Layer: 0
+  m_Name: SaleCoinPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1820856732356943012
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547903765480459930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7684137763770977537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1547903765480459930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e076b65ef89d745b6c2864176e5841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &2303878431568018059
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6468836373641061126}
+  - component: {fileID: 5046130314210574688}
+  m_Layer: 0
+  m_Name: FacebookAndPlayFabManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6468836373641061126
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2303878431568018059}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7580877917542944320}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5046130314210574688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2303878431568018059}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5e45df2271bf6446abcbdd7e9e51062, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _contentUrl: 
+  _contentTitle: 
+  _contentDescription: 
+  _pictureUrl: 
+--- !u!1 &2348799527054137930
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8922940215473570146}
+  - component: {fileID: 7744103116355942383}
+  m_Layer: 0
+  m_Name: SaleItemPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8922940215473570146
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2348799527054137930}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7744103116355942383
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2348799527054137930}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912402ddd24c19d43af3a91f03783b74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &2928317678064152019
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7588425055567045395}
+  - component: {fileID: 3667120304759760326}
+  m_Layer: 0
+  m_Name: RemoveAdsPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7588425055567045395
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2928317678064152019}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3667120304759760326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2928317678064152019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c78f008c1c2e9543b6447ea13e0ceb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &3267874926611148878
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3267874926611148880}
+  - component: {fileID: 3267874926611148879}
+  m_Layer: 0
+  m_Name: Music
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3267874926611148880
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267874926611148878}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 183405003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3267874926611148879
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267874926611148878}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 2c41c63412a8cd040b45854337285773, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &3267874927748736295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3267874927748736296}
+  - component: {fileID: 3267874927748736297}
+  m_Layer: 0
+  m_Name: Sound
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3267874927748736296
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267874927748736295}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 183405003}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &3267874927748736297
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3267874927748736295}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &3502556738778528302
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7625231664097454313}
+  - component: {fileID: 5148058666004309495}
+  m_Layer: 0
+  m_Name: CoinChallenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7625231664097454313
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502556738778528302}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7888241272021265489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5148058666004309495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502556738778528302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f06293c8d7daf44b8d864adcdf36069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeChallenge: 2
+  reasonClaimReward: 10
+  data:
+    currentNumItemSync: 0
+    currentIndexRewardSync: 0
+    rememberCurrentNumItemSync: 0
+    timeEndChallengeSync: 0
+  config:
+    version: 0
+    version_accept: 0
+    is_active: 0
+    time_start: 
+    time_end: 
+    level_unlock: 0
+    time_delay_show: 0
+    str_start_date: 
+    str_end_date: 
+    is_video_x_reward: 0
+    num_x_reward: 0
+    rewards: []
+    percentSpawnItems: []
+    parmaExtral: []
+    timeLife: 0
+  view: {fileID: 0}
+  itemChallengePrefab: {fileID: 4611383607906831878, guid: 7432aa0a944f5fb45976784929f0ee50, type: 3}
+  iconItem: {fileID: 21300000, guid: c5cc87c0cfc5e5b42abd91170482fe03, type: 3}
+--- !u!1 &3875033662779845857
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 950039007315203323}
+  - component: {fileID: 8273711841721103733}
+  m_Layer: 0
+  m_Name: DiamondChallegen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &950039007315203323
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3875033662779845857}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7888241272021265489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8273711841721103733
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3875033662779845857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8f93a3669c678a43ac059f445dd42b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeChallenge: 3
+  reasonClaimReward: 11
+  data:
+    currentNumItemSync: 0
+    currentIndexRewardSync: 0
+    rememberCurrentNumItemSync: 0
+    timeEndChallengeSync: 0
+  config:
+    version: 0
+    version_accept: 0
+    is_active: 0
+    time_start: 
+    time_end: 
+    level_unlock: 0
+    time_delay_show: 0
+    str_start_date: 
+    str_end_date: 
+    is_video_x_reward: 0
+    num_x_reward: 0
+    rewards: []
+    percentSpawnItems: []
+    parmaExtral: []
+    timeLife: 0
+  view: {fileID: 0}
+  itemChallengePrefab: {fileID: 2217311945624393806, guid: 53178278a79dd564abb0835f5523299f, type: 3}
+  iconItem: {fileID: 21300000, guid: 80b66b0d47786d446a6eb659ce22f404, type: 3}
+--- !u!1 &4253585615776132768
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6007655584535127165}
+  - component: {fileID: 5418960212852397737}
+  m_Layer: 0
+  m_Name: RacePlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6007655584535127165
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253585615776132768}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1177063396200223331}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5418960212852397737
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4253585615776132768}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7583f70fe167ac499255ec8186a449f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalTimeFinishRace: 0
+  isMe: 1
+  ID: 0
+--- !u!1 &4844984295336139600
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1402468671846622065}
+  - component: {fileID: 3131631034872764621}
+  m_Layer: 0
+  m_Name: DailyPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1402468671846622065
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4844984295336139600}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3131631034872764621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4844984295336139600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6b88f64b009fa4ab7e726a6523f23f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &5066497380210098831
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4879354716925268594}
+  - component: {fileID: 3652610390877195554}
+  m_Layer: 0
+  m_Name: EloRaceChallenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4879354716925268594
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066497380210098831}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1177063396200223331}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3652610390877195554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5066497380210098831}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d44d99962cf9994392d2845cd1a56b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  elosData:
+    elos:
+    - eloID: 0
+      tierBossSpawn: 01000000
+      minEloScore: 0
+      maxEloScore: 499
+      conditions:
+      - top: 1
+        scoreEloAdd: 500
+      - top: 2
+        scoreEloAdd: 350
+      - top: 3
+        scoreEloAdd: 250
+      - top: 4
+        scoreEloAdd: 0
+    - eloID: 1
+      tierBossSpawn: 02000000
+      minEloScore: 500
+      maxEloScore: 1000
+      conditions:
+      - top: 1
+        scoreEloAdd: 400
+      - top: 2
+        scoreEloAdd: 275
+      - top: 3
+        scoreEloAdd: 175
+      - top: 4
+        scoreEloAdd: -50
+    - eloID: 2
+      tierBossSpawn: 03000000
+      minEloScore: 1001
+      maxEloScore: 3000
+      conditions:
+      - top: 1
+        scoreEloAdd: 300
+      - top: 2
+        scoreEloAdd: 200
+      - top: 3
+        scoreEloAdd: 100
+      - top: 4
+        scoreEloAdd: -100
+    - eloID: 3
+      tierBossSpawn: 04000000
+      minEloScore: 3001
+      maxEloScore: 4000
+      conditions:
+      - top: 1
+        scoreEloAdd: 200
+      - top: 2
+        scoreEloAdd: 125
+      - top: 3
+        scoreEloAdd: 25
+      - top: 4
+        scoreEloAdd: -150
+    - eloID: 4
+      tierBossSpawn: 05000000
+      minEloScore: 4001
+      maxEloScore: 6000
+      conditions:
+      - top: 1
+        scoreEloAdd: 100
+      - top: 2
+        scoreEloAdd: 50
+      - top: 3
+        scoreEloAdd: -50
+      - top: 4
+        scoreEloAdd: -200
+--- !u!1 &5295920849263189562
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5295920849263189563}
+  - component: {fileID: 5295920849263189564}
+  m_Layer: 0
+  m_Name: CoolDownLevelSource (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5295920849263189563
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5295920849263189562}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7782920496519139397}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &5295920849263189564
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5295920849263189562}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 24300002, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  m_audioClip: {fileID: 8300000, guid: 0c305b68a5d1c604ca34cf1851cdb2e5, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 1
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &5451924456029150767
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8893301431322861509}
+  - component: {fileID: 8381228605252940545}
+  m_Layer: 0
+  m_Name: GameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8893301431322861509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5451924456029150767}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2316514870826417342}
+  - {fileID: 7747875082488903523}
+  - {fileID: 3804280219957937229}
+  - {fileID: 7782920496519139397}
+  - {fileID: 183405003}
+  - {fileID: 6545023522743761019}
+  - {fileID: 1642105877}
+  - {fileID: 1196834011052746794}
+  - {fileID: 3946952759953541259}
+  - {fileID: 7580877917542944320}
+  - {fileID: 2115794409858075652}
+  - {fileID: 6769891743294203454}
+  - {fileID: 8914716046654845276}
+  - {fileID: 8764220292581379811}
+  - {fileID: 1245047984359823294}
+  - {fileID: 7888241272021265489}
+  - {fileID: 1391500965}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8381228605252940545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5451924456029150767}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e829a80e66ebfd4dbaa2f5a0591e701, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  useProfile: {fileID: 8396620061436862852}
+  dataContain: {fileID: 3508337465709743097}
+  musicManager: {fileID: 5740087761589089530}
+  admobAds: {fileID: 2054987287612453848}
+  AnalyticsController: {fileID: 7749172273767947542}
+  iapController: {fileID: 5348018436265162636}
+  segmentController: {fileID: 7673977240581075682}
+  packController: {fileID: 7721603957805240251}
+  videoPackController: {fileID: 201482469892790310}
+  moneyEffectController: {fileID: 8926304833441468992}
+  loginController: {fileID: 7486149814615503327}
+  poolController: {fileID: 0}
+  fXController: {fileID: 8914716046654845277}
+  challengeController: {fileID: 1096980438946740605}
+  notificationController: {fileID: 1391500966}
+  skillUserController: {fileID: 6385754762983929159}
+  currentScene: 0
+  modeGame: 0
+  openFeatureBox: 0
+  startLoading: {fileID: 0}
+--- !u!1 &5688766313391877527
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8764220292581379811}
+  - component: {fileID: 201482469892790310}
+  m_Layer: 0
+  m_Name: SaleVideoController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8764220292581379811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5688766313391877527}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8598382581105659138}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &201482469892790310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5688766313391877527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c9e443feb5c5cd4688158870e5505d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allPacksInGame:
+  - {fileID: 713841772214507574}
+  activeSalePacks: []
+  packVideoData:
+    config:
+      videoGirl:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+        rewards: []
+      xCoinWinLevel:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+        rewards: []
+  PackTimer: 0
+--- !u!1 &5784054007852098426
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7879544644765736363}
+  - component: {fileID: 5391581689796844225}
+  m_Layer: 0
+  m_Name: AppsFlyerObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7879544644765736363
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5784054007852098426}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 142720288088751475}
+  m_Father: {fileID: 6545023522743761019}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5391581689796844225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5784054007852098426}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a2ec6ba1ee8b48749524f015ed572a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  devKey: UAVHtuYSgwSPXxXQVDGA65
+  appID: 6689494714
+  UWPAppID: 
+  macOSAppID: 
+  isDebug: 0
+  getConversionData: 0
+--- !u!1 &5835944279138603992
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3946952759953541259}
+  - component: {fileID: 2991064040508271454}
+  m_Layer: 0
+  m_Name: BoxController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3946952759953541259
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5835944279138603992}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2991064040508271454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5835944279138603992}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9e45624b4998774fa810a9a50d7e2c2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentScene: {fileID: 0}
+  isLoadingShow: 0
+  isLockEscape: 0
+--- !u!1 &6150410543105305808
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8340441774729157238}
+  - component: {fileID: 2358373978274811285}
+  m_Layer: 0
+  m_Name: BossRace3
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8340441774729157238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150410543105305808}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8082665084758918016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2358373978274811285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6150410543105305808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5973552c510f52c44a773f9d30dd5838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalTimeFinishRace: 0
+  isMe: 0
+  ID: 3
+  idBoss: 3
+--- !u!1 &6180716220682761023
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7580877917542944320}
+  - component: {fileID: 7486149814615503327}
+  m_Layer: 0
+  m_Name: LoginController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7580877917542944320
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180716220682761023}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6468836373641061126}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7486149814615503327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6180716220682761023}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e70f68f125541d4cb6787038c059e04, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  facebookAndPlayFabManager: {fileID: 5046130314210574688}
+  PlayFabTitleId: 71D80
+--- !u!1 &6194580446896483798
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 568014531814706443}
+  - component: {fileID: 7286113651586834027}
+  m_Layer: 0
+  m_Name: AdsController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &568014531814706443
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194580446896483798}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1642105877}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7286113651586834027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6194580446896483798}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5081322dbaab8a498ab44f1daf9d596, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &6425995222068303627
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8598382581105659138}
+  - component: {fileID: 713841772214507574}
+  m_Layer: 0
+  m_Name: VideoGirlPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8598382581105659138
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6425995222068303627}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8764220292581379811}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &713841772214507574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6425995222068303627}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab632d5dcc27365478c5eff9146620d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    typePack: 0
+    typeSale: 0
+    isCanShowIconHome: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    delayShowHome: 0
+    prioritySale: 0
+    timeLifeType: 0
+    buyMany: 0
+    buyTimes: 0
+--- !u!1 &6760275866525970799
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1177063396200223331}
+  - component: {fileID: 2671493822744590605}
+  m_Layer: 0
+  m_Name: RaceSpaceChallegen
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1177063396200223331
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6760275866525970799}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4879354716925268594}
+  - {fileID: 6007655584535127165}
+  - {fileID: 8082665084758918016}
+  m_Father: {fileID: 7888241272021265489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2671493822744590605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6760275866525970799}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d935c327172b1c4e84b2bf26b45ea7f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeChallenge: 4
+  reasonClaimReward: 12
+  data:
+    currentNumItemSync: 0
+    currentIndexRewardSync: 0
+    rememberCurrentNumItemSync: 0
+    timeEndChallengeSync: 0
+  config:
+    version: 0
+    version_accept: 0
+    is_active: 0
+    time_start: 
+    time_end: 
+    level_unlock: 0
+    time_delay_show: 0
+    str_start_date: 
+    str_end_date: 
+    is_video_x_reward: 0
+    num_x_reward: 0
+    rewards: []
+    percentSpawnItems: []
+    parmaExtral: []
+    timeLife: 0
+  view: {fileID: 0}
+  itemChallengePrefab: {fileID: 0}
+  iconItem: {fileID: 0}
+  eloRaceChallenge: {fileID: 3652610390877195554}
+  raceBossController: {fileID: 7871501249252741194}
+  timerRaccing: 0
+  playerRace: {fileID: 5418960212852397737}
+  rankingMember: []
+--- !u!1 &7252610784655200883
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7747875082488903523}
+  - component: {fileID: 3508337465709743097}
+  m_Layer: 0
+  m_Name: DataContain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7747875082488903523
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7252610784655200883}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3508337465709743097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7252610784655200883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86340e278b6b8641a42ca0792eb5247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  giftDatabase: {fileID: 11400000, guid: 77ccaf745c663fc4e8da1bbe8e238ce5, type: 2}
+  salePackDatabase: {fileID: 11400000, guid: b17c1b563f1dd5b4da7bc75e4536c042, type: 2}
+  dailyLoginDatabase: {fileID: 11400000, guid: 596d3f5bc2c877e4cab2cd76f0ab6ac0, type: 2}
+  packVideoDatabase: {fileID: 11400000, guid: 37e7e030542d9c14db80c8ed6e657c4e, type: 2}
+--- !u!1 &7273047579805967250
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2316514870826417342}
+  - component: {fileID: 8396620061436862852}
+  m_Layer: 0
+  m_Name: UserProfile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2316514870826417342
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7273047579805967250}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8396620061436862852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7273047579805967250}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5a875e3cd44fba498c3ea00266bacd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &7275635671396514724
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7888241272021265489}
+  - component: {fileID: 1096980438946740605}
+  m_Layer: 0
+  m_Name: ChallengeController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7888241272021265489
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275635671396514724}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5873745754716865784}
+  - {fileID: 7290095012284654702}
+  - {fileID: 7625231664097454313}
+  - {fileID: 950039007315203323}
+  - {fileID: 1177063396200223331}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1096980438946740605
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275635671396514724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b245f52de590fa54aa4148ffebe6aeaa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lstChallenges:
+  - {fileID: 1447582119096776369}
+  - {fileID: 5148058666004309495}
+  - {fileID: 8273711841721103733}
+  - {fileID: 2671493822744590605}
+--- !u!1 &7335798458484453213
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5839797812269864632}
+  - component: {fileID: 8816823485568976430}
+  m_Layer: 0
+  m_Name: BeginerPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5839797812269864632
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7335798458484453213}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8816823485568976430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7335798458484453213}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c2137d667ec9ff6449fc510185943ce7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &7784628984070614952
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8082665084758918016}
+  - component: {fileID: 7871501249252741194}
+  m_Layer: 0
+  m_Name: RaceBossController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8082665084758918016
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784628984070614952}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 4761302518804927852}
+  - {fileID: 2316344742622055056}
+  - {fileID: 8340441774729157238}
+  m_Father: {fileID: 1177063396200223331}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7871501249252741194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7784628984070614952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 19b98e48f5edd884ebe5bf00bc7f0111, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 7a79d7a3aaf1b4f4ca6a84af64dfc962, type: 2}
+  bossAI:
+  - {fileID: 1992854273802229142}
+  - {fileID: 8847893056021820602}
+  - {fileID: 2358373978274811285}
+  controller: {fileID: 0}
+--- !u!1 &8217392839068241451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2115794409858075652}
+  - component: {fileID: 7721603957805240251}
+  m_Layer: 0
+  m_Name: PackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2115794409858075652
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217392839068241451}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 5839797812269864632}
+  - {fileID: 7588425055567045395}
+  - {fileID: 1581759675655299238}
+  - {fileID: 8922940215473570146}
+  - {fileID: 1820856732356943012}
+  - {fileID: 6115978707864182917}
+  - {fileID: 1402468671846622065}
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7721603957805240251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8217392839068241451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 002eeb17995985c4e9c72dc38b617e77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  allPacksInGame:
+  - {fileID: 8816823485568976430}
+  - {fileID: 5581476497067441216}
+  - {fileID: 3131631034872764621}
+  - {fileID: 7684137763770977537}
+  - {fileID: 7744103116355942383}
+  - {fileID: 3667120304759760326}
+  - {fileID: 5656330450246727924}
+  activeSalePacks: []
+  saleData:
+    config:
+      beginerPack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      removeAdsPack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      bigRemoveAdsPack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      pickOneChoicePack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      saleCoinPack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      weeklySalePack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      dailyOfferPack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      itemSalePack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      coinSalePack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+      noelSalePack:
+        version: 0
+        version_accept: 0
+        is_active: 0
+        time_start: 
+        time_end: 
+        level_unlock: 0
+        time_delay_show: 0
+        str_start_date: 
+        str_end_date: 
+        is_video_x_reward: 0
+        num_x_reward: 0
+        lifeTime: -1
+        AllWeek: 1
+        Monday: 0
+        Tuesday: 0
+        Wednesday: 0
+        Thursday: 0
+        Friday: 0
+        Saturday: 0
+        Sunday: 0
+        salePercent: 0
+        parmaExtral: []
+  PackTimer: 0
+--- !u!1 &8242365692659812489
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6769891743294203454}
+  - component: {fileID: 7673977240581075682}
+  m_Layer: 0
+  m_Name: SegmentController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6769891743294203454
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8242365692659812489}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7673977240581075682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8242365692659812489}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433b5edc37c1aa54fa8a115e1ad4b8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segments:
+  - nameSegment: Default Free
+    coreGameData:
+      config:
+        loadGameConfig:
+          isComeHomeWhenEndLevel: 0
+          typeSenceFirstOnOpenGame: 0
+          typeSenceFirstOnInstall: 0
+        levelConfig:
+          bonusIQ1Star: 100
+          bonusIQ2Star: 200
+          bonusIQ3Star: 300
+          coinEndLevel: 0
+        healthConfig:
+          timeReFillHealth: 600
+          priceCoinReFillHeath: 100
+          isAddHealthVideo: 1
+          addHeathVideo: 1
+        bootsConfig:
+          addTime_BirdSort:
+            unlockLevel: 14
+            price: 250
+            packAmount: 3
+            workValue:
+            - 30
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          blockBrand_BirdSort:
+            unlockLevel: 15
+            price: 290
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          return_BirdSort:
+            unlockLevel: 3
+            price: 120
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          sugget_BirdSort:
+            unlockLevel: 3
+            price: 120
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          ice_BirdSort:
+            unlockLevel: 10
+            price: 240
+            packAmount: 3
+            workValue:
+            - 10
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          shuffle_BirdSort:
+            unlockLevel: 7
+            price: 190
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          breakTheRule_BirdSort:
+            unlockLevel: 9
+            price: 200
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          addBrand_BirdSort:
+            unlockLevel: 5
+            price: 200
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+        dailyLoginConfig:
+          unlockLevel: 12
+          is_video_x_reward: 1
+          num_x_reward: 2
+        starChestConfig:
+          unlockLevel: 0
+          startRequirement: 20
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 10
+              weight: 6
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1
+              amount: 20
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1005
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          is_video_x_reward: 1
+          num_x_reward: 2
+        levelChestConfig:
+          unlockLevel: 0
+          levelSpacing: 10
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 10
+              weight: 5
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1
+              amount: 20
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1
+              amount: 30
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1005
+              amount: 1
+              weight: 4
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 1
+              isUnlimited: 0
+          is_video_x_reward: 1
+          num_x_reward: 2
+        rateConfig:
+          isActive: 1
+          levelStartShow: 6
+          levelMaxShow: 33
+    reviveData:
+      config:
+        isOnVideoRevive: 1
+        timeAddedReviveVideo: 45
+        cappingWatchVideoRevive: 10
+        spacingWatchVideoRevive: 3600
+        reviveData:
+        - numCoinReviveAddTime: 100
+          numCoinReviveOutSpace: 100
+          lightningRewardAmount: 0
+          timeAddedRevive: 60
+        - numCoinReviveAddTime: 150
+          numCoinReviveOutSpace: 150
+          lightningRewardAmount: 3
+          timeAddedRevive: 60
+        - numCoinReviveAddTime: 200
+          numCoinReviveOutSpace: 200
+          lightningRewardAmount: 6
+          timeAddedRevive: 60
+    adsData:
+      config:
+        banner:
+          minimumLevel: 0
+        interstitials:
+          minimumLevel: 3
+          minimumInterval: 10
+          showAfterDefeat: 1
+          showAfterQuit: 1
+          showOnAppResume: 1
+          appResumedThreshold: 60
+          showBeforeLevel: 1
+        reward:
+          minimumLevel: 0
+          isRewardedGetMoreLivesEnabled: 1
+          isRewardedStoreEnabled: 1
+          limitRVStoreEnabled: 1
+          maximumRVStorePerDay: 10
+          amountRV: 10
+    saleData:
+      config:
+        beginerPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 5
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        removeAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 5
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        bigRemoveAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 9
+          time_delay_show: 1800
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 3
+          - 6
+        pickOneChoicePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        saleCoinPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        weeklySalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 1
+          Sunday: 1
+          salePercent: 50
+          parmaExtral:
+          - 3
+        dailyOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 600
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: 600
+          AllWeek: 0
+          Monday: 1
+          Tuesday: 1
+          Wednesday: 1
+          Thursday: 1
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 60
+          parmaExtral:
+          - 3
+          - 1
+        itemSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 1
+          Tuesday: 0
+          Wednesday: 1
+          Thursday: 0
+          Friday: 1
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        coinSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 1
+          Wednesday: 0
+          Thursday: 1
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        noelSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+    saleVideoData:
+      config:
+        videoGirl:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 13
+          time_delay_show: 1800
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 2
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1002
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1005
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1006
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 20
+              weight: 5
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1007
+              amount: 1
+              weight: 20
+              isUnlimited: 0
+        xCoinWinLevel:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 3
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 0
+          rewards: []
+    challengeData:
+      config:
+        weeklyChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 10
+          time_delay_show: 60
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards:
+          - numItemRequire: 3
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 13
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 20
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 43
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 83
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 123
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 900
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 193
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 243
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 303
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 403
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 543
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 40
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 583
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 653
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 703
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 763
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 863
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1003
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 100
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1043
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1113
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1163
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1223
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1323
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1463
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 200
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1503
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1573
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1623
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1723
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1863
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 300
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1903
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1973
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 2173
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 1000
+              weight: 0
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 2
+          - numItemSpawn: 2
+            weight: 3
+          parmaExtral: []
+          timeLife: 604800
+        coinChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 30
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 100
+              weight: 25
+              isUnlimited: 0
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 100
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 120
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 130
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 140
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 150
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 160
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 170
+              weight: 524
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 13
+          parmaExtral:
+          - 50
+          - 300
+          - 1050
+          timeLife: 0
+        diamodChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 35
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 35
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 40
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 50
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 2
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 60
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 70
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 80
+              weight: 4
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 10
+          parmaExtral:
+          - 20
+          - 160
+          - 540
+          timeLife: 0
+        royalPass:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 16
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards:
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          parmaExtral: []
+          timeLife: 2592000
+        raceSpaceChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 40
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          parmaExtral: []
+          timeLife: 2592000
+    skillUserData:
+      config:
+        isActive: 1
+        level_start: 15
+        datas:
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 0.8
+          coPercentCover: 0.75
+        - coNumber: 0.85
+          coPercentCover: 0.8
+        - coNumber: 0.9
+          coPercentCover: 0.85
+        - coNumber: 0.95
+          coPercentCover: 0.9
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 1.1
+          coPercentCover: 1.25
+        - coNumber: 1.2
+          coPercentCover: 1.5
+        - coNumber: 1.3
+          coPercentCover: 1.75
+        - coNumber: 1.4
+          coPercentCover: 2
+    notificationData:
+      config:
+        isActive: 1
+        comeBackSeconds: 7200
+    suggetBuyerInGameSegmentData:
+      config:
+        suggetStartLevel:
+          is_active: 1
+          level_unlock: 4
+          suggets: 00000000
+          space_level_show_sugget: 1
+          num_sugget_in_day: 10
+        suggetEndLevel:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+        suggetOnPopup:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+    suggetBuyItemSegmentData:
+      config:
+        amountItem: 3
+        isHasBuyVideo: 1
+        isHasBuyCoin: 0
+        percentDiscount: 0
+    minigameConnectSegmentData:
+      config:
+        version: 0
+        version_accept: 0
+        num_watch_video_buy_egg: 3
+        num_turn_free: 3
+        is_active: 1
+        time_play: 00:01:40
+        min_level: 30
+        time_delay_show: 1800
+        str_start_date: 2024/12/1 00:00:00
+        str_end_date: 2025/1/20 00:00:00
+--- !u!1 &8355045420651717269
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4761302518804927852}
+  - component: {fileID: 1992854273802229142}
+  m_Layer: 0
+  m_Name: BossRace1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4761302518804927852
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8355045420651717269}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8082665084758918016}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1992854273802229142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8355045420651717269}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5973552c510f52c44a773f9d30dd5838, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  totalTimeFinishRace: 0
+  isMe: 0
+  ID: 1
+  idBoss: 1
+--- !u!1 &8611963684878257047
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1196834011052746794}
+  - component: {fileID: 5348018436265162636}
+  m_Layer: 0
+  m_Name: IAPController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1196834011052746794
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611963684878257047}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5348018436265162636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8611963684878257047}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bcb59b947ce9a408f919be9a9ce666, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isInited: 0
+  inappDatabase: {fileID: 11400000, guid: 38d5c0f59b4f96e449139e3eaf71822b, type: 2}
+--- !u!1 &8905972569208708242
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7290095012284654702}
+  - component: {fileID: 5987402476144414805}
+  m_Layer: 0
+  m_Name: RoyalPass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &7290095012284654702
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8905972569208708242}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7888241272021265489}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5987402476144414805
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8905972569208708242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0af5de45d617fe4f850d392c2063925, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  typeChallenge: 1
+  reasonClaimReward: 8
+  data:
+    currentNumItemSync: 0
+    currentIndexRewardSync: 0
+    rememberCurrentNumItemSync: 0
+    timeEndChallengeSync: 0
+  config:
+    version: 0
+    version_accept: 0
+    is_active: 0
+    time_start: 
+    time_end: 
+    level_unlock: 0
+    time_delay_show: 0
+    str_start_date: 
+    str_end_date: 
+    is_video_x_reward: 0
+    num_x_reward: 0
+    rewards: []
+    percentSpawnItems: []
+    parmaExtral: []
+    timeLife: 0
+  view: {fileID: 0}
+  itemChallengePrefab: {fileID: 4786106815450494120, guid: c02996ef56ed5a142adf26ebe1949ef4, type: 3}
+  iconItem: {fileID: 21300000, guid: 9d884ed9835103641bb953df4860bc18, type: 3}
+--- !u!1 &8914716046654845274
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8914716046654845276}
+  - component: {fileID: 8914716046654845277}
+  m_Layer: 0
+  m_Name: FXController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8914716046654845276
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914716046654845274}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 8893301431322861509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8914716046654845277
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8914716046654845274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 422b371572801154ab3d4364ece76cd6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fxCombinePrefab: {fileID: 3551027239576229974, guid: 9be900663342af847a026a6e4c403f10, type: 3}
+  fxExplosionLightningPrefab: {fileID: 105310, guid: e6ea0c2b13012484ba2f5dc1054e6d75, type: 3}
+  fxDoneRequiremnentPrefab: {fileID: 7733243572329707273, guid: fb66fb5e82f95ce4b829573e8a293f5e, type: 3}
+  fxClaimStarChestHomePrefab: {fileID: 7733243572329707273, guid: 1a11443879fd75d4fa72ffd39934db1a, type: 3}
+  transFX: {fileID: 8914716046654845276}
+--- !u!1 &8974024850152056695
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1581759675655299238}
+  - component: {fileID: 5656330450246727924}
+  m_Layer: 0
+  m_Name: BigRemoveAdsPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1581759675655299238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974024850152056695}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2115794409858075652}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5656330450246727924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8974024850152056695}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf3ee05a865c8f4dbac82f8d3ed8d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1001 &5295920851045238875
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8893301431322861509}
+    m_Modifications:
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: HomeMusic
+      value: 
+      objectReference: {fileID: 8300000, guid: 079756810ea73f84e89421b5244bacce, type: 3}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.Prefab
+      value: 
+      objectReference: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[0]
+      value: '"path":"clips","add_keys":{"$id":0,"$type":"System.Object[], mscorlib","$rlength":20,"$rcontent":[{"$id":1,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",1},{"$id":2,"$type":"BirdSort2.NameMusic, Assembly-CSharp",1},{"$id":3,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",2},{"$id":4,"$type":"BirdSort2.NameMusic, Assembly-CSharp",1},{"$id":5,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",2},{"$id":6,"$type":"BirdSort2.NameMusic, Assembly-CSharp",3},{"$id":7,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",1},{"$id":8,"$type":"BirdSort2.NameMusic, Assembly-CSharp",2},{"$id":9,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",3},{"$id":10,"$type":"BirdSort2.NameMusic, Assembly-CSharp",4},{"$id":11,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",1},{"$id":12,"$type":"BirdSort2.NameMusic, Assembly-CSharp",2},{"$id":13,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",3},{"$id":14,"$type":"BirdSort2.NameMusic, Assembly-CSharp",4},{"$id":15,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",5},{"$id":16,"$type":"BirdSort2.NameMusic, Assembly-CSharp",1},{"$id":17,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",2},{"$id":18,"$type":"BirdSort2.NameMusic, Assembly-CSharp",3},{"$id":19,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",4},{"$id":20,"$type":"BirdSort2.NameMusic, Assembly-CSharp",5}]},"remove_keys":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[1]
+      value: '"path":"clips.{1es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":1,"spaceDelayTime":0.12,"timmer":0,"isActiving":false,"audioClip":null}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[2]
+      value: '"path":"clips.{1es}.audioClip","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[3]
+      value: '"path":"clips.{1es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",1}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[4]
+      value: '"path":"clips.{1es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.12}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[5]
+      value: '"path":"clips.{2es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":2,"spaceDelayTime":0.15,"timmer":0,"isActiving":false,"audioClip":null}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[6]
+      value: '"path":"clips.{2es}.audioClip","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[7]
+      value: '"path":"clips.{2es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",2}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[8]
+      value: '"path":"clips.{2es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.15}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[9]
+      value: '"path":"clips.{3es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":3,"spaceDelayTime":0.08,"timmer":0,"isActiving":false,"audioClip":null}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[10]
+      value: '"path":"clips.{3es}.audioClip","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[11]
+      value: '"path":"clips.{3es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",3}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[12]
+      value: '"path":"clips.{3es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.08}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[13]
+      value: '"path":"clips.{4es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":4,"spaceDelayTime":0.05,"timmer":0,"isActiving":false,"audioClip":null}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[14]
+      value: '"path":"clips.{4es}.audioClip","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[15]
+      value: '"path":"clips.{4es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",4}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[16]
+      value: '"path":"clips.{4es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.05}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[17]
+      value: '"path":"clips.{5es}","value":{"$id":0,"$type":"BirdSort2.MusicData,
+        Assembly-CSharp","name":5,"spaceDelayTime":0.05,"timmer":0,"isActiving":false,"audioClip":null}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[18]
+      value: '"path":"clips.{5es}.audioClip","value":null'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[19]
+      value: '"path":"clips.{5es}.name","value":{"$id":0,"$type":"BirdSort2.NameMusic,
+        Assembly-CSharp",5}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModifications.Array.data[20]
+      value: '"path":"clips.{5es}.spaceDelayTime","value":{"$id":0,"$type":"System.Single,
+        mscorlib",0.05}'
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: serializationData.PrefabModificationsReferencedUnityObjects.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2701208702270281759, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      propertyPath: m_Name
+      value: MusicManager (1)
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2701208702270281757, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5295920849263189563}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2701208702270281759, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5740087761589089530}
+  m_SourcePrefab: {fileID: 100100000, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+--- !u!82 &7782920496167596193 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2701208702556305658, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+  m_PrefabInstance: {fileID: 5295920851045238875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7782920496519139396 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2701208702270281759, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+  m_PrefabInstance: {fileID: 5295920851045238875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5740087761589089530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7782920496519139396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74ff246ecb3dfe24c98399db0c60d490, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: clips
+      Entry: 7
+      Data: 0|System.Collections.Generic.Dictionary`2[[BirdSort2.NameMusic, Assembly-CSharp],[BirdSort2.MusicData,
+        Assembly-CSharp]], mscorlib
+    - Name: comparer
+      Entry: 7
+      Data: 1|System.Collections.Generic.EnumEqualityComparer`1[[BirdSort2.NameMusic,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 12
+      Data: 7
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 1
+    - Name: $v
+      Entry: 7
+      Data: 2|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 1
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.12
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 2
+    - Name: $v
+      Entry: 7
+      Data: 3|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 2
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.15
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 3
+    - Name: $v
+      Entry: 7
+      Data: 4|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 3
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.08
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 4
+    - Name: $v
+      Entry: 7
+      Data: 5|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 4
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.05
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 5
+    - Name: $v
+      Entry: 7
+      Data: 6|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 5
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.08
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 8
+    - Name: $v
+      Entry: 7
+      Data: 7|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 8
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.12
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 
+    - Name: $k
+      Entry: 3
+      Data: 9
+    - Name: $v
+      Entry: 7
+      Data: 8|BirdSort2.MusicData, Assembly-CSharp
+    - Name: name
+      Entry: 3
+      Data: 9
+    - Name: spaceDelayTime
+      Entry: 4
+      Data: 0.12
+    - Name: timmer
+      Entry: 4
+      Data: 0
+    - Name: isActiving
+      Entry: 5
+      Data: false
+    - Name: audioClip
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+  mixer: {fileID: 24100000, guid: a097b51baeb02cd4b804198bd6295170, type: 2}
+  effectSource: {fileID: 7782920497303610823}
+  musicSource: {fileID: 7782920496167596193}
+  soundUISource: {fileID: 9202656546348067949}
+  coolDownLevelSource: {fileID: 5295920849263189564}
+  lowPitchRange: 0.95
+  highPitchRange: 1.05
+  delayTime: 0.5
+  winMusic: {fileID: 8300000, guid: 6a7a8dbe1513ae94692762cbc5b5482f, type: 3}
+  loseMusic: {fileID: 8300000, guid: bd24c0e455aa34147a63660886f615df, type: 3}
+  BGMusicHome: {fileID: 8300000, guid: 079756810ea73f84e89421b5244bacce, type: 3}
+  BGMusicLevel: {fileID: 8300000, guid: 2023e2e74297ba84c87d703eec7e2e42, type: 3}
+  clickSound: {fileID: 8300000, guid: b4dcb19192f5cf541b777785377c8ba2, type: 3}
+--- !u!4 &7782920496519139397 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2701208702270281758, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+  m_PrefabInstance: {fileID: 5295920851045238875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &7782920497303610823 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2701208701443878300, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+  m_PrefabInstance: {fileID: 5295920851045238875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &9202656546348067949 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 3947550945509712950, guid: 40140076a6b5dd94d860f9f332d59c8b, type: 3}
+  m_PrefabInstance: {fileID: 5295920851045238875}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &7297105289516734639
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8893301431322861509}
+    m_Modifications:
+    - target: {fileID: 2639470723297015731, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_Name
+      value: SkillUserController
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_RootOrder
+      value: 14
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+--- !u!4 &1245047984359823294 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8359747515382337297, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+  m_PrefabInstance: {fileID: 7297105289516734639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &6385754762983929159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4456950127582424552, guid: 1aa58918f2d357643a7fb5c560b04626, type: 3}
+  m_PrefabInstance: {fileID: 7297105289516734639}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 926ebc7feafa84645a126662a0884a82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &8297597637976863924
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8893301431322861509}
+    m_Modifications:
+    - target: {fileID: 4323508241329400192, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 4323508241329400192, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601508, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Name
+      value: MoneyEffectController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+--- !u!224 &3804280219957937229 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+  m_PrefabInstance: {fileID: 8297597637976863924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8926304833441468992 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 632307031048103668, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+  m_PrefabInstance: {fileID: 8297597637976863924}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59982fec0b0a5a040ba98f9702b354af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -77,15 +77,7 @@ public class GameEnum : MonoBehaviour
         Uncrew,
         CompleteLevel,
     }
-
-    public enum BoosterType
-    {
-        AddScrewPort,
-        BreakObject,
-        ClearScrewPorts,
-        UnlockScrewBox
-    }
-
+    
 
     public enum ButtonMode
     {

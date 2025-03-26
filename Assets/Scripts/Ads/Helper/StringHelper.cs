@@ -258,6 +258,8 @@ public static class StringHelper
     public const string CURRENT_LEVEL_PASS_ME = "current_level_pass_me";
     public const string TIME_ME_FINISH_RACE_RACE_CHALLENGE = "time_me_finish_race_race_challenge";
     public const string LAST_TIME_MINIGAME_SHOW_HOME = "LAST_TIME_MINIGAME_SHOW_HOME";
+    
+    
 }
 
 public class PathPrefabs
@@ -333,6 +335,7 @@ public class PathPrefabs
     public const string TRIPLE_BIRD_MINI_GAME_SHOP_BOX = "UI/Popups/TripleBirdMiniGameShop";
     public const string REWARD_CONNECT_BIRD_MN_BOX = "UI/Popups/RewardConnectBirdMNBox";
     public const string REWARD_TRIPLE_BIRD_MN_BOX = "UI/Popups/RewardTripleBirdMNBox";
+    
 }
 
 
@@ -481,6 +484,27 @@ public class FirebaseConfig
     public const string ON_OFF_PVP1 = "on_off_pvp1";
     public const string DEFAULT_NUM_ADD_STAND = "default_num_add_stand";
     public const string TIME_COOL_DOWN_PVP1_TICKET = "time_cool_down_pvp1_ticket";
+
+    //Tripple Match
+    public const string DEFAULT_NUM_ITEM = "default_num_{0}_item";
+    public const string BONUS_TIME_ITEM = "bonus_time_item";
+
+    public const string REVIEW_IAP_VERSION = "review_iap_version";
+    public const string REVIEW_FUNC_VERSION = "review_func_version";
+
+    public const string IS_TEST_LEVEL = "is_test_level";
+
+    public const string DEFAULT_NUM_ADD_BRANCH = "default_num_add_branch";//2
+    public const string DEFAULT_NUM_REMOVE_BOMB = "default_num_remove_bomb";//0
+    public const string DEFAULT_NUM_REMOVE_EGG = "default_num_remove_egg";//0
+    public const string DEFAULT_NUM_REMOVE_JAIL = "default_num_remove_jail";//0
+    public const string DEFAULT_NUM_REMOVE_SLEEP = "default_num_remove_sleep";//0
+    public const string DEFAULT_NUM_REMOVE_CAGE = "default_num_remove_cage";//0
+    public const string NUM_RETURN_CLAIM_VIDEO_REWARD = "num_return_claim_video_reward";//3
+    public const string DEFAULT_NUM_RETURN = "default_num_return";//2
+
+    public const string CONFERI_MUTIL_TIME_LEVEL = "conferi_mutil_time_level";
+    public const string START_LEVEL_BACK_TO_HOME = "start_level_back_to_home";
 
     //Banner Collap
     public const string ENABLE_ADMOB_BANNER = "enable_banner_admob";

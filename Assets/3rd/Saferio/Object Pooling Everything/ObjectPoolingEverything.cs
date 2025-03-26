@@ -12,7 +12,7 @@ public class ObjectPoolingEverything : MonoBehaviour
     public static ObjectPoolingEverything Instance;
     private Dictionary<string, ObjectPool> _poolGroup;
 
-    private void Awake()
+    public void Init()
     {
         if (Instance != null && Instance != this)
         {
@@ -21,8 +21,6 @@ public class ObjectPoolingEverything : MonoBehaviour
         else
         {
             Instance = this;
-
-            DontDestroyOnLoad(gameObject);
         }
 
         _poolGroup = new Dictionary<string, ObjectPool>();

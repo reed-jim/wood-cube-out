@@ -11,7 +11,7 @@ public class LevelGarbageBin : MonoBehaviour
 
     void Awake()
     {
-        LevelLoader.startLevelEvent += EmptyGarbageBin;
+        //LevelLoader.startLevelEvent += EmptyGarbageBin;
 
         if (Instance != null && Instance != this)
         {
@@ -27,7 +27,7 @@ public class LevelGarbageBin : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= EmptyGarbageBin;
+        //LevelLoader.startLevelEvent -= EmptyGarbageBin;
     }
 
     private void EmptyGarbageBin()

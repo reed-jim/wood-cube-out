@@ -23,11 +23,10 @@ public class BottomBar : MonoBehaviour
 
     private void Awake()
     {
-        SwipeGesture.swipeGestureEvent += OnSwipe;
+        //SwipeGesture.swipeGestureEvent += OnSwipe;
         SwipeGesture.stopSwipeGestureEvent += OnStopSwiping;
         BottomBarItem.moveBottomBarHighlightEvent += MoveBottomBarHighlight;
-        BasePopup.enableSwipingScreenEvent += EnableSwiping;
-
+    
         _slotSize = canvasSizeOfReferenceDevice.Value.x / screenNumber;
 
         _isEnabledSwiping = true;
@@ -40,10 +39,10 @@ public class BottomBar : MonoBehaviour
 
     private void OnDestroy()
     {
-        SwipeGesture.swipeGestureEvent -= OnSwipe;
+        //SwipeGesture.swipeGestureEvent -= OnSwipe;
         SwipeGesture.stopSwipeGestureEvent -= OnStopSwiping;
         BottomBarItem.moveBottomBarHighlightEvent -= MoveBottomBarHighlight;
-        BasePopup.enableSwipingScreenEvent -= EnableSwiping;
+     
     }
 
     private void OnSwipe(Vector2 direction)

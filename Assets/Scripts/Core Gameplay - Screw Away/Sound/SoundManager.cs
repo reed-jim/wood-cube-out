@@ -33,7 +33,7 @@ public class SoundManager : MonoBehaviour
 
         GameSettingManager.enableBackgroundMusicEvent += EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent += EnableGameSound;
-        GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
+        //GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
 
         _tweens = new List<Tween>();
     }
@@ -42,7 +42,7 @@ public class SoundManager : MonoBehaviour
     {
         GameSettingManager.enableBackgroundMusicEvent -= EnableBackgroundMusic;
         GameSettingManager.enableGameSoundEvent -= EnableGameSound;
-        GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
+        //;GameVariableInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
     }

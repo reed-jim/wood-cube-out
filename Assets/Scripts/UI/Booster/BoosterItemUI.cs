@@ -21,13 +21,12 @@ public class BoosterItemUI : MonoBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
-    public static event Action<BoosterType> showBuyBoosterPopupEvent;
+    
 
     void Awake()
     {
-        BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
+    
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
-        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
 
@@ -36,9 +35,7 @@ public class BoosterItemUI : MonoBehaviour
 
     void OnDestroy()
     {
-        BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
-        BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
-        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+       BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
     }
 
     private async void Setup()
@@ -63,7 +60,7 @@ public class BoosterItemUI : MonoBehaviour
 
     private void ShowBuyBoosterPopup()
     {
-        showBuyBoosterPopupEvent?.Invoke((BoosterType)boosterIndex);
+       
     }
 
     private void UpdateQuantityText(int boosterIndex)

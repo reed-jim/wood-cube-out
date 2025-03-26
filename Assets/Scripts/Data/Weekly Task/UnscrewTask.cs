@@ -25,7 +25,7 @@ public class UnscrewTask : BaseWeeklyTask
 
     public override void Init()
     {
-        BaseScrew.screwLoosenedEvent += OnScrewLoosened;
+        //BaseScrew.screwLoosenedEvent += OnScrewLoosened;
     }
 
     public override void GetDesription(out string translationName, out string parameter)

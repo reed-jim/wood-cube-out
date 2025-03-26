@@ -16,7 +16,7 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
+        //Anhtusz MultiPhase LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent += UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent += DisableMultiPhaseLevelUI;
 
@@ -25,7 +25,7 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
+        //Anhtusz MultiPhase LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent -= UpdateMultiPhaseLevelUI;
         MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent -= DisableMultiPhaseLevelUI;
 

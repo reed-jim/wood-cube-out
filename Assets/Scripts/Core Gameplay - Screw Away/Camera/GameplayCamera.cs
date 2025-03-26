@@ -1,11 +1,11 @@
 using System;
+using BirdSort2;
 using PrimeTween;
 using UnityEngine;
 
 public class GameplayCamera : MonoBehaviour
 {
     [SerializeField] private Camera gameplayCamera;
-    [SerializeField] private Transform background;
 
     private float _initialOrthographicSize;
     private float _targetOrthographicSize;
@@ -14,28 +14,22 @@ public class GameplayCamera : MonoBehaviour
 
     public static event Action<float> updateCameraZoomRatioEvent;
 
-    private void Awake()
+    public void Init()
     {
-        LevelLoader.startLevelEvent += OnLevelStart;
-        PinchGesture.pinchGestureEvent += Zoom;
-        BasicObjectPart.shakeCameraEvent += Shake;
-        MultiPhaseLevelManager.zoomCameraEvent += Zoom;
-        MultiPhaseLevelManager.resetCameraEvent += Reset;
+        //MultiPhaseLevelManager.zoomCameraEvent += Zoom;
+        //MultiPhaseLevelManager.resetCameraEvent += Reset;
 
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
 
-        _initialBackgroundScale = background.localScale;
-        _targetBackgroundScale = background.localScale;
+        //_initialBackgroundScale = background.localScale;
+        //_targetBackgroundScale = background.localScale;
 
-        GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(gameplayCamera);
+        GamePlayController_BirdSort.Instance.gameScene.screenSizeWorld = CommonUtil.GetScreenSizeWorld(gameplayCamera);
     }
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStart;
-        PinchGesture.pinchGestureEvent -= Zoom;
-        BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
     }
@@ -43,9 +37,6 @@ public class GameplayCamera : MonoBehaviour
     private void Update()
     {
         gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 0.333f);
-
-        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 0.333f);
-
         updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }
 
@@ -60,13 +51,13 @@ public class GameplayCamera : MonoBehaviour
         // _targetBackgroundScale = _initialBackgroundScale;
     }
 
-    private void Zoom(float orthographicSize)
+    public void Zoom(float orthographicSize)
     {
         _targetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
     }
 
-    private void Shake()
+    public void Shake()
     {
         Tween.ShakeCamera(gameplayCamera, 1, duration: 0.3f);
     }

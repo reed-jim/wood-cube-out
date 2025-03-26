@@ -12,15 +12,17 @@ using UnityEngine.Events;
 using Firebase.Extensions;
 using System.Collections;
 using Firebase;
+using PlayFab;
+using PlayFab.ClientModels;
 using UnityEngine.UI;
 
 public class RemoteConfigController : MonoBehaviour
 {
-    private static RemoteConfigController Instance;
+    //private static RemoteConfigController Instance;
 
-    FirebaseRemoteConfig _remoteConfig;
+    //FirebaseRemoteConfig _remoteConfig;
 
-    private Task FetchAsync()
+    /* Task FetchAsync()
     {
         var task = FirebaseRemoteConfig.DefaultInstance.FetchAsync(System.TimeSpan.Zero);
         return task.ContinueWithOnMainThread(FetchComplete);
@@ -48,7 +50,7 @@ public class RemoteConfigController : MonoBehaviour
             {
                 ReloadFirebaseKeys();
             });
-    }
+    }*/
 
 
 
@@ -69,25 +71,25 @@ public class RemoteConfigController : MonoBehaviour
     #region Public Methods
     public static bool isFetchDone;
 
-    //     public static async Task FetchData()
-    //     {
-    //         //Context.Waiting.ShowWaiting("Fetching data...");
-    //         DebugLog("Fetching data...");
-    //         // FetchAsync only fetches new data if the current data is older than the provided
-    //         // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
-    //         // By default the timespan is 12 hours, and for production apps, this is a good
-    //         // number.  For this example though, it's set to a timespan of zero, so that
-    //         // changes in the console will always show up immediately.
-    // #if TEST
-    //         System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-    //             TimeSpan.FromSeconds(30));
-    // #else
-    //         System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-    //             TimeSpan.FromHours(6));
-    // #endif
-    //         await fetchTask.ContinueWith(FetchComplete);
-    //     }
-
+        public static async Task FetchData()
+        {
+            //Context.Waiting.ShowWaiting("Fetching data...");
+            DebugLog("Fetching data...");
+            // FetchAsync only fetches new data if the current data is older than the provided
+            // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
+            // By default the timespan is 12 hours, and for production apps, this is a good
+            // number.  For this example though, it's set to a timespan of zero, so that
+            // changes in the console will always show up immediately.
+    #if TEST
+            System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+                TimeSpan.FromSeconds(30));
+    #else
+            System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+                TimeSpan.FromHours(6));
+    #endif
+            await fetchTask.ContinueWith(FetchComplete);
+        }
+/*
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -123,52 +125,97 @@ public class RemoteConfigController : MonoBehaviour
             }
         });
     }
+*/
+    public async Task FetchDataAsync()
+    {
+        DebugLog("Fetching data...");
+        System.Threading.Tasks.Task fetchTask =
+        Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+            TimeSpan.Zero);
+        fetchTask.ContinueWithOnMainThread(FetchComplete);
+    }
 
-    // public async Task FetchDataAsync()
-    // {
-    //     DebugLog("Fetching data...");
-    //     System.Threading.Tasks.Task fetchTask =
-    //     Firebase.RemoteConfig.FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-    //         TimeSpan.Zero);
-    //     fetchTask.ContinueWithOnMainThread(FetchComplete);
-    // }
+    public static async Task FetchDataNow()
+    {
+        //Context.Waiting.ShowWaiting("Fetching data...");
+        DebugLog("Fetching data Now...");
+        // FetchAsync only fetches new data if the current data is older than the provided
+        // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
+        // By default the timespan is 12 hours, and for production apps, this is a good
+        // number.  For this example though, it's set to a timespan of zero, so that
+        // changes in the console will always show up immediately.
 
-    // public static async Task FetchDataNow()
-    // {
-    //     //Context.Waiting.ShowWaiting("Fetching data...");
-    //     DebugLog("Fetching data Now...");
-    //     // FetchAsync only fetches new data if the current data is older than the provided
-    //     // timespan.  Otherwise it assumes the data is "recent enough", and does nothing.
-    //     // By default the timespan is 12 hours, and for production apps, this is a good
-    //     // number.  For this example though, it's set to a timespan of zero, so that
-    //     // changes in the console will always show up immediately.
+        System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
+            TimeSpan.Zero);
 
-    //     System.Threading.Tasks.Task fetchTask = FirebaseRemoteConfig.DefaultInstance.FetchAsync(
-    //         TimeSpan.Zero);
+        fetchTask.ContinueWithOnMainThread(FetchComplete);
+    }
 
-    //     fetchTask.ContinueWithOnMainThread(FetchComplete);
-    // }
+    private static void FetchComplete(Task fetchTask)
+    {
+        if (fetchTask.IsCanceled)
+        {
+            DebugLog("Fetch canceled.");
+            isFetchDone = true;
+        }
+        else if (fetchTask.IsFaulted)
+        {
+            DebugLog("Fetch encountered an error.");
+            isFetchDone = true;
+        }
+        else if (fetchTask.IsCompleted)
+        {
+            DebugLog("Fetch completed successfully!");
+        }
+        //Context.Waiting.HideWaiting();
+        var info = FirebaseRemoteConfig.DefaultInstance.Info;
+        switch (info.LastFetchStatus)
+        {
+            case LastFetchStatus.Success:
+                FetchAndActivateAsync(fetchTask, info);
+                break;
 
+            case LastFetchStatus.Failure:
+                switch (info.LastFetchFailureReason)
+                {
+                    case FetchFailureReason.Error:
+                        DebugLog("Fetch failed for unknown reason");
+                        break;
 
+                    case FetchFailureReason.Throttled:
+                        DebugLog("Fetch throttled until " + info.ThrottledEndTime);
+                        break;
+                }
+                isFetchDone = true;
+                break;
+
+            case LastFetchStatus.Pending:
+                DebugLog("Latest Fetch call still pending.");
+                isFetchDone = true;
+                break;
+        }
+
+        //AdmobAds.Instance.Init();
+    }
     public static string GetStringConfig(string key, string defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
         //if (!defaults.ContainsKey(key)) return defaultValue;+
-        return Instance._remoteConfig.GetValue(key).StringValue;
+        return FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
     }
 
 
     public static bool GetBoolConfig(string key, bool defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        return Instance._remoteConfig.GetValue(key).BooleanValue;
+        return FirebaseRemoteConfig.DefaultInstance.GetValue(key).BooleanValue;
     }
 
 
     public static float GetFloatConfig(string key, float defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        string val = Instance._remoteConfig.GetValue(key).StringValue;
+        string val = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
         try
         {
             return float.Parse(val, CultureInfo.InvariantCulture);
@@ -182,7 +229,7 @@ public class RemoteConfigController : MonoBehaviour
     public static int GetIntConfig(string key, int defaultValue)
     {
         if (!firebaseRemoteKeys.Contains(key)) return defaultValue;
-        string val = Instance._remoteConfig.GetValue(key).StringValue;
+        string val = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue;
         try
         {
             return int.Parse(val);
@@ -198,7 +245,7 @@ public class RemoteConfigController : MonoBehaviour
         string input;
 
         if (!firebaseRemoteKeys.Contains(key) ||
-            string.IsNullOrEmpty(input = Instance._remoteConfig.GetValue(key).StringValue))
+            string.IsNullOrEmpty(input = FirebaseRemoteConfig.DefaultInstance.GetValue(key).StringValue))
         {
             result = default;
             return false;
@@ -431,20 +478,20 @@ public class RemoteConfigController : MonoBehaviour
 
     #endregion Private Methods
 
-    //     public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
-    //     {
-    //         var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
-    //         PlayFabClientAPI.GetStoreItems(request,
-    //            (s) =>
-    //            {
-    //                var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
-    // #if LOG_VERBOSE
-    //                Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
-    // #endif
-    //                if (data != null)
-    //                    success?.Invoke(data);
+        public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
+        {
+            var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
+            PlayFabClientAPI.GetStoreItems(request,
+               (s) =>
+               {
+                   var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
+    #if LOG_VERBOSE
+                   Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
+    #endif
+                   if (data != null)
+                       success?.Invoke(data);
 
-    //            },
-    //             (e) => error?.Invoke(e));
-    //     }
+               },
+                (e) => error?.Invoke(e));
+        }
 }

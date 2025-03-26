@@ -37,9 +37,7 @@ public class MenuScreen : MonoBehaviour
 
     private void Awake()
     {
-        GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
-        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -87,9 +85,7 @@ public class MenuScreen : MonoBehaviour
 
     void OnDestroy()
     {
-        GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
-        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
@@ -220,7 +216,7 @@ public class MenuScreen : MonoBehaviour
         {
             menuScreenAudioListener.enabled = false;
 
-            SceneManager.UnloadSceneAsync(GameConstants.MENU_SCENE);
+            SceneManager.UnloadSceneAsync(GameConstants.HomeScene);
         }
     }
 }
