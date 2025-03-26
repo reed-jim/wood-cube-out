@@ -116,6 +116,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateLevelRubik();
         }
 
+        if (GUILayout.Button("Generate Level Rubik Symmetrically"))
+        {
+            GenerateLevelRubikQuarter();
+        }
+
         if (GUILayout.Button("Randomize Level Pieces' Color"))
         {
             RandomizeLevelModelColor();
@@ -1772,6 +1777,343 @@ public class HingeJointGenerator : EditorWindow
         EditorUtility.SetDirty(Selection.activeTransform);
     }
 
+    private void GenerateLevelRubikSymmetrically()
+    {
+        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like.prefab");
+
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Vector3 currentPieceSize;
+
+        int totalSpawn = 0;
+        float distanceMultiplier = 1.05f;
+        int numRow = 2;
+        int numScrewSpawned = 0;
+
+        Dictionary<Vector3Int, bool> isTilesContainPiece = new Dictionary<Vector3Int, bool>();
+        Dictionary<int, Material> cachedMaterials = new Dictionary<int, Material>();
+
+        Vector3 symmetricalFactor = new Vector3(0, 1, 1);
+
+        // // XPlane
+        // Matrix4x4 swapMatrix = new Matrix4x4(
+        //     new Vector4(0, 1, 0, 0),
+        //     new Vector4(1, 0, 0, 0),
+        //     new Vector4(0, 0, 1, 0),
+        //     new Vector4(0, 0, 0, 1)
+        // );
+
+        // // ZPlane
+        // Matrix4x4 swapMatrix = new Matrix4x4(
+        //     new Vector4(0, 0, 1, 0),
+        //     new Vector4(0, 1, 0, 0),
+        //     new Vector4(1, 0, 0, 0),
+        //     new Vector4(0, 0, 0, 1)
+        // );
+
+        // // YPlane
+        // Matrix4x4 swapMatrix = new Matrix4x4(
+        //     new Vector4(0, 1, 0, 0),
+        //     new Vector4(1, 0, 0, 0),
+        //     new Vector4(0, 0, 1, 0),
+        //     new Vector4(0, 0, 0, 1)
+        // );
+
+        Matrix4x4 swapMatrix = new Matrix4x4(
+            new Vector4(1, 0, 0, 0),
+            new Vector4(0, 1, 0, 0),
+            new Vector4(0, 0, 1, 0),
+            new Vector4(0, 0, 0, 1)
+        );
+
+        // GENERATE FIRST HALF
+        // X
+        for (int i = 0; i <= numRow + 0; i++)
+        {
+            Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+            cachedMaterials.Add(i, randomMaterial);
+
+            // Y
+            for (int j = -0; j <= numRow; j++)
+            {
+                // Z
+                for (int k = -numRow - 0; k <= numRow + 0; k++)
+                {
+                    if (numScrewSpawned >= maxScrew)
+                    {
+                        continue;
+                    }
+
+                    int random = UnityEngine.Random.Range(0, 3);
+
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3 transformedCoordinator = swapMatrix.MultiplyPoint3x4(coordinator);
+                    Vector3Int transformedCoordinatorInt = new Vector3Int(
+                        Mathf.RoundToInt(transformedCoordinator.x),
+                        Mathf.RoundToInt(transformedCoordinator.y),
+                        Mathf.RoundToInt(transformedCoordinator.z)
+                    );
+
+                    if (random == 0)
+                    {
+                        SpawnBlock(transformedCoordinatorInt, randomMaterial);
+
+                        totalSpawn++;
+
+                        isTilesContainPiece.Add(transformedCoordinatorInt, true);
+                    }
+                    else
+                    {
+                        isTilesContainPiece.Add(transformedCoordinatorInt, false);
+                    }
+                }
+            }
+        }
+
+        // GENERATE SECOND HALF
+        // X
+        for (int i = -1; i >= -numRow - 0; i--)
+        {
+            Material cachedMaterial = cachedMaterials[-i];
+
+            // Y
+            for (int j = -numRow; j <= numRow; j++)
+            {
+                // Z
+                for (int k = -numRow - 0; k <= numRow + 0; k++)
+                {
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3 transformedCoordinator = swapMatrix.MultiplyPoint3x4(coordinator);
+                    Vector3Int transformedCoordinatoraInt = new Vector3Int(
+                        Mathf.RoundToInt(transformedCoordinator.x),
+                        Mathf.RoundToInt(transformedCoordinator.y),
+                        Mathf.RoundToInt(transformedCoordinator.z)
+                    );
+
+                    Vector3Int cachedCoordinator = new Vector3Int(-i, j, k);
+                    Vector3 transformedCachedCoordinator = swapMatrix.MultiplyPoint3x4(cachedCoordinator);
+                    Vector3Int transformedCachedCoordinatorInt = new Vector3Int(
+                        Mathf.RoundToInt(transformedCachedCoordinator.x),
+                        Mathf.RoundToInt(transformedCachedCoordinator.y),
+                        Mathf.RoundToInt(transformedCachedCoordinator.z)
+                    );
+
+                    if (isTilesContainPiece[transformedCachedCoordinatorInt])
+                    {
+                        SpawnBlock(transformedCoordinatoraInt, cachedMaterial);
+                    }
+                }
+            }
+        }
+
+        void SpawnBlock(Vector3Int coordinator, Material randomMaterial)
+        {
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+            generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+            numScrewSpawned += generatedPiece.transform.childCount;
+
+            Vector3 rotation = new Vector3(0, 0, 0);
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+
+            currentPieceSize = generatedPiece.GetComponent<MeshRenderer>().bounds.size;
+
+            Vector3 position = new Vector3
+            (
+                distanceMultiplier * coordinator.x * currentPieceSize.x,
+                distanceMultiplier * coordinator.y * currentPieceSize.y,
+                distanceMultiplier * coordinator.z * currentPieceSize.z
+            );
+
+            generatedPiece.position = position;
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = randomMaterial;
+
+            totalSpawn++;
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
+    private void GenerateLevelRubikQuarter()
+    {
+        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like.prefab");
+
+        // Remove all existing blocks
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        {
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+
+        // MATERIALS
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Vector3 currentPieceSize;
+
+        int totalSpawn = 0;
+        float distanceMultiplier = 1.05f;
+        int numRow = 2;
+        int numScrewSpawned = 0;
+
+        Dictionary<Vector3Int, bool> isTilesContainPiece = new Dictionary<Vector3Int, bool>();
+        Dictionary<Vector3Int, Material> cachedMaterials = new Dictionary<Vector3Int, Material>();
+
+        // GENERATE FIRST HALF
+        // X
+        for (int i = 0; i <= numRow + 0; i++)
+        {
+            Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+            // Y
+            for (int j = 0; j <= numRow; j++)
+            {
+                // Z
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    if (numScrewSpawned >= maxScrew)
+                    {
+                        continue;
+                    }
+
+                    int random = UnityEngine.Random.Range(0, 3);
+
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+
+                    if (random == 0)
+                    {
+                        SpawnBlock(coordinator, randomMaterial);
+
+                        totalSpawn++;
+
+                        isTilesContainPiece.Add(coordinator, true);
+                        cachedMaterials.Add(coordinator, randomMaterial);
+                    }
+                    else
+                    {
+                        isTilesContainPiece.Add(coordinator, false);
+                    }
+                }
+            }
+        }
+
+        // GENERATE SECOND QUARTER
+        // X
+        for (int i = 0; i <= numRow + 0; i++)
+        {
+            // Y
+            for (int j = -numRow; j <= -1; j++)
+            {
+                // Z
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3Int cachedCoordinator = new Vector3Int(i, -j, k);
+
+                    if (isTilesContainPiece[cachedCoordinator])
+                    {
+                        SpawnBlock(coordinator, cachedMaterials[cachedCoordinator]);
+                    }
+                }
+            }
+        }
+
+        // GENERATE THIRD QUARTER
+        // X
+        for (int i = -numRow; i <= -1; i++)
+        {
+            // Y
+            for (int j = 0; j <= numRow; j++)
+            {
+                // Z
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3Int cachedCoordinator = new Vector3Int(-i, j, k);
+
+                    if (isTilesContainPiece[cachedCoordinator])
+                    {
+                        SpawnBlock(coordinator, cachedMaterials[cachedCoordinator]);
+                    }
+                }
+            }
+        }
+
+        // GENERATE THIRD QUARTER
+        // X
+        for (int i = -numRow; i <= -1; i++)
+        {
+            // Y
+            for (int j = -numRow; j <= -1; j++)
+            {
+                // Z
+                for (int k = -numRow; k <= numRow; k++)
+                {
+                    Vector3Int coordinator = new Vector3Int(i, j, k);
+                    Vector3Int cachedCoordinator = new Vector3Int(-i, -j, k);
+
+                    if (isTilesContainPiece[cachedCoordinator])
+                    {
+                        SpawnBlock(coordinator, cachedMaterials[cachedCoordinator]);
+                    }
+                }
+            }
+        }
+
+        void SpawnBlock(Vector3Int coordinator, Material randomMaterial)
+        {
+            Transform generatedPiece = ((GameObject)PrefabUtility.InstantiatePrefab(piecePrefab, Selection.activeTransform)).transform;
+
+            generatedPiece.name = $"Piece {totalSpawn + 1}";
+
+            numScrewSpawned += generatedPiece.transform.childCount;
+
+            Vector3 rotation = new Vector3(0, 0, 0);
+            generatedPiece.rotation = Quaternion.Euler(rotation);
+
+            currentPieceSize = generatedPiece.GetComponent<MeshRenderer>().bounds.size;
+
+            Vector3 position = new Vector3
+            (
+                distanceMultiplier * coordinator.x * currentPieceSize.x,
+                distanceMultiplier * coordinator.y * currentPieceSize.y,
+                distanceMultiplier * coordinator.z * currentPieceSize.z
+            );
+
+            generatedPiece.position = position;
+
+            // MATERIAL
+            generatedPiece.GetComponent<MeshRenderer>().sharedMaterial = randomMaterial;
+
+            totalSpawn++;
+        }
+
+        EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
     private void GenerateLevel()
     {
         int totalPiece = UnityEngine.Random.Range(24, 32);
@@ -2067,6 +2409,17 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return prefabs.ToArray();
+    }
+
+    private Vector3Int GetAbsoluteVector3(Vector3Int input)
+    {
+        Vector3Int absoluteOne = input;
+
+        absoluteOne.x = Mathf.Abs(input.x);
+        absoluteOne.y = Mathf.Abs(input.y);
+        absoluteOne.z = Mathf.Abs(input.z);
+
+        return absoluteOne;
     }
     #endregion
 
