@@ -17,6 +17,10 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private Vector3 throwForceMultiplier = new Vector3(0.003f, 0.003f, 0.003f);
     [SerializeField] private int minJointToDisableKinematic = 1;
 
+    #region COMPONENT
+    private ObjectPartMaterialPropertyBlock _pieceMaterialPropertyBlock;
+    #endregion
+
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Sequence> _sequences;
@@ -37,6 +41,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     public Vector3 BoundSize
     {
         get => _boundSize;
+    }
+
+    public ObjectPartMaterialPropertyBlock PieceMaterialPropertyBlock
+    {
+        get => _pieceMaterialPropertyBlock;
     }
 
     #region EVENT
@@ -60,6 +69,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         partRigidbody = GetComponent<Rigidbody>();
         meshCollider = GetComponent<MeshCollider>();
+        _pieceMaterialPropertyBlock = GetComponent<ObjectPartMaterialPropertyBlock>();
 
         _totalJoint = GetComponents<HingeJoint>().Length;
 
