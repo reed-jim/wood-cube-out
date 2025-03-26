@@ -1979,27 +1979,29 @@ public class HingeJointGenerator : EditorWindow
         int numRow = 2;
         int numScrewSpawned = 0;
 
+        Vector3Int additional = new Vector3Int(0, 0, 0);
+
         Dictionary<Vector3Int, bool> isTilesContainPiece = new Dictionary<Vector3Int, bool>();
         Dictionary<Vector3Int, Material> cachedMaterials = new Dictionary<Vector3Int, Material>();
 
         // GENERATE FIRST HALF
         // X
-        for (int i = 0; i <= numRow + 0; i++)
+        for (int i = 0; i <= numRow + additional.x; i++)
         {
             Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 
             // Y
-            for (int j = 0; j <= numRow; j++)
+            for (int j = 0; j <= numRow + additional.y; j++)
             {
                 // Z
-                for (int k = -numRow; k <= numRow; k++)
+                for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
                 {
                     if (numScrewSpawned >= maxScrew)
                     {
                         continue;
                     }
 
-                    int random = UnityEngine.Random.Range(0, 3);
+                    int random = UnityEngine.Random.Range(0, 4);
 
                     Vector3Int coordinator = new Vector3Int(i, j, k);
 
@@ -2022,13 +2024,13 @@ public class HingeJointGenerator : EditorWindow
 
         // GENERATE SECOND QUARTER
         // X
-        for (int i = 0; i <= numRow + 0; i++)
+        for (int i = 0; i <= numRow + additional.x; i++)
         {
             // Y
-            for (int j = -numRow; j <= -1; j++)
+            for (int j = -numRow - additional.y; j <= -1; j++)
             {
                 // Z
-                for (int k = -numRow; k <= numRow; k++)
+                for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
                 {
                     Vector3Int coordinator = new Vector3Int(i, j, k);
                     Vector3Int cachedCoordinator = new Vector3Int(i, -j, k);
@@ -2043,13 +2045,13 @@ public class HingeJointGenerator : EditorWindow
 
         // GENERATE THIRD QUARTER
         // X
-        for (int i = -numRow; i <= -1; i++)
+        for (int i = -numRow - additional.x; i <= -1; i++)
         {
             // Y
-            for (int j = 0; j <= numRow; j++)
+            for (int j = 0; j <= numRow + additional.y; j++)
             {
                 // Z
-                for (int k = -numRow; k <= numRow; k++)
+                for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
                 {
                     Vector3Int coordinator = new Vector3Int(i, j, k);
                     Vector3Int cachedCoordinator = new Vector3Int(-i, j, k);
@@ -2062,15 +2064,15 @@ public class HingeJointGenerator : EditorWindow
             }
         }
 
-        // GENERATE THIRD QUARTER
+        // GENERATE FOURTH QUARTER
         // X
-        for (int i = -numRow; i <= -1; i++)
+        for (int i = -numRow - additional.x; i <= -1; i++)
         {
             // Y
-            for (int j = -numRow; j <= -1; j++)
+            for (int j = -numRow - additional.y; j <= -1; j++)
             {
                 // Z
-                for (int k = -numRow; k <= numRow; k++)
+                for (int k = -numRow - additional.z; k <= numRow + additional.z; k++)
                 {
                     Vector3Int coordinator = new Vector3Int(i, j, k);
                     Vector3Int cachedCoordinator = new Vector3Int(-i, -j, k);
