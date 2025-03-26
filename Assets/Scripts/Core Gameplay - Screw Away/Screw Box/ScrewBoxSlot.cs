@@ -1,5 +1,4 @@
 using System;
-using BirdSort2;
 using UnityEngine;
 using static GameEnum;
 
@@ -28,7 +27,11 @@ public class ScrewBoxSlot : MonoBehaviour
         get => isScrewPort;
         set => isScrewPort = value;
     }
-    
+
+    #region EVENT
+    public static event Action<int> screwBoxCompleteEvent;
+    #endregion
+
     public void Fill(BaseScrew screw)
     {
         _screw = screw;
@@ -40,10 +43,7 @@ public class ScrewBoxSlot : MonoBehaviour
     {
         if (transform.GetSiblingIndex() == 2)
         {
-            foreach (var i in GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewBoxs)
-            {
-                if (i != null) i.OnScrewBoxCompleted((transform.parent.gameObject.GetInstanceID()));
-            }
+            screwBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());
         }
     }
 }

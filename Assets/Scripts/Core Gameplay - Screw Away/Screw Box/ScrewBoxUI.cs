@@ -12,7 +12,7 @@ public class ScrewBoxUI : MonoBehaviour
     [SerializeField] private RectTransform unlockByAdsButtonRT;
     [SerializeField] private RectTransform unlockBoxTextRT;
     [SerializeField] private Button unlockByAdsButton;
-    [SerializeField] private Text numItemTxt;
+
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxCameraObserver screwBoxCameraObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
@@ -20,32 +20,39 @@ public class ScrewBoxUI : MonoBehaviour
 
     private Camera _screwBoxCamera;
 
+    #region EVENT
+    public static event Action<int> unlockScrewBox;
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
+    #endregion
+
     private void Awake()
     {
+        ScrewBoxCameraManager.setCameraEvent += OnCameraSet;
+
         unlockByAdsButton.gameObject.SetActive(false);
+
         unlockByAdsButton.onClick.AddListener(ClickButtonUnlockByAds);
+
         SetupUI();
-        EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.BUYED_ITEM, o =>
-        {
-            SetupUI();
-        } );
     }
 
-    private void OnDisable()
+    void OnDestroy()
     {
-        EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.BUYED_ITEM, o =>
-        {
-            SetupUI();
-        } );
+        ScrewBoxCameraManager.setCameraEvent -= OnCameraSet;
     }
 
     private async void SetupUI()
     {
-        if (UseProfile.GetNumItem(GiftType.AddBox) > 0)
-        {
-            numItemTxt.text = UseProfile.GetNumItem(GiftType.AddBox).ToString();
-        }
-        else numItemTxt.text = "+";
+        // await Task.Delay(500);
+
+        // float orthoSize = _screwBoxCamera.orthographicSize;
+
+        // float screenHeightWorld = orthoSize * 2;
+        // float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
+
+        // float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
+
+        // UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * canvasSize.Value.x);
     }
 
     private void OnCameraSet(Camera camera)
@@ -71,41 +78,7 @@ public class ScrewBoxUI : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
-        int numItem = UseProfile.GetNumItem(GiftType.AddBox);
-        if (numItem > 0)
-        {
-                Unlock();
-                GameController.Instance.dataContain.giftDatabase.Claim(GiftType.AddBox, -1, Reason.in_campain_level);
-                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.BUYED_ITEM, GiftType.AddBox);
-
-                if (BirdSort2.GamePlayController_BirdSort.Instance != null)
-                {
-                    BirdSort2.GamePlayController_BirdSort.Instance.tutItemInGameController.NextTut();
-                }
-          
-            if (!BirdSort2.UseProfile.hadBuySuggest)
-                BirdSort2.GamePlayController_BirdSort.Instance.suggetBuyItemController.OnUseItem(GiftType.AddBox);
-        }
-        else
-        {
-            //Mở shop
-            if (BirdSort2.GamePlayController_BirdSort.Instance != null)
-            {
-                BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(true);
-                var box = BuyItemBox.Setup();
-                box.Show(GiftType.AddBox);
-
-                box.OnCloseBox = () =>
-                {
-                    BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(false);
-                };
-            }
-            else
-            {
-                BuyItemBox.Setup().Show(GiftType.AddBox);
-            }
-        }
-        GameController.Instance.musicManager.PlayClickSound();
+        showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
     }
 
     public void Lock()
@@ -133,9 +106,10 @@ public class ScrewBoxUI : MonoBehaviour
             });
         });
 
-        gameObject.GetComponent<ScrewBox>().Unlock(gameObject.GetInstanceID());
+        unlockScrewBox?.Invoke(gameObject.GetInstanceID());
 
-        GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.UnlockAdsScrewBox);
-        
+        SoundManager.Instance.PlaySoundUnlockScrewBox();
+
+        levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
     }
 }

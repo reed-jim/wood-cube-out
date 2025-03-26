@@ -4,7 +4,7 @@ using static GameEnum;
 public static class GameConstants
 {
     public static string LOADING_SCENE = "Loading";
-    public static string HomeScene = "HomeScene";
+    public static string MENU_SCENE = "Menu";
     public static string GAMEPLAY_SCENE = "Gameplay";
 
     #region SCREEN ROUTE

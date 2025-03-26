@@ -72,7 +72,7 @@ public class GameScene : BaseScene
         if (GamePlayController.Instance.state != StateGame.Playing)
             return;
 
-        PasueBox.Setup().Show();
+        // PasueBox.Setup().Show();
         GameController.Instance.musicManager.PlayClickSound();
     }
 

@@ -119,21 +119,21 @@ public class ItemUI : MonoBehaviour
 
     protected virtual void OpenShop()
     {
-        if (BirdSort2.GamePlayController_BirdSort.Instance != null)
-        {
-            BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(true);
-            var box = BuyItemBox.Setup();
-            box.Show(typeItem);
+        // if (BirdSort2.GamePlayController_BirdSort.Instance != null)
+        // {
+        //     BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(true);
+        //     var box = BuyItemBox.Setup();
+        //     box.Show(typeItem);
 
-            box.OnCloseBox = () =>
-            {
-                BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(false);
-            };
-        }
-        else
-        {
-            BuyItemBox.Setup().Show(typeItem);
-        }
+        //     box.OnCloseBox = () =>
+        //     {
+        //         BirdSort2.GamePlayController_BirdSort.Instance.level.PauseLevel(false);
+        //     };
+        // }
+        // else
+        // {
+        //     BuyItemBox.Setup().Show(typeItem);
+        // }
 
 
     }

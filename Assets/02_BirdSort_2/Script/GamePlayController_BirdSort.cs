@@ -66,9 +66,9 @@ namespace BirdSort2
         {
             ObjectPoolingEverythingInitializer.Init();
             ObjectPoolingEverything.Init();
-            playerContain.Init();
-            gamePlayCamera.Init();
-            level.Init();
+            // playerContain.Init();
+            // gamePlayCamera.Init();
+            // level.Init();
             //themeController.Init();
             gameScene.Init();
         

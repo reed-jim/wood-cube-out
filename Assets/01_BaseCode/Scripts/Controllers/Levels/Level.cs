@@ -1023,7 +1023,7 @@ public class Level : MonoBehaviour
 
         GameController.Instance.musicManager.PlayLoseSound();
 
-        StartCoroutine(Helper.StartAction(() => { ReviveBox.Setup().Show(type, GetItemYouMiss(), isLoseExtral); }, 0.45f));
+        // StartCoroutine(Helper.StartAction(() => { ReviveBox.Setup().Show(type, GetItemYouMiss(), isLoseExtral); }, 0.45f));
     }
     
 

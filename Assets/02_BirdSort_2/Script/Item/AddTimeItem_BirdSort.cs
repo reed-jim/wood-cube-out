@@ -30,23 +30,23 @@ public class AddTimeItem_BirdSort : ItemBase
             5,
             () =>
             {
-                float currentTime = BirdSort2.GamePlayController_BirdSort.Instance.level.timePlayRequire;
-                float endTime = currentTime + bonusTime;
-                valueCache = (int)currentTime;
-                textTime.transform.DOKill();
-                textTime.transform.DOScale(1.1f, 0.3f).OnComplete(() =>
-                {
-                    textTime.transform.DOScale(1f, 0.3f);
-                    BirdSort2.GamePlayController_BirdSort.Instance.level.timePlayRequire += bonusTime;
+                // float currentTime = BirdSort2.GamePlayController_BirdSort.Instance.level.timePlayRequire;
+                // float endTime = currentTime + bonusTime;
+                // valueCache = (int)currentTime;
+                // textTime.transform.DOKill();
+                // textTime.transform.DOScale(1.1f, 0.3f).OnComplete(() =>
+                // {
+                //     textTime.transform.DOScale(1f, 0.3f);
+                //     BirdSort2.GamePlayController_BirdSort.Instance.level.timePlayRequire += bonusTime;
                     
-                    //BirdSort2.GamePlayController_BirdSort.Instance.countDownController.HandleAddTime(new System.TimeSpan(0,0, bonusTime) );
+                //     //BirdSort2.GamePlayController_BirdSort.Instance.countDownController.HandleAddTime(new System.TimeSpan(0,0, bonusTime) );
 
-                    //PlayTweenTimeText((int)endTime);
+                //     //PlayTweenTimeText((int)endTime);
 
-                });
-                //Gọi FX
-                //..
-                GameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
+                // });
+                // //Gọi FX
+                // //..
+                // GameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
             },
             isTime: true
             );

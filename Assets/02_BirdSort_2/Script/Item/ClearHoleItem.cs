@@ -33,7 +33,7 @@ public class ClearHoleItem : ItemBase
 
     protected override bool ActiveItemHandle()
     {
-        GamePlayController_BirdSort.Instance.level.screwBoxManager.ClearAllScrewPorts();
+        // GamePlayController_BirdSort.Instance.level.screwBoxManager.ClearAllScrewPorts();
         return isClearHole;
     }
     public ItemUI GetTranformUIButton

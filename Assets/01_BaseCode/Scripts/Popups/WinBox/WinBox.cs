@@ -268,31 +268,31 @@ public class WinBox : BaseBox
     #region IQ Ranking
     private void UpdateIQScore()
     {
-        int bonusIQ = 0;
-        int starWin = BirdSort2.GamePlayController_BirdSort.Instance.level.starWin;
-        if (starWin == 1)
-        {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
-        }
-        else if (starWin == 2)
-        {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
-        }
-        else
-        {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
-        }
+        // int bonusIQ = 0;
+        // int starWin = BirdSort2.GamePlayController_BirdSort.Instance.level.starWin;
+        // if (starWin == 1)
+        // {
+        //     bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
+        // }
+        // else if (starWin == 2)
+        // {
+        //     bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
+        // }
+        // else
+        // {
+        //     bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
+        // }
 
-        iqScoreLast = (BirdSort2.GamePlayController_BirdSort.Instance.scoreController.currentScore + bonusIQ);
-        UseProfile.IQScore += iqScoreLast;
-        addIQScoreByStarTxt.text = "+" + bonusIQ + " IQ";
+        // iqScoreLast = (BirdSort2.GamePlayController_BirdSort.Instance.scoreController.currentScore + bonusIQ);
+        // UseProfile.IQScore += iqScoreLast;
+        // addIQScoreByStarTxt.text = "+" + bonusIQ + " IQ";
 
-        if (Application.internetReachability == NetworkReachability.NotReachable || !LoginController.IsConnected)
-        {
-            return;
-        }
+        // if (Application.internetReachability == NetworkReachability.NotReachable || !LoginController.IsConnected)
+        // {
+        //     return;
+        // }
 
-        GConnection.UpdateIQScore(UseProfile.IQScore);
+        // GConnection.UpdateIQScore(UseProfile.IQScore);
 
     }
 

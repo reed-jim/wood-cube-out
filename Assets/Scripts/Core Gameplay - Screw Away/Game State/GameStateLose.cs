@@ -1,5 +1,4 @@
 using System;
-using BirdSort2;
 using UnityEngine;
 using static GameEnum;
 
@@ -15,7 +14,7 @@ public class GameStateLose : BaseGameState
     public override GameState GameState { get => GameState.Lose; }
 
     public static event Action loseLevelEvent;
-    public static event Action<GiftType> showRevivePopupEvent;
+    public static event Action<BoosterType> showRevivePopupEvent;
 
     public override bool CanTransitionTo()
     {
@@ -31,14 +30,14 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        if (GamePlayController_BirdSort.Instance.level.screwBoxManager.NumLockedScrewBoxes == 0)
+        if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
         {
             // loseLevelEvent?.Invoke();
-            showRevivePopupEvent?.Invoke(GiftType.ClearHole);
+            showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
         }
         else
         {
-            showRevivePopupEvent?.Invoke(GiftType.AddBox);
+            showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
         }
     }
 

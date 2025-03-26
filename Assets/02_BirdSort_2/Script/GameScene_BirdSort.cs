@@ -130,7 +130,7 @@ namespace BirdSort2
 
         private void HandlePauseButton()
         {
-            PasueBox.Setup().Show();
+            // PasueBox.Setup().Show();
             GameController.Instance.musicManager.PlayClickSound();
         }
 
@@ -222,32 +222,32 @@ namespace BirdSort2
         private Vector3 boosterPos;
         public void EnableHammer()
         {
-            if (_isTransition)
-            {
-                return;
-            }
-            _isTransition = true;
-            PrimeTween.Tween.LocalPositionY(parentItem, -Screen.height, 0.4f);
-            PrimeTween.Tween.LocalPositionY(hammerPanel, boosterPos.y, 0.4f).OnComplete((() =>
-            {
-                GamePlayController_BirdSort.Instance.playerContain.EnableBreakObjectMode();
-                _isTransition = false;
-            }));
+            // if (_isTransition)
+            // {
+            //     return;
+            // }
+            // _isTransition = true;
+            // PrimeTween.Tween.LocalPositionY(parentItem, -Screen.height, 0.4f);
+            // PrimeTween.Tween.LocalPositionY(hammerPanel, boosterPos.y, 0.4f).OnComplete((() =>
+            // {
+            //     GamePlayController_BirdSort.Instance.playerContain.EnableBreakObjectMode();
+            //     _isTransition = false;
+            // }));
         }
 
         public void DisableHammer()
         {
-            if (_isTransition)
-            {
-                return;
-            }
-            _isTransition = true;
-            PrimeTween.Tween.LocalPositionY(parentItem, boosterPos.y, 0.4f);
-            PrimeTween.Tween.LocalPositionY(hammerPanel, -Screen.height, 0.4f).OnComplete((() =>
-            {
-                GamePlayController_BirdSort.Instance.playerContain.DisableBreakObjectMode();
-                _isTransition = false;
-            }));
+            // if (_isTransition)
+            // {
+            //     return;
+            // }
+            // _isTransition = true;
+            // PrimeTween.Tween.LocalPositionY(parentItem, boosterPos.y, 0.4f);
+            // PrimeTween.Tween.LocalPositionY(hammerPanel, -Screen.height, 0.4f).OnComplete((() =>
+            // {
+            //     GamePlayController_BirdSort.Instance.playerContain.DisableBreakObjectMode();
+            //     _isTransition = false;
+            // }));
         }
         
         public void OnCheat()
