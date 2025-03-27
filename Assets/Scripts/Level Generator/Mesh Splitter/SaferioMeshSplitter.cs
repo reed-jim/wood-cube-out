@@ -404,40 +404,115 @@ public class SaferioMeshSplitter : EditorWindow
 
         Queue<Transform[]> toCombineMeshesQueue = new Queue<Transform[]>();
 
-        spawnedPieces = spawnedPieces.OrderBy(item => Vector3.Distance(item.transform.position, spawnedPieces[0].transform.position)).ToList();
+        spawnedPieces = spawnedPieces.OrderBy(item => item.transform.position.x).ToList();
 
-        Dictionary<float, List<Transform>> slices = new Dictionary<float, List<Transform>>();
+
+        List<Transform> combinedPieces = new List<Transform>();
 
         for (int i = 0; i < spawnedPieces.Count; i++)
         {
-            bool isFound = false;
-
-            foreach (var key in slices.Keys)
+            for (int j = i + 1; j < spawnedPieces.Count; j++)
             {
-                if (Mathf.Abs(key - spawnedPieces[i].transform.position.y) < 0.01f)
-                {
-                    if (slices[key] == null)
-                    {
-                        slices[key] = new List<Transform>();
-                    }
 
-                    slices[key].Add(spawnedPieces[i].transform);
-
-                    isFound = true;
-
-                    break;
-                }
-            }
-
-            if (!isFound)
-            {
-                slices.Add(spawnedPieces[i].transform.position.y, new List<Transform>() { spawnedPieces[i].transform });
             }
         }
 
-        foreach (var slice in slices.Values)
+
+        // Dictionary<float, List<Transform>> slices = new Dictionary<float, List<Transform>>();
+
+        // for (int i = 0; i < spawnedPieces.Count; i++)
+        // {
+        //     bool isFound = false;
+
+        //     foreach (var key in slices.Keys)
+        //     {
+        //         if (Mathf.Abs(key - spawnedPieces[i].transform.position.y) < 0.01f)
+        //         {
+        //             bool isValid = true;
+
+        //             foreach (var piece in slices[key])
+        //             {
+        //                 if (Vector3.Distance(spawnedPieces[i].transform.position, piece.position) > 4f * pieceSize)
+        //                 {
+        //                     isValid = false;
+
+        //                     break;
+        //                 }
+        //             }
+
+        //             if (!isValid)
+        //             {
+        //                 continue;
+        //             }
+
+        //             if (slices[key] == null)
+        //             {
+        //                 slices[key] = new List<Transform>();
+        //             }
+
+        //             slices[key].Add(spawnedPieces[i].transform);
+
+        //             isFound = true;
+
+        //             break;
+        //         }
+        //     }
+
+        //     if (!isFound)
+        //     {
+        //         if (!slices.ContainsKey(spawnedPieces[i].transform.position.y))
+        //         {
+        //             slices.Add(spawnedPieces[i].transform.position.y, new List<Transform>() { spawnedPieces[i].transform });
+        //         }
+        //         else
+        //         {
+        //             slices.Add(spawnedPieces[i].transform.position.y + 0.1f, new List<Transform>() { spawnedPieces[i].transform });
+        //         }
+        //     }
+        // }
+
+        List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 0.01f);
+
+        foreach (var group in groups)
         {
-            toCombineMeshesQueue.Enqueue(slice.ToArray());
+            toCombineMeshesQueue.Enqueue(group.ToArray());
+        }
+
+        List<List<Transform>> GroupGameObjectsByYPosition(GameObject[] gameObjects, float tolerance)
+        {
+            List<List<Transform>> groupedGameObjects = new List<List<Transform>>();
+
+            foreach (var obj in gameObjects)
+            {
+                bool addedToGroup = false;
+
+                foreach (var group in groupedGameObjects)
+                {
+                    if (Mathf.Abs(group[0].transform.position.y - obj.transform.position.y) <= tolerance)
+                    {
+                        float minDistanceToBoundary = float.MaxValue;
+                        foreach (var member in group)
+                        {
+                            minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
+                        }
+
+                        if (minDistanceToBoundary <= 1.5f * pieceSize)
+                        {
+                            group.Add(obj.transform);
+                            addedToGroup = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!addedToGroup)
+                {
+                    List<Transform> newGroup = new List<Transform> { obj.transform };
+                    groupedGameObjects.Add(newGroup);
+                }
+            }
+
+            return groupedGameObjects;
         }
 
         // for (int i = 0; i < spawnedPieces.Count; i++)
