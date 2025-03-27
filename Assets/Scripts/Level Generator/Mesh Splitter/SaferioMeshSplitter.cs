@@ -38,7 +38,7 @@ public class SaferioMeshSplitter : EditorWindow
 
         if (GUILayout.Button("Split Mesh"))
         {
-            Generate();
+            GenerateTriangles();
         }
 
         if (GUILayout.Button("Fill"))
@@ -46,6 +46,205 @@ public class SaferioMeshSplitter : EditorWindow
             Fill();
         }
     }
+
+
+
+
+    #region NEW WAY
+    private void GenerateTriangles()
+    {
+        Transform container = Selection.activeTransform;
+
+        // DELETE
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < container.childCount; i++)
+        {
+            toRemoveList.Add(container.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+        //
+
+        MeshFilter meshFilter = originalMeshObject.GetComponent<MeshFilter>();
+
+        Vector3[] vertices = meshFilter.sharedMesh.vertices;
+        int[] triangles = meshFilter.sharedMesh.triangles;
+
+        float pieceSize = cubePrefab.GetComponent<Renderer>().bounds.size.x;
+
+        spawnedPieces = new List<GameObject>();
+
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            Vector3 pointA = vertices[triangles[i]];
+            Vector3 pointB = vertices[triangles[i + 1]];
+            Vector3 pointC = vertices[triangles[i + 2]];
+
+            FillTriangleWithCubes(container, pointA, pointB, pointC, pieceSize);
+        }
+
+        // Symmetrize (X Plane)
+        List<GameObject> cachedSpawnedPieces = new List<GameObject>();
+
+        for (int i = 0; i < spawnedPieces.Count; i++)
+        {
+            Vector3 position = spawnedPieces[i].transform.position;
+
+            position.x *= -1;
+
+            GameObject piece = Instantiate(cubePrefab, container);
+
+            piece.transform.position = position;
+
+            cachedSpawnedPieces.Add(piece);
+        }
+
+        spawnedPieces.AddRange(cachedSpawnedPieces);
+
+        Debug.Log($"SAFERIO Spawned {spawnedPieces.Count} pieces");
+
+        // Combine
+        if (!isMergeSmallPieces)
+        {
+            return;
+        }
+
+        List<int> checkedList = new List<int>();
+
+        Queue<Transform[]> toCombineMeshesQueue = new Queue<Transform[]>();
+
+        spawnedPieces = spawnedPieces.OrderBy(item => item.transform.position.x).ToList();
+
+        List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 0.01f);
+
+        foreach (var group in groups)
+        {
+            toCombineMeshesQueue.Enqueue(group.ToArray());
+        }
+
+        List<List<Transform>> GroupGameObjectsByYPosition(GameObject[] gameObjects, float tolerance)
+        {
+            List<List<Transform>> groupedGameObjects = new List<List<Transform>>();
+
+            foreach (var obj in gameObjects)
+            {
+                bool addedToGroup = false;
+
+                foreach (var group in groupedGameObjects)
+                {
+                    if (Mathf.Abs(group[0].transform.position.y - obj.transform.position.y) <= tolerance)
+                    {
+                        float minDistanceToBoundary = float.MaxValue;
+                        foreach (var member in group)
+                        {
+                            minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
+                        }
+
+                        if (minDistanceToBoundary <= 1.1f * pieceSize)
+                        {
+                            group.Add(obj.transform);
+                            addedToGroup = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!addedToGroup)
+                {
+                    List<Transform> newGroup = new List<Transform> { obj.transform };
+                    groupedGameObjects.Add(newGroup);
+                }
+            }
+
+            return groupedGameObjects;
+        }
+
+        int index = 0;
+
+        while (toCombineMeshesQueue.Count > 0)
+        {
+            Transform[] toCombineMeshes = toCombineMeshesQueue.Dequeue();
+
+            CombineMeshes(toCombineMeshes, container, index);
+
+            index++;
+        }
+    }
+
+    void FillTriangleWithCubes(Transform container, Vector3 pointA, Vector3 pointB, Vector3 pointC, float pieceSize)
+    {
+        Vector3 normal = Vector3.Cross(pointB - pointA, pointC - pointA).normalized;
+
+        Vector3 min = Vector3.Min(Vector3.Min(pointA, pointB), pointC);
+        Vector3 max = Vector3.Max(Vector3.Max(pointA, pointB), pointC);
+
+        for (float x = min.x; x <= max.x; x += pieceSize)
+        {
+            for (float y = min.y; y <= max.y; y += pieceSize)
+            {
+                Vector3 testPoint = new Vector3(x, y, 0);
+                testPoint = ProjectPointOnPlane(testPoint, pointA, normal);
+
+                bool isSkip = false;
+
+                for (int j = 0; j < spawnedPieces.Count; j++)
+                {
+                    if (Vector3.Distance(spawnedPieces[j].transform.position, testPoint) < 1f * pieceSize)
+                    {
+                        isSkip = true;
+
+                        break;
+                    }
+                }
+
+                if (isSkip)
+                {
+                    continue;
+                }
+
+                if (testPoint.x <= 0)
+                {
+                    continue;
+                }
+
+                if (IsPointInTriangle(testPoint, pointA, pointB, pointC))
+                {
+                    GameObject piece = Instantiate(cubePrefab, testPoint, Quaternion.identity, container);
+
+                    spawnedPieces.Add(piece);
+                }
+            }
+        }
+    }
+
+    Vector3 ProjectPointOnPlane(Vector3 point, Vector3 planePoint, Vector3 planeNormal)
+    {
+        float distance = Vector3.Dot(planeNormal, point - planePoint);
+        return point - distance * planeNormal;
+    }
+
+    bool IsPointInTriangle(Vector3 p, Vector3 a, Vector3 b, Vector3 c)
+    {
+        float areaABC = Area(a, b, c);
+        float areaPAB = Area(p, a, b);
+        float areaPBC = Area(p, b, c);
+        float areaPCA = Area(p, c, a);
+
+        return Mathf.Approximately(areaABC, areaPAB + areaPBC + areaPCA);
+    }
+
+    float Area(Vector3 p1, Vector3 p2, Vector3 p3)
+    {
+        return Mathf.Abs((p1.x * (p2.y - p3.y) + p2.x * (p3.y - p1.y) + p3.x * (p1.y - p2.y)) / 2f);
+    }
+    #endregion
+
+
+
 
     private async Task SplitMesh()
     {
@@ -417,60 +616,6 @@ public class SaferioMeshSplitter : EditorWindow
             }
         }
 
-
-        // Dictionary<float, List<Transform>> slices = new Dictionary<float, List<Transform>>();
-
-        // for (int i = 0; i < spawnedPieces.Count; i++)
-        // {
-        //     bool isFound = false;
-
-        //     foreach (var key in slices.Keys)
-        //     {
-        //         if (Mathf.Abs(key - spawnedPieces[i].transform.position.y) < 0.01f)
-        //         {
-        //             bool isValid = true;
-
-        //             foreach (var piece in slices[key])
-        //             {
-        //                 if (Vector3.Distance(spawnedPieces[i].transform.position, piece.position) > 4f * pieceSize)
-        //                 {
-        //                     isValid = false;
-
-        //                     break;
-        //                 }
-        //             }
-
-        //             if (!isValid)
-        //             {
-        //                 continue;
-        //             }
-
-        //             if (slices[key] == null)
-        //             {
-        //                 slices[key] = new List<Transform>();
-        //             }
-
-        //             slices[key].Add(spawnedPieces[i].transform);
-
-        //             isFound = true;
-
-        //             break;
-        //         }
-        //     }
-
-        //     if (!isFound)
-        //     {
-        //         if (!slices.ContainsKey(spawnedPieces[i].transform.position.y))
-        //         {
-        //             slices.Add(spawnedPieces[i].transform.position.y, new List<Transform>() { spawnedPieces[i].transform });
-        //         }
-        //         else
-        //         {
-        //             slices.Add(spawnedPieces[i].transform.position.y + 0.1f, new List<Transform>() { spawnedPieces[i].transform });
-        //         }
-        //     }
-        // }
-
         List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 0.01f);
 
         foreach (var group in groups)
@@ -529,44 +674,6 @@ public class SaferioMeshSplitter : EditorWindow
 
             return groupedGameObjects;
         }
-
-        // for (int i = 0; i < spawnedPieces.Count; i++)
-        // {
-        //     if (checkedList.Contains(spawnedPieces[i].transform.GetInstanceID()))
-        //     {
-        //         continue;
-        //     }
-
-        //     List<Transform> combinedList = new List<Transform>();
-
-        //     combinedList.Add(spawnedPieces[i].transform);
-
-        //     // find adjacent cubes
-        //     for (int j = i + 1; j < spawnedPieces.Count; j++)
-        //     {
-        //         if (!checkedList.Contains(spawnedPieces[j].transform.GetInstanceID()))
-        //         {
-        //             for (int k = 0; k < combinedList.Count; k++)
-        //             {
-        //                 if (Vector3.Distance(combinedList[k].transform.position, spawnedPieces[j].transform.position) < 1.1f * pieceSize)
-        //                 {
-        //                     combinedList.Add(spawnedPieces[j].transform);
-
-        //                     break;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     List<Transform> chosenList = combinedList.OrderBy(item => Vector3.Distance(item.position, spawnedPieces[i].transform.position)).Take(12).ToList();
-
-        //     toCombineMeshesQueue.Enqueue(chosenList.ToArray());
-
-        //     for (int j = 0; j < chosenList.Count; j++)
-        //     {
-        //         checkedList.Add(chosenList[j].GetInstanceID());
-        //     }
-        // }
 
         int index = 0;
 
