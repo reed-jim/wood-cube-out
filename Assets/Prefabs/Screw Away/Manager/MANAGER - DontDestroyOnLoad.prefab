@@ -2223,8 +2223,81 @@ MonoBehaviour:
   clearScrewPortsSoundPrefab: {fileID: 7606835583939712495, guid: 3734458f6d3896141824ba0b0e6dbdbd, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
-  boxCompletedFxPrefab: {fileID: 5137123306192418792, guid: 5a8d99fb95262ea458a7b580f2a1611c, type: 3}
+  boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
   taskItemUIPrefab: {fileID: 413993787269842527, guid: cfbf48fdb9ee8ba438323f24aaa9fe07, type: 3}
+--- !u!1 &2870443471325024113
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8358702021488761027}
+  - component: {fileID: 5699492187853530663}
+  m_Layer: 0
+  m_Name: Start New Level
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8358702021488761027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2870443471325024113}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5699492187853530663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2870443471325024113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Start New Level
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9marrer un nouveau niveau"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Neues Level starten
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Avvia un nuovo livello
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u65B0\u3057\u3044\u30EC\u30D9\u30EB\u3092\u958B\u59CB\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC0C8\uB85C\uC6B4 \uC218\uC900\uC744 \uC2DC\uC791\uD558\uC2ED\uC2DC\uC624"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Inicie o novo n\xEDvel"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0430\u0447\u0430\u0442\u044C \u043D\u043E\u0432\u044B\u0439 \u0443\u0440\u043E\u0432\u0435\u043D\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Comience un nuevo nivel
+    Object: {fileID: 0}
 --- !u!1 &2894233103652177606
 GameObject:
   m_ObjectHideFlags: 0
@@ -3570,6 +3643,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 27297809597f5e243b92e15fb15f5465, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &5231145252467311487
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5102948530347734093}
+  - component: {fileID: 6087461538359943439}
+  m_Layer: 0
+  m_Name: Level In Progress
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5102948530347734093
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5231145252467311487}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6087461538359943439
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5231145252467311487}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Level In Progress
+    Object: {fileID: 0}
+  - Language: French
+    Text: Niveau en cours
+    Object: {fileID: 0}
+  - Language: German
+    Text: Level in Arbeit
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Livello in corso
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u9032\u884C\u4E2D\u306E\u30EC\u30D9\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB808\uBCA8 \uC9C4\uD589\uC911\uC778 \uB808\uBCA8"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "N\xEDvel em andamento"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0432 \u043F\u0440\u043E\u0433\u0440\u0435\u0441\u0441\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Nivel en progreso
+    Object: {fileID: 0}
 --- !u!1 &5267284499585037940
 GameObject:
   m_ObjectHideFlags: 0
@@ -3827,6 +3973,9 @@ Transform:
   - {fileID: 5015691724766041214}
   - {fileID: 1442228164817286484}
   - {fileID: 6502681486859351173}
+  - {fileID: 8358702021488761027}
+  - {fileID: 5047876937955593939}
+  - {fileID: 5102948530347734093}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -5998,6 +6147,84 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "Int\xE9ntelo de nuevo m\xE1s tarde"
+    Object: {fileID: 0}
+--- !u!1 &7713222313756030727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5047876937955593939}
+  - component: {fileID: 3565555478843264950}
+  m_Layer: 0
+  m_Name: Your level is in progress
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5047876937955593939
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713222313756030727}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3565555478843264950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7713222313756030727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Your level is in progress. Would you like to continue or restart?
+    Object: {fileID: 0}
+  - Language: French
+    Text: Votre niveau est en cours de progression. Souhaitez-vous continuer ou recommencer
+      ?
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Ihr Level ist in Bearbeitung. M\xF6chten Sie fortfahren oder neu starten?"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Il tuo livello \xE8 in corso di aggiornamento. Vuoi continuare o ricominciare?"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3042\u306A\u305F\u306E\u30EC\u30D9\u30EB\u306F\u9032\u884C\u4E2D\u3067\u3059\u3002\u7D9A\u3051\u307E\u3059\u304B\u3001\u305D\u308C\u3068\u3082\u518D\u958B\u3057\u307E\u3059\u304B\uFF1F"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2F9\uC2E0\uC758 \uB808\uBCA8\uC740 \uC9C4\uD589 \uC911\uC785\uB2C8\uB2E4.
+      \uACC4\uC18D\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C, \uC544\uB2C8\uBA74 \uB2E4\uC2DC
+      \uC2DC\uC791\uD558\uC2DC\uACA0\uC2B5\uB2C8\uAE4C?"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "O seu n\xEDvel est\xE1 em progresso. Gostaria de continuar ou recome\xE7ar?"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u0430\u0448 \u0443\u0440\u043E\u0432\u0435\u043D\u044C \u0432 \u043F\u0440\u043E\u0446\u0435\u0441\u0441\u0435.
+      \u0425\u043E\u0442\u0438\u0442\u0435 \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C
+      \u0438\u043B\u0438 \u043D\u0430\u0447\u0430\u0442\u044C \u0437\u0430\u043D\u043E\u0432\u043E?"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Tu nivel est\xE1 en progreso. \xBFTe gustar\xEDa continuar o reiniciar?"
     Object: {fileID: 0}
 --- !u!1 &7915355799277270204
 GameObject:

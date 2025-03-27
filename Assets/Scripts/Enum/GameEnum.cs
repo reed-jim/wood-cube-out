@@ -35,7 +35,8 @@ public class GameEnum : MonoBehaviour
         IAPReview,
         Compensate,
         IAPSuggestion,
-        DailyReward
+        DailyReward,
+        LevelInProgress
     }
 
     public enum GameFaction

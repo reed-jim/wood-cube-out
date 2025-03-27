@@ -25,6 +25,10 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
+    #region LEVEL IN PROGRESS
+    public static bool isLoadingLevelInProgress; 
+    #endregion
+
     #region AUTO TEST
     public static bool isAutoTestingLevel;
     #endregion
