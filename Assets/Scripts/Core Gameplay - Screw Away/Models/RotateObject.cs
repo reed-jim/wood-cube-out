@@ -80,11 +80,11 @@ public class RotateObject : MonoBehaviour
 
             if (_isRotating)
             {
-                transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 6f);
 
                 _rotateLerpStep++;
 
-                if (_rotateLerpStep >= 3)
+                if (_rotateLerpStep >= 6)
                 {
                     _rotateLerpStep = 0;
                     _isRotating = false;
