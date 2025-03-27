@@ -496,12 +496,27 @@ public class SaferioMeshSplitter : EditorWindow
                             minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
                         }
 
-                        if (minDistanceToBoundary <= 1.5f * pieceSize)
+                        if (minDistanceToBoundary <= 2f * pieceSize)
                         {
                             group.Add(obj.transform);
                             addedToGroup = true;
                             break;
                         }
+
+                        // Vector3 averagePosition = new Vector3();
+                        // foreach (var member in group)
+                        // {
+                        //     averagePosition += member.transform.position;
+                        // }
+
+                        // averagePosition /= group.Count;
+
+                        // if (Vector3.Distance(obj.transform.position, averagePosition) < Math.Sqrt(2) * pieceSize)
+                        // {
+                        //     group.Add(obj.transform);
+                        //     addedToGroup = true;
+                        //     break;
+                        // }
                     }
                 }
 
@@ -553,11 +568,15 @@ public class SaferioMeshSplitter : EditorWindow
         //     }
         // }
 
+        int index = 0;
+
         while (toCombineMeshesQueue.Count > 0)
         {
             Transform[] toCombineMeshes = toCombineMeshesQueue.Dequeue();
 
-            CombineMeshes(toCombineMeshes);
+            CombineMeshes(toCombineMeshes, container, index);
+
+            index++;
         }
     }
 
@@ -859,7 +878,7 @@ public class SaferioMeshSplitter : EditorWindow
         return reducedVertices.ToArray();
     }
 
-    private void CombineMeshes(Transform[] selected)
+    private void CombineMeshes(Transform[] selected, Transform level = null, int index = 0)
     {
         MeshFilter[] meshFilters = new MeshFilter[selected.Length];
         CombineInstance[] combine = new CombineInstance[meshFilters.Length];
@@ -899,6 +918,8 @@ public class SaferioMeshSplitter : EditorWindow
         Mesh mesh = new Mesh();
         mesh.CombineMeshes(combine);
 
+        Extract(mesh, $"{level.name} Piece {index}");
+
         Bounds combineMeshBound = new Bounds();
 
         combineMeshBound.center = Vector3.zero;
@@ -908,7 +929,8 @@ public class SaferioMeshSplitter : EditorWindow
 
         GameObject combinedMesh = new GameObject();
 
-        combinedMesh.transform.SetParent(selected[0].parent);
+        combinedMesh.name = $"{level.name} Piece {index}";
+        combinedMesh.transform.SetParent(level);
 
         // MATERIALS
         // MATERIALS
@@ -1043,6 +1065,11 @@ public class SaferioMeshSplitter : EditorWindow
         }
 
         return false;
+    }
+
+    private void Extract(Mesh mesh, string name)
+    {
+        AssetDatabase.CreateAsset(mesh, $"Assets/Models/Screw Away/Level/Generated Level Meshes/{name}.asset");
     }
     #endregion
 }
