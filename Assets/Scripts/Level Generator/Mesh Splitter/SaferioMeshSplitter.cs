@@ -10,9 +10,11 @@ public class SaferioMeshSplitter : EditorWindow
 {
     public GameObject originalMeshObject;
     public GameObject cubePrefab;
+    public GameObject container;
     public Material material;
     public float cubeSize = 0.1f;
     public float clusterDistance = 0.1f;
+    public bool isMergeSmallPieces;
 
     private List<Vector3> spawnedPositions;
     List<GameObject> spawnedPieces;
@@ -29,18 +31,20 @@ public class SaferioMeshSplitter : EditorWindow
         GUILayout.Label("Mesh Splitter Tool", EditorStyles.boldLabel);
         originalMeshObject = (GameObject)EditorGUILayout.ObjectField("Mesh Object", originalMeshObject, typeof(GameObject), true);
         cubePrefab = (GameObject)EditorGUILayout.ObjectField("Cube Prefab", cubePrefab, typeof(GameObject), true);
+        container = (GameObject)EditorGUILayout.ObjectField("Container", container, typeof(GameObject), true);
         material = (Material)EditorGUILayout.ObjectField("Material", material, typeof(Material), true);
         cubeSize = EditorGUILayout.FloatField("Cube Size", cubeSize);
+        isMergeSmallPieces = EditorGUILayout.Toggle("is Merge Small Pieces", isMergeSmallPieces);
 
         if (GUILayout.Button("Split Mesh"))
         {
-            SplitMesh();
+            Generate();
         }
 
-        // if (GUILayout.Button("Combine Mesh"))
-        // {
-        //     CombineMeshes();
-        // }
+        if (GUILayout.Button("Fill"))
+        {
+            Fill();
+        }
     }
 
     private async Task SplitMesh()
@@ -179,8 +183,8 @@ public class SaferioMeshSplitter : EditorWindow
         spawnedPositions = new List<Vector3>();
         spawnedPieces = new List<GameObject>();
 
-        FillPolygon(polygons, container, excludeAxis: "Y");
-        FillPolygon(polygonsVericallySliced, container, excludeAxis: "Z");
+        // FillPolygon(polygons, container, excludeAxis: "Y");
+        // FillPolygon(polygonsVericallySliced, container, excludeAxis: "Z");
         // FillPolygon(polygonsXPlaneSliced, container, excludeAxis: "X");
         //
 
@@ -217,35 +221,40 @@ public class SaferioMeshSplitter : EditorWindow
         //     }
         // }
 
-        // for (int i = 0; i < vertices.Length; i++)
-        // {
-        //     bool isSkip = false;
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            bool isSkip = false;
 
-        //     for (int j = 0; j < spawnedPieces.Count; j++)
-        //     {
-        //         if (Vector3.Distance(spawnedPieces[j].transform.position, vertices[i]) < 0.01f)
-        //         {
-        //             isSkip = true;
+            for (int j = 0; j < spawnedPieces.Count; j++)
+            {
+                if (Vector3.Distance(spawnedPieces[j].transform.position, vertices[i]) < 0.01f)
+                {
+                    isSkip = true;
 
-        //             break;
-        //         }
-        //     }
+                    break;
+                }
+            }
 
-        //     if (isSkip)
-        //     {
-        //         continue;
-        //     }
+            if (isSkip)
+            {
+                continue;
+            }
 
-        //     GameObject piece = Instantiate(cubePrefab, container);
+            GameObject piece = Instantiate(cubePrefab, container);
 
-        //     piece.transform.position = vertices[i];
+            piece.transform.position = vertices[i];
 
-        //     spawnedPieces.Add(piece);
-        // }
+            spawnedPieces.Add(piece);
+        }
 
         // return;
 
         // COMBINE
+
+        if (!isMergeSmallPieces)
+        {
+            return;
+        }
 
         List<int> checkedList = new List<int>();
 
@@ -307,6 +316,310 @@ public class SaferioMeshSplitter : EditorWindow
 
             CombineMeshes(toCombineMeshes);
         }
+    }
+
+    private void Generate()
+    {
+        Transform container = Selection.activeTransform;
+
+        // DELETE
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        for (int i = 0; i < container.childCount; i++)
+        {
+            toRemoveList.Add(container.GetChild(i).gameObject);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+        //
+
+        MeshFilter meshFilter = originalMeshObject.GetComponent<MeshFilter>();
+
+        Vector3[] vertices = meshFilter.sharedMesh.vertices;
+        int[] triangles = meshFilter.sharedMesh.triangles;
+
+        spawnedPieces = new List<GameObject>();
+
+        float pieceSize = cubePrefab.GetComponent<Renderer>().bounds.size.x;
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            bool isSkip = false;
+
+            for (int j = 0; j < spawnedPieces.Count; j++)
+            {
+                if (Vector3.Distance(spawnedPieces[j].transform.position, vertices[i]) < 1 * pieceSize)
+                {
+                    isSkip = true;
+
+                    break;
+                }
+            }
+
+            if (isSkip)
+            {
+                continue;
+            }
+
+            if (vertices[i].x <= 0)
+            {
+                continue;
+            }
+
+            GameObject piece = Instantiate(cubePrefab, container);
+
+            piece.transform.position = vertices[i];
+
+            spawnedPieces.Add(piece);
+        }
+
+        // Symmetrize (X Plane)
+        List<GameObject> cachedSpawnedPieces = new List<GameObject>();
+
+        for (int i = 0; i < spawnedPieces.Count; i++)
+        {
+            Vector3 position = spawnedPieces[i].transform.position;
+
+            position.x *= -1;
+
+            GameObject piece = Instantiate(cubePrefab, container);
+
+            piece.transform.position = position;
+
+            cachedSpawnedPieces.Add(piece);
+        }
+
+        spawnedPieces.AddRange(cachedSpawnedPieces);
+
+        // Combine
+        if (!isMergeSmallPieces)
+        {
+            return;
+        }
+
+        List<int> checkedList = new List<int>();
+
+        Queue<Transform[]> toCombineMeshesQueue = new Queue<Transform[]>();
+
+        spawnedPieces = spawnedPieces.OrderBy(item => Vector3.Distance(item.transform.position, spawnedPieces[0].transform.position)).ToList();
+
+        Dictionary<float, List<Transform>> slices = new Dictionary<float, List<Transform>>();
+
+        for (int i = 0; i < spawnedPieces.Count; i++)
+        {
+            bool isFound = false;
+
+            foreach (var key in slices.Keys)
+            {
+                if (Mathf.Abs(key - spawnedPieces[i].transform.position.y) < 0.01f)
+                {
+                    if (slices[key] == null)
+                    {
+                        slices[key] = new List<Transform>();
+                    }
+
+                    slices[key].Add(spawnedPieces[i].transform);
+
+                    isFound = true;
+
+                    break;
+                }
+            }
+
+            if (!isFound)
+            {
+                slices.Add(spawnedPieces[i].transform.position.y, new List<Transform>() { spawnedPieces[i].transform });
+            }
+        }
+
+        foreach (var slice in slices.Values)
+        {
+            toCombineMeshesQueue.Enqueue(slice.ToArray());
+        }
+
+        // for (int i = 0; i < spawnedPieces.Count; i++)
+        // {
+        //     if (checkedList.Contains(spawnedPieces[i].transform.GetInstanceID()))
+        //     {
+        //         continue;
+        //     }
+
+        //     List<Transform> combinedList = new List<Transform>();
+
+        //     combinedList.Add(spawnedPieces[i].transform);
+
+        //     // find adjacent cubes
+        //     for (int j = i + 1; j < spawnedPieces.Count; j++)
+        //     {
+        //         if (!checkedList.Contains(spawnedPieces[j].transform.GetInstanceID()))
+        //         {
+        //             for (int k = 0; k < combinedList.Count; k++)
+        //             {
+        //                 if (Vector3.Distance(combinedList[k].transform.position, spawnedPieces[j].transform.position) < 1.1f * pieceSize)
+        //                 {
+        //                     combinedList.Add(spawnedPieces[j].transform);
+
+        //                     break;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     List<Transform> chosenList = combinedList.OrderBy(item => Vector3.Distance(item.position, spawnedPieces[i].transform.position)).Take(12).ToList();
+
+        //     toCombineMeshesQueue.Enqueue(chosenList.ToArray());
+
+        //     for (int j = 0; j < chosenList.Count; j++)
+        //     {
+        //         checkedList.Add(chosenList[j].GetInstanceID());
+        //     }
+        // }
+
+        while (toCombineMeshesQueue.Count > 0)
+        {
+            Transform[] toCombineMeshes = toCombineMeshesQueue.Dequeue();
+
+            CombineMeshes(toCombineMeshes);
+        }
+    }
+
+    private void Fill()
+    {
+        Transform[] selections = Selection.transforms;
+
+        float pieceSize = selections[0].GetComponent<Renderer>().bounds.size.x;
+
+        Vector3 distance = selections[1].transform.position - selections[0].transform.position;
+        distance.x = Mathf.Abs(distance.x);
+        distance.y = Mathf.Abs(distance.y);
+        distance.z = Mathf.Abs(distance.z);
+
+        int numX = (int)(distance.x / pieceSize);
+        int numY = (int)(distance.y / pieceSize);
+        int numZ = (int)(distance.z / pieceSize);
+
+        // numX = Mathf.Max(numX, 1);
+        // numY = Mathf.Max(numY, 1);
+        // numZ = Mathf.Max(numZ, 1);
+
+        for (int i = 0; i <= numX; i++)
+        {
+            Vector3 position = selections[0].transform.position +
+                        new Vector3(pieceSize * i, 0, 0);
+
+
+            GameObject piece = Instantiate(cubePrefab, container.transform);
+
+            piece.name = $"Filled Piece {i}";
+
+            piece.transform.position = position;
+        }
+
+        for (int i = 0; i <= numY; i++)
+        {
+            Vector3 position = selections[0].transform.position +
+                        new Vector3(0, pieceSize * i, 0);
+
+
+            GameObject piece = Instantiate(cubePrefab, container.transform);
+
+            piece.name = $"Filled Piece {i}";
+
+            piece.transform.position = position;
+        }
+
+        for (int i = 0; i <= numZ; i++)
+        {
+            Vector3 position = selections[0].transform.position +
+                        new Vector3(0, 0, pieceSize * i);
+
+
+            GameObject piece = Instantiate(cubePrefab, container.transform);
+
+            piece.name = $"Filled Piece {i}";
+
+            piece.transform.position = position;
+        }
+
+        // for (int i = 0; i <= numX; i++)
+        // {
+        //     for (int j = 0; j <= numX; j++)
+        //     {
+        //         for (int k = 0; k <= numZ; k++)
+        //         {
+        //             Vector3 position = selections[0].transform.position +
+        //                 new Vector3(pieceSize * i, pieceSize * j, pieceSize * k);
+
+
+        //             GameObject piece = Instantiate(cubePrefab, container.transform);
+
+        //             piece.transform.position = position;
+        //         }
+        //     }
+        // }
+
+        EditorUtility.SetDirty(container);
+    }
+
+    // private void Generate()
+    // {
+    //     Transform container = Selection.activeTransform;
+
+    //     List<Mesh> meshes = SplitMesh(originalMeshObject.GetComponent<MeshFilter>().sharedMesh);
+
+    //     ObjectPartMaterialContainer objectPartMaterialContainer = AssetDatabase.LoadAssetAtPath<ObjectPartMaterialContainer>(
+    //         "Assets/Scriptable Objects/Material Container/Object Part Material Container.asset");
+
+    //     List<Material> materialPool = objectPartMaterialContainer.Materials.ToList();
+
+    //     for (int i = 0; i < meshes.Count; i++)
+    //     {
+    //         GameObject piece = new GameObject();
+
+    //         piece.transform.SetParent(container);
+
+    //         piece.AddComponent<MeshFilter>().sharedMesh = meshes[i];
+    //         piece.AddComponent<MeshRenderer>().material = materialPool[UnityEngine.Random.Range(0, materialPool.Count)];
+    //     }
+    // }
+
+    public List<Mesh> SplitMesh(Mesh inputMesh)
+    {
+        List<Mesh> smallerMeshes = new List<Mesh>();
+
+        // Get the vertices and triangles of the input mesh
+        Vector3[] vertices = inputMesh.vertices;
+        int[] triangles = inputMesh.triangles;
+
+        // Split triangles into chunks
+        List<int[]> triangleChunks = new List<int[]>();
+        int chunkSize = 12 * 3; // 3 indices per triangle
+        for (int i = 0; i < triangles.Length; i += chunkSize)
+        {
+            int chunkLength = Mathf.Min(chunkSize, triangles.Length - i);
+            int[] chunk = new int[chunkLength];
+            System.Array.Copy(triangles, i, chunk, 0, chunkLength);
+            triangleChunks.Add(chunk);
+        }
+
+        // Create a smaller mesh for each chunk
+        foreach (var chunk in triangleChunks)
+        {
+            Mesh newMesh = new Mesh();
+            newMesh.vertices = vertices;
+            newMesh.triangles = chunk;
+
+            // Recalculate normals and bounds
+            newMesh.RecalculateNormals();
+            newMesh.RecalculateBounds();
+
+            smallerMeshes.Add(newMesh);
+        }
+
+        return smallerMeshes;
     }
 
     private void FillPolygon(Dictionary<float, List<Vector3>> polygons, Transform pieceContainer, string excludeAxis)
@@ -502,7 +815,7 @@ public class SaferioMeshSplitter : EditorWindow
         while (i < meshFilters.Length)
         {
             combine[i].mesh = meshFilters[i].sharedMesh;
-            combine[i].transform = meshFilters[i].transform.localToWorldMatrix * meshFilters[i].transform.parent.localToWorldMatrix; ;
+            combine[i].transform = meshFilters[i].transform.localToWorldMatrix * meshFilters[i].transform.parent.localToWorldMatrix;
             meshFilters[i].gameObject.SetActive(false);
 
             i++;
