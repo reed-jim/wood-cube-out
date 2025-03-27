@@ -28,6 +28,9 @@ public class ScrewsDataManager : MonoBehaviour
     {
         ScrewManager.setScrewsEvent += OnAllLevelScrewsObservered;
         GameStateWin.winLevelEvent += OnLevelWon;
+        DebugPopup.prevLevelEvent += OnPrevLevel;
+        DebugPopup.nextLevelEvent += OnNextLevel;
+        DebugPopup.toLevelEvent += OnDebugToLevel;
 
         StartCoroutine(PeriodicallySaving());
     }
@@ -36,6 +39,9 @@ public class ScrewsDataManager : MonoBehaviour
     {
         ScrewManager.setScrewsEvent -= OnAllLevelScrewsObservered;
         GameStateWin.winLevelEvent -= OnLevelWon;
+        DebugPopup.prevLevelEvent -= OnPrevLevel;
+        DebugPopup.nextLevelEvent -= OnNextLevel;
+        DebugPopup.toLevelEvent -= OnDebugToLevel;
     }
 
     private IEnumerator PeriodicallySaving()
@@ -264,7 +270,37 @@ public class ScrewsDataManager : MonoBehaviour
         GamePersistentVariable.isPreventLoadLevelData = false;
         GamePersistentVariable.isFreshLevel = true;
 
-        DataUtility.RemoveKey(levelSaveKey);
+        string validLevelKey = levelSaveKey;
+
+        if (string.IsNullOrEmpty(validLevelKey))
+        {
+            validLevelKey = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value}";
+        }
+
+        DataUtility.RemoveKey(validLevelKey);
+    }
+    #endregion
+
+    #region DEBUG
+    private void OnPrevLevel()
+    {
+        string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value - 1}";
+
+        SetFreshLevel(key);
+    }
+
+    private void OnNextLevel()
+    {
+        string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value + 1}";
+
+        SetFreshLevel(key);
+    }
+
+    private void OnDebugToLevel(int level)
+    {
+        string key = $"{GameConstants.SCREWS_DATA}_{level}";
+
+        SetFreshLevel(key);
     }
     #endregion
 }

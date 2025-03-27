@@ -24,6 +24,12 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
 
+    [Header("LOADING LEVEL IN PROGRESS")]
+    [SerializeField] private RectTransform loadLevelInProgressContainer;
+    [SerializeField] private CanvasGroup loadLevelInProgressCanvasGroup;
+    [SerializeField] private RectTransform rotatingLoadingIcon;
+    private Coroutine _loadingLevelInProgressCoroutine;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private float startDelay;
     [SerializeField] private float blackScreenStartDelay;
@@ -47,8 +53,8 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
-        progressBar.value = 0;
-        progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
+        // progressBar.value = 0;
+        // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
         _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
@@ -134,6 +140,15 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
+        if (GamePersistentVariable.isLoadingLevelInProgress)
+        {
+            LoadingLevelInProgress();
+        }
+        else
+        {
+            loadLevelInProgressContainer.gameObject.SetActive(false);
+        }
+
         _isLevelLoaded = false;
     }
 
@@ -141,4 +156,43 @@ public class SceneTransition : MonoBehaviour
     {
         _isLevelLoaded = true;
     }
+
+    #region LOADING LEVEL IN PROGRESS
+    private void LoadingLevelInProgress()
+    {
+        if (_loadingLevelInProgressCoroutine != null)
+        {
+            StopCoroutine(_loadingLevelInProgressCoroutine);
+        }
+
+        _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
+
+        _tweens.Add(Tween.Delay(2).OnComplete(() =>
+        {
+            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+            {
+                loadLevelInProgressCanvasGroup.alpha = newVal;
+            })
+            .OnComplete(() =>
+            {
+                loadLevelInProgressContainer.gameObject.SetActive(false);
+            })
+            );
+
+            StopCoroutine(_loadingLevelInProgressCoroutine);
+        }));
+    }
+
+    private IEnumerator RotatingIcon()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
+
+        while (true)
+        {
+            rotatingLoadingIcon.eulerAngles += new Vector3(0, 0, 8);
+
+            yield return waitForSeconds;
+        }
+    }
+    #endregion
 }

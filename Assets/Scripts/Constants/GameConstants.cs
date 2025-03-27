@@ -73,7 +73,7 @@ public static class GameConstants
 
     #region LANGUAGE
     public static string DEFAULT_LANGUAGE = "English";
-    public static string[] AvailableLanguages = { "English", "French", "German", "Italian", "Japanese" };
+    public static string[] AvailableLanguages = { "English", "French", "German", "Italian", "Japanese", "Korean" };
     #endregion
 
     #region TASK

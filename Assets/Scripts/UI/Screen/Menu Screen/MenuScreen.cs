@@ -129,7 +129,16 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        GamePersistentVariable.isLoadingLevelInProgress = false;
+
+        if (CommonUtil.IsLevelInProgress(currentLevel.Value))
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.LevelInProgress);
+        }
+        else
+        {
+            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        }
     }
 
     private void OpenRemoveAdPopup()
