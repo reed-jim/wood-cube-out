@@ -31,6 +31,8 @@ public abstract class ItemBase : MonoBehaviour
 
     protected abstract bool ActiveItemHandle();
 
+    public abstract void OnItemUsed();
+
     public abstract bool IsCanUseItem();
 
     public virtual void InteractButton(bool isInteract)

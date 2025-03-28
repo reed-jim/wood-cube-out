@@ -99,7 +99,7 @@ namespace BirdSort2
 
         public void Init()
         {
-            boosterPos = parentItem.transform.position;
+            boosterPos = parentItem.transform.localPosition;
             levelTxt.text = Localization.Get("s_level_tile") + " " + UseProfile.CurrentLevelPlay;
             replayBtn.onClick.AddListener(OnClickReplay);
             removeADSBtn.onClick.AddListener(OnClickRemoveAds);

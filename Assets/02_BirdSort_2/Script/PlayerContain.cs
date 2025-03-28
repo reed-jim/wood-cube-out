@@ -69,6 +69,10 @@ namespace BirdSort2
 
         private void Update()
         {
+            if (BoxController.Instance.IsShowingPopup())
+            {
+                return;
+            }
             if (Input.touchCount == 2 && !_pinchIsDisabled)
             {
                 Touch touch1 = Input.GetTouch(0);
@@ -237,11 +241,10 @@ namespace BirdSort2
             {
                 return;
             }
-
-            // if (IsClickedOnUI())
-            // {
-            //     return;
-            // }
+            if (BoxController.Instance.IsShowingPopup())
+            {
+                return;
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMaskCheck);
@@ -270,12 +273,10 @@ namespace BirdSort2
             {
                 return;
             }
-
-            // if (IsClickedOnUI())
-            // {
-            //     return;
-            // }
-
+            if (BoxController.Instance.IsShowingPopup())
+            {
+                return;
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMaskCheck);
@@ -294,12 +295,11 @@ namespace BirdSort2
                             if (_inputMode == GameEnum.InputMode.BreakObject)
                             {
                                 objectPart.Break(i.point);
-                                
                                 if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
                                 {
                                     GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScrewSelected();
                                 }
-                                
+                                GamePlayController_BirdSort.Instance.itemController.GetItem(GiftType.BreakObject).OnItemUsed();
                                 _inputMode = GameEnum.InputMode.Disabled;
 
                                 // avoid click screw immediately
@@ -346,22 +346,43 @@ namespace BirdSort2
 
         private bool IsClickedOnUI()
         {
-            PointerEventData pointerData = new PointerEventData(EventSystem.current)
-            {
-                position = Input.mousePosition
-            };
+            // PointerEventData pointerData = new PointerEventData(EventSystem.current)
+            // {
+            //     position = Input.mousePosition
+            // };
+            //
+            // var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+            // EventSystem.current.RaycastAll(pointerData, raycastResults);
+            //
+            // if (raycastResults.Count > 0)
+            // {
+            //     return true;
+            // }
+            // else
+            // {
+            //     return false;
+            // }
+            int layerMaskUI = LayerMask.GetMask("UI");
 
-            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, raycastResults);
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-            if (raycastResults.Count > 0)
+            if (Physics.Raycast(ray, out RaycastHit hit, 999))
             {
-                return true;
+                if (hit.collider != null)
+                {
+                    if (hit.collider.gameObject.layer == layerMaskUI)
+                    {
+                        // Raycast bắn vào UI
+                        Debug.Log("Raycast hit UI");
+                    }
+                    else
+                    {
+                        // Raycast không bắn vào UI
+                        Debug.Log("Raycast did not hit UI");
+                    }
+                }
             }
-            else
-            {
-                return false;
-            }
+            return false;
         }
         
 

@@ -123,6 +123,11 @@ public class LightElectricItem : ItemBase
         return isLighning;
     }
 
+    public override void OnItemUsed()
+    {
+        
+    }
+
     public bool IsBirdCanElectric(BirdBase bird)
     {
         if (bird.isLockMove || bird.isHasExtral || bird.isDie || bird.state == StateBird.InSlot || bird.state == StateBird.Match3)

@@ -41,6 +41,11 @@ public class IceItem_BirdSort : ItemBase
         return true;
     }
 
+    public override void OnItemUsed()
+    {
+        
+    }
+
     public override void EndItem()
     {
         isUsing = false;

@@ -99,8 +99,6 @@ public class ItemUI : MonoBehaviour
             {
                 if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
-
                     InitState();
 
                     if (BirdSort2.GamePlayController_BirdSort.Instance != null)

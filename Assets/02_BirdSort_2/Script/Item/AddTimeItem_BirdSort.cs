@@ -54,6 +54,11 @@ public class AddTimeItem_BirdSort : ItemBase
         return true;
     }
 
+    public override void OnItemUsed()
+    {
+        
+    }
+
     int valueCache;
     private void PlayTweenTimeText(int targetValue)
     {

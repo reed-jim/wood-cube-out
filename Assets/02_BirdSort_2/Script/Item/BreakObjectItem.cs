@@ -41,6 +41,11 @@ public class BreakObjectItem : ItemBase
         return CanBreakObject;
     }
 
+    public override void OnItemUsed()
+    {
+        GameController.Instance.dataContain.giftDatabase.Claim(GiftType.BreakObject, -1, Reason.in_campain_level);
+        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.BUYED_ITEM, typeItem);
+    }
 
     public bool CanBreakObject
     {

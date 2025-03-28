@@ -21,6 +21,11 @@ public class AddHoleItem : ItemBase
         throw new System.NotImplementedException();
     }
 
+    public override void OnItemUsed()
+    {
+        
+    }
+
     public override bool IsCanUseItem()
     {
         if (isUsing) return false;
@@ -51,6 +56,7 @@ public class AddHoleItem : ItemBase
     {
         isUsing = true;
         GamePlayController_BirdSort.Instance.level.screwBoxManager.AddMoreScrewPort();
+        GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
         StartCoroutine(DelayItem());
         return CanShuffle;
     }

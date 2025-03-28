@@ -161,6 +161,11 @@
             return CanSugget;
         }
 
+        public override void OnItemUsed()
+        {
+            
+        }
+
         public override bool IsCanUseItem()
         {
             throw new NotImplementedException();

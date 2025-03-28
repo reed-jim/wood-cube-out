@@ -12,6 +12,11 @@ public class ClearHoleItem : ItemBase
        
     }
 
+    public override void OnItemUsed()
+    {
+        GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
+    }
+
     public override bool IsCanUseItem()
     {
         if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ReturnItem_BirdSort).unlockLevel)
@@ -51,6 +56,7 @@ public class ClearHoleItem : ItemBase
     {
         isClearHole = true;
         GamePlayController_BirdSort.Instance.level.screwBoxManager.ClearAllScrewPorts();
+        OnItemUsed();
         StartCoroutine(DelayItem());
         return isClearHole;
     }
