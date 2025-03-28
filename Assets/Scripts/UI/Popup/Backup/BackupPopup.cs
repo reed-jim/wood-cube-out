@@ -26,6 +26,9 @@ public class BackupPopup : BasePopup
     public static event Action uploadGameDataEvent;
     public static event Action downloadGameDataEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action updateCoinTextEvent;
+    public static event Action updateLevelEvent;
+    public static event Action updateRemoveAdsStateEvent;
     #endregion
 
     protected override void RegisterMoreEvent()
@@ -173,6 +176,10 @@ public class BackupPopup : BasePopup
 
         if (GamePersistentVariable.isCloudStorageOperationCompleted)
         {
+            updateCoinTextEvent?.Invoke();
+            updateLevelEvent?.Invoke();
+            updateRemoveAdsStateEvent?.Invoke();
+
             Hide(onCompletedAction: () =>
             {
                 if (GamePersistentVariable.cloudStorageRequest == CloudStorageRequest.Upload)

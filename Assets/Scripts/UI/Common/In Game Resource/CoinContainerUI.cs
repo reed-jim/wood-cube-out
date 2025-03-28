@@ -34,6 +34,7 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
         SaferioIAPManager.collectCoinEvent += CollectCoin;
         ResourceEarnPopup.collectCoinEvent += CollectCoin;
+        BackupPopup.updateCoinTextEvent += UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -58,6 +59,7 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
         SaferioIAPManager.collectCoinEvent -= CollectCoin;
         ResourceEarnPopup.collectCoinEvent -= CollectCoin;
+        BackupPopup.updateCoinTextEvent -= UpdateCoinText;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -68,6 +70,13 @@ public class CoinContainerUI : MonoBehaviour
 
     //     collectCoinEvent?.Invoke(positionRelativeToCanvas);
     // }
+
+    private void UpdateCoinText()
+    {
+        userResourcesObserver.Load();
+
+        UpdateCoinText(userResourcesObserver.UserResources.CoinQuantity, isPlayAnimation: true);
+    }
 
     private void UpdateCoinText(float value)
     {

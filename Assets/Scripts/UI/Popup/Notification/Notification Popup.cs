@@ -44,20 +44,25 @@ public class NotificationPopup : BasePopup
     {
         base.Show(onCompletedAction);
 
-        int numActivePopup = GetActiveChildCount(transform.parent);
+        _tweens.Add(Tween.Delay(duration: 0.3f)
+            .OnComplete(() =>
+            {
+                int numActivePopup = GetActiveChildCount(transform.parent);
 
-        if (numActivePopup < 3)
-        {
-            blackBackground.gameObject.SetActive(false);
+                if (numActivePopup < 3)
+                {
+                    blackBackground.gameObject.SetActive(false);
 
-            return;
-        }
+                    return;
+                }
 
-        blackBackground.gameObject.SetActive(true);
+                blackBackground.gameObject.SetActive(true);
 
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
+                blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
 
-        _tweens.Add(Tween.Alpha(blackBackground, 0.95f, duration: 0.3f));
+                _tweens.Add(Tween.Alpha(blackBackground, 0.95f, duration: 0.3f));
+            })
+        );
     }
 
     protected override void Hide()
