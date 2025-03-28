@@ -160,7 +160,7 @@ public class BasePopup : MonoBehaviour
         {
             return;
         }
-
+        
         if (_isShown)
         {
             _transitionAnimation.Hide(OnTransitionCompleted);

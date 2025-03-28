@@ -194,6 +194,79 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &316065243
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 316065244}
+  - component: {fileID: 316065245}
+  m_Layer: 0
+  m_Name: Successful
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &316065244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316065243}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582410616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &316065245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 316065243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Successful
+    Object: {fileID: 0}
+  - Language: French
+    Text: "R\xE9ussi"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Erfolgreich
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Riuscito
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6210\u529F"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC131\uACF5\uC801\uC778"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Bem-sucedido
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0441\u043F\u0435\u0448\u043D\u044B\u0439"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Exitoso
+    Object: {fileID: 0}
 --- !u!1001 &371384566
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -866,9 +939,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 316065244}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+--- !u!4 &1582410616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1684984258
 GameObject:
   m_ObjectHideFlags: 0
