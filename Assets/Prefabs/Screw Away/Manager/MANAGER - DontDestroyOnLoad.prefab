@@ -1257,6 +1257,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Trato caliente
     Object: {fileID: 0}
+--- !u!1 &1591666222808834053
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3172891254533891615}
+  - component: {fileID: 3027876414947177155}
+  m_Layer: 0
+  m_Name: Load Data
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3172891254533891615
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591666222808834053}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3027876414947177155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1591666222808834053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Load Data
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Charger des donn\xE9es"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Daten laden
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Carica dati
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C7\u30FC\u30BF\u3092\u30ED\u30FC\u30C9\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB85C\uB4DC \uB370\uC774\uD130"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Carregar dados
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cargar datos
+    Object: {fileID: 0}
 --- !u!1 &1614852111592892618
 GameObject:
   m_ObjectHideFlags: 0
@@ -2225,6 +2298,81 @@ MonoBehaviour:
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
   taskItemUIPrefab: {fileID: 413993787269842527, guid: cfbf48fdb9ee8ba438323f24aaa9fe07, type: 3}
+--- !u!1 &2863594954950279179
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7311846301151916920}
+  - component: {fileID: 6006700250679455157}
+  m_Layer: 0
+  m_Name: This will overwrite your cloud data. Are you sure
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7311846301151916920
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2863594954950279179}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6006700250679455157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2863594954950279179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: This will overwrite your cloud data. Are you sure?
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Cela \xE9crasera vos donn\xE9es cloud. "
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Dadurch \xFCberschreiben Sie Ihre Cloud -Daten. "
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Questo sovrascriver\xE0 i tuoi dati cloud. "
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3053\u308C\u306B\u3088\u308A\u3001\u30AF\u30E9\u30A6\u30C9\u30C7\u30FC\u30BF\u304C\u4E0A\u66F8\u304D\u3055\u308C\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD074\uB77C\uC6B0\uB4DC \uB370\uC774\uD130\uB97C \uB36E\uC5B4 \uC4F8
+      \uAC83\uC785\uB2C8\uB2E4. "
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Isso substituir\xE1 seus dados em nuvem. "
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u042D\u0442\u043E \u0431\u0443\u0434\u0435\u0442 \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C
+      \u0432\u0430\u0448\u0438 \u043E\u0431\u043B\u0430\u0447\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435. "
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Esto sobrescribir\xE1 sus datos en la nube. "
+    Object: {fileID: 0}
 --- !u!1 &2870443471325024113
 GameObject:
   m_ObjectHideFlags: 0
@@ -2783,6 +2931,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Ingrese su c\xF3digo de redimir ..."
     Object: {fileID: 0}
+--- !u!1 &3516342123622071916
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3635230007825316767}
+  - component: {fileID: 6424565215361728081}
+  m_Layer: 0
+  m_Name: Danger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3635230007825316767
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3516342123622071916}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6424565215361728081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3516342123622071916}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Danger
+    Object: {fileID: 0}
+  - Language: French
+    Text: Danger
+    Object: {fileID: 0}
+  - Language: German
+    Text: Gefahr
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pericolo
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5371\u967A"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC704\uD5D8"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Perigo
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u043F\u0430\u0441\u043D\u043E\u0441\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Peligro
+    Object: {fileID: 0}
 --- !u!1 &3601538918192833633
 GameObject:
   m_ObjectHideFlags: 0
@@ -2855,6 +3076,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Advertencia
+    Object: {fileID: 0}
+--- !u!1 &3612805153881337347
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3891492000437975040}
+  - component: {fileID: 1473643283303491193}
+  m_Layer: 0
+  m_Name: Save Data
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3891492000437975040
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3612805153881337347}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1473643283303491193
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3612805153881337347}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Save Data
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Enregistrer les donn\xE9es"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Daten speichern
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Salva dati
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C7\u30FC\u30BF\u3092\u4FDD\u5B58\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB370\uC774\uD130 \uC800\uC7A5"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Salvar dados
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0445\u0440\u0430\u043D\u0438\u0442\u044C \u0434\u0430\u043D\u043D\u044B\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Guardar datos
     Object: {fileID: 0}
 --- !u!1 &3665256406809735149
 GameObject:
@@ -3196,6 +3490,82 @@ MonoBehaviour:
   - Language: Spanish
     Text: Cargando...
     Object: {fileID: 0}
+--- !u!1 &4255559527617466109
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6878264416144596309}
+  - component: {fileID: 8540833163334620745}
+  m_Layer: 0
+  m_Name: This will overwrite your local data. Are you sure
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6878264416144596309
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4255559527617466109}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8540833163334620745
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4255559527617466109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: This will overwrite your local data. Are you sure?
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Cela \xE9crasera vos donn\xE9es locales. "
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Dadurch \xFCberschreiben Sie Ihre lokalen Daten. "
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Questo sovrascriver\xE0 i tuoi dati locali. "
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3053\u308C\u306B\u3088\u308A\u3001\u30ED\u30FC\u30AB\u30EB\u30C7\u30FC\u30BF\u304C\u4E0A\u66F8\u304D\u3055\u308C\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC774\uAC83\uC740 \uB85C\uCEEC \uB370\uC774\uD130\uB97C \uB36E\uC5B4
+      \uC501\uB2C8\uB2E4. "
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Isso substituir\xE1 seus dados locais. "
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u042D\u0442\u043E \u0431\u0443\u0434\u0435\u0442 \u043F\u0435\u0440\u0435\u0437\u0430\u043F\u0438\u0441\u0430\u0442\u044C
+      \u0432\u0430\u0448\u0438 \u043B\u043E\u043A\u0430\u043B\u044C\u043D\u044B\u0435
+      \u0434\u0430\u043D\u043D\u044B\u0435. "
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Esto sobrescribir\xE1 sus datos locales. "
+    Object: {fileID: 0}
 --- !u!1 &4264493002780682231
 GameObject:
   m_ObjectHideFlags: 0
@@ -3231,6 +3601,80 @@ Transform:
   - {fileID: 3573088185947741363}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &4474402725407498998
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5968615087854098956}
+  - component: {fileID: 6655316779412952502}
+  m_Layer: 0
+  m_Name: Data loaded successfully
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5968615087854098956
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474402725407498998}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6655316779412952502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4474402725407498998}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Data loaded successfully!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Donn\xE9es charg\xE9es avec succ\xE8s!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Daten erfolgreich geladen!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Dati caricati con successo!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C7\u30FC\u30BF\u304C\u6B63\u5E38\u306B\u8AAD\u307F\u8FBC\u307E\u308C\u307E\u3057\u305F\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC131\uACF5\uC801\uC73C\uB85C \uB370\uC774\uD130\uB97C\uB85C\uB4DC\uD588\uC2B5\uB2C8\uB2E4!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Dados carregados com sucesso!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0414\u0430\u043D\u043D\u044B\u0435 \u0437\u0430\u0433\u0440\u0443\u0436\u0435\u043D\u044B
+      \u0443\u0441\u043F\u0435\u0448\u043D\u043E!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Datos cargados con \xE9xito!"
+    Object: {fileID: 0}
 --- !u!1 &4512167489505558287
 GameObject:
   m_ObjectHideFlags: 0
@@ -3599,6 +4043,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Nivel {level}
     Object: {fileID: 0}
+--- !u!1 &4841730450718879905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 837884004581421451}
+  - component: {fileID: 5888177768320380820}
+  m_Layer: 0
+  m_Name: Backup
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &837884004581421451
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4841730450718879905}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5888177768320380820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4841730450718879905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Backup
+    Object: {fileID: 0}
+  - Language: French
+    Text: Sauvegarde
+    Object: {fileID: 0}
+  - Language: German
+    Text: Backup
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Backup
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC9C0\uC6D0"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Backup
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0435\u0437\u0435\u0440\u0432\u043D\u0430\u044F \u043A\u043E\u043F\u0438\u044F"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Respaldo
+    Object: {fileID: 0}
 --- !u!1 &5168148922547679480
 GameObject:
   m_ObjectHideFlags: 0
@@ -3789,6 +4306,83 @@ MonoBehaviour:
   - Language: Spanish
     Text: Sin anuncios
     Object: {fileID: 0}
+--- !u!1 &5437777867941391929
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1013713267517054520}
+  - component: {fileID: 8290667633746929527}
+  m_Layer: 0
+  m_Name: If you have any issues with the backup, please contact us
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1013713267517054520
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437777867941391929}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8290667633746929527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5437777867941391929}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: If you have any issues with the backup, please contact us.
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Si vous avez des probl\xE8mes avec la sauvegarde, veuillez nous contacter."
+    Object: {fileID: 0}
+  - Language: German
+    Text: Wenn Sie Probleme mit der Sicherung haben, kontaktieren Sie uns bitte.
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Se hai problemi con il backup, contattaci.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D0\u30C3\u30AF\u30A2\u30C3\u30D7\u306B\u554F\u984C\u304C\u3042\u308B\u5834\u5408\u306F\u3001\u304A\u554F\u3044\u5408\u308F\u305B\u304F\u3060\u3055\u3044\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBC31\uC5C5\uC5D0 \uBB38\uC81C\uAC00 \uC788\uC73C\uC2DC\uBA74 \uBB38\uC758\uD558\uC2ED\uC2DC\uC624."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Se voc\xEA tiver algum problema com o backup, entre em contato conosco."
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0441\u043B\u0438 \u0443 \u0432\u0430\u0441 \u0435\u0441\u0442\u044C
+      \u043A\u0430\u043A\u0438\u0435 -\u043B\u0438\u0431\u043E \u043F\u0440\u043E\u0431\u043B\u0435\u043C\u044B
+      \u0441 \u0440\u0435\u0437\u0435\u0440\u0432\u043D\u043E\u0439 \u043A\u043E\u043F\u0438\u0435\u0439,
+      \u043F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u0441\u0432\u044F\u0436\u0438\u0442\u0435\u0441\u044C
+      \u0441 \u043D\u0430\u043C\u0438."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Si tiene alg\xFAn problema con la copia de seguridad, cont\xE1ctenos."
+    Object: {fileID: 0}
 --- !u!1 &5467073483452587781
 GameObject:
   m_ObjectHideFlags: 0
@@ -3976,6 +4570,16 @@ Transform:
   - {fileID: 8358702021488761027}
   - {fileID: 5047876937955593939}
   - {fileID: 5102948530347734093}
+  - {fileID: 837884004581421451}
+  - {fileID: 3891492000437975040}
+  - {fileID: 3172891254533891615}
+  - {fileID: 3635230007825316767}
+  - {fileID: 1095667277576720885}
+  - {fileID: 7311846301151916920}
+  - {fileID: 6878264416144596309}
+  - {fileID: 735734412849428368}
+  - {fileID: 5968615087854098956}
+  - {fileID: 1013713267517054520}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -4632,6 +5236,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Tabla de clasificaci\xF3n"
     Object: {fileID: 0}
+--- !u!1 &6029989215894385043
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5812160801231827010}
+  - component: {fileID: 8884880253518776279}
+  m_Layer: 0
+  m_Name: Cloud Storage Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5812160801231827010
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6029989215894385043}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 328848638671994766}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8884880253518776279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6029989215894385043}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8f08960bc659f9498c8a25276ac3ca9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6050411402626446992
 GameObject:
   m_ObjectHideFlags: 0
@@ -5679,6 +6327,7 @@ Transform:
   - {fileID: 2368289629660575849}
   - {fileID: 3679338208945242195}
   - {fileID: 7430847053776927505}
+  - {fileID: 5812160801231827010}
   - {fileID: 3442741769211523240}
   - {fileID: 6629955821744465093}
   m_Father: {fileID: 0}
@@ -6417,6 +7066,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Reanimar
     Object: {fileID: 0}
+--- !u!1 &8126691772631940631
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1095667277576720885}
+  - component: {fileID: 4146494988359712345}
+  m_Layer: 0
+  m_Name: Proceed anyway
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1095667277576720885
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8126691772631940631}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4146494988359712345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8126691772631940631}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Proceed anyway
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Continuez de toute fa\xE7on"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Fahren Sie trotzdem fort
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Procedere comunque
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3068\u306B\u304B\u304F\u7D9A\u884C\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC5B4\uCA0C\uB4E0 \uC9C4\uD589\uD558\uC2ED\uC2DC\uC624"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Prossiga de qualquer maneira
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439 \u0432\u0441\u0435
+      \u0440\u0430\u0432\u043D\u043E"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Proceder de todos modos
+    Object: {fileID: 0}
 --- !u!1 &8256324105275650458
 GameObject:
   m_ObjectHideFlags: 0
@@ -6956,6 +7679,80 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Hogar
+    Object: {fileID: 0}
+--- !u!1 &8993136306486284365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 735734412849428368}
+  - component: {fileID: 7703321429069860335}
+  m_Layer: 0
+  m_Name: Data saved successfully
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &735734412849428368
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8993136306486284365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7703321429069860335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8993136306486284365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Data saved successfully!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Donn\xE9es enregistr\xE9es avec succ\xE8s!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Daten erfolgreich gespeichert!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Dati salvati con successo!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30C7\u30FC\u30BF\u304C\u6B63\u5E38\u306B\u4FDD\u5B58\u3055\u308C\u307E\u3057\u305F\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB370\uC774\uD130\uAC00 \uC131\uACF5\uC801\uC73C\uB85C \uC800\uC7A5\uB418\uC5C8\uC2B5\uB2C8\uB2E4!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Dados salvos com sucesso!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0414\u0430\u043D\u043D\u044B\u0435 \u0441\u043E\u0445\u0440\u0430\u043D\u0438\u043B\u0438\u0441\u044C
+      \u0443\u0441\u043F\u0435\u0448\u043D\u043E!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Datos guardados con \xE9xito!"
     Object: {fileID: 0}
 --- !u!1 &9054152769513469131
 GameObject:

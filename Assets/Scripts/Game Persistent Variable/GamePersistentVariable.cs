@@ -1,6 +1,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CloudStorageRequest {
+    Upload,
+    Download
+}
+
 public static class GamePersistentVariable
 {
     public static Vector2 canvasSize;
@@ -27,6 +32,11 @@ public static class GamePersistentVariable
 
     #region LEVEL IN PROGRESS
     public static bool isLoadingLevelInProgress; 
+    #endregion
+
+    #region BACKUP
+    public static CloudStorageRequest cloudStorageRequest;
+    public static bool isCloudStorageOperationCompleted;
     #endregion
 
     #region AUTO TEST
