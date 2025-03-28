@@ -16,6 +16,10 @@ using UnityEngine.UI;
 
 public class RemoteConfigController : MonoBehaviour
 {
+    #region EVENT
+    public static event Action remoteConfigReadyEvent;
+    #endregion  
+
     private static RemoteConfigController Instance;
 
     FirebaseRemoteConfig _remoteConfig;
@@ -390,6 +394,8 @@ public class RemoteConfigController : MonoBehaviour
         }
 
         GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
+
+        remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);
 

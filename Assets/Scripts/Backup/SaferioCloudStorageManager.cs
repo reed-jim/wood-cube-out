@@ -21,14 +21,14 @@ public class SaferioCloudStorageManager : MonoBehaviour
 
     void Awake()
     {
+        RemoteConfigController.remoteConfigReadyEvent += Init;
         BackupPopup.uploadGameDataEvent += UploadFromLocalFile;
         BackupPopup.downloadGameDataEvent += DownloadFile;
-
-        Init();
     }
 
     void OnDestroy()
     {
+        RemoteConfigController.remoteConfigReadyEvent -= Init;
         BackupPopup.uploadGameDataEvent -= UploadFromLocalFile;
         BackupPopup.downloadGameDataEvent -= DownloadFile;
     }
@@ -80,7 +80,7 @@ public class SaferioCloudStorageManager : MonoBehaviour
                         string md5Hash = metadata.Md5Hash;
 
                         GamePersistentVariable.isCloudStorageOperationCompleted = true;
-                        
+
                         cloudStorageOperationCompleteEvent?.Invoke();
                     }
                 });

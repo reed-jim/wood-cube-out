@@ -38,6 +38,8 @@ public class MenuScreen : MonoBehaviour
     private void Awake()
     {
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
+        BackupPopup.updateLevelEvent += UpdateCurrentLevelTextOnBackup;
+        BackupPopup.updateRemoveAdsStateEvent += UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
@@ -88,6 +90,8 @@ public class MenuScreen : MonoBehaviour
     void OnDestroy()
     {
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
+        BackupPopup.updateLevelEvent -= UpdateCurrentLevelTextOnBackup;
+        BackupPopup.updateRemoveAdsStateEvent -= UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
@@ -173,6 +177,13 @@ public class MenuScreen : MonoBehaviour
         localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
+    private void UpdateCurrentLevelTextOnBackup()
+    {
+        currentLevel.Load();
+
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+    }
+
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)
     {
         ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(screenRoute);
@@ -182,6 +193,14 @@ public class MenuScreen : MonoBehaviour
     private void OnAdsRemoved()
     {
         openRemoveAdPopupButton.gameObject.SetActive(false);
+    }
+
+    private void UpdateRemoveAdsState()
+    {
+        if (UserData.IsRemoveAds)
+        {
+            openRemoveAdPopupButton.gameObject.SetActive(false);
+        }
     }
 
     private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)
