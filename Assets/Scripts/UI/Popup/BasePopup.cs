@@ -28,9 +28,12 @@ public class BasePopup : MonoBehaviour
     public static event Action popupHideEvent;
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
+    public static event Action<ScreenRoute> switchPopupRouteEvent;
+    public static event Action<string, string> showNotificationEvent;
 
     private void Awake()
     {
+        switchPopupRouteEvent += OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
@@ -73,6 +76,7 @@ public class BasePopup : MonoBehaviour
 
     private void OnDestroy()
     {
+        switchPopupRouteEvent -= OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
@@ -160,7 +164,7 @@ public class BasePopup : MonoBehaviour
         {
             return;
         }
-        
+
         if (_isShown)
         {
             _transitionAnimation.Hide(OnTransitionCompleted);
@@ -258,6 +262,16 @@ public class BasePopup : MonoBehaviour
                 Hide();
             }
         }
+    }
+
+    protected void SwitchRoute(ScreenRoute route)
+    {
+        switchPopupRouteEvent?.Invoke(route);
+    }
+
+    protected void ShowNotification(string title, string description)
+    {
+        showNotificationEvent?.Invoke(title, description);
     }
 
     protected void InvokeShowAdNotLoadedPopupEvent()

@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,10 +13,11 @@ public class CompensatePopup : BasePopup
 
     [SerializeField] private Button redeemButton;
 
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
-    public static event Action<string, string> showNotificationEvent;
+    public static event Action updateLevelEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -34,7 +37,7 @@ public class CompensatePopup : BasePopup
     {
         if (!GamePersistentVariable.isFirebaseRemoteConfigLoaded)
         {
-            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
+            ShowNotification(GameConstants.WARNING, "Invalid Code");
 
             return;
         }
@@ -48,14 +51,14 @@ public class CompensatePopup : BasePopup
 
         if (validUniqueDeviceIdentifierContainer.validIdentifiers == null)
         {
-            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
+            ShowNotification(GameConstants.WARNING, "Invalid Code");
 
             return;
         }
 
         if (!validUniqueDeviceIdentifierContainer.validIdentifiers.Contains(GamePersistentVariable.FirebaseUserId))
         {
-            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
+            ShowNotification(GameConstants.WARNING, "Invalid Code");
 
             return;
         }
@@ -88,7 +91,7 @@ public class CompensatePopup : BasePopup
             }
             else
             {
-                showNotificationEvent?.Invoke(GameConstants.WARNING, "The code has already been claimed");
+                ShowNotification(GameConstants.WARNING, "The code has already been claimed");
             }
         }
         else if (string.Equals(codeInput.text, bigRewardCode, StringComparison.OrdinalIgnoreCase))
@@ -116,12 +119,29 @@ public class CompensatePopup : BasePopup
             }
             else
             {
-                showNotificationEvent?.Invoke(GameConstants.WARNING, "The code has already been claimed");
+                ShowNotification(GameConstants.WARNING, "The code has already been claimed");
+            }
+        }
+        else if (codeInput.text.ContainsInsensitive("gotolevel"))
+        {
+            string pattern = @"\d+";
+
+            Match match = Regex.Match(codeInput.text, pattern);
+
+            if (match.Success)
+            {
+                int level = int.Parse(match.Value);
+
+                currentLevel.Value = level;
+
+                currentLevel.Save();
+
+                updateLevelEvent?.Invoke();
             }
         }
         else
         {
-            showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
+            ShowNotification(GameConstants.WARNING, "Invalid Code");
         }
     }
 

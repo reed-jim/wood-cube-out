@@ -14,7 +14,6 @@ public class RemoveAdPopup : BasePopup
 
     #region EVENT
     public static event Action<string> buyIAPEvent;
-    public static event Action<string, string> showNotificationEvent;
     #endregion
 
     protected override void MoreActionInAwake()
@@ -45,7 +44,7 @@ public class RemoveAdPopup : BasePopup
         {
             Hide();
 
-            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
         }
         else
         {

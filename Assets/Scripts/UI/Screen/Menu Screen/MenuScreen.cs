@@ -39,6 +39,7 @@ public class MenuScreen : MonoBehaviour
     {
         GameVariableInitializer.currentLevelFetchedEvent += UpdateCurrentLevelText;
         BackupPopup.updateLevelEvent += UpdateCurrentLevelTextOnBackup;
+        CompensatePopup.updateLevelEvent += UpdateCurrentLevelTextOnBackup;
         BackupPopup.updateRemoveAdsStateEvent += UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
@@ -91,6 +92,7 @@ public class MenuScreen : MonoBehaviour
     {
         GameVariableInitializer.currentLevelFetchedEvent -= UpdateCurrentLevelText;
         BackupPopup.updateLevelEvent -= UpdateCurrentLevelTextOnBackup;
+        CompensatePopup.updateLevelEvent -= UpdateCurrentLevelTextOnBackup;
         BackupPopup.updateRemoveAdsStateEvent -= UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
