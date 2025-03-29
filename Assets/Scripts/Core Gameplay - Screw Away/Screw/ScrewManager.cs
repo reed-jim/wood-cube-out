@@ -753,6 +753,9 @@ public class ScrewManager : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
 
+        // wait for level loaded
+        yield return new WaitForSeconds(3f);
+
         while (true)
         {
             if (!_isHandlingOutsideScrews)
