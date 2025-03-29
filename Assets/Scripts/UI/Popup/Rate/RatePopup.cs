@@ -37,7 +37,9 @@ public class RatePopup : BasePopup
             }
             else
             {
-                OpenReviewPage();
+                launchInAppReviewEvent?.Invoke();
+
+                // OpenReviewPage();
 
                 _isDisableOpenReviewPage = true;
             }
@@ -47,8 +49,6 @@ public class RatePopup : BasePopup
         {
             Hide();
         }
-
-        // launchInAppReviewEvent?.Invoke();
     }
 
     private void SelectRateStar(int index)
