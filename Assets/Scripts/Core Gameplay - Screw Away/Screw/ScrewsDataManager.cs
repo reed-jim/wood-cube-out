@@ -16,7 +16,6 @@ public class ScrewsDataManager : MonoBehaviour
 
     #region PRIVATE FIELD
     private string _currentSaveLevelDataKey;
-    private bool _isOldDataLoaded;
     #endregion
 
     public static event Action spawnFreshLevelScrewBoxesEvent;
@@ -68,13 +67,22 @@ public class ScrewsDataManager : MonoBehaviour
         // No data for current level
         if (levelProgressData.ScrewsData == null)
         {
-            _isOldDataLoaded = true;
+            spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
         }
 
         ScrewData[] screwsData = levelProgressData.ScrewsData;
         ScrewBoxData[] screwBoxesData = levelProgressData.ScrewBoxesData;
+
+        if (screwsData.Length != _screws.Length)
+        {
+            GamePersistentVariable.isFreshLevel = true;
+
+            spawnFreshLevelScrewBoxesEvent?.Invoke();
+
+            return;
+        }
 
         for (int i = 0; i < screwBoxesData.Length; i++)
         {
@@ -158,8 +166,6 @@ public class ScrewsDataManager : MonoBehaviour
         // UPDATE UI
         updateRemainingScrewEvent?.Invoke(remainingScrew, totalScrew);
         updateOutsideScrewNumberEvent?.Invoke();
-
-        _isOldDataLoaded = true;
     }
 
     private ScrewBoxData[] GetScrewBoxesData()
