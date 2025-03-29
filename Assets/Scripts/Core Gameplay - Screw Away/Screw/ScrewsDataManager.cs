@@ -22,6 +22,9 @@ public class ScrewsDataManager : MonoBehaviour
     public static event Action<int, int> updateRemainingScrewEvent;
     public static event Action updateOutsideScrewNumberEvent;
 
+    #region TUTORIAL LEVEL 1
+    public static event Action endTutorialLevel1Event;
+    #endregion
 
     void Awake()
     {
@@ -84,6 +87,11 @@ public class ScrewsDataManager : MonoBehaviour
             return;
         }
 
+        if (currentLevel.Value == 1)
+        {
+            endTutorialLevel1Event?.Invoke();
+        }
+
         for (int i = 0; i < screwBoxesData.Length; i++)
         {
             screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
@@ -118,7 +126,7 @@ public class ScrewsDataManager : MonoBehaviour
             screw.IsInScrewPort = screwData.IsInScrewPort();
             screw.IsOutsideWithNoScrewBox = screwData.IsOutside();
 
-            if (!screwData.IsActive())
+            if (!screwData.IsActive() && !screwData.IsOutside())
             {
                 screw.InvokeBreakJointEvent();
 
@@ -154,13 +162,6 @@ public class ScrewsDataManager : MonoBehaviour
             {
                 screw.ForceUnscrew();
             }
-
-            // if (screwData.IsDone)
-            // {
-            //     ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
-
-            //     screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
-            // }
         }
 
         // UPDATE UI

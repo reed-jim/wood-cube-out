@@ -53,6 +53,7 @@ public class LevelTutorial : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent += OnScrewSelected;
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
+        ScrewsDataManager.endTutorialLevel1Event += EndTutorialImmediately;
 
         GamePersistentVariable.isPassedStepOneTutorial = true;
 
@@ -99,6 +100,7 @@ public class LevelTutorial : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent -= OnScrewSelected;
         SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
         PinchGesture.pinchGestureEvent -= OnScreenZoomed;
+        ScrewsDataManager.endTutorialLevel1Event -= EndTutorialImmediately;
     }
 
     private IEnumerator TutorialStepOne()
@@ -345,6 +347,13 @@ public class LevelTutorial : MonoBehaviour
         });
 
         enableSwipingEvent?.Invoke(true);
+    }
+
+    private void EndTutorialImmediately()
+    {
+        enableSwipingEvent?.Invoke(true);
+
+        gameObject.SetActive(false);
     }
 
     #region CALLBACK
