@@ -180,10 +180,10 @@ public class ScrewManager : MonoBehaviour
                 //     // }
                 // }
 
-                if (GamePersistentVariable.isFreshLevel)
-                {
-                    SpawnFirstScrewBoxes();
-                }
+                // if (GamePersistentVariable.isFreshLevel)
+                // {
+                //     SpawnFirstScrewBoxes();
+                // }
             }));
         }
     }
@@ -497,7 +497,7 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region MANAGE SCREW BOX
-    private async void SpawnFirstScrewBoxes()
+    public async void SpawnFirstScrewBoxes()
     {
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
