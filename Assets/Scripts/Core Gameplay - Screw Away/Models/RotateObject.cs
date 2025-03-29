@@ -31,17 +31,17 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.024f;
+        rotateSpeedMultiplier = 0.006f;
         // _acceleratedMultiplier = 1;
 
-        // if (!isDisableAutoRotatingAtStart)
-        // {
-        //     // _isAutoRotating = true;
+        if (!isDisableAutoRotatingAtStart)
+        {
+            // _isAutoRotating = true;
 
-        //     _remainingTimeToAutoRotate = 2;
+            _remainingTimeToAutoRotate = 2;
 
-        //     StartCoroutine(AutoRotating());
-        // }
+            StartCoroutine(AutoRotating());
+        }
 
         StartCoroutine(Rotating());
     }
@@ -67,12 +67,17 @@ public class RotateObject : MonoBehaviour
                 // _targetRotation = transform.rotation;
                 // transform.rotation = cachedRotation;
 
-                cloneToCalculateRotation.rotation = transform.rotation;
+                // cloneToCalculateRotation.rotation = transform.rotation;
+
+                if (!_isRotating)
+                {
+                    cloneToCalculateRotation.rotation = transform.rotation;
+                }
 
                 cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
                 cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
 
-                _targetRotation = cloneToCalculateRotation.rotation;
+                // _targetRotation = cloneToCalculateRotation.rotation;
 
                 _rotateLerpStep = 0;
                 _isRotating = true;
@@ -80,14 +85,16 @@ public class RotateObject : MonoBehaviour
 
             if (_isRotating)
             {
-                transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 6f);
+                transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 3f);
 
                 _rotateLerpStep++;
 
-                if (_rotateLerpStep >= 6)
+                if (_rotateLerpStep >= 3)
                 {
                     _rotateLerpStep = 0;
                     _isRotating = false;
+
+                    cloneToCalculateRotation.rotation = transform.rotation;
                 }
             }
 
