@@ -13,6 +13,10 @@ using Firebase.Extensions;
 using System.Collections;
 using Firebase;
 using UnityEngine.UI;
+using Firebase.Auth;
+using Google;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
 
 public class RemoteConfigController : MonoBehaviour
 {
@@ -120,12 +124,81 @@ public class RemoteConfigController : MonoBehaviour
                 FetchAsync();
 
                 GamePersistentVariable.isFirebaseAvailable = true;
+
+                // Sign in
+                FirebaseAuth auth = FirebaseAuth.DefaultInstance;
+
+                if (!PlayGamesPlatform.Instance.IsAuthenticated())
+                {
+                    PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+                }
+
+                // if (auth.CurrentUser == null)
+                // {
+                // auth.SignInAnonymouslyAsync().ContinueWith(task =>
+                // {
+                //     if (task.IsCanceled)
+                //     {
+                //         return;
+                //     }
+                //     if (task.IsFaulted)
+                //     {
+                //         return;
+                //     }
+
+                //     AuthResult result = task.Result;
+
+                //     GamePersistentVariable.FirebaseUserId = auth.CurrentUser.UserId;
+                // });
+                // }
+                // else
+                // {
+                //     GamePersistentVariable.FirebaseUserId = auth.CurrentUser.UserId;
+                // }
             }
             else
             {
                 // Firebase Unity SDK is not safe to use here.
             }
         });
+    }
+
+    internal void ProcessAuthentication(SignInStatus status)
+    {
+        if (status == SignInStatus.Success)
+        {
+            // Continue with Play Games Services
+
+            string name = PlayGamesPlatform.Instance.GetUserDisplayName();
+            string id = PlayGamesPlatform.Instance.GetUserId();
+            string ImgUrl = PlayGamesPlatform.Instance.GetUserImageUrl();
+
+            GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
+
+            Debug.Log("SAFERIO " + PlayGamesPlatform.Instance.GetUserId());
+        }
+        else
+        {
+            FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    return;
+                }
+
+                AuthResult result = task.Result;
+
+                GamePersistentVariable.FirebaseUserId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            });
+
+            // Disable your integration with Play Games Services or show a login button
+            // to ask users to sign-in. Clicking it should call
+            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
+        }
     }
 
     // public async Task FetchDataAsync()

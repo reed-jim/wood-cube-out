@@ -1,5 +1,8 @@
 using System;
 using System.Collections;
+using System.Threading.Tasks;
+using Firebase.Auth;
+using Google;
 using Lean.Localization;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -107,7 +110,7 @@ public class BackupPopup : BasePopup
 
         warningPopup.localPosition = warningPopup.localPosition.ChangeX(-GamePersistentVariable.canvasSize.x);
 
-        _tweens.Add(Tween.LocalPositionX(backupPopupContainer, GamePersistentVariable.canvasSize.x, duration: 0.3f));
+        _tweens.Add(Tween.LocalPositionX(backupPopupContainer, GamePersistentVariable.canvasSize.x + 0.5f * backupPopupContainer.sizeDelta.x, duration: 0.3f));
         _tweens.Add(Tween.LocalPositionX(warningPopup, 0, duration: 0.3f)
             .OnComplete(() =>
             {
@@ -202,4 +205,61 @@ public class BackupPopup : BasePopup
             });
         }
     }
+
+    // #region LOGIN GOOGLE
+    // private void LoginGoogle()
+    // {
+    //     GoogleSignInConfiguration configuration = new GoogleSignInConfiguration
+    //     {
+    //         RequestIdToken = true,
+    //         // Copy this value from the google-service.json file.
+    //         // oauth_client with type == 3
+    //         WebClientId = "362306753432-1rfg1so86d0eldarvisn29bcrg6886r5.apps.googleusercontent.com"
+    //     };
+
+    //     GoogleSignIn.Configuration = configuration;
+    //     GoogleSignIn.Configuration.UseGameSignIn = false;
+    //     GoogleSignIn.Configuration.RequestIdToken = true;
+
+    //     GoogleSignIn.DefaultInstance.SignIn().ContinueWith(OnGoogleAuthenticatedFinished);
+    // }
+
+    // void OnGoogleAuthenticatedFinished(Task<GoogleSignInUser> task)
+    // {
+    //     Credential credential = GoogleAuthProvider.GetCredential(task.Result.IdToken, null);
+
+    //     FirebaseAuth.DefaultInstance.SignInAndRetrieveDataWithCredentialAsync(credential).ContinueWith(task =>
+    //     {
+    //         if (task.IsCanceled)
+    //         {
+    //             Debug.LogError("SignInAndRetrieveDataWithCredentialAsync was canceled.");
+    //             return;
+    //         }
+    //         if (task.IsFaulted)
+    //         {
+    //             Debug.LogError("SignInAndRetrieveDataWithCredentialAsync encountered an error: " + task.Exception);
+    //             return;
+    //         }
+
+    //         AuthResult result = task.Result;
+    //         Debug.LogFormat("User signed in successfully: {0} ({1})",
+    //             result.User.DisplayName, result.User.UserId);
+
+    //         GamePersistentVariable.FirebaseUserId = result.User.UserId;
+
+    //         if (GamePersistentVariable.cloudStorageRequest == CloudStorageRequest.Upload)
+    //         {
+    //             localizedDescription.TranslationName = "This will overwrite your cloud data. Are you sure";
+
+    //             ShowWarningPopup(true);
+    //         }
+    //         else
+    //         {
+    //             localizedDescription.TranslationName = "This will overwrite your local data. Are you sure";
+
+    //             ShowWarningPopup(true);
+    //         }
+    //     });
+    // }
+    // #endregion
 }

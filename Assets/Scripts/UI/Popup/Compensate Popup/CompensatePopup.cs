@@ -21,8 +21,13 @@ public class CompensatePopup : BasePopup
         base.MoreActionInAwake();
 
         redeemButton.onClick.AddListener(Redeem);
+    }
 
-        idText.text = $"ID: {SystemInfo.deviceUniqueIdentifier}";
+    protected override void Show(Action onCompletedAction = null)
+    {
+        idText.text = $"ID: {GamePersistentVariable.FirebaseUserId}";
+
+        base.Show(onCompletedAction);
     }
 
     private void Redeem()
@@ -48,7 +53,7 @@ public class CompensatePopup : BasePopup
             return;
         }
 
-        if (!validUniqueDeviceIdentifierContainer.validIdentifiers.Contains(SystemInfo.deviceUniqueIdentifier))
+        if (!validUniqueDeviceIdentifierContainer.validIdentifiers.Contains(GamePersistentVariable.FirebaseUserId))
         {
             showNotificationEvent?.Invoke(GameConstants.WARNING, "Invalid Code");
 
@@ -79,7 +84,7 @@ public class CompensatePopup : BasePopup
 
                 DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_REMOVE_ADS, true);
 
-                SaferioTracking.TrackClaimCompensateReward(removeAdCode, SystemInfo.deviceUniqueIdentifier);
+                SaferioTracking.TrackClaimCompensateReward(removeAdCode, GamePersistentVariable.FirebaseUserId);
             }
             else
             {
@@ -107,7 +112,7 @@ public class CompensatePopup : BasePopup
 
                 DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_BIG_REWARD, true);
 
-                SaferioTracking.TrackClaimCompensateReward(bigRewardCode, SystemInfo.deviceUniqueIdentifier);
+                SaferioTracking.TrackClaimCompensateReward(bigRewardCode, GamePersistentVariable.FirebaseUserId);
             }
             else
             {

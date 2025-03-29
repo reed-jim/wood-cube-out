@@ -4,8 +4,8 @@ using System.Threading.Tasks;
 using Firebase.Auth;
 using Firebase.Extensions;
 using Firebase.Storage;
-using NUnit.Framework;
 using UnityEngine;
+using UnityEngine.Android;
 using UnityEngine.UI;
 
 public class SaferioCloudStorageManager : MonoBehaviour
@@ -22,14 +22,14 @@ public class SaferioCloudStorageManager : MonoBehaviour
     void Awake()
     {
         RemoteConfigController.remoteConfigReadyEvent += Init;
-        BackupPopup.uploadGameDataEvent += UploadFromLocalFile;
+        BackupPopup.uploadGameDataEvent += UploadDataInMemory;
         BackupPopup.downloadGameDataEvent += DownloadFile;
     }
 
     void OnDestroy()
     {
         RemoteConfigController.remoteConfigReadyEvent -= Init;
-        BackupPopup.uploadGameDataEvent -= UploadFromLocalFile;
+        BackupPopup.uploadGameDataEvent -= UploadDataInMemory;
         BackupPopup.downloadGameDataEvent -= DownloadFile;
     }
 
@@ -53,12 +53,50 @@ public class SaferioCloudStorageManager : MonoBehaviour
         // Assert.AreNotEqual(mountainsRef.Path, mountainImagesRef.Path);
     }
 
-    private void UploadFromLocalFile()
+    private void UploadDataInMemory()
     {
-        string deviceUniqueId = SystemInfo.deviceUniqueIdentifier;
+        string userId = GamePersistentVariable.FirebaseUserId;
 
         string localFilePath = Application.persistentDataPath + $"/{GameConstants.SAVE_FILE_NAME}.json";
-        string cloudFilePath = $"wood-cube-out/{deviceUniqueId}/game-data";
+        string cloudFilePath = $"wood-cube-out/{userId}/game-data";
+
+        try
+        {
+            byte[] fileBytes = File.ReadAllBytes(localFilePath);
+
+            StorageReference gameDataRef = _storageRef.Child(cloudFilePath);
+
+            gameDataRef.PutBytesAsync(fileBytes)
+                .ContinueWith((Task<StorageMetadata> task) =>
+                {
+                    if (task.IsFaulted || task.IsCanceled)
+                    {
+
+                    }
+                    else
+                    {
+                        StorageMetadata metadata = task.Result;
+
+                        string md5Hash = metadata.Md5Hash;
+
+                        GamePersistentVariable.isCloudStorageOperationCompleted = true;
+
+                        cloudStorageOperationCompleteEvent?.Invoke();
+                    }
+                });
+        }
+        catch (System.Exception e)
+        {
+            Debug.Log("SAFERIO " + e.Message);
+        }
+    }
+
+    private void UploadFromLocalFile()
+    {
+        string userId = GamePersistentVariable.FirebaseUserId;
+
+        string localFilePath = Application.persistentDataPath + $"/{GameConstants.SAVE_FILE_NAME}.json";
+        string cloudFilePath = $"wood-cube-out/{userId}/game-data";
 
         try
         {
@@ -93,10 +131,10 @@ public class SaferioCloudStorageManager : MonoBehaviour
 
     private void DownloadFile()
     {
-        string deviceUniqueId = SystemInfo.deviceUniqueIdentifier;
+        string userId = GamePersistentVariable.FirebaseUserId;
 
         string localFilePath = Application.persistentDataPath + $"/{GameConstants.SAVE_FILE_NAME}.json";
-        string cloudFilePath = $"/wood-cube-out/{deviceUniqueId}/game-data";
+        string cloudFilePath = $"/wood-cube-out/{userId}/game-data";
 
         StorageReference pathReference =
             _storage.GetReference(cloudFilePath);

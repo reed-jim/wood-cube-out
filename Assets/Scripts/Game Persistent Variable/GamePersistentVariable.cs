@@ -33,6 +33,10 @@ public static class GamePersistentVariable
     #region LEVEL IN PROGRESS
     public static bool isLoadingLevelInProgress; 
     #endregion
+    
+    #region AUTHENTICATION
+    public static string FirebaseUserId;
+    #endregion
 
     #region BACKUP
     public static CloudStorageRequest cloudStorageRequest;
