@@ -25,6 +25,8 @@ public class NotificationPopup : BasePopup
         CompensatePopup.showNotificationEvent += ShowNotification;
         BackupPopup.showNotificationEvent += ShowNotification;
 
+        showNotificationEvent += ShowNotification;
+
         okButton.onClick.AddListener(Hide);
     }
 
@@ -38,6 +40,8 @@ public class NotificationPopup : BasePopup
         IAPReviewPopup.showNotificationEvent -= ShowNotification;
         CompensatePopup.showNotificationEvent -= ShowNotification;
         BackupPopup.showNotificationEvent -= ShowNotification;
+
+        showNotificationEvent -= ShowNotification;
     }
 
     protected override void Show(Action onCompletedAction = null)

@@ -8,6 +8,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class BackupPopup : BasePopup
 {
@@ -28,7 +29,6 @@ public class BackupPopup : BasePopup
     #region EVENT
     public static event Action uploadGameDataEvent;
     public static event Action downloadGameDataEvent;
-    public static event Action<string, string> showNotificationEvent;
     public static event Action updateCoinTextEvent;
     public static event Action updateLevelEvent;
     public static event Action updateRemoveAdsStateEvent;
@@ -69,6 +69,13 @@ public class BackupPopup : BasePopup
 
     private void RequestUpload()
     {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            ShowNotification(GameConstants.WARNING, GameConstants.NO_INTERNET);
+
+            return;
+        }
+
         GamePersistentVariable.cloudStorageRequest = CloudStorageRequest.Upload;
 
         localizedDescription.TranslationName = "This will overwrite your cloud data. Are you sure";
@@ -78,6 +85,13 @@ public class BackupPopup : BasePopup
 
     private void RequestDownload()
     {
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            ShowNotification(GameConstants.WARNING, GameConstants.NO_INTERNET);
+
+            return;
+        }
+
         GamePersistentVariable.cloudStorageRequest = CloudStorageRequest.Download;
 
         localizedDescription.TranslationName = "This will overwrite your local data. Are you sure";
@@ -187,11 +201,11 @@ public class BackupPopup : BasePopup
             {
                 if (GamePersistentVariable.cloudStorageRequest == CloudStorageRequest.Upload)
                 {
-                    showNotificationEvent?.Invoke("Successful", "Data saved successfully");
+                    ShowNotification("Successful", "Data saved successfully");
                 }
                 else
                 {
-                    showNotificationEvent?.Invoke("Successful", "Data loaded successfully");
+                    ShowNotification("Successful", "Data loaded successfully");
                 }
             });
 
@@ -201,7 +215,7 @@ public class BackupPopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
-                showNotificationEvent?.Invoke(GameConstants.ERROR, GameConstants.PLEASE_TRY_AGAIN);
+                ShowNotification(GameConstants.ERROR, GameConstants.PLEASE_TRY_AGAIN);
             });
         }
     }

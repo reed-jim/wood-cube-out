@@ -24,8 +24,6 @@ public class IAPReviewPopup : BasePopup
 
     public static event Action<string> buyIAPEvent;
     public static event Action requestFetchIAPPrice;
-    public static event Action<string, string> showNotificationEvent;
-
 
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
 
@@ -73,7 +71,7 @@ public class IAPReviewPopup : BasePopup
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
+            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
         }
         else
         {
