@@ -118,9 +118,9 @@ public class SaferioMeshSplitter : EditorWindow
 
         Queue<Transform[]> toCombineMeshesQueue = new Queue<Transform[]>();
 
-        spawnedPieces = spawnedPieces.OrderBy(item => item.transform.position.x).ToList();
+        spawnedPieces = spawnedPieces.OrderBy(item => item.transform.position.y).ToList();
 
-        List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 0.01f);
+        List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 2 * pieceSize);
 
         foreach (var group in groups)
         {
@@ -145,7 +145,9 @@ public class SaferioMeshSplitter : EditorWindow
                             minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
                         }
 
-                        if (minDistanceToBoundary <= 2f * pieceSize)
+                        bool isSameSide = group[0].transform.position.x * obj.transform.position.x >= 0;
+
+                        if (minDistanceToBoundary <= 99999 * 1.01f * Mathf.Sqrt(2) * pieceSize && isSameSide)
                         {
                             group.Add(obj.transform);
                             addedToGroup = true;
@@ -194,7 +196,7 @@ public class SaferioMeshSplitter : EditorWindow
 
                 for (int j = 0; j < spawnedPieces.Count; j++)
                 {
-                    if (Vector3.Distance(spawnedPieces[j].transform.position, testPoint) < 1f * pieceSize)
+                    if (Vector3.Distance(spawnedPieces[j].transform.position, testPoint) < 0.9f * pieceSize)
                     {
                         isSkip = true;
 
@@ -1043,7 +1045,7 @@ public class SaferioMeshSplitter : EditorWindow
         // MATERIALS
         // MATERIALS
         ObjectPartMaterialContainer objectPartMaterialContainer = AssetDatabase.LoadAssetAtPath<ObjectPartMaterialContainer>(
-            "Assets/Scriptable Objects/Material Container/Object Part Material Container.asset");
+            "Assets/Scriptable Objects/Material Container/Object Part Minecraft Material Container.asset");
 
         List<Material> materialPool = objectPartMaterialContainer.Materials.ToList();
 
