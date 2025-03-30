@@ -780,7 +780,7 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (i % 6 == 0 && i > 0)
+            if (i % 16 == 0 && i > 0)
             {
                 await Task.Delay(100);
             }
