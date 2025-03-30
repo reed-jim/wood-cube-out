@@ -177,7 +177,7 @@ public class RotateObject : MonoBehaviour
 
         _isAutoRotating = false;
 
-        // _remainingTimeToAutoRotate = 20;
+        _remainingTimeToAutoRotate = 10;
         // // _acceleratedMultiplier += ACCELERATE_RATE;
         // // _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
         // _resetAccelerationTime = 0;
