@@ -238,14 +238,12 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         if (instanceId == gameObject.GetInstanceID())
         {
-            partRigidbody.isKinematic = true;
+            if (_totalJoint == 1)
+            {
+                partRigidbody.isKinematic = true;
+            }
 
             await Task.Delay(200);
-
-            if (!_isConcave)
-            {
-                partRigidbody.isKinematic = false;
-            }
 
             _totalJoint--;
 
