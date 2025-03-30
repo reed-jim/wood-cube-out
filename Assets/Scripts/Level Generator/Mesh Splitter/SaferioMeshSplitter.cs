@@ -145,7 +145,7 @@ public class SaferioMeshSplitter : EditorWindow
                             minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
                         }
 
-                        if (minDistanceToBoundary <= 1.1f * pieceSize)
+                        if (minDistanceToBoundary <= 2f * pieceSize)
                         {
                             group.Add(obj.transform);
                             addedToGroup = true;
@@ -1026,7 +1026,7 @@ public class SaferioMeshSplitter : EditorWindow
         Mesh mesh = new Mesh();
         mesh.CombineMeshes(combine);
 
-        Extract(mesh, $"{level.name} Piece {index}");
+        Extract(mesh, level.name, $"{level.name} Piece {index}");
 
         Bounds combineMeshBound = new Bounds();
 
@@ -1175,9 +1175,14 @@ public class SaferioMeshSplitter : EditorWindow
         return false;
     }
 
-    private void Extract(Mesh mesh, string name)
+    private void Extract(Mesh mesh, string level, string name)
     {
-        AssetDatabase.CreateAsset(mesh, $"Assets/Models/Screw Away/Level/Generated Level Meshes/{name}.asset");
+        if (!AssetDatabase.IsValidFolder($"Assets/Models/Screw Away/Level/Generated Level Meshes/{level}"))
+        {
+            AssetDatabase.CreateFolder($"Assets/Models/Screw Away/Level/Generated Level Meshes", $"{level}");
+        }
+
+        AssetDatabase.CreateAsset(mesh, $"Assets/Models/Screw Away/Level/Generated Level Meshes/{level}/{name}.asset");
     }
     #endregion
 }

@@ -16,13 +16,13 @@ public class LevelLoader : MonoBehaviour
     [Header("Clone to calculate level rotation")]
     [SerializeField] private Transform cloneToCalculateRotation;
 
-
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
+    #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -31,7 +31,10 @@ public class LevelLoader : MonoBehaviour
     private Transform _currentLevelContainer;
     private Transform _pivotAdjust;
     private bool _isNotAutoCenterLevel;
+    private bool _isSetLevelGradientBound;
+    #endregion
 
+    #region EVENT
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
@@ -40,6 +43,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
     public static event Action<bool> enableSwipingEvent;
+    #endregion
 
     private void Awake()
     {
@@ -79,6 +83,7 @@ public class LevelLoader : MonoBehaviour
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
 
+    #region LEVEL
     private async Task LoadLevel()
     {
         int nextLevel = 1;
@@ -241,6 +246,8 @@ public class LevelLoader : MonoBehaviour
 
                     GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
 
+                    _isSetLevelGradientBound = false;
+
                     Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
@@ -287,50 +294,6 @@ public class LevelLoader : MonoBehaviour
         showSceneTransitionEvent?.Invoke();
     }
 
-    private void OnPieceCompleted(int pieceInstanceId)
-    {
-        // if (_isNotAutoCenterLevel)
-        // {
-        //     return;
-        // }
-
-        Vector3 currentPosition = _pivotAdjust.transform.position;
-        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
-
-        _pivotAdjust.transform.position = Vector3.zero;
-        _pivotAdjust.transform.eulerAngles = Vector3.zero;
-
-        Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
-
-        _pivotAdjust.transform.position = currentPosition;
-        _pivotAdjust.transform.eulerAngles = currentRotation;
-
-        Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
-
-        CommonUtil.StopAllTweens(_autoCenterLevelTweens);
-
-        _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
-
-        // _autoCenterLevelTweens.Add(
-        //     Tween.Delay(1.7f).OnComplete(() =>
-        //     {
-        //         if (GamePersistentVariable.levelPrefab != 1)
-        //         {
-        //             enableSwipingEvent?.Invoke(false);
-        //         }
-
-        //         _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f)
-        //         .OnComplete(() =>
-        //         {
-        //             if (GamePersistentVariable.levelPrefab != 1)
-        //             {
-        //                 enableSwipingEvent?.Invoke(true);
-        //             }
-        //         }));
-        //     })
-        // );
-    }
-
     private async void GoLevel(int level)
     {
         await Task.Delay(500);
@@ -367,7 +330,9 @@ public class LevelLoader : MonoBehaviour
 
         GoLevel(currentLevel.Value);
     }
+    #endregion
 
+    #region ASSIGN SCREW FACTION
     private void AutoAssignScrewFactionMultiPhaseLevel(GameObject level)
     {
         MultiPhaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<MultiPhaseScrew>(level.transform).ToArray();
@@ -592,8 +557,34 @@ public class LevelLoader : MonoBehaviour
 
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
+    #endregion
 
     #region AUTO CENTER LEVEL
+    private void OnPieceCompleted(int pieceInstanceId)
+    {
+        // if (_isNotAutoCenterLevel)
+        // {
+        //     return;
+        // }
+
+        Vector3 currentPosition = _pivotAdjust.transform.position;
+        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+
+        _pivotAdjust.transform.position = Vector3.zero;
+        _pivotAdjust.transform.eulerAngles = Vector3.zero;
+
+        Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+
+        _pivotAdjust.transform.position = currentPosition;
+        _pivotAdjust.transform.eulerAngles = currentRotation;
+
+        Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
+
+        CommonUtil.StopAllTweens(_autoCenterLevelTweens);
+
+        _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+    }
+
     Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
     {
         if (objects.Length == 0)
@@ -673,14 +664,19 @@ public class LevelLoader : MonoBehaviour
         _pivotAdjust.transform.eulerAngles = currentRotation;
 
         // Set Shader World Bound
-        if (_pieces != null)
+        if (!_isSetLevelGradientBound)
         {
-            for (int i = 0; i < _pieces.Length; i++)
+            if (_pieces != null)
             {
-                if (_pieces[i] != null)
+                for (int i = 0; i < _pieces.Length; i++)
                 {
-                    _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(minY, maxY);
+                    if (_pieces[i] != null)
+                    {
+                        _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(minY, maxY);
+                    }
                 }
+
+                _isSetLevelGradientBound = true;
             }
         }
 
