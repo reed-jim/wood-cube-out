@@ -31,7 +31,7 @@ public class RotateObject : MonoBehaviour
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.0055f;
+        rotateSpeedMultiplier = 0.005f;
         // _acceleratedMultiplier = 1;
 
         if (!isDisableAutoRotatingAtStart)
@@ -102,6 +102,10 @@ public class RotateObject : MonoBehaviour
             {
                 _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
                 _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+            }
+            else
+            {
+                _yaw = 0.5f;
             }
 
             yield return waitForSeconds;
@@ -189,12 +193,12 @@ public class RotateObject : MonoBehaviour
         {
             if (_isAutoRotating)
             {
-                if (_yaw != 1)
-                {
-                    // _pitch = 1;
-                    _yaw = 0.5f;
-                    // _yaw = -normalizedDirection.x;
-                }
+                // if (_yaw != 1)
+                // {
+                //     // _pitch = 1;
+                //     _yaw = 0.5f;
+                //     // _yaw = -normalizedDirection.x;
+                // }
             }
             else
             {
@@ -203,7 +207,7 @@ public class RotateObject : MonoBehaviour
                 if (_remainingTimeToAutoRotate < 0)
                 {
                     _isAutoRotating = true;
-                    _remainingTimeToAutoRotate = 20;
+                    _remainingTimeToAutoRotate = 10;
                 }
             }
 

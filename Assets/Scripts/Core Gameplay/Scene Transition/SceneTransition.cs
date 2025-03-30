@@ -189,7 +189,7 @@ public class SceneTransition : MonoBehaviour
 
         while (true)
         {
-            rotatingLoadingIcon.eulerAngles += new Vector3(0, 0, 8);
+            rotatingLoadingIcon.eulerAngles -= new Vector3(0, 0, 8);
 
             yield return waitForSeconds;
         }

@@ -109,8 +109,8 @@ public class WinPopup : BasePopup
         }
 
         currentLevel.Value++;
-
         currentLevel.Save();
+        DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
 
         _isAlreadyWatchRewardedAd = false;
     }
