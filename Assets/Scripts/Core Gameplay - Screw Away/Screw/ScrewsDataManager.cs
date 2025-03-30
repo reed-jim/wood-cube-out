@@ -256,6 +256,8 @@ public class ScrewsDataManager : MonoBehaviour
         {
             SetFreshLevel(_currentSaveLevelDataKey);
 
+            spawnFreshLevelScrewBoxesEvent?.Invoke();
+
             // GamePersistentVariable.isPreventLoadLevelData = false;
             // GamePersistentVariable.isFreshLevel = true;
 
