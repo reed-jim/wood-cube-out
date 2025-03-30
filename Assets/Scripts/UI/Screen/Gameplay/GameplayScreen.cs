@@ -58,10 +58,6 @@ public class GameplayScreen : MonoBehaviour
     private async void Pause()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
-
-        await Task.Delay(1000);
-
-        // Time.timeScale = 0;
     }
 
     private void OpenDebugPopupButton()

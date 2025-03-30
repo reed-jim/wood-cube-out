@@ -32,6 +32,7 @@ public class LevelLoader : MonoBehaviour
     private Transform _pivotAdjust;
     private bool _isNotAutoCenterLevel;
     private bool _isSetLevelGradientBound;
+    private bool _isNewLoopLevel;
     #endregion
 
     #region EVENT
@@ -98,7 +99,7 @@ public class LevelLoader : MonoBehaviour
             }
             else
             {
-                nextLevel = UnityEngine.Random.Range(6, _maxLevel);
+                nextLevel = GetLoopLevel();
 
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
@@ -110,9 +111,7 @@ public class LevelLoader : MonoBehaviour
         {
             if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
             {
-                nextLevel = UnityEngine.Random.Range(6, _maxLevel);
-
-                // await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
+                nextLevel = GetLoopLevel();
             }
             else
             {
@@ -756,6 +755,26 @@ public class LevelLoader : MonoBehaviour
     #endregion
 
     #region UTIL
+    private int GetLoopLevel()
+    {
+        int currentLoopLevel = DataUtility.Load(GameConstants.CURRENT_LEVEL_LOOP, -1);
+
+        _isNewLoopLevel = currentLoopLevel == -1;
+
+        if (currentLoopLevel == -1)
+        {
+            int randomLoopLevel = UnityEngine.Random.Range(6, _maxLevel);
+
+            DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, randomLoopLevel);
+
+            return randomLoopLevel;
+        }
+        else
+        {
+            return currentLoopLevel;
+        }
+    }
+
     private void RandomizeLevelModelColor(GameObject level)
     {
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();

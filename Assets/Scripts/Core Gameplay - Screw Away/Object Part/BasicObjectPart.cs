@@ -240,7 +240,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         {
             partRigidbody.isKinematic = true;
 
-            await Task.Delay(500);
+            await Task.Delay(200);
 
             if (!_isConcave)
             {
