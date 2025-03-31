@@ -351,6 +351,8 @@ public class LevelTutorial : MonoBehaviour
 
     private void EndTutorialImmediately()
     {
+        screwOutline.HideOutline();
+
         enableSwipingEvent?.Invoke(true);
 
         gameObject.SetActive(false);

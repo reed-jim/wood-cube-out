@@ -1,66 +1,51 @@
-// using System;
-// using System.Threading.Tasks;
-// using GooglePlayGames;
-// using GooglePlayGames.BasicApi;
-// using Unity.Services.Authentication;
-// using Unity.Services.Core;
-// using UnityEngine;
+using Firebase.Auth;
+using GooglePlayGames;
+using GooglePlayGames.BasicApi;
+using UnityEngine;
 
-// public class GooglePlayGamesSignInManager : MonoBehaviour
-// {
-//     public string Token;
-//     public string Error;
+public class GooglePlayGamesSignInManager : MonoBehaviour
+{
+    void Awake()
+    {
+        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
 
-//     public static event Action userAuthenticatedEvent;
+        if (!PlayGamesPlatform.Instance.IsAuthenticated())
+        {
+            PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+        }
+    }
 
-//     void Awake()
-//     {
-//         // PlayGamesPlatform.Activate();
+    internal void ProcessAuthentication(SignInStatus status)
+    {
+        if (status == SignInStatus.Success)
+        {
+            string name = PlayGamesPlatform.Instance.GetUserDisplayName();
+            string id = PlayGamesPlatform.Instance.GetUserId();
+            string ImgUrl = PlayGamesPlatform.Instance.GetUserImageUrl();
 
-//         // LoginGooglePlayGames();
-//     }
+            GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
+        }
+        else
+        {
+            FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
+            {
+                if (task.IsCanceled)
+                {
+                    return;
+                }
+                if (task.IsFaulted)
+                {
+                    return;
+                }
 
-//     public void LoginGooglePlayGames()
-//     {
-//         // PlayGamesPlatform.Instance.Authenticate((success) =>
-//         // {
-//         //     Debug.Log("SAFERIO - " + success);
+                AuthResult result = task.Result;
 
-//         //     if (success == SignInStatus.Success)
-//         //     {
-//         //         Debug.Log("Login with Google Play games successful.");
+                GamePersistentVariable.FirebaseUserId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            });
 
-//         //         PlayGamesPlatform.Instance.RequestServerSideAccess(true, async code =>
-//         //         {
-//         //             Token = code;
-
-//         //             await SignInWithGooglePlayGamesAsync(code);
-//         //         });
-//         //     }
-//         //     else
-//         //     {
-//         //         Error = "Failed to retrieve Google play games authorization code";
-//         //     }
-//         // });
-//     }
-
-//     async Task SignInWithGooglePlayGamesAsync(string authCode)
-//     {
-//         try
-//         {
-//             await UnityServices.InitializeAsync();
-
-//             await AuthenticationService.Instance.SignInWithGooglePlayGamesAsync(authCode);
-
-//             userAuthenticatedEvent?.Invoke();
-//         }
-//         catch (AuthenticationException ex)
-//         {
-//             Debug.LogException(ex);
-//         }
-//         catch (RequestFailedException ex)
-//         {
-//             Debug.LogException(ex);
-//         }
-//     }
-// }
+            // Disable your integration with Play Games Services or show a login button
+            // to ask users to sign-in. Clicking it should call
+            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
+        }
+    }
+}

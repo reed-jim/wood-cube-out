@@ -3417,6 +3417,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: Tornillo
     Object: {fileID: 0}
+--- !u!1 &4213218163812937229
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5374378525236721376}
+  - component: {fileID: 4423873231986469795}
+  m_Layer: 0
+  m_Name: GooglePlayGamesSignInManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5374378525236721376
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4213218163812937229}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 328848638671994766}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4423873231986469795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4213218163812937229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6400f8e50b1fd0347b2ccb0d935e2fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4233501662937365661
 GameObject:
   m_ObjectHideFlags: 0
@@ -4580,6 +4624,7 @@ Transform:
   - {fileID: 735734412849428368}
   - {fileID: 5968615087854098956}
   - {fileID: 1013713267517054520}
+  - {fileID: 8459210492195847843}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -6314,6 +6359,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 5374378525236721376}
   - {fileID: 4389691161869714160}
   - {fileID: 584785918878118629}
   - {fileID: 6009759255304445178}
@@ -6874,6 +6920,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "Tu nivel est\xE1 en progreso. \xBFTe gustar\xEDa continuar o reiniciar?"
+    Object: {fileID: 0}
+--- !u!1 &7826624952946173288
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8459210492195847843}
+  - component: {fileID: 3532813964882172728}
+  m_Layer: 0
+  m_Name: Successful
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8459210492195847843
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826624952946173288}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3532813964882172728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7826624952946173288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Successful
+    Object: {fileID: 0}
+  - Language: French
+    Text: "R\xE9ussi"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Erfolgreich
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Riuscito
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6210\u529F"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC131\uACF5\uC801\uC778"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Bem-sucedido
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0441\u043F\u0435\u0448\u043D\u044B\u0439"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Exitoso
     Object: {fileID: 0}
 --- !u!1 &7915355799277270204
 GameObject:
