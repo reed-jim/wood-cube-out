@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -15,6 +16,7 @@ public class ScrewsDataManager : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private string _currentSaveLevelDataKey;
     #endregion
 
@@ -34,6 +36,8 @@ public class ScrewsDataManager : MonoBehaviour
         DebugPopup.nextLevelEvent += OnNextLevel;
         DebugPopup.toLevelEvent += OnDebugToLevel;
 
+        _tweens = new List<Tween>();
+
         StartCoroutine(PeriodicallySaving());
     }
 
@@ -44,6 +48,8 @@ public class ScrewsDataManager : MonoBehaviour
         DebugPopup.prevLevelEvent -= OnPrevLevel;
         DebugPopup.nextLevelEvent -= OnNextLevel;
         DebugPopup.toLevelEvent -= OnDebugToLevel;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private IEnumerator PeriodicallySaving()
@@ -109,6 +115,8 @@ public class ScrewsDataManager : MonoBehaviour
         int totalScrew = _screws.Length;
         int remainingScrew = totalScrew;
 
+        GamePersistentVariable.isLoadingOldLevelState = true;
+
         foreach (var screw in screwsWithData.Keys)
         {
             ScrewData screwData = screwsWithData[screw];
@@ -163,6 +171,11 @@ public class ScrewsDataManager : MonoBehaviour
                 screw.ForceUnscrew();
             }
         }
+
+        _tweens.Add(Tween.Delay(2).OnComplete(() =>
+        {
+            GamePersistentVariable.isLoadingOldLevelState = false;
+        }));
 
         // UPDATE UI
         updateRemainingScrewEvent?.Invoke(remainingScrew, totalScrew);

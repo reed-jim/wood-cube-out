@@ -287,6 +287,11 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
                 pieceCompleteEvent?.Invoke(transform.GetInstanceID());
 
+                if (GamePersistentVariable.isLoadingOldLevelState)
+                {
+                    gameObject.SetActive(false);
+                }
+
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
         }

@@ -165,8 +165,6 @@ public class RemoteConfigController : MonoBehaviour
 
     internal void ProcessAuthentication(SignInStatus status)
     {
-        Debug.Log("SAFERIO " + status);
-
         if (status == SignInStatus.Success)
         {
             // Continue with Play Games Services
@@ -176,8 +174,6 @@ public class RemoteConfigController : MonoBehaviour
             string ImgUrl = PlayGamesPlatform.Instance.GetUserImageUrl();
 
             GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
-
-            Debug.Log("SAFERIO " + PlayGamesPlatform.Instance.GetUserId());
         }
         else
         {
