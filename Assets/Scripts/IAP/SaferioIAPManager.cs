@@ -211,9 +211,9 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         {
             validator.Validate(e.purchasedProduct.receipt);
         }
-        catch (IAPSecurityException)
+        catch (IAPSecurityException exception)
         {
-            // SaferioTracking.TrackInvalidIAPEvent(e.message);
+            SaferioTracking.TrackInvalidIAPEvent(exception.Message);
 
             validPurchase = false;
         }
@@ -289,10 +289,12 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
     public void OnPurchaseFailed(Product i, PurchaseFailureReason p)
     {
+
     }
 
     public void OnPurchaseFailed(Product i, PurchaseFailureDescription p)
     {
+        SaferioTracking.TrackInvalidIAPEvent($"{p.reason}");
     }
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)

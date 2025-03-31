@@ -122,6 +122,76 @@ public class SaferioMeshSplitter : EditorWindow
 
         List<List<Transform>> groups = GroupGameObjectsByYPosition(spawnedPieces.ToArray(), 2 * pieceSize);
 
+        // // FILL Cube Space
+        // for (int i = 0; i < groups.Count; i++)
+        // {
+        //     float minX = float.MaxValue;
+        //     float maxX = float.MinValue;
+        //     float minY = float.MaxValue;
+        //     float maxY = float.MinValue;
+        //     float minZ = float.MaxValue;
+        //     float maxZ = float.MinValue;
+
+        //     for (int j = 0; j < groups[i].Count; j++)
+        //     {
+        //         Transform piece = groups[i][j];
+
+        //         if (piece.position.x < minX)
+        //         {
+        //             minX = piece.position.x;
+        //         }
+        //         if (piece.position.x > maxX)
+        //         {
+        //             maxX = piece.position.x;
+        //         }
+
+        //         if (piece.position.y < minY)
+        //         {
+        //             minY = piece.position.y;
+        //         }
+        //         if (piece.position.y > maxY)
+        //         {
+        //             maxY = piece.position.y;
+        //         }
+
+        //         if (piece.position.z < minZ)
+        //         {
+        //             minZ = piece.position.z;
+        //         }
+        //         if (piece.position.z > maxZ)
+        //         {
+        //             maxZ = piece.position.z;
+        //         }
+        //     }
+
+        //     int numX = (int)((maxX - minX) / pieceSize) + 1;
+        //     int numY = (int)((maxY - minY) / pieceSize) + 1;
+        //     int numZ = (int)((maxZ - minZ) / pieceSize) + 1;
+
+        //     Debug.Log("SAFERIO " + numX + "/" + numY + "/" + numZ);
+
+        //     for (int k = 0; k <= numZ - 1; k++)
+        //     {
+        //         for (int m = 0; m <= numY - 1; m++)
+        //         {
+        //             for (int n = 0; n <= numX - 1; n++)
+        //             {
+        //                 Vector3 position =
+        //                     new Vector3(minX + n * pieceSize, minY + m * pieceSize, minZ + k * pieceSize);
+
+        //                 GameObject piece = Instantiate(cubePrefab, container.transform);
+
+        //                 piece.name = $"Filled Piece {i}";
+
+        //                 piece.transform.position = position;
+
+        //                 groups[i].Add(piece.transform);
+        //             }
+        //         }
+        //     }
+        // }
+        // //
+
         foreach (var group in groups)
         {
             toCombineMeshesQueue.Enqueue(group.ToArray());
@@ -147,7 +217,7 @@ public class SaferioMeshSplitter : EditorWindow
 
                         bool isSameSide = group[0].transform.position.x * obj.transform.position.x >= 0;
 
-                        if (minDistanceToBoundary <= 99999 * 1.01f * Mathf.Sqrt(2) * pieceSize && isSameSide)
+                        if (minDistanceToBoundary <= 1.01f * Mathf.Sqrt(2) * pieceSize && isSameSide)
                         {
                             group.Add(obj.transform);
                             addedToGroup = true;
@@ -644,7 +714,7 @@ public class SaferioMeshSplitter : EditorWindow
                             minDistanceToBoundary = Mathf.Min(minDistanceToBoundary, Vector3.Distance(member.transform.position, obj.transform.position));
                         }
 
-                        if (minDistanceToBoundary <= 2f * pieceSize)
+                        if (minDistanceToBoundary <= 1.1f * pieceSize)
                         {
                             group.Add(obj.transform);
                             addedToGroup = true;
