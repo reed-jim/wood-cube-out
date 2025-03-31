@@ -36,9 +36,9 @@ namespace GooglePlayGames {
         private const string UnescapedWebClientId = "WEB_CLIENTID";
         private const string UnescapedNearbyServiceId = "NEARBY_SERVICE_ID";
 
-        public const string ApplicationId = "593407331145"; // Filled in automatically
+        public const string ApplicationId = "362306753432"; // Filled in automatically
         public const string IosClientId = "__IOS_CLIENTID__"; // Filled in automatically
-        public const string WebClientId = "593407331145-uu4acbl874ve0gm0cau2gfclbftcf5ge.apps.googleusercontent.com"; // Filled in automatically
+        public const string WebClientId = "362306753432-rlaco1nt2om4bcekpr0j2bqrlsot017k.apps.googleusercontent.com"; // Filled in automatically
         public const string NearbyConnectionServiceId = "com.gplay.wood.cube.out";
 
         public static bool ApplicationIdInitialized() {

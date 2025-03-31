@@ -14,6 +14,7 @@ public class AdmobAdsMax : MonoBehaviour
     #region SAFERIO
     private int _loadBannerRetryTime;
     private bool _isBannerLoaded;
+    private bool _remoteConfigIsShowBanner;
     #endregion
 
 
@@ -34,6 +35,7 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "948e190d8c5cd11d";
     private const string RewardedAdUnitId = "34ea7232532db3db";
     private const string BanerAdUnitId = "efc1069b84f4656f";
+    private const string mrecAdUnitId = "195ff2a11b92285d";
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
@@ -118,6 +120,7 @@ public class AdmobAdsMax : MonoBehaviour
 
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
+            InitializeMRecAds();
         };
 
         MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
@@ -359,6 +362,8 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+
+        _remoteConfigIsShowBanner = remoteConfigIsShowBanner;
 
         if (!remoteConfigIsShowBanner)
         {
@@ -909,6 +914,11 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
+        if (!_remoteConfigIsShowBanner)
+        {
+            return;
+        }
+
         if (SceneManager.GetActiveScene().name == GameConstants.LOADING_SCENE)
         {
             return;
@@ -966,6 +976,8 @@ public class AdmobAdsMax : MonoBehaviour
             _bannerView.Destroy();
             _bannerView = null;
         }
+
+        DestroyMRec();
     }
 
     private void TryHideBannerCollap()
@@ -976,6 +988,77 @@ public class AdmobAdsMax : MonoBehaviour
         }
     }
     #endregion
+
+    #region MREC
+    public void InitializeMRecAds()
+    {
+        // MRECs are sized to 300x250 on phones and tablets
+        MaxSdk.CreateMRec(mrecAdUnitId, MaxSdkBase.AdViewPosition.Centered);
+
+        Debug.Log("SAFERIO mrec init");
+
+        MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecAdLoadedEvent;
+        MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdLoadFailedEvent;
+        MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecAdClickedEvent;
+        MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnMRecAdRevenuePaidEvent;
+        MaxSdkCallbacks.MRec.OnAdExpandedEvent += OnMRecAdExpandedEvent;
+        MaxSdkCallbacks.MRec.OnAdCollapsedEvent += OnMRecAdCollapsedEvent;
+    }
+
+    public void ShowMRec()
+    {
+        if (UserData.IsRemoveAds)
+        {
+            return;
+        }
+
+        if (!GamePersistentVariable.remoteConfigIsShowMREC)
+        {
+            return;
+        }
+
+        MaxSdk.ShowMRec(mrecAdUnitId);
+    }
+
+    public void HideMRec()
+    {
+        MaxSdk.HideMRec(mrecAdUnitId);
+    }
+
+    public void DestroyMRec()
+    {
+        MaxSdk.DestroyMRec(mrecAdUnitId);
+    }
+
+    public void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+    {
+        Debug.Log("SAFERIO mrec loaded");
+    }
+
+    public void OnMRecAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo error) { }
+
+    public void OnMRecAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
+
+    public void OnMRecAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+    {
+        if (adInfo == null) return;
+        if (adInfo.Revenue < 0) return;
+
+        double revenue = adInfo.Revenue;
+
+        AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
+            adInfo.AdFormat, revenue, "USD");
+
+        AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
+            adInfo.AdFormat, revenue, "USD");
+        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
+            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+    }
+
+    public void OnMRecAdExpandedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
+
+    public void OnMRecAdCollapsedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
+    #endregion  
 
     #region Open App Ads
     DateTime oldTime = DateTime.MinValue;
