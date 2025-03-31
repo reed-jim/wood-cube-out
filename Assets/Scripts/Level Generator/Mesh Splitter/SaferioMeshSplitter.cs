@@ -97,11 +97,26 @@ public class SaferioMeshSplitter : EditorWindow
 
             position.x *= -1;
 
-            GameObject piece = Instantiate(cubePrefab, container);
+            bool isSkip = false;
 
-            piece.transform.position = position;
+            for (int j = 0; j < spawnedPieces.Count; j++)
+            {
+                if (Vector3.Distance(spawnedPieces[j].transform.position, position) < pieceSize)
+                {
+                    isSkip = true;
 
-            cachedSpawnedPieces.Add(piece);
+                    break;
+                }
+            }
+
+            if (!isSkip)
+            {
+                GameObject piece = Instantiate(cubePrefab, container);
+
+                piece.transform.position = position;
+
+                cachedSpawnedPieces.Add(piece);
+            }
         }
 
         spawnedPieces.AddRange(cachedSpawnedPieces);
@@ -266,7 +281,7 @@ public class SaferioMeshSplitter : EditorWindow
 
                 for (int j = 0; j < spawnedPieces.Count; j++)
                 {
-                    if (Vector3.Distance(spawnedPieces[j].transform.position, testPoint) < 0.9f * pieceSize)
+                    if (Vector3.Distance(spawnedPieces[j].transform.position, testPoint) < pieceSize)
                     {
                         isSkip = true;
 
