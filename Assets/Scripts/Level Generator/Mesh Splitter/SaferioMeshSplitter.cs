@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Saferio.Util.SaferioTween;
+
 // using EzySlice;
 using UnityEditor;
 using UnityEngine;
@@ -79,47 +81,442 @@ public class SaferioMeshSplitter : EditorWindow
 
         spawnedPieces = new List<GameObject>();
 
-        for (int i = 0; i < triangles.Length; i += 3)
-        {
-            Vector3 pointA = vertices[triangles[i]];
-            Vector3 pointB = vertices[triangles[i + 1]];
-            Vector3 pointC = vertices[triangles[i + 2]];
+        // for (int i = 0; i < vertices.Length; i++)
+        // {
+        //     if (vertices[i].x <= 0)
+        //     {
+        //         continue;
+        //     }
 
-            FillTriangleWithCubes(container, pointA, pointB, pointC, pieceSize);
+        //     Vector3 firstPosition = vertices[i];
+        //     Vector3 secondPosition = vertices[i].ChangeX(-vertices[i].x);
+
+        //     Vector3 distance = secondPosition - firstPosition;
+        //     distance.x = Mathf.Abs(distance.x);
+        //     distance.y = Mathf.Abs(distance.y);
+        //     distance.z = Mathf.Abs(distance.z);
+
+        //     int numX = (int)(distance.x / pieceSize);
+        //     int numY = (int)(distance.y / pieceSize);
+        //     int numZ = (int)(distance.z / pieceSize);
+
+        //     for (int j = 0; j <= numX; j++)
+        //     {
+        //         Vector3 position = secondPosition +
+        //                     new Vector3(pieceSize * j, 0, 0);
+
+        //         bool isSkip = false;
+
+        //         for (int k = 0; k < spawnedPieces.Count; k++)
+        //         {
+        //             if (Vector3.Distance(spawnedPieces[k].transform.position, position) < 0.9f * pieceSize)
+        //             {
+        //                 isSkip = true;
+
+        //                 break;
+        //             }
+        //         }
+
+        //         if (isSkip)
+        //         {
+        //             continue;
+        //         }
+
+        //         GameObject piece = Instantiate(cubePrefab, container.transform);
+
+        //         piece.name = $"Filled Piece {j}";
+
+        //         piece.transform.position = position;
+
+        //         spawnedPieces.Add(piece);
+        //     }
+
+        //     // bool isSkip = false;
+
+        //     // for (int j = 0; j < spawnedPieces.Count; j++)
+        //     // {
+        //     //     if (Vector3.Distance(spawnedPieces[j].transform.position, vertices[i]) < 0.9f * pieceSize)
+        //     //     {
+        //     //         isSkip = true;
+
+        //     //         break;
+        //     //     }
+        //     // }
+
+        //     // if (isSkip)
+        //     // {
+        //     //     continue;
+        //     // }
+
+        //     // GameObject piece = Instantiate(cubePrefab, vertices[i], Quaternion.identity, container);
+
+        //     // spawnedPieces.Add(piece);
+        // }
+
+        // for (int i = 0; i < vertices.Length; i++)
+        // {
+        //     if (vertices[i].z <= 0)
+        //     {
+        //         continue;
+        //     }
+
+        // Vector3 firstPosition = vertices[i];
+        // Vector3 secondPosition = vertices[i].ChangeZ(-vertices[i].z);
+
+        // Vector3 distance = secondPosition - firstPosition;
+        // distance.x = Mathf.Abs(distance.x);
+        // distance.y = Mathf.Abs(distance.y);
+        // distance.z = Mathf.Abs(distance.z);
+
+        // int numX = (int)(distance.x / pieceSize);
+        // int numY = (int)(distance.y / pieceSize);
+        // int numZ = (int)(distance.z / pieceSize);
+
+        //     for (int j = 0; j <= numZ; j++)
+        //     {
+        //         Vector3 position = secondPosition +
+        //                     new Vector3(0, 0, pieceSize * j);
+
+        //         bool isSkip = false;
+
+        //         for (int k = 0; k < spawnedPieces.Count; k++)
+        //         {
+        //             if (Vector3.Distance(spawnedPieces[k].transform.position, position) < 0.9f * pieceSize)
+        //             {
+        //                 isSkip = true;
+
+        //                 break;
+        //             }
+        //         }
+
+        //         if (isSkip)
+        //         {
+        //             continue;
+        //         }
+
+        //         GameObject piece = Instantiate(cubePrefab, container.transform);
+
+        //         piece.name = $"Filled Piece {j}";
+
+        //         piece.transform.position = position;
+
+        //         spawnedPieces.Add(piece);
+        //     }
+        // }
+
+        #region Y
+        List<List<Vector3>> sameXZ = new List<List<Vector3>>();
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            if (sameXZ.Count == 0)
+            {
+                sameXZ.Add(new List<Vector3>() { vertices[i] });
+            }
+            else
+            {
+                bool isFound = false;
+
+                for (int j = 0; j < sameXZ.Count; j++)
+                {
+                    if (vertices[i].x == sameXZ[j][0].x && vertices[i].z == sameXZ[j][0].z && Mathf.Abs(vertices[i].y - sameXZ[j][0].y) < 4f * pieceSize)
+                    {
+                        sameXZ[j].Add(vertices[i]);
+
+                        isFound = true;
+                    }
+                }
+
+                if (!isFound)
+                {
+                    sameXZ.Add(new List<Vector3>() { vertices[i] });
+                }
+            }
         }
 
-        // Symmetrize (X Plane)
-        List<GameObject> cachedSpawnedPieces = new List<GameObject>();
-
-        for (int i = 0; i < spawnedPieces.Count; i++)
+        for (int i = 0; i < sameXZ.Count; i++)
         {
-            Vector3 position = spawnedPieces[i].transform.position;
+            float min = float.MaxValue;
+            float max = float.MinValue;
 
-            position.x *= -1;
+            Vector3 firstPosition;
+            Vector3 secondPosition = Vector3.zero;
 
-            bool isSkip = false;
-
-            for (int j = 0; j < spawnedPieces.Count; j++)
+            for (int j = 0; j < sameXZ[i].Count; j++)
             {
-                if (Vector3.Distance(spawnedPieces[j].transform.position, position) < pieceSize)
+                if (sameXZ[i][j].y < min)
                 {
-                    isSkip = true;
+                    min = sameXZ[i][j].y;
 
-                    break;
+                    secondPosition = sameXZ[i][j];
+                }
+                if (sameXZ[i][j].y > max)
+                {
+                    max = sameXZ[i][j].y;
+
+                    firstPosition = sameXZ[i][j];
                 }
             }
 
-            if (!isSkip)
+            float distance = max - min;
+
+            int num = (int)(distance / pieceSize);
+
+            for (int j = 0; j <= num; j++)
             {
-                GameObject piece = Instantiate(cubePrefab, container);
+                Vector3 position = secondPosition + new Vector3(0, pieceSize * j, 0);
+
+                bool isSkip = false;
+
+                for (int k = 0; k < spawnedPieces.Count; k++)
+                {
+                    if (Vector3.Distance(spawnedPieces[k].transform.position, position) < 0.9f * pieceSize)
+                    {
+                        isSkip = true;
+
+                        break;
+                    }
+                }
+
+                if (isSkip)
+                {
+                    continue;
+                }
+
+                GameObject piece = Instantiate(cubePrefab, container.transform);
+
+                piece.name = $"Filled Piece {j}";
 
                 piece.transform.position = position;
 
-                cachedSpawnedPieces.Add(piece);
+                spawnedPieces.Add(piece);
+            }
+        }
+        #endregion
+
+        #region X
+        List<List<Vector3>> sameYZ = new List<List<Vector3>>();
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            if (sameYZ.Count == 0)
+            {
+                sameYZ.Add(new List<Vector3>() { vertices[i] });
+            }
+            else
+            {
+                bool isFound = false;
+
+                for (int j = 0; j < sameYZ.Count; j++)
+                {
+                    if (vertices[i].y == sameYZ[j][0].y && vertices[i].z == sameYZ[j][0].z)
+                    {
+                        sameYZ[j].Add(vertices[i]);
+
+                        isFound = true;
+                    }
+                }
+
+                if (!isFound)
+                {
+                    sameYZ.Add(new List<Vector3>() { vertices[i] });
+                }
             }
         }
 
-        spawnedPieces.AddRange(cachedSpawnedPieces);
+        for (int i = 0; i < sameYZ.Count; i++)
+        {
+            float min = float.MaxValue;
+            float max = float.MinValue;
+
+            Vector3 firstPosition;
+            Vector3 secondPosition = Vector3.zero;
+
+            for (int j = 0; j < sameYZ[i].Count; j++)
+            {
+                if (sameYZ[i][j].x < min)
+                {
+                    min = sameYZ[i][j].x;
+
+                    secondPosition = sameYZ[i][j];
+                }
+                if (sameYZ[i][j].x > max)
+                {
+                    max = sameYZ[i][j].x;
+
+                    firstPosition = sameYZ[i][j];
+                }
+            }
+
+            float distance = max - min;
+
+            int num = (int)(distance / pieceSize);
+
+            for (int j = 0; j <= num; j++)
+            {
+                Vector3 position = secondPosition +
+                            new Vector3(pieceSize * j, 0, 0);
+
+                bool isSkip = false;
+
+                for (int k = 0; k < spawnedPieces.Count; k++)
+                {
+                    if (Vector3.Distance(spawnedPieces[k].transform.position, position) < 0.9f * pieceSize)
+                    {
+                        isSkip = true;
+
+                        break;
+                    }
+                }
+
+                if (isSkip)
+                {
+                    continue;
+                }
+
+                GameObject piece = Instantiate(cubePrefab, container.transform);
+
+                piece.name = $"Filled Piece {j}";
+
+                piece.transform.position = position;
+
+                spawnedPieces.Add(piece);
+            }
+        }
+        #endregion
+
+        #region Z
+        List<List<Vector3>> sameXY = new List<List<Vector3>>();
+
+        for (int i = 0; i < vertices.Length; i++)
+        {
+            if (sameXY.Count == 0)
+            {
+                sameXY.Add(new List<Vector3>() { vertices[i] });
+            }
+            else
+            {
+                bool isFound = false;
+
+                for (int j = 0; j < sameXY.Count; j++)
+                {
+                    if (vertices[i].x == sameXY[j][0].x && vertices[i].y == sameXY[j][0].y)
+                    {
+                        sameXY[j].Add(vertices[i]);
+
+                        isFound = true;
+                    }
+                }
+
+                if (!isFound)
+                {
+                    sameXY.Add(new List<Vector3>() { vertices[i] });
+                }
+            }
+        }
+
+        for (int i = 0; i < sameXY.Count; i++)
+        {
+            float minZ = float.MaxValue;
+            float maxZ = float.MinValue;
+
+            Vector3 firstPosition;
+            Vector3 secondPosition = Vector3.zero;
+
+            for (int j = 0; j < sameXY[i].Count; j++)
+            {
+                if (sameXY[i][j].z < minZ)
+                {
+                    minZ = sameXY[i][j].z;
+
+                    secondPosition = sameXY[i][j];
+                }
+                if (sameXY[i][j].z > maxZ)
+                {
+                    maxZ = sameXY[i][j].z;
+
+                    firstPosition = sameXY[i][j];
+                }
+            }
+
+            float distance = maxZ - minZ;
+
+            int numZ = (int)(distance / pieceSize);
+
+            for (int j = 0; j <= numZ; j++)
+            {
+                Vector3 position = secondPosition +
+                            new Vector3(0, 0, pieceSize * j);
+
+                bool isSkip = false;
+
+                for (int k = 0; k < spawnedPieces.Count; k++)
+                {
+                    if (Vector3.Distance(spawnedPieces[k].transform.position, position) < 0.9f * pieceSize)
+                    {
+                        isSkip = true;
+
+                        break;
+                    }
+                }
+
+                if (isSkip)
+                {
+                    continue;
+                }
+
+                GameObject piece = Instantiate(cubePrefab, container.transform);
+
+                piece.name = $"Filled Piece {j}";
+
+                piece.transform.position = position;
+
+                spawnedPieces.Add(piece);
+            }
+        }
+        #endregion
+
+        // for (int i = 0; i < triangles.Length; i += 3)
+        // {
+        //     Vector3 pointA = vertices[triangles[i]];
+        //     Vector3 pointB = vertices[triangles[i + 1]];
+        //     Vector3 pointC = vertices[triangles[i + 2]];
+
+        //     FillTriangleWithCubes(container, pointA, pointB, pointC, pieceSize);
+        // }
+
+        // // Symmetrize (X Plane)
+        // List<GameObject> cachedSpawnedPieces = new List<GameObject>();
+
+        // for (int i = 0; i < spawnedPieces.Count; i++)
+        // {
+        //     Vector3 position = spawnedPieces[i].transform.position;
+
+        //     position.x *= -1;
+
+        //     bool isSkip = false;
+
+        //     for (int j = 0; j < spawnedPieces.Count; j++)
+        //     {
+        //         if (Vector3.Distance(spawnedPieces[j].transform.position, position) < pieceSize)
+        //         {
+        //             isSkip = true;
+
+        //             break;
+        //         }
+        //     }
+
+        //     if (!isSkip)
+        //     {
+        //         GameObject piece = Instantiate(cubePrefab, container);
+
+        //         piece.transform.position = position;
+
+        //         cachedSpawnedPieces.Add(piece);
+        //     }
+        // }
+
+        // spawnedPieces.AddRange(cachedSpawnedPieces);
 
         Debug.Log($"SAFERIO Spawned {spawnedPieces.Count} pieces");
 
@@ -224,6 +621,10 @@ public class SaferioMeshSplitter : EditorWindow
                 {
                     if (Mathf.Abs(group[0].transform.position.y - obj.transform.position.y) <= tolerance)
                     {
+                        group.Add(obj.transform);
+                        addedToGroup = true;
+                        break;
+
                         float minDistanceToBoundary = float.MaxValue;
                         foreach (var member in group)
                         {
