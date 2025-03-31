@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CloudStorageRequest {
+public enum CloudStorageRequest
+{
     Upload,
     Download
 }
@@ -16,15 +17,15 @@ public static class GamePersistentVariable
     public static Vector2 screenSizeWorld;
 
     #region LEVEL OBSERVER
-    public static int currentLevel; 
+    public static int currentLevel;
     public static int levelPrefab;
-    public static bool isFreshLevel; 
+    public static bool isFreshLevel;
     public static bool isLoadingOldLevelState;
-    public static bool isPreventLoadLevelData; 
-    public static int numScrewBoxUnlocked; 
+    public static bool isPreventLoadLevelData;
+    public static int numScrewBoxUnlocked;
     public static int numOutsideScrew;
     public static bool isAllowedSkipLevel;
-    public static bool isPassedStepOneTutorial; 
+    public static bool isPassedStepOneTutorial;
     public static Dictionary<int, List<Transform>> pieceDependencies;
     public static Vector3 levelOffset;
     public static Vector3 boxForOutsideScrewScreenPosition;
@@ -32,9 +33,10 @@ public static class GamePersistentVariable
     #endregion
 
     #region LEVEL IN PROGRESS
-    public static bool isLoadingLevelInProgress; 
+    public static bool isEnableLoadingLevelInProgress;
+    public static bool isLoadingLevelInProgress;
     #endregion
-    
+
     #region AUTHENTICATION
     public static string FirebaseUserId;
     #endregion

@@ -132,12 +132,12 @@ public static class SaferioTracking
 #endif
     }
 
-    public static void TrackInvalidIAPEvent(string error)
+    public static void TrackInvalidIAPEvent(string reason)
     {
 #if !UNITY_EDITOR
         Parameter[] parameters =
         {
-            new Parameter("error", error),
+            new Parameter("reason", reason),
         };
 
         FirebaseAnalytics.LogEvent("invalid_iap", parameters);
