@@ -243,7 +243,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 partRigidbody.isKinematic = true;
             }
 
-            await Task.Delay(200);
+            await Task.Delay(400);
 
             _totalJoint--;
 

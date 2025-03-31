@@ -6,6 +6,7 @@ using Saferio.Util.SaferioTween;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour
@@ -124,6 +125,11 @@ public class SceneTransition : MonoBehaviour
         //     return;
         // }
 
+        if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
+        {
+            LoadingLevelInProgress();
+        }
+
         if (_waitForLevelLoadedCoroutine != null)
         {
             StopCoroutine(_waitForLevelLoadedCoroutine);
@@ -146,7 +152,14 @@ public class SceneTransition : MonoBehaviour
         }
         else
         {
-            loadLevelInProgressContainer.gameObject.SetActive(false);
+            if (GamePersistentVariable.remoteConfigIsShowMREC)
+            {
+                LoadingLevelInProgress();
+            }
+            else
+            {
+                loadLevelInProgressContainer.gameObject.SetActive(false);
+            }
         }
 
         _isLevelLoaded = false;
@@ -160,6 +173,10 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
+        loadLevelInProgressContainer.gameObject.SetActive(true);
+
+        loadLevelInProgressCanvasGroup.alpha = 1;
+
         if (_loadingLevelInProgressCoroutine != null)
         {
             StopCoroutine(_loadingLevelInProgressCoroutine);
@@ -167,16 +184,20 @@ public class SceneTransition : MonoBehaviour
 
         _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
 
-        _tweens.Add(Tween.Delay(2).OnComplete(() =>
+        AdmobAdsMax.Instance.ShowMRec();
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
         {
+            AdmobAdsMax.Instance.HideMRec();
+
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {
                 loadLevelInProgressCanvasGroup.alpha = newVal;
             })
             .OnComplete(() =>
-            {
-                loadLevelInProgressContainer.gameObject.SetActive(false);
-            })
+                {
+                    loadLevelInProgressContainer.gameObject.SetActive(false);
+                })
             );
 
             StopCoroutine(_loadingLevelInProgressCoroutine);

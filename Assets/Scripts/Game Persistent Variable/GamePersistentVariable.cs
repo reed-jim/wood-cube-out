@@ -60,6 +60,10 @@ public static class GamePersistentVariable
     public static bool isFirebaseRemoteConfigLoaded;
     #endregion
 
+    #region ADS
+    public static bool remoteConfigIsShowMREC;
+    #endregion
+
     #region IAP
     public static string IAPLocation;
     public static int IAPAddition;

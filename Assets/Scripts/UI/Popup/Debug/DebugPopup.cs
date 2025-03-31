@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class DebugPopup : BasePopup
 {
+    [SerializeField] private GameObject woodBackground;
+
     [SerializeField] private TMP_InputField levelInput;
     [SerializeField] private TMP_InputField backgroundColorInput;
 
@@ -138,5 +140,7 @@ public class DebugPopup : BasePopup
         Camera camera = Camera.main;
 
         camera.backgroundColor = ColorUtil.GetColorFromHex(backgroundColorInput.text);
+
+        woodBackground.gameObject.SetActive(false);
     }
 }

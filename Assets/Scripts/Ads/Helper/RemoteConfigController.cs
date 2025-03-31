@@ -165,6 +165,8 @@ public class RemoteConfigController : MonoBehaviour
 
     internal void ProcessAuthentication(SignInStatus status)
     {
+        Debug.Log("SAFERIO " + status);
+
         if (status == SignInStatus.Success)
         {
             // Continue with Play Games Services
@@ -467,6 +469,7 @@ public class RemoteConfigController : MonoBehaviour
         }
 
         GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
+        GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
 
         remoteConfigReadyEvent?.Invoke();
 
