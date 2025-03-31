@@ -993,9 +993,7 @@ public class AdmobAdsMax : MonoBehaviour
     public void InitializeMRecAds()
     {
         // MRECs are sized to 300x250 on phones and tablets
-        MaxSdk.CreateMRec(mrecAdUnitId, MaxSdkBase.AdViewPosition.Centered);
-
-        Debug.Log("SAFERIO mrec init");
+        MaxSdk.CreateMRec(mrecAdUnitId, MaxSdkBase.AdViewPosition.TopCenter);
 
         MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecAdLoadedEvent;
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdLoadFailedEvent;
@@ -1032,7 +1030,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        Debug.Log("SAFERIO mrec loaded");
+        
     }
 
     public void OnMRecAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo error) { }

@@ -18,6 +18,7 @@ public class CompensatePopup : BasePopup
 
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action updateLevelEvent;
+    public static event Action updateCoinTextEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -133,10 +134,25 @@ public class CompensatePopup : BasePopup
                 int level = int.Parse(match.Value);
 
                 currentLevel.Value = level;
-
                 currentLevel.Save();
 
                 updateLevelEvent?.Invoke();
+            }
+        }
+        else if (codeInput.text.ContainsInsensitive("addcoin"))
+        {
+            int coinQuantity = ExtractIntFromString(codeInput.text);
+
+            userResourcesObserver.UserResources.CoinQuantity += coinQuantity;
+            userResourcesObserver.Save();
+
+            if (coinQuantity < 39999)
+            {
+                updateCoinTextEvent?.Invoke();
+            }
+            else
+            {
+                ShowNotification(GameConstants.WARNING, "Invalid Code");
             }
         }
         else
@@ -144,6 +160,22 @@ public class CompensatePopup : BasePopup
             ShowNotification(GameConstants.WARNING, "Invalid Code");
         }
     }
+
+    #region UTIL
+    private int ExtractIntFromString(string input)
+    {
+        string pattern = @"\d+";
+
+        Match match = Regex.Match(input, pattern);
+
+        if (match.Success)
+        {
+            return int.Parse(match.Value);
+        }
+
+        return 0;
+    }
+    #endregion
 
     [System.Serializable]
     public class ValidUniqueDeviceIdentifierContainer

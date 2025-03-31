@@ -19,6 +19,7 @@ public static class GamePersistentVariable
     public static int currentLevel; 
     public static int levelPrefab;
     public static bool isFreshLevel; 
+    public static bool isLoadingOldLevelState;
     public static bool isPreventLoadLevelData; 
     public static int numScrewBoxUnlocked; 
     public static int numOutsideScrew;
