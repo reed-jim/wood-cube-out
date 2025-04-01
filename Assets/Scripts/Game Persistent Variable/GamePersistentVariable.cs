@@ -48,6 +48,7 @@ public static class GamePersistentVariable
 
     #region AUTO TEST
     public static bool isAutoTestingLevel;
+    public static bool isShowRevivePopup;
     #endregion
 
     #region SETTING

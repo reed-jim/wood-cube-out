@@ -46,6 +46,8 @@ public class GameVariableInitializer : MonoBehaviour
         {
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
+
+        UserData.IsRemoveAds = true;
     }
 
     private void Start()

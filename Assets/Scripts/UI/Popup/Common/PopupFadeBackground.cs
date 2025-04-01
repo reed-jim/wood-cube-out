@@ -29,6 +29,13 @@ public class PopupFadeBackground : MonoBehaviour
 
     private void OnPopupShow()
     {
+        if (GamePersistentVariable.isShowRevivePopup)
+        {
+            GamePersistentVariable.isShowRevivePopup = false;
+
+            return;
+        }
+
         fadeBackground.gameObject.SetActive(true);
 
         CommonUtil.StopTween(_transitionTween);

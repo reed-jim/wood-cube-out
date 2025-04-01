@@ -62,6 +62,8 @@ public class RevivePopup : BasePopup
     {
         if (GamePersistentVariable.isAutoTestingLevel)
         {
+            GamePersistentVariable.isShowRevivePopup = true;
+
             Show(onCompletedAction: () => ReviveByDiamond());
         }
         else
