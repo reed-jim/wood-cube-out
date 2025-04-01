@@ -168,7 +168,8 @@ public class ScrewsDataManager : MonoBehaviour
 
                 if (screwBoxSlot != null)
                 {
-                    screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot, isCheckObstacles: false);
+                    screw.LooseImmediately(screwBoxSlot);
+                    // screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot, isCheckObstacles: false);
                 }
 
                 remainingScrew--;

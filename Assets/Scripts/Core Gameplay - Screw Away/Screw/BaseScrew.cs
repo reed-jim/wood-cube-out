@@ -243,6 +243,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         }
 
         screwBoxSlot.Fill(this);
+        screwBoxSlot.CompleteFill();
     }
 
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
