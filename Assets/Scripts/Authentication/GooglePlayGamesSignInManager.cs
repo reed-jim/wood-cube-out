@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Firebase.Auth;
 using GooglePlayGames;
 using GooglePlayGames.BasicApi;
@@ -5,10 +6,8 @@ using UnityEngine;
 
 public class GooglePlayGamesSignInManager : MonoBehaviour
 {
-    void Awake()
+    void Start()
     {
-        FirebaseAuth auth = FirebaseAuth.DefaultInstance;
-
         if (!PlayGamesPlatform.Instance.IsAuthenticated())
         {
             PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
@@ -19,33 +18,50 @@ public class GooglePlayGamesSignInManager : MonoBehaviour
     {
         if (status == SignInStatus.Success)
         {
-            string name = PlayGamesPlatform.Instance.GetUserDisplayName();
-            string id = PlayGamesPlatform.Instance.GetUserId();
-            string ImgUrl = PlayGamesPlatform.Instance.GetUserImageUrl();
-
             GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
         }
         else
         {
-            FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
-            {
-                if (task.IsCanceled)
-                {
-                    return;
-                }
-                if (task.IsFaulted)
-                {
-                    return;
-                }
-
-                AuthResult result = task.Result;
-
-                GamePersistentVariable.FirebaseUserId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
-            });
-
-            // Disable your integration with Play Games Services or show a login button
-            // to ask users to sign-in. Clicking it should call
-            // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
+            FallbackLoginAnonymously();
         }
+    }
+
+    private async Task FallbackLoginAnonymously()
+    {
+        await Task.Delay(3000);
+
+        try
+        {
+            if (FirebaseAuth.DefaultInstance.CurrentUser == null)
+            {
+                FirebaseAuth.DefaultInstance.SignInAnonymouslyAsync().ContinueWith(task =>
+                {
+                    if (task.IsCanceled)
+                    {
+                        return;
+                    }
+                    if (task.IsFaulted)
+                    {
+                        return;
+                    }
+
+                    AuthResult result = task.Result;
+
+                    GamePersistentVariable.FirebaseUserId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+                });
+            }
+            else
+            {
+                GamePersistentVariable.FirebaseUserId = FirebaseAuth.DefaultInstance.CurrentUser.UserId;
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
+
+        // Disable your integration with Play Games Services or show a login button
+        // to ask users to sign-in. Clicking it should call
+        // PlayGamesPlatform.Instance.ManuallyAuthenticate(ProcessAuthentication).
     }
 }
