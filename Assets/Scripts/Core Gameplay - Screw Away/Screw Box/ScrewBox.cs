@@ -93,7 +93,7 @@ public class ScrewBox : MonoBehaviour
             Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
             .OnComplete(() =>
             {
-                shakeCameraEvent?.Invoke();
+                GamePlayController_BirdSort.Instance.gamePlayCamera.Shake();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
                 
                 if (GameController.Instance.useProfile.OnVibration)

@@ -20,9 +20,9 @@ public class SuggetUseItemInGame : MonoBehaviour
     private Action<object> onBuyItem;
 
     
-    [SerializeField] private Sprite highlightAddBranch;
-    [SerializeField] private Sprite highlightShuffer;
-    [SerializeField] private Sprite highlightBreakRule;
+    [SerializeField] private Sprite highlightClearHole;
+    [SerializeField] private Sprite highlightAddHole;
+    [SerializeField] private Sprite highlightBreakObject;
 
     public void Init()
     {
@@ -45,7 +45,7 @@ public class SuggetUseItemInGame : MonoBehaviour
 
             if (itemController.IsCanUseItem(GiftType.ClearHole))
             {
-                itemsInGame[GiftType.ClearHole].hightLightItem = highlightAddBranch;
+                itemsInGame[GiftType.ClearHole].hightLightItem = highlightClearHole;
                 itemsInGame[GiftType.ClearHole].SuggetUseItem(true);
                 isSuggeting = true;
                 return;
@@ -53,7 +53,7 @@ public class SuggetUseItemInGame : MonoBehaviour
 
             if (itemController.IsCanUseItem(GiftType.AddHole))
             {
-                itemsInGame[GiftType.AddHole].hightLightItem = highlightShuffer;
+                itemsInGame[GiftType.AddHole].hightLightItem = highlightAddHole;
                 itemsInGame[GiftType.AddHole].SuggetUseItem(true);
                 isSuggeting = true;
                 return;
@@ -61,7 +61,7 @@ public class SuggetUseItemInGame : MonoBehaviour
 
             if (itemController.IsCanUseItem(GiftType.BreakObject))
             {
-                itemsInGame[GiftType.BreakObject].hightLightItem = highlightBreakRule;
+                itemsInGame[GiftType.BreakObject].hightLightItem = highlightBreakObject;
                 itemsInGame[GiftType.BreakObject].SuggetUseItem(true);
                 isSuggeting = true;
                 return;

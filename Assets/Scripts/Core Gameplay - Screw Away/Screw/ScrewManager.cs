@@ -35,6 +35,8 @@ public class ScrewManager : MonoBehaviour
     private int _totalScrewBoxesSpawned;
     private int _remainingHandleOutsideScrewCommands;
     private bool _isHandlingOutsideScrews;
+    public int numOutsideScrew;
+    public RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
     #region EVENT
@@ -608,85 +610,91 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
+    #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     public void OnScrewBoxSpawned(ScrewBox screwBox)
     {
-        // for (int i = 0; i < _screws.Count; i++)
-        // {
-        //     BaseScrew screw = _screws[i];
-
-        //     if (screw.IsOutsideWithNoScrewBox)
-        //     {
-        //         GameFaction faction = screw.Faction;
-
-        //         ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
-
-        //         if (screwBoxSlot != null)
-        //         {
-        //             screwBoxSlot.Fill(screw);
-
-        //             screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
-
-        //             screw.IsInteractable = true;
-
-        //             screw.Loose(screw.ScrewId, faction, screwBoxSlot);
-
-        //             screw.IsOutsideWithNoScrewBox = false;
-        //         }
-        //     }
-        // }
-
         _remainingHandleOutsideScrewCommands++;
     }
 
     private IEnumerator HandlingOutsideScrews()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f);
+
+        // wait for level loaded
+        yield return new WaitForSeconds(3f);
 
         while (true)
         {
-            if (_remainingHandleOutsideScrewCommands > 0)
+            if (!_isHandlingOutsideScrews)
             {
-                if (!_isHandlingOutsideScrews)
-                {
-                    _isHandlingOutsideScrews = true;
+                _isHandlingOutsideScrews = true;
 
-                    HandleOutsideScrews();
-                }
+                yield return HandleOutsideScrews();
             }
 
             yield return waitForSeconds;
         }
     }
 
-    private void HandleOutsideScrews()
+    private async Task HandleOutsideScrews()
     {
+        if (_screws == null)
+        {
+            return;
+        }
+
+        bool isFound = false;
+
         for (int i = 0; i < _screws.Count; i++)
         {
-            BaseScrew screw = _screws[i];
-
-            if (screw.IsOutsideWithNoScrewBox && !screw.IsMoving)
+            if (i % 16 == 0 && i > 0)
             {
-                GameFaction faction = screw.Faction;
+                await Task.Delay(100);
+            }
 
-                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
+            try
+            {
+                BaseScrew screw = _screws[i];
 
-                if (screwBoxSlot != null)
+                if (screw.IsOutsideWithNoScrewBox && !screw.IsMoving)
                 {
-                    screwBoxSlot.Fill(screw);
+                    GameFaction faction = screw.Faction;
 
-                    screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
+                    ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(faction, isIncludeScrewPorts: false);
 
-                    screw.IsInteractable = true;
+                    if (screwBoxSlot != null)
+                    {
+                        screw.ScrewServiceLocator.screwMeshRenderer.enabled = true;
 
-                    screw.Loose(screw.ScrewId, faction, screwBoxSlot);
+                        screw.IsInteractable = true;
 
-                    screw.IsOutsideWithNoScrewBox = false;
+                        screw.Loose(screw.ScrewId, faction, screwBoxSlot);
+
+                        screw.IsOutsideWithNoScrewBox = false;
+
+                        if (!isFound)
+                        {
+                            isFound = true;
+                        }
+
+                        numOutsideScrew--;
+                    }
                 }
+            }
+            catch (System.Exception e)
+            {
+
             }
         }
 
-        _remainingHandleOutsideScrewCommands--;
+        if (isFound)
+        {
+            GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.UpdateNumber();
+        }
+
+        // _remainingHandleOutsideScrewCommands--;
         _isHandlingOutsideScrews = false;
     }
+    #endregion
     #endregion
 }

@@ -72,7 +72,8 @@ public class ScrewsDataManager : MonoBehaviour
                 }
             }
         }
-
+        int totalScrew = _screws.Length;
+        int remainingScrew = totalScrew;
         foreach (var screw in screwsWithData.Keys)
         {
             ScrewData screwData = screwsWithData[screw];
@@ -82,25 +83,49 @@ public class ScrewsDataManager : MonoBehaviour
                 continue;
             }
 
-            if (screwData.IsDestroyed)
+            screw.Faction = screwData.Faction;
+            screw.ScrewServiceLocator.screwFaction.SetColorByFaction();
+
+            screw.IsMoving = screwData.IsMoving();
+            screw.IsDone = screwData.IsDone();
+            screw.IsInScrewPort = screwData.IsInScrewPort();
+            screw.IsOutsideWithNoScrewBox = screwData.IsOutside();
+
+            if (!screwData.IsActive() && !screwData.IsOutside())
             {
-                screw.ForceUnscrew();
+                screw.InvokeBreakJointEvent();
+
+                screw.gameObject.SetActive(false);
+
+                screw.IsDone = true;
+
+                remainingScrew--;
 
                 continue;
             }
 
-            if (screwData.IsInScrewPort)
+            if (screwData.IsDone())
             {
-                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction);
 
-                screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
+                if (screwBoxSlot != null)
+                {
+                    screw.LooseImmediately(screwBoxSlot);
+                }
+
+                remainingScrew--;
             }
 
-            if (screwData.IsDone)
+            if (screwData.IsInScrewPort())
             {
-                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
 
-                screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot);
+                screw.LooseImmediately(screwBoxSlot);
+            }
+
+            if (screwData.IsOutside())
+            {
+                screw.ForceUnscrew();
             }
         }
     }

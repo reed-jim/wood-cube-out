@@ -255,6 +255,15 @@ namespace BirdSort2
 
                 if (screw != null)
                 {
+                    RaycastHit surfaceHit;
+
+                    Physics.Raycast(hit.transform.position + hit.transform.forward, -hit.transform.forward, out surfaceHit, 3, LayerMask.GetMask("Default"));
+
+                    if (surfaceHit.collider != null)
+                    {
+                        GamePlayController_BirdSort.Instance.level.screwManager.lastScrewSelectedSurfaceHit = surfaceHit;
+                    }
+                    
                     screw.Select();
                     
                     GamePlayController_BirdSort.Instance.level.levelParent.DisableAutoRotating();
@@ -294,7 +303,7 @@ namespace BirdSort2
 
                             if (_inputMode == GameEnum.InputMode.BreakObject)
                             {
-                                objectPart.Break(i.point);
+                                objectPart.Break(i.point, i);
                                 if (GamePlayController_BirdSort.Instance.level.levelParent.tut != null)
                                 {
                                     GamePlayController_BirdSort.Instance.level.levelParent.tut.OnScrewSelected();

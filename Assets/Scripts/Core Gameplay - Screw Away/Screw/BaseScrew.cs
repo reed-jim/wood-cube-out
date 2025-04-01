@@ -38,6 +38,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected bool _isRotating;
     protected bool _isRotatingToCorrectAngleOnScrewBox;
     protected bool _isInteractable = true;
+    protected Vector3 _localRotationOnScrewSlot;
     protected bool _isDone;
     protected bool _isOutsideWithNoScrewBox;
     protected bool _isLocked;
@@ -181,7 +182,32 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
 
     }
+    public void LooseImmediately(ScrewBoxSlot screwBoxSlot)
+    {
+        if (joint != null)
+        {
+            Destroy(joint);
 
+            InvokeBreakJointEvent();
+
+            transform.SetParent(screwBoxSlot.transform);
+
+            Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
+            _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
+
+            if (screwBoxSlot.IsScrewPort)
+            {
+                finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
+                _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
+            }
+
+            transform.localScale = scaleOnScrewBox * Vector3.one;
+            transform.localPosition = finalLocalPosition;
+            transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
+        }
+
+        screwBoxSlot.Fill(this);
+    }
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
         Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
@@ -205,8 +231,9 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         // // FOR ROTATING
         // await Task.Delay(100);
-        
-        if (!_isInScrewPort)
+
+        // LOOSE FX
+        if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
         {
             ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
             ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
@@ -216,86 +243,100 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             Color factionColor = FactionUtility.GetColorForFaction(Faction);
 
-            looseScrewFxMain.startColor = factionColor;
-            ringFxMain.startColor = factionColor;
+            looseScrewFxMain.startColor = 1.2f * factionColor;
+            ringFxMain.startColor = 1.2f * factionColor;
 
             looseScrewFx.gameObject.SetActive(true);
 
-            looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
+            // looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
             looseScrewFx.transform.rotation = transform.rotation;
+
+            looseScrewFx.transform.position = GamePlayController_BirdSort.Instance.level.screwManager.lastScrewSelectedSurfaceHit.point + 0.03f * GamePlayController_BirdSort.Instance.level.screwManager.lastScrewSelectedSurfaceHit.normal;
+            ringFx.transform.position = GamePlayController_BirdSort.Instance.level.screwManager.lastScrewSelectedSurfaceHit.point + 0.03f * GamePlayController_BirdSort.Instance.level.screwManager.lastScrewSelectedSurfaceHit.normal;
 
             looseScrewFx.Play();
         }
-        
+        //
+
+        if (IsOutsideWithNoScrewBox)
+        {
+            Vector3 destination = Camera.main.ScreenToWorldPoint(GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.container.position);
+
+            destination.z = transform.position.z;
+
+            transform.position = destination;
+
+            // Vector3 initialScale = transform.localScale;
+
+            // transform.localScale = Vector3.zero;
+
+            // _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
+        }
+
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
-            // _isRotating = false;
-
-            transform.SetParent(screwBoxSlot.transform);
-
-            // if (isSwitchCamera)
-            // {
-            //     gameObject.layer = LayerMask.NameToLayer("UI");
-
-            //     foreach (Transform child in transform)
-            //     {
-            //         child.gameObject.layer = LayerMask.NameToLayer("UI");
-            //     }
-
-            //     GameplayCameraManager.ConvertCameraSpaceSmoothly(transform);
-            // }
-
-            _isRotating = false;
-
-            float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
-            timeMultiplier = Mathf.Min(timeMultiplier, 8);
-
-            _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-            _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
-            .OnComplete(() =>
+            _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
             {
-                // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationDelay, ease: Ease.Linear));
-                _tweens.Add(Tween.Delay(duration: durationDelay)
+                transform.SetParent(screwBoxSlot.transform);
+
+                _isRotating = false;
+
+                float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
+                timeMultiplier = Mathf.Min(timeMultiplier, 8);
+
+                Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
+                _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
+
+                if (screwBoxSlot.IsScrewPort)
+                {
+                    finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
+                    _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
+                }
+
+                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
-                    _isRotating = true;
-                    rotateSpeed *= 2;
-                    
-                    GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.TightenScrew);
-
-                    _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
+                    _tweens.Add(Tween.Delay(duration: 0)
                     .OnComplete(() =>
                     {
-                        _isRotating = false;
-                        rotateSpeed = _initialRotateSpeed;
-                        _isRotatingToCorrectAngleOnScrewBox = true;
-                    }));
-                    // _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(new Vector3(-30f, 180 + 0f, 0)), duration: durationTightenScrewPort, ease: Ease.Linear));
-                    _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, -0.1f, 0.2f), duration: durationTightenScrewPort, ease: Ease.Linear)
+                        _isRotating = true;
+                        rotateSpeed *= 2;
+
+                        if ( !_isInScrewPort && !_isOutsideWithNoScrewBox)
+                        {
+                            GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.TightenScrew);
+                        }
+
+                        _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
                         .OnComplete(() =>
                         {
-                            screwBoxSlot.CompleteFill();
+                            _isRotating = false;
+                            rotateSpeed = _initialRotateSpeed;
+                            _isRotatingToCorrectAngleOnScrewBox = true;
+                        }));
+                        _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationTightenScrewPort, ease: Ease.Linear));
+                        _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.Linear)
+                            .OnComplete(() =>
+                            {
+                                screwBoxSlot.CompleteFill();
 
-                            _isDone = true;
-                            _isInScrewPort = screwBoxSlot.IsScrewPort;
-                            _isMoving = false;
+                                _isInScrewPort = screwBoxSlot.IsScrewPort;
+                                _isMoving = false;
 
-                            InvokeScrewLoosenedEvent();
-                            GamePlayController_BirdSort.Instance.level.screwBoxManager.MoveSingleScrewFromHoleToScrewBox(this);
+                                if (!_isInScrewPort)
+                                {
+                                    _isDone = true;
+                                }
 
-                            onCompleteAction?.Invoke();
-                        })
-                    );
+                                InvokeScrewLoosenedEvent();
+                                GamePlayController_BirdSort.Instance.level.screwBoxManager.MoveSingleScrewFromHoleToScrewBox(this);
 
-                    // screwBoxSlot.CompleteFill();
-
-                    // _isDone = true;
-                    // _isInScrewPort = screwBoxSlot.IsScrewPort;
-
-                    // InvokeScrewLoosenedEvent();
-
-                    // onCompleteAction?.Invoke();
+                                onCompleteAction?.Invoke();
+                            })
+                        );
+                    }));
                 }));
             }));
         }));
@@ -358,22 +399,17 @@ public class BaseScrew : MonoBehaviour, IScrew
         _tweens.Add(Tween.Position(transform, transform.position + 3f * transform.forward, duration: 0.3f)
         .OnComplete(() =>
         {
-            Vector3 destination = transform.position;
+            Vector3 destination = Camera.main.ScreenToWorldPoint(GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.container.position);
 
-            if (transform.position.x > 0)
-            {
-                destination.x = 10;
-            }
-            else
-            {
-                destination.x = -10;
-            }
-
-            destination.y = 0;
+            destination.z = transform.position.z;
 
             _tweens.Add(Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>
             {
                 // InvokeScrewLoosenedEvent();
+
+                GamePlayController_BirdSort.Instance.level.screwManager.numOutsideScrew++;
+
+                GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.UpdateNumber();
 
                 screwServiceLocator.screwMeshRenderer.enabled = false;
 
@@ -398,7 +434,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         GamePlayController_BirdSort.Instance.level.screwManager.OnScrewLoosed();
     }
 
-    protected void InvokeBreakJointEvent()
+    public void InvokeBreakJointEvent()
     {
         foreach (var i in GamePlayController_BirdSort.Instance.level.pieces)
         {

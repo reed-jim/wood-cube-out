@@ -45,7 +45,7 @@ public class ClearHoleItem : ItemBase
 
         if (!checkAvailable)
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.ClearHole].transform.position, "Hole Cleared", Color.red);
+            //GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.ClearHole].transform.position, "Hole Cleared", Color.red);
             return false;
         }
         return true;

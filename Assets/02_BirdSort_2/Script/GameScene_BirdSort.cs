@@ -63,6 +63,8 @@ namespace BirdSort2
         public Vector2 canvasSizeAfterCanvasScaler;
         public Vector2 canvasScale;
         public Vector2 screenSizeWorld;
+
+        public BoxForOutsideScrew boxForOutsideScrew;
         
         public ItemUI GetItem(GiftType type)
         {
