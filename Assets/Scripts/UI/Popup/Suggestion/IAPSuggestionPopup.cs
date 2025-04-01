@@ -52,6 +52,11 @@ public class IAPSuggestionPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        if (CommonUtil.GetParentActiveChildCount(transform.parent) > 1)
+        {
+            return;
+        }
+
         int packageIndex = RemoteConfigController.GetIntConfig(FirebaseConfig.IAP_SUGGESTION_PACKAGE_INDEX, 1);
 
         packageData = IAPDataContainer.ProductsData[packageIndex];

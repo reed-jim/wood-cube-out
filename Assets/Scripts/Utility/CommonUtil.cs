@@ -86,6 +86,21 @@ public static class CommonUtil
         return child.transform.parent.gameObject;
     }
 
+    public static int GetParentActiveChildCount(Transform parent)
+    {
+        int count = 0;
+
+        foreach (Transform child in parent)
+        {
+            if (child.gameObject.activeInHierarchy)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     #region CONSOLE
     public static void ClearLog()
     {

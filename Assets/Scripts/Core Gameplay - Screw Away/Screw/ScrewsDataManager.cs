@@ -67,7 +67,7 @@ public class ScrewsDataManager : MonoBehaviour
 
             if (
                 GamePersistentVariable.isFirebaseRemoteConfigLoaded &&
-                GamePersistentVariable.isEnableLoadingLevelInProgress
+                !GamePersistentVariable.isEnableLoadingLevelInProgress
             )
             {
                 break;

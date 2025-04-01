@@ -121,15 +121,15 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // NOT LOOP
-        if (isLoopLevel)
-        {
-            showSceneTransitionEvent?.Invoke();
-            setIsLevelLoadedEvent?.Invoke();
-            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        // // NOT LOOP
+        // if (isLoopLevel)
+        // {
+        //     showSceneTransitionEvent?.Invoke();
+        //     setIsLevelLoadedEvent?.Invoke();
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-            return;
-        }
+        //     return;
+        // }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
