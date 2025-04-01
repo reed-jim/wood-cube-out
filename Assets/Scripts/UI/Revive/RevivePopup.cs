@@ -71,7 +71,7 @@ public class RevivePopup : BasePopup
             Show();
         }
 
-        SoundManager.Instance.PlaySoundLose();
+        // SoundManager.Instance.PlaySoundLose();
 
         if (boosterType == BoosterType.UnlockScrewBox)
         {
