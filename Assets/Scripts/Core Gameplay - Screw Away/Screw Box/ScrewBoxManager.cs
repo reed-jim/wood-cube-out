@@ -435,6 +435,8 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.Faction = faction;
 
+        screwBox.ResetVisually();
+
         int index = 0;
 
         bool isFound = false;

@@ -188,7 +188,14 @@ public class SceneTransition : MonoBehaviour
 
         AdmobAdsMax.Instance.ShowMRec();
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        float minWaitTime = 2;
+
+        if (GamePersistentVariable.remoteConfigIsShowMREC)
+        {
+            minWaitTime = 3;
+        }
+
+        _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
 
