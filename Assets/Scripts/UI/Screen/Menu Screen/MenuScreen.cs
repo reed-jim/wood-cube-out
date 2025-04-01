@@ -135,11 +135,18 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        GamePersistentVariable.isLoadingLevelInProgress = false;
-
-        if (CommonUtil.IsLevelInProgress(currentLevel.Value))
+        if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
-            switchRouteEvent?.Invoke(ScreenRoute.LevelInProgress);
+            GamePersistentVariable.isLoadingLevelInProgress = false;
+
+            if (CommonUtil.IsLevelInProgress(currentLevel.Value))
+            {
+                switchRouteEvent?.Invoke(ScreenRoute.LevelInProgress);
+            }
+            else
+            {
+                Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            }
         }
         else
         {

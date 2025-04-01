@@ -64,11 +64,26 @@ public class ScrewsDataManager : MonoBehaviour
             {
                 SaveLevelData();
             }
+
+            if (
+                GamePersistentVariable.isFirebaseRemoteConfigLoaded &&
+                GamePersistentVariable.isEnableLoadingLevelInProgress
+            )
+            {
+                break;
+            }
         }
     }
 
     private async void LoadLevelData()
     {
+        if (!GamePersistentVariable.isEnableLoadingLevelInProgress)
+        {
+            spawnFreshLevelScrewBoxesEvent?.Invoke();
+
+            return;
+        }
+
         LevelProgressData levelProgressData = DataUtility.Load($"{GameConstants.SCREWS_DATA}_{currentLevel.Value}", new LevelProgressData());
 
         GamePersistentVariable.isFreshLevel = levelProgressData.ScrewsData == null;
@@ -153,7 +168,7 @@ public class ScrewsDataManager : MonoBehaviour
 
                 if (screwBoxSlot != null)
                 {
-                    screw.LooseImmediately(screwBoxSlot);
+                    screw.Loose(screw.ScrewId, screw.Faction, screwBoxSlot, isCheckObstacles: false);
                 }
 
                 remainingScrew--;

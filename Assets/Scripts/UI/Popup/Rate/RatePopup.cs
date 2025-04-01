@@ -28,22 +28,27 @@ public class RatePopup : BasePopup
     {
         if (_numStar == 5)
         {
-            if (_isDisableOpenReviewPage)
-            {
-                _tweens.Add(Tween.Delay(5f).OnComplete(() =>
-                {
-                    _isDisableOpenReviewPage = false;
-                }));
-            }
-            else
-            {
-                launchInAppReviewEvent?.Invoke();
+            HideImmediately();
 
-                // OpenReviewPage();
+            OpenReviewPage();
 
-                _isDisableOpenReviewPage = true;
-            }
+            // if (_isDisableOpenReviewPage)
+            // {
+            //     _tweens.Add(Tween.Delay(5f).OnComplete(() =>
+            //     {
+            //         _isDisableOpenReviewPage = false;
+            //     }));
+            // }
+            // else
+            // {
+            //     // launchInAppReviewEvent?.Invoke();
 
+            //     Hide();
+
+            //     OpenReviewPage();
+
+            //     _isDisableOpenReviewPage = true;
+            // }
         }
         else
         {

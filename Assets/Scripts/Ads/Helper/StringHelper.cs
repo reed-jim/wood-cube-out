@@ -430,6 +430,7 @@ public class FirebaseConfig
     public const string VALID_DEVICE_UNIQUE_IDENTIFIERS = "valid_device_unique_identifiers";
     public const string TARGET_FPS = "target_fps";
     public const string IS_PLAY_BOX_COMPLETE_FX = "is_play_box_complete_fx";
+    public const string IS_ENABLE_LOAD_LEVEL_PROGRESS = "is_enable_load_level_progress";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
