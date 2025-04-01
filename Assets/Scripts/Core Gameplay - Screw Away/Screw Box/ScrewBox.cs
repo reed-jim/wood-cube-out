@@ -234,6 +234,13 @@ public class ScrewBox : MonoBehaviour
         }
     }
 
+    public void ResetVisually()
+    {
+        screwBoxSpriteRenderer.enabled = true;
+
+        screwBoxServiceLocator.screwBoxUI.HideUnlockBoxButton();
+    }
+
     public void InvokeScrewBoxUnlockedEvent()
     {
         screwBoxUnlockedEvent?.Invoke(this);

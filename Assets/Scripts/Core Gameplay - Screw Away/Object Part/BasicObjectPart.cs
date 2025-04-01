@@ -238,14 +238,14 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         if (instanceId == gameObject.GetInstanceID())
         {
-            if (_totalJoint == 1)
-            {
-                partRigidbody.isKinematic = true;
+            // if (_totalJoint == 1)
+            // {
+            //     partRigidbody.isKinematic = true;
 
-                _tweens.Add(Tween.ShakeScale(transform, 0.15f * transform.localScale, duration: 0.3f));
-            }
+            //     _tweens.Add(Tween.ShakeScale(transform, 0.15f * transform.localScale, duration: 0.3f));
+            // }
 
-            await Task.Delay(300);
+            await Task.Delay(400);
 
             _totalJoint--;
 

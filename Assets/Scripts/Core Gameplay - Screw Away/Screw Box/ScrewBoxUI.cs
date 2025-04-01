@@ -94,7 +94,7 @@ public class ScrewBoxUI : MonoBehaviour
 
         screwBox.IsInTransition = true;
 
-        Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 1f).OnComplete(() =>
+        Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
         {
             Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
             {
@@ -111,5 +111,10 @@ public class ScrewBoxUI : MonoBehaviour
         SoundManager.Instance.PlaySoundUnlockScrewBox();
 
         levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+    }
+
+    public void HideUnlockBoxButton()
+    {
+        unlockByAdsButton.gameObject.SetActive(false);
     }
 }
