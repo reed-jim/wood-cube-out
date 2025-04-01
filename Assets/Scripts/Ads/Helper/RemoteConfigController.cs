@@ -398,6 +398,7 @@ public class RemoteConfigController : MonoBehaviour
         }
 
         GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
+        GamePersistentVariable.isEnableLoadingLevelInProgress = GetBoolConfig(FirebaseConfig.IS_ENABLE_LOAD_LEVEL_PROGRESS, true);
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
 
         remoteConfigReadyEvent?.Invoke();

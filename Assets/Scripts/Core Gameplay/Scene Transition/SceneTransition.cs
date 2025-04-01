@@ -149,6 +149,8 @@ public class SceneTransition : MonoBehaviour
         if (GamePersistentVariable.isLoadingLevelInProgress)
         {
             LoadingLevelInProgress();
+
+            GamePersistentVariable.isLoadingLevelInProgress = false;
         }
         else
         {
