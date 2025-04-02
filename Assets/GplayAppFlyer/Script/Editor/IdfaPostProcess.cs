@@ -9,6 +9,7 @@
 // Note:
 
 using System.IO;
+using AppleAuth.Editor;
 using UnityEditor;
 using UnityEditor.Callbacks;
 using UnityEditor.iOS.Xcode;
@@ -28,6 +29,14 @@ namespace GplayAppFlyer.Editor
             rootDict.SetString("NSAdvertisingAttributionReportEndpoint", "https://appsflyer-skadnetwork.com/");
             rootDict.SetString("NSUserTrackingUsageDescription", "Your data will be used to provide you a better and personalized ad experience.");
             File.WriteAllText(plistPath, plist.WriteToString());
+
+            // Sign In With Apple
+            // var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
+            // var project = new PBXProject();
+            // project.ReadFromString(System.IO.File.ReadAllText(projectPath));
+            // var manager = new ProjectCapabilityManager(projectPath, "Entitlements.entitlements", null, project.GetUnityMainTargetGuid());
+            // manager.AddSignInWithAppleWithCompatibility();
+            // manager.WriteToFile();
 
             // // Framework
             // var projectPath = PBXProject.GetPBXProjectPath(pathToBuiltProject);
