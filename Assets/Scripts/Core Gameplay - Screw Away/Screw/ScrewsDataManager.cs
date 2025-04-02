@@ -99,6 +99,8 @@ public class ScrewsDataManager : MonoBehaviour
         ScrewData[] screwsData = levelProgressData.ScrewsData;
         ScrewBoxData[] screwBoxesData = levelProgressData.ScrewBoxesData;
 
+        // screwBoxesData = screwBoxesData.OrderBy(item => item.IsLocked).ToArray();
+
         if (screwsData.Length != _screws.Length)
         {
             GamePersistentVariable.isFreshLevel = true;
@@ -223,23 +225,6 @@ public class ScrewsDataManager : MonoBehaviour
     private void SaveLevelData()
     {
         ScrewData[] screwsData = new ScrewData[_screws.Length];
-
-        // foreach (var id in _screwsWithId.Keys)
-        // {
-        //     ScrewData screwData = new ScrewData();
-
-        //     screwData.ScrewId = _screwsWithId[id].ScrewId;
-        //     screwData.Faction = _screwsWithId[id].Faction;
-        //     screwData.IsDone = _screwsWithId[id].IsDone;
-        //     screwData.IsInScrewPort = _screwsWithId[id].IsInScrewPort;
-
-        //     if (!_screwsWithId[id].gameObject.activeSelf)
-        //     {
-        //         screwData.IsDestroyed = true;
-        //     }
-
-        //     screwsData.Add(id, screwData);
-        // }
 
         for (int i = 0; i < _screws.Length; i++)
         {
