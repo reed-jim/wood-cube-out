@@ -120,6 +120,11 @@ public class ScrewsDataManager : MonoBehaviour
             screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
         }
 
+        for (int i = 0; i < levelProgressData.NumHolesAdded; i++)
+        {
+            screwBoxManager.AddMoreScrewPort();
+        }
+
         await Task.Delay(1000);
 
         Dictionary<BaseScrew, ScrewData> screwsWithData = new Dictionary<BaseScrew, ScrewData>();
@@ -250,6 +255,8 @@ public class ScrewsDataManager : MonoBehaviour
         levelProgressData.ScrewBoxesData = screwBoxesData;
 
         string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value}";
+
+        levelProgressData.NumHolesAdded = GamePersistentVariable.numHolesAdded;
 
         DataUtility.SaveAsync(key, levelProgressData);
 
