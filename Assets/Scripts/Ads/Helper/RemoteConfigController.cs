@@ -1,22 +1,11 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using System;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using Firebase.RemoteConfig;
 using System.Threading.Tasks;
 using System.Globalization;
 using Newtonsoft.Json;
-using UnityEngine.Events;
 using Firebase.Extensions;
-using System.Collections;
-using Firebase;
-using UnityEngine.UI;
-using Firebase.Auth;
-using Google;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
 
 public class RemoteConfigController : MonoBehaviour
 {
