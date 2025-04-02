@@ -42,6 +42,7 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
     private const string RewardedAdUnitId = "5a5d29ce1c57f419";
     private const string BanerAdUnitId = "515e33c5e1389ee4";
+    private const string mrecAdUnitId = "f28550c606ced4ca";
 #endif
     // #if UNITY_ANDROID
     //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";

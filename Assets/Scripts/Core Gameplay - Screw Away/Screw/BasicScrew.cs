@@ -19,21 +19,21 @@ public class BasicScrew : BaseScrew
             transform.RotateAround(transform.forward, rotateSpeed);
         }
 
-        if (_isRotatingToCorrectAngleOnScrewBox)
-        {
-            transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_localRotationOnScrewSlot), 1f / 3);
+        // if (_isRotatingToCorrectAngleOnScrewBox)
+        // {
+        //     transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_localRotationOnScrewSlot), 1f / 3);
 
-            stepRotateToCorrectAngleOnScrewBox++;
+        //     stepRotateToCorrectAngleOnScrewBox++;
 
-            if (stepRotateToCorrectAngleOnScrewBox == 3)
-            {
-                transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
+        //     if (stepRotateToCorrectAngleOnScrewBox == 3)
+        //     {
+        //         transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
 
-                _isRotatingToCorrectAngleOnScrewBox = false;
+        //         _isRotatingToCorrectAngleOnScrewBox = false;
 
-                stepRotateToCorrectAngleOnScrewBox = 0;
-            }
-        }
+        //         stepRotateToCorrectAngleOnScrewBox = 0;
+        //     }
+        // }
     }
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)

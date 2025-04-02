@@ -245,7 +245,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             //     _tweens.Add(Tween.ShakeScale(transform, 0.15f * transform.localScale, duration: 0.3f));
             // }
 
-            await Task.Delay(400);
+            // await Task.Delay(400);
 
             _totalJoint--;
 

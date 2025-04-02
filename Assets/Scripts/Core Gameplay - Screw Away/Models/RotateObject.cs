@@ -53,7 +53,7 @@ public class RotateObject : MonoBehaviour
 
     private IEnumerator Rotating()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 60f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 80f);
 
         while (true)
         {
