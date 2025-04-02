@@ -118,7 +118,7 @@ public class ScrewsDataManager : MonoBehaviour
 
             if (screwData.IsInScrewPort())
             {
-                ScrewBoxSlot screwBoxSlot = screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
+                ScrewBoxSlot screwBoxSlot = GamePlayController_BirdSort.Instance.level.screwBoxManager.CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: true);
 
                 screw.LooseImmediately(screwBoxSlot);
             }
@@ -184,13 +184,9 @@ public class ScrewsDataManager : MonoBehaviour
 
             screwsData[i].ScrewId = _screws[i].ScrewId;
             screwsData[i].Faction = _screws[i].Faction;
-            screwsData[i].IsDone = _screws[i].IsDone;
-            screwsData[i].IsInScrewPort = _screws[i].IsInScrewPort;
-
-            if (!_screws[i].gameObject.activeSelf)
-            {
-                screwsData[i].IsDestroyed = true;
-            }
+            screwsData[i].SetState(
+                _screws[i].IsDone, _screws[i].IsMoving, _screws[i].IsOutsideWithNoScrewBox, _screws[i].IsInScrewPort, _screws[i].gameObject.activeInHierarchy);
+            
         }
 
         ScrewBoxData[] screwBoxesData = GetScrewBoxesData();

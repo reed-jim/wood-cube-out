@@ -260,7 +260,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         if (IsOutsideWithNoScrewBox)
         {
-            Vector3 destination = Camera.main.ScreenToWorldPoint(GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.container.position);
+            Vector3 destination = GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.transform.position;
 
             destination.z = transform.position.z;
 
@@ -399,8 +399,8 @@ public class BaseScrew : MonoBehaviour, IScrew
         _tweens.Add(Tween.Position(transform, transform.position + 3f * transform.forward, duration: 0.3f)
         .OnComplete(() =>
         {
-            Vector3 destination = Camera.main.ScreenToWorldPoint(GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.container.position);
-
+            Vector3 destination = GamePlayController_BirdSort.Instance.gameScene.boxForOutsideScrew.transform.position;
+            Debug.Log("Anhtuszz Des: " + destination);
             destination.z = transform.position.z;
 
             _tweens.Add(Tween.Position(transform, destination, duration: 0.3f).OnComplete(() =>

@@ -2724,7 +2724,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 132.5, y: 516.07}
+  m_AnchoredPosition: {x: 99.84, y: 386}
   m_SizeDelta: {x: 100, y: 104}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &296450216
@@ -4928,7 +4928,6 @@ GameObject:
   - component: {fileID: 547902163}
   - component: {fileID: 547902166}
   - component: {fileID: 547902165}
-  - component: {fileID: 547902164}
   m_Layer: 5
   m_Name: Title
   m_TagString: Untagged
@@ -4955,21 +4954,6 @@ RectTransform:
   m_AnchoredPosition: {x: 8.7, y: 98.3}
   m_SizeDelta: {x: 360, y: 60}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &547902164
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 547902162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  translationName: Break Object
-  parameter: 
-  FallbackText: Clear Holes
 --- !u!114 &547902165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4990,7 +4974,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Clear Holes
+  m_text: Break Object
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -17951,11 +17935,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 785838023568118907, guid: 1dd224e7987615d4b86b1512725acb4a, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -53
       objectReference: {fileID: 0}
     - target: {fileID: 785838023568118907, guid: 1dd224e7987615d4b86b1512725acb4a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 785838023568118907, guid: 1dd224e7987615d4b86b1512725acb4a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -20651,7 +20635,6 @@ GameObject:
   - component: {fileID: 1893472153}
   - component: {fileID: 1893472156}
   - component: {fileID: 1893472155}
-  - component: {fileID: 1893472154}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -20678,21 +20661,6 @@ RectTransform:
   m_AnchoredPosition: {x: 80, y: -22.2}
   m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1893472154
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1893472152}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  translationName: Click any object to break it
-  parameter: 
-  FallbackText: Clear Holes
 --- !u!114 &1893472155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20713,7 +20681,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Clear Holes
+  m_text: Break Object
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
@@ -20740,7 +20708,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 72
+  m_fontSize: 64.8
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -23514,6 +23482,7 @@ MonoBehaviour:
   hammerPrefab: {fileID: 4433449578633393889, guid: 5d4598c11808c5149adb2188681c7d75, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
+  boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
   taskItemUIPrefab: {fileID: 413993787269842527, guid: cfbf48fdb9ee8ba438323f24aaa9fe07, type: 3}
 --- !u!1 &2129780089
 GameObject:

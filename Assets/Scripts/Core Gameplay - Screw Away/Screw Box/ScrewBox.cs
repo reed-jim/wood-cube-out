@@ -95,7 +95,29 @@ public class ScrewBox : MonoBehaviour
             {
                 GamePlayController_BirdSort.Instance.gamePlayCamera.Shake();
                 // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
-                
+                ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+
+                if (rippleFx != null)
+                {
+                    Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+
+                    ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                    rippleFxMain.startColor = factionColor;
+
+                    for (int i = 0; i < rippleFx.transform.childCount; i++)
+                    {
+                        ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+
+                        ParticleSystem.MainModule childFxMain = childFx.main;
+
+                        childFxMain.startColor = factionColor;
+                    }
+
+                    rippleFx.gameObject.SetActive(true);
+                    rippleFx.transform.position = transform.position.ChangeZ(-9);
+                    rippleFx.Play();
+                }
                 if (GameController.Instance.useProfile.OnVibration)
                 {
                     HapticFeedback.HeavyFeedback();

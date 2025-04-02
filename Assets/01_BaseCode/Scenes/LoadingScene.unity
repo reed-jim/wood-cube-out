@@ -1507,20 +1507,40 @@ MonoBehaviour:
           - rewardData:
             - id: 0
               typeItem: 1
-              amount: 200
-              weight: 0
+              amount: 10
+              weight: 6
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 20
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 2
               isUnlimited: 0
           - rewardData:
             - id: 0
               typeItem: 1
-              amount: 300
-              weight: 0
-              isUnlimited: 0
-          - rewardData:
-            - id: 0
-              typeItem: 1
-              amount: 500
-              weight: 0
+              amount: 50
+              weight: 2
               isUnlimited: 0
           is_video_x_reward: 0
           num_x_reward: 0
@@ -1531,20 +1551,18 @@ MonoBehaviour:
           - rewardData:
             - id: 0
               typeItem: 1
-              amount: 100
-              weight: 0
+              amount: 10
+              weight: 5
               isUnlimited: 0
-          - rewardData:
             - id: 0
               typeItem: 1
-              amount: 200
-              weight: 0
+              amount: 20
+              weight: 3
               isUnlimited: 0
-          - rewardData:
             - id: 0
               typeItem: 1
-              amount: 300
-              weight: 0
+              amount: 30
+              weight: 2
               isUnlimited: 0
           is_video_x_reward: 0
           num_x_reward: 0
@@ -1922,7 +1940,18 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
-          rewards: []
+          rewards:
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 0
+              amount: 0
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
           percentSpawnItems: []
           parmaExtral: []
           timeLife: 0
