@@ -24,6 +24,7 @@ public static class GamePersistentVariable
     public static bool isPreventLoadLevelData;
     public static int numScrewBoxUnlocked;
     public static int numOutsideScrew;
+    public static int numHolesAdded;
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial;
     public static Dictionary<int, List<Transform>> pieceDependencies;

@@ -148,6 +148,8 @@ public class ScrewBoxManager : MonoBehaviour
                 screwPorts[i].Screw = null;
             }
         }
+        
+        GamePersistentVariable.numHolesAdded = 0;
 
         int toRemoveStartIndex = 0;
         int toRemoveCount = 0;
@@ -806,6 +808,8 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }));
         }
+
+        GamePersistentVariable.numHolesAdded++;
     }
 
     private void ClearAllScrewPorts()
