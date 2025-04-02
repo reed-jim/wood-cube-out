@@ -42,7 +42,7 @@ public class SaferioCloudStorageManager : MonoBehaviour
 
     private void CreateReference()
     {
-        _storageRef = _storage.GetReferenceFromUrl("gs://wood-cube-out.firebasestorage.app");
+        _storageRef = _storage.GetReferenceFromUrl("gs://wood-cube-out-3d---ios.firebasestorage.app");
 
         // StorageReference mountainsRef = _storageRef.Child("mountains.jpg");
 
