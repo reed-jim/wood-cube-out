@@ -559,29 +559,38 @@ public class LevelLoader : MonoBehaviour
     #endregion
 
     #region AUTO CENTER LEVEL
-    private void OnPieceCompleted(int pieceInstanceId)
+    private async void OnPieceCompleted(int pieceInstanceId)
     {
         // if (_isNotAutoCenterLevel)
         // {
         //     return;
         // }
 
-        Vector3 currentPosition = _pivotAdjust.transform.position;
-        Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
+        await Task.Delay(500);
 
-        _pivotAdjust.transform.position = Vector3.zero;
-        _pivotAdjust.transform.eulerAngles = Vector3.zero;
+        try
+        {
+            Vector3 currentPosition = _pivotAdjust.transform.position;
+            Vector3 currentRotation = _pivotAdjust.transform.eulerAngles;
 
-        Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+            _pivotAdjust.transform.position = Vector3.zero;
+            _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
-        _pivotAdjust.transform.position = currentPosition;
-        _pivotAdjust.transform.eulerAngles = currentRotation;
+            Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
-        Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
+            _pivotAdjust.transform.position = currentPosition;
+            _pivotAdjust.transform.eulerAngles = currentRotation;
 
-        CommonUtil.StopAllTweens(_autoCenterLevelTweens);
+            Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
 
-        _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+            CommonUtil.StopAllTweens(_autoCenterLevelTweens);
+
+            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
