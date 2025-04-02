@@ -663,6 +663,13 @@ public class LevelLoader : MonoBehaviour
         _pivotAdjust.transform.eulerAngles = currentRotation;
 
         // Set Shader World Bound
+        Vector3 currentCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
+        Vector3 newCenter = -currentCenter / _currentLevelContainer.transform.localScale.x;
+
+        float halfDistance = (maxY - minY) / 2;
+        float shaderMinY = newCenter.y - halfDistance;
+        float shaderMaxY = newCenter.y + halfDistance;
+
         if (!_isSetLevelGradientBound)
         {
             if (_pieces != null)
@@ -671,7 +678,7 @@ public class LevelLoader : MonoBehaviour
                 {
                     if (_pieces[i] != null)
                     {
-                        _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(minY, maxY);
+                        _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
                     }
                 }
 
