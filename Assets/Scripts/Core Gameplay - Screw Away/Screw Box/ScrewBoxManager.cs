@@ -436,6 +436,7 @@ public class ScrewBoxManager : MonoBehaviour
         ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
 
         screwBox.Faction = faction;
+        screwBox.IsLocked = false;
 
         screwBox.ResetVisually();
 
