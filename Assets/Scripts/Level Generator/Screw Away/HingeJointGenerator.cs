@@ -294,6 +294,11 @@ public class HingeJointGenerator : EditorWindow
             SetLossyScaleAllScrews();
         }
 
+        if (GUILayout.Button("Check Level Issues"))
+        {
+            CheckLevelIssues();
+        }
+
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
@@ -527,6 +532,138 @@ public class HingeJointGenerator : EditorWindow
         EditorUtility.SetDirty(level);
     }
 
+    #region CHECKING LEVEL
+    private void CheckLevelIssues()
+    {
+        GameObject level = Selection.activeGameObject;
+
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
+
+        int numScrew = screws.Length;
+        Vector3 screwSize = screws[0].GetComponent<MeshRenderer>().bounds.size;
+
+
+
+        Dictionary<string, List<string>> obstaclesOfPieces = new Dictionary<string, List<string>>();
+
+        int totalBlockedScrew = 0;
+
+        for (int i = 0; i < numScrew; i++)
+        {
+            string pieceName = screws[i].transform.parent.name;
+
+            List<string> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
+
+            if (obstacleName.Count > 0)
+            {
+                totalBlockedScrew++;
+            }
+
+            if (!obstaclesOfPieces.ContainsKey(pieceName))
+            {
+                obstaclesOfPieces.Add(pieceName, obstacleName);
+            }
+            else
+            {
+                foreach (var item in obstacleName)
+                {
+                    if (!obstaclesOfPieces[pieceName].Contains(item))
+                    {
+                        obstaclesOfPieces[pieceName].Add(item);
+                    }
+                }
+            }
+
+
+            // Check screws that are too near each other
+            for (int j = 0; j < screws[i].transform.parent.childCount; j++)
+            {
+                Transform checkScrew = screws[i].transform.parent.GetChild(j);
+
+                if (checkScrew.GetInstanceID() == screws[i].transform.GetInstanceID())
+                {
+                    continue;
+                }
+
+                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
+                {
+                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name}</color>");
+
+                    break;
+                }
+            }
+        }
+
+        foreach (var obstaclesOfPiece in obstaclesOfPieces)
+        {
+            foreach (var obstacle in obstaclesOfPiece.Value)
+            {
+                if (obstaclesOfPieces[obstacle].Contains(obstaclesOfPiece.Key))
+                {
+                    Debug.Log($"SAFERIO <color=#73FF83>Level {level}:<color=#fff> {obstaclesOfPiece.Key} {obstacle} <color=#FF7A75>INVALID<color=#fff>");
+
+                    // isValid = false;
+
+                    // break;
+                }
+            }
+        }
+    }
+    private void CheckHingeJointNumber()
+    {
+        GameObject levelPrefab = Selection.activeGameObject;
+
+        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
+        BaseScrew[] screw = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
+
+        int numScrew = screw.Length;
+        int numHingeJoint = 0;
+
+        for (int i = 0; i < objectParts.Length; i++)
+        {
+            HingeJoint[] hingeJoints = objectParts[i].GetComponents<HingeJoint>();
+
+            if (hingeJoints.Length == 0)
+            {
+                break;
+            }
+
+            if (hingeJoints[0].connectedBody == null)
+            {
+                break;
+            }
+
+            // Check DUPLICATE components
+            BasicObjectPart[] basicObjectParts = objectParts[i].GetComponents<BasicObjectPart>();
+
+            if (basicObjectParts.Length > 1)
+            {
+                break;
+            }
+
+            int numHingeJointInObjectPart = hingeJoints.Length;
+
+            numHingeJoint += numHingeJointInObjectPart;
+        }
+
+        bool isPassed = numHingeJoint == numScrew;
+
+        if (numScrew % 3 != 0)
+        {
+            isPassed = false;
+        }
+
+        string resultText = $"<color=#89FF5B>Passed</color>";
+
+        if (!isPassed)
+        {
+            resultText = $"<color=#FF7878>Failed</color>";
+        }
+
+        Debug.Log($"{levelPrefab.name}: {numHingeJoint}/{numScrew} - {resultText}<color=#fff></color>");
+    }
+
     private void CheckHingeJointNumber(string path)
     {
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
@@ -588,6 +725,36 @@ public class HingeJointGenerator : EditorWindow
             CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
         }
     }
+
+    private void CheckInvalidScrews()
+    {
+        Transform level = Selection.activeTransform;
+
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+
+        Vector3 screwSize = screws[0].GetComponent<MeshRenderer>().bounds.size;
+
+        for (int i = 0; i < screws.Length - 1; i++)
+        {
+            for (int j = 0; j < screws[i].transform.parent.childCount; j++)
+            {
+                Transform checkScrew = screws[i].transform.parent.GetChild(j);
+
+                if (checkScrew.GetInstanceID() == screws[i].transform.GetInstanceID())
+                {
+                    continue;
+                }
+
+                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
+                {
+                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name}</color>");
+
+                    break;
+                }
+            }
+        }
+    }
+    #endregion
 
     private void AutoAssignScrewFaction(string path)
     {
@@ -1140,6 +1307,94 @@ public class HingeJointGenerator : EditorWindow
     private int RandomWithoutZero(int maxValue)
     {
         return UnityEngine.Random.Range(1, maxValue) * (UnityEngine.Random.Range(0, 2) * 2 - 1);
+    }
+
+    public List<string> GetScrewObstacles(Transform screw, bool isIncludeHiddenScrew)
+    {
+        MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
+
+        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
+        Vector3 pointTwo = pointOne + 10f * screw.forward;
+
+        Collider[] hits = new Collider[16];
+
+        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
+
+        List<string> obstacleInstanceIds = new List<string>();
+
+        if (hits != null)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i] == null)
+                {
+                    continue;
+                }
+
+                if (hits[i].transform == screw.parent)
+                {
+                    continue;
+                }
+
+                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    if (isIncludeHiddenScrew)
+                    {
+                        continue;
+                    }
+
+                    Vector3 hitPos;
+
+                    // Concave
+                    if (objectPart.IsConcave)
+                    {
+                        RaycastHit hit;
+
+                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
+
+                        Physics.CapsuleCast(
+                            pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
+                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
+
+                        if (hit.collider != null)
+                        {
+                            hitPos = hit.point;
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        hitPos = hits[i].ClosestPoint(pointOne);
+                    }
+
+                    // Perpendicular distance
+                    Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
+
+                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
+
+                    distance = Mathf.Max(distance, 0);
+
+                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
+                    {
+                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
+                        {
+                            continue;
+                        }
+
+                        obstacleInstanceIds.Add(hits[i].transform.name);
+                    }
+                }
+            }
+        }
+
+        return obstacleInstanceIds;
     }
     #endregion
 
@@ -2615,19 +2870,31 @@ public class HingeJointGenerator : EditorWindow
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
 
-                            for (int m = 0; m < maxScrewZ; m++)
+                            for (int m = 0; m < maxScrewY; m++)
                             {
                                 isTilesEmpty[new Vector3(i, m, k)] = false;
                             }
                         }
                         else
                         {
-                            direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
+                            direction = UnityEngine.Random.Range(0, 10) < 5 ? -1 : 1;
+
+                            if (direction == -1)
+                            {
+                                RaycastHit hitFromPiece;
+
+                                level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, Vector3.left, out hitFromPiece);
+
+                                if (hitFromPiece.collider != null)
+                                {
+                                    direction = 1;
+                                }
+                            }
 
                             screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
 
-                            for (int m = 0; m < maxScrewZ; m++)
+                            for (int m = 0; m < maxScrewX; m++)
                             {
                                 isTilesEmpty[new Vector3(m, j, k)] = false;
                             }
@@ -2647,6 +2914,13 @@ public class HingeJointGenerator : EditorWindow
                         if (hit.collider == null)
                         {
                             DestroyImmediate(screw.gameObject);
+                        }
+                        else
+                        {
+                            // if (hit.collider.GetComponent<BaseScrew>() != null)
+                            // {
+                            //     DestroyImmediate(screw.gameObject);
+                            // }
                         }
                     }
                 }
