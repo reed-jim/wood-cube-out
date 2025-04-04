@@ -13,7 +13,7 @@ public class HomeController : Singleton<HomeController>
     public MiniGameController miniGameController;
     protected override void OnAwake()
     {
-        //GameController.Instance.currentScene = SceneType.MainHome;
+        GameController.Instance.currentScene = SceneType.MainHome;
         CheckHealth();
     }
 

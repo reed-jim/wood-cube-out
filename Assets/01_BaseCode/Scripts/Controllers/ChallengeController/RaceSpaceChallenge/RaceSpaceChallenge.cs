@@ -240,6 +240,7 @@ public class RaceSpaceChallenge : ChallengeBase
 
     public override bool IsChallengeActive()
     {
+        Debug.Log("Checked");
         if (UseProfile.CurrentLevel < config.level_unlock)
             return false;
         if (!config.IsActive)

@@ -289,6 +289,7 @@ namespace BirdSort2
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, layerMaskCheck);
+            Array.Sort(hits, CompareHitsByDistance);
             if (hits.Length > 0)
             {
                 foreach (RaycastHit i in hits)
@@ -328,8 +329,16 @@ namespace BirdSort2
                 }
                 
             }
-            
+            int CompareHitsByDistance(RaycastHit hit1, RaycastHit hit2)
+            {
+                float distance1 = Vector3.Distance(ray.origin, hit1.point);
+                float distance2 = Vector3.Distance(ray.origin, hit2.point);
+    
+                return distance1.CompareTo(distance2); // Sắp xếp từ xa đến gần
+            }
+
         }
+        
 
         public void EnableBreakObjectMode()
         {

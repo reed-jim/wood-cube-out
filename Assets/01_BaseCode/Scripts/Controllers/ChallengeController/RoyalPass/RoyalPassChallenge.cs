@@ -169,6 +169,7 @@ public class RoyalPassChallenge : ChallengeBase
 
     public override bool IsChallengeActive()
     {
+        Debug.Log("Checked");
         if (!config.IsActive)
             return false;
         if (UseProfile.CurrentLevel < config.level_unlock)

@@ -56,6 +56,7 @@ public class SuggetPopupHomeController : MonoBehaviour
         numRegisterd = 0;
         isShowed = false;
         panelClearClick.gameObject.SetActive(false);
+        Debug.Log("False");
     }
 
     public void RegisterSuggetPopupShow(bool isHasSuperStarLegendaryShow = false)
@@ -114,10 +115,12 @@ public class SuggetPopupHomeController : MonoBehaviour
 
     private void ShowPopup()
     {
+        Debug.Log("Anhtusz Check size: " + actionsSuggetShowPopup.Count);
         if (actionsSuggetShowPopup.Count > 0)
         {
             numRegisterSugget--;
             actionsSuggetShowPopup[0].actionShow?.Invoke();
+            Debug.Log("Anhtusz PopUp: " + actionsSuggetShowPopup[0].priovity);
             actionsSuggetShowPopup.RemoveAt(0);
         }
         else
@@ -147,6 +150,7 @@ public class SuggetPopupHomeController : MonoBehaviour
 
     public void NextSuggetSuperStarLegendaryShow()
     {
+        Debug.Log("Anhtusz Check size: " + actionsSuggetSuperStarLegendaryShow.Count);
         if (actionsSuggetSuperStarLegendaryShow.Count > 0)
         {
             actionsSuggetSuperStarLegendaryShow[0].actionShow?.Invoke();
@@ -161,6 +165,7 @@ public class SuggetPopupHomeController : MonoBehaviour
             }
             if (actionsSuggetShowPopup.Count <= 0)
             {
+                Debug.Log("Close");
                 panelClearClick.gameObject.SetActive(false);
             }
         }

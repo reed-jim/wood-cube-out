@@ -56,7 +56,7 @@ public class ChallengeViewBase : MonoBehaviour
             }
         }
         challengeBtn.onClick.AddListener(OnClickOpenBox);
-
+        Debug.Log("Tatbatchanlange");
         if (controller.IsChallengeActive())
         {
             iconObj.gameObject.SetActive(false);

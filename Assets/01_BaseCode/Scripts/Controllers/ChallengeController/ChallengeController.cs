@@ -18,7 +18,7 @@ public class ChallengeController : MonoBehaviour
     {
         for (int i = 0; i < lstChallenges.Count; i++)
         {
-            //lstChallenges[i].InitHome();
+            lstChallenges[i].InitHome();
         }
     }
 
@@ -26,7 +26,7 @@ public class ChallengeController : MonoBehaviour
     {
         for (int i = 0; i < lstChallenges.Count; i++)
         {
-            //lstChallenges[i].InitStateHome();
+            lstChallenges[i].InitStateHome();
         }
     }
 
@@ -34,7 +34,7 @@ public class ChallengeController : MonoBehaviour
     {
         for (int i = 0; i < lstChallenges.Count; i++)
         {
-            //lstChallenges[i].OnLeftHome();
+            lstChallenges[i].OnLeftHome();
         }
     }
 

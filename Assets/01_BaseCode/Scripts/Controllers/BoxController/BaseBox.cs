@@ -182,9 +182,6 @@ public abstract class BaseBox : MonoBehaviour
         if (!isNotStack)
             BoxController.Instance.Remove();
         DoClose();
-        if (isPostEventPopupClose)
-            EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
-
         GameController.Instance.musicManager.PlayClickSound();
     }
     public virtual void CloseToPoint(Transform point)
@@ -205,6 +202,8 @@ public abstract class BaseBox : MonoBehaviour
                 mainPanel.DOScale(0, 0.5f).SetUpdate(true).SetEase(Ease.InBack).OnComplete(() =>
                 {
                     OnCloseDone?.Invoke();
+                    if (isPostEventPopupClose)
+                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
                     this.gameObject.SetActive(false);
 
                 });
@@ -221,11 +220,15 @@ public abstract class BaseBox : MonoBehaviour
             else
             {
                 this.gameObject.SetActive(false);
+                if (isPostEventPopupClose)
+                    EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
             }
         }
         else
         {
             this.gameObject.SetActive(false);
+            if (isPostEventPopupClose)
+                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
         }
 
         if (canvasGruop != null)

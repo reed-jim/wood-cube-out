@@ -305,114 +305,114 @@ public class PlayerData : BaseData
 
     private void SetData(PlayerData data, bool isSync = false)
     {
-        //if (isSync)
-            UseProfile.VersionData = data.version;
-        UseProfile.IsLoggedIn = data.isLogin;
-        UseProfile.NamePlayer = data.namePlayer;
-        UseProfile.AvatarLink = data.linkAvatar;
-        UseProfile.FlagLink = data.flagLink;
-        UseProfile.LastTimeOnline = DateTime.FromBinary(data.lastTimeOnline);
-        UseProfile.LastTimePlayFab = DateTime.FromBinary(data.lastTimePlayFab);
-        UseProfile.LinkedId = data.linkedId;
-        UseProfile.DaysPlayed = data.dayPlayed;
-
-        //In Game Data
-        UseProfile.CurrentLevel = data.currentLevel;
-        GameController.Instance.useProfile.CurrentLevelPlay = data.currentLevelPlay;
-        GameController.Instance.useProfile.IsRemoveAds = data.isRemoveAds;
-
-        //Daily Login
-        DailyLoginController.LastTimeClaimReward = DateTime.FromBinary(data.lastTimeClaimReward_DailyLogin);
-        DailyLoginController.CurrentReward = data.currentReward_DailyLogin;
-        DailyLoginController.CurrentWeekReward = data.currentWeekReward_DailyLogin;
-        DailyLoginController.IsClaimRewardToDay = data.isClaimRewardToDay_DailyLogin;
-
-        //Resource
-        UseProfile.CoinSync = data.coin;
-        UseProfile.SetItem(GiftType.SuggetItem_BirdSort, data.hintItem);
-        UseProfile.SetItem(GiftType.ReturnItem_BirdSort, data.returnItem);
-        UseProfile.SetItem(GiftType.AddHole, data.shuffleItem);
-        UseProfile.SetItem(GiftType.AddBox, data.iceItem);
-        UseProfile.SetItem(GiftType.AddTimeItem_BirdSort, data.addTimeItem);
-        UseProfile.SetItem(GiftType.BlockBrand_BirdSort, data.blockBrandItem);
-        UseProfile.SetItem(GiftType.ClearHole, data.addBrandItem);
-
-        //Ulimited Resource
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.SuggetItem_BirdSort, data.timeEndUlimited_HintItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.ReturnItem_BirdSort, data.timeEndUlimited_ReturnItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.AddHole, data.timeEndUlimited_ShuffleItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.AddBox, data.timeEndUlimited_IceItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.AddTimeItem_BirdSort, data.timeEndUlimited_AddTimeItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.BlockBrand_BirdSort, data.timeEndUlimited_BlockBrandItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.ClearHole, data.timeEndUlimited_AddBrandItem);
-        UseProfile.SetTimeEndUnlimitedItem(GiftType.X2WeeklyChallgeneItem, data.timeEndUlimited_X2WeeklyChallenge);
-
-        //Health
-        UseProfile.Health = data.Health;
-        UseProfile.TimeLastOverHealth = DateTime.FromBinary(data.TimeLastOverHealth);
-        UseProfile.IsRefillHealth = data.IsRefillHealth;
-        UseProfile.TimeEndUnlimitedHealth = DateTime.FromBinary(data.TimeEndUnlimitedHealth);
-
-        //Star Chest
-        StartChestController.CurrentStar = data.CurrentStar_StarChest;
-        //StartChestController.RememberCurrentStar = StartChestController.CurrentStar;
-
-        //Level Chest
-        LevelChestController.CurrentLevelChest = data.CurrentLevelChest_LevelChest;
-        //LevelChestController.RememberLevelChest = LevelChestController.CurrentLevelChest;
-
-        //IQ Score
-        UseProfile.IQScore = data.IQScore;
-
-        //tut
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.AddTimeItem_BirdSort, data.isTutItem_addTimeItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.BlockBrand_BirdSort, data.isTutItem_blockBrandItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.ClearHole, data.isTutItem_addBrandItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.ReturnItem_BirdSort, data.isTutItem_returnItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.SuggetItem_BirdSort, data.isTutItem_hintItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddHole, data.isTutItem_shuffleItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddBox, data.isTutItem_iceItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.BreakObject, data.isTutItem_breakRuleItem);
-        GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialWeeklyItem.TUT_WEEKLY_ITEM_1, data.isTutWeeklyChallenge);
-
-
-        //Skill User
-        UseProfile.NumberLoseLevelInDay = data.numberLoseLevelInDay;
-        SkillUserController.CurrentSkill = data.currentSkillUser;
-
-
-        //Challegen
-        DataChallenge.SetData(ChallengeType.WeeklyChallenge, data.weeklyChallenge);
-
-        //Rate
-        UseProfile.CanShowRate = data.isCanShowRate;
-        UseProfile.LevelShowedRate = data.levelShowedRate;
-
-
-        //Ads
-        UseProfile.NumberInterShowed = data.numberInterShowed;
-        UseProfile.NumberRewardShowed = data.numberRewardShowed;
-
-        RaceSpaceSyncData.SetData(data.raceSpaceData);
-        //MiniGame
-        UseProfile.ConnectBirdTurnBuy = data.ConnectBirdTurnBuy;
-        UseProfile.Version = data.Version;
-        UseProfile.PointConnectBirdMiniGame = data.PointConnectBirdMiniGame;
-        UseProfile.lsRewardConnectBirdMNGOfPlayer = data.lsRewardConnectBirdMNGOfPlayer;
-        UseProfile.WasCommpleteConnectBirdMiniGame = data.WasCommpleteConnectBirdMiniGame;
-        UseProfile.ConnectBirdTurnFree = data.ConnectBirdTurnFree;
-        UseProfile.LimitNumbWatchVideoInDay = data.LimitNumbWatchVideoInDay;
-        UseProfile.FirstOpenConnectBirdMNGame = data.FirstOpenConnectBirdMNGame;
-        UseProfile.FirstShowHand = data.FirstShowHand;
-        UseProfile.CurrentNumWatchVideoInDay = data.CurrentNumWatchVideoInDay;
-        UseProfile.DataToResetMiniGame = DateTime.FromBinary(DataToResetMiniGame);
-        UseProfile.FirstWeek = FirstWeek;
-
-        // Sale pack
-        UseProfile.DailyBought = dailyBought;
-        UseProfile.CoinBought = coinBought;
-        UseProfile.ItemBought = itemBought;
-        UseProfile.WeekendBought = weekendBought;
+        // //if (isSync)
+        //     UseProfile.VersionData = data.version;
+        // UseProfile.IsLoggedIn = data.isLogin;
+        // UseProfile.NamePlayer = data.namePlayer;
+        // UseProfile.AvatarLink = data.linkAvatar;
+        // UseProfile.FlagLink = data.flagLink;
+        // UseProfile.LastTimeOnline = DateTime.FromBinary(data.lastTimeOnline);
+        // UseProfile.LastTimePlayFab = DateTime.FromBinary(data.lastTimePlayFab);
+        // UseProfile.LinkedId = data.linkedId;
+        // UseProfile.DaysPlayed = data.dayPlayed;
+        //
+        // //In Game Data
+        // UseProfile.CurrentLevel = data.currentLevel;
+        // GameController.Instance.useProfile.CurrentLevelPlay = data.currentLevelPlay;
+        // GameController.Instance.useProfile.IsRemoveAds = data.isRemoveAds;
+        //
+        // //Daily Login
+        // DailyLoginController.LastTimeClaimReward = DateTime.FromBinary(data.lastTimeClaimReward_DailyLogin);
+        // DailyLoginController.CurrentReward = data.currentReward_DailyLogin;
+        // DailyLoginController.CurrentWeekReward = data.currentWeekReward_DailyLogin;
+        // DailyLoginController.IsClaimRewardToDay = data.isClaimRewardToDay_DailyLogin;
+        //
+        // //Resource
+        // UseProfile.CoinSync = data.coin;
+        // UseProfile.SetItem(GiftType.SuggetItem_BirdSort, data.hintItem);
+        // UseProfile.SetItem(GiftType.ReturnItem_BirdSort, data.returnItem);
+        // UseProfile.SetItem(GiftType.AddHole, data.shuffleItem);
+        // UseProfile.SetItem(GiftType.AddBox, data.iceItem);
+        // UseProfile.SetItem(GiftType.AddTimeItem_BirdSort, data.addTimeItem);
+        // UseProfile.SetItem(GiftType.BlockBrand_BirdSort, data.blockBrandItem);
+        // UseProfile.SetItem(GiftType.ClearHole, data.addBrandItem);
+        //
+        // //Ulimited Resource
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.SuggetItem_BirdSort, data.timeEndUlimited_HintItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.ReturnItem_BirdSort, data.timeEndUlimited_ReturnItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.AddHole, data.timeEndUlimited_ShuffleItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.AddBox, data.timeEndUlimited_IceItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.AddTimeItem_BirdSort, data.timeEndUlimited_AddTimeItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.BlockBrand_BirdSort, data.timeEndUlimited_BlockBrandItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.ClearHole, data.timeEndUlimited_AddBrandItem);
+        // UseProfile.SetTimeEndUnlimitedItem(GiftType.X2WeeklyChallgeneItem, data.timeEndUlimited_X2WeeklyChallenge);
+        //
+        // //Health
+        // UseProfile.Health = data.Health;
+        // UseProfile.TimeLastOverHealth = DateTime.FromBinary(data.TimeLastOverHealth);
+        // UseProfile.IsRefillHealth = data.IsRefillHealth;
+        // UseProfile.TimeEndUnlimitedHealth = DateTime.FromBinary(data.TimeEndUnlimitedHealth);
+        //
+        // //Star Chest
+        // StartChestController.CurrentStar = data.CurrentStar_StarChest;
+        // //StartChestController.RememberCurrentStar = StartChestController.CurrentStar;
+        //
+        // //Level Chest
+        // LevelChestController.CurrentLevelChest = data.CurrentLevelChest_LevelChest;
+        // //LevelChestController.RememberLevelChest = LevelChestController.CurrentLevelChest;
+        //
+        // //IQ Score
+        // UseProfile.IQScore = data.IQScore;
+        //
+        // //tut
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.AddTimeItem_BirdSort, data.isTutItem_addTimeItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.BlockBrand_BirdSort, data.isTutItem_blockBrandItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialCampainBox.TUT_ITEM_CAMPAIN + GiftType.ClearHole, data.isTutItem_addBrandItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.ReturnItem_BirdSort, data.isTutItem_returnItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.SuggetItem_BirdSort, data.isTutItem_hintItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddHole, data.isTutItem_shuffleItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.AddBox, data.isTutItem_iceItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialItemInGame.TUT_ITEM_UI + GiftType.BreakObject, data.isTutItem_breakRuleItem);
+        // GPlayerPrefs.SetInt(StringHelper.IS_DONE_TUT + TutorialWeeklyItem.TUT_WEEKLY_ITEM_1, data.isTutWeeklyChallenge);
+        //
+        //
+        // //Skill User
+        // UseProfile.NumberLoseLevelInDay = data.numberLoseLevelInDay;
+        // SkillUserController.CurrentSkill = data.currentSkillUser;
+        //
+        //
+        // //Challegen
+        // DataChallenge.SetData(ChallengeType.WeeklyChallenge, data.weeklyChallenge);
+        //
+        // //Rate
+        // UseProfile.CanShowRate = data.isCanShowRate;
+        // UseProfile.LevelShowedRate = data.levelShowedRate;
+        //
+        //
+        // //Ads
+        // UseProfile.NumberInterShowed = data.numberInterShowed;
+        // UseProfile.NumberRewardShowed = data.numberRewardShowed;
+        //
+        // RaceSpaceSyncData.SetData(data.raceSpaceData);
+        // //MiniGame
+        // UseProfile.ConnectBirdTurnBuy = data.ConnectBirdTurnBuy;
+        // UseProfile.Version = data.Version;
+        // UseProfile.PointConnectBirdMiniGame = data.PointConnectBirdMiniGame;
+        // UseProfile.lsRewardConnectBirdMNGOfPlayer = data.lsRewardConnectBirdMNGOfPlayer;
+        // UseProfile.WasCommpleteConnectBirdMiniGame = data.WasCommpleteConnectBirdMiniGame;
+        // UseProfile.ConnectBirdTurnFree = data.ConnectBirdTurnFree;
+        // UseProfile.LimitNumbWatchVideoInDay = data.LimitNumbWatchVideoInDay;
+        // UseProfile.FirstOpenConnectBirdMNGame = data.FirstOpenConnectBirdMNGame;
+        // UseProfile.FirstShowHand = data.FirstShowHand;
+        // UseProfile.CurrentNumWatchVideoInDay = data.CurrentNumWatchVideoInDay;
+        // UseProfile.DataToResetMiniGame = DateTime.FromBinary(DataToResetMiniGame);
+        // UseProfile.FirstWeek = FirstWeek;
+        //
+        // // Sale pack
+        // UseProfile.DailyBought = dailyBought;
+        // UseProfile.CoinBought = coinBought;
+        // UseProfile.ItemBought = itemBought;
+        // UseProfile.WeekendBought = weekendBought;
 
         InitData();
 #if LOG_VERBOSE

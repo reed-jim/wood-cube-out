@@ -231,6 +231,7 @@ public abstract class ChallengeBase : MonoBehaviour
 
     public virtual bool IsChallengeActive()
     {
+        Debug.Log("Checked");
         if (!config.IsActive)
             return false;
         if (UseProfile.CurrentLevel < config.level_unlock)

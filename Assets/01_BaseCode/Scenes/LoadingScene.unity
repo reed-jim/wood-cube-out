@@ -1931,45 +1931,338 @@ MonoBehaviour:
         coinChallenge:
           version: 0
           version_accept: 0
-          is_active: 0
+          is_active: 1
           time_start: 
           time_end: 
-          level_unlock: 10
+          level_unlock: 30
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
-          is_video_x_reward: 0
-          num_x_reward: 0
+          is_video_x_reward: 1
+          num_x_reward: 2
           rewards:
-          - numItemRequire: 0
+          - numItemRequire: 50
             rewardData:
             - id: 0
-              typeItem: 0
-              amount: 0
-              weight: 0
+              typeItem: 1
+              amount: 100
+              weight: 25
               isUnlimited: 0
-          - numItemRequire: 0
-            rewardData: []
-          - numItemRequire: 0
-            rewardData: []
-          percentSpawnItems: []
-          parmaExtral: []
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 1
+              weight: 100
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 120
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 130
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 140
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 2
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 150
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 160
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 170
+              weight: 524
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 3
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 13
+          parmaExtral:
+          - 50
+          - 300
+          - 1050
           timeLife: 0
         diamodChallenge:
           version: 0
           version_accept: 0
-          is_active: 0
+          is_active: 1
           time_start: 
           time_end: 
-          level_unlock: 10
+          level_unlock: 35
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
-          is_video_x_reward: 0
-          num_x_reward: 0
-          rewards: []
-          percentSpawnItems: []
-          parmaExtral: []
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 1
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 35
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 40
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 50
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 2
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 60
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 70
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 80
+              weight: 4
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 3
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 10
+          parmaExtral:
+          - 20
+          - 160
+          - 540
           timeLife: 0
         royalPass:
           version: 0
@@ -1977,49 +2270,194 @@ MonoBehaviour:
           is_active: 0
           time_start: 
           time_end: 
-          level_unlock: 10
+          level_unlock: 16
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
-          rewards: []
-          percentSpawnItems: []
+          rewards:
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
           parmaExtral: []
-          timeLife: 0
+          timeLife: 2592000
         raceSpaceChallenge:
           version: 0
           version_accept: 0
-          is_active: 0
+          is_active: 1
           time_start: 
           time_end: 
-          level_unlock: 0
+          level_unlock: 40
           time_delay_show: 0
           str_start_date: 
           str_end_date: 
-          is_video_x_reward: 0
-          num_x_reward: 0
-          rewards: []
-          percentSpawnItems: []
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1004
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
           parmaExtral: []
-          timeLife: 0
+          timeLife: 2592000
     skillUserData:
       config:
-        isActive: 0
-        level_start: 0
-        datas: []
+        isActive: 1
+        level_start: 15
+        datas:
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 0.8
+          coPercentCover: 0.75
+        - coNumber: 0.85
+          coPercentCover: 0.8
+        - coNumber: 0.9
+          coPercentCover: 0.85
+        - coNumber: 0.95
+          coPercentCover: 0.9
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 1.1
+          coPercentCover: 1.25
+        - coNumber: 1.2
+          coPercentCover: 1.5
+        - coNumber: 1.3
+          coPercentCover: 1.75
+        - coNumber: 1.4
+          coPercentCover: 2
     notificationData:
       config:
-        isActive: 0
-        comeBackSeconds: 0
+        isActive: 1
+        comeBackSeconds: 7200
     suggetBuyerInGameSegmentData:
       config:
         suggetStartLevel:
-          is_active: 0
-          level_unlock: 0
-          suggets: 
-          space_level_show_sugget: 0
-          num_sugget_in_day: 0
+          is_active: 1
+          level_unlock: 4
+          suggets: 00000000
+          space_level_show_sugget: 1
+          num_sugget_in_day: 10
         suggetEndLevel:
           is_active: 0
           level_unlock: 0
@@ -2034,22 +2472,22 @@ MonoBehaviour:
           num_sugget_in_day: 0
     suggetBuyItemSegmentData:
       config:
-        amountItem: 0
-        isHasBuyVideo: 0
+        amountItem: 3
+        isHasBuyVideo: 1
         isHasBuyCoin: 0
         percentDiscount: 0
     minigameConnectSegmentData:
       config:
         version: 0
         version_accept: 0
-        num_watch_video_buy_egg: 0
-        num_turn_free: 0
-        is_active: 0
-        time_play: 
-        min_level: 0
-        time_delay_show: 0
-        str_start_date: 
-        str_end_date: 
+        num_watch_video_buy_egg: 3
+        num_turn_free: 3
+        is_active: 1
+        time_play: 00:01:40
+        min_level: 30
+        time_delay_show: 1800
+        str_start_date: 2024/12/1 00:00:00
+        str_end_date: 2025/1/20 00:00:00
 --- !u!114 &1070703550 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -2196,10 +2634,10 @@ RectTransform:
   - {fileID: 1471610799}
   m_Father: {fileID: 316155902}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -540, y: -1128}
-  m_SizeDelta: {x: 1080, y: 2256}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1256665739
 MonoBehaviour:

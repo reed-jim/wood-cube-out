@@ -414,6 +414,7 @@ public class PackController : MonoBehaviour
                     {
                         packShow.OnShowPopupSuggetHome();
                         packShow.ShowPopup(true);
+                        Debug.Log("Anhtusz PAck: " + packShow.name);
                     },
                     priovity = SuggetPopupHomeController.PriovitySugget.Important
                 }
