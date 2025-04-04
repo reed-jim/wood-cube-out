@@ -45,6 +45,10 @@ public class HingeJointGenerator : EditorWindow
     private Dictionary<Renderer, Material> _cachedMaterialDictionary;
     #endregion
 
+    #region EXTRACT FROM OTHER GAMES' LEVEL
+    private string matchName;
+    #endregion
+
 
     [MenuItem("Saferio/Tools/Level Tool")]
     public static void ShowWindow()
@@ -59,6 +63,7 @@ public class HingeJointGenerator : EditorWindow
         Rect areaRect = new Rect(padding, padding, position.width - 2 * padding, position.height - 2 * padding);
 
         GUILayout.BeginArea(areaRect);
+        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
 
         // prefabPath = EditorGUILayout.TextField("Prefab Path", prefabPath);
 
@@ -73,6 +78,7 @@ public class HingeJointGenerator : EditorWindow
         expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
 
         maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
+        matchName = EditorGUILayout.TextField("Match Name", matchName);
 
         // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
         // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
@@ -80,8 +86,6 @@ public class HingeJointGenerator : EditorWindow
         // ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
 
         // expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
-
-        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Width(position.width), GUILayout.Height(position.height));
 
         // if (GUILayout.Button("Generate"))
         // {
@@ -270,6 +274,14 @@ public class HingeJointGenerator : EditorWindow
         // }
 
         GUILayout.Space(16);
+        GUILayout.Label("Extract other games' level", centeredStyle);
+
+        if (GUILayout.Button("Extract Pieces"))
+        {
+            ExtractPieces();
+        }
+
+        GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
 
         if (GUILayout.Button("Add Required Components To Pieces"))
@@ -297,8 +309,8 @@ public class HingeJointGenerator : EditorWindow
         //     IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
         // }
 
-        GUILayout.EndArea();
         EditorGUILayout.EndScrollView();
+        GUILayout.EndArea();
     }
 
     bool IsOverlapping(Vector3 spawnPosition, GameObject target)
@@ -2494,7 +2506,7 @@ public class HingeJointGenerator : EditorWindow
             maxScrewZ = Mathf.Max(maxScrewZ, 1);
 
             // Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
-            Debug.Log(maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
+            // Debug.Log(maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             // avoid spawn too many
             if (maxScrewX * maxScrewY * maxScrewZ > 16)
@@ -2546,6 +2558,8 @@ public class HingeJointGenerator : EditorWindow
 
                         BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
 
+                        screw.name = $"Screw 3D {numScrewSpawned}";
+
                         numScrewSpawned++;
 
                         List<FaceDirection> poolDirection = new List<FaceDirection>();
@@ -2554,17 +2568,22 @@ public class HingeJointGenerator : EditorWindow
                         poolDirection.Add(FaceDirection.Top);
                         poolDirection.Add(FaceDirection.Rear);
 
-                        if (screwSize.x > pieceSize.x)
+                        if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.y > pieceSize.y)
                         {
                             poolDirection.Remove(FaceDirection.Front);
                         }
-                        if (screwSize.y > pieceSize.y)
+                        if (1.6f * screwSize.y > pieceSize.y || 1.6f * screwSize.z > pieceSize.z)
                         {
                             poolDirection.Remove(FaceDirection.Rear);
                         }
-                        if (screwSize.z > pieceSize.z)
+                        if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.z > pieceSize.z)
                         {
                             poolDirection.Remove(FaceDirection.Top);
+                        }
+
+                        if (poolDirection.Count == 0)
+                        {
+                            poolDirection.Add(FaceDirection.Top);
                         }
 
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
@@ -2603,16 +2622,32 @@ public class HingeJointGenerator : EditorWindow
                         }
                         else
                         {
+                            direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
+
                             screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
 
                             for (int m = 0; m < maxScrewZ; m++)
                             {
                                 isTilesEmpty[new Vector3(m, j, k)] = false;
                             }
+
+                            if (direction == -1)
+                            {
+                                Debug.Log($"<color=#Ff8E9E> {piece.name} / {screw.name}</color>");
+                            }
                         }
 
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+
+                        RaycastHit hit;
+
+                        level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
+
+                        if (hit.collider == null)
+                        {
+                            DestroyImmediate(screw.gameObject);
+                        }
                     }
                 }
             }
@@ -2627,6 +2662,48 @@ public class HingeJointGenerator : EditorWindow
             else
             {
                 return false;
+            }
+        }
+    }
+    #endregion
+
+    #region EXTRACT OTHER GAMES' LEVEL
+    private void ExtractPieces()
+    {
+        Transform level = Selection.activeTransform;
+
+        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+
+        for (int i = 0; i < allChildren.Length; i++)
+        {
+            Transform child = allChildren[i];
+
+            if (child.name.Contains(matchName))
+            {
+                Transform piece = Instantiate(child, level);
+
+                Component[] components = piece.GetComponents<Component>();
+
+                foreach (Component component in components)
+                {
+                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer))
+                    {
+                        DestroyImmediate(component, allowDestroyingAssets: true);
+                    }
+                }
+
+                // Remove all existing blocks
+                List<GameObject> toRemoveList = new List<GameObject>();
+
+                for (int j = 0; j < piece.childCount; j++)
+                {
+                    toRemoveList.Add(piece.GetChild(j).gameObject);
+                }
+
+                foreach (var item in toRemoveList)
+                {
+                    DestroyImmediate(item, allowDestroyingAssets: true);
+                }
             }
         }
     }
