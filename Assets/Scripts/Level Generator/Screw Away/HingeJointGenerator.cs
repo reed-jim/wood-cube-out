@@ -276,6 +276,11 @@ public class HingeJointGenerator : EditorWindow
         GUILayout.Space(16);
         GUILayout.Label("Extract other games' level", centeredStyle);
 
+        // if (GUILayout.Button("ChangeMesh"))
+        // {
+        //     ChangeMesh();
+        // }
+
         if (GUILayout.Button("Extract Pieces"))
         {
             ExtractPieces();
@@ -2946,6 +2951,40 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region EXTRACT OTHER GAMES' LEVEL
+    private void ChangeMesh()
+    {
+        Transform selection = Selection.activeTransform;
+
+        MeshFilter meshFilter = selection.GetComponent<MeshFilter>();
+
+        Mesh originalMesh = meshFilter.sharedMesh;
+
+        Mesh newMesh = new Mesh();
+
+        newMesh.vertices = originalMesh.vertices;
+        newMesh.triangles = originalMesh.triangles;
+
+        Vector3[] newVertices = originalMesh.vertices;
+
+        for (int i = 0; i < newMesh.vertexCount; i++)
+        {
+            int random = UnityEngine.Random.Range(0, 2);
+
+            if (random == 0)
+            {
+                newVertices[i].x *= 1.2f;
+            }
+        }
+
+        newMesh.vertices = newVertices;
+
+        newMesh.RecalculateNormals();
+        newMesh.RecalculateBounds();
+
+        newMesh.name = "Generated";
+
+        meshFilter.mesh = newMesh;
+    }
     private void ExtractPieces()
     {
         Transform level = Selection.activeTransform;
@@ -2971,6 +3010,11 @@ public class HingeJointGenerator : EditorWindow
                     if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer) && !(component is MeshCollider))
                     {
                         DestroyImmediate(component, allowDestroyingAssets: true);
+                    }
+
+                    if (component == null)
+                    {
+                        Undo.DestroyObjectImmediate(component);
                     }
                 }
 
