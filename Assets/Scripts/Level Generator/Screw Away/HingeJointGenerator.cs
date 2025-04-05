@@ -1235,9 +1235,13 @@ public class HingeJointGenerator : EditorWindow
             pieces[i].AddComponent<BasicObjectPart>();
             pieces[i].AddComponent<ObjectPartMaterialPropertyBlock>();
             pieces[i].AddComponent<Rigidbody>();
-            MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
 
-            meshCollider.convex = true;
+            if (pieces[i].GetComponent<MeshCollider>() == null)
+            {
+                MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
+
+                meshCollider.convex = true;
+            }
         }
 
         EditorUtility.SetDirty(level);
@@ -2948,6 +2952,10 @@ public class HingeJointGenerator : EditorWindow
 
         Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
 
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
         for (int i = 0; i < allChildren.Length; i++)
         {
             Transform child = allChildren[i];
@@ -2960,10 +2968,23 @@ public class HingeJointGenerator : EditorWindow
 
                 foreach (Component component in components)
                 {
-                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer))
+                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer) && !(component is MeshCollider))
                     {
                         DestroyImmediate(component, allowDestroyingAssets: true);
                     }
+                }
+
+                MeshRenderer meshRenderer = piece.GetComponent<MeshRenderer>();
+
+                if (meshRenderer != null)
+                {
+                    meshRenderer.sharedMaterial = randomMaterial;
+                }
+                else
+                {
+                    DestroyImmediate(piece.gameObject, allowDestroyingAssets: true);
+
+                    continue;
                 }
 
                 // Remove all existing blocks
