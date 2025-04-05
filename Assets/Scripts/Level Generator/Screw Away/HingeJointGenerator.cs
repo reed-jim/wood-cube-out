@@ -3014,7 +3014,7 @@ public class HingeJointGenerator : EditorWindow
 
                     if (component == null)
                     {
-                        Undo.DestroyObjectImmediate(component);
+                        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(piece.gameObject);
                     }
                 }
 
