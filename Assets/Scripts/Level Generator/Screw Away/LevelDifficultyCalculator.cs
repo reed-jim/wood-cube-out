@@ -585,13 +585,13 @@ public static class LevelDifficultyCalculatorUltility
     {
         float WEIGHT_REPEAT_TEMPLATE = 0.8f;
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
-        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0.4f);
+        float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0.0f);
 
         float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 
         List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
 
-        int PREDICTED_MAX_LEVEL = 125;
+        int PREDICTED_MAX_LEVEL = 225;
 
         // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
