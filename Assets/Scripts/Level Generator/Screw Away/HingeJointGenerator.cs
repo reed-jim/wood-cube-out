@@ -593,7 +593,7 @@ public class HingeJointGenerator : EditorWindow
 
                 if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
                 {
-                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name}</color>");
+                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name} {checkScrew.name}</color>");
 
                     break;
                 }
@@ -1082,12 +1082,27 @@ public class HingeJointGenerator : EditorWindow
             }
             else
             {
-                RaycastAgain();
+                SnapByDirection(selectedObject.forward);
+                // RaycastAgain();
             }
         }
         else
         {
-            RaycastAgain();
+            SnapByDirection(selectedObject.forward);
+            // RaycastAgain();
+        }
+
+        void SnapByDirection(Vector3 raycastDirection)
+        {
+            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, raycastDirection, out hit, maxRaycastDistance))
+            {
+                IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    Snap();
+                }
+            }
         }
 
         void RaycastAgain()
@@ -2760,6 +2775,7 @@ public class HingeJointGenerator : EditorWindow
             Vector3 halfSize = 0.5f * pieceSize;
 
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
+            Vector3 pieceBoundCenter = piece.GetComponent<MeshFilter>().sharedMesh.bounds.center;
 
             int maxScrewX = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
             int maxScrewY = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
@@ -2854,9 +2870,9 @@ public class HingeJointGenerator : EditorWindow
 
                         screw.transform.position = piece.transform.position +
                         new Vector3(
-                            (-(maxScrewX - 1) / 2f + i) * 0.9f * pieceSize.x / maxScrewX,
-                            (-(maxScrewY - 1) / 2f + j) * 0.9f * pieceSize.y / maxScrewY,
-                            (-(maxScrewZ - 1) / 2f + k) * 0.9f * pieceSize.z / maxScrewZ
+                            (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
+                            (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
+                            (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
                             );
 
                         int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
@@ -2914,6 +2930,8 @@ public class HingeJointGenerator : EditorWindow
                             }
                         }
 
+                        // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
+                        screw.transform.position += pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
                         RaycastHit hit;
