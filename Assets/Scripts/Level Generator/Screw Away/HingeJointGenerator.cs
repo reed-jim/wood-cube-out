@@ -591,7 +591,7 @@ public class HingeJointGenerator : EditorWindow
                     continue;
                 }
 
-                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
+                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.3f * screwSize.x)
                 {
                     Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name} {checkScrew.name}</color>");
 
