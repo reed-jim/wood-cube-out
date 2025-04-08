@@ -313,11 +313,13 @@ public class BaseScrew : MonoBehaviour, IScrew
             // _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
         }
 
+        transform.SetParent(screwBoxSlot.transform);
+
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
             {
-                transform.SetParent(screwBoxSlot.transform);
+                // transform.SetParent(screwBoxSlot.transform);
 
                 _isRotating = false;
 
