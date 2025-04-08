@@ -2934,7 +2934,7 @@ public class HingeJointGenerator : EditorWindow
                         }
 
                         // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
-                        screw.transform.position += pieceBoundCenter;
+                        screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
                         RaycastHit hit;
