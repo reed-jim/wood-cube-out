@@ -2245,7 +2245,10 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateLevelRubikQuarter()
     {
-        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like (3 Screws).prefab");
+        if (piecePrefab == null)
+        {
+            piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like (3 Screws) Variant 2.prefab");
+        }
 
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
