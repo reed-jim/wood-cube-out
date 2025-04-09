@@ -420,6 +420,7 @@ public class FirebaseConfig
     public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
     public const string LEVEL_4_VARIANT = "level_4_variant";
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
+    public const string IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION = "is_show_double_screw_boxes_suggestion";
     public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
     public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
     public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";

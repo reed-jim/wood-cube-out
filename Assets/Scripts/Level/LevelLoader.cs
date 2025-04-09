@@ -296,16 +296,26 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                DelayShowDoubleScrewBoxesSuggestion();
+                int randomSuggestionIndex = UnityEngine.Random.Range(0, 1);
+
+                if (randomSuggestionIndex == 0)
+                {
+                    if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+                    {
+                        DelayShowDoubleScrewBoxesSuggestion();
+                    }
+                }
+                else
+                {
+                    if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                    {
+                        DelayShowIAPSuggestion();
+                    }
+                }
 
                 // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
                 // {
                 //     DelayShowBoosterSuggest();
-                // }
-
-                // if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
-                // {
-                //     DelayShowIAPSuggestion();
                 // }
             }
         };
@@ -795,6 +805,24 @@ public class LevelLoader : MonoBehaviour
         // }
 
         bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, false);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+
+        if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsShowDoubleScrewBoxesSuggestion(int level)
+    {
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
         int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
         if (!remoteConfigIsShowBoosterSuggestion)
