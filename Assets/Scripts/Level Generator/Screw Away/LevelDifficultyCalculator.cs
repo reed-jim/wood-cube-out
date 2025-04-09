@@ -596,6 +596,19 @@ public static class LevelDifficultyCalculatorUltility
         // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
 
+        // REMOTE CONFIG
+        try
+        {
+            string remoteConfigWeightsString =
+            RemoteConfigController.GetStringConfig(FirebaseConfig.DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS, "0.2f, 0.3f, 0.45f, 1f, 0.55f");
+
+            weightForModules = ConvertStringToFloatArray(remoteConfigWeightsString);
+        }
+        catch (System.Exception)
+        {
+
+        }
+
         int validLevel = Mathf.Max(level, 1) % PREDICTED_MAX_LEVEL;
 
         float expectedDifficultyNormalized =
@@ -646,6 +659,21 @@ public static class LevelDifficultyCalculatorUltility
         levelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame = 1;
 
         return levelDifficultyConfiguration;
+
+        float[] ConvertStringToFloatArray(string inputString)
+        {
+            string[] stringValues = inputString.Split(',');
+
+            float[] floatValues = new float[stringValues.Length];
+
+            for (int i = 0; i < stringValues.Length; i++)
+            {
+                stringValues[i] = stringValues[i].Trim();
+                floatValues[i] = float.Parse(stringValues[i].Replace("f", ""));
+            }
+
+            return floatValues;
+        }
     }
 
     public static Dictionary<int, List<Transform>> FindPieceDependency(BasicObjectPart[] pieces)
