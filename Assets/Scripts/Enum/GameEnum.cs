@@ -37,7 +37,8 @@ public class GameEnum : MonoBehaviour
         IAPSuggestion,
         DailyReward,
         LevelInProgress,
-        Backup
+        Backup,
+        UnlockDoubleScrewBoxesSuggestion
     }
 
     public enum GameFaction

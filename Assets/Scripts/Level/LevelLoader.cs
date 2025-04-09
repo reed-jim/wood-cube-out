@@ -296,15 +296,17 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
-                {
-                    DelayShowBoosterSuggest();
-                }
+                DelayShowDoubleScrewBoxesSuggestion();
 
-                if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
-                {
-                    DelayShowIAPSuggestion();
-                }
+                // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
+                // {
+                //     DelayShowBoosterSuggest();
+                // }
+
+                // if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                // {
+                //     DelayShowIAPSuggestion();
+                // }
             }
         };
 
@@ -841,6 +843,16 @@ public class LevelLoader : MonoBehaviour
         _tweens.Add(Tween.Delay(3).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
+        }));
+    }
+
+    private void DelayShowDoubleScrewBoxesSuggestion()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
         }));
     }
 
