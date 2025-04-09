@@ -304,6 +304,11 @@ public class HingeJointGenerator : EditorWindow
             CheckLevelIssues();
         }
 
+        if (GUILayout.Button("Check Level Concave Colliders"))
+        {
+            CheckForConcaveColliderAllLevels();
+        }
+
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
@@ -758,6 +763,42 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
         }
+    }
+
+    private void CheckForConcaveColliderAllLevels()
+    {
+        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < levels.Length; i++)
+        {
+            if (levels[i].name.Contains("Level"))
+            {
+                totalConcavePieces += CheckForConcaveCollider(levels[i].transform);
+            }
+        }
+
+        Debug.Log("SAFERIO " + totalConcavePieces);
+    }
+
+    private int CheckForConcaveCollider(Transform level)
+    {
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (!pieces[i].GetComponent<MeshCollider>().convex)
+            {
+                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + pieces[i].name + "</color>");
+
+                totalConcavePieces++;
+            }
+        }
+
+        return totalConcavePieces;
     }
     #endregion
 
