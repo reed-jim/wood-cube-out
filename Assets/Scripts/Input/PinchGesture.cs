@@ -30,6 +30,7 @@ public class PinchGesture : MonoBehaviour
     private void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
+        LevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
@@ -44,34 +45,11 @@ public class PinchGesture : MonoBehaviour
     void OnDestroy()
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
+        LevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
         CommonUtil.StopAllTweens(_tweens);
-    }
-
-    private void OnZoomSliderValueChanged(float value)
-    {
-        if (_isDisabled)
-        {
-            return;
-        }
-
-        pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
-
-        if (!_isZoomByPinching)
-        {
-            enableSwipingEvent?.Invoke(false);
-        }
-
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
-        {
-            enableSwipingEvent?.Invoke(true);
-        }));
-
-        _lastZoomPercent = value;
     }
 
     private void Update()
@@ -137,6 +115,36 @@ public class PinchGesture : MonoBehaviour
         // OnZoomSliderValueChanged(0);
 
         // pinchGestureEvent?.Invoke(maxZoom);
+    }
+
+    private void OnZoomSliderValueChanged(float value)
+    {
+        if (_isDisabled)
+        {
+            return;
+        }
+
+        pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
+
+        if (!_isZoomByPinching)
+        {
+            enableSwipingEvent?.Invoke(false);
+        }
+
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
+        {
+            enableSwipingEvent?.Invoke(true);
+        }));
+
+        _lastZoomPercent = value;
+    }
+
+    private void SetNewCameraOrthographicSize(float orthographicSize)
+    {
+        maxZoom = orthographicSize;
+        minZoom = 0.7f * orthographicSize;
     }
 
     private void EnablePinching(bool isEnable)

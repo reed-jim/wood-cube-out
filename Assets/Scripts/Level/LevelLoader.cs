@@ -44,6 +44,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
     public static event Action<bool> enableSwipingEvent;
+    public static event Action<float> setTargetOrthographicSizeEvent;
     #endregion
 
     private void Awake()
@@ -677,9 +678,78 @@ public class LevelLoader : MonoBehaviour
         Vector3 currentCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
         Vector3 newCenter = -currentCenter / _currentLevelContainer.transform.localScale.x;
 
-        float halfDistance = (maxY - minY) / 2;
-        float shaderMinY = newCenter.y - halfDistance;
-        float shaderMaxY = newCenter.y + halfDistance;
+        if (!_isSetLevelGradientBound)
+        {
+            SetLevelGradientMinMaxIn(newCenter, minY, maxY);
+
+            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
+        }
+
+        // float halfDistance = (maxY - minY) / 2;
+        // float shaderMinY = newCenter.y - halfDistance;
+        // float shaderMaxY = newCenter.y + halfDistance;
+
+        // if (!_isSetLevelGradientBound)
+        // {
+        //     if (_pieces != null)
+        //     {
+        //         for (int i = 0; i < _pieces.Length; i++)
+        //         {
+        //             if (_pieces[i] != null)
+        //             {
+        //                 _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
+        //             }
+        //         }
+
+        //         _isSetLevelGradientBound = true;
+        //     }
+        // }
+
+        return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
+    }
+    #endregion
+
+    #region LEVEL SETUP
+    private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
+    {
+        bool isScaleByHeight = false;
+
+        float maxExpectedLevelSize = expectedLevelSize.x;
+
+        if (expectedLevelSize.y > maxExpectedLevelSize)
+        {
+            maxExpectedLevelSize = expectedLevelSize.y;
+
+            isScaleByHeight = true;
+        }
+
+        if (expectedLevelSize.z > maxExpectedLevelSize)
+        {
+            maxExpectedLevelSize = expectedLevelSize.z;
+
+            isScaleByHeight = false;
+        }
+
+        Camera mainCamera = Camera.main;
+
+        float expectedScreenWidth = 1.1f * maxExpectedLevelSize;
+        float expectedScreenHeight = 2.3f * maxExpectedLevelSize;
+
+        if (!isScaleByHeight)
+        {
+            expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
+        }
+
+        float targetOrthographicSize = expectedScreenHeight / 2f;
+
+        setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
+    }
+
+    private void SetLevelGradientMinMaxIn(Vector3 levelCenter, float minWorldY, float maxWorldY)
+    {
+        float halfDistance = (maxWorldY - minWorldY) / 2;
+        float shaderMinY = levelCenter.y - halfDistance;
+        float shaderMaxY = levelCenter.y + halfDistance;
 
         if (!_isSetLevelGradientBound)
         {
@@ -696,8 +766,6 @@ public class LevelLoader : MonoBehaviour
                 _isSetLevelGradientBound = true;
             }
         }
-
-        return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
     }
     #endregion
 
