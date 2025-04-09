@@ -860,15 +860,49 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4213218163812937229, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: m_Name
+      value: SignInManager
+      objectReference: {fileID: 0}
     - target: {fileID: 7090409953449974092, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: m_Name
       value: MANAGER - DontDestroyOnLoad
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6628810113550170433, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+    m_RemovedGameObjects:
+    - {fileID: 884400809045876616, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2009154034}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4213218163812937229, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1582410618}
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+--- !u!4 &1582410616 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1582410617 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4213218163812937229, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1582410618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1582410617}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6400f8e50b1fd0347b2ccb0d935e2fee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1684984258
 GameObject:
   m_ObjectHideFlags: 0
@@ -914,6 +948,80 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2009154033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2009154034}
+  - component: {fileID: 2009154035}
+  m_Layer: 0
+  m_Name: Unlock All Screw Boxes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2009154034
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009154033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582410616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2009154035
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2009154033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock All Screw Boxes!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9verrouillez toutes les bo\xEEtes \xE0 vis!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schalten Sie alle Schraubenkisten frei!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca tutte le scatole a vite!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3059\u3079\u3066\u306E\u30B9\u30AF\u30EA\u30E5\u30FC\u30DC\u30C3\u30AF\u30B9\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBAA8\uB4E0 \uB098\uC0AC \uC0C1\uC790 \uC7A0\uAE08 \uD574\uC81C!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desbloqueie todas as caixas de parafusos!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0439\u0442\u0435
+      \u0432\u0441\u0435 \u0432\u0438\u043D\u0442\u043E\u0432\u044B\u0435 \u044F\u0449\u0438\u043A\u0438!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Desbloquee todas las cajas de tornillo!"
+    Object: {fileID: 0}
 --- !u!1 &395928970860806824
 GameObject:
   m_ObjectHideFlags: 0

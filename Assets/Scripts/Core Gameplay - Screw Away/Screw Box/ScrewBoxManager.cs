@@ -601,6 +601,31 @@ public class ScrewBoxManager : MonoBehaviour
 
         _isSpawnScrewBoxFirstTimeInLevel = false;
     }
+
+    public void UnlockAllScrewBoxes()
+    {
+        int totalBoxUnlocked = 0;
+
+        for (int i = 0; i < screwBoxs.Length; i++)
+        {
+            if (screwBoxs[i] == null)
+            {
+                continue;
+            }
+
+            if (screwBoxs[i].IsLocked)
+            {
+                screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
+
+                totalBoxUnlocked++;
+
+                if (totalBoxUnlocked == 2)
+                {
+                    break;
+                }
+            }
+        }
+    }
     #endregion
 
     private void MoveFromScrewPortToScrewBox(ScrewBox screwBox)
