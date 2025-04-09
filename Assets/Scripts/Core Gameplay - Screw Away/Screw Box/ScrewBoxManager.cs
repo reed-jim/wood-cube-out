@@ -148,7 +148,7 @@ public class ScrewBoxManager : MonoBehaviour
                 screwPorts[i].Screw = null;
             }
         }
-        
+
         GamePersistentVariable.numHolesAdded = 0;
 
         int toRemoveStartIndex = 0;
@@ -175,7 +175,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[i].transform.lossyScale.x;
 
             screwPorts[i].transform.position = screwPortPosition;
         }
@@ -215,7 +215,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[i].transform.lossyScale.x;
 
             screwPorts[i].transform.position = screwPortPosition;
         }
@@ -798,7 +798,7 @@ public class ScrewBoxManager : MonoBehaviour
         {
             int index = i;
 
-            position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[0].transform.lossyScale.x;
 
             _tweens.Add(Tween.Position(screwPorts[i].transform, position, duration: 0.3f)
             .OnComplete(() =>

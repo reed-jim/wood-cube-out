@@ -138,9 +138,9 @@ public class LevelLoader : MonoBehaviour
 
         setLevelNumberEvent?.Invoke();
 
-        string levelPrefab = $"Level {nextLevel}";
+        nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
-        RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
+        string levelPrefab = $"Level {nextLevel}";
 
         // A/B TEST LEVEL 4
         if (nextLevel == 4)
@@ -191,6 +191,21 @@ public class LevelLoader : MonoBehaviour
                     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
                 }
+
+                // // GENERATE CONVEX COLLIDERS
+                // for (int i = 0; i < pieces.Count; i++)
+                // {
+                //     BasicObjectPart piece = pieces[i];
+                //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
+                //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
+
+                //     if (!pieceCollider.convex)
+                //     {
+                //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
+
+                //         Destroy(pieceCollider);
+                //     }
+                // }
 
 
 
