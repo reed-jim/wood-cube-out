@@ -434,6 +434,7 @@ public class FirebaseConfig
     public const string IS_ENABLE_LOAD_LEVEL_PROGRESS = "is_enable_load_level_progress";
     public const string REMOTE_CONFIG_LEVEL_LIST = "remote_config_level_list";
     public const string DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS = "difficulty_weight_group_of_five_levels";
+    public const string BANNER_COOLDOWN = "banner_cooldown";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
