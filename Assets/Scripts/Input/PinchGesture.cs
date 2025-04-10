@@ -110,9 +110,9 @@ public class PinchGesture : MonoBehaviour
     {
         _isDisabled = false;
 
-        zoomSlider.value = 0.5f;
+        zoomSlider.value = 0f;
 
-        OnZoomSliderValueChanged(zoomSlider.value);
+        // OnZoomSliderValueChanged(zoomSlider.value);
 
         // pinchGestureEvent?.Invoke(maxZoom);
     }
@@ -144,7 +144,12 @@ public class PinchGesture : MonoBehaviour
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
         maxZoom = orthographicSize;
-        minZoom = 0.7f * orthographicSize;
+        minZoom = 0.5f * orthographicSize;
+
+        Tween.Delay(0.2f).OnComplete(() =>
+        {
+            zoomSlider.value = 0.5f;
+        });
     }
 
     private void EnablePinching(bool isEnable)
