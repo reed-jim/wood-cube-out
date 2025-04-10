@@ -24,6 +24,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
     public static event Action removeAdPurchasedCompletedEvent;
+    public static event Action unlockScrewBoxesPurchasedCompletedEvent;
     public static event Action<int> collectCoinEvent;
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
@@ -272,6 +273,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             GamePersistentVariable.isUnlockedAllScrewBoxes = true;
 
                             GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
+
+                            unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
                         }
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);

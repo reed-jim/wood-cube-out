@@ -47,6 +47,7 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
@@ -66,6 +67,11 @@ public class MenuScreen : MonoBehaviour
         if (UserData.IsRemoveAds)
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
+        }
+
+        if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
+        {
+            openAllScrewBoxesForeverButton.gameObject.SetActive(false);
         }
 
         currentLevel.Load();
@@ -101,6 +107,7 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
@@ -139,6 +146,8 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
+        Debug.Log("SAFERIO " + GamePersistentVariable.isEnableLoadingLevelInProgress);
+        
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
             GamePersistentVariable.isLoadingLevelInProgress = false;
@@ -211,6 +220,11 @@ public class MenuScreen : MonoBehaviour
     private void OnAdsRemoved()
     {
         openRemoveAdPopupButton.gameObject.SetActive(false);
+    }
+
+    private void OnAllScrewBoxesUnlockedForever()
+    {
+        openAllScrewBoxesForeverButton.gameObject.SetActive(false);
     }
 
     private void UpdateRemoveAdsState()

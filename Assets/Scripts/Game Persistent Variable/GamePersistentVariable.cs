@@ -66,6 +66,7 @@ public static class GamePersistentVariable
 
     #region ADS
     public static bool remoteConfigIsShowMREC;
+    public static int bannerCooldown = 30;
     #endregion
 
     #region IAP

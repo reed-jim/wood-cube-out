@@ -67,6 +67,8 @@ public class LevelLoader : MonoBehaviour
         _maxLevel = levelDataContainer.MaxLevel;
 
         GoLevel(currentLevel.Value);
+
+        // StartCoroutine(LoadFromGitHub());
     }
 
     void OnDestroy()
@@ -84,6 +86,13 @@ public class LevelLoader : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
+
+    // System.Collections.IEnumerator LoadFromGitHub()
+    // {
+    //     var handle = Addressables.LoadContentCatalogAsync("https://raw.githubusercontent.com/ninhnk2000/wood-cube-out-content/refs/heads/main/Content/catalog_21.hash");
+        
+    //     yield return handle;
+    // }
 
     #region LEVEL
     private async Task LoadLevel()
@@ -296,7 +305,7 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                int randomSuggestionIndex = UnityEngine.Random.Range(0, 1);
+                int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
 
                 if (randomSuggestionIndex == 0)
                 {
@@ -310,6 +319,13 @@ public class LevelLoader : MonoBehaviour
                     if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
                     {
                         DelayShowIAPSuggestion();
+                    }
+                    else
+                    {
+                        if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+                        {
+                            DelayShowDoubleScrewBoxesSuggestion();
+                        }
                     }
                 }
 
@@ -743,7 +759,7 @@ public class LevelLoader : MonoBehaviour
 
         float maxExpectedLevelSize = expectedLevelSize.x;
 
-        if (expectedLevelSize.y > maxExpectedLevelSize)
+        if (expectedLevelSize.y > 1.05f * maxExpectedLevelSize)
         {
             maxExpectedLevelSize = expectedLevelSize.y;
 
@@ -759,7 +775,7 @@ public class LevelLoader : MonoBehaviour
 
         Camera mainCamera = Camera.main;
 
-        float expectedScreenWidth = 1.1f * maxExpectedLevelSize;
+        float expectedScreenWidth = 1.6f * maxExpectedLevelSize;
         float expectedScreenHeight = 2.3f * maxExpectedLevelSize;
 
         if (!isScaleByHeight)
@@ -823,9 +839,14 @@ public class LevelLoader : MonoBehaviour
     private bool IsShowDoubleScrewBoxesSuggestion(int level)
     {
         bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
-        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 1);
 
         if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
         {
             return false;
         }
