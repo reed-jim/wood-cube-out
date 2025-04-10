@@ -90,7 +90,7 @@ public class LevelLoader : MonoBehaviour
     // System.Collections.IEnumerator LoadFromGitHub()
     // {
     //     var handle = Addressables.LoadContentCatalogAsync("https://raw.githubusercontent.com/ninhnk2000/wood-cube-out-content/refs/heads/main/Content/catalog_21.hash");
-        
+
     //     yield return handle;
     // }
 
@@ -775,8 +775,8 @@ public class LevelLoader : MonoBehaviour
 
         Camera mainCamera = Camera.main;
 
-        float expectedScreenWidth = 1.6f * maxExpectedLevelSize;
-        float expectedScreenHeight = 2.3f * maxExpectedLevelSize;
+        float expectedScreenWidth = 1.5f * maxExpectedLevelSize;
+        float expectedScreenHeight = 3f * maxExpectedLevelSize;
 
         if (!isScaleByHeight)
         {
@@ -784,6 +784,12 @@ public class LevelLoader : MonoBehaviour
         }
 
         float targetOrthographicSize = expectedScreenHeight / 2f;
+
+        // 3 dimesion equal
+        if (Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f)
+        {
+            targetOrthographicSize *= 1.3f;
+        }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
     }
