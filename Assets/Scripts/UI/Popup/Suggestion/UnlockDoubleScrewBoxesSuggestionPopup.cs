@@ -26,9 +26,39 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        if (CommonUtil.GetParentActiveChildCount(transform.parent) > 1)
+        {
+            return;
+        }
 
-        _countingCoroutine = StartCoroutine(Counting());
+        // delay enable buttons
+        closeButton.interactable = false;
+        claimButton.interactable = false;
+        noThanksButton.interactable = false;
+
+        closeButton.transform.localScale = Vector3.zero;
+        claimButton.transform.localScale = Vector3.zero;
+        noThanksButton.transform.localScale = Vector3.zero;
+
+        timeText.text = $"{10}s";
+
+        base.Show(ShowButtons);
+
+        void ShowButtons()
+        {
+            _tweens.Add(Tween.Scale(closeButton.transform, 1, duration: 0.3f));
+            _tweens.Add(Tween.Scale(claimButton.transform, 1, duration: 0.3f));
+            _tweens.Add(Tween.Scale(noThanksButton.transform, 1, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    closeButton.interactable = true;
+                    claimButton.interactable = true;
+                    noThanksButton.interactable = true;
+
+                    _countingCoroutine = StartCoroutine(Counting());
+                })
+            );
+        }
     }
 
     private IEnumerator Counting()
@@ -37,13 +67,11 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
 
         int remaningTime = 10;
 
-        timeText.text = $"{remaningTime}s";
-
         while (remaningTime > 0)
         {
             // CommonUtil.StopAllTweens(_tweens);
 
-            SoundManager.Instance.PlaySoundCountingTime();
+            // SoundManager.Instance.PlaySoundTightenScrew();
 
             _tweens.Add(Tween.Scale(claimButton.transform, 1.05f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.4f)
             .OnComplete(() =>
@@ -84,6 +112,8 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
+        Hide();
+
         InvokeShowAdNotLoadedPopupEvent();
     }
 }

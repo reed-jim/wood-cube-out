@@ -95,6 +95,8 @@ public class ResourceEarnPopup : BasePopup
         if (GamePersistentVariable.isUnlockedAllScrewBoxes)
         {
             validResourceGroups.Add(resourceGroups[5]);
+
+            GamePersistentVariable.isUnlockedAllScrewBoxes = false;
         }
 
         if (coinQuantity > 0)

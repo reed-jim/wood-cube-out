@@ -26,38 +26,42 @@ public static class RemoteConfigLevelManager
 
     public static int GetReplacedLevelIndex(int originalLevelIndex)
     {
-        RemoteConfigLevelList remoteConfigLevelList;
-
-        RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out remoteConfigLevelList);
-
-        if (remoteConfigLevelList.toReplaceLevelList == null)
+        try
         {
-            return 0;
-        }
+            RemoteConfigLevelList remoteConfigLevelList;
 
-        foreach (var item in remoteConfigLevelList.toReplaceLevelList)
-        {
-            Debug.Log("SAFERIO " + item.value + "/" + item.key);
-        }
+            RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out remoteConfigLevelList);
 
-        int index = -1;
-
-        for (int i = 0; i < remoteConfigLevelList.toReplaceLevelList.Length; i++)
-        {
-            if (remoteConfigLevelList.toReplaceLevelList[i].key == originalLevelIndex)
+            if (remoteConfigLevelList.toReplaceLevelList == null)
             {
-                index = i;
-
-                break;
+                return originalLevelIndex;
             }
-        }
 
-        if (index == -1)
+            int index = -1;
+
+            for (int i = 0; i < remoteConfigLevelList.toReplaceLevelList.Length; i++)
+            {
+                if (remoteConfigLevelList.toReplaceLevelList[i].key == originalLevelIndex)
+                {
+                    index = i;
+
+                    break;
+                }
+            }
+
+            if (index == -1)
+            {
+                return originalLevelIndex;
+            }
+
+            return remoteConfigLevelList.toReplaceLevelList[index].value;
+        }
+        catch (System.Exception)
         {
-            return originalLevelIndex;
+
         }
 
-        return remoteConfigLevelList.toReplaceLevelList[index].value;
+        return originalLevelIndex;
     }
 }
 
