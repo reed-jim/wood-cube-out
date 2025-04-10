@@ -43,6 +43,8 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
         {
             // CommonUtil.StopAllTweens(_tweens);
 
+            SoundManager.Instance.PlaySoundCountingTime();
+
             _tweens.Add(Tween.Scale(claimButton.transform, 1.05f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.4f)
             .OnComplete(() =>
             {

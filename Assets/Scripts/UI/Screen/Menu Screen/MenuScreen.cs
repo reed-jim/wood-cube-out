@@ -13,6 +13,8 @@ public class MenuScreen : MonoBehaviour
 {
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button openRemoveAdPopupButton;
+    [SerializeField] private Button openAllScrewBoxesForeverButton;
+    [SerializeField] private CanvasGroup openAllScrewBoxesForeverCanvasGroup;
     [SerializeField] private Button openDailyRewardPopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
@@ -29,6 +31,7 @@ public class MenuScreen : MonoBehaviour
     private List<Tween> _tweens;
     private float _initialOpenRemoveAdPopupButtonPositionY;
     private Tween _openRemoveAdPopupButtonTween;
+    private Tween _openUnlockScrewBoxesPopupButtonTween;
     private Tween _topBarDividerTween;
     #endregion
 
@@ -50,6 +53,7 @@ public class MenuScreen : MonoBehaviour
 
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
+        openAllScrewBoxesForeverButton.onClick.AddListener(OpenUnlockAllScrewBoxesForeverPopup);
         openDailyRewardPopupButton.onClick.AddListener(OpenDailyRewardPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
@@ -159,6 +163,11 @@ public class MenuScreen : MonoBehaviour
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
 
+    private void OpenUnlockAllScrewBoxesForeverPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.UnlockAllScrewBoxesForever);
+    }
+
     private void OpenDailyRewardPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.DailyReward);
@@ -232,6 +241,22 @@ public class MenuScreen : MonoBehaviour
         {
             _openRemoveAdPopupButtonTween = Tween.LocalPositionY(
                 openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * GamePersistentVariable.canvasSize.y, 0.3f);
+        }
+
+        // Unlock All Screw boxes
+        CommonUtil.StopTween(_openUnlockScrewBoxesPopupButtonTween);
+
+        if (screenRoute != ScreenRoute.IAPShop)
+        {
+            openAllScrewBoxesForeverCanvasGroup.interactable = true;
+
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(openAllScrewBoxesForeverCanvasGroup, 1, duration: 0.3f);
+        }
+        else
+        {
+            openAllScrewBoxesForeverCanvasGroup.interactable = false;
+
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(openAllScrewBoxesForeverCanvasGroup, 0, duration: 0.3f);
         }
     }
 

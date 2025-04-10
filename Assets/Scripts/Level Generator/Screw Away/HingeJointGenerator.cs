@@ -309,6 +309,11 @@ public class HingeJointGenerator : EditorWindow
             CheckForConcaveColliderAllLevels();
         }
 
+        if (GUILayout.Button("Check Missing Components"))
+        {
+            CheckMissingComponents();
+        }
+
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
@@ -799,6 +804,24 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return totalConcavePieces;
+    }
+
+    private void CheckMissingComponents()
+    {
+        Transform selected = Selection.activeTransform;
+
+        GameObject go = selected.gameObject;
+        Component[] components = go.GetComponents<Component>();
+
+        Debug.Log("SAFERIO " + components.Length);
+
+        for (int i = 0; i < components.Length; i++)
+        {
+            if (components[i] == null)
+            {
+                Debug.Log($"SAFERIO Missing Component found on GameObject: {go.name}", go);
+            }
+        }
     }
     #endregion
 

@@ -92,6 +92,11 @@ public class ResourceEarnPopup : BasePopup
             _isRemoveAds = true;
         }
 
+        if (GamePersistentVariable.isUnlockedAllScrewBoxes)
+        {
+            validResourceGroups.Add(resourceGroups[5]);
+        }
+
         if (coinQuantity > 0)
         {
             _resourceGroupsUI[1].SetQuantity(coinQuantity);

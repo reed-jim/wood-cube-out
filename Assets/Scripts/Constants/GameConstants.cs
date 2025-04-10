@@ -65,6 +65,7 @@ public static class GameConstants
     public static string CLOSE_POPUP_SOUND = "Close Popup Sound";
     public static string UNLOCK_ADS_SCREW_BOX_SOUND = "Unlock Ads Screw Box Sound";
     public static string CLEAR_SCREW_PORTS_SOUND = "Clear Screw Ports Sound";
+    public static string COUNTING_TIME_SOUND = "Counting Time Sound";
     #endregion
 
     #region ANIMATION
@@ -88,6 +89,7 @@ public static class GameConstants
 
     #region IAP
     public static string REMOVE_AD_ID = "remove_ad";
+    public static string IS_UNLOCKED_ALL_SCREW_BOXES = "IS_UNLOCKED_ALL_SCREW_BOXES";
     #endregion
 
     #region SAVE/LOAD
