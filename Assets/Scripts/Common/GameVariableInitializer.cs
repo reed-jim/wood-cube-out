@@ -58,8 +58,6 @@ public class GameVariableInitializer : MonoBehaviour
 
         if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
         {
-            GamePersistentVariable.isUnlockedAllScrewBoxes = true;
-
             GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
         }
 
