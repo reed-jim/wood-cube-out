@@ -10,6 +10,7 @@ public class IAPPackageData : ScriptableObject
     [SerializeField] private int breakObjectBoosterQuantity;
     [SerializeField] private int clearHolesBoosterQuantity;
     [SerializeField] private bool isRemoveAd;
+    [SerializeField] private bool isUnlockAllScrewBoxes;
     [SerializeField] private float price;
 
     public string ProductId
@@ -45,6 +46,11 @@ public class IAPPackageData : ScriptableObject
     public bool IsRemoveAd
     {
         get => isRemoveAd;
+    }
+
+    public bool IsUnlockAllScrewBoxes
+    {
+        get => isUnlockAllScrewBoxes;
     }
 
     public float Price

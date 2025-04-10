@@ -39,10 +39,12 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         RemoveAdPopup.buyIAPEvent += BuyProduct;
         IAPReviewPopup.buyIAPEvent += BuyProduct;
         IAPSuggestionPopup.buyIAPEvent += BuyProduct;
+        UnlockAllScrewBoxesForeverPopup.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice += FetchLocalizedPrice;
+        UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -75,10 +77,12 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
         IAPReviewPopup.buyIAPEvent -= BuyProduct;
         IAPSuggestionPopup.buyIAPEvent -= BuyProduct;
+        UnlockAllScrewBoxesForeverPopup.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
+        UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
     }
 
     private void Init()
@@ -259,6 +263,15 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             AdmobAdsMax.Instance.DestroyBanner();
 
                             UserData.IsRemoveAds = true;
+                        }
+
+                        if (productData.IsUnlockAllScrewBoxes)
+                        {
+                            DataUtility.Save(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, true);
+
+                            GamePersistentVariable.isUnlockedAllScrewBoxes = true;
+
+                            GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
                         }
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);

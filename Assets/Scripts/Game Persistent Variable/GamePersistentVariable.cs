@@ -71,5 +71,6 @@ public static class GamePersistentVariable
     #region IAP
     public static string IAPLocation;
     public static int IAPAddition;
+    public static bool isUnlockedAllScrewBoxes;
     #endregion
 }
