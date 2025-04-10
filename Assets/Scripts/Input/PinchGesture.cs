@@ -110,9 +110,9 @@ public class PinchGesture : MonoBehaviour
     {
         _isDisabled = false;
 
-        zoomSlider.value = 0;
+        zoomSlider.value = 0.5f;
 
-        // OnZoomSliderValueChanged(0);
+        OnZoomSliderValueChanged(zoomSlider.value);
 
         // pinchGestureEvent?.Invoke(maxZoom);
     }
