@@ -591,7 +591,7 @@ public static class LevelDifficultyCalculatorUltility
 
         List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
 
-        int PREDICTED_MAX_LEVEL = 225;
+        int PREDICTED_MAX_LEVEL = 175;
 
         // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
