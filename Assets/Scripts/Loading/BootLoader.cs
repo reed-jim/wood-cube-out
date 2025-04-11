@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
 
 public class BootLoader : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class BootLoader : MonoBehaviour
         // Skip one frame, so in case of pause event, we can react
         yield return null;
 
-        Addressables.LoadSceneAsync(GameConstants.LOADING_SCENE);
+        SceneManager.LoadScene(GameConstants.LOADING_SCENE);
+
+        // Addressables.LoadSceneAsync(GameConstants.LOADING_SCENE);
     }
 
     System.Collections.IEnumerator LoadFromGitHub()
@@ -34,5 +37,17 @@ public class BootLoader : MonoBehaviour
         {
             Debug.LogError("SAFERIO Failed to load catalog.");
         }
+    }
+
+    IEnumerator DownloadWithProgress(object key)
+    {
+        var handle = Addressables.DownloadDependenciesAsync(key, true);
+        while (!handle.IsDone)
+        {
+            Debug.Log($"Downloading: {handle.PercentComplete * 100}%");
+            yield return null;
+        }
+
+        Debug.Log("Download complete.");
     }
 }
