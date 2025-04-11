@@ -7,7 +7,7 @@ public class BootLoader : MonoBehaviour
 {
     void Start()
     {
-        StartCoroutine(LoadFromGitHub());
+        StartCoroutine(LoadMainScene());
     }
 
     IEnumerator LoadMainScene()

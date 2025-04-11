@@ -304,6 +304,13 @@ public class LevelLoader : MonoBehaviour
                     {
                         DelayShowDoubleScrewBoxesSuggestion();
                     }
+                    else
+                    {
+                        if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                        {
+                            DelayShowIAPSuggestion();
+                        }
+                    }
                 }
                 else
                 {
