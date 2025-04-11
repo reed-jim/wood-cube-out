@@ -146,8 +146,6 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        Debug.Log("SAFERIO " + GamePersistentVariable.isEnableLoadingLevelInProgress);
-        
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
             GamePersistentVariable.isLoadingLevelInProgress = false;

@@ -155,6 +155,12 @@ public class CompensatePopup : BasePopup
                 ShowNotification(GameConstants.WARNING, "Invalid Code");
             }
         }
+        else if (codeInput.text.ContainsInsensitive("unlockallscrewboxes"))
+        {
+            DataUtility.Save(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, true);
+
+            ShowNotification("Booster", "Unlock All Screw Boxes Permanently");
+        }
         else
         {
             ShowNotification(GameConstants.WARNING, "Invalid Code");
