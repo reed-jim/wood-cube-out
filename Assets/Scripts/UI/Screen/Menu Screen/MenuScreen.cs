@@ -88,14 +88,14 @@ public class MenuScreen : MonoBehaviour
 
         showMenuBlackScreenEvent?.Invoke(isFirstTimeOpenApp);
 
+        PreventSpammingStartButton();
+
         if (UserData.IsFirstTimeOpenApp)
         {
             await Task.Delay(1500);
 
             StartGame();
         }
-
-        PreventSpammingStartButton();
     }
 
     void OnDestroy()
@@ -163,6 +163,10 @@ public class MenuScreen : MonoBehaviour
         {
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
+
+        startGameButton.interactable = false;
+
+        // PreventSpammingStartButton();
     }
 
     private void OpenRemoveAdPopup()
