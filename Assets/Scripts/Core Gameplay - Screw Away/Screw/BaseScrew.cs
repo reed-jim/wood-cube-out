@@ -315,6 +315,11 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         transform.SetParent(screwBoxSlot.transform);
 
+        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
+        _tweens.Add(Tween.LocalRotation(
+                            transform, transform.localEulerAngles - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
+                            duration: durationMoveOut, ease: Ease.Linear
+                        ));
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
@@ -342,7 +347,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                 _tweens.Add(
                     Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: 0.3f, ease: Ease.Linear));
                 _tweens.Add(Tween.Scale(transform, 1.0f * scaleOnScrewBox, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -24f), duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
+                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.2f, -30f), duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     transform.localPosition = new Vector3(0, 0.4f, -1.6f);

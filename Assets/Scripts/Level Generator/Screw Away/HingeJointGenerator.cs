@@ -8,6 +8,8 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 
 public class HingeJointGenerator : EditorWindow
@@ -317,6 +319,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
+        }
+
+        if (GUILayout.Button("CheckAddressablesLevels"))
+        {
+            CheckAddressablesLevels();
         }
 
         if (GUILayout.Button("Fold All"))
@@ -767,6 +774,30 @@ public class HingeJointGenerator : EditorWindow
                     break;
                 }
             }
+        }
+    }
+
+    private void CheckAddressablesLevels()
+    {
+        int total = 0;
+
+        for (int i = 1; i <= 175; i++)
+        {
+            int level = i;
+
+            string levelPrefab = $"Level {level}";
+
+            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+
+            handle.Completed += (op) =>
+            {
+                if (op.Status == AsyncOperationStatus.Succeeded)
+                {
+                    total++;
+
+                    Debug.Log($"<color=#32CD32>SAFERIO Level {level} Passed</color> - Total: {total}");
+                }
+            };
         }
     }
 

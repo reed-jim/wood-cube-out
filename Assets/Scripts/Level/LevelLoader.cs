@@ -67,8 +67,6 @@ public class LevelLoader : MonoBehaviour
         _maxLevel = levelDataContainer.MaxLevel;
 
         GoLevel(currentLevel.Value);
-
-        // StartCoroutine(LoadFromGitHub());
     }
 
     void OnDestroy()
@@ -86,13 +84,6 @@ public class LevelLoader : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
-
-    // System.Collections.IEnumerator LoadFromGitHub()
-    // {
-    //     var handle = Addressables.LoadContentCatalogAsync("https://raw.githubusercontent.com/ninhnk2000/wood-cube-out-content/refs/heads/main/Content/catalog_21.hash");
-
-    //     yield return handle;
-    // }
 
     #region LEVEL
     private async Task LoadLevel()
@@ -131,15 +122,15 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // NOT LOOP
-        if (isLoopLevel)
-        {
-            showSceneTransitionEvent?.Invoke();
-            setIsLevelLoadedEvent?.Invoke();
-            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        // // NOT LOOP
+        // if (isLoopLevel)
+        // {
+        //     showSceneTransitionEvent?.Invoke();
+        //     setIsLevelLoadedEvent?.Invoke();
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-            return;
-        }
+        //     return;
+        // }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 

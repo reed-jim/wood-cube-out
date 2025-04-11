@@ -1031,7 +1031,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        
+
     }
 
     public void OnMRecAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo error) { }
@@ -1040,18 +1040,25 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnMRecAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        if (adInfo == null) return;
-        if (adInfo.Revenue < 0) return;
+        try
+        {
+            if (adInfo == null) return;
+            if (adInfo.Revenue < 0) return;
 
-        double revenue = adInfo.Revenue;
+            double revenue = adInfo.Revenue;
 
-        AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
+            AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
+                adInfo.AdFormat, revenue, "USD");
 
-        AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
-        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
-            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+            AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
+                adInfo.AdFormat, revenue, "USD");
+            AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
+                adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     public void OnMRecAdExpandedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
