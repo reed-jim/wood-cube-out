@@ -45,6 +45,7 @@ public class LevelLoader : MonoBehaviour
     public static event Action setIsLevelLoadedEvent;
     public static event Action<bool> enableSwipingEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
+    public static event Action<bool> showLoadLevelErrorEvent;
     #endregion
 
     private void Awake()
@@ -58,6 +59,7 @@ public class LevelLoader : MonoBehaviour
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
+        LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
@@ -80,14 +82,28 @@ public class LevelLoader : MonoBehaviour
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
+        LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
 
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
 
     #region LEVEL
-    private async Task LoadLevel()
+    private async void LoadLevel()
     {
+        // NO INTERNET
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            showLoadLevelErrorEvent?.Invoke(true);
+
+            return;
+        }
+        else
+        {
+            showLoadLevelErrorEvent?.Invoke(false);
+        }
+        //
+
         int nextLevel = 1;
 
         bool isLoopLevel = false;
@@ -296,41 +312,7 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
-
-                if (randomSuggestionIndex == 0)
-                {
-                    if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
-                    {
-                        DelayShowDoubleScrewBoxesSuggestion();
-                    }
-                    else
-                    {
-                        if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
-                        {
-                            DelayShowIAPSuggestion();
-                        }
-                    }
-                }
-                else
-                {
-                    if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
-                    {
-                        DelayShowIAPSuggestion();
-                    }
-                    else
-                    {
-                        if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
-                        {
-                            DelayShowDoubleScrewBoxesSuggestion();
-                        }
-                    }
-                }
-
-                // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
-                // {
-                //     DelayShowBoosterSuggest();
-                // }
+                ShowSuggestion(nextLevel, isLoopLevel);
             }
         };
 
@@ -817,6 +799,45 @@ public class LevelLoader : MonoBehaviour
     #endregion
 
     #region BOOSTER SUGGESTION
+    private void ShowSuggestion(int nextLevel, bool isLoopLevel)
+    {
+        int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
+
+        if (randomSuggestionIndex == 0)
+        {
+            if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+            {
+                DelayShowDoubleScrewBoxesSuggestion();
+            }
+            else
+            {
+                if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                {
+                    DelayShowIAPSuggestion();
+                }
+            }
+        }
+        else
+        {
+            if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+            {
+                DelayShowIAPSuggestion();
+            }
+            else
+            {
+                if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+                {
+                    DelayShowDoubleScrewBoxesSuggestion();
+                }
+            }
+        }
+
+        // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
+        // {
+        //     DelayShowBoosterSuggest();
+        // }
+    }
+
     private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
     {
         // if (isLoopLevel)
