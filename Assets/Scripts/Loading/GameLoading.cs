@@ -64,9 +64,9 @@ public class GameLoading : MonoBehaviour
             _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
         }
 
-        StartCoroutine(LoadFromGitHub());
+        // StartCoroutine(LoadFromGitHub());
 
-        // StartCoroutine(SlowTransititon());
+        StartCoroutine(SlowTransititon());
     }
 
     private void OnDestroy()
