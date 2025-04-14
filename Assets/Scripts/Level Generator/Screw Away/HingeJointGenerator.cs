@@ -3119,6 +3119,8 @@ public class HingeJointGenerator : EditorWindow
             {
                 Transform piece = Instantiate(child, level);
 
+                piece.transform.position = child.position;
+
                 Component[] components = piece.GetComponents<Component>();
 
                 foreach (Component component in components)
