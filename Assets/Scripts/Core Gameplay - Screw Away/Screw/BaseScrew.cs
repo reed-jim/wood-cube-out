@@ -172,6 +172,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         MoreLogicInAwake();
     }
 
+    void Start()
+    {
+        transform.eulerAngles = transform.eulerAngles.ChangeZ(0);
+    }
+
     void OnDestroy()
     {
         ScrewBoxManager.looseScrewEvent -= Loose;
