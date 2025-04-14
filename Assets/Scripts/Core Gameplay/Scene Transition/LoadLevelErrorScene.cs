@@ -46,7 +46,10 @@ public class LoadLevelErrorScene : MonoBehaviour
             endValue = 1;
         }
 
-        canvasGroup.gameObject.SetActive(true);
+        if (isShow)
+        {
+            canvasGroup.gameObject.SetActive(true);
+        }
 
         _tweens.Add(Tween.Alpha(canvasGroup, endValue, duration: 0.3f)
         .OnComplete(() =>
