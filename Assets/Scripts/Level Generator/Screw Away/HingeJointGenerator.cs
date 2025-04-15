@@ -321,6 +321,11 @@ public class HingeJointGenerator : EditorWindow
             CheckHingeJointNumberAllLevels();
         }
 
+        if (GUILayout.Button("Check Null HingeJoint's Rigidbody"))
+        {
+            CheckForNullHingeJointRigidbody(Selection.activeTransform);
+        }
+
         if (GUILayout.Button("CheckAddressablesLevels"))
         {
             CheckAddressablesLevels();
@@ -818,6 +823,25 @@ public class HingeJointGenerator : EditorWindow
         Debug.Log("SAFERIO " + totalConcavePieces);
     }
 
+    private int CheckForNullHingeJointRigidbody(Transform level)
+    {
+        HingeJoint[] hingeJoints = GetComponentsFromAllChildren<HingeJoint>(level).ToArray();
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < hingeJoints.Length; i++)
+        {
+            if (hingeJoints[i].connectedBody == null)
+            {
+                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + hingeJoints[i].transform.parent.name + "</color>");
+
+                totalConcavePieces++;
+            }
+        }
+
+        return totalConcavePieces;
+    }
+
     private int CheckForConcaveCollider(Transform level)
     {
         BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
@@ -1224,6 +1248,7 @@ public class HingeJointGenerator : EditorWindow
             Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
             selectedObject.rotation = surfaceRotation;
+            selectedObject.localEulerAngles = selectedObject.localEulerAngles.ChangeZ(0);
         }
     }
 
