@@ -174,7 +174,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
     void Start()
     {
-        transform.eulerAngles = transform.eulerAngles.ChangeZ(0);
+        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
     }
 
     void OnDestroy()
