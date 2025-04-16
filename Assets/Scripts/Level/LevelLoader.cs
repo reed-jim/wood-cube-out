@@ -91,18 +91,18 @@ public class LevelLoader : MonoBehaviour
     #region LEVEL
     private async void LoadLevel()
     {
-        // NO INTERNET
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            showLoadLevelErrorEvent?.Invoke(true);
+        // // NO INTERNET
+        // if (Application.internetReachability == NetworkReachability.NotReachable)
+        // {
+        //     showLoadLevelErrorEvent?.Invoke(true);
 
-            return;
-        }
-        else
-        {
-            showLoadLevelErrorEvent?.Invoke(false);
-        }
-        //
+        //     return;
+        // }
+        // else
+        // {
+        //     showLoadLevelErrorEvent?.Invoke(false);
+        // }
+        // //
 
         int nextLevel = 1;
 
@@ -779,6 +779,9 @@ public class LevelLoader : MonoBehaviour
         float halfDistance = (maxWorldY - minWorldY) / 2;
         float shaderMinY = levelCenter.y - halfDistance;
         float shaderMaxY = levelCenter.y + halfDistance;
+
+        shaderMinY = Mathf.Min(shaderMinY, 0);
+        shaderMaxY = Mathf.Max(shaderMaxY, 1);
 
         if (!_isSetLevelGradientBound)
         {
