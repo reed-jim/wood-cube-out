@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,6 +33,15 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private Vector3 _initialScale;
     private Vector3 _boundSize;
     #endregion
+
+    #region CHECK HINGE JOINT MOVING
+    private Vector3 _initialPosition;
+    private Transform _lastScrew;
+    private Transform _level;
+    private float _lastDistance;
+    private Vector3 _initialLocalPosition;
+    private Vector3 _initialEulerAngles;
+    #endregion  
 
     public bool IsConcave
     {
@@ -195,6 +205,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         physicsMaterial.staticFriction = 0;
         physicsMaterial.dynamicFriction = 0;
+        // physicsMaterial.bounciness = 0.2f;
         physicsMaterial.frictionCombine = PhysicsMaterialCombine.Minimum;
 
         meshCollider.material = physicsMaterial;
@@ -268,6 +279,33 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                     }
 
                     partRigidbody.isKinematic = false;
+
+                    HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
+
+                    for (int i = 0; i < hingeJoints.Length; i++)
+                    {
+                        if (hingeJoints[i].breakForce > 0)
+                        {
+                            _lastScrew = hingeJoints[i].connectedBody.transform;
+
+                            _lastScrew.SetParent(transform.parent);
+
+                            _level = transform.parent;
+
+                            _initialPosition = _level.InverseTransformPoint(transform.position);
+
+                            _lastDistance = Vector3.Distance(transform.position, _lastScrew.position);
+
+
+
+                            _initialLocalPosition = transform.localPosition;
+                            _initialEulerAngles = transform.localEulerAngles;
+
+                            break;
+                        }
+                    }
+
+                    StartCoroutine(CheckHingeJointMoving());
                 }
             }
 
@@ -411,6 +449,28 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         transform.SetParent(LevelGarbageBin.GarbageBin);
     }
+
+    #region CHECK HINGE JOINT MOVING
+    private IEnumerator CheckHingeJointMoving()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (_totalJoint > 0)
+        {
+            if (Mathf.Abs(_lastDistance - Vector3.Distance(transform.position, _lastScrew.position)) > 0.05f)
+            {
+                partRigidbody.isKinematic = true;
+
+                _tweens.Add(Tween.LocalPosition(transform, _initialLocalPosition, duration: 0.3f));
+                _tweens.Add(Tween.LocalEulerAngles(transform, transform.localEulerAngles, _initialEulerAngles, duration: 0.3f));
+
+                break;
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+    #endregion  
 
     #region UTIL
     private bool IsMeshConcave()

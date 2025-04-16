@@ -169,6 +169,11 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAll(Selection.activeTransform);
         }
 
+        // if (GUILayout.Button("Remove Mesh Colliders"))
+        // {
+        //     RemoveAllMeshColliders();
+        // }
+
         // if (GUILayout.Button("Generate Hinge Joint All Levels"))
         // {
         //     GenerateHingeJointAllLevels();
@@ -1115,6 +1120,34 @@ public class HingeJointGenerator : EditorWindow
         }
 
         EditorUtility.SetDirty(Selection.activeTransform);
+    }
+
+    private void RemoveAllMeshColliders()
+    {
+        Transform[] selections = Selection.transforms;
+
+        for (int i = 0; i < selections.Length; i++)
+        {
+            RemoveAllMeshColliders(selections[i]);
+        }
+    }
+
+    private void RemoveAllMeshColliders(Transform selection)
+    {
+        MeshCollider[] meshColliders = selection.GetComponents<MeshCollider>();
+
+        // Remove all existing blocks
+        List<MeshCollider> toRemoveList = new List<MeshCollider>();
+
+        for (int i = 0; i < meshColliders.Length; i++)
+        {
+            toRemoveList.Add(meshColliders[i]);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
     }
     #endregion
 

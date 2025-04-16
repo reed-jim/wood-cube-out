@@ -460,8 +460,9 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         if (joint != null)
         {
+            joint.breakForce = 0;
+
             Destroy(joint);
-            // joint.breakForce = 0;
 
             breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
         }
