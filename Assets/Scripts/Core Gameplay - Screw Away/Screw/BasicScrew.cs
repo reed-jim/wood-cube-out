@@ -119,8 +119,9 @@ public class BasicScrew : BaseScrew
 
             if (joint != null)
             {
+                joint.breakForce = 0;
+
                 Destroy(joint);
-                // joint.breakForce = 0;
 
                 InvokeBreakJointEvent();
             }
