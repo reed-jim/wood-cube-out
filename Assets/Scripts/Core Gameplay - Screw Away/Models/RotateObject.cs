@@ -57,7 +57,7 @@ public class RotateObject : MonoBehaviour
 
         while (true)
         {
-            if (Mathf.Abs(_pitch) > 0.001f || Mathf.Abs(_yaw) > 0.001f)
+            if (Mathf.Abs(_pitch) > 0.005f || Mathf.Abs(_yaw) > 0.005f)
             {
                 // Quaternion cachedRotation = transform.rotation;
 
