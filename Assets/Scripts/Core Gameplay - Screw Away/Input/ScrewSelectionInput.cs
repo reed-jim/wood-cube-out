@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -48,14 +49,17 @@ public class ScrewSelectionInput : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount == 2)
+        if (Input.touchCount > 1)
         {
             return;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            twoTouchPoints.Add(Input.mousePosition);
+            if (twoTouchPoints.Count == 0)
+            {
+                twoTouchPoints.Add(Input.mousePosition);
+            }
         }
 
         if (Input.GetMouseButton(0))

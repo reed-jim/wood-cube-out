@@ -280,32 +280,32 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
                     partRigidbody.isKinematic = false;
 
-                    HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
+                    // HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
 
-                    for (int i = 0; i < hingeJoints.Length; i++)
-                    {
-                        if (hingeJoints[i].breakForce > 0)
-                        {
-                            _lastScrew = hingeJoints[i].connectedBody.transform;
+                    // for (int i = 0; i < hingeJoints.Length; i++)
+                    // {
+                    //     if (hingeJoints[i].breakForce > 0)
+                    //     {
+                    //         _lastScrew = hingeJoints[i].connectedBody.transform;
 
-                            _lastScrew.SetParent(transform.parent);
+                    //         _lastScrew.SetParent(transform.parent);
 
-                            _level = transform.parent;
+                    //         _level = transform.parent;
 
-                            _initialPosition = _level.InverseTransformPoint(transform.position);
+                    //         _initialPosition = _level.InverseTransformPoint(transform.position);
 
-                            _lastDistance = Vector3.Distance(transform.position, _lastScrew.position);
+                    //         _lastDistance = Vector3.Distance(transform.position, _lastScrew.position);
 
 
 
-                            _initialLocalPosition = transform.localPosition;
-                            _initialEulerAngles = transform.localEulerAngles;
+                    //         _initialLocalPosition = transform.localPosition;
+                    //         _initialEulerAngles = transform.localEulerAngles;
 
-                            break;
-                        }
-                    }
+                    //         break;
+                    //     }
+                    // }
 
-                    StartCoroutine(CheckHingeJointMoving());
+                    // StartCoroutine(CheckHingeJointMoving());
                 }
             }
 
