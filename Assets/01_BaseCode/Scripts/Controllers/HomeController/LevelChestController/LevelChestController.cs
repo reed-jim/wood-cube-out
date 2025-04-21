@@ -107,8 +107,8 @@ public class LevelChestController : MonoBehaviour
                 view.OnOpenChestDone();
                 Debug.Log("Chest Rewards" + GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward);
                 GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.LevelChest, rewards, Reason.open_chest_level,
-    GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
-    GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
+                GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
+                GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
                 //OpenChestBox.Setup(true).Show(TypeChest.LevelChest, rewards); 
             },
             priovity = SuggetPopupHomeController.PriovitySugget.Special

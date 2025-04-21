@@ -298,6 +298,7 @@ public class PathPrefabs
     public const string OPEN_CHEST_BOX = "UI/Popups/OpenChestBox";
     public const string SUGGET_LOGIN_BOX = "UI/Popups/SuggetLoginBox";
     public const string REPLAY_BOX = "UI/Popups/ReplayBox";
+    public const string CANT_USE_ITEM_BOX = "UI/Popups/CantUseItemBox";
 
 
     //Pack Sale

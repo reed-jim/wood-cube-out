@@ -33,21 +33,19 @@ public class AddHoleItem : ItemBase
         {
             return false;
         }
-
-        if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts.Count >= 8)
-        {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.AddHole].transform.position, "Max Hole Reached", Color.red);
-            return false;
-        }
-           
-
         if (UseProfile.GetNumItem(typeItem) <= 0)
         {
             return false;
         }
+        return true;
+    }
 
-      
-      
+    public override bool IsCanUseItemNoti()
+    {
+        if (GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts.Count >= 8)
+        {
+            return false;
+        }
 
         return true;
     }

@@ -100,6 +100,7 @@ public class SuggetPopupHomeController : MonoBehaviour
 
     public IEnumerator StartShowPopup()
     {
+        yield return new WaitUntil(()=>GameController.Instance.currentScene == SceneType.MainHome);
         actionsSuggetShowPopup = Helper.SelectionSortListSelf(actionsSuggetShowPopup, (a, b) =>
         {
             if ((int)(((SuggetPopupData)a).priovity) < (int)(((SuggetPopupData)b).priovity))

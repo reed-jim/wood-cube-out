@@ -171,6 +171,11 @@
             throw new NotImplementedException();
         }
 
+        public override bool IsCanUseItemNoti()
+        {
+            throw new NotImplementedException();
+        }
+
         public override void EndItem()
         {
           

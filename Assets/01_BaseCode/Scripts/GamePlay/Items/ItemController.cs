@@ -58,6 +58,19 @@ public class ItemController : MonoBehaviour
 
         return false;
     }
+    public bool IsCanUseItemNoti(GiftType typeItem)
+    {
+        for (int i = 0; i < items.Count; i++)
+        {
+            int index = i;
+            if (items[index].typeItem == typeItem)
+            {
+                return items[index].IsCanUseItemNoti();
+            }
+        }
+
+        return false;
+    }
 
     public ItemBase GetItem(GiftType typeItem)
     {

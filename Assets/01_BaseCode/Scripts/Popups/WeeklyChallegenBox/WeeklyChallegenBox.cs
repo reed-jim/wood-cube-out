@@ -207,19 +207,23 @@ public class WeeklyChallegenBox : BaseBox
                 mainPanel.DOScale(0, 0.5f).SetUpdate(true).SetEase(Ease.InBack).OnComplete(() =>
                 {
 
+                    if (isPostEventPopupClose)
+                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
                     this.gameObject.SetActive(false);
                 });
                 //canvasGruop.DOFade(0, 0.1f);
             }
             else
             {
-                this.gameObject.SetActive(false);
-            }
+                if (isPostEventPopupClose)
+                    EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+                this.gameObject.SetActive(false);            }
         }
         else
         {
-            this.gameObject.SetActive(false);
-        }
+            if (isPostEventPopupClose)
+                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+            this.gameObject.SetActive(false);        }
 
         if (canvasGruop != null)
         {

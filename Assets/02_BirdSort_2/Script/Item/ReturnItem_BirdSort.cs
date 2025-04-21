@@ -36,6 +36,11 @@ public class ReturnItem_BirdSort : ItemBase
         return true;
     }
 
+    public override bool IsCanUseItemNoti()
+    {
+        throw new NotImplementedException();
+    }
+
     protected override bool ActiveItemHandle()
     {
 

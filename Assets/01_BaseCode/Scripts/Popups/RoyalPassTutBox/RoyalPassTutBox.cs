@@ -85,23 +85,28 @@ public class RoyalPassTutBox : BaseBox
                 canvasGruop.DOKill();
                 canvasGruop.alpha = 1;
 
-                canvasGruop.DOFade(0, 0.1f).OnComplete(() => { this.gameObject.SetActive(false); });
+                canvasGruop.DOFade(0, 0.1f).OnComplete(() => { if (isPostEventPopupClose)
+                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+                    this.gameObject.SetActive(false); });
             }
             else
             {
-                this.gameObject.SetActive(false);
+                if (isPostEventPopupClose)
+                    EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+                this.gameObject.SetActive(false);            
             }
         }
         else
         {
-            this.gameObject.SetActive(false);
+            if (isPostEventPopupClose)
+                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+            this.gameObject.SetActive(false);        
         }
 
         if (canvasGruop != null)
         {
             canvasGruop.interactable = false;
         }
-        //this.gameObject.SetActive(false);
         if (!isPopup)
         {
             if (canvasGroupPanel != null)

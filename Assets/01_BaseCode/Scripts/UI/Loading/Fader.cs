@@ -100,9 +100,20 @@ public class Fader : MonoBehaviour
         }
 
         Initiate.DoneFading();
-
+        
        // Debug.Log("Your scene has been loaded , and fading in has just ended");
-
+       switch (fadeScene)
+       {
+           case SceneName.GAME_PLAY:
+               GameController.Instance.currentScene = SceneType.GamePlay;
+               break;
+           case SceneName.HOME_SCENE:
+               GameController.Instance.currentScene = SceneType.MainHome;
+               break;
+           case SceneName.LOADING_SCENE:
+               GameController.Instance.currentScene = SceneType.StartLoading;
+               break;
+       }
         Destroy(gameObject);
 
         yield return null;

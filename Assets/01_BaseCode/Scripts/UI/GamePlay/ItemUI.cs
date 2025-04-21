@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using BirdSort2;
 using DG.Tweening;
 
 public class ItemUI : MonoBehaviour
@@ -95,7 +96,15 @@ public class ItemUI : MonoBehaviour
 
         if (numItem > 0 || isUnlimited)
         {
-            if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.IsCanUseItem(typeItem))
+            if(!BirdSort2.GamePlayController_BirdSort.Instance.itemController.IsCanUseItemNoti(typeItem))
+            {
+                if (typeItem == GiftType.AddHole)
+                {
+                    GamePlayController_BirdSort.Instance.gameScene.RePosItemsUI();
+                }
+                else CantUseItemBox.Setup().Show(typeItem);
+            }
+            else if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.IsCanUseItem(typeItem))
             {
                 if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
                 {
@@ -106,10 +115,6 @@ public class ItemUI : MonoBehaviour
                         BirdSort2.GamePlayController_BirdSort.Instance.tutItemInGameController.NextTut();
                     }
                 }
-            }
-            else
-            {
-                
             }
             if (!BirdSort2.UseProfile.hadBuySuggest)
                 BirdSort2.GamePlayController_BirdSort.Instance.suggetBuyItemController.OnUseItem(typeItem);

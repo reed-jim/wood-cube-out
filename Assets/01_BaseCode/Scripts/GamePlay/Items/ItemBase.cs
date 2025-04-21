@@ -34,7 +34,7 @@ public abstract class ItemBase : MonoBehaviour
     public abstract void OnItemUsed();
 
     public abstract bool IsCanUseItem();
-
+    public abstract bool IsCanUseItemNoti();
     public virtual void InteractButton(bool isInteract)
     {
         GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem].InteractBtnUse(isInteract);

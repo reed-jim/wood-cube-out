@@ -29,6 +29,19 @@ public class ClearHoleItem : ItemBase
             return false;
         }
 
+       
+        if (isClearHole)
+        {
+            return false;
+        }
+
+       
+        return true;
+
+    }
+
+    public override bool IsCanUseItemNoti()
+    {
         bool checkAvailable = false;
         foreach (var i in GamePlayController_BirdSort.Instance.level.screwBoxManager.ScrewPorts)
         {
@@ -37,19 +50,13 @@ public class ClearHoleItem : ItemBase
                 checkAvailable = true;
             }
         }
-
-        if (isClearHole)
-        {
-            return false;
-        }
-
         if (!checkAvailable)
         {
             //GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(GamePlayController_BirdSort.Instance.gameScene.itemsUI[GiftType.ClearHole].transform.position, "Hole Cleared", Color.red);
             return false;
         }
-        return true;
 
+        return true;
     }
 
     protected override bool ActiveItemHandle()

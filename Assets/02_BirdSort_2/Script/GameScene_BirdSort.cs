@@ -355,6 +355,15 @@ namespace BirdSort2
                 Configs.currSelectLevel = Configs.currLevel;
             }
         }
+
+        public void RePosItemsUI()
+        {
+            PrimeTween.Tween.LocalPositionY(itemsUI[GiftType.AddHole].transform, -Screen.height, 0.6f);
+            PrimeTween.Tween.LocalPositionX(itemsUI[GiftType.ClearHole].transform,
+                - parentItem.GetComponent<RectTransform>().rect.width / 6f, 0.4f);
+            PrimeTween.Tween.LocalPositionX(itemsUI[GiftType.BreakObject].transform,
+                 parentItem.GetComponent<RectTransform>().rect.width / 6f, 0.4f);
+        }
         public void UpdateRemainingScrew(int remainingScrew, int totalScrew)
         {
             remainingScrewText.text = $"{remainingScrew}/{totalScrew}";

@@ -85,4 +85,9 @@ public class AddTimeItem_BirdSort : ItemBase
     {
         return true;
     }
+
+    public override bool IsCanUseItemNoti()
+    {
+        throw new System.NotImplementedException();
+    }
 }

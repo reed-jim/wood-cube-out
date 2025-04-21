@@ -35,6 +35,11 @@ public class BreakObjectItem : ItemBase
         return true;
     }
 
+    public override bool IsCanUseItemNoti()
+    {
+        return true;
+    }
+
     protected override bool ActiveItemHandle()
     {
         GamePlayController_BirdSort.Instance.gameScene.EnableHammer();

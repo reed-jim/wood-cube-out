@@ -129,6 +129,7 @@ public class StartLoading : MonoBehaviour
                 {
                      blackBackground.gameObject.SetActive(false);
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                    GameController.Instance.currentScene = SceneType.MainHome;
                 }));
 
                 _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>

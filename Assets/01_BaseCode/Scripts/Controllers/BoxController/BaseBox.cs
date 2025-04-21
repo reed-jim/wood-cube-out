@@ -219,16 +219,16 @@ public abstract class BaseBox : MonoBehaviour
             //}
             else
             {
-                this.gameObject.SetActive(false);
                 if (isPostEventPopupClose)
                     EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+                this.gameObject.SetActive(false);
             }
         }
         else
         {
-            this.gameObject.SetActive(false);
             if (isPostEventPopupClose)
                 EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+            this.gameObject.SetActive(false);
         }
 
         if (canvasGruop != null)

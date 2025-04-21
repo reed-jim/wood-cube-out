@@ -145,4 +145,9 @@ public class LightElectricItem : ItemBase
     {
         return true;
     }
+
+    public override bool IsCanUseItemNoti()
+    {
+        throw new System.NotImplementedException();
+    }
 }

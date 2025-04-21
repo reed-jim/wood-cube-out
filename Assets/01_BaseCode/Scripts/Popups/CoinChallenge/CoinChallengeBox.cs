@@ -96,15 +96,24 @@ public class CoinChallengeBox : BaseBox
                 canvasGruop.DOKill();
                 canvasGruop.alpha = 1;
 
-                canvasGruop.DOFade(0, 0.1f).OnComplete(() => { this.gameObject.SetActive(false); });
+                canvasGruop.DOFade(0, 0.1f).OnComplete(() =>
+                {
+                    if (isPostEventPopupClose)
+                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
+                    this.gameObject.SetActive(false);
+                });
             }
             else
             {
+                if (isPostEventPopupClose)
+                    EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
                 this.gameObject.SetActive(false);
             }
         }
         else
         {
+            if (isPostEventPopupClose)
+                EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
             this.gameObject.SetActive(false);
         }
 
