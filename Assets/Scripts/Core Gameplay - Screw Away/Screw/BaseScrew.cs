@@ -342,7 +342,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                 if (screwBoxSlot.IsScrewPort)
                 {
-                    preFinalLocalPosition = new Vector3(0, -0.05f, -1.6f);
+                    preFinalLocalPosition = new Vector3(0, 0.3f, 0.2f);
                     finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
                     _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
                 }
