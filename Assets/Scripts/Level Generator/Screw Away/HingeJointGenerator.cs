@@ -169,10 +169,10 @@ public class HingeJointGenerator : EditorWindow
             GenerateHingeJointAll(Selection.activeTransform);
         }
 
-        // if (GUILayout.Button("Remove Mesh Colliders"))
-        // {
-        //     RemoveAllMeshColliders();
-        // }
+        if (GUILayout.Button("Remove Mesh Colliders"))
+        {
+            RemoveAllMeshColliders();
+        }
 
         // if (GUILayout.Button("Generate Hinge Joint All Levels"))
         // {
