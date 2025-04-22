@@ -22,6 +22,7 @@ public static class GamePersistentVariable
     public static bool isFreshLevel;
     public static bool isLoadingOldLevelState;
     public static bool isPreventLoadLevelData;
+    public static bool isRemoteLevelsDownloaded;
     public static int numScrewBoxUnlocked;
     public static int numOutsideScrew;
     public static int numHolesAdded;

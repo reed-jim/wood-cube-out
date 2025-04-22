@@ -24,6 +24,7 @@ public class NotificationPopup : BasePopup
         IAPReviewPopup.showNotificationEvent += ShowNotification;
         CompensatePopup.showNotificationEvent += ShowNotification;
         BackupPopup.showNotificationEvent += ShowNotification;
+        MenuScreen.showNotificationEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -40,6 +41,7 @@ public class NotificationPopup : BasePopup
         IAPReviewPopup.showNotificationEvent -= ShowNotification;
         CompensatePopup.showNotificationEvent -= ShowNotification;
         BackupPopup.showNotificationEvent -= ShowNotification;
+        MenuScreen.showNotificationEvent -= ShowNotification;
 
         showNotificationEvent -= ShowNotification;
     }

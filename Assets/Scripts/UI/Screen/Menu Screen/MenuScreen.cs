@@ -37,6 +37,7 @@ public class MenuScreen : MonoBehaviour
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<bool> showMenuBlackScreenEvent;
+    public static event Action<string, string> showNotificationEvent;
 
     private void Awake()
     {
@@ -146,6 +147,21 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
+        if (currentLevel.Value > 10)
+        {
+            if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+            {
+                showNotificationEvent?.Invoke("Try again later", "Data is being downloaded. Please wait a moment.");
+
+                return;
+            }
+        }
+
+        if (Application.internetReachability == NetworkReachability.NotReachable)
+        {
+            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_TRY_AGAIN);
+        }
+
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
             GamePersistentVariable.isLoadingLevelInProgress = false;
