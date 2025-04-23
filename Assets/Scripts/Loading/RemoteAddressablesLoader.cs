@@ -29,9 +29,13 @@ public class RemoteAddressablesLoader : MonoBehaviour
     private List<Tween> _tweens;
 
     public static event Action<string> updateDownloadProgressEvent;
+    public static event Action retryLoadLevelEvent;
+    public static event Action downloadRemoteContentCompletedEvent;
 
     private void Awake()
     {
+        LoadLevelErrorScene.retryLoadRemoteContentEvent += RetryConnection;
+
         _tweens = new List<Tween>();
     }
 
@@ -42,6 +46,8 @@ public class RemoteAddressablesLoader : MonoBehaviour
 
     private void OnDestroy()
     {
+        LoadLevelErrorScene.retryLoadRemoteContentEvent -= RetryConnection;
+
         CommonUtil.StopAllTweens(_tweens);
     }
 
@@ -72,14 +78,14 @@ public class RemoteAddressablesLoader : MonoBehaviour
 
         // yield return null;
 
-        updateDownloadProgressEvent?.Invoke("Retrieving data from the server. Please wait a moment.");
-
         yield return new WaitForSeconds(0.2f);
 
         bool isInternetConnected = Application.internetReachability != NetworkReachability.NotReachable;
 
         if (isInternetConnected)
         {
+            updateDownloadProgressEvent?.Invoke("Retrieving data from the server. Please wait a moment.");
+
             var handle = Addressables.LoadContentCatalogAsync("https://raw.githubusercontent.com/ninhnk2000/wood-cube-out-content/refs/heads/main/Content/catalog_22.hash");
 
             yield return handle;
@@ -94,6 +100,10 @@ public class RemoteAddressablesLoader : MonoBehaviour
             {
 
             }
+        }
+        else
+        {
+            updateDownloadProgressEvent?.Invoke("No internet connection detected. Please check your connection and try again.");
         }
     }
 
@@ -113,7 +123,9 @@ public class RemoteAddressablesLoader : MonoBehaviour
             }
         }
 
-        Addressables.GetDownloadSizeAsync(allKeys).Completed += handle =>
+        var handle = Addressables.GetDownloadSizeAsync(allKeys);
+
+        handle.Completed += handle =>
         {
             if (handle.Status == AsyncOperationStatus.Succeeded)
             {
@@ -136,6 +148,13 @@ public class RemoteAddressablesLoader : MonoBehaviour
             }
         };
 
+        while (!handle.IsDone)
+        {
+            updateDownloadProgressEvent?.Invoke($"Preparing to download remote content");
+
+            yield return waitForSeconds;
+        }
+
         yield return null;
     }
 
@@ -149,12 +168,16 @@ public class RemoteAddressablesLoader : MonoBehaviour
         {
             updateDownloadProgressEvent?.Invoke($"Downloading - {downloadHandle.PercentComplete * 100:F2}%");
 
+            Debug.Log("SAFERIO Download " + downloadHandle.PercentComplete);
+
             yield return waitForSeconds;
         }
 
         GamePersistentVariable.isRemoteLevelsDownloaded = true;
 
         updateDownloadProgressEvent?.Invoke($"All data has been successfully downloaded.");
+        downloadRemoteContentCompletedEvent?.Invoke();
+        // retryLoadLevelEvent?.Invoke();
     }
     #endregion
 

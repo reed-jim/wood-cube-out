@@ -138,15 +138,15 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // // NOT LOOP
-        // if (isLoopLevel)
-        // {
-        //     showSceneTransitionEvent?.Invoke();
-        //     setIsLevelLoadedEvent?.Invoke();
-        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        // NOT LOOP
+        if (isLoopLevel)
+        {
+            showSceneTransitionEvent?.Invoke();
+            setIsLevelLoadedEvent?.Invoke();
+            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-        //     return;
-        // }
+            return;
+        }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -170,6 +170,21 @@ public class LevelLoader : MonoBehaviour
             else if (level4Variant == 2)
             {
                 levelPrefab = $"Level {nextLevel} - Variant 2";
+            }
+        }
+
+        // REMOTE LEVELS
+        if (nextLevel > 10)
+        {
+            if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+            {
+                showLoadLevelErrorEvent?.Invoke(true);
+
+                return;
+            }
+            else
+            {
+                showLoadLevelErrorEvent?.Invoke(false);
             }
         }
 
