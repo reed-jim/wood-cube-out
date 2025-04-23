@@ -385,6 +385,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         for (int i = 0; i < screws.Count; i++)
         {
+            // Screw may be null if the user unscrews it before the break animation finishes.
             BaseScrew screw = screws[i];
 
             loosenScrewOnObjectBrokenEvent?.Invoke(screw);
