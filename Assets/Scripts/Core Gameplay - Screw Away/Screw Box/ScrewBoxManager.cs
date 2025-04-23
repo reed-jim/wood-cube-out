@@ -791,15 +791,22 @@ public class ScrewBoxManager : MonoBehaviour
     #region BOOSTER
     private void LoosenScrewOnObjectBroken(BaseScrew screw)
     {
-        ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: false);
+        try
+        {
+            ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: false);
 
-        if (screwBoxSlot != null)
-        {
-            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            if (screwBoxSlot != null)
+            {
+                looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            }
+            else
+            {
+                screw.ForceUnscrew();
+            }
         }
-        else
+        catch (System.Exception)
         {
-            screw.ForceUnscrew();
+
         }
     }
 
