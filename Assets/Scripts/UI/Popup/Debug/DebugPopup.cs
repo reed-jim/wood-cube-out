@@ -20,6 +20,7 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugAddCoinButton;
     [SerializeField] private Button changeBackgroundColorButton;
     [SerializeField] private Button startAutoTestLevelButton;
+    [SerializeField] private Button clearAddressablesCacheButton;
     [SerializeField] private TMP_Text debugAdsText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -40,6 +41,7 @@ public class DebugPopup : BasePopup
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
         startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
+        clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
 
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
     }
@@ -91,7 +93,7 @@ public class DebugPopup : BasePopup
     private void StartAutoTestLevel()
     {
         AddCoin();
-        
+
         startAutoTestLevelEvent?.Invoke();
 
         Hide();
@@ -142,5 +144,10 @@ public class DebugPopup : BasePopup
         camera.backgroundColor = ColorUtil.GetColorFromHex(backgroundColorInput.text);
 
         woodBackground.gameObject.SetActive(false);
+    }
+
+    private void ClearAddressablesCache()
+    {
+        Caching.ClearCache();
     }
 }

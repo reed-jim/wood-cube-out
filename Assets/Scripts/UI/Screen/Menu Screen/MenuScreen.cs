@@ -147,20 +147,15 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        if (currentLevel.Value > 10)
-        {
-            if (!GamePersistentVariable.isRemoteLevelsDownloaded)
-            {
-                showNotificationEvent?.Invoke("Try again later", "Data is being downloaded. Please wait a moment.");
+        // if (currentLevel.Value > 10)
+        // {
+        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+        //     {
+        //         showNotificationEvent?.Invoke("Try again later", "Data is being downloaded. Please wait a moment.");
 
-                return;
-            }
-        }
-
-        if (Application.internetReachability == NetworkReachability.NotReachable)
-        {
-            showNotificationEvent?.Invoke(GameConstants.NO_INTERNET, GameConstants.PLEASE_TRY_AGAIN);
-        }
+        //         return;
+        //     }
+        // }
 
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
