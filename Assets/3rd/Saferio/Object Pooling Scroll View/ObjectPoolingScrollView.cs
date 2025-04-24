@@ -566,6 +566,8 @@ namespace Saferio.Util
                 scrollRect.vertical = false;
                 scrollRect.inertia = false;
 
+                Debug.Log("SAFERIO back");
+
                 Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.3f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;

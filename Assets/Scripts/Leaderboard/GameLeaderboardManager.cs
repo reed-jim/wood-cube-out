@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Lean.Localization;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards;
 using UnityEngine;
+using UnityEngine.Android;
 
 public class GameLeaderboardManager : MonoBehaviour
 {
@@ -27,8 +29,6 @@ public class GameLeaderboardManager : MonoBehaviour
         }
 
         await UnityServices.InitializeAsync();
-
-        Debug.Log("SAFERIO " + Application.systemLanguage);
     }
 
     void Start()
