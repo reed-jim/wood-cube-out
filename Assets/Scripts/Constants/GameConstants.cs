@@ -170,5 +170,9 @@ public static class GameConstants
     #region COMPENSATE
     public static string IS_CLAIMED_COMPENSATE_REMOVE_ADS = "IS_CLAIMED_COMPENSATE_REMOVE_ADS";
     public static string IS_CLAIMED_COMPENSATE_BIG_REWARD = "IS_CLAIMED_COMPENSATE_BIG_REWARD";
+    #endregion
+
+    #region LEADERBOARD
+    public static string DID_USER_LOGIN = "DID_USER_LOGIN";
     #endregion  
 }

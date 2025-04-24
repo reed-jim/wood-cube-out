@@ -260,7 +260,7 @@ public class MenuScreen : MonoBehaviour
 
         CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 
-        if (screenRoute != ScreenRoute.IAPShop)
+        if (screenRoute == ScreenRoute.Home)
         {
             _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
         }
@@ -273,7 +273,7 @@ public class MenuScreen : MonoBehaviour
         // Unlock All Screw boxes
         CommonUtil.StopTween(_openUnlockScrewBoxesPopupButtonTween);
 
-        if (screenRoute != ScreenRoute.IAPShop)
+        if (screenRoute == ScreenRoute.Home)
         {
             openAllScrewBoxesForeverCanvasGroup.interactable = true;
 
