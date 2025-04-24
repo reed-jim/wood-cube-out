@@ -35,6 +35,7 @@ namespace Saferio.Util
 
         [Header("CUSTOMIZE")]
         [SerializeField] private int poolSize;
+        [SerializeField] private int expectedMaxSize;
 
         #region PRIVATE FIELD
         private Vector2 _canvasSize;
@@ -157,10 +158,12 @@ namespace Saferio.Util
             _topMostVisibleItemIndex = 0;
             _bottomMostVisibleItemIndex = poolSize - 1;
 
-            _maxScrollPositionY = (poolSize - _bottomMostVisibleItemIndex) * _itemSize.y;
+            // _maxScrollPositionY = (poolSize - _bottomMostVisibleItemIndex) * _itemSize.y;
 
-            _maxScrollPositionY = (poolSize - 3) * _items[0].sizeDelta.y;
-            _maxScrollPositionY = 0.5f * _viewAreaSize.y;
+            // _maxScrollPositionY = (poolSize - 3) * _items[0].sizeDelta.y;
+            // _maxScrollPositionY = 0.5f * _viewAreaSize.y;
+
+            _maxScrollPositionY = expectedMaxSize * _items[0].sizeDelta.y;
             _minScrollPositionY = 0;
 
             _currentHighestItemPositionY = _items.First().localPosition.y;
@@ -187,13 +190,12 @@ namespace Saferio.Util
 
         private IEnumerator ObjectPoolingScrolling()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
             yield return waitForSeconds;
 
             while (true)
             {
-
                 ScrollBackToValidPosition(300);
 
                 ScrollDirection scrollDirection = GetScrollDirection();
@@ -235,7 +237,7 @@ namespace Saferio.Util
 
                         _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
 
-                        _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
+                        // _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
 
                         break;
                     }
@@ -250,9 +252,9 @@ namespace Saferio.Util
                         _bottomMostVisibleItemIndex--;
                         _topMostVisibleItemIndex--;
 
-                        _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
+                        _scrollViewItems[i].Refresh(_topMostVisibleItemIndex);
 
-                        _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
+                        // _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
 
                         break;
                     }
@@ -550,20 +552,24 @@ namespace Saferio.Util
             if (content.localPosition.y < _minScrollPositionY - scrollOverLimitTolerance && scrollRect.vertical)
             {
                 scrollRect.vertical = false;
+                scrollRect.inertia = false;
 
                 Tween.LocalPositionY(content, _minScrollPositionY, duration: 0.3f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
+                    scrollRect.inertia = true;
                 });
             }
 
             if (content.localPosition.y > _maxScrollPositionY + scrollOverLimitTolerance && scrollRect.vertical)
             {
                 scrollRect.vertical = false;
+                scrollRect.inertia = false;
 
                 Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.3f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
+                    scrollRect.inertia = true;
                 });
             }
         }
