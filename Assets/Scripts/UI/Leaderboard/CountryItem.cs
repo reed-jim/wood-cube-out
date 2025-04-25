@@ -30,13 +30,13 @@ public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
         try
         {
             _currentCountry = countryDataContainer.Countries[index];
-            
+
             flag.sprite = _currentCountry.Flag;
             countryNameText.text = _currentCountry.Name;
         }
         catch (System.Exception e)
         {
-            Debug.Log("SAFERIO exception " + e.Message);
+
         }
     }
 

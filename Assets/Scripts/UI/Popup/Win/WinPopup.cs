@@ -134,6 +134,9 @@ public class WinPopup : BasePopup
                     userResourcesObserver.Save();
 
                     _currentCollectedCoin += numCoin;
+
+                    SaferioTracking.TrackResourceSource(
+                        currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
                 }
 
                 _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
