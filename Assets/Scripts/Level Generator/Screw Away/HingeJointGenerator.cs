@@ -784,7 +784,7 @@ public class HingeJointGenerator : EditorWindow
 
     private void CheckHingeJointNumberAllLevels()
     {
-        for (int i = 1; i <= 175; i++)
+        for (int i = 1; i <= 225; i++)
         {
             CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
         }

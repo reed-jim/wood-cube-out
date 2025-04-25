@@ -422,6 +422,7 @@ public class FirebaseConfig
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
     public const string IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION = "is_show_double_screw_boxes_suggestion";
     public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
+    public const string IS_SHOW_TUTORIAL_LEVEL_1 = "is_show_tutorial_level_1";
     public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
     public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
     public const string IAP_SUGGESTION_PACKAGE_INDEX = "iap_suggestion_package_index";

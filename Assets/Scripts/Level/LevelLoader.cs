@@ -138,15 +138,15 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // NOT LOOP
-        if (isLoopLevel)
-        {
-            showSceneTransitionEvent?.Invoke();
-            setIsLevelLoadedEvent?.Invoke();
-            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        // // NOT LOOP
+        // if (isLoopLevel)
+        // {
+        //     showSceneTransitionEvent?.Invoke();
+        //     setIsLevelLoadedEvent?.Invoke();
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-            return;
-        }
+        //     return;
+        // }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -761,9 +761,11 @@ public class LevelLoader : MonoBehaviour
             isScaleByHeight = true;
         }
 
+        bool isThreeDimensionEqual = Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f;
+
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
-            maxExpectedLevelSize = expectedLevelSize.z;
+            maxExpectedLevelSize = 1f * expectedLevelSize.z;
 
             isScaleByHeight = false;
         }
@@ -781,7 +783,7 @@ public class LevelLoader : MonoBehaviour
         float targetOrthographicSize = expectedScreenHeight / 2f;
 
         // 3 dimesion equal
-        if (Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f)
+        if (isThreeDimensionEqual)
         {
             targetOrthographicSize *= 1.3f;
         }

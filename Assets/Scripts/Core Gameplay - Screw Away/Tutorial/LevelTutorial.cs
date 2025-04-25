@@ -54,6 +54,7 @@ public class LevelTutorial : MonoBehaviour
         SwipeGesture.swipeGestureEvent += OnScreenSwiped;
         PinchGesture.pinchGestureEvent += OnScreenZoomed;
         ScrewsDataManager.endTutorialLevel1Event += EndTutorialImmediately;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         GamePersistentVariable.isPassedStepOneTutorial = true;
 
@@ -78,6 +79,14 @@ public class LevelTutorial : MonoBehaviour
     {
         enableSwipingEvent?.Invoke(false);
         enablePinchingEvent?.Invoke(false);
+
+        if (GamePersistentVariable.isFirebaseRemoteConfigLoaded)
+        {
+            if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_TUTORIAL_LEVEL_1, true))
+            {
+                EndTutorialImmediately();
+            }
+        }
     }
 
     void Update()
@@ -101,6 +110,7 @@ public class LevelTutorial : MonoBehaviour
         SwipeGesture.swipeGestureEvent -= OnScreenSwiped;
         PinchGesture.pinchGestureEvent -= OnScreenZoomed;
         ScrewsDataManager.endTutorialLevel1Event -= EndTutorialImmediately;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     private IEnumerator TutorialStepOne()
@@ -351,6 +361,8 @@ public class LevelTutorial : MonoBehaviour
 
     private void EndTutorialImmediately()
     {
+        GamePersistentVariable.isPassedStepOneTutorial = true;
+
         screwOutline.HideOutline();
 
         enableSwipingEvent?.Invoke(true);
@@ -380,6 +392,14 @@ public class LevelTutorial : MonoBehaviour
         if (_step == 2)
         {
             _step++;
+        }
+    }
+
+    private void OnRemoteConfigReady()
+    {
+        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_TUTORIAL_LEVEL_1, true))
+        {
+            EndTutorialImmediately();
         }
     }
     #endregion
