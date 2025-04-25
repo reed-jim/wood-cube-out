@@ -290,9 +290,6 @@ public class GameLoading : MonoBehaviour
 
         bool isDownloadNewLevel = true;
 
-        Debug.Log("SAFERIO " + Addressables.RuntimePath);
-
-
         List<object> allKeys = new List<object>();
 
         foreach (var locator in Addressables.ResourceLocators)
@@ -311,14 +308,11 @@ public class GameLoading : MonoBehaviour
 
                 if (downloadSize > 0)
                 {
-                    Debug.Log($"SAFERIO Download size: {downloadSize / (1024f * 1024f):F2} MB");
-
                     StartCoroutine(DownloadingAddressables(allKeys));
                 }
                 else
                 {
                     StartCoroutine(SlowTransititon());
-                    Debug.Log("SAFERIO All content already cached.");
                 }
             }
         };
