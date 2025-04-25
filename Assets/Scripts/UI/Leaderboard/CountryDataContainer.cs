@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public static class CountryDataContainer
+[CreateAssetMenu(fileName = "CountryDataContainer", menuName = "ScriptableObjects/CountryDataContainer")]
+public class CountryDataContainer : ScriptableObject
 {
-    public static List<Country> Countries;
+    public List<Country> Countries;
 }
 
 [System.Serializable]
