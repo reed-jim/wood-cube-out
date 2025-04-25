@@ -1,11 +1,24 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
 {
+    [SerializeField] private Button selectButton;
     [SerializeField] private Image flag;
     [SerializeField] private TMP_Text countryNameText;
+
+    [SerializeField] private CountryDataContainer countryDataContainer;
+
+    private Country _currentCountry;
+
+    public static event Action<Country> selectCountryEvent;
+
+    void Awake()
+    {
+        selectButton.onClick.AddListener(Select);
+    }
 
     public bool IsValidAtIndex(int index)
     {
@@ -16,8 +29,10 @@ public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
     {
         try
         {
-            flag.sprite = CountryDataContainer.Countries[index].Flag;
-            countryNameText.text = CountryDataContainer.Countries[index].Name;
+            _currentCountry = countryDataContainer.Countries[index];
+            
+            flag.sprite = _currentCountry.Flag;
+            countryNameText.text = _currentCountry.Name;
         }
         catch (System.Exception e)
         {
@@ -27,6 +42,11 @@ public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
 
     public void Setup(int index, RectTransform parent)
     {
-        // throw new System.NotImplementedException();
+        Refresh(index);
+    }
+
+    private void Select()
+    {
+        selectCountryEvent?.Invoke(_currentCountry);
     }
 }

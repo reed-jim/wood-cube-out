@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -23,6 +24,7 @@ public class LeaderboardUI : MonoBehaviour
     [SerializeField] private RectTransform countryPicker;
     [SerializeField] private Image selectedCountryFlag;
     [SerializeField] private TMP_Text selectedCountryName;
+    [SerializeField] private CountryDataContainer countryDataContainer;
     #endregion
 
     [SerializeField] private CanvasGroup inputNameCanvasGroup;
@@ -35,6 +37,8 @@ public class LeaderboardUI : MonoBehaviour
 
     void Awake()
     {
+        CountryItem.selectCountryEvent += SelectCountry;
+
         continueButton.onClick.AddListener(ConfirmNameAsync);
         openCountryPickerButton.onClick.AddListener(OpenCountryPicker);
 
@@ -42,11 +46,26 @@ public class LeaderboardUI : MonoBehaviour
         countryPicker.gameObject.SetActive(false);
     }
 
+    void OnDestroy()
+    {
+        CountryItem.selectCountryEvent -= SelectCountry;
+    }
+
     void Start()
     {
         CheckShowLeaderboardAsync();
 
-        StartCoroutine(FetchCountries());
+        // StartCoroutine(FetchCountries());
+
+        RefreshCountryPicker();
+    }
+
+    private void RefreshCountryPicker()
+    {
+        selectedCountryFlag.sprite = countryDataContainer.Countries[236].Flag;
+        selectedCountryName.text = countryDataContainer.Countries[236].Name;
+
+        countryPickerScrollView.Refresh();
     }
 
     private async Task CheckShowLeaderboardAsync()
@@ -132,34 +151,52 @@ public class LeaderboardUI : MonoBehaviour
             }
             else
             {
-                Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
-                Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
-                                              new Vector2(0.5f, 0.5f));
+                // Texture2D texture = DownloadHandlerTexture.GetContent(uwr);
+                // Sprite sprite = Sprite.Create(texture, new Rect(0, 0, texture.width, texture.height),
+                //                               new Vector2(0.5f, 0.5f));
 
-                Country country = new Country
-                {
-                    Name = countryName,
-                    Flag = sprite
-                };
+                // Country country = new Country
+                // {
+                //     Name = countryName,
+                //     FlagTexture = texture,
+                //     Flag = sprite
+                // };
 
-                if (CountryDataContainer.Countries == null)
-                {
-                    CountryDataContainer.Countries = new List<Country>();
-                }
+                // if (countryDataContainer.Countries == null)
+                // {
+                //     countryDataContainer.Countries = new List<Country>();
+                // }
 
-                CountryDataContainer.Countries.Add(country);
+                // countryDataContainer.Countries.Add(country);
 
-                if (CountryDataContainer.Countries.Count == _totalCountries)
-                {
-                    CountryDataContainer.Countries = CountryDataContainer.Countries.OrderBy(item => item.Name.First()).ToList();
+                // if (countryDataContainer.Countries.Count == _totalCountries)
+                // {
+                //     countryDataContainer.Countries = countryDataContainer.Countries.OrderBy(item => item.Name).ToList();
 
-                    selectedCountryFlag.sprite = CountryDataContainer.Countries[0].Flag;
-                    selectedCountryName.text = CountryDataContainer.Countries[0].Name;
+                //     int flagIndex = 0;
 
-                    countryPickerScrollView.Refresh();
-                }
+                //     foreach (var item in countryDataContainer.Countries)
+                //     {
+                //         byte[] bytes = item.FlagTexture.EncodeToPNG();
+                //         string path = Path.Combine("Assets/Sprites/Country Flags/", $"flag_{flagIndex}.png");
+                //         File.WriteAllBytes(path, bytes);
+
+                //         flagIndex++;
+                //     }
+
+                //     selectedCountryFlag.sprite = countryDataContainer.Countries[0].Flag;
+                //     selectedCountryName.text = countryDataContainer.Countries[0].Name;
+
+                //     countryPickerScrollView.Refresh();
+                // }
             }
         }
+    }
+
+    private void SelectCountry(Country country)
+    {
+        selectedCountryFlag.sprite = country.Flag;
+        selectedCountryName.text = country.Name;
     }
 
     [System.Serializable]

@@ -41,7 +41,7 @@ public class RemoteAddressablesLoader : MonoBehaviour
 
     void Start()
     {
-        StartCoroutine(LoadFromServer());
+        // StartCoroutine(LoadFromServer());
     }
 
     private void OnDestroy()
@@ -56,12 +56,8 @@ public class RemoteAddressablesLoader : MonoBehaviour
     {
         // Addressables.InitializeAsync().Completed += handle =>
         // {
-        //     Debug.Log("SAFERIO Addressables Initialized");
-
         //     Addressables.CheckForCatalogUpdates().Completed += catalogHandle =>
         //     {
-        //         Debug.Log("SAFERIO Addressables Catalog " + catalogHandle.Result.Count);
-
         //         if (catalogHandle.Result != null && catalogHandle.Result.Count > 0)
         //         {
         //             Addressables.UpdateCatalogs(catalogHandle.Result).Completed += updateHandle =>
@@ -133,8 +129,6 @@ public class RemoteAddressablesLoader : MonoBehaviour
 
                 if (downloadSize > 0)
                 {
-                    Debug.Log($"SAFERIO Download size: {downloadSize / (1024f * 1024f):F2} MB");
-
                     StartCoroutine(DownloadingAddressables(allKeys));
                 }
                 else
@@ -142,8 +136,6 @@ public class RemoteAddressablesLoader : MonoBehaviour
                     GamePersistentVariable.isRemoteLevelsDownloaded = true;
 
                     updateDownloadProgressEvent?.Invoke($"All data has been successfully downloaded.");
-
-                    Debug.Log("SAFERIO All content already cached.");
                 }
             }
         };
@@ -167,8 +159,6 @@ public class RemoteAddressablesLoader : MonoBehaviour
         while (!downloadHandle.IsDone)
         {
             updateDownloadProgressEvent?.Invoke($"Downloading - {downloadHandle.PercentComplete * 100:F2}%");
-
-            Debug.Log("SAFERIO Download " + downloadHandle.PercentComplete);
 
             yield return waitForSeconds;
         }

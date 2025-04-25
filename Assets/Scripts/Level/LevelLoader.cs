@@ -173,20 +173,20 @@ public class LevelLoader : MonoBehaviour
             }
         }
 
-        // REMOTE LEVELS
-        if (nextLevel > 10)
-        {
-            if (!GamePersistentVariable.isRemoteLevelsDownloaded)
-            {
-                showLoadLevelErrorEvent?.Invoke(true);
+        // // REMOTE LEVELS
+        // if (nextLevel > 10)
+        // {
+        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+        //     {
+        //         showLoadLevelErrorEvent?.Invoke(true);
 
-                return;
-            }
-            else
-            {
-                showLoadLevelErrorEvent?.Invoke(false);
-            }
-        }
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         showLoadLevelErrorEvent?.Invoke(false);
+        //     }
+        // }
 
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
 

@@ -1,7 +1,9 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -58,6 +60,8 @@ public class HingeJointGenerator : EditorWindow
         GetWindow<HingeJointGenerator>("Level Tool");
     }
 
+    private CountryDataContainer countryDataContainer;
+
     private void OnGUI()
     {
         float padding = 20f;
@@ -73,6 +77,7 @@ public class HingeJointGenerator : EditorWindow
         screwPrefab = (GameObject)EditorGUILayout.ObjectField("Screw Prefab", screwPrefab, typeof(GameObject), true);
         // targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), true);
         piecePrefab = (GameObject)EditorGUILayout.ObjectField("Piece Prefab", piecePrefab, typeof(GameObject), true);
+        countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
 
         // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         // distance = EditorGUILayout.Vector3Field("Distance", distance);
@@ -101,6 +106,11 @@ public class HingeJointGenerator : EditorWindow
         };
 
         GUILayout.Label("Generate", centeredStyle);
+
+        if (GUILayout.Button("AutoAssignSprites"))
+        {
+            AutoAssignSprites();
+        }
 
         if (GUILayout.Button("Generate Level"))
         {
@@ -348,6 +358,28 @@ public class HingeJointGenerator : EditorWindow
 
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
+    }
+
+    private void AutoAssignSprites()
+    {
+        string[] files = Directory.GetFiles("Assets/Sprites/Country Flags", "flag_*.png");
+
+        var sortedFiles = files.OrderBy(file =>
+        {
+            var match = Regex.Match(Path.GetFileNameWithoutExtension(file), @"flag_(\d+)");
+            return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
+        });
+
+        int index = 0;
+
+        foreach (string file in sortedFiles)
+        {
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(file);
+
+            countryDataContainer.Countries[index].Flag = sprite;
+
+            index++;
+        }
     }
 
     bool IsOverlapping(Vector3 spawnPosition, GameObject target)

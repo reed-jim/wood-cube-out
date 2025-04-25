@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -194,88 +195,94 @@ namespace Saferio.Util
 
             yield return waitForSeconds;
 
+            bool isSkip;
+
             while (true)
             {
+                isSkip = false;
+
                 ScrollBackToValidPosition(300);
 
                 ScrollDirection scrollDirection = GetScrollDirection();
 
-                for (int i = 0; i < poolSize; i++)
+                if (content.localPosition.y > 4000)
                 {
-                    bool isOutsideTop = false;
-                    bool isOutsideBottom = false;
+                    content.localPosition = content.localPosition.ChangeY(content.localPosition.y - 3000);
 
-                    if (_items[i].localPosition.y - 0.5f * _items[i].sizeDelta.y + content.localPosition.y > 0.5f * _viewAreaSize.y)
+                    for (int i = 0; i < poolSize; i++)
                     {
-                        int index = i;
-
-                        if (IsHighestItem(index))
-                        {
-                            isOutsideTop = true;
-                        }
+                        _items[i].localPosition = _items[i].localPosition.ChangeY(_items[i].localPosition.y + 3000);
                     }
 
-                    if (_items[i].localPosition.y + 0.5f * _items[i].sizeDelta.y + content.localPosition.y < -0.5f * _viewAreaSize.y)
-                    {
-                        int index = i;
+                    _currentHighestItemPositionY += 3000;
+                    _currentLowestItemPositionY += 3000;
 
-                        if (IsLowestItem(index))
-                        {
-                            isOutsideBottom = true;
-                        }
-                    }
-
-                    if (isOutsideTop && scrollDirection == ScrollDirection.Up && _scrollViewItems[i].IsValidAtIndex(_bottomMostVisibleItemIndex + 1))
-                    {
-                        UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
-
-                        _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-                        _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                        _bottomMostVisibleItemIndex++;
-                        _topMostVisibleItemIndex++;
-
-                        _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
-
-                        // _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                        break;
-                    }
-
-                    if (isOutsideBottom && scrollDirection == ScrollDirection.Down && _scrollViewItems[i].IsValidAtIndex(_topMostVisibleItemIndex - 1))
-                    {
-                        UIUtil.SetLocalPositionY(_items[i], _currentHighestItemPositionY + 1.1f * _items[i].sizeDelta.y);
-
-                        _currentHighestItemPositionY += 1.1f * _items[i].sizeDelta.y;
-                        _currentLowestItemPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                        _bottomMostVisibleItemIndex--;
-                        _topMostVisibleItemIndex--;
-
-                        _scrollViewItems[i].Refresh(_topMostVisibleItemIndex);
-
-                        // _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                        break;
-                    }
-
-                    // if (isOutsideTop && scrollDirection == ScrollDirection.Up && IsValidScrollingNext(isScrollUp: true))
-                    // {
-                    //     UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
-
-                    //     _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-                    //     _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                    //     _bottomMostVisibleItemIndex++;
-                    //     _topMostVisibleItemIndex++;
-
-                    //     _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
-
-                    //     _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                    //     break;
-                    // }
+                    isSkip = true;
                 }
+
+                if (!isSkip)
+                {
+                    for (int i = 0; i < poolSize; i++)
+                    {
+                        bool isOutsideTop = false;
+                        bool isOutsideBottom = false;
+
+                        if (_items[i].localPosition.y - 0.5f * _items[i].sizeDelta.y + content.localPosition.y > 0.5f * _viewAreaSize.y)
+                        {
+                            int index = i;
+
+                            if (IsHighestItem(index))
+                            {
+                                isOutsideTop = true;
+                            }
+                        }
+
+                        if (_items[i].localPosition.y + 0.5f * _items[i].sizeDelta.y + content.localPosition.y < -0.5f * _viewAreaSize.y)
+                        {
+                            int index = i;
+
+                            if (IsLowestItem(index))
+                            {
+                                isOutsideBottom = true;
+                            }
+                        }
+
+                        if (isOutsideTop && scrollDirection == ScrollDirection.Up && _scrollViewItems[i].IsValidAtIndex(_bottomMostVisibleItemIndex + 1))
+                        {
+                            UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
+
+                            _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
+                            _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
+
+                            _bottomMostVisibleItemIndex++;
+                            _topMostVisibleItemIndex++;
+
+                            _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
+
+                            // _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
+
+                            break;
+                        }
+
+                        if (isOutsideBottom && scrollDirection == ScrollDirection.Down && _scrollViewItems[i].IsValidAtIndex(_topMostVisibleItemIndex - 1))
+                        {
+                            UIUtil.SetLocalPositionY(_items[i], _currentHighestItemPositionY + 1.1f * _items[i].sizeDelta.y);
+
+                            _currentHighestItemPositionY += 1.1f * _items[i].sizeDelta.y;
+                            _currentLowestItemPositionY += 1.1f * _items[i].sizeDelta.y;
+
+                            _bottomMostVisibleItemIndex--;
+                            _topMostVisibleItemIndex--;
+
+                            _scrollViewItems[i].Refresh(_topMostVisibleItemIndex);
+
+                            // _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
+
+                            break;
+                        }
+                    }
+                }
+
 
 
 
