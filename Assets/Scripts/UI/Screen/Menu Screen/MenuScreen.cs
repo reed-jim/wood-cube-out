@@ -291,7 +291,7 @@ public class MenuScreen : MonoBehaviour
     {
         CommonUtil.StopTween(_topBarDividerTween);
 
-        if (screenRoute == ScreenRoute.IAPShop)
+        if (screenRoute != ScreenRoute.Home)
         {
             _topBarDividerTween = Tween.Alpha(topBarDivider, 1, 0.3f);
         }

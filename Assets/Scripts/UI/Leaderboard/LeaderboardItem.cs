@@ -1,11 +1,15 @@
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private TMP_Text scoreText;
+    [SerializeField] private Image flag;
+
+    [SerializeField] private CountryDataContainer countryDataContainer;
 
     public bool IsValidAtIndex(int index)
     {
@@ -23,12 +27,20 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
     {
         try
         {
-            nameText.text = $"{LeaderboardDataContainer.Items[index].name}";
+            gameObject.SetActive(true);
+
+            string originalName = LeaderboardDataContainer.Items[index].name;
+            int truncateIndex = originalName.IndexOf('#');
+            string playerName = truncateIndex >= 0 ? originalName.Substring(0, truncateIndex) : originalName;
+
+            nameText.text = $"{playerName}";
             scoreText.text = $"{LeaderboardDataContainer.Items[index].score}";
+
+            flag.sprite = countryDataContainer.Countries[LeaderboardDataContainer.Items[index].countryIndex].Flag;
         }
         catch (System.Exception)
         {
-
+            gameObject.SetActive(false);
         }
     }
 

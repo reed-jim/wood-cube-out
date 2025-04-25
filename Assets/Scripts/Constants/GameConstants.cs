@@ -174,5 +174,6 @@ public static class GameConstants
 
     #region LEADERBOARD
     public static string DID_USER_LOGIN = "DID_USER_LOGIN";
+    public static string SELECTED_COUNTRY_INDEX = "SELECTED_COUNTRY_INDEX";
     #endregion  
 }

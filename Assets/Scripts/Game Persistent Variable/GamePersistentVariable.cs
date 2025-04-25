@@ -75,4 +75,8 @@ public static class GamePersistentVariable
     public static int IAPAddition;
     public static bool isUnlockedAllScrewBoxes;
     #endregion
+
+    #region LEADERBOARD
+    public static int selectedCountryIndex;
+    #endregion
 }
