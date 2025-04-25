@@ -33,6 +33,7 @@ public class LeaderboardUI : MonoBehaviour
     #region PRIVATE
     private int _numCountriesFetched;
     private int _totalCountries;
+    private int _selectedCountryIndex;
     #endregion  
 
     void Awake()
@@ -57,13 +58,24 @@ public class LeaderboardUI : MonoBehaviour
 
         // StartCoroutine(FetchCountries());
 
-        RefreshCountryPicker();
+        _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
+
+        if (_selectedCountryIndex != -1)
+        {
+            GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
+        }
+        else
+        {
+            SetupCountryPicker();
+        }
     }
 
-    private void RefreshCountryPicker()
+    private void SetupCountryPicker()
     {
-        selectedCountryFlag.sprite = countryDataContainer.Countries[236].Flag;
-        selectedCountryName.text = countryDataContainer.Countries[236].Name;
+        _selectedCountryIndex = 244;
+
+        selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
+        selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
 
         countryPickerScrollView.Refresh();
     }
@@ -84,6 +96,8 @@ public class LeaderboardUI : MonoBehaviour
 
     private async void ConfirmNameAsync()
     {
+        GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
+
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
 
@@ -98,6 +112,7 @@ public class LeaderboardUI : MonoBehaviour
         scrollView.Refresh();
 
         DataUtility.Save(GameConstants.DID_USER_LOGIN, true);
+        DataUtility.Save(GameConstants.SELECTED_COUNTRY_INDEX, _selectedCountryIndex);
     }
 
     private void OpenCountryPicker()
@@ -197,6 +212,16 @@ public class LeaderboardUI : MonoBehaviour
     {
         selectedCountryFlag.sprite = country.Flag;
         selectedCountryName.text = country.Name;
+
+        for (int i = 0; i < countryDataContainer.Countries.Count; i++)
+        {
+            if (countryDataContainer.Countries[i].Name == country.Name)
+            {
+                _selectedCountryIndex = i;
+
+                break;
+            }
+        }
     }
 
     [System.Serializable]

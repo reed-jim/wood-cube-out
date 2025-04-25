@@ -35,6 +35,7 @@ namespace Saferio.Util
         private List<TMP_Text> _texts;
 
         [Header("CUSTOMIZE")]
+        [SerializeField] private int numVisibleItem = 4;
         [SerializeField] private int poolSize;
         [SerializeField] private int expectedMaxSize;
 
@@ -117,7 +118,7 @@ namespace Saferio.Util
 
             _viewAreaSize = viewArea.sizeDelta;
 
-            _itemSize = new Vector2(0.9f * _viewAreaSize.x, 0.25f * _viewAreaSize.y);
+            _itemSize = new Vector2(0.9f * _viewAreaSize.x, 1f / numVisibleItem * _viewAreaSize.y);
 
             // UIUtil.SetSize(content, new Vector2(_canvasSize.x, 1.4f * (poolSize * _itemSize.y + (poolSize - 1) * 0.1f * _itemSize.y)));
             UIUtil.SetSize(content, _viewAreaSize);
