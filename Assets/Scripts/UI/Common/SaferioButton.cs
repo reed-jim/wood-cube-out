@@ -76,7 +76,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     {
         if (isPlaySound)
         {
-            GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.Click);
+            GameController.Instance.musicManager.PlayClickSound();
         }
     }
 

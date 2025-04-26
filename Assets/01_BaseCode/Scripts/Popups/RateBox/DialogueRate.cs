@@ -45,7 +45,7 @@ public class DialogueRate : BaseBox
         for (int i = 0; i < lstImgStar.Count; i++)
         {
             int index = i + 1;
-            // lstBtnStar[i].onClick.AddListener(() => { ClickStar(index); });
+            //lstBtnStar[i].onClick.AddListener(() => { ClickStar(index); });
             lstImgStar[i].sprite = lstSprStar[0];
         }
         countStar = 0;

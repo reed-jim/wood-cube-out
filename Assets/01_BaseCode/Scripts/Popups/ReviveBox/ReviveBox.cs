@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using System.Linq;
+using BirdSort2;
 
 public class ReviveBox : BaseBox
 {
@@ -219,11 +221,11 @@ public class ReviveBox : BaseBox
             }
             else
             {
-                titlePopupTxt.text = Localization.Get("s_title_lose_extral");
-                reviveTxt.text = Localization.Get("s_keep_playing");
+                reviveTxt.text = Localization.Get("s_clear_bar");
+                titlePopupTxt.text = Localization.Get("s_title_out_of_space");
             }
 
-            clearBarVideoObj.gameObject.SetActive(true);
+            //clearBarVideoObj.gameObject.SetActive(true);
             clockVideoObj.gameObject.SetActive(false);
 
             if (numElectricLightBonnus > 0)
@@ -241,13 +243,13 @@ public class ReviveBox : BaseBox
 
             priceCoinRevive = reviveData.config.reviveData[numTurnedRevie].numCoinReviveAddTime;
             priceReviveTxt.text = priceCoinRevive.ToString();
-            titlePopupTxt.text = Localization.Get("s_title_time_is_up");
-            reviveTxt.text = Localization.Get("s_keep_playing");
-            timeAddReviveCoinTxt.text = reviveData.config.reviveData[numTurnedRevie].timeAddedRevive + "s";
-            timeAddReviveVideoTxt.text = reviveData.config.timeAddedReviveVideo + "s";
+            titlePopupTxt.text = Localization.Get("s_clear_bar");
+            reviveTxt.text = Localization.Get("s_title_out_of_space");
+            //timeAddReviveCoinTxt.text = reviveData.config.reviveData[numTurnedRevie].timeAddedRevive + "s";
+            //timeAddReviveVideoTxt.text = reviveData.config.timeAddedReviveVideo + "s";
 
             clearBarVideoObj.gameObject.SetActive(false);
-            clockVideoObj.gameObject.SetActive(true);
+            //clockVideoObj.gameObject.SetActive(true);
 
             if (numElectricLightBonnus > 0)
             {
@@ -378,12 +380,31 @@ public class ReviveBox : BaseBox
 
     public void OnClickClose2()
     {
+        Dictionary<GameEnum.GameFaction, int> remainingScrewByFaction = new Dictionary<GameEnum.GameFaction, int>();
+
+        for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+        {
+            remainingScrewByFaction.Add(GameConstants.SCREW_FACTION[i], 0);
+        }
+
+        for (int i = 0; i < GamePlayController_BirdSort.Instance.level.screwManager._screws.Count; i++)
+        {
+            if (GamePlayController_BirdSort.Instance.level.screwManager._screws[i].IsDone && !GamePlayController_BirdSort.Instance.level.screwManager._screws[i].IsInScrewPort)
+            {
+                continue;
+            }
+
+            remainingScrewByFaction[GamePlayController_BirdSort.Instance.level.screwManager._screws[i].Faction]++;
+        }
+
+        int remainingScrew = remainingScrewByFaction.Sum(item => item.Value);
+
         if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat)
         {
             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
-                LoseBox.SetupLegacy().Show();
+                LoseBox.SetupLegacy().Show((float)remainingScrew/(float)GamePlayController_BirdSort.Instance.level.screwManager._totalScrew);
                 UseProfile.NumberLoseLevelInDay++;
                 GameController.Instance.musicManager.PlayLoseSound();
             }, actionWatchLog: AdsPlacement.Interstitials.LEVEL_CAMPAIN_FAIL);
@@ -391,7 +412,7 @@ public class ReviveBox : BaseBox
         else
         {
             Close();
-            LoseBox.SetupLegacy().Show();
+            LoseBox.SetupLegacy().Show((float)remainingScrew/(float)GamePlayController_BirdSort.Instance.level.screwManager._totalScrew);
             UseProfile.NumberLoseLevelInDay++;
             GameController.Instance.musicManager.PlayLoseSound();
         }
@@ -404,7 +425,7 @@ public class ReviveBox : BaseBox
             reviveVideoBtn.gameObject.SetActive(true);
             reviveVideoBtn.interactable = true;
             reviveVideoImg.sprite = activeVideoSpr;
-            turnLeftVideoObj.gameObject.SetActive(true);
+            //turnLeftVideoObj.gameObject.SetActive(true);
             numTurnLeftVideo.text = Mathf.Abs(CurrentTurnSuggetReviveVideo - reviveData.config.cappingWatchVideoRevive).ToString();
             timeResetCappingVideo.gameObject.SetActive(false);
         }

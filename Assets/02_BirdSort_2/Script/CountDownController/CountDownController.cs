@@ -97,9 +97,7 @@
          
             LoseBox.SetupLegacy().Show();
             // Debug.LogError("Lose");
-
-
-
+            
         }
 
 

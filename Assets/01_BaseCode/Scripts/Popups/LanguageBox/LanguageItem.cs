@@ -40,7 +40,7 @@ public class LanguageItem : MonoBehaviour
 
     public void OnClickFlagButton() {
         if (_clickAction != null) _clickAction(this);
-
+        
         GameController.Instance.musicManager.PlayClickSound();
     }
 

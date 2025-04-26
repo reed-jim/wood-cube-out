@@ -1,10 +1,13 @@
 //using MoreMountains.NiceVibrations;
+
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using GPlay.GplayGoogleUMP;
 using Gplay.Notifications;
 using UnityEngine;
 using UnityEngine.UI;
+using PrimeTween;
 using GPlayUI;
 
 public class SettingBox : BaseBox
@@ -24,27 +27,9 @@ public class SettingBox : BaseBox
     }
 
     [Header("Sound/Music/Vibration/Notification")]
-    [SerializeField]
-    private Button vibrationBtn;
-
-    [SerializeField] private Image vibrationImg;
-    [SerializeField] private Sprite vibrationSprt_On;
-    [SerializeField] private Sprite vibrationSprt_Off;
-
-    [SerializeField] private Button soundBtn;
-    [SerializeField] private Image soundImg;
-    [SerializeField] private Sprite soundSprt_On;
-    [SerializeField] private Sprite soundSprt_Off;
-
-    [SerializeField] private Button musicBtn;
-    [SerializeField] private Image musicImg;
-    [SerializeField] private Sprite musicSprt_On;
-    [SerializeField] private Sprite musicSprt_Off;
-
-    [SerializeField] private Button notificationBtn;
-    [SerializeField] private Image notificationImg;
-    [SerializeField] private Sprite notificationOn;
-    [SerializeField] private Sprite notificationOff;
+    [SerializeField] private SaferioToggle musicToggle;
+    [SerializeField] private SaferioToggle soundToggle;
+    [SerializeField] private SaferioToggle vibrationToggle;
 
     [Header("Settings Btns")]
     [SerializeField]
@@ -57,6 +42,13 @@ public class SettingBox : BaseBox
     [SerializeField] private Button restorePurchaseBtn;
     [SerializeField] private Button privacyOptionBtn;
 
+    [SerializeField] private RectTransform chooseLanguageContainer;
+    [SerializeField] private CanvasGroup chooseLanguageContainerCanvasGroup;
+    [SerializeField] private LanguageItem[] _flagItems;
+    [SerializeField] private LanguageSpriteDictionary flagDict;
+    [SerializeField] private Transform parentGroup;
+    [SerializeField] private LanguageItem sampleFlagButton;
+    
     //[SerializeField] private ToggleUIHandle toggleTargetAds;
 
     [SerializeField] private Text versionTxt;
@@ -64,12 +56,15 @@ public class SettingBox : BaseBox
 
     public void Init()
     {
-        vibrationBtn.onClick.AddListener(OnClickVibration);
-        soundBtn.onClick.AddListener(OnClickSound);
-        musicBtn.onClick.AddListener(OnClickMusic);
-        notificationBtn.onClick.AddListener(OnClickNotification);
+        CloseLanguageDropdown();
+        musicToggle.SetState(GameController.Instance.useProfile.OnMusic);
+        soundToggle.SetState(GameController.Instance.useProfile.OnSound);
+        vibrationToggle.SetState(GameController.Instance.useProfile.OnVibration);
+        musicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
+        soundToggle.RegisterOnSwitchedEvent(EnableGameSound);
+        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
 
-        languageBtn.onClick.AddListener(OnClickLanguage);
+        languageBtn.onClick.AddListener(OpenLanguageDropdown);
         supportBtn.onClick.AddListener(OnClickSupport);
         termsBtn.onClick.AddListener(OnClickTermOfUse);
         privacyBtn.onClick.AddListener(OnClickPrivacy);
@@ -128,92 +123,107 @@ public class SettingBox : BaseBox
 
     public void InitState()
     {
-        if (GameController.Instance.useProfile.OnVibration)
-        {
-            vibrationImg.sprite = vibrationSprt_On;
-        }
-        else
-        {
-            vibrationImg.sprite = vibrationSprt_Off;
-        }
-
-        if (GameController.Instance.useProfile.OnSound)
-        {
-            soundImg.sprite = soundSprt_On;
-        }
-        else
-        {
-            soundImg.sprite = soundSprt_Off;
-        }
-
-        if (GameController.Instance.useProfile.OnMusic)
-        {
-            musicImg.sprite = musicSprt_On;
-        }
-        else
-        {
-            musicImg.sprite = musicSprt_Off;
-        }
-        notificationImg.sprite = NotificationController.IsActive ? notificationOn : notificationOff;
+        
     }
-
-    public void OnClickVibration()
+    
+    
+    private void EnableGameMusic(bool isTurnOn)
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.useProfile.OnVibration = !GameController.Instance.useProfile.OnVibration;
-        if (GameController.Instance.useProfile.OnVibration)
-        {
-            vibrationImg.sprite = vibrationSprt_On;
-          //  MMVibrationManager.Haptic(HapticTypes.Success, false, true, this);
-        }
-        else
-        {
-            vibrationImg.sprite = vibrationSprt_Off;
-        }
+        GameController.Instance.useProfile.OnMusic = isTurnOn;
     }
 
-    public void OnClickSound()
+    private void EnableGameSound(bool isTurnOn)
     {
-        GameController.Instance.useProfile.OnSound = !GameController.Instance.useProfile.OnSound;
-        if (GameController.Instance.useProfile.OnSound)
-        {
-            soundImg.sprite = soundSprt_On;
-        }
-        else
-        {
-            soundImg.sprite = soundSprt_Off;
-        }
-
-        GameController.Instance.musicManager.PlayClickSound();
+        GameController.Instance.useProfile.OnSound = isTurnOn;
     }
 
-    public void OnClickMusic()
+    private void EnableVibration(bool isTurnOn)
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.useProfile.OnMusic = !GameController.Instance.useProfile.OnMusic;
-        if (GameController.Instance.useProfile.OnMusic)
-        {
-            musicImg.sprite = musicSprt_On;
-        }
-        else
-        {
-            musicImg.sprite = musicSprt_Off;
-        }
+        GameController.Instance.useProfile.OnVibration = isTurnOn;
     }
-
-    private void OnClickNotification()
+    private void OpenLanguageDropdown()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        NotificationController.IsActive = !NotificationController.IsActive;
-        notificationImg.sprite = NotificationController.IsActive ? notificationOn : notificationOff;
-    }
+        chooseLanguageContainer.gameObject.SetActive(true);
 
-    public void OnClickLanguage()
+        chooseLanguageContainer.localScale = new Vector3(1, 0, 1);
+
+        Tween.ScaleY(chooseLanguageContainer, 1, duration: 0.3f);
+
+        languageBtn.onClick.RemoveListener(OpenLanguageDropdown);
+        languageBtn.onClick.AddListener(CloseLanguageDropdown);
+
+        _flagItems = new LanguageItem[flagDict.Value.Count];
+        int i = 0;
+        foreach (Transform child in parentGroup.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (var lanuage in flagDict.Value) {
+            if(_flagItems[i] != null) Destroy(_flagItems[i].gameObject);
+            var newFlag = Instantiate(sampleFlagButton, parentGroup.transform, false);
+            newFlag.Init(lanuage, item => {
+                OnSelectFlagItem(item);
+                OnClickLanguage(lanuage.ToString());
+            });
+            newFlag.ActiveSelected(
+                string.Compare(Localization.language, lanuage.ToString(), StringComparison.Ordinal) == 0);
+            
+            newFlag.name = lanuage.ToString();
+            Debug.Log(i);
+            _flagItems[i] = newFlag;
+            i++;
+        }
+    }
+    public void OnClickLanguage(string language) {
+        if (string.CompareOrdinal(Localization.language, language) != 0)
+        {
+            //PlayerPrefs.SetString("Language", language);
+            Localization.LoadCSV(Localization.loadFunction.Invoke(language), true);
+            Localization.language = language;
+        }
+
+        var uiLnaguage = FindObjectsOfType<LocalizeBehaviour>();
+        for (var i = 0; i < uiLnaguage.Length; i++) {
+            uiLnaguage[i].OnLocalize();
+        }
+        
+        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CHANGE_LANGUAGE);
+    }
+    private void OnSelectFlagItem(LanguageItem item) {
+        foreach (LanguageItem flagItem in _flagItems) {
+            flagItem.ActiveSelected(flagItem == item);            
+        }
+    }
+    private void CloseLanguageDropdown()
     {
-        LanguageBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
-    }
+        Tween.Custom(1, 0, duration: 0.2f, onValueChange: newVal =>
+            {
+                chooseLanguageContainerCanvasGroup.alpha = newVal;
+            })
+            .OnComplete(() =>
+            {
+                chooseLanguageContainerCanvasGroup.alpha = 1;
 
+                chooseLanguageContainer.gameObject.SetActive(false);
+
+                languageBtn.onClick.RemoveListener(CloseLanguageDropdown);
+                languageBtn.onClick.AddListener(OpenLanguageDropdown);
+                foreach (var i in _flagItems)
+                {
+                    Destroy(i.gameObject);
+                }
+
+                _flagItems = Array.Empty<LanguageItem>();
+            });
+
+        Tween.ScaleY(chooseLanguageContainer, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                chooseLanguageContainer.localScale = Vector3.one;
+            });
+
+        //isAbleToHideOnClickOutside = true;
+    }
     public void OnClickSupport()
     {
         GameController.Instance.musicManager.PlayClickSound();

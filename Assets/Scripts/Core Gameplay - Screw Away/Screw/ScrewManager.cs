@@ -20,7 +20,7 @@ public class ScrewManager : MonoBehaviour
     #region PRIVATE FIELD
     [SerializeField]public List<BaseScrew> _screws;
     [SerializeField]private int _totalScrewObserved;
-    [SerializeField]private int _totalScrew;
+    [SerializeField]public int _totalScrew;
     [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     public bool _inited;
     #endregion
@@ -79,7 +79,6 @@ public class ScrewManager : MonoBehaviour
     {
         _totalScrew = screwNumber;
         _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
-
        GamePlayController_BirdSort.Instance.gameScene.UpdateRemainingScrew(_totalScrew, _totalScrew);
     }
 

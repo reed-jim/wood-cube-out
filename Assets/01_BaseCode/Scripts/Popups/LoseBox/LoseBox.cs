@@ -3,10 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using PrimeTween;
+using Tween = DG.Tweening.Tween;
 
 public class LoseBox : PlayCampainBox
 {
     private static LoseBox instance;
+    private List<PrimeTween.Tween> _tweens;
     public static LoseBox SetupLegacy()
     {
         if (instance == null)
@@ -21,6 +24,8 @@ public class LoseBox : PlayCampainBox
     }
 
    [SerializeField] protected Button closeBtn;
+   [SerializeField] private Slider progressSlider;
+   [SerializeField] private Text progressText;
 
     public override void Init()
     {
@@ -53,8 +58,30 @@ public class LoseBox : PlayCampainBox
 
         if (GamePlayController_BirdSort.Instance != null)
             GameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
+        
     }
 
+    public void Show(float currentProgress)
+    {
+        currentProgress = 1f - currentProgress;
+        base.Show();
+        progressSlider.value = 0.19f;
+        if (currentProgress > 0.19f)
+        {
+            PrimeTween.Tween.Custom(0.19f, currentProgress,onValueChange: (newVal) =>
+            {
+                progressSlider.value = newVal;
+                progressText.text = ((int)(newVal*100f)).ToString() + "%";
+                
+            },duration: 1f, ease: Ease.InQuart);
+        }
+        else
+        {
+            progressText.text = "0%";
+            progressSlider.value = 0.19f;
+        }
+            
+    }
     public virtual void OnClickClose()
     {
         if (adsData.config.interstitials.showAfterQuit)
@@ -119,7 +146,6 @@ public class LoseBox : PlayCampainBox
             OutOfHealthBox.Setup().Show();
             GameController.Instance.musicManager.PlayClickSound();
         }
-
-
     }
+    
 }

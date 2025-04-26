@@ -17,7 +17,7 @@ public class ChestStarInfoBox : BaseBox
         return instance;
     }
 
-    [SerializeField] protected Image progessImg;
+    [SerializeField] protected Slider progessImg;
     [SerializeField] protected Text progessTxt;
     [SerializeField] protected Button continueBtn;
     public void Init()
@@ -28,6 +28,6 @@ public class ChestStarInfoBox : BaseBox
     public void InitState()
     {
         progessTxt.text = StartChestController.CurrentStar + "/" + GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
-        progessImg.fillAmount = (float)StartChestController.CurrentStar / GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
+        progessImg.value = (float)StartChestController.CurrentStar / GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
     }
 }
