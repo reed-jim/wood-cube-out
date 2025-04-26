@@ -49,7 +49,7 @@ public class RotateObject : MonoBehaviour
 
         while (true)
         {
-            if (_isSwiping)
+            if (_isSwiping || _isAutoRotating)
             {
                 if (!_isRotating)
                 {
