@@ -8,7 +8,7 @@ public enum GameResourceType
     ClearHolesBooster
 }
 
-[CreateAssetMenu(fileName = "reward_", menuName = "ScriptableObjects/RewardBundleData")]
+[CreateAssetMenu(fileName = "Gold Pass Reward_", menuName = "ScriptableObjects/RewardBundleData")]
 public class RewardBundleData : ScriptableObject
 {
     [SerializeField] private GameResourceType resourceType;

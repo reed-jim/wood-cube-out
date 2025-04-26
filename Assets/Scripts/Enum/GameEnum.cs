@@ -39,7 +39,8 @@ public class GameEnum : MonoBehaviour
         LevelInProgress,
         Backup,
         UnlockDoubleScrewBoxesSuggestion,
-        UnlockAllScrewBoxesForever
+        UnlockAllScrewBoxesForever,
+        GoldPass
     }
 
     public enum GameFaction
