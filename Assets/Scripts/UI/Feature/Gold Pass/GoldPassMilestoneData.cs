@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "gold_pass_milestone_", menuName = "ScriptableObjects/GoldPassMilestoneData")]
+[CreateAssetMenu(fileName = "Gold Pass Milestone_", menuName = "ScriptableObjects/GoldPassMilestoneData")]
 public class GoldPassMilestoneData : ScriptableObject
 {
     [SerializeField] private int keyRequired;
