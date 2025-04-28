@@ -37,6 +37,20 @@ public class GoldPassPopup : BasePopup
 
             goldPassMilestoneItems[i].Setup(rewardBundleData, goldPassMilestoneData);
         }
+
+        float currentPassLevelProgress = GetCurrentPassLevelProgress();
+
+        if (currentPassLevelProgress > 0.19f)
+        {
+            progress.value = currentPassLevelProgress;
+            progressText.text = $"{(currentPassLevelProgress * 100).ToString("F1")}%";
+        }
+        else
+        {
+
+        }
+
+        passLevelText.text = $"{goldPassDataContainer.goldPassData.passLevel}";
     }
 
     private IEnumerator Counting()
@@ -45,31 +59,50 @@ public class GoldPassPopup : BasePopup
 
         while (true)
         {
-            UpdateRemainingReplenishLife();
+            UpdateRemainingTime();
 
             yield return waitOneSecond;
         }
     }
 
-    private void UpdateRemainingReplenishLife()
+    private void UpdateRemainingTime()
     {
-        if (goldPassDataContainer.endTimestamp == 0)
+        if (goldPassDataContainer.goldPassData.endTimestamp == 0)
         {
-            goldPassDataContainer.endTimestamp =
+            goldPassDataContainer.goldPassData.endTimestamp =
                 new DateTimeOffset(DateTime.Now).AddDays(goldPassDataContainer.numDays).ToUnixTimeSeconds();
+
+            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
         }
 
         // TimeSpan timeSinceStart = DateTime.Now - DateTimeOffset.FromUnixTimeSeconds(goldPassDataContainer.endTimestamp).DateTime;
 
-        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(goldPassDataContainer.endTimestamp).DateTime - DateTime.Now).TotalSeconds;
+        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(goldPassDataContainer.goldPassData.endTimestamp).DateTime - DateTime.Now).TotalSeconds;
 
         timeCounterText.text = $"{ConvertTimeFormat(remainingTime)}";
     }
 
-    #region UTIL
-    private string ConvertTimeFormat(double time)
+    private void Claim()
     {
-        return $"{TimeSpan.FromSeconds(time).ToString(@"mm\:ss")}";
+
+    }
+
+    private float GetCurrentPassLevelProgress()
+    {
+        return (float)goldPassDataContainer.goldPassData.keyCollected /
+            goldPassDataContainer.goldPassMilestones[goldPassDataContainer.goldPassData.passLevel].KeyRequired;
+    }
+
+    #region UTIL
+    private string ConvertTimeFormat(double totalSeconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+
+        return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}",
+                        (int)time.TotalDays,
+                        time.Hours,
+                        time.Minutes,
+                        time.Seconds);
     }
     #endregion
 }

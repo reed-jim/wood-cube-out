@@ -24,6 +24,9 @@ public class WinPopup : BasePopup
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
 
@@ -113,6 +116,10 @@ public class WinPopup : BasePopup
         DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
 
         _isAlreadyWatchRewardedAd = false;
+
+        #region GOLD PASS
+        HandleGoldPass();
+        #endregion
     }
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
@@ -247,4 +254,21 @@ public class WinPopup : BasePopup
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: true, EndLevelReason.Win.ToString());
         }
     }
+
+    #region GOLD PASS
+    private void HandleGoldPass()
+    {
+        goldPassDataContainer.goldPassData.keyCollected++;
+
+        if (goldPassDataContainer.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
+        {
+            goldPassDataContainer.CurrentMilestone.IsPassed = true;
+            goldPassDataContainer.goldPassData.passLevel++;
+
+            goldPassDataContainer.goldPassData.keyCollected = 0;
+
+            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
+        }
+    }
+    #endregion
 }
