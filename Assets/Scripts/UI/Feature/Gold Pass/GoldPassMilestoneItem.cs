@@ -4,6 +4,7 @@ using UnityEngine;
 public class GoldPassMilestoneItem : MonoBehaviour
 {
     #region SHARED
+    [SerializeField] private GameObject doneState;
     [SerializeField] private TMP_Text passNumberText;
     #endregion
 
@@ -20,6 +21,9 @@ public class GoldPassMilestoneItem : MonoBehaviour
     [SerializeField] private GameObject goldPassChest;
     #endregion
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isChestReward;
 
@@ -28,6 +32,7 @@ public class GoldPassMilestoneItem : MonoBehaviour
         freePassRewardQuantity.text = $"{rewardBundleData.Quantity}";
         goldPassRewardQuantity.text = $"{3 * rewardBundleData.Quantity}";
 
-        freePassDoneIcon.gameObject.SetActive(goldPassMilestoneData.IsPassed);
+        doneState.gameObject.SetActive(goldPassMilestoneData.IsPassed);
+        freePassDoneIcon.gameObject.SetActive(goldPassMilestoneData.IsClaimed);
     }
 }
