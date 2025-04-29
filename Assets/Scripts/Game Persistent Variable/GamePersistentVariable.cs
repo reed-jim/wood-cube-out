@@ -79,4 +79,9 @@ public static class GamePersistentVariable
     #region LEADERBOARD
     public static int selectedCountryIndex;
     #endregion
+
+    #region DAILY REWARD
+    public static int currentDailyRewardIndex;
+    public static bool isCurrentDailyRewardIndexLoaded;
+    #endregion
 }
