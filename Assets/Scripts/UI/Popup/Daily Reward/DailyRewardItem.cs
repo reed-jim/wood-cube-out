@@ -9,11 +9,13 @@ public class DailyRewardItem : MonoBehaviour
     [SerializeField] private Button claimButton;
     [SerializeField] private Image icon;
     [SerializeField] private Image activeState;
+    [SerializeField] private GameObject doneState;
     [SerializeField] private TMP_Text quantityText;
 
     [SerializeField] private Sprite[] iconSprites;
 
     [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer dailyRewardDataContainer;
 
     [Header("CUSTOMIZE")]
@@ -23,6 +25,7 @@ public class DailyRewardItem : MonoBehaviour
 
     #region EVENT
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static event Action refreshDailyRewardEvent;
     #endregion
 
     void Awake()
@@ -65,27 +68,22 @@ public class DailyRewardItem : MonoBehaviour
 
         _day = dayIndex + 1;
 
-        if (DailyRewardUtil.IsClaimedTodayReward(_day))
-        {
-            activeState.gameObject.SetActive(false);
-        }
-        else
-        {
-            activeState.gameObject.SetActive(true);
-        }
+        activeState.gameObject.SetActive(DailyRewardUtil.IsDailyRewardReadyForDay(_day));
+        doneState.gameObject.SetActive(DailyRewardUtil.IsClaimedDailyReward(_day));
 
         claimButton.gameObject.SetActive(false);
     }
 
     private void Claim()
     {
-        if (DailyRewardUtil.IsClaimedTodayReward(_day))
+        if (!DailyRewardUtil.IsDailyRewardReadyForDay(_day))
         {
             return;
         }
 
-        DataUtility.Save(GameConstants.LAST_DAY_CLAIM_DAILY_REWARD, DateTime.Now.Day);
-        DataUtility.Save(GameConstants.NUM_DAY_CLAIMED_REWARD, DataUtility.Load(GameConstants.NUM_DAY_CLAIMED_REWARD, 0) + 1);
+        DataUtility.Save("last_timestamp_claim_daily_reward", new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds());
+        DataUtility.Save($"is_claim_daily_reward_day_{_day}", true);
+        DataUtility.Save($"current_daily_reward_day", GamePersistentVariable.currentDailyRewardIndex + 1);
 
         Tween.Scale(claimButton.transform, 1.1f, duration: 0.15f).OnComplete(() =>
         {
@@ -94,12 +92,18 @@ public class DailyRewardItem : MonoBehaviour
                 int coinQuantity = dailyRewardDataContainer.Items[dayIndex].CoinQuantity;
                 int[] boosterQuantites = dailyRewardDataContainer.Items[dayIndex].BoosterQuantities;
 
+                userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+                userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+                userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+
+                userResourcesObserver.ChangeCoin(coinQuantity);
+
                 showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
 
                 claimButton.gameObject.SetActive(false);
 
                 Init();
             });
-        });
+        }); 
     }
 }

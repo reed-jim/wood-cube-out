@@ -247,12 +247,24 @@ public class BasePopup : MonoBehaviour
 
             bool clickedOutside = true;
 
+            RectTransform[] children = TransformUtil.GetComponentsFromAllChildren<RectTransform>(transform).ToArray();
+
+            bool isFound = false;
+
             foreach (var result in raycastResults)
             {
-                if (result.gameObject == container.gameObject)
+                for (int i = 0; i < children.Length; i++)
                 {
-                    clickedOutside = false;
+                    if (result.gameObject == children[i].gameObject)
+                    {
+                        clickedOutside = false;
 
+                        break;
+                    }
+                }
+
+                if (isFound)
+                {
                     break;
                 }
             }
