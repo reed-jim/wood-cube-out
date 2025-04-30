@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class DailyRewardItem : MonoBehaviour
 {
     [SerializeField] private Button claimButton;
-    [SerializeField] private Image icon;
+    [SerializeField] private Image[] rewardIcons;
     [SerializeField] private Image activeState;
     [SerializeField] private GameObject doneState;
     [SerializeField] private TMP_Text dayText;
-    [SerializeField] private TMP_Text quantityText;
+    [SerializeField] private TMP_Text[] quantityTexts;
 
     [SerializeField] private Sprite[] iconSprites;
 
@@ -48,11 +48,13 @@ public class DailyRewardItem : MonoBehaviour
         int coinQuantity = dailyRewardDataContainer.Items[dayIndex].CoinQuantity;
         int[] boosterQuantites = dailyRewardDataContainer.Items[dayIndex].BoosterQuantities;
 
+        int currentIndex = 0;
+
         if (coinQuantity > 0)
         {
-            icon.sprite = iconSprites[0];
+            // rewardIcons[0].sprite = iconSprites[0];
 
-            quantityText.text = $"{coinQuantity}";
+            quantityTexts[0].text = $"{coinQuantity}";
         }
         else
         {
@@ -60,9 +62,13 @@ public class DailyRewardItem : MonoBehaviour
             {
                 if (boosterQuantites[i] > 0)
                 {
-                    icon.sprite = iconSprites[1 + i];
+                    // rewardIcons[i].sprite = iconSprites[1 + i];
 
-                    quantityText.text = $"{boosterQuantites[i]}";
+                    Debug.Log("SAFERIO " + currentIndex + "/" + transform.name);
+
+                    quantityTexts[currentIndex].text = $"{boosterQuantites[i]}";
+
+                    currentIndex++;
                 }
             }
         }
@@ -107,6 +113,6 @@ public class DailyRewardItem : MonoBehaviour
 
                 Init();
             });
-        }); 
+        });
     }
 }
