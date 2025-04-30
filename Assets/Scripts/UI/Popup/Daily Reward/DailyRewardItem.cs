@@ -10,6 +10,7 @@ public class DailyRewardItem : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private Image activeState;
     [SerializeField] private GameObject doneState;
+    [SerializeField] private TMP_Text dayText;
     [SerializeField] private TMP_Text quantityText;
 
     [SerializeField] private Sprite[] iconSprites;
@@ -67,6 +68,8 @@ public class DailyRewardItem : MonoBehaviour
         }
 
         _day = dayIndex + 1;
+
+        dayText.text = $"Day {_day}";
 
         activeState.gameObject.SetActive(DailyRewardUtil.IsDailyRewardReadyForDay(_day));
         doneState.gameObject.SetActive(DailyRewardUtil.IsClaimedDailyReward(_day));
