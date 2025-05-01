@@ -40,7 +40,8 @@ public class GameEnum : MonoBehaviour
         Backup,
         UnlockDoubleScrewBoxesSuggestion,
         UnlockAllScrewBoxesForever,
-        GoldPass
+        GoldPass,
+        EndlessSale
     }
 
     public enum GameFaction

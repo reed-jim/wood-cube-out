@@ -64,8 +64,6 @@ public class DailyRewardItem : MonoBehaviour
                 {
                     // rewardIcons[i].sprite = iconSprites[1 + i];
 
-                    Debug.Log("SAFERIO " + currentIndex + "/" + transform.name);
-
                     quantityTexts[currentIndex].text = $"{boosterQuantites[i]}";
 
                     currentIndex++;
