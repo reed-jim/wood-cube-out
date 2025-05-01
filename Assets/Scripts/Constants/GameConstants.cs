@@ -167,6 +167,10 @@ public static class GameConstants
     public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
     #endregion
 
+    #region ENDLESS SALE
+    public static string ENDLESS_SALE_DATA = "ENDLESS_SALE_DATA";
+    #endregion
+
     #region COMPENSATE
     public static string IS_CLAIMED_COMPENSATE_REMOVE_ADS = "IS_CLAIMED_COMPENSATE_REMOVE_ADS";
     public static string IS_CLAIMED_COMPENSATE_BIG_REWARD = "IS_CLAIMED_COMPENSATE_BIG_REWARD";
