@@ -33,7 +33,7 @@ public class GoldPassPopup : BasePopup
         for (int i = 0; i < goldPassMilestoneItems.Length; i++)
         {
             GoldPassMilestoneData goldPassMilestoneData = goldPassDataContainer.goldPassMilestones[i];
-            RewardBundleData rewardBundleData = goldPassDataContainer.goldPassRewards[i];
+            DailyRewardData rewardBundleData = goldPassDataContainer.goldPassRewards[i];
 
             goldPassMilestoneItems[i].Setup(rewardBundleData, goldPassMilestoneData);
         }
