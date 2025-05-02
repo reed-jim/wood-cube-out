@@ -41,7 +41,8 @@ public class GameEnum : MonoBehaviour
         UnlockDoubleScrewBoxesSuggestion,
         UnlockAllScrewBoxesForever,
         GoldPass,
-        EndlessSale
+        EndlessSale,
+        WeeklyChallenge
     }
 
     public enum GameFaction

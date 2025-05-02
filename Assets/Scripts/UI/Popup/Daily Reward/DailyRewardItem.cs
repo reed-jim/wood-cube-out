@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class DailyRewardItem : MonoBehaviour
 {
+    [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private Button claimButton;
     [SerializeField] private Image[] rewardIcons;
     [SerializeField] private Image activeState;
@@ -27,6 +28,7 @@ public class DailyRewardItem : MonoBehaviour
     #region EVENT
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action refreshDailyRewardEvent;
+    public static event Action enableClaimDailyRewardButtonsEvent;
     #endregion
 
     void Awake()
@@ -75,7 +77,24 @@ public class DailyRewardItem : MonoBehaviour
 
         dayText.text = $"Day {_day}";
 
-        activeState.gameObject.SetActive(DailyRewardUtil.IsDailyRewardReadyForDay(_day));
+        bool isRewardReadyForDay = DailyRewardUtil.IsDailyRewardReadyForDay(_day);
+        bool IsClaimedDailyReward = DailyRewardUtil.IsClaimedDailyReward(_day);
+
+        if (isRewardReadyForDay)
+        {
+            canvasGroup.alpha = 1;
+
+            enableClaimDailyRewardButtonsEvent?.Invoke();
+        }
+        else
+        {
+            if (!IsClaimedDailyReward)
+            {
+                canvasGroup.alpha = 0.2f;
+            }
+        }
+
+        activeState.gameObject.SetActive(isRewardReadyForDay);
         doneState.gameObject.SetActive(DailyRewardUtil.IsClaimedDailyReward(_day));
 
         claimButton.gameObject.SetActive(false);
