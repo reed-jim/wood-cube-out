@@ -5,7 +5,7 @@ using UnityEngine;
 public class GoldPassDataContainer : ScriptableObject
 {
     [SerializeField] public GoldPassMilestoneData[] goldPassMilestones;
-    [SerializeField] public RewardBundleData[] goldPassRewards;
+    [SerializeField] public DailyRewardData[] goldPassRewards;
 
     [SerializeField] public int numDays;
 
