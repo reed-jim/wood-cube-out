@@ -18,6 +18,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openDailyRewardPopupButton;
     [SerializeField] private Button openGoldPassPopupButton;
     [SerializeField] private Button openEndlessSalePopupButton;
+    [SerializeField] private Button openWeeklyChallengePopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
@@ -60,7 +61,8 @@ public class MenuScreen : MonoBehaviour
         openAllScrewBoxesForeverButton.onClick.AddListener(OpenUnlockAllScrewBoxesForeverPopup);
         openDailyRewardPopupButton.onClick.AddListener(OpenDailyRewardPopup);
         openGoldPassPopupButton.onClick.AddListener(OpenGoldPassPopup);
-        openEndlessSalePopupButton.onClick.AddListener(OpenEndlessSalePopup);
+        openEndlessSalePopupButton.onClick.AddListener(OpenWeeklyChallengePopup);
+        openWeeklyChallengePopupButton.onClick.AddListener(OpenEndlessSalePopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -207,6 +209,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenEndlessSalePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.EndlessSale);
+    }
+
+    private void OpenWeeklyChallengePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.WeeklyChallenge);
     }
 
     private void OpenLuckyWheelScreen()

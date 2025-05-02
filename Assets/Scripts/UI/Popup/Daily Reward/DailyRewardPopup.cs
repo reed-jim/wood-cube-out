@@ -1,5 +1,6 @@
 using System;
 using PrimeTween;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,12 +8,14 @@ public class DailyRewardPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button claimButton;
+    [SerializeField] private Button claimX2Button;
 
     public static event Action claimDailyRewardEvent;
 
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
         claimButton.onClick.AddListener(Claim);
     }
@@ -20,6 +23,15 @@ public class DailyRewardPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        DailyRewardItem.enableClaimDailyRewardButtonsEvent -= EnableClaimButtons;
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+
+        claimButton.gameObject.SetActive(false);
+        claimX2Button.gameObject.SetActive(false);
     }
 
     private void Claim()
@@ -42,5 +54,11 @@ public class DailyRewardPopup : BasePopup
         {
             popupCanvasGroup.alpha = newVal;
         }));
+    }
+
+    private void EnableClaimButtons()
+    {
+        claimButton.gameObject.SetActive(true);
+        claimX2Button.gameObject.SetActive(true);
     }
 }
