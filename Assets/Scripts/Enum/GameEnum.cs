@@ -44,7 +44,8 @@ public class GameEnum : MonoBehaviour
         EndlessSale,
         WeeklyChallenge,
         ChestLevel,
-        CoinChallenge
+        CoinChallenge,
+        MedalTournament
     }
 
     public enum GameFaction

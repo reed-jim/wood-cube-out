@@ -21,6 +21,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openWeeklyChallengePopupButton;
     [SerializeField] private Button openChestLevelPopupButton;
     [SerializeField] private Button openCoinChallengePopupButton;
+    [SerializeField] private Button openMedalTournamentPopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
@@ -67,6 +68,7 @@ public class MenuScreen : MonoBehaviour
         openWeeklyChallengePopupButton.onClick.AddListener(OpenEndlessSalePopup);
         openChestLevelPopupButton.onClick.AddListener(OpenChestLevelPopup);
         openCoinChallengePopupButton.onClick.AddListener(OpenCoinChallengePopup);
+        openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -228,6 +230,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenCoinChallengePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.CoinChallenge);
+    }
+
+    private void OpenMedalTournamentPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.MedalTournament);
     }
 
     private void OpenLuckyWheelScreen()
