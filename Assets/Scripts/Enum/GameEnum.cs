@@ -43,7 +43,8 @@ public class GameEnum : MonoBehaviour
         GoldPass,
         EndlessSale,
         WeeklyChallenge,
-        ChestLevel
+        ChestLevel,
+        CoinChallenge
     }
 
     public enum GameFaction
