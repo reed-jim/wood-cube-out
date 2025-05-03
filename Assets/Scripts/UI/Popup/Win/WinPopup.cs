@@ -119,6 +119,7 @@ public class WinPopup : BasePopup
 
         #region GOLD PASS
         HandleGoldPass();
+        HandleCoinChallenge();
         #endregion
     }
 
@@ -269,6 +270,17 @@ public class WinPopup : BasePopup
 
             DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
         }
+    }
+    #endregion
+
+    #region COIN CHALLENGE
+    private void HandleCoinChallenge()
+    {
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        coinChallengeData.gemCollected++;
+
+        DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
     }
     #endregion
 }
