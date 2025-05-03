@@ -1,3 +1,5 @@
+using System;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +11,7 @@ public class GoldPassMilestoneItem : MonoBehaviour
     [SerializeField] private GameObject doneState;
     [SerializeField] private TMP_Text passNumberText;
     [SerializeField] private Sprite[] rewardSprites;
+    [SerializeField] private Button claimButton;
     #endregion
 
     #region FREE PASS
@@ -28,12 +31,27 @@ public class GoldPassMilestoneItem : MonoBehaviour
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isChestReward;
 
-    public void Setup(DailyRewardData rewardData, GoldPassMilestoneData goldPassMilestoneData)
+    private int _index;
+
+    #region EVENT
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    #endregion
+
+    private void Awake()
     {
+        claimButton.onClick.AddListener(Claim);
+    }
+
+    public void Setup(int index)
+    {
+        GoldPassMilestoneData goldPassMilestoneData = goldPassDataContainer.goldPassMilestones[index];
+        DailyRewardData rewardData = goldPassDataContainer.goldPassRewards[index];
+
         int numReward = 0;
 
         int singleRewardQuantity = 0;
@@ -78,9 +96,31 @@ public class GoldPassMilestoneItem : MonoBehaviour
         UIUtil.SetSizeKeepRatioX(freePassRewardIcon, 0.5f * container.sizeDelta.y);
         UIUtil.SetSizeKeepRatioX(goldPassRewardIcon, 0.5f * container.sizeDelta.y);
 
-        doneState.gameObject.SetActive(goldPassMilestoneData.IsPassed);
+        doneState.gameObject.SetActive(goldPassMilestoneData.IsPassed && !goldPassMilestoneData.IsClaimed);
         freePassDoneIcon.gameObject.SetActive(goldPassMilestoneData.IsClaimed);
 
+        claimButton.interactable = goldPassMilestoneData.IsPassed && !goldPassMilestoneData.IsClaimed;
+
         goldPassLock.SetActive(!GamePersistentVariable.isGoldPassUnlocked);
+
+        _index = index;
+    }
+
+    private void Claim()
+    {
+        int coinQuantity = goldPassDataContainer.goldPassRewards[_index].CoinQuantity;
+        int[] boosterQuantites = goldPassDataContainer.goldPassRewards[_index].BoosterQuantities;
+
+        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+
+        userResourcesObserver.ChangeCoin(coinQuantity);
+
+        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+
+        goldPassDataContainer.goldPassMilestones[_index].IsClaimed = true;
+
+        Setup(_index);
     }
 }
