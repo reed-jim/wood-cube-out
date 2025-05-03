@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using PrimeTween;
 using TMPro;
 using UnityEditor.Embree;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine.UI;
 
 public class GoldPassPopup : BasePopup
 {
+    [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button helpButton;
     [SerializeField] private Slider progress;
@@ -16,6 +18,16 @@ public class GoldPassPopup : BasePopup
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
 
     private GoldPassMilestoneItem[] goldPassMilestoneItems;
+
+    protected override void RegisterMoreEvent()
+    {
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+    }
 
     protected override void Show(Action onCompletedAction = null)
     {
@@ -32,10 +44,9 @@ public class GoldPassPopup : BasePopup
 
         for (int i = 0; i < goldPassMilestoneItems.Length; i++)
         {
-            GoldPassMilestoneData goldPassMilestoneData = goldPassDataContainer.goldPassMilestones[i];
-            DailyRewardData rewardBundleData = goldPassDataContainer.goldPassRewards[i];
+            int index = i;
 
-            goldPassMilestoneItems[i].Setup(rewardBundleData, goldPassMilestoneData);
+            goldPassMilestoneItems[i].Setup(index);
         }
 
         float currentPassLevelProgress = GetCurrentPassLevelProgress();
@@ -43,12 +54,13 @@ public class GoldPassPopup : BasePopup
         if (currentPassLevelProgress > 0.19f)
         {
             progress.value = currentPassLevelProgress;
-            progressText.text = $"{(currentPassLevelProgress * 100).ToString("F1")}%";
         }
         else
         {
-
+            progress.value = 0;
         }
+
+        progressText.text = $"{(currentPassLevelProgress * 100).ToString("F1")}%";
 
         passLevelText.text = $"{goldPassDataContainer.goldPassData.passLevel}";
     }
@@ -91,6 +103,23 @@ public class GoldPassPopup : BasePopup
     {
         return (float)goldPassDataContainer.goldPassData.keyCollected /
             goldPassDataContainer.goldPassMilestones[goldPassDataContainer.goldPassData.passLevel].KeyRequired;
+    }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
     }
 
     #region UTIL
