@@ -5,6 +5,7 @@ using Lean.Localization;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Leaderboards;
+using Unity.Services.Leaderboards.Models;
 using UnityEngine;
 using UnityEngine.Android;
 
@@ -88,6 +89,13 @@ public class GameLeaderboardManager : MonoBehaviour
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });
+    }
+
+    public async Task<int> GetCurrentPlayerRankAsync()
+    {
+        var playerEntry = await LeaderboardsService.Instance.GetPlayerScoreAsync("wood_cube_out");
+
+        return playerEntry.Rank;
     }
 }
 
