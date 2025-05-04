@@ -32,11 +32,6 @@ public class GameLeaderboardManager : MonoBehaviour
         await UnityServices.InitializeAsync();
     }
 
-    void Start()
-    {
-
-    }
-
     // private void Awake()
     // {
     //     GooglePlayGamesSignInManager.userAuthenticatedEvent += AddPlayerScoreToLeaderboard;

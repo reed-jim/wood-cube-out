@@ -187,5 +187,9 @@ public static class GameConstants
 
     #region COIN CHALLENGE
     public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";
-    #endregion  
+    #endregion 
+
+    #region SPACE RACE
+    public static string SAPCE_RACE_DATA = "SAPCE_RACE_DATA";
+    #endregion 
 }
