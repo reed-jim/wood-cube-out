@@ -45,7 +45,8 @@ public class GameEnum : MonoBehaviour
         WeeklyChallenge,
         ChestLevel,
         CoinChallenge,
-        MedalTournament
+        MedalTournament,
+        SpaceRace
     }
 
     public enum GameFaction

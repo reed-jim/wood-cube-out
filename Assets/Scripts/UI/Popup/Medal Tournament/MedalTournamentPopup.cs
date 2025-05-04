@@ -5,6 +5,7 @@ using PrimeTween;
 using Saferio.Util;
 using TMPro;
 using Unity.Services.Authentication;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,17 +32,19 @@ public class MedalTournamentPopup : BasePopup
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
-    protected override void Show(Action onCompletedAction = null)
+    protected override async void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
 
-        ShowReward();
-    }
+        // ShowReward();
 
-    void Start()
-    {
         CheckShowLeaderboardAsync();
     }
+
+    // void Start()
+    // {
+    //     CheckShowLeaderboardAsync();
+    // }
 
     private async Task CheckShowLeaderboardAsync()
     {
