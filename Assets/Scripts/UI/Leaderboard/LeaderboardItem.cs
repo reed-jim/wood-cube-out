@@ -36,7 +36,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
             nameText.text = $"{playerName}";
             scoreText.text = $"{LeaderboardDataContainer.Items[index].score}";
 
-            flag.sprite = countryDataContainer.Countries[LeaderboardDataContainer.Items[index].countryIndex].Flag;
+            // flag.sprite = countryDataContainer.Countries[LeaderboardDataContainer.Items[index].countryIndex].Flag;
         }
         catch (System.Exception)
         {
