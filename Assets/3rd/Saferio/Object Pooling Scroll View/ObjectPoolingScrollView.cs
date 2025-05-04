@@ -38,6 +38,7 @@ namespace Saferio.Util
         [SerializeField] private int numVisibleItem = 4;
         [SerializeField] private int poolSize;
         [SerializeField] private int expectedMaxSize;
+        [SerializeField] private bool isAutoSetItemSize;
 
         #region PRIVATE FIELD
         private Vector2 _canvasSize;
@@ -126,7 +127,10 @@ namespace Saferio.Util
 
             for (int i = 0; i < _items.Count; i++)
             {
-                UIUtil.SetSize(_items[i], _itemSize);
+                if (isAutoSetItemSize)
+                {
+                    UIUtil.SetSize(_items[i], _itemSize);
+                }
 
 
 
@@ -165,7 +169,7 @@ namespace Saferio.Util
             // _maxScrollPositionY = (poolSize - 3) * _items[0].sizeDelta.y;
             // _maxScrollPositionY = 0.5f * _viewAreaSize.y;
 
-            _maxScrollPositionY = expectedMaxSize * _items[0].sizeDelta.y;
+            _maxScrollPositionY = Mathf.Max(0, (expectedMaxSize - numVisibleItem) * _items[0].sizeDelta.y);
             _minScrollPositionY = 0;
 
             _currentHighestItemPositionY = _items.First().localPosition.y;
@@ -562,7 +566,7 @@ namespace Saferio.Util
                 scrollRect.vertical = false;
                 scrollRect.inertia = false;
 
-                Tween.LocalPositionY(content, _minScrollPositionY, duration: 0.3f).OnComplete(() =>
+                Tween.LocalPositionY(content, _minScrollPositionY, duration: 0.5f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
                     scrollRect.inertia = true;
@@ -574,7 +578,7 @@ namespace Saferio.Util
                 scrollRect.vertical = false;
                 scrollRect.inertia = false;
 
-                Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.3f).OnComplete(() =>
+                Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.5f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
                     scrollRect.inertia = true;
