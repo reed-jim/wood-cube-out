@@ -106,7 +106,7 @@ public class GoldPassMilestoneItem : MonoBehaviour
         goldPassRewardQuantity.gameObject.SetActive(isSingleReward);
 
         freePassRewardQuantity.text = $"{singleRewardQuantity}";
-        goldPassRewardQuantity.text = $"{3 * singleRewardQuantity}";
+        goldPassRewardQuantity.text = $"{GamePersistentVariable.goldPassMultiplier * singleRewardQuantity}";
 
         freePassRewardIcon.sprite = rewardSprites[rewardSpriteIndex];
         goldPassRewardIcon.sprite = rewardSprites[rewardSpriteIndex];
@@ -150,6 +150,16 @@ public class GoldPassMilestoneItem : MonoBehaviour
         int coinQuantity = goldPassDataContainer.goldPassRewards[_index].CoinQuantity;
         int[] boosterQuantites = goldPassDataContainer.goldPassRewards[_index].BoosterQuantities;
 
+        if (goldPassDataContainer.goldPassData.isGoldPass)
+        {
+            coinQuantity *= GamePersistentVariable.goldPassMultiplier;
+
+            for (int i = 0; i < boosterQuantites.Length; i++)
+            {
+                boosterQuantites[i] *= GamePersistentVariable.goldPassMultiplier;
+            }
+        }
+
         userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
         userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
         userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
@@ -183,16 +193,21 @@ public class GoldPassMilestoneItem : MonoBehaviour
 
         chestPreviewContainer.position = chestPreviewContainer.position.ChangeX(goldPassChest.position.x);
 
-        chestPreviewQuantityTexts[0].text = $"{3 * rewardData.BoosterQuantities[0]}";
-        chestPreviewQuantityTexts[1].text = $"{3 * rewardData.BoosterQuantities[1]}";
-        chestPreviewQuantityTexts[2].text = $"{3 * rewardData.BoosterQuantities[2]}";
-        chestPreviewQuantityTexts[3].text = $"{3 * rewardData.CoinQuantity}";
+        chestPreviewQuantityTexts[0].text = $"{GamePersistentVariable.goldPassMultiplier * rewardData.BoosterQuantities[0]}";
+        chestPreviewQuantityTexts[1].text = $"{GamePersistentVariable.goldPassMultiplier * rewardData.BoosterQuantities[1]}";
+        chestPreviewQuantityTexts[2].text = $"{GamePersistentVariable.goldPassMultiplier * rewardData.BoosterQuantities[2]}";
+        chestPreviewQuantityTexts[3].text = $"{GamePersistentVariable.goldPassMultiplier * rewardData.CoinQuantity}";
 
         ShowPreviewChest(true);
     }
 
     private void ShowPreviewChest(bool isShow)
     {
+        if (chestPreviewContainer.gameObject.activeInHierarchy == isShow)
+        {
+            return;
+        }
+
         if (isShow)
         {
             chestPreviewContainer.gameObject.SetActive(true);

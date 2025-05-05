@@ -25,8 +25,8 @@ public class GoldPassDataContainer : ScriptableObject
 [Serializable]
 public class GoldPassData
 {
+    [SerializeField] public bool isGoldPass;
     [SerializeField] public int passLevel;
     [SerializeField] public int keyCollected;
-
     [SerializeField] public long endTimestamp;
 }

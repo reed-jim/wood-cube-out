@@ -267,9 +267,9 @@ public class WinPopup : BasePopup
             goldPassDataContainer.goldPassData.passLevel++;
 
             goldPassDataContainer.goldPassData.keyCollected = 0;
-
-            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
         }
+
+        DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
     }
     #endregion
 

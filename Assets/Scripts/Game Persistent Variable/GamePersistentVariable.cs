@@ -87,5 +87,6 @@ public static class GamePersistentVariable
 
     #region GOLD PASS
     public static bool isGoldPassUnlocked;
+    public static int goldPassMultiplier = 10;
     #endregion
 }
