@@ -83,8 +83,6 @@ public class DailyRewardItem : MonoBehaviour
         if (isRewardReadyForDay)
         {
             canvasGroup.alpha = 1;
-
-            enableClaimDailyRewardButtonsEvent?.Invoke();
         }
         else
         {

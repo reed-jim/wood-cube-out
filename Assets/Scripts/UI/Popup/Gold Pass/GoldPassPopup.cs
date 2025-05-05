@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using PrimeTween;
 using TMPro;
-using UnityEditor.Embree;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -48,7 +47,7 @@ public class GoldPassPopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         progress.value = 0;
-        
+
         base.Show(onCompletedAction: () =>
         {
             AnimateProgress();

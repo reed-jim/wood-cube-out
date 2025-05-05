@@ -185,6 +185,10 @@ public static class GameConstants
     public static string GOLD_PASS_DATA_CONTAINER = "GOLD_PASS_DATA_CONTAINER";
     #endregion 
 
+    #region CHEST LEVEL
+    public static string CHEST_LEVEL = "CHEST_LEVEL";
+    #endregion 
+
     #region COIN CHALLENGE
     public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";
     #endregion 
