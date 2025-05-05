@@ -47,7 +47,15 @@ public class GameEnum : MonoBehaviour
         CoinChallenge,
         MedalTournament,
         SpaceRace,
-        SpaceRaceTutorial
+        SpaceRaceTutorial,
+        DailyOffer,
+        GiantOffer,
+        MasterOffer,
+        MegaOffer,
+        SaleCoin,
+        SaleItem,
+        StarterPack,
+        WeekendSale
     }
 
     public enum GameFaction
