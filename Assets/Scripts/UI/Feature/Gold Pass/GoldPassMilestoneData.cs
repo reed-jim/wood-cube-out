@@ -4,12 +4,19 @@ using UnityEngine;
 public class GoldPassMilestoneData : ScriptableObject
 {
     [SerializeField] private int keyRequired;
+    [SerializeField] private bool isChest;
     [SerializeField] private bool isPassed;
     [SerializeField] private bool isClaimed;
 
     public int KeyRequired
     {
         get => keyRequired;
+    }
+
+    public bool IsChest
+    {
+        get => isChest;
+        set => isChest = value;
     }
 
     public bool IsPassed

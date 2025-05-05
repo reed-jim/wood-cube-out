@@ -1279,6 +1279,79 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346863602}
   m_CullTransparentMesh: 1
+--- !u!1 &1441086815
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1441086816}
+  - component: {fileID: 1441086817}
+  m_Layer: 0
+  m_Name: Gold Pass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1441086816
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441086815}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1582410616}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1441086817
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1441086815}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Gold Pass
+    Object: {fileID: 0}
+  - Language: French
+    Text: Passe d'or
+    Object: {fileID: 0}
+  - Language: German
+    Text: Gold Pass
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pass d'oro
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B4\u30FC\u30EB\u30C9\u30D1\u30B9"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uACE8\uB4DC \uD328\uC2A4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Passe de ouro
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u043E\u043B\u043E\u0442\u043E\u0439 \u043F\u0440\u043E\u0445\u043E\u0434"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Pase de oro
+    Object: {fileID: 0}
 --- !u!1001 &1503621971
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1530,6 +1603,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       insertIndex: -1
       addedObject: {fileID: 455301722}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1441086816}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
 --- !u!4 &1582410616 stripped

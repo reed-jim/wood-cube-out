@@ -1,7 +1,9 @@
 using System;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class GoldPassMilestoneItem : MonoBehaviour
@@ -18,7 +20,8 @@ public class GoldPassMilestoneItem : MonoBehaviour
     [SerializeField] private TMP_Text freePassRewardQuantity;
     [SerializeField] private Image freePassRewardIcon;
     [SerializeField] private Image freePassDoneIcon;
-    [SerializeField] private GameObject freePassChest;
+    [SerializeField] private RectTransform freePassChest;
+    [SerializeField] private Button freePassChestButton;
     #endregion
 
     #region GOLD PASS
@@ -26,7 +29,15 @@ public class GoldPassMilestoneItem : MonoBehaviour
     [SerializeField] private GameObject goldPassLock;
     [SerializeField] private Image goldPassRewardIcon;
     [SerializeField] private Image goldPassDoneIcon;
-    [SerializeField] private GameObject goldPassChest;
+    [SerializeField] private RectTransform goldPassChest;
+    [SerializeField] private Button goldPassChestButton;
+    #endregion
+
+    #region CHEST PREVIEW
+    [SerializeField] private RectTransform chestPreviewContainer;
+    [SerializeField] private CanvasGroup chestPreviewCanvasGroup;
+    [SerializeField] private RectTransform[] chestPreviewItems;
+    [SerializeField] private TMP_Text[] chestPreviewQuantityTexts;
     #endregion
 
     [Header("SCRIPTABLE OBJECT")]
@@ -45,6 +56,13 @@ public class GoldPassMilestoneItem : MonoBehaviour
     private void Awake()
     {
         claimButton.onClick.AddListener(Claim);
+        freePassChestButton.onClick.AddListener(ShowPreviewChestFreePass);
+        goldPassChestButton.onClick.AddListener(ShowPreviewChestGoldPass);
+    }
+
+    void Update()
+    {
+        CheckClosePreviewChest();
     }
 
     public void Setup(int index)
@@ -78,8 +96,8 @@ public class GoldPassMilestoneItem : MonoBehaviour
 
         bool isSingleReward = numReward == 1;
 
-        freePassChest.SetActive(!isSingleReward);
-        goldPassChest.SetActive(!isSingleReward);
+        freePassChest.gameObject.SetActive(!isSingleReward);
+        goldPassChest.gameObject.SetActive(!isSingleReward);
 
         freePassRewardIcon.gameObject.SetActive(isSingleReward);
         freePassRewardQuantity.gameObject.SetActive(isSingleReward);
@@ -95,6 +113,27 @@ public class GoldPassMilestoneItem : MonoBehaviour
 
         UIUtil.SetSizeKeepRatioX(freePassRewardIcon, 0.5f * container.sizeDelta.y);
         UIUtil.SetSizeKeepRatioX(goldPassRewardIcon, 0.5f * container.sizeDelta.y);
+
+        #region CHEST
+        if (goldPassMilestoneData.IsChest)
+        {
+            freePassChest.gameObject.SetActive(true);
+            goldPassChest.gameObject.SetActive(true);
+
+            freePassRewardIcon.gameObject.SetActive(false);
+            freePassRewardQuantity.gameObject.SetActive(false);
+
+            goldPassRewardIcon.gameObject.SetActive(false);
+            goldPassRewardQuantity.gameObject.SetActive(false);
+
+            chestPreviewQuantityTexts[0].text = $"{rewardData.BoosterQuantities[0]}";
+            chestPreviewQuantityTexts[1].text = $"{rewardData.BoosterQuantities[1]}";
+            chestPreviewQuantityTexts[2].text = $"{rewardData.BoosterQuantities[2]}";
+            chestPreviewQuantityTexts[3].text = $"{rewardData.CoinQuantity}";
+        }
+
+        chestPreviewContainer.gameObject.SetActive(false);
+        #endregion
 
         doneState.gameObject.SetActive(goldPassMilestoneData.IsPassed && !goldPassMilestoneData.IsClaimed);
         freePassDoneIcon.gameObject.SetActive(goldPassMilestoneData.IsClaimed);
@@ -122,5 +161,99 @@ public class GoldPassMilestoneItem : MonoBehaviour
         goldPassDataContainer.goldPassMilestones[_index].IsClaimed = true;
 
         Setup(_index);
+    }
+
+    private void ShowPreviewChestFreePass()
+    {
+        DailyRewardData rewardData = goldPassDataContainer.goldPassRewards[_index];
+
+        chestPreviewContainer.position = chestPreviewContainer.position.ChangeX(freePassChest.position.x);
+
+        chestPreviewQuantityTexts[0].text = $"{rewardData.BoosterQuantities[0]}";
+        chestPreviewQuantityTexts[1].text = $"{rewardData.BoosterQuantities[1]}";
+        chestPreviewQuantityTexts[2].text = $"{rewardData.BoosterQuantities[2]}";
+        chestPreviewQuantityTexts[3].text = $"{rewardData.CoinQuantity}";
+
+        ShowPreviewChest(true);
+    }
+
+    private void ShowPreviewChestGoldPass()
+    {
+        DailyRewardData rewardData = goldPassDataContainer.goldPassRewards[_index];
+
+        chestPreviewContainer.position = chestPreviewContainer.position.ChangeX(goldPassChest.position.x);
+
+        chestPreviewQuantityTexts[0].text = $"{3 * rewardData.BoosterQuantities[0]}";
+        chestPreviewQuantityTexts[1].text = $"{3 * rewardData.BoosterQuantities[1]}";
+        chestPreviewQuantityTexts[2].text = $"{3 * rewardData.BoosterQuantities[2]}";
+        chestPreviewQuantityTexts[3].text = $"{3 * rewardData.CoinQuantity}";
+
+        ShowPreviewChest(true);
+    }
+
+    private void ShowPreviewChest(bool isShow)
+    {
+        if (isShow)
+        {
+            chestPreviewContainer.gameObject.SetActive(true);
+
+            chestPreviewCanvasGroup.alpha = 0;
+
+            Tween.Alpha(chestPreviewCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
+            {
+
+            });
+        }
+        else
+        {
+            Tween.Alpha(chestPreviewCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+            {
+                chestPreviewContainer.gameObject.SetActive(false);
+            });
+        }
+    }
+
+    private void CheckClosePreviewChest()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!chestPreviewContainer.gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+            {
+                position = Input.mousePosition
+            };
+
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+
+            EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+
+            bool clickedOutside = true;
+
+            bool isFound = false;
+
+            foreach (var result in raycastResults)
+            {
+                if (result.gameObject == chestPreviewContainer.gameObject)
+                {
+                    clickedOutside = false;
+
+                    break;
+                }
+
+                if (isFound)
+                {
+                    break;
+                }
+            }
+
+            if (clickedOutside)
+            {
+                ShowPreviewChest(false);
+            }
+        }
     }
 }
