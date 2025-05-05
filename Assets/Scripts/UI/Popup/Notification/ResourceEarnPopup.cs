@@ -37,6 +37,7 @@ public class ResourceEarnPopup : BasePopup
         GoldPassMilestoneItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
         MedalTournamentPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
         SpaceRacePopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        ChestLevelPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
@@ -55,6 +56,7 @@ public class ResourceEarnPopup : BasePopup
         GoldPassMilestoneItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         MedalTournamentPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         SpaceRacePopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        ChestLevelPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 

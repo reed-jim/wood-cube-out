@@ -10,6 +10,8 @@ public class DailyRewardPopup : BasePopup
     [SerializeField] private Button claimButton;
     [SerializeField] private Button claimX2Button;
 
+    private DailyRewardItem[] _dailyRewardItems;
+
     public static event Action claimDailyRewardEvent;
 
     protected override void RegisterMoreEvent()
@@ -26,12 +28,33 @@ public class DailyRewardPopup : BasePopup
         DailyRewardItem.enableClaimDailyRewardButtonsEvent -= EnableClaimButtons;
     }
 
+    protected override void MoreActionInAwake()
+    {
+        _dailyRewardItems = TransformUtil.GetComponentsFromAllChildren<DailyRewardItem>(transform).ToArray();
+    }
+
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
 
+        Refresh();
+    }
+
+    private void Refresh()
+    {
         claimButton.gameObject.SetActive(false);
         claimX2Button.gameObject.SetActive(false);
+
+        for (int i = 0; i < _dailyRewardItems.Length; i++)
+        {
+            if (DailyRewardUtil.IsDailyRewardReadyForDay(i))
+            {
+                claimButton.gameObject.SetActive(true);
+                claimX2Button.gameObject.SetActive(true);
+
+                break;
+            }
+        }
     }
 
     private void Claim()
@@ -53,12 +76,22 @@ public class DailyRewardPopup : BasePopup
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
-        }));
+        })
+        .OnComplete(() =>
+        {
+            Refresh();
+        })
+        );
     }
 
     private void EnableClaimButtons()
     {
-        claimButton.gameObject.SetActive(true);
-        claimX2Button.gameObject.SetActive(true);
+        _tweens.Add(Tween.Delay(0.3f)
+            .OnComplete(() =>
+            {
+                claimButton.gameObject.SetActive(true);
+                claimX2Button.gameObject.SetActive(true);
+            })
+        );
     }
 }
