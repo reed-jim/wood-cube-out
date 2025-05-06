@@ -178,7 +178,7 @@ public class GoldPassPopup : BasePopup
 
         double remaningSecond = timeLeft.TotalSeconds;
 
-        timeCounterText.text = $"{ConvertTimeFormat(remaningSecond)}";
+        timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
 
     private void ShowTutorial(bool isShow)
@@ -225,17 +225,4 @@ public class GoldPassPopup : BasePopup
             popupCanvasGroup.alpha = newVal;
         }));
     }
-
-    #region UTIL
-    private string ConvertTimeFormat(double totalSeconds)
-    {
-        TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
-
-        return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}",
-                        (int)time.TotalDays,
-                        time.Hours,
-                        time.Minutes,
-                        time.Seconds);
-    }
-    #endregion
 }

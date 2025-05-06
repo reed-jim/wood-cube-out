@@ -16,7 +16,6 @@ public class CompensatePopup : BasePopup
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
-    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action updateLevelEvent;
     public static event Action updateCoinTextEvent;
 
@@ -84,7 +83,7 @@ public class CompensatePopup : BasePopup
 
                 Hide();
 
-                showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, isRemoveAd);
+                InvokeShowResourcesEarnPopupPopupEvent(coinValue, boosterQuantites, isRemoveAd);
 
                 DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_REMOVE_ADS, true);
 
@@ -112,7 +111,7 @@ public class CompensatePopup : BasePopup
 
                 Hide();
 
-                showResourcesEarnPopupEvent?.Invoke(coinValue, boosterQuantites, isRemoveAd);
+                InvokeShowResourcesEarnPopupPopupEvent(coinValue, boosterQuantites, isRemoveAd);
 
                 DataUtility.Save(GameConstants.IS_CLAIMED_COMPENSATE_BIG_REWARD, true);
 

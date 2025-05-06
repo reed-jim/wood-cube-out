@@ -18,10 +18,6 @@ public class MedalTournamentPopup : BasePopup
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer medalTournamentRewardDataContainer;
 
-    #region EVENT
-    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
-    #endregion
-
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
@@ -69,7 +65,7 @@ public class MedalTournamentPopup : BasePopup
 
             userResourcesObserver.ChangeCoin(coinQuantity);
 
-            showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
         });
     }
 

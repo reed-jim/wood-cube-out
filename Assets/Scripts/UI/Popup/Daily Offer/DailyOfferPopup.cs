@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,8 +11,9 @@ public class DailyOfferPopup : BasePopup
     [SerializeField] private TMP_Text localizedPriceText;
     [SerializeField] private TMP_Text timeCounterText;
 
-    [SerializeField] private DailyRewardData rewardData;
     [SerializeField] private IAPPackageData packageData;
+
+    private SaleIAPData _saleIAPData;
 
     public static event Action<string> buyIAPEvent;
     public static event Action requestFetchIAPPrice;
@@ -30,6 +32,11 @@ public class DailyOfferPopup : BasePopup
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShown;
     }
 
+    protected override void MoreActionInAwake()
+    {
+        LoadData();
+    }
+
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
@@ -37,14 +44,16 @@ public class DailyOfferPopup : BasePopup
         ShowRewards();
 
         requestFetchIAPPrice?.Invoke();
+
+        StartCoroutine(Counting());
     }
 
     private void ShowRewards()
     {
-        rewardQuantityTexts[0].text = $"{rewardData.BoosterQuantities[0]}";
-        rewardQuantityTexts[1].text = $"{rewardData.BoosterQuantities[1]}";
-        rewardQuantityTexts[2].text = $"{rewardData.BoosterQuantities[2]}";
-        rewardQuantityTexts[3].text = $"{rewardData.CoinQuantity}";
+        rewardQuantityTexts[0].text = $"{packageData.CoinQuantity}";
+        rewardQuantityTexts[1].text = $"{packageData.AddHoleBoosterQuantity}";
+        rewardQuantityTexts[2].text = $"{packageData.BreakObjectBoosterQuantity}";
+        rewardQuantityTexts[3].text = $"{packageData.ClearHolesBoosterQuantity}";
     }
 
     private void FetchLocalizedPrice(string productId, string localizedPrice)
@@ -58,6 +67,38 @@ public class DailyOfferPopup : BasePopup
     private void Buy()
     {
         buyIAPEvent?.Invoke(packageData.ProductId);
+    }
+
+    private void LoadData()
+    {
+        _saleIAPData = DataUtility.Load(GameConstants.SALE_IAP_DATA, new SaleIAPData());
+    }
+
+    private IEnumerator Counting()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(1);
+
+        while (true)
+        {
+            UpdateRemainingTime();
+
+            yield return waitOneSecond;
+        }
+    }
+
+    private void UpdateRemainingTime()
+    {
+        if (_saleIAPData.dailyOfferSaleTimestampEnd == 0)
+        {
+            _saleIAPData.dailyOfferSaleTimestampEnd =
+                new DateTimeOffset(DateTime.Now).AddDays(3).ToUnixTimeSeconds();
+
+            DataUtility.Save(GameConstants.SALE_IAP_DATA, _saleIAPData);
+        }
+
+        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(_saleIAPData.dailyOfferSaleTimestampEnd).DateTime - DateTime.Now).TotalSeconds;
+
+        timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remainingTime)}";
     }
 
     private void OnResourceEarnPopupShown(bool isShow)

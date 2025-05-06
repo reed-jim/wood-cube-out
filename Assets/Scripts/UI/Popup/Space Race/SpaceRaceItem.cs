@@ -10,7 +10,7 @@ public class SpaceRaceItem : MonoBehaviour
 
     public void Setup(int index)
     {
-        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SAPCE_RACE_DATA, new SpaceRaceData());
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
         playerNameText.text = GetTruncatedPlayerName(spaceRaceData.spaceRacePlayerGroup[index].name);
         rankText.text = $"{index + 1}";

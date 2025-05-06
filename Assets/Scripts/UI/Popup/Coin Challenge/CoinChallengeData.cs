@@ -5,4 +5,5 @@ using UnityEngine;
 public class CoinChallengeData
 {
     [SerializeField] public int gemCollected;
+    public long endTimestamp;
 }
