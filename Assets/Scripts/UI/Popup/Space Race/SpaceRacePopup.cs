@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using Dreamteck.Utilities;
 using JetBrains.Annotations;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
+using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -52,8 +55,6 @@ public class SpaceRacePopup : BasePopup
         StartCoroutine(Counting());
 
         rewardCanvasGroup.gameObject.SetActive(false);
-
-        ShowRewardScreen();
     }
 
     private void Setup()
@@ -75,16 +76,41 @@ public class SpaceRacePopup : BasePopup
 
     private void StartRace()
     {
-        SpaceRaceData spaceRaceData = new SpaceRaceData();
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
-        spaceRaceData.spaceRacePlayerGroup = new LeaderboardUserData[3];
-
-        for (int i = 0; i < LeaderboardDataContainer.Items.Length; i++)
+        if (spaceRaceData.isStarted)
         {
-            spaceRaceData.spaceRacePlayerGroup[i] = LeaderboardDataContainer.Items[i];
+            return;
         }
 
-        spaceRaceData.spaceRacePlayerGroup = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.score).ToArray();
+        spaceRaceData.spaceRacePlayerGroup = new LeaderboardUserData[4];
+
+        List<LeaderboardUserData> randomList = new List<LeaderboardUserData>();
+
+        randomList.AddRange(LeaderboardDataContainer.Items);
+        randomList.Shuffle();
+
+        for (int i = 0; i < randomList.Count; i++)
+        {
+            if (randomList[i].id == AuthenticationService.Instance.PlayerId)
+            {
+                spaceRaceData.spaceRacePlayerGroup[0] = randomList[i];
+
+                randomList.Remove(randomList[i]);
+
+                break;
+            }
+        }
+
+        for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length - 1; i++)
+        {
+            spaceRaceData.spaceRacePlayerGroup[i + 1] = randomList[i];
+        }
+
+        // Sort
+        // spaceRaceData.spaceRacePlayerGroup = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.score).ToArray();
+
+        spaceRaceData.isStarted = true;
 
         DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
     }
