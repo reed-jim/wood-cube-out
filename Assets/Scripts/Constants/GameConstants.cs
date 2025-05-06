@@ -194,6 +194,10 @@ public static class GameConstants
     #endregion 
 
     #region SPACE RACE
-    public static string SAPCE_RACE_DATA = "SAPCE_RACE_DATA";
+    public static string SPACE_RACE_DATA = "SPACE_RACE_DATA";
+    #endregion
+
+    #region SALE IAP
+    public static string SALE_IAP_DATA = "SALE_IAP_DATA";
     #endregion 
 }

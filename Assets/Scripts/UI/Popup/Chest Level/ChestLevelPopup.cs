@@ -19,10 +19,6 @@ public class ChestLevelPopup : BasePopup
 
     private ChestLevelData _cachedchestLevelData;
 
-    #region EVENT
-    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
-    #endregion
-
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
@@ -83,7 +79,7 @@ public class ChestLevelPopup : BasePopup
 
             userResourcesObserver.ChangeCoin(coinQuantity);
 
-            showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
 
             _cachedchestLevelData.currentRequiredLevel += 10;
 

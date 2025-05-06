@@ -22,10 +22,6 @@ public class SpaceRacePopup : BasePopup
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer spaceRaceRewardDataContainer;
 
-    #region EVENT
-    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
-    #endregion
-
     protected override void MoreActionInAwake()
     {
         base.MoreActionInAwake();
@@ -90,7 +86,7 @@ public class SpaceRacePopup : BasePopup
 
         spaceRaceData.spaceRacePlayerGroup = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.score).ToArray();
 
-        DataUtility.Save(GameConstants.SAPCE_RACE_DATA, spaceRaceData);
+        DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
     }
 
     private IEnumerator Counting()
@@ -148,7 +144,7 @@ public class SpaceRacePopup : BasePopup
 
     private void Claim()
     {
-        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SAPCE_RACE_DATA, new SpaceRaceData());
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
         LeaderboardUserData[] items = spaceRaceData.spaceRacePlayerGroup;
 
@@ -175,9 +171,7 @@ public class SpaceRacePopup : BasePopup
 
         userResourcesObserver.ChangeCoin(coinQuantity);
 
-        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
-
-
+        InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
 
         Tween.Alpha(rewardCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
         {

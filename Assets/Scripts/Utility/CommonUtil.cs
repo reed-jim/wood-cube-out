@@ -164,4 +164,17 @@ public static class CommonUtil
         return levelProgressData.ScrewsData != null;
     }
     #endregion
+
+    #region TIME
+    public static string ConvertTimeFormat(double totalSeconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+
+        return string.Format("{0:D2}:{1:D2}:{2:D2}:{3:D2}",
+                        (int)time.TotalDays,
+                        time.Hours,
+                        time.Minutes,
+                        time.Seconds);
+    }
+    #endregion
 }
