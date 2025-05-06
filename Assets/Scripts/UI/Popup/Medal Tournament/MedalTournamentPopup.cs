@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Lean.Localization;
 using PrimeTween;
 using Saferio.Util;
+using Spine.Unity;
 using TMPro;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
@@ -13,8 +14,14 @@ using UnityEngine.UI;
 public class MedalTournamentPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
+    [SerializeField] private CanvasGroup rewardCanvasGroup;
     [SerializeField] private ObjectPoolingScrollView scrollView;
     [SerializeField] private TMP_Text timeCounterText;
+
+    [SerializeField] private SkeletonGraphic giftRankOne;
+    [SerializeField] private SkeletonGraphic giftRankTwo;
+    [SerializeField] private SkeletonGraphic giftRankThree;
+    [SerializeField] private SkeletonGraphic giftRankOther;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -39,6 +46,8 @@ public class MedalTournamentPopup : BasePopup
         CheckShowLeaderboardAsync();
 
         StartCoroutine(Counting());
+
+        rewardCanvasGroup.gameObject.SetActive(false);
     }
 
     // void Start()
@@ -54,23 +63,68 @@ public class MedalTournamentPopup : BasePopup
         scrollView.Refresh();
     }
 
-    private void ShowReward()
+    private async Task ShowRewardScreen()
     {
-        Tween.Delay(2).OnComplete(() =>
+        int rank = await GameLeaderboardManager.Instance.GetCurrentPlayerRankAsync();
+
+        rank = 2;
+
+        rewardCanvasGroup.gameObject.SetActive(true);
+
+        rewardCanvasGroup.alpha = 0;
+
+        SkeletonGraphic giftByRank;
+
+        if (rank == 1)
         {
-            int rank = 0;
+            giftByRank = giftRankOne;
+        }
+        else if (rank == 2)
+        {
+            giftByRank = giftRankTwo;
+        }
+        else if (rank == 3)
+        {
+            giftByRank = giftRankThree;
+        }
+        else
+        {
+            giftByRank = giftRankOther;
+        }
 
-            int coinQuantity = medalTournamentRewardDataContainer.Items[rank].CoinQuantity;
-            int[] boosterQuantites = medalTournamentRewardDataContainer.Items[rank].BoosterQuantities;
+        giftByRank.gameObject.SetActive(true);
 
-            userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-            userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-            userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+        _tweens.Add(Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
+        {
 
-            userResourcesObserver.ChangeCoin(coinQuantity);
+            giftByRank.AnimationState.SetAnimation(0, "open", false);
 
-            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-        });
+            _tweens.Add(Tween.Delay(1).OnComplete(() =>
+            {
+                Claim();
+            }));
+        }));
+    }
+
+    private void Claim()
+    {
+        int rank = 0;
+
+        int coinQuantity = medalTournamentRewardDataContainer.Items[rank].CoinQuantity;
+        int[] boosterQuantites = medalTournamentRewardDataContainer.Items[rank].BoosterQuantities;
+
+        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+
+        userResourcesObserver.ChangeCoin(coinQuantity);
+
+        InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
+
+        _tweens.Add(Tween.Alpha(rewardCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+        {
+            rewardCanvasGroup.gameObject.SetActive(false);
+        }));
     }
 
     private IEnumerator Counting()
