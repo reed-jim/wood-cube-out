@@ -213,7 +213,19 @@ public class MenuScreen : MonoBehaviour
 
     private void OpenGoldPassPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.GoldPass);
+        if (GamePersistentVariable.goldPassData == null)
+        {
+            GamePersistentVariable.goldPassData = DataUtility.Load(GameConstants.GOLD_PASS_DATA_CONTAINER, new GoldPassData());
+        }
+
+        if (GamePersistentVariable.goldPassData.isIntroDone)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.GoldPass);
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.GoldPassIntro);
+        }
     }
 
     private void OpenEndlessSalePopup()
@@ -238,7 +250,19 @@ public class MenuScreen : MonoBehaviour
 
     private void OpenMedalTournamentPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.MedalTournament);
+        if (GamePersistentVariable.medalTournamentData == null)
+        {
+            GamePersistentVariable.medalTournamentData = DataUtility.Load(GameConstants.MEDAL_TOURNAMENT_DATA, new MedalTournamentData());
+        }
+
+        if (GamePersistentVariable.medalTournamentData.isIntroDone)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.MedalTournament);
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.MedalTournamentIntro);
+        }
     }
 
     private void OpenSpaceRacePopup()

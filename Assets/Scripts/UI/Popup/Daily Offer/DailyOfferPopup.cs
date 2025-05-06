@@ -96,7 +96,7 @@ public class DailyOfferPopup : BasePopup
             DataUtility.Save(GameConstants.SALE_IAP_DATA, _saleIAPData);
         }
 
-        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(_saleIAPData.dailyOfferSaleTimestampEnd).DateTime - DateTime.Now).TotalSeconds;
+        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(_saleIAPData.dailyOfferSaleTimestampEnd).LocalDateTime - DateTime.Now).TotalSeconds;
 
         timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remainingTime)}";
     }

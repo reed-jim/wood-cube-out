@@ -55,7 +55,9 @@ public class GameEnum : MonoBehaviour
         SaleCoin,
         SaleItem,
         StarterPack,
-        WeekendSale
+        WeekendSale,
+        GoldPassIntro,
+        MedalTournamentIntro
     }
 
     public enum GameFaction
