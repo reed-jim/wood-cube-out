@@ -43,6 +43,24 @@ public class GameLeaderboardManager : MonoBehaviour
     //     GooglePlayGamesSignInManager.userAuthenticatedEvent -= AddPlayerScoreToLeaderboard;
     // }
 
+    private async void AddTestScoreEntryAsync(int index)
+    {
+        // enter different username and password
+        await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
+
+        AddPlayerScoreToLeaderboardTest(index + 1);
+    }
+
+    private void AddTestScoreEntries()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            AddTestScoreEntryAsync(i + 2);
+
+            AuthenticationService.Instance.SignOut();
+        }
+    }
+
     public async Task GetLeaderboardData()
     {
         var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
@@ -89,6 +107,13 @@ public class GameLeaderboardManager : MonoBehaviour
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });
+    }
+
+    private async void AddPlayerScoreToLeaderboardTest(int testScore)
+    {
+        var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
+
+        await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", testScore, new AddPlayerScoreOptions { Metadata = scoreMetadata });
     }
 
     public async Task<int> GetCurrentPlayerRankAsync()

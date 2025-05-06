@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Threading.Tasks;
 using Lean.Localization;
 using PrimeTween;
@@ -13,6 +14,7 @@ public class MedalTournamentPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private ObjectPoolingScrollView scrollView;
+    [SerializeField] private TMP_Text timeCounterText;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -35,6 +37,8 @@ public class MedalTournamentPopup : BasePopup
         // ShowReward();
 
         CheckShowLeaderboardAsync();
+
+        StartCoroutine(Counting());
     }
 
     // void Start()
@@ -69,6 +73,37 @@ public class MedalTournamentPopup : BasePopup
         });
     }
 
+    private IEnumerator Counting()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(1);
+
+        while (true)
+        {
+            UpdateRemainingTime();
+
+            yield return waitOneSecond;
+        }
+    }
+
+    private void UpdateRemainingTime()
+    {
+        DateTime now = DateTime.UtcNow;
+
+        int daysUntilEndOfWeek = ((int)DayOfWeek.Sunday - (int)now.DayOfWeek + 7) % 7;
+
+        DateTime endOfWeek = new DateTime(now.Year, now.Month, now.Day)
+            .AddDays(daysUntilEndOfWeek)
+            .AddHours(23)
+            .AddMinutes(59)
+            .AddSeconds(59);
+
+        TimeSpan timeLeft = endOfWeek - now;
+
+        double remaningSecond = timeLeft.TotalSeconds;
+
+        timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
@@ -85,4 +120,9 @@ public class MedalTournamentPopup : BasePopup
             popupCanvasGroup.alpha = newVal;
         }));
     }
+}
+
+public class MedalTournamentData
+{
+    public bool isIntroDone;
 }

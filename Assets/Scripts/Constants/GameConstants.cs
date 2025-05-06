@@ -200,4 +200,8 @@ public static class GameConstants
     #region SALE IAP
     public static string SALE_IAP_DATA = "SALE_IAP_DATA";
     #endregion 
+
+    #region MEDAL TOURNAMENT
+    public static string MEDAL_TOURNAMENT_DATA = "MEDAL_TOURNAMENT_DATA";
+    #endregion 
 }
