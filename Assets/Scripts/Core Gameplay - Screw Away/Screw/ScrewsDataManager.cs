@@ -38,7 +38,7 @@ public class ScrewsDataManager : MonoBehaviour
 
         _tweens = new List<Tween>();
 
-        StartCoroutine(PeriodicallySaving());
+        // StartCoroutine(PeriodicallySaving());
     }
 
     void OnDestroy()

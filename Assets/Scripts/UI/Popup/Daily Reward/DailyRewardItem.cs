@@ -6,8 +6,12 @@ using UnityEngine.UI;
 
 public class DailyRewardItem : MonoBehaviour
 {
-    [SerializeField] private CanvasGroup canvasGroup;
+    // [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private GameObject giftStateContainer;
     [SerializeField] private Button claimButton;
+    [SerializeField] private Image claimButtonImage;
+    [SerializeField] private TMP_Text claimButtonText;
+    [SerializeField] private Image giftIcon;
     [SerializeField] private Image[] rewardIcons;
     [SerializeField] private Image activeState;
     [SerializeField] private GameObject doneState;
@@ -15,6 +19,7 @@ public class DailyRewardItem : MonoBehaviour
     [SerializeField] private TMP_Text[] quantityTexts;
 
     [SerializeField] private Sprite[] iconSprites;
+    [SerializeField] private Sprite[] claimButtonSprites;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -26,6 +31,7 @@ public class DailyRewardItem : MonoBehaviour
     private int _day;
 
     #region EVENT
+    public static event Action<int, int[], bool> showClaimRewardPopupEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action refreshDailyRewardEvent;
     public static event Action enableClaimDailyRewardButtonsEvent;
@@ -80,22 +86,50 @@ public class DailyRewardItem : MonoBehaviour
         bool isRewardReadyForDay = DailyRewardUtil.IsDailyRewardReadyForDay(_day);
         bool IsClaimedDailyReward = DailyRewardUtil.IsClaimedDailyReward(_day);
 
+        for (int i = 0; i < rewardIcons.Length; i++)
+        {
+            rewardIcons[i].gameObject.SetActive(true);
+            quantityTexts[i].gameObject.SetActive(true);
+        }
+
         if (isRewardReadyForDay)
         {
-            canvasGroup.alpha = 1;
+            for (int i = 0; i < rewardIcons.Length; i++)
+            {
+                rewardIcons[i].gameObject.SetActive(false);
+                quantityTexts[i].gameObject.SetActive(false);
+            }
+
+            giftStateContainer.SetActive(true);
+
+            claimButton.interactable = true;
+            claimButtonImage.sprite = claimButtonSprites[0];
+            claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 1f);
+            giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 1f);
         }
         else
         {
             if (!IsClaimedDailyReward)
             {
-                canvasGroup.alpha = 0.2f;
+                for (int i = 0; i < rewardIcons.Length; i++)
+                {
+                    rewardIcons[i].gameObject.SetActive(false);
+                    quantityTexts[i].gameObject.SetActive(false);
+                }
+
+                claimButton.interactable = false;
+                claimButtonImage.sprite = claimButtonSprites[1];
+                claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 0.3f);
+                giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 0.3f);
+            }
+            else
+            {
+                giftStateContainer.SetActive(false);
             }
         }
 
         activeState.gameObject.SetActive(isRewardReadyForDay);
         doneState.gameObject.SetActive(DailyRewardUtil.IsClaimedDailyReward(_day));
-
-        claimButton.gameObject.SetActive(false);
     }
 
     private void Claim()
@@ -109,25 +143,20 @@ public class DailyRewardItem : MonoBehaviour
         DataUtility.Save($"is_claim_daily_reward_day_{_day}", true);
         DataUtility.Save($"current_daily_reward_day", GamePersistentVariable.currentDailyRewardIndex + 1);
 
-        Tween.Scale(claimButton.transform, 1.1f, duration: 0.15f).OnComplete(() =>
-        {
-            Tween.Scale(claimButton.transform, 0, duration: 0.3f).OnComplete(() =>
-            {
-                int coinQuantity = dailyRewardDataContainer.Items[dayIndex].CoinQuantity;
-                int[] boosterQuantites = dailyRewardDataContainer.Items[dayIndex].BoosterQuantities;
+        int coinQuantity = dailyRewardDataContainer.Items[dayIndex].CoinQuantity;
+        int[] boosterQuantites = dailyRewardDataContainer.Items[dayIndex].BoosterQuantities;
 
-                userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-                userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-                userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
+        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
+        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
 
-                userResourcesObserver.ChangeCoin(coinQuantity);
+        userResourcesObserver.ChangeCoin(coinQuantity);
 
-                showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+        // showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+        showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
 
-                claimButton.gameObject.SetActive(false);
+        claimButton.gameObject.SetActive(false);
 
-                Init();
-            });
-        });
+        Init();
     }
 }

@@ -172,6 +172,8 @@ namespace Saferio.Util
             _maxScrollPositionY = Mathf.Max(0, (expectedMaxSize - numVisibleItem) * _items[0].sizeDelta.y);
             _minScrollPositionY = 0;
 
+            Debug.Log("SAFERIO " + _minScrollPositionY + "/" + _maxScrollPositionY);
+
             _currentHighestItemPositionY = _items.First().localPosition.y;
             _currentLowestItemPositionY = _items.Last().localPosition.y;
         }
@@ -210,20 +212,20 @@ namespace Saferio.Util
 
                 ScrollDirection scrollDirection = GetScrollDirection();
 
-                if (content.localPosition.y > 4000)
-                {
-                    content.localPosition = content.localPosition.ChangeY(content.localPosition.y - 3000);
+                // if (content.localPosition.y > 4000)
+                // {
+                //     content.localPosition = content.localPosition.ChangeY(content.localPosition.y - 3000);
 
-                    for (int i = 0; i < poolSize; i++)
-                    {
-                        _items[i].localPosition = _items[i].localPosition.ChangeY(_items[i].localPosition.y + 3000);
-                    }
+                //     for (int i = 0; i < poolSize; i++)
+                //     {
+                //         _items[i].localPosition = _items[i].localPosition.ChangeY(_items[i].localPosition.y + 3000);
+                //     }
 
-                    _currentHighestItemPositionY += 3000;
-                    _currentLowestItemPositionY += 3000;
+                //     _currentHighestItemPositionY += 3000;
+                //     _currentLowestItemPositionY += 3000;
 
-                    isSkip = true;
-                }
+                //     isSkip = true;
+                // }
 
                 if (!isSkip)
                 {
