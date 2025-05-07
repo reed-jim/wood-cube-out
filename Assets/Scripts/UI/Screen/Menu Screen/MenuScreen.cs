@@ -66,8 +66,8 @@ public class MenuScreen : MonoBehaviour
         openAllScrewBoxesForeverButton.onClick.AddListener(OpenUnlockAllScrewBoxesForeverPopup);
         openDailyRewardPopupButton.onClick.AddListener(OpenDailyRewardPopup);
         openGoldPassPopupButton.onClick.AddListener(OpenGoldPassPopup);
-        openEndlessSalePopupButton.onClick.AddListener(OpenWeeklyChallengePopup);
-        openWeeklyChallengePopupButton.onClick.AddListener(OpenEndlessSalePopup);
+        openEndlessSalePopupButton.onClick.AddListener(OpenEndlessSalePopup);
+        openWeeklyChallengePopupButton.onClick.AddListener(OpenWeeklyChallengePopup);
         openChestLevelPopupButton.onClick.AddListener(OpenChestLevelPopup);
         openCoinChallengePopupButton.onClick.AddListener(OpenCoinChallengePopup);
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);

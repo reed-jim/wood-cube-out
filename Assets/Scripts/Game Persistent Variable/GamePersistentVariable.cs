@@ -94,4 +94,8 @@ public static class GamePersistentVariable
     #region MEDAL TOURNAMENT
     public static MedalTournamentData medalTournamentData;
     #endregion
+
+    #region WEEKLY CHALLENGE
+    public static WeeklyChallengeData weeklyChallengeData;
+    #endregion
 }

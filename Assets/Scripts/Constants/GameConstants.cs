@@ -193,6 +193,10 @@ public static class GameConstants
     public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";
     #endregion 
 
+    #region WEEKLY CHALLENGE
+    public static string WEEKLY_CHALLENGE_DATA = "WEEKLY_CHALLENGE_DATA";
+    #endregion 
+
     #region SPACE RACE
     public static string SPACE_RACE_DATA = "SPACE_RACE_DATA";
     #endregion

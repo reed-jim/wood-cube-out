@@ -1,16 +1,47 @@
+using System;
 using UnityEngine;
 
-public class WeeklyTaskItemData : MonoBehaviour
+[Serializable]
+public class WeeklyChallengeItemData
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private bool isDone;
+    [SerializeField] private bool isClaimed;
+
+    public bool IsDone
     {
-        
+        get => isDone;
+        set => isDone = value;
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool IsClaimed
     {
-        
+        get => isClaimed;
+        set => isClaimed = value;
+    }
+}
+
+[Serializable]
+public class WeeklyChallengeData
+{
+    [SerializeField] private WeeklyChallengeItemData[] items;
+    [SerializeField] private int currentChallengeIndex;
+    [SerializeField] private int eventItemCollected;
+
+    public WeeklyChallengeItemData[] Items
+    {
+        get => items;
+        set => items = value;
+    }
+
+    public int CurrentChallengeIndex
+    {
+        get => currentChallengeIndex;
+        set => currentChallengeIndex = value;
+    }
+
+    public int EventItemCollected
+    {
+        get => eventItemCollected;
+        set => eventItemCollected = value;
     }
 }
