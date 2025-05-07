@@ -2239,6 +2239,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: x{value} recompensa
     Object: {fileID: 0}
+--- !u!1 &2345853132251907649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7155741436982547562}
+  - component: {fileID: 5051697088138626032}
+  m_Layer: 0
+  m_Name: Star Tournament
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7155741436982547562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2345853132251907649}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5051697088138626032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2345853132251907649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Star Tournament
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Tournoi \xE9toile"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Star -Turnier
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Torneo a stella
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30BF\u30FC\u30C8\u30FC\u30CA\u30E1\u30F3\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uD0C0 \uD1A0\uB108\uBA3C\uD2B8"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Torneio de estrela
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0432\u0435\u0437\u0434\u043D\u044B\u0439 \u0442\u0443\u0440\u043D\u0438\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Torneo estelar
+    Object: {fileID: 0}
 --- !u!1 &2348540516113918591
 GameObject:
   m_ObjectHideFlags: 0
@@ -5239,6 +5312,8 @@ Transform:
   - {fileID: 3756439636338471250}
   - {fileID: 7367402812740906260}
   - {fileID: 3647435359176526275}
+  - {fileID: 8310468995580669769}
+  - {fileID: 7155741436982547562}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -7754,6 +7829,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Exitoso
+    Object: {fileID: 0}
+--- !u!1 &7907887170136618835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8310468995580669769}
+  - component: {fileID: 5832194850529758514}
+  m_Layer: 0
+  m_Name: Star Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8310468995580669769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7907887170136618835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5832194850529758514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7907887170136618835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Star Chest
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Coffre \xE9toil\xE9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Sternruhe
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cassa a stella
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30BF\u30FC\u30C1\u30A7\u30B9\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBCC4 \uC0C1\uC790"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Peito estrela
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0432\u0435\u0437\u0434\u043D\u044B\u0439 \u0441\u0443\u043D\u0434\u0443\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cofre de estrella
     Object: {fileID: 0}
 --- !u!1 &7915355799277270204
 GameObject:

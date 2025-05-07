@@ -45,16 +45,16 @@ public class DailyRewardPopup : BasePopup
         claimButton.gameObject.SetActive(false);
         claimX2Button.gameObject.SetActive(false);
 
-        for (int i = 0; i < _dailyRewardItems.Length; i++)
-        {
-            if (DailyRewardUtil.IsDailyRewardReadyForDay(i))
-            {
-                claimButton.gameObject.SetActive(true);
-                claimX2Button.gameObject.SetActive(true);
+        // for (int i = 0; i < _dailyRewardItems.Length; i++)
+        // {
+        //     if (DailyRewardUtil.IsDailyRewardReadyForDay(i))
+        //     {
+        //         claimButton.gameObject.SetActive(true);
+        //         claimX2Button.gameObject.SetActive(true);
 
-                break;
-            }
-        }
+        //         break;
+        //     }
+        // }
     }
 
     private void Claim()
