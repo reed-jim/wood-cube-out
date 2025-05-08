@@ -14,7 +14,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button openRemoveAdPopupButton;
     [SerializeField] private Button openAllScrewBoxesForeverButton;
-    [SerializeField] private CanvasGroup openAllScrewBoxesForeverCanvasGroup;
+    [SerializeField] private CanvasGroup buttonsCanvasGroup;
     [SerializeField] private Button openDailyRewardPopupButton;
     [SerializeField] private Button openGoldPassPopupButton;
     [SerializeField] private Button openEndlessSalePopupButton;
@@ -355,15 +355,15 @@ public class MenuScreen : MonoBehaviour
 
         if (screenRoute == ScreenRoute.Home)
         {
-            openAllScrewBoxesForeverCanvasGroup.interactable = true;
+            buttonsCanvasGroup.interactable = true;
 
-            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(openAllScrewBoxesForeverCanvasGroup, 1, duration: 0.3f);
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 1, duration: 0.3f);
         }
         else
         {
-            openAllScrewBoxesForeverCanvasGroup.interactable = false;
+            buttonsCanvasGroup.interactable = false;
 
-            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(openAllScrewBoxesForeverCanvasGroup, 0, duration: 0.3f);
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
         }
     }
 

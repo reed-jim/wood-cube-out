@@ -43,7 +43,7 @@ public class MedalTournamentPopup : BasePopup
 
         // ShowReward();
 
-        CheckShowLeaderboardAsync();
+        // CheckShowLeaderboardAsync();
 
         StartCoroutine(Counting());
 
