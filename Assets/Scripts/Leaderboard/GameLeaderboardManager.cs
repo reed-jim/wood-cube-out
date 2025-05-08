@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Lean.Localization;
 using Unity.Services.Authentication;
@@ -33,6 +34,7 @@ public class GameLeaderboardManager : MonoBehaviour
         }
 
         await UnityServices.InitializeAsync();
+        // AddTestScoreEntries();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
         await GetLeaderboardData();
     }
@@ -50,14 +52,14 @@ public class GameLeaderboardManager : MonoBehaviour
     private async void AddTestScoreEntryAsync(int index)
     {
         // enter different username and password
-        await AuthenticationService.Instance.SignInWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
+        await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
 
         AddPlayerScoreToLeaderboardTest(index + 1);
     }
 
     private void AddTestScoreEntries()
     {
-        for (int i = 0; i < 5; i++)
+        for (int i = 10; i < 20; i++)
         {
             AddTestScoreEntryAsync(i);
 
@@ -67,12 +69,26 @@ public class GameLeaderboardManager : MonoBehaviour
 
     public async Task GetLeaderboardData()
     {
+        if (LeaderboardDataContainer.Items != null)
+        {
+            if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
+            {
+                LoadLocalLeaderboardData();
+            }
+
+            fetchLeaderboardDataCompletedEvent?.Invoke();
+
+            return;
+        }
+
         var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
             "wood_cube_out",
             new GetScoresOptions { Offset = 0, Limit = 50, IncludeMetadata = true }
         );
 
         List<LeaderboardUserData> items = new List<LeaderboardUserData>();
+
+        LeaderboardUserData currentPlayerData = new LeaderboardUserData();
 
         foreach (var item in scoresResponse.Results)
         {
@@ -98,14 +114,39 @@ public class GameLeaderboardManager : MonoBehaviour
                 countryIndex = scoreMetadata.countryIndex
             };
 
+            if (item.PlayerId == AuthenticationService.Instance.PlayerId)
+            {
+                currentPlayerData = leaderboardUserData;
+            }
+
             items.Add(leaderboardUserData);
         }
 
         LeaderboardDataContainer.Items = items.ToArray();
 
-        AddPlayerScoreToLeaderboard();
+        if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
+        {
+            LoadLocalLeaderboardData();
+        }
 
         fetchLeaderboardDataCompletedEvent?.Invoke();
+    }
+
+    private void LoadLocalLeaderboardData()
+    {
+        int currentPlayerCountryIndex = LeaderboardDataContainer.Items.First(item => item.id == AuthenticationService.Instance.PlayerId).countryIndex;
+
+        List<LeaderboardUserData> localLeaderboard = new List<LeaderboardUserData>();
+
+        for (int i = 0; i < LeaderboardDataContainer.Items.Length; i++)
+        {
+            if (LeaderboardDataContainer.Items[i].countryIndex == currentPlayerCountryIndex)
+            {
+                localLeaderboard.Add(LeaderboardDataContainer.Items[i]);
+            }
+        }
+
+        LeaderboardDataContainer.LocalLeaderboardItems = localLeaderboard.ToArray();
     }
 
     private async void AddPlayerScoreToLeaderboard()
@@ -117,7 +158,7 @@ public class GameLeaderboardManager : MonoBehaviour
 
     private async void AddPlayerScoreToLeaderboardTest(int testScore)
     {
-        GamePersistentVariable.selectedCountryIndex = 244;
+        GamePersistentVariable.selectedCountryIndex = UnityEngine.Random.Range(1, 250);
 
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 

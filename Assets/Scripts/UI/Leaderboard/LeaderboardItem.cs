@@ -30,9 +30,11 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 
     public bool IsValidAtIndex(int index)
     {
-        if (LeaderboardDataContainer.Items != null)
+        LeaderboardUserData[] items = GetLeaderboardDataBasedOnScope();
+
+        if (items != null)
         {
-            return index >= 0 && index < LeaderboardDataContainer.Items.Count();
+            return index >= 0 && index < items.Count();
         }
         else
         {
@@ -44,17 +46,19 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
     {
         try
         {
+            LeaderboardUserData[] items = GetLeaderboardDataBasedOnScope();
+
             gameObject.SetActive(true);
 
-            string originalName = LeaderboardDataContainer.Items[index].name;
+            string originalName = items[index].name;
             int truncateIndex = originalName.IndexOf('#');
             string playerName = truncateIndex >= 0 ? originalName.Substring(0, truncateIndex) : originalName;
 
             nameText.text = $"{playerName}";
             rankText.text = $"{index + 1}";
-            scoreText.text = $"{LeaderboardDataContainer.Items[index].score}";
+            scoreText.text = $"{items[index].score}";
 
-            if (index >= 2)
+            if (index > 2)
             {
                 medalIcon.sprite = medalSprites[3];
             }
@@ -63,7 +67,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
                 medalIcon.sprite = medalSprites[index];
             }
 
-            flag.sprite = countryDataContainer.Countries[LeaderboardDataContainer.Items[index].countryIndex].Flag;
+            flag.sprite = countryDataContainer.Countries[items[index].countryIndex].Flag;
         }
         catch (System.Exception)
         {
@@ -80,7 +84,19 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 
     public async Task UpdateUI(LeaderboardUserData data)
     {
-        int rank = await GameLeaderboardManager.Instance.GetCurrentPlayerRankAsync();
+        LeaderboardUserData[] items = GetLeaderboardDataBasedOnScope();
+
+        int rank = 0;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            if (items[i].id == data.id)
+            {
+                rank = i;
+
+                break;
+            }
+        }
 
         try
         {
@@ -94,7 +110,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
             rankText.text = $"{rank + 1}";
             scoreText.text = $"{data.score}";
 
-            if (rank >= 2)
+            if (rank > 2)
             {
                 medalIcon.sprite = medalSprites[3];
             }
@@ -109,6 +125,18 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
         {
             gameObject.SetActive(false);
         }
+    }
+
+    private LeaderboardUserData[] GetLeaderboardDataBasedOnScope()
+    {
+        LeaderboardUserData[] items = LeaderboardDataContainer.Items;
+
+        if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Local)
+        {
+            items = LeaderboardDataContainer.LocalLeaderboardItems;
+        }
+
+        return items;
     }
 
     private void OnLeaderboardDataFetchCompleted()
