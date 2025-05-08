@@ -1,16 +1,25 @@
 using System.Collections.Generic;
+using PrimeTween;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class ClaimRewardPopup : BasePopup
 {
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private CanvasGroup rewardCanvasGroup;
     [SerializeField] private Button claimButton;
     [SerializeField] private Button claimMultiplierButton;
 
     [SerializeField] private RectTransform[] resourceGroups;
 
     private ResourceGroupUI[] _resourceGroupsUI;
+
+    #region CHEST
+    [SerializeField] private CanvasGroup chestCanvasGroup;
+    [SerializeField] private SkeletonGraphic chest;
+    [SerializeField] private Button openChestButton;
+    #endregion
 
     private int _coinQuantity;
     private int[] _boosterQuantities;
@@ -27,6 +36,7 @@ public class ClaimRewardPopup : BasePopup
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
+        openChestButton.onClick.AddListener(OpenChest);
     }
 
     protected override void UnregisterMoreEvent()
@@ -86,9 +96,20 @@ public class ClaimRewardPopup : BasePopup
         InvokeShowAdNotLoadedPopupEvent();
     }
 
-    private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
+    private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
     {
         Show();
+
+        if (isChest)
+        {
+            rewardCanvasGroup.gameObject.SetActive(false);
+            chestCanvasGroup.gameObject.SetActive(true);
+        }
+        else
+        {
+            rewardCanvasGroup.gameObject.SetActive(true);
+            chestCanvasGroup.gameObject.SetActive(false);
+        }
 
         List<RectTransform> validResourceGroups = new List<RectTransform>();
 
@@ -125,7 +146,7 @@ public class ClaimRewardPopup : BasePopup
 
         Vector3 position = Vector3.zero;
 
-        position.y = 0.08f * container.sizeDelta.y;
+        position.y = 0.08f * resourceGroups[0].localPosition.y;
 
         for (int i = 0; i < resourceGroups.Length; i++)
         {
@@ -137,10 +158,33 @@ public class ClaimRewardPopup : BasePopup
             position.x = (-(validResourceGroups.Count - 1) / 2f + i) * 0.17f * container.sizeDelta.x;
 
             validResourceGroups[i].gameObject.SetActive(true);
-            validResourceGroups[i].localPosition = position;
+            UIUtil.SetLocalPositionX(validResourceGroups[i], position.x);
         }
 
         _coinQuantity = coinQuantity;
         _boosterQuantities = boosterQuantities;
+    }
+
+    private void OpenChest()
+    {
+        chest.AnimationState.SetAnimation(0, "open", false);
+
+        Tween.Delay(1.233f).OnComplete(() =>
+        {
+            chest.AnimationState.SetAnimation(0, "end", true);
+
+            Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+            {
+                chestCanvasGroup.gameObject.SetActive(false);
+                rewardCanvasGroup.gameObject.SetActive(true);
+
+                rewardCanvasGroup.alpha = 0;
+
+                Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
+                {
+
+                });
+            });
+        });
     }
 }

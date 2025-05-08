@@ -31,7 +31,7 @@ public class DailyRewardItem : MonoBehaviour
     private int _day;
 
     #region EVENT
-    public static event Action<int, int[], bool> showClaimRewardPopupEvent;
+    public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action refreshDailyRewardEvent;
     public static event Action enableClaimDailyRewardButtonsEvent;
@@ -153,7 +153,10 @@ public class DailyRewardItem : MonoBehaviour
         userResourcesObserver.ChangeCoin(coinQuantity);
 
         // showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
-        showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
+
+        bool isChest = _day == 7;
+
+        showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false, isChest);
 
         claimButton.gameObject.SetActive(false);
 

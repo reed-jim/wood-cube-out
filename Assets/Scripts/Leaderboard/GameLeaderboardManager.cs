@@ -15,6 +15,8 @@ public class GameLeaderboardManager : MonoBehaviour
 
     [SerializeField] private bool isAdd;
 
+    public static event Action fetchLeaderboardDataCompletedEvent;
+
     private async void Awake()
     {
         if (Instance != null && Instance != this)
@@ -31,6 +33,8 @@ public class GameLeaderboardManager : MonoBehaviour
         }
 
         await UnityServices.InitializeAsync();
+        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        await GetLeaderboardData();
     }
 
     // private void Awake()
@@ -46,16 +50,16 @@ public class GameLeaderboardManager : MonoBehaviour
     private async void AddTestScoreEntryAsync(int index)
     {
         // enter different username and password
-        await AuthenticationService.Instance.SignUpWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
+        await AuthenticationService.Instance.SignInWithUsernamePasswordAsync($"user{index}", $"Password{index}!");
 
         AddPlayerScoreToLeaderboardTest(index + 1);
     }
 
     private void AddTestScoreEntries()
     {
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 5; i++)
         {
-            AddTestScoreEntryAsync(i + 2);
+            AddTestScoreEntryAsync(i);
 
             AuthenticationService.Instance.SignOut();
         }
@@ -100,6 +104,8 @@ public class GameLeaderboardManager : MonoBehaviour
         LeaderboardDataContainer.Items = items.ToArray();
 
         AddPlayerScoreToLeaderboard();
+
+        fetchLeaderboardDataCompletedEvent?.Invoke();
     }
 
     private async void AddPlayerScoreToLeaderboard()
@@ -111,6 +117,8 @@ public class GameLeaderboardManager : MonoBehaviour
 
     private async void AddPlayerScoreToLeaderboardTest(int testScore)
     {
+        GamePersistentVariable.selectedCountryIndex = 244;
+
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", testScore, new AddPlayerScoreOptions { Metadata = scoreMetadata });
