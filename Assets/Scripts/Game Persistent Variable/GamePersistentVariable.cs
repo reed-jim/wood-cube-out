@@ -78,6 +78,7 @@ public static class GamePersistentVariable
 
     #region LEADERBOARD
     public static int selectedCountryIndex;
+    public static GameEnum.LeaderboardScope leaderboardScope;
     #endregion
 
     #region DAILY REWARD

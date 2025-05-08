@@ -124,6 +124,12 @@ public class GameEnum : MonoBehaviour
         Win
     }
 
+    public enum LeaderboardScope
+    {
+        Global,
+        Local
+    }
+
     public static T GetRandomEnumValue<T>()
     {
         Array enumValues = Enum.GetValues(typeof(T));
