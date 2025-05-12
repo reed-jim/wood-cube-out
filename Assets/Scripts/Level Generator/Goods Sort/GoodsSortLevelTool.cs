@@ -104,6 +104,9 @@ public class GoodsSortLevelTool : EditorWindow
             }
         }
 
+        // Management
+        List<BaseItem> _spawnedItems = new List<BaseItem>();
+
         Vector3 position = new Vector3();
 
         for (int i = 0; i < numRow; i++)
@@ -115,6 +118,8 @@ public class GoodsSortLevelTool : EditorWindow
 
                 // generate goods shelf
                 GameObject goodShelf = (GameObject)PrefabUtility.InstantiatePrefab(shelfPrefab, goodsContainer.transform);
+
+                goodShelf.name = $"Shelf {j + i * numColumn}";
 
                 goodShelf.transform.position = position;
 
