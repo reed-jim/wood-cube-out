@@ -41,7 +41,15 @@ public class BaseItem : MonoBehaviour
     {
         _isStopping = true;
 
-        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position, _boxCollider.size, 0);
+        Vector3 lossyScale = transform.lossyScale;
+
+        Collider2D[] hits =
+            Physics2D.OverlapBoxAll(transform.position + lossyScale.x * (Vector3)_boxCollider.offset, transform.lossyScale.x * _boxCollider.size, 0);
+
+        bool isFound = false;
+        bool isValid = true;
+
+        BaseShelf shelf = null;
 
         foreach (var hit in hits)
         {
@@ -50,59 +58,74 @@ public class BaseItem : MonoBehaviour
                 continue;
             }
 
-            Debug.Log("SAFERIO " + hit.name);
-
-            BaseShelf shelf = hit?.GetComponent<BaseShelf>();
+            shelf = hit?.GetComponent<BaseShelf>();
 
             if (_currentShelf == null || shelf != _currentShelf)
             {
                 if (shelf != null)
                 {
-                    transform.SetParent(shelf.transform);
+                    isFound = true;
+                }
 
-                    float finalX = -0.35f;
-                    float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
-                    float nearestX = currentNearestX;
-
-                    currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
-
-                    if (currentNearestX < nearestX)
-                    {
-                        nearestX = currentNearestX;
-                        finalX = 0;
-                    }
-
-                    currentNearestX = Mathf.Abs(0.35f - transform.localPosition.x);
-
-                    if (currentNearestX < nearestX)
-                    {
-                        finalX = 0.35f;
-                    }
-
-                    Tween.LocalPosition(transform, new Vector3(finalX, -0.55f, -1), duration: 0.3f)
-                    .OnComplete(() =>
-                    {
-                        _isSnapping = false;
-                    });
-
-                    _currentShelf = shelf;
-
-                    _isSnapping = true;
-                    _isStopping = false;
-                    _isMoving = false;
+                if (hit.GetComponent<BaseItem>() != null)
+                {
+                    isValid = false;
 
                     break;
                 }
             }
         }
 
+        if (isFound && isValid)
+        {
+            transform.SetParent(shelf.transform);
+
+            float finalX = -0.35f;
+            float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
+            float nearestX = currentNearestX;
+
+            currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
+
+            if (currentNearestX < nearestX)
+            {
+                nearestX = currentNearestX;
+                finalX = 0;
+            }
+
+            currentNearestX = Mathf.Abs(0.35f - transform.localPosition.x);
+
+            if (currentNearestX < nearestX)
+            {
+                finalX = 0.35f;
+            }
+
+            Tween.LocalPosition(transform, new Vector3(finalX, -0.55f, -1), duration: 0.3f)
+            .OnComplete(() =>
+            {
+                _isSnapping = false;
+            });
+
+            _currentShelf = shelf;
+
+            _isSnapping = true;
+            _isStopping = false;
+            _isMoving = false;
+        }
+        else
+        {
+            Tween.Position(transform, _lastSnapPosition, duration: 0.3f);
+
+            _isStopping = false;
+            _isMoving = false;
+        }
+
         // _delayAutoGoBackLastSnapPosition =
         //     Tween.Delay(0.3f).OnComplete(() =>
         //     {
-        //         Tween.Position(transform, _lastSnapPosition, duration: 0.3f);
+        // Tween.Position(transform, _lastSnapPosition, duration: 0.3f);
 
-        //         _isStopping = false;
-        //         _isMoving = false;
+        // _isStopping = false;
+        // _isMoving = false;
         //     });
     }
 
