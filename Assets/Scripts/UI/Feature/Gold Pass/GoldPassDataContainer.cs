@@ -9,17 +9,17 @@ public class GoldPassDataContainer : ScriptableObject
 
     [SerializeField] public int numDays;
 
-    [SerializeField] public GoldPassData goldPassData;
+    // [SerializeField] public GoldPassData goldPassData;
 
     public GoldPassMilestoneData CurrentMilestone
     {
-        get => goldPassMilestones[goldPassData.passLevel];
+        get => goldPassMilestones[GamePersistentVariable.goldPassData.passLevel];
     }
 
-    public void Load(GoldPassData savedData)
-    {
-        goldPassData = savedData;
-    }
+    // public void Load(GoldPassData savedData)
+    // {
+    //     goldPassData = savedData;
+    // }
 }
 
 [Serializable]
@@ -30,4 +30,5 @@ public class GoldPassData
     [SerializeField] public int passLevel;
     [SerializeField] public int keyCollected;
     [SerializeField] public long endTimestamp;
+    [SerializeField] public GoldPassMilestoneData[] goldPassMilestones;
 }

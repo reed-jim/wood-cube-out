@@ -121,8 +121,9 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 
             flag.sprite = countryDataContainer.Countries[data.countryIndex].Flag;
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
+            Debug.Log("SAFERIO " + e.Message);
             gameObject.SetActive(false);
         }
     }

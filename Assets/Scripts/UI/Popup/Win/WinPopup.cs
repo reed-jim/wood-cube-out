@@ -115,6 +115,8 @@ public class WinPopup : BasePopup
         currentLevel.Save();
         DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
 
+        GamePersistentVariable.currentLevel = currentLevel.Value;
+
         _isAlreadyWatchRewardedAd = false;
 
         #region GOLD PASS
@@ -122,6 +124,8 @@ public class WinPopup : BasePopup
         HandleCoinChallenge();
         HandleWeeklyChallenge();
         #endregion
+
+        GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
@@ -260,17 +264,19 @@ public class WinPopup : BasePopup
     #region GOLD PASS
     private void HandleGoldPass()
     {
-        goldPassDataContainer.goldPassData.keyCollected++;
+        GamePersistentVariable.goldPassData.keyCollected++;
 
-        if (goldPassDataContainer.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
+        if (GamePersistentVariable.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
         {
             goldPassDataContainer.CurrentMilestone.IsPassed = true;
-            goldPassDataContainer.goldPassData.passLevel++;
+            
+            GamePersistentVariable.goldPassData.passLevel++;
+            GamePersistentVariable.goldPassData.keyCollected = 0;
 
-            goldPassDataContainer.goldPassData.keyCollected = 0;
+            GamePersistentVariable.goldPassData.goldPassMilestones = goldPassDataContainer.goldPassMilestones;
         }
 
-        DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
+        DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, GamePersistentVariable.goldPassData);
     }
     #endregion
 

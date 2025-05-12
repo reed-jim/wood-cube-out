@@ -109,7 +109,7 @@ public class GoldPassPopup : BasePopup
         // }
 
         // progressText.text = $"{(currentPassLevelProgress * 100).ToString("F0")}%";
-        passLevelText.text = $"{goldPassDataContainer.goldPassData.passLevel}";
+        passLevelText.text = $"{GamePersistentVariable.goldPassData.passLevel}";
     }
 
     private void AnimateProgress()
@@ -205,8 +205,8 @@ public class GoldPassPopup : BasePopup
 
     private float GetCurrentPassLevelProgress()
     {
-        return (float)goldPassDataContainer.goldPassData.keyCollected /
-            goldPassDataContainer.goldPassMilestones[goldPassDataContainer.goldPassData.passLevel].KeyRequired;
+        return (float)GamePersistentVariable.goldPassData.keyCollected /
+            goldPassDataContainer.goldPassMilestones[GamePersistentVariable.goldPassData.passLevel].KeyRequired;
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)

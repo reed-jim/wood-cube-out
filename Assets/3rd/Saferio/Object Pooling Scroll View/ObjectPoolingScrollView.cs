@@ -80,7 +80,7 @@ namespace Saferio.Util
         {
             _cachedItemList = new List<string>();
 
-            _canvasSize = canvas.sizeDelta;
+            // _canvasSize = canvas.sizeDelta;
 
             CreatePool();
 
@@ -172,8 +172,6 @@ namespace Saferio.Util
             _maxScrollPositionY = Mathf.Max(0, (expectedMaxSize - numVisibleItem) * _items[0].sizeDelta.y);
             _minScrollPositionY = 0;
 
-            Debug.Log("SAFERIO " + _minScrollPositionY + "/" + _maxScrollPositionY);
-
             _currentHighestItemPositionY = _items.First().localPosition.y;
             _currentLowestItemPositionY = _items.Last().localPosition.y;
         }
@@ -194,6 +192,16 @@ namespace Saferio.Util
                     _scrollViewItems[i].Refresh(index);
                 }
             }
+        }
+
+        public void SetMaxItemNumber(int maxItem)
+        {
+            _maxScrollPositionY = Mathf.Max(0, (maxItem - numVisibleItem) * _items[0].sizeDelta.y);
+        }
+
+        public void ScrollTo(float positionY)
+        {
+            content.localPosition = content.localPosition.ChangeY(positionY);
         }
 
         private IEnumerator ObjectPoolingScrolling()
