@@ -149,8 +149,14 @@ public class GameLeaderboardManager : MonoBehaviour
         LeaderboardDataContainer.LocalLeaderboardItems = localLeaderboard.ToArray();
     }
 
-    private async void AddPlayerScoreToLeaderboard()
+    public async void AddPlayerScoreToLeaderboard()
     {
+        // SAFERIO Remove later
+        if (GamePersistentVariable.selectedCountryIndex == 0)
+        {
+            GamePersistentVariable.selectedCountryIndex = 244;
+        }
+
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });

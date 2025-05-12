@@ -64,15 +64,19 @@ public class GameVariableInitializer : MonoBehaviour
 
         GoldPassData savedGoldPassData = DataUtility.Load(GameConstants.GOLD_PASS_DATA_CONTAINER, new GoldPassData());
 
-        if (goldPassDataContainer.goldPassData.endTimestamp == 0)
+        GamePersistentVariable.goldPassData = savedGoldPassData;
+
+        if (savedGoldPassData.endTimestamp == 0)
         {
-            goldPassDataContainer.goldPassData.endTimestamp =
+            savedGoldPassData.endTimestamp =
                 new DateTimeOffset(DateTime.Now).AddDays(goldPassDataContainer.numDays).ToUnixTimeSeconds();
 
-            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, goldPassDataContainer.goldPassData);
-        }
+            GamePersistentVariable.goldPassData.goldPassMilestones = goldPassDataContainer.goldPassMilestones;
 
-        goldPassDataContainer.Load(savedGoldPassData);
+            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, savedGoldPassData);
+
+            GamePersistentVariable.goldPassData = savedGoldPassData;
+        }
 
         currentLevelFetchedEvent?.Invoke();
     }

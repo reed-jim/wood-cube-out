@@ -70,6 +70,9 @@ public class GoldPassMilestoneItem : MonoBehaviour
         GoldPassMilestoneData goldPassMilestoneData = goldPassDataContainer.goldPassMilestones[index];
         DailyRewardData rewardData = goldPassDataContainer.goldPassRewards[index];
 
+        goldPassMilestoneData.IsPassed = GamePersistentVariable.goldPassData.goldPassMilestones[index].IsPassed;
+        goldPassMilestoneData.IsClaimed = GamePersistentVariable.goldPassData.goldPassMilestones[index].IsClaimed;
+
         int numReward = 0;
 
         int singleRewardQuantity = 0;
@@ -150,7 +153,7 @@ public class GoldPassMilestoneItem : MonoBehaviour
         int coinQuantity = goldPassDataContainer.goldPassRewards[_index].CoinQuantity;
         int[] boosterQuantites = goldPassDataContainer.goldPassRewards[_index].BoosterQuantities;
 
-        if (goldPassDataContainer.goldPassData.isGoldPass)
+        if (GamePersistentVariable.goldPassData.isGoldPass)
         {
             coinQuantity *= GamePersistentVariable.goldPassMultiplier;
 
@@ -168,7 +171,9 @@ public class GoldPassMilestoneItem : MonoBehaviour
 
         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
 
-        goldPassDataContainer.goldPassMilestones[_index].IsClaimed = true;
+        GamePersistentVariable.goldPassData.goldPassMilestones[_index].IsClaimed = true;
+
+        DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, GamePersistentVariable.goldPassData);
 
         Setup(_index);
     }
