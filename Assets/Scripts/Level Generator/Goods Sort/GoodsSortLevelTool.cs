@@ -67,22 +67,17 @@ public class GoodsSortLevelTool : EditorWindow
         GUILayout.EndArea();
     }
 
-    private async Task GenerateFullLevel()
+    private void GenerateLevel()
     {
-        Transform level = Selection.activeTransform;
-
-        tilePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Color Block Jam/Board/Tile.prefab");
-
-        GameObject TileContainerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Color Block Jam/Containers/Tile Container.prefab");
-        GameObject BlockContainerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Color Block Jam/Containers/Block Container.prefab");
-        GameObject BarricadeContainerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Color Block Jam/Containers/Barricade Container.prefab");
+        // Load
+        _allGoods = LoadAllPrefabsInFolder("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods");
 
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
 
-        for (int i = 0; i < level.childCount; i++)
+        for (int i = 0; i < Selection.activeTransform.childCount; i++)
         {
-            toRemoveList.Add(level.GetChild(i).gameObject);
+            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
         }
 
         foreach (var item in toRemoveList)
@@ -90,27 +85,18 @@ public class GoodsSortLevelTool : EditorWindow
             DestroyImmediate(item);
         }
 
-        Transform tileContainer = ((GameObject)PrefabUtility.InstantiatePrefab(TileContainerPrefab, level)).transform;
-        Transform blockContainer = ((GameObject)PrefabUtility.InstantiatePrefab(BlockContainerPrefab, level)).transform;
-        Transform barricadeContainer = ((GameObject)PrefabUtility.InstantiatePrefab(BarricadeContainerPrefab, level)).transform;
-    }
-
-    private void GenerateLevel()
-    {
-        // // Load
-        // _allGoods = LoadAllPrefabsInFolder("");
-
+        // Properties
         int numGoods = 3 * numRow * numColumn;
         int numShelf = numRow * numColumn;
 
         Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
 
-        // POOL GOODS
+        // Pool Items
         List<int> remaingFactions = new List<int>();
 
         for (int i = 0; i < numShelf; i++)
         {
-            int faction = Random.Range(0, 99);
+            int faction = Random.Range(0, _allGoods.Length);
 
             for (int j = 0; j < 3; j++)
             {
@@ -124,8 +110,6 @@ public class GoodsSortLevelTool : EditorWindow
         {
             for (int j = 0; j < numColumn; j++)
             {
-                int tileIndex = j + i * numColumn;
-
                 position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
                 position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
 
@@ -135,9 +119,19 @@ public class GoodsSortLevelTool : EditorWindow
                 goodShelf.transform.position = position;
 
                 // generate product
-                int randomFaction = remaingFactions[Random.Range(0, remaingFactions.Count)];
+                for (int k = 0; k < 3; k++)
+                {
+                    int randomFaction = remaingFactions[Random.Range(0, remaingFactions.Count)];
 
-                remaingFactions.Remove(randomFaction);
+                    GameObject item = Instantiate(_allGoods[randomFaction], goodShelf.transform);
+
+                    position.x = -0.35f * (1 - k);
+                    position.y = -0.5f;
+
+                    item.transform.localPosition = position;
+
+                    remaingFactions.Remove(randomFaction);
+                }
             }
         }
 
