@@ -75,9 +75,9 @@ public class GoodsSortLevelTool : EditorWindow
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
 
-        for (int i = 0; i < Selection.activeTransform.childCount; i++)
+        for (int i = 0; i < goodsContainer.transform.childCount; i++)
         {
-            toRemoveList.Add(Selection.activeTransform.GetChild(i).gameObject);
+            toRemoveList.Add(goodsContainer.transform.GetChild(i).gameObject);
         }
 
         foreach (var item in toRemoveList)
@@ -114,7 +114,7 @@ public class GoodsSortLevelTool : EditorWindow
                 position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
 
                 // generate goods shelf
-                GameObject goodShelf = Instantiate(shelfPrefab, goodsContainer.transform);
+                GameObject goodShelf = (GameObject)PrefabUtility.InstantiatePrefab(shelfPrefab, goodsContainer.transform);
 
                 goodShelf.transform.position = position;
 
@@ -123,10 +123,11 @@ public class GoodsSortLevelTool : EditorWindow
                 {
                     int randomFaction = remaingFactions[Random.Range(0, remaingFactions.Count)];
 
-                    GameObject item = Instantiate(_allGoods[randomFaction], goodShelf.transform);
+                    GameObject item = (GameObject)PrefabUtility.InstantiatePrefab(_allGoods[randomFaction], goodShelf.transform);
 
                     position.x = -0.35f * (1 - k);
-                    position.y = -0.5f;
+                    position.y = -0.55f;
+                    position.z = -1;
 
                     item.transform.localPosition = position;
 
