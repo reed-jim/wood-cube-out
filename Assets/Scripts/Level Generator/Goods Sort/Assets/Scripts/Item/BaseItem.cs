@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BaseItem : MonoBehaviour
 {
+    private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _boxCollider;
 
     private BaseShelf _currentShelf;
@@ -11,14 +12,35 @@ public class BaseItem : MonoBehaviour
     private bool _isSnapping;
     private bool _isStopping;
     private bool _isMoving;
+    [SerializeField] private int _layer;
     private Vector3 _offsetToTouch;
     private Vector3 _lastSnapPosition;
+
+    [SerializeField] private string _type;
+
+
+    #region PROPERTY
+    public string TYPE
+    {
+        get => _type;
+        set => _type = value;
+    }
+
+    public int LAYER
+    {
+        get => _layer;
+        set => _layer = value;
+    }
+    #endregion
 
     private Tween _delayAutoGoBackLastSnapPosition;
 
     void Awake()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _boxCollider = GetComponent<BoxCollider2D>();
+
+        _type = _spriteRenderer.sprite.name;
     }
 
     public void Follow(Vector2 position)
@@ -102,6 +124,8 @@ public class BaseItem : MonoBehaviour
             Tween.LocalPosition(transform, new Vector3(finalX, -0.55f, -1), duration: 0.3f)
             .OnComplete(() =>
             {
+                shelf.CheckMatchedItems();
+
                 _isSnapping = false;
             });
 
@@ -129,62 +153,13 @@ public class BaseItem : MonoBehaviour
         //     });
     }
 
-    public void Snap()
+    private void SnapToShelf()
     {
 
     }
 
-    // void OnTriggerEnter2D(Collider2D other)
-    // {
-    //     if (!_isStopping)
-    //     {
-    //         return;
-    //     }
+    public void Snap()
+    {
 
-    // BaseShelf shelf = other.GetComponent<BaseShelf>();
-
-    // if (_currentShelf == null || shelf != _currentShelf)
-    // {
-    //     if (shelf != null)
-    //     {
-    //         if (_delayAutoGoBackLastSnapPosition.isAlive)
-    //         {
-    //             _delayAutoGoBackLastSnapPosition.Stop();
-    //         }
-
-    //         transform.SetParent(shelf.transform);
-
-    //         float finalX = -0.35f;
-    //         float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
-    //         float nearestX = currentNearestX;
-
-    //         currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
-
-    //         if (currentNearestX < nearestX)
-    //         {
-    //             nearestX = currentNearestX;
-    //             finalX = 0;
-    //         }
-
-    //         currentNearestX = Mathf.Abs(0.35f - transform.localPosition.x);
-
-    //         if (currentNearestX < nearestX)
-    //         {
-    //             finalX = 0.35f;
-    //         }
-
-    //         Tween.LocalPosition(transform, new Vector3(finalX, -0.55f, -1), duration: 0.3f)
-    //         .OnComplete(() =>
-    //         {
-    //             _isSnapping = false;
-    //         });
-
-    //         _currentShelf = shelf;
-
-    //         _isSnapping = true;
-    //         _isStopping = false;
-    //         _isMoving = false;
-    //     }
-    // }
-    // }
+    }
 }
