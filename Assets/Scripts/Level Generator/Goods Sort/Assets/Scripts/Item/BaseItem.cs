@@ -20,6 +20,11 @@ public class BaseItem : MonoBehaviour
 
 
     #region PROPERTY
+    public SpriteRenderer SpriteRenderer
+    {
+        get => _spriteRenderer;
+    }
+
     public string TYPE
     {
         get => _type;
@@ -89,11 +94,16 @@ public class BaseItem : MonoBehaviour
                     isFound = true;
                 }
 
-                if (hit.GetComponent<BaseItem>() != null)
-                {
-                    isValid = false;
+                BaseItem otherItem = hit.GetComponent<BaseItem>();
 
-                    break;
+                if (otherItem != null)
+                {
+                    if (otherItem.LAYER == 0)
+                    {
+                        isValid = false;
+
+                        break;
+                    }
                 }
             }
         }
@@ -101,6 +111,8 @@ public class BaseItem : MonoBehaviour
         if (isFound && isValid)
         {
             transform.SetParent(shelf.transform);
+
+            shelf.AddItem(this);
 
             float finalX = -0.35f;
             float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);

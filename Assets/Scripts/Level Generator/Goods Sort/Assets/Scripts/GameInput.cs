@@ -40,7 +40,10 @@ public class GameInput : MonoBehaviour
 
             if (item != null)
             {
-                _selectedItem = item;
+                if (item.LAYER == 0)
+                {
+                    _selectedItem = item;
+                }
             }
         }
     }
@@ -56,7 +59,7 @@ public class GameInput : MonoBehaviour
         else
         {
             _selectedItem.Stop();
-            
+
             _selectedItem = null;
         }
     }
