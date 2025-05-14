@@ -26,7 +26,7 @@ public class GoodsSortLevelTool : EditorWindow
     #endregion
 
 
-    private GameObject[] _generatedShelves;
+    private Dictionary<int, GameObject> _generatedShelves;
 
     private string folderPath = "Assets/Prefabs/Color Block Jam/Blocks";
     private string barricadeFolderPath = "Assets/Prefabs/Color Block Jam/Barricades";
@@ -75,13 +75,14 @@ public class GoodsSortLevelTool : EditorWindow
         // Load
         _allGoods = LoadAllPrefabsInFolder("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods");
         shelfPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Shelf.prefab");
+        shelfContainer = Selection.activeTransform.GetChild(0).gameObject;
 
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
 
-        for (int i = 0; i < goodsContainer.transform.childCount; i++)
+        for (int i = 0; i < shelfContainer.transform.childCount; i++)
         {
-            toRemoveList.Add(goodsContainer.transform.GetChild(i).gameObject);
+            toRemoveList.Add(shelfContainer.transform.GetChild(i).gameObject);
         }
 
         foreach (var item in toRemoveList)
@@ -100,18 +101,43 @@ public class GoodsSortLevelTool : EditorWindow
         EditorUtility.SetDirty(Selection.activeTransform);
     }
 
-    private GameObject[] GenerateShelves()
+    private Dictionary<int, GameObject> GenerateShelves()
     {
         Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
 
-        Vector3 position = new Vector3();
+        Dictionary<int, GameObject> generatedShelves = new Dictionary<int, GameObject>();
 
-        List<GameObject> generatedShelves = new List<GameObject>();
+        // Remove random shelves symetrically
+        List<Vector2Int> emptyCoordinators = new List<Vector2Int>();
+
+        for (int i = 0; i < numColumn / 2; i++)
+        {
+            for (int j = 0; j < numRow; j++)
+            {
+                int random = Random.Range(0, 3);
+
+                if (random == 0)
+                {
+                    emptyCoordinators.Add(new Vector2Int(i, j));
+                    emptyCoordinators.Add(new Vector2Int(numColumn - 1 - i, j));
+
+                    // Debug.Log("SAFERIO" + new Vector2Int(j, i) + "/" + new Vector2Int(j, numColumn - 1 - i));
+                }
+            }
+        }
+
+        // Generate
+        Vector3 position = new Vector3();
 
         for (int i = 0; i < numRow; i++)
         {
             for (int j = 0; j < numColumn; j++)
             {
+                if (emptyCoordinators.Contains(new Vector2Int(j, i)))
+                {
+                    continue;
+                }
+
                 position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
                 position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
 
@@ -121,11 +147,11 @@ public class GoodsSortLevelTool : EditorWindow
 
                 shelf.transform.position = position;
 
-                generatedShelves.Add(shelf);
+                generatedShelves.Add(j + numColumn * i, shelf);
             }
         }
 
-        return generatedShelves.ToArray();
+        return generatedShelves;
     }
 
     private void GenerateLayer(int layer, int numShelf)
@@ -155,6 +181,11 @@ public class GoodsSortLevelTool : EditorWindow
             for (int j = 0; j < numColumn; j++)
             {
                 int shelfIndex = j + i * numColumn;
+
+                if (!_generatedShelves.ContainsKey(shelfIndex))
+                {
+                    continue;
+                }
 
                 position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
                 position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
