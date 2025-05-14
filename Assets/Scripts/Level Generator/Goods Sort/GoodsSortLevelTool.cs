@@ -95,8 +95,9 @@ public class GoodsSortLevelTool : EditorWindow
 
         _generatedShelves = GenerateShelves();
 
-        GenerateLayer(0, numShelf);
-        GenerateLayer(1, numShelf);
+        GenerateItemsAllLayers(2, _generatedShelves.Count);
+        // GenerateLayer(0, numShelf);
+        // GenerateLayer(1, numShelf);
 
         EditorUtility.SetDirty(Selection.activeTransform);
     }
@@ -154,6 +155,163 @@ public class GoodsSortLevelTool : EditorWindow
         return generatedShelves;
     }
 
+    private void GenerateItemsAllLayers(int maxLayer, int numShelf)
+    {
+        Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
+
+        // Pools
+        List<int> poolFactions = new List<int>();
+        List<int> poolLayers = new List<int>();
+
+        for (int i = 0; i < maxLayer * numShelf; i++)
+        {
+            int faction = Random.Range(0, _allGoods.Length);
+
+            for (int j = 0; j < 3; j++)
+            {
+                poolFactions.Add(faction);
+            }
+        }
+
+        for (int i = 0; i < 3 * numShelf; i++)
+        {
+            for (int j = 0; j < maxLayer; j++)
+            {
+                poolLayers.Add(j);
+            }
+        }
+
+        Debug.Log("SAFERIO " + poolFactions.Count + "/" + poolLayers.Count);
+
+        // Generate
+        List<BaseItem> _spawnedItems = new List<BaseItem>();
+
+        Vector3 position = new Vector3();
+
+        for (int i = 0; i < numRow; i++)
+        {
+            for (int j = 0; j < numColumn; j++)
+            {
+                int shelfIndex = j + i * numColumn;
+
+                if (!_generatedShelves.ContainsKey(shelfIndex))
+                {
+                    continue;
+                }
+
+                position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
+                position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
+
+                // generate product
+                for (int m = 0; m < maxLayer; m++)
+                {
+                    // avoid three same type items
+                    int currentFaction = 0;
+                    int numSameFaction = 0;
+
+                    for (int k = 0; k < 3; k++)
+                    {
+                        int randomFaction = poolFactions[Random.Range(0, poolFactions.Count)];
+                        int randomLayer = poolLayers[Random.Range(0, poolLayers.Count)];
+
+                        if (numSameFaction == 0)
+                        {
+                            currentFaction = randomFaction;
+                            numSameFaction++;
+                        }
+                        else
+                        {
+                            if (randomFaction == currentFaction)
+                            {
+                                numSameFaction++;
+                            }
+                            else
+                            {
+                                currentFaction = randomFaction;
+                            }
+
+                            if (numSameFaction == 3)
+                            {
+                                while (randomFaction == currentFaction)
+                                {
+                                    randomFaction = poolFactions[Random.Range(0, poolFactions.Count)];
+                                }
+                            }
+                        }
+
+                        randomLayer = m;
+
+                        GameObject itemObject = (GameObject)PrefabUtility.InstantiatePrefab(_allGoods[randomFaction], _generatedShelves[shelfIndex].transform);
+
+                        BaseItem item = itemObject.GetComponent<BaseItem>();
+
+                        position.x = -0.35f * (1 - k);
+                        position.y = -0.55f;
+                        position.z = -1 + 0.1f * randomLayer;
+
+                        item.transform.localPosition = position;
+
+                        poolFactions.Remove(randomFaction);
+                        poolLayers.Remove(randomLayer);
+
+                        item.TYPE = _allGoods[randomFaction].name;
+                        item.LAYER = randomLayer;
+
+                        if (randomLayer > 0)
+                        {
+                            item.GetComponent<SpriteRenderer>().color = new Color(0.1f, 0.1f, 0.1f, 1);
+                        }
+
+                        _spawnedItems.Add(item);
+                    }
+                }
+            }
+        }
+
+        #region  Randomly remove items
+        List<GameObject> toRemoveItems = new List<GameObject>();
+
+        int randomRemoveFactionNumber = (int)Random.Range(1, numShelf / 2f);
+
+        _spawnedItems.Shuffle();
+
+        for (int i = 0; i < randomRemoveFactionNumber; i++)
+        {
+            string toRemoveFaction = _allGoods[Random.Range(0, _allGoods.Length)].name;
+
+            int numItemsFound = 0;
+
+            for (int j = 0; j < _spawnedItems.Count; j++)
+            {
+                if (_spawnedItems[j].TYPE == toRemoveFaction)
+                {
+                    toRemoveItems.Add(_spawnedItems[j].gameObject);
+
+                    numItemsFound++;
+
+                    if (numItemsFound == 3)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        foreach (var item in toRemoveItems)
+        {
+            DestroyImmediate(item);
+        }
+        #endregion
+
+        #region DIFFICULTY
+        float ratioMatchItems = GetRatioMatchItemsFirstLayer(_spawnedItems.ToArray());
+        float ratioEmptySlot = GetRatioEmptySlotFirstLayer(numShelf);
+
+        Debug.Log("SAFERIO " + ratioMatchItems);
+        Debug.Log("SAFERIO " + ratioEmptySlot);
+        #endregion
+    }
+
     private void GenerateLayer(int layer, int numShelf)
     {
         Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
@@ -170,6 +328,8 @@ public class GoodsSortLevelTool : EditorWindow
                 remaingFactions.Add(faction);
             }
         }
+
+        // Difficulty
 
         // Generate
         List<BaseItem> _spawnedItems = new List<BaseItem>();
@@ -254,6 +414,75 @@ public class GoodsSortLevelTool : EditorWindow
             DestroyImmediate(item);
         }
     }
+
+    #region DIFFICULTY
+    private void CalculateDifficulty(BaseItem[] spawnedItems)
+    {
+        for (int i = 0; i < spawnedItems.Length; i++)
+        {
+
+        }
+    }
+
+    private float GetRatioMatchItemsFirstLayer(BaseItem[] spawnedItems)
+    {
+        int matchRatio = 0;
+        int totalItems = 0;
+        int totalMatchItems = 0;
+
+        for (int i = 0; i < spawnedItems.Length; i++)
+        {
+            if (spawnedItems[i].LAYER == 0)
+            {
+                totalItems++;
+
+                int totalItemWithSameType = 1;
+
+                for (int j = i + 1; j < spawnedItems.Length; j++)
+                {
+                    if (spawnedItems[j].TYPE == spawnedItems[i].TYPE)
+                    {
+                        totalItemWithSameType++;
+                    }
+                }
+
+                if (totalItemWithSameType >= 3)
+                {
+                    totalMatchItems++;
+                }
+            }
+        }
+
+        return (float)totalMatchItems / totalItems;
+    }
+
+    private float GetRatioEmptySlotFirstLayer(int numShelf)
+    {
+        int totalSlots = 3 * numShelf;
+        int totalTakenSlots = 0;
+
+        foreach (var shelf in _generatedShelves.Values)
+        {
+            BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(shelf.transform).ToArray();
+
+            totalTakenSlots += items.Length;
+        }
+
+        // for (int i = 0; i < _generatedShelves.Count; i++)
+        // {
+        //     if (!_generatedShelves.ContainsKey(i))
+        //         {
+        //             continue;
+        //         }
+
+        //     BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(_generatedShelves[i].transform).ToArray();
+
+        //     totalTakenSlots += items.Length;
+        // }
+
+        return (float)totalTakenSlots / totalSlots;
+    }
+    #endregion
 
     #region UTIL
     bool IsValidArea(bool[] isTileFull, int startX, int startZ, int sizeX, int sizeZ)
