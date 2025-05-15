@@ -245,11 +245,12 @@ public class GoodsSortLevelTool : EditorWindow
 
                         BaseItem item = itemObject.GetComponent<BaseItem>();
 
-                        position.x = -0.35f * (1 - k);
-                        position.y = -0.55f;
+                        position.x = -0.9f * (1 - k);
+                        position.y = -0.7f;
                         position.z = -1 + 0.1f * randomLayer;
 
                         item.transform.localPosition = position;
+                        item.transform.localScale = 0.7f * Vector3.one;
 
                         poolFactions.Remove(randomFaction);
                         poolLayers.Remove(randomLayer);
