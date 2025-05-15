@@ -117,7 +117,7 @@ public class ScrewBox : MonoBehaviour
     {
         if (instanceId == gameObject.GetInstanceID())
         {
-            await Task.Delay((int)(delayMoveInDuration * 1000));
+            await Task.Delay((int)(delayMoveInDuration * 300));
 
             SoundManager.Instance.PlaySoundScrewBoxDone();
 
@@ -232,6 +232,13 @@ public class ScrewBox : MonoBehaviour
         {
             Unlock();
         }
+    }
+
+    public void ResetVisually()
+    {
+        screwBoxSpriteRenderer.enabled = true;
+
+        screwBoxServiceLocator.screwBoxUI.HideUnlockBoxButton();
     }
 
     public void InvokeScrewBoxUnlockedEvent()

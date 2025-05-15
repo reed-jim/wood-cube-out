@@ -37,7 +37,27 @@ public class GameEnum : MonoBehaviour
         IAPSuggestion,
         DailyReward,
         LevelInProgress,
-        Backup
+        Backup,
+        UnlockDoubleScrewBoxesSuggestion,
+        UnlockAllScrewBoxesForever,
+        GoldPass,
+        EndlessSale,
+        WeeklyChallenge,
+        ChestLevel,
+        CoinChallenge,
+        MedalTournament,
+        SpaceRace,
+        SpaceRaceTutorial,
+        DailyOffer,
+        GiantOffer,
+        MasterOffer,
+        MegaOffer,
+        SaleCoin,
+        SaleItem,
+        StarterPack,
+        WeekendSale,
+        GoldPassIntro,
+        MedalTournamentIntro
     }
 
     public enum GameFaction
@@ -102,6 +122,12 @@ public class GameEnum : MonoBehaviour
         Replay,
         Quit,
         Win
+    }
+
+    public enum LeaderboardScope
+    {
+        Global,
+        Local
     }
 
     public static T GetRandomEnumValue<T>()

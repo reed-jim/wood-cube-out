@@ -65,6 +65,7 @@ public static class GameConstants
     public static string CLOSE_POPUP_SOUND = "Close Popup Sound";
     public static string UNLOCK_ADS_SCREW_BOX_SOUND = "Unlock Ads Screw Box Sound";
     public static string CLEAR_SCREW_PORTS_SOUND = "Clear Screw Ports Sound";
+    public static string COUNTING_TIME_SOUND = "Counting Time Sound";
     #endregion
 
     #region ANIMATION
@@ -88,6 +89,7 @@ public static class GameConstants
 
     #region IAP
     public static string REMOVE_AD_ID = "remove_ad";
+    public static string IS_UNLOCKED_ALL_SCREW_BOXES = "IS_UNLOCKED_ALL_SCREW_BOXES";
     #endregion
 
     #region SAVE/LOAD
@@ -165,8 +167,45 @@ public static class GameConstants
     public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
     #endregion
 
+    #region ENDLESS SALE
+    public static string ENDLESS_SALE_DATA = "ENDLESS_SALE_DATA";
+    #endregion
+
     #region COMPENSATE
     public static string IS_CLAIMED_COMPENSATE_REMOVE_ADS = "IS_CLAIMED_COMPENSATE_REMOVE_ADS";
     public static string IS_CLAIMED_COMPENSATE_BIG_REWARD = "IS_CLAIMED_COMPENSATE_BIG_REWARD";
-    #endregion  
+    #endregion
+
+    #region LEADERBOARD
+    public static string DID_USER_LOGIN = "DID_USER_LOGIN";
+    public static string SELECTED_COUNTRY_INDEX = "SELECTED_COUNTRY_INDEX";
+    #endregion
+
+    #region GOLD PASS
+    public static string GOLD_PASS_DATA_CONTAINER = "GOLD_PASS_DATA_CONTAINER";
+    #endregion 
+
+    #region CHEST LEVEL
+    public static string CHEST_LEVEL = "CHEST_LEVEL";
+    #endregion 
+
+    #region COIN CHALLENGE
+    public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";
+    #endregion 
+
+    #region WEEKLY CHALLENGE
+    public static string WEEKLY_CHALLENGE_DATA = "WEEKLY_CHALLENGE_DATA";
+    #endregion 
+
+    #region SPACE RACE
+    public static string SPACE_RACE_DATA = "SPACE_RACE_DATA";
+    #endregion
+
+    #region SALE IAP
+    public static string SALE_IAP_DATA = "SALE_IAP_DATA";
+    #endregion 
+
+    #region MEDAL TOURNAMENT
+    public static string MEDAL_TOURNAMENT_DATA = "MEDAL_TOURNAMENT_DATA";
+    #endregion 
 }

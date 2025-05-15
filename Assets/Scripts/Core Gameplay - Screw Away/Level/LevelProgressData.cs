@@ -4,6 +4,7 @@ public class LevelProgressData
 {
     private ScrewData[] _screwsData;
     private ScrewBoxData[] _screwBoxesData;
+    private int _numHolesAdded;
 
     public ScrewData[] ScrewsData
     {
@@ -15,5 +16,11 @@ public class LevelProgressData
     {
         get => _screwBoxesData;
         set => _screwBoxesData = value;
+    }
+
+    public int NumHolesAdded
+    {
+        get => _numHolesAdded;
+        set => _numHolesAdded = value;
     }
 }

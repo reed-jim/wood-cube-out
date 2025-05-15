@@ -42,6 +42,7 @@ public class AdmobAdsMax : MonoBehaviour
     private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
     private const string RewardedAdUnitId = "5a5d29ce1c57f419";
     private const string BanerAdUnitId = "515e33c5e1389ee4";
+    private const string mrecAdUnitId = "f28550c606ced4ca";
 #endif
     // #if UNITY_ANDROID
     //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
@@ -1030,7 +1031,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        
+
     }
 
     public void OnMRecAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo error) { }
@@ -1039,18 +1040,25 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void OnMRecAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        if (adInfo == null) return;
-        if (adInfo.Revenue < 0) return;
+        try
+        {
+            if (adInfo == null) return;
+            if (adInfo.Revenue < 0) return;
 
-        double revenue = adInfo.Revenue;
+            double revenue = adInfo.Revenue;
 
-        AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
+            AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
+                adInfo.AdFormat, revenue, "USD");
 
-        AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
-        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
-            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+            AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
+                adInfo.AdFormat, revenue, "USD");
+            AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
+                adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     public void OnMRecAdExpandedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
@@ -1223,7 +1231,7 @@ public class AdmobAdsMax : MonoBehaviour
                     if (_cooldownAdmobBannerTimer <= 0)
                     {
                         RefreshAdmobBanner();
-                        _cooldownAdmobBannerTimer = 30;
+                        _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
 
                         _loadBannerRetryTime++;
 

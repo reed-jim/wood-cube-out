@@ -13,7 +13,17 @@ public class MenuScreen : MonoBehaviour
 {
     [SerializeField] private Button startGameButton;
     [SerializeField] private Button openRemoveAdPopupButton;
+    [SerializeField] private Button openAllScrewBoxesForeverButton;
+    [SerializeField] private CanvasGroup buttonsCanvasGroup;
     [SerializeField] private Button openDailyRewardPopupButton;
+    [SerializeField] private Button openGoldPassPopupButton;
+    [SerializeField] private Button openEndlessSalePopupButton;
+    [SerializeField] private Button openWeeklyChallengePopupButton;
+    [SerializeField] private Button openChestLevelPopupButton;
+    [SerializeField] private Button openCoinChallengePopupButton;
+    [SerializeField] private Button openMedalTournamentPopupButton;
+    [SerializeField] private Button openSpaceRacePopupButton;
+    [SerializeField] private Button openIAPOfferPopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
@@ -29,11 +39,13 @@ public class MenuScreen : MonoBehaviour
     private List<Tween> _tweens;
     private float _initialOpenRemoveAdPopupButtonPositionY;
     private Tween _openRemoveAdPopupButtonTween;
+    private Tween _openUnlockScrewBoxesPopupButtonTween;
     private Tween _topBarDividerTween;
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<bool> showMenuBlackScreenEvent;
+    public static event Action<string, string> showNotificationEvent;
 
     private void Awake()
     {
@@ -44,13 +56,23 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
+        openAllScrewBoxesForeverButton.onClick.AddListener(OpenUnlockAllScrewBoxesForeverPopup);
         openDailyRewardPopupButton.onClick.AddListener(OpenDailyRewardPopup);
+        openGoldPassPopupButton.onClick.AddListener(OpenGoldPassPopup);
+        openEndlessSalePopupButton.onClick.AddListener(OpenEndlessSalePopup);
+        openWeeklyChallengePopupButton.onClick.AddListener(OpenWeeklyChallengePopup);
+        openChestLevelPopupButton.onClick.AddListener(OpenChestLevelPopup);
+        openCoinChallengePopupButton.onClick.AddListener(OpenCoinChallengePopup);
+        openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
+        openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
+        openIAPOfferPopupButton.onClick.AddListener(OpenIAPOfferPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -62,6 +84,11 @@ public class MenuScreen : MonoBehaviour
         if (UserData.IsRemoveAds)
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
+        }
+
+        if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
+        {
+            openAllScrewBoxesForeverButton.gameObject.SetActive(false);
         }
 
         currentLevel.Load();
@@ -78,14 +105,14 @@ public class MenuScreen : MonoBehaviour
 
         showMenuBlackScreenEvent?.Invoke(isFirstTimeOpenApp);
 
+        PreventSpammingStartButton();
+
         if (UserData.IsFirstTimeOpenApp)
         {
             await Task.Delay(1500);
 
             StartGame();
         }
-
-        PreventSpammingStartButton();
     }
 
     void OnDestroy()
@@ -97,6 +124,7 @@ public class MenuScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
@@ -135,6 +163,16 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
+        // if (currentLevel.Value > 10)
+        // {
+        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+        //     {
+        //         showNotificationEvent?.Invoke("Try again later", "Data is being downloaded. Please wait a moment.");
+
+        //         return;
+        //     }
+        // }
+
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
             GamePersistentVariable.isLoadingLevelInProgress = false;
@@ -152,6 +190,10 @@ public class MenuScreen : MonoBehaviour
         {
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
+
+        startGameButton.interactable = false;
+
+        // PreventSpammingStartButton();
     }
 
     private void OpenRemoveAdPopup()
@@ -159,9 +201,78 @@ public class MenuScreen : MonoBehaviour
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
 
+    private void OpenUnlockAllScrewBoxesForeverPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.UnlockAllScrewBoxesForever);
+    }
+
     private void OpenDailyRewardPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.DailyReward);
+    }
+
+    private void OpenGoldPassPopup()
+    {
+        if (GamePersistentVariable.goldPassData == null)
+        {
+            GamePersistentVariable.goldPassData = DataUtility.Load(GameConstants.GOLD_PASS_DATA_CONTAINER, new GoldPassData());
+        }
+
+        if (GamePersistentVariable.goldPassData.isIntroDone)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.GoldPass);
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.GoldPassIntro);
+        }
+    }
+
+    private void OpenEndlessSalePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.EndlessSale);
+    }
+
+    private void OpenWeeklyChallengePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.WeeklyChallenge);
+    }
+
+    private void OpenChestLevelPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.ChestLevel);
+    }
+
+    private void OpenCoinChallengePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.CoinChallenge);
+    }
+
+    private void OpenMedalTournamentPopup()
+    {
+        if (GamePersistentVariable.medalTournamentData == null)
+        {
+            GamePersistentVariable.medalTournamentData = DataUtility.Load(GameConstants.MEDAL_TOURNAMENT_DATA, new MedalTournamentData());
+        }
+
+        if (GamePersistentVariable.medalTournamentData.isIntroDone)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.MedalTournament);
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.MedalTournamentIntro);
+        }
+    }
+
+    private void OpenSpaceRacePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SpaceRace);
+    }
+
+    private void OpenIAPOfferPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.DailyOffer);
     }
 
     private void OpenLuckyWheelScreen()
@@ -204,6 +315,11 @@ public class MenuScreen : MonoBehaviour
         openRemoveAdPopupButton.gameObject.SetActive(false);
     }
 
+    private void OnAllScrewBoxesUnlockedForever()
+    {
+        openAllScrewBoxesForeverButton.gameObject.SetActive(false);
+    }
+
     private void UpdateRemoveAdsState()
     {
         if (UserData.IsRemoveAds)
@@ -224,7 +340,7 @@ public class MenuScreen : MonoBehaviour
 
         CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 
-        if (screenRoute != ScreenRoute.IAPShop)
+        if (screenRoute == ScreenRoute.Home)
         {
             _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
         }
@@ -233,13 +349,29 @@ public class MenuScreen : MonoBehaviour
             _openRemoveAdPopupButtonTween = Tween.LocalPositionY(
                 openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * GamePersistentVariable.canvasSize.y, 0.3f);
         }
+
+        // Unlock All Screw boxes
+        CommonUtil.StopTween(_openUnlockScrewBoxesPopupButtonTween);
+
+        if (screenRoute == ScreenRoute.Home)
+        {
+            buttonsCanvasGroup.interactable = true;
+
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 1, duration: 0.3f);
+        }
+        else
+        {
+            buttonsCanvasGroup.interactable = false;
+
+            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
+        }
     }
 
     private void ShowTopBarDivider(ScreenRoute screenRoute)
     {
         CommonUtil.StopTween(_topBarDividerTween);
 
-        if (screenRoute == ScreenRoute.IAPShop)
+        if (screenRoute != ScreenRoute.Home)
         {
             _topBarDividerTween = Tween.Alpha(topBarDivider, 1, 0.3f);
         }

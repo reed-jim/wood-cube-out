@@ -24,6 +24,9 @@ public class WinPopup : BasePopup
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
 
@@ -112,7 +115,17 @@ public class WinPopup : BasePopup
         currentLevel.Save();
         DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
 
+        GamePersistentVariable.currentLevel = currentLevel.Value;
+
         _isAlreadyWatchRewardedAd = false;
+
+        #region GOLD PASS
+        HandleGoldPass();
+        HandleCoinChallenge();
+        HandleWeeklyChallenge();
+        #endregion
+
+        GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
@@ -134,6 +147,9 @@ public class WinPopup : BasePopup
                     userResourcesObserver.Save();
 
                     _currentCollectedCoin += numCoin;
+
+                    SaferioTracking.TrackResourceSource(
+                        currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
                 }
 
                 _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
@@ -244,4 +260,43 @@ public class WinPopup : BasePopup
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: true, EndLevelReason.Win.ToString());
         }
     }
+
+    #region GOLD PASS
+    private void HandleGoldPass()
+    {
+        GamePersistentVariable.goldPassData.keyCollected++;
+
+        if (GamePersistentVariable.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
+        {
+            goldPassDataContainer.CurrentMilestone.IsPassed = true;
+            
+            GamePersistentVariable.goldPassData.passLevel++;
+            GamePersistentVariable.goldPassData.keyCollected = 0;
+
+            GamePersistentVariable.goldPassData.goldPassMilestones = goldPassDataContainer.goldPassMilestones;
+        }
+
+        DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, GamePersistentVariable.goldPassData);
+    }
+    #endregion
+
+    #region COIN CHALLENGE
+    private void HandleCoinChallenge()
+    {
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        coinChallengeData.gemCollected++;
+
+        DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
+    }
+
+    private void HandleWeeklyChallenge()
+    {
+        WeeklyChallengeData challengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
+
+        challengeData.EventItemCollected++;
+
+        DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, challengeData);
+    }
+    #endregion
 }

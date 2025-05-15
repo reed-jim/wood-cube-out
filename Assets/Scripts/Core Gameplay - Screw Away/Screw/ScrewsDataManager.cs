@@ -38,7 +38,7 @@ public class ScrewsDataManager : MonoBehaviour
 
         _tweens = new List<Tween>();
 
-        StartCoroutine(PeriodicallySaving());
+        // StartCoroutine(PeriodicallySaving());
     }
 
     void OnDestroy()
@@ -99,6 +99,8 @@ public class ScrewsDataManager : MonoBehaviour
         ScrewData[] screwsData = levelProgressData.ScrewsData;
         ScrewBoxData[] screwBoxesData = levelProgressData.ScrewBoxesData;
 
+        // screwBoxesData = screwBoxesData.OrderBy(item => item.IsLocked).ToArray();
+
         if (screwsData.Length != _screws.Length)
         {
             GamePersistentVariable.isFreshLevel = true;
@@ -116,6 +118,11 @@ public class ScrewsDataManager : MonoBehaviour
         for (int i = 0; i < screwBoxesData.Length; i++)
         {
             screwBoxManager.SpawnScrewBox(screwBoxesData[i].Faction, screwBoxesData[i].IsLocked);
+        }
+
+        for (int i = 0; i < levelProgressData.NumHolesAdded; i++)
+        {
+            screwBoxManager.AddMoreScrewPort();
         }
 
         await Task.Delay(1000);
@@ -224,23 +231,6 @@ public class ScrewsDataManager : MonoBehaviour
     {
         ScrewData[] screwsData = new ScrewData[_screws.Length];
 
-        // foreach (var id in _screwsWithId.Keys)
-        // {
-        //     ScrewData screwData = new ScrewData();
-
-        //     screwData.ScrewId = _screwsWithId[id].ScrewId;
-        //     screwData.Faction = _screwsWithId[id].Faction;
-        //     screwData.IsDone = _screwsWithId[id].IsDone;
-        //     screwData.IsInScrewPort = _screwsWithId[id].IsInScrewPort;
-
-        //     if (!_screwsWithId[id].gameObject.activeSelf)
-        //     {
-        //         screwData.IsDestroyed = true;
-        //     }
-
-        //     screwsData.Add(id, screwData);
-        // }
-
         for (int i = 0; i < _screws.Length; i++)
         {
             if (_screws[i] == null)
@@ -265,6 +255,8 @@ public class ScrewsDataManager : MonoBehaviour
         levelProgressData.ScrewBoxesData = screwBoxesData;
 
         string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value}";
+
+        levelProgressData.NumHolesAdded = GamePersistentVariable.numHolesAdded;
 
         DataUtility.SaveAsync(key, levelProgressData);
 

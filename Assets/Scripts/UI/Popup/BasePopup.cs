@@ -24,12 +24,15 @@ public class BasePopup : MonoBehaviour
     protected List<Tween> _tweens;
     #endregion
 
+    #region EVENT
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    #endregion
 
     private void Awake()
     {
@@ -247,12 +250,24 @@ public class BasePopup : MonoBehaviour
 
             bool clickedOutside = true;
 
+            RectTransform[] children = TransformUtil.GetComponentsFromAllChildren<RectTransform>(transform).ToArray();
+
+            bool isFound = false;
+
             foreach (var result in raycastResults)
             {
-                if (result.gameObject == container.gameObject)
+                for (int i = 0; i < children.Length; i++)
                 {
-                    clickedOutside = false;
+                    if (result.gameObject == children[i].gameObject)
+                    {
+                        clickedOutside = false;
 
+                        break;
+                    }
+                }
+
+                if (isFound)
+                {
                     break;
                 }
             }
@@ -277,5 +292,10 @@ public class BasePopup : MonoBehaviour
     protected void InvokeShowAdNotLoadedPopupEvent()
     {
         showAdNotLoadedPopupEvent?.Invoke();
+    }
+
+    protected void InvokeShowResourcesEarnPopupPopupEvent(int coinQuantity, int[] boosterQuantites, bool isRemoveAds)
+    {
+        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);
     }
 }

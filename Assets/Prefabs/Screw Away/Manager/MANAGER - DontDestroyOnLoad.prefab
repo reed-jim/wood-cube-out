@@ -47,6 +47,84 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   backgroundMusic: {fileID: 8517707550276581621}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+--- !u!1 &91373835428622801
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7430420593622774833}
+  - component: {fileID: 5386654117328240529}
+  m_Layer: 0
+  m_Name: Collect more gems to unlock your next reward
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7430420593622774833
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91373835428622801}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5386654117328240529
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91373835428622801}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Collect {value} more gems to unlock your next reward!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Collectez {value} Plus de gemmes pour d\xE9verrouiller votre prochaine
+      r\xE9compense!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Sammeln Sie {value} mehr Edelsteine, um Ihre n\xE4chste Belohnung freizuschalten!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Raccogli {value} pi\xF9 gemme per sbloccare la tua prossima ricompensa!"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "{value}\u3092\u53CE\u96C6\u3057\u3066\u3001\u6B21\u306E\u5831\u916C\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2E4\uC74C \uBCF4\uC0C1\uC744 \uC7A0\uAE08 \uD574\uC81C\uD558\uAE30
+      \uC704\uD574 {value} \uB354 \uB9CE\uC740 \uBCF4\uC11D\uC744 \uC218\uC9D1\uD558\uC2ED\uC2DC\uC624!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Colete {value} Mais gemas para desbloquear sua pr\xF3xima recompensa!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0431\u0435\u0440\u0438\u0442\u0435 {value} \u0431\u043E\u043B\u044C\u0448\u0435
+      \u0434\u0440\u0430\u0433\u043E\u0446\u0435\u043D\u043D\u044B\u0445 \u043A\u0430\u043C\u043D\u0435\u0439,
+      \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u0441\u043B\u0435\u0434\u0443\u044E\u0449\u0443\u044E \u043D\u0430\u0433\u0440\u0430\u0434\u0443!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Recopile {value} m\xE1s gemas para desbloquear su pr\xF3xima recompensa!"
+    Object: {fileID: 0}
 --- !u!1 &149502133893662216
 GameObject:
   m_ObjectHideFlags: 0
@@ -239,6 +317,152 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+--- !u!1 &334184623055387940
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3171382905226789307}
+  - component: {fileID: 499578387653829121}
+  m_Layer: 0
+  m_Name: Super Value Package
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3171382905226789307
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334184623055387940}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &499578387653829121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334184623055387940}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Super Value Package
+    Object: {fileID: 0}
+  - Language: French
+    Text: Package de super valeur
+    Object: {fileID: 0}
+  - Language: German
+    Text: Superwertpaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto super valore
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30FC\u30D1\u30FC\u30D0\u30EA\u30E5\u30FC\u30D1\u30C3\u30B1\u30FC\u30B8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC288\uD37C \uAC00\uCE58 \uD328\uD0A4\uC9C0"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote de super valor
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u0443\u043F\u0435\u0440 Value Package"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Paquete de supervalor
+    Object: {fileID: 0}
+--- !u!1 &423915758204961211
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7179187797751047101}
+  - component: {fileID: 5322038813063990275}
+  m_Layer: 0
+  m_Name: Coin Challenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7179187797751047101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423915758204961211}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5322038813063990275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 423915758204961211}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Coin Challenge
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9fi de monnaie"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "M\xFCnzherausforderung"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sfida delle monete
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B3\u30A4\u30F3\u30C1\u30E3\u30EC\u30F3\u30B8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB3D9\uC804 \uB3C4\uC804"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desafio de moeda
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: COIN Challenge
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Desaf\xEDo de monedas"
+    Object: {fileID: 0}
 --- !u!1 &425542802022964959
 GameObject:
   m_ObjectHideFlags: 0
@@ -459,6 +683,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: "\xA1M\xE1s niveles pr\xF3ximamente!"
     Object: {fileID: 0}
+--- !u!1 &549530558639101137
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2677290191527029431}
+  - component: {fileID: 1127968767313466855}
+  m_Layer: 0
+  m_Name: Reach Level To Open
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2677290191527029431
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549530558639101137}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1127968767313466855
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 549530558639101137}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Reach level {level} to open!
+    Object: {fileID: 0}
+  - Language: French
+    Text: Atteignez le niveau {level} pour ouvrir!
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Level {level} zu \xF6ffnen!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Raggiungi il livello {level} per aprire!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5230\u9054\u30EC\u30D9\u30EB{level}\u3092\u958B\u304F\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB808\uBCA8\uC5D0 \uB3C4\uB2EC {level}\uC744 \uC5F4\uB824\uBA74!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "N\xEDvel de alcance {level} para abrir!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0414\u043E\u0441\u0442\u0438\u0433\u043D\u0443\u0442\u044C \u0443\u0440\u043E\u0432\u0435\u043D\u044C
+      {level}, \u0447\u0442\u043E\u0431\u044B \u043E\u0442\u043A\u0440\u044B\u0442\u044C!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Level de alcance {level} para abrir!
+    Object: {fileID: 0}
 --- !u!1 &602139710279757417
 GameObject:
   m_ObjectHideFlags: 0
@@ -603,6 +901,8 @@ MonoBehaviour:
     productType: 0
   - id: com.cube.wood.out.coin.pack.6
     productType: 0
+  - id: com.gplay.wood.cube.out.unlockscrewboxes
+    productType: 0
   IAPDataContainer: {fileID: 11400000, guid: 31c21ffa01bfb1042a4965503a727bd7, type: 2}
   userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
@@ -682,7 +982,7 @@ MonoBehaviour:
   - Language: Spanish
     Text: Haga clic en el tornillo para regresar a la caja.
     Object: {fileID: 0}
---- !u!1 &884400809045876616
+--- !u!1 &757073618972489815
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -690,22 +990,22 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 3679338208945242195}
-  - component: {fileID: 6116073360624942682}
+  - component: {fileID: 7751665578971614947}
+  - component: {fileID: 2588507896834183197}
   m_Layer: 0
-  m_Name: In App Review Manager
+  m_Name: Remote Addressables Loader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &3679338208945242195
+--- !u!4 &7751665578971614947
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 884400809045876616}
+  m_GameObject: {fileID: 757073618972489815}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -714,18 +1014,24 @@ Transform:
   m_Children: []
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6116073360624942682
+--- !u!114 &2588507896834183197
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 884400809045876616}
+  m_GameObject: {fileID: 757073618972489815}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9944f2c14a5e73c43bb480a024ba4941, type: 3}
+  m_Script: {fileID: 11500000, guid: 1c99854241a21904ea8cfac932ee9899, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downloadProgressText: {fileID: 0}
+  noInternetContainer: {fileID: 0}
+  retryConnectButton: {fileID: 0}
+  maxExpectedMenuLoadTime: 0
+  loadingDuration: 0
+  fadeOutDuration: 0
 --- !u!1 &901504633059052292
 GameObject:
   m_ObjectHideFlags: 0
@@ -798,6 +1104,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Tornillos
+    Object: {fileID: 0}
+--- !u!1 &941775329938913710
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2650602578617798148}
+  - component: {fileID: 8102247808005788061}
+  m_Layer: 0
+  m_Name: Space Race
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2650602578617798148
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941775329938913710}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8102247808005788061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941775329938913710}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Space Race
+    Object: {fileID: 0}
+  - Language: French
+    Text: Course spatiale
+    Object: {fileID: 0}
+  - Language: German
+    Text: Weltraumrennen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Gara di spazio
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5B87\u5B99\u30EC\u30FC\u30B9"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC6B0\uC8FC \uACBD\uC8FC"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Corrida espacial
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041A\u043E\u0441\u043C\u0438\u0447\u0435\u0441\u043A\u0430\u044F \u0433\u043E\u043D\u043A\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Carrera espacial
     Object: {fileID: 0}
 --- !u!1 &956359563507629719
 GameObject:
@@ -1492,6 +1871,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: De acuerdo
     Object: {fileID: 0}
+--- !u!1 &1825968734387741660
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2932449433464804207}
+  - component: {fileID: 3686018031287410725}
+  m_Layer: 0
+  m_Name: Chest Level
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2932449433464804207
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825968734387741660}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3686018031287410725
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1825968734387741660}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Chest Level
+    Object: {fileID: 0}
+  - Language: French
+    Text: Niveau de poitrine
+    Object: {fileID: 0}
+  - Language: German
+    Text: Brustniveau
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Livello toracico
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u80F8\u90E8\u30EC\u30D9\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC00\uC2B4 \uC218\uC900"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "N\xEDvel de peito"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C \u0433\u0440\u0443\u0434\u0438"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Nivel del pecho
+    Object: {fileID: 0}
 --- !u!1 &1884693829514517870
 GameObject:
   m_ObjectHideFlags: 0
@@ -1786,6 +2238,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: x{value} recompensa
+    Object: {fileID: 0}
+--- !u!1 &2345853132251907649
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7155741436982547562}
+  - component: {fileID: 5051697088138626032}
+  m_Layer: 0
+  m_Name: Star Tournament
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7155741436982547562
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2345853132251907649}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5051697088138626032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2345853132251907649}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Star Tournament
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Tournoi \xE9toile"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Star -Turnier
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Torneo a stella
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30BF\u30FC\u30C8\u30FC\u30CA\u30E1\u30F3\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2A4\uD0C0 \uD1A0\uB108\uBA3C\uD2B8"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Torneio de estrela
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0432\u0435\u0437\u0434\u043D\u044B\u0439 \u0442\u0443\u0440\u043D\u0438\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Torneo estelar
     Object: {fileID: 0}
 --- !u!1 &2348540516113918591
 GameObject:
@@ -2294,6 +2819,7 @@ MonoBehaviour:
   closePopupSoundPrefab: {fileID: 7606835583939712495, guid: 3bb1b26f373872649ad66276977066b0, type: 3}
   unlockAdsScrewBoxSoundPrefab: {fileID: 7606835583939712495, guid: 63f6778fb6b280a499f4ce3c4efab9e6, type: 3}
   clearScrewPortsSoundPrefab: {fileID: 7606835583939712495, guid: 3734458f6d3896141824ba0b0e6dbdbd, type: 3}
+  countingTimeSoundPrefab: {fileID: 7606835583939712495, guid: fc229fe5c7f1d3344b2958261610abf8, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -3417,6 +3943,82 @@ MonoBehaviour:
   - Language: Spanish
     Text: Tornillo
     Object: {fileID: 0}
+--- !u!1 &4159413850102709646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 141830119470058027}
+  - component: {fileID: 8149607888445481170}
+  m_Layer: 0
+  m_Name: Unlock All Screw Boxes Permanently
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &141830119470058027
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4159413850102709646}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8149607888445481170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4159413850102709646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock All Screw Boxes <color=#AF5936>Permanently</color>!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9verrouillez en permanence toutes les bo\xEEtes \xE0 vis!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schalte alle Schraubenkisten dauerhaft frei!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca tutte le scatole a vite in modo permanente!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3059\u3079\u3066\u306E\u30CD\u30B8\u30DC\u30C3\u30AF\u30B9\u306E\u30ED\u30C3\u30AF\u3092\u6C38\u4E45\u306B\u89E3\u9664\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBAA8\uB4E0 \uB098\uC0AC \uC0C1\uC790\uB97C \uC601\uAD6C\uC801\uC73C\uB85C
+      \uC7A0\uAE08 \uD574\uC81C\uD558\uC2ED\uC2DC\uC624!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desbloqueie todas as caixas de parafusos permanentemente!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0439\u0442\u0435
+      \u0432\u0441\u0435 \u0432\u0438\u043D\u0442\u043E\u0432\u044B\u0435 \u044F\u0449\u0438\u043A\u0438
+      \u043D\u0430\u0432\u0441\u0435\u0433\u0434\u0430!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Desbloquee todas las cajas de tornillo de forma permanente!"
+    Object: {fileID: 0}
 --- !u!1 &4213218163812937229
 GameObject:
   m_ObjectHideFlags: 0
@@ -3426,9 +4028,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5374378525236721376}
-  - component: {fileID: 4423873231986469795}
+  - component: {fileID: 6115126687855792712}
   m_Layer: 0
-  m_Name: GooglePlayGamesSignInManager
+  m_Name: SignInManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3449,7 +4051,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4423873231986469795
+--- !u!114 &6115126687855792712
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4500,6 +5102,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Agregar agujero
     Object: {fileID: 0}
+--- !u!1 &5502802275755428258
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3756439636338471250}
+  - component: {fileID: 4887625146966181101}
+  m_Layer: 0
+  m_Name: Gold Pass
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3756439636338471250
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5502802275755428258}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4887625146966181101
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5502802275755428258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Gold Pass
+    Object: {fileID: 0}
+  - Language: French
+    Text: Passe d'or
+    Object: {fileID: 0}
+  - Language: German
+    Text: Gold Pass
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pass d'oro
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B4\u30FC\u30EB\u30C9\u30D1\u30B9"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uACE8\uB4DC \uD328\uC2A4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Passe de ouro
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u043E\u043B\u043E\u0442\u043E\u0439 \u043F\u0440\u043E\u0445\u043E\u0434"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Pase de oro
+    Object: {fileID: 0}
 --- !u!1 &5558069693773874823
 GameObject:
   m_ObjectHideFlags: 0
@@ -4625,6 +5300,21 @@ Transform:
   - {fileID: 5968615087854098956}
   - {fileID: 1013713267517054520}
   - {fileID: 8459210492195847843}
+  - {fileID: 8296790618901653154}
+  - {fileID: 3171382905226789307}
+  - {fileID: 141830119470058027}
+  - {fileID: 2932449433464804207}
+  - {fileID: 2677290191527029431}
+  - {fileID: 7179187797751047101}
+  - {fileID: 7430420593622774833}
+  - {fileID: 1686278075662265061}
+  - {fileID: 2650602578617798148}
+  - {fileID: 3756439636338471250}
+  - {fileID: 7367402812740906260}
+  - {fileID: 3647435359176526275}
+  - {fileID: 8310468995580669769}
+  - {fileID: 7155741436982547562}
+  - {fileID: 3047985053959780477}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -5280,6 +5970,153 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "Tabla de clasificaci\xF3n"
+    Object: {fileID: 0}
+--- !u!1 &5825909724513701167
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7367402812740906260}
+  - component: {fileID: 7833387808674413433}
+  m_Layer: 0
+  m_Name: Daily Offer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7367402812740906260
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825909724513701167}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7833387808674413433
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5825909724513701167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Daily Offer
+    Object: {fileID: 0}
+  - Language: French
+    Text: Offre quotidienne
+    Object: {fileID: 0}
+  - Language: German
+    Text: "T\xE4gliches Angebot"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Offerta quotidiana
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6BCE\u65E5\u306E\u30AA\u30D5\u30A1\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB9E4\uC77C \uC81C\uC548"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Oferta di\xE1ria"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0436\u0435\u0434\u043D\u0435\u0432\u043D\u043E\u0435 \u043F\u0440\u0435\u0434\u043B\u043E\u0436\u0435\u043D\u0438\u0435"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Oferta diaria
+    Object: {fileID: 0}
+--- !u!1 &5847084916805602033
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3647435359176526275}
+  - component: {fileID: 2706810274536811099}
+  m_Layer: 0
+  m_Name: Weekly Challenge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3647435359176526275
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5847084916805602033}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2706810274536811099
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5847084916805602033}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Weekly Challenge
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9fi hebdomadaire"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xF6chentliche Herausforderung"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sfida settimanale
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6BCE\u9031\u306E\u30C1\u30E3\u30EC\u30F3\u30B8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC8FC\uAC04 \uB3C4\uC804"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desafio semanal
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0415\u0436\u0435\u043D\u0435\u0434\u0435\u043B\u044C\u043D\u044B\u0439
+      \u0432\u044B\u0437\u043E\u0432"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Desaf\xEDo semanal"
     Object: {fileID: 0}
 --- !u!1 &6029989215894385043
 GameObject:
@@ -6371,11 +7208,11 @@ Transform:
   - {fileID: 2382114561705044355}
   - {fileID: 4490029826336158445}
   - {fileID: 2368289629660575849}
-  - {fileID: 3679338208945242195}
   - {fileID: 7430847053776927505}
   - {fileID: 5812160801231827010}
   - {fileID: 3442741769211523240}
   - {fileID: 6629955821744465093}
+  - {fileID: 7751665578971614947}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7479835907961905004
@@ -6994,6 +7831,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Exitoso
     Object: {fileID: 0}
+--- !u!1 &7907887170136618835
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8310468995580669769}
+  - component: {fileID: 5832194850529758514}
+  m_Layer: 0
+  m_Name: Star Chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8310468995580669769
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7907887170136618835}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5832194850529758514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7907887170136618835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Star Chest
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Coffre \xE9toil\xE9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Sternruhe
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cassa a stella
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30BF\u30FC\u30C1\u30A7\u30B9\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBCC4 \uC0C1\uC790"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Peito estrela
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0432\u0435\u0437\u0434\u043D\u044B\u0439 \u0441\u0443\u043D\u0434\u0443\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cofre de estrella
+    Object: {fileID: 0}
 --- !u!1 &7915355799277270204
 GameObject:
   m_ObjectHideFlags: 0
@@ -7534,6 +8444,156 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &8343067938292222626
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3047985053959780477}
+  - component: {fileID: 4811910300670954188}
+  m_Layer: 0
+  m_Name: Log in for 7 days to unlock a special chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3047985053959780477
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343067938292222626}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4811910300670954188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8343067938292222626}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Log in for 7 days to unlock a special chest!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Connectez-vous pendant 7 jours pour d\xE9bloquer un coffre sp\xE9cial!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Melden Sie sich 7 Tage lang an, um eine besondere Truhe freizuschalten!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Accedi per 7 giorni per sbloccare un petto speciale!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u7279\u5225\u306A\u30C1\u30A7\u30B9\u30C8\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3059\u308B\u305F\u3081\u306B7\u65E5\u9593\u30ED\u30B0\u30A4\u30F3\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD2B9\uBCC4\uD55C \uAC00\uC2B4\uC744 \uC7A0\uAE08 \uD574\uC81C\uD558\uB824\uBA74
+      7 \uC77C \uB3D9\uC548 \uB85C\uADF8\uC778\uD558\uC2ED\uC2DC\uC624!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Fa\xE7a login por 7 dias para desbloquear um ba\xFA especial!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u043E\u0439\u0434\u0438\u0442\u0435 \u0432 \u0442\u0435\u0447\u0435\u043D\u0438\u0435
+      7 \u0434\u043D\u0435\u0439, \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u043E\u0441\u043E\u0431\u044B\u0439 \u0441\u0443\u043D\u0434\u0443\u043A!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Inicie sesi\xF3n durante 7 d\xEDas para desbloquear un cofre especial!"
+    Object: {fileID: 0}
+--- !u!1 &8363598514103339574
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8296790618901653154}
+  - component: {fileID: 8090649618883045938}
+  m_Layer: 0
+  m_Name: Unlock All Screw Boxes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8296790618901653154
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363598514103339574}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8090649618883045938
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8363598514103339574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock All Screw Boxes!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9verrouillez toutes les bo\xEEtes \xE0 vis!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Schalten Sie alle Schraubenkisten frei!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca tutte le scatole a vite!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3059\u3079\u3066\u306E\u30B9\u30AF\u30EA\u30E5\u30FC\u30DC\u30C3\u30AF\u30B9\u306E\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3057\u3066\u304F\u3060\u3055\u3044\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBAA8\uB4E0 \uB098\uC0AC \uC0C1\uC790 \uC7A0\uAE08 \uD574\uC81C!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Desbloqueie todas as caixas de parafusos!
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u0443\u0439\u0442\u0435
+      \u0432\u0441\u0435 \u0432\u0438\u043D\u0442\u043E\u0432\u044B\u0435 \u044F\u0449\u0438\u043A\u0438!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Desbloquee todas las cajas de tornillo!"
+    Object: {fileID: 0}
 --- !u!1 &8492624515224176491
 GameObject:
   m_ObjectHideFlags: 0
@@ -7798,6 +8858,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Hogar
+    Object: {fileID: 0}
+--- !u!1 &8951160080346720416
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1686278075662265061}
+  - component: {fileID: 551190106311486471}
+  m_Layer: 0
+  m_Name: Medal Tournament
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1686278075662265061
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8951160080346720416}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &551190106311486471
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8951160080346720416}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Medal Tournament
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Tournoi de m\xE9daille"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Medaillen -Turnier
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Torneo di medaglia
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30E1\u30C0\u30EB\u30C8\u30FC\u30CA\u30E1\u30F3\u30C8"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBA54\uB2EC \uD1A0\uB108\uBA3C\uD2B8"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Torneio de medalhas
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041C\u0435\u0434\u0430\u043B\u044C \u0422\u0443\u0440\u043D\u0438\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Torneo de medallas
     Object: {fileID: 0}
 --- !u!1 &8993136306486284365
 GameObject:

@@ -22,8 +22,10 @@ public static class GamePersistentVariable
     public static bool isFreshLevel;
     public static bool isLoadingOldLevelState;
     public static bool isPreventLoadLevelData;
+    public static bool isRemoteLevelsDownloaded;
     public static int numScrewBoxUnlocked;
     public static int numOutsideScrew;
+    public static int numHolesAdded;
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial;
     public static Dictionary<int, List<Transform>> pieceDependencies;
@@ -66,10 +68,36 @@ public static class GamePersistentVariable
 
     #region ADS
     public static bool remoteConfigIsShowMREC;
+    public static int bannerCooldown = 30;
     #endregion
 
     #region IAP
     public static string IAPLocation;
     public static int IAPAddition;
+    public static bool isUnlockedAllScrewBoxes;
+    #endregion
+
+    #region LEADERBOARD
+    public static int selectedCountryIndex;
+    public static GameEnum.LeaderboardScope leaderboardScope;
+    #endregion
+
+    #region DAILY REWARD
+    public static int currentDailyRewardIndex;
+    public static bool isCurrentDailyRewardIndexLoaded;
+    #endregion
+
+    #region GOLD PASS
+    public static bool isGoldPassUnlocked;
+    public static int goldPassMultiplier = 10;
+    public static GoldPassData goldPassData;
+    #endregion
+
+    #region MEDAL TOURNAMENT
+    public static MedalTournamentData medalTournamentData;
+    #endregion
+
+    #region WEEKLY CHALLENGE
+    public static WeeklyChallengeData weeklyChallengeData;
     #endregion
 }

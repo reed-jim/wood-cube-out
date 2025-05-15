@@ -420,7 +420,9 @@ public class FirebaseConfig
     public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
     public const string LEVEL_4_VARIANT = "level_4_variant";
     public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
+    public const string IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION = "is_show_double_screw_boxes_suggestion";
     public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
+    public const string IS_SHOW_TUTORIAL_LEVEL_1 = "is_show_tutorial_level_1";
     public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
     public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
     public const string IAP_SUGGESTION_PACKAGE_INDEX = "iap_suggestion_package_index";
@@ -431,6 +433,9 @@ public class FirebaseConfig
     public const string TARGET_FPS = "target_fps";
     public const string IS_PLAY_BOX_COMPLETE_FX = "is_play_box_complete_fx";
     public const string IS_ENABLE_LOAD_LEVEL_PROGRESS = "is_enable_load_level_progress";
+    public const string REMOTE_CONFIG_LEVEL_LIST = "remote_config_level_list";
+    public const string DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS = "difficulty_weight_group_of_five_levels";
+    public const string BANNER_COOLDOWN = "banner_cooldown";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

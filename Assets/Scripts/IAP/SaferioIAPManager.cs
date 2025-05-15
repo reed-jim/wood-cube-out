@@ -24,6 +24,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
     #region EVENT
     public static event Action iapProductPurchasedCompletedEvent;
     public static event Action removeAdPurchasedCompletedEvent;
+    public static event Action unlockScrewBoxesPurchasedCompletedEvent;
     public static event Action<int> collectCoinEvent;
     public static event Action<string, string> updatePriceEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
@@ -39,9 +40,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         RemoveAdPopup.buyIAPEvent += BuyProduct;
         IAPReviewPopup.buyIAPEvent += BuyProduct;
         IAPSuggestionPopup.buyIAPEvent += BuyProduct;
+        UnlockAllScrewBoxesForeverPopup.buyIAPEvent += BuyProduct;
+        DailyOfferPopup.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
+        IAPSuggestionPopup.requestFetchIAPPrice += FetchLocalizedPrice;
+        UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
+        DailyOfferPopup.requestFetchIAPPrice += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -74,9 +80,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         RemoveAdPopup.buyIAPEvent -= BuyProduct;
         IAPReviewPopup.buyIAPEvent -= BuyProduct;
         IAPSuggestionPopup.buyIAPEvent -= BuyProduct;
+        UnlockAllScrewBoxesForeverPopup.buyIAPEvent -= BuyProduct;
+        DailyOfferPopup.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
+        IAPSuggestionPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
+        UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
+        DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
     }
 
     private void Init()
@@ -257,6 +268,17 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             AdmobAdsMax.Instance.DestroyBanner();
 
                             UserData.IsRemoveAds = true;
+                        }
+
+                        if (productData.IsUnlockAllScrewBoxes)
+                        {
+                            DataUtility.Save(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, true);
+
+                            GamePersistentVariable.isUnlockedAllScrewBoxes = true;
+
+                            GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
+
+                            unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
                         }
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);

@@ -700,7 +700,8 @@ public enum ActionWatchVideo
     UnlockScrewBox,
     SkipLevel,
     MultiplyCoinWinLevel,
-    BoosterSuggestion
+    BoosterSuggestion,
+    ClaimDoubleScrewBoxes
 }
 
 public enum ActionShowInter

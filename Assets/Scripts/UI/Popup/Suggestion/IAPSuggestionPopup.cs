@@ -24,6 +24,7 @@ public class IAPSuggestionPopup : BasePopup
     private bool _isRemoveAds;
 
     public static event Action<string> buyIAPEvent;
+    public static event Action requestFetchIAPPrice;
 
     protected override void MoreActionInAwake()
     {
@@ -65,6 +66,8 @@ public class IAPSuggestionPopup : BasePopup
         {
             return;
         }
+
+        requestFetchIAPPrice?.Invoke();
 
         int coinQuantity = packageData.CoinQuantity;
 

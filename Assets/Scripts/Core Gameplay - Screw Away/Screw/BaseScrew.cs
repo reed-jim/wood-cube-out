@@ -172,6 +172,11 @@ public class BaseScrew : MonoBehaviour, IScrew
         MoreLogicInAwake();
     }
 
+    void Start()
+    {
+        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
+    }
+
     void OnDestroy()
     {
         ScrewBoxManager.looseScrewEvent -= Loose;
@@ -283,13 +288,15 @@ public class BaseScrew : MonoBehaviour, IScrew
 
             looseScrewFxMain.startColor = 1.2f * factionColor;
             ringFxMain.startColor = 1.2f * factionColor;
+            ringFxMain.startSize = 1.2f * transform.lossyScale.x;
 
             looseScrewFx.gameObject.SetActive(true);
+            looseScrewFx.transform.SetParent(transform.parent);
 
             // looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
             looseScrewFx.transform.rotation = transform.rotation;
-
             looseScrewFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
+
             ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
 
             looseScrewFx.Play();
@@ -311,36 +318,53 @@ public class BaseScrew : MonoBehaviour, IScrew
             // _tweens.Add(Tween.Scale(transform, initialScale, duration: 0.3f));
         }
 
+        transform.SetParent(screwBoxSlot.transform);
+
+        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
+        _tweens.Add(Tween.LocalRotation(
+                            transform, transform.localEulerAngles - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
+                            duration: durationMoveOut / 2, ease: Ease.Linear
+                        ));
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.Linear).OnComplete(() =>
         {
             _tweens.Add(Tween.Delay(duration: durationDelay).OnComplete(() =>
             {
-                transform.SetParent(screwBoxSlot.transform);
+                // transform.SetParent(screwBoxSlot.transform);
 
                 _isRotating = false;
 
                 float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
                 timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
+                Vector3 preFinalLocalPosition = new Vector3(0, 0.3f, -24f);
                 Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.2f);
                 _localRotationOnScrewSlot = new Vector3(-30f, 180 + 0f, 0);
 
                 if (screwBoxSlot.IsScrewPort)
                 {
+                    preFinalLocalPosition = new Vector3(0, 0.3f, -4f);
                     finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
                     _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
                 }
 
-                _tweens.Add(Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-                _tweens.Add(Tween.Scale(transform, 1.3f * scaleOnScrewBox, duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
-                _tweens.Add(Tween.LocalPosition(transform, new Vector3(0, 0.4f, -1.6f), duration: timeMultiplier * durationMoveToScrewPort, ease: Ease.Linear)
+                float durationMultiplier = Vector3.Distance(finalLocalPosition, transform.localPosition) / 10f;
+
+                durationMultiplier = Mathf.Clamp(durationMultiplier, 0.6f, 1);
+
+                _tweens.Add(
+                    Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot), duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear));
+                _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
                 .OnComplete(() =>
                 {
+                    transform.localPosition = transform.localPosition.ChangeZ(-1.6f);
+                    // transform.localPosition = new Vector3(0, 0.4f, -1.6f);
+
                     _tweens.Add(Tween.Delay(duration: 0)
                     .OnComplete(() =>
                     {
-                        _isRotating = true;
-                        rotateSpeed *= 2;
+                        // _isRotating = false;
+                        // rotateSpeed *= 2;
 
                         if (!GamePersistentVariable.isSoundTightenScrewPlaying && !_isInScrewPort && !_isOutsideWithNoScrewBox)
                         {
@@ -349,14 +373,33 @@ public class BaseScrew : MonoBehaviour, IScrew
                             GamePersistentVariable.isSoundTightenScrewPlaying = true;
                         }
 
-                        _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
-                        .OnComplete(() =>
-                        {
-                            _isRotating = false;
-                            rotateSpeed = _initialRotateSpeed;
-                            _isRotatingToCorrectAngleOnScrewBox = true;
-                        }));
-                        _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationTightenScrewPort, ease: Ease.Linear));
+                        // _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
+                        // .OnComplete(() =>
+                        // {
+                        //     _isRotating = false;
+                        //     rotateSpeed = _initialRotateSpeed;
+                        //     _isRotatingToCorrectAngleOnScrewBox = true;
+                        // }));
+
+                        // transform.eulerAngles = _localRotationOnScrewSlot - new Vector3(0, 0, 120);
+                        // _tweens.Add(Tween.LocalRotation(
+                        //     transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180),
+                        //     duration: durationTightenScrewPort / 2, ease: Ease.Default
+                        // )
+                        // .OnComplete(() =>
+                        // {
+                        //     _tweens.Add(Tween.LocalRotation(
+                        //         transform, _localRotationOnScrewSlot - new Vector3(0, 0, 360),
+                        //         duration: durationTightenScrewPort / 2, ease: Ease.Default
+                        //     ));
+                        // })
+                        // );
+
+                        _tweens.Add(Tween.LocalRotation(
+                            transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
+                            duration: durationTightenScrewPort / 2, ease: Ease.Linear
+                        ));
+                        // _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationTightenScrewPort, ease: Ease.Default));
                         _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.Linear)
                             .OnComplete(() =>
                             {
@@ -419,8 +462,9 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         if (joint != null)
         {
+            joint.breakForce = 0;
+
             Destroy(joint);
-            // joint.breakForce = 0;
 
             breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
         }

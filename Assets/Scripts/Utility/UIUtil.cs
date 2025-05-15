@@ -503,7 +503,12 @@ public static class UIUtil
 
     public static void SetSizeX(RectTransform target, float width)
     {
-        target.sizeDelta = new Vector2(width, target.sizeDelta.x);
+        target.sizeDelta = new Vector2(width, target.sizeDelta.y);
+    }
+
+    public static void SetSizeY(RectTransform target, float height)
+    {
+        target.sizeDelta = new Vector2(target.sizeDelta.x, height);
     }
 
     public static void SetSizeKeepRatioX(Image target, float height)

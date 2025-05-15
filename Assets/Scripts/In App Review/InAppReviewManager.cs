@@ -1,6 +1,5 @@
 using System.Collections;
 using Google.Play.Review;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class InAppReviewManager : MonoBehaviour
@@ -11,22 +10,22 @@ public class InAppReviewManager : MonoBehaviour
     private Coroutine _coroutine;
 #endif
 
-    void Awake()
-    {
-        RatePopup.launchInAppReviewEvent += RateAndReview;
-    }
+//     void Awake()
+//     {
+//         RatePopup.launchInAppReviewEvent += RateAndReview;
+//     }
 
-    private void Start()
-    {
-#if UNITY_ANDROID
-        _coroutine = StartCoroutine(InitReview());
-#endif
-    }
+//     private void Start()
+//     {
+// #if UNITY_ANDROID
+//         _coroutine = StartCoroutine(InitReview());
+// #endif
+//     }
 
-    void OnDestroy()
-    {
-        RatePopup.launchInAppReviewEvent += RateAndReview;
-    }
+//     void OnDestroy()
+//     {
+//         RatePopup.launchInAppReviewEvent += RateAndReview;
+//     }
 
     public void RateAndReview()
     {

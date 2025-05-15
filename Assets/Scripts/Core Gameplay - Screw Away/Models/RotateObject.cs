@@ -8,42 +8,34 @@ public class RotateObject : MonoBehaviour
 
     private float _pitch;
     private float _yaw;
-    private Quaternion _targetRotation;
+    private bool _isSwiping;
     private bool _isRotating;
     private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
     public Transform cloneToCalculateRotation;
 
-    #region ACCELERATE
-    private float _acceleratedMultiplier;
-    private float _resetAccelerationTime;
-    #endregion
-
-    #region CONST
-    private const float ACCELERATE_RATE = 0.04f;
-    private const float MAX_ACCELERATE_MULTIPLIER = 2.5f;
-    private const float MAX_TICK_RESET_ACCELERATE = 6;
-    #endregion
-
     void Awake()
     {
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
         SwipeGesture.swipeGestureEvent += Rotate;
 
-        rotateSpeedMultiplier = 0.005f;
-        // _acceleratedMultiplier = 1;
+        rotateSpeedMultiplier = 0.006f;
 
         if (!isDisableAutoRotatingAtStart)
         {
-            // _isAutoRotating = true;
-
             _remainingTimeToAutoRotate = 2;
 
             StartCoroutine(AutoRotating());
         }
 
         StartCoroutine(Rotating());
+    }
+
+    void OnDestroy()
+    {
+        ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
+        SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
     public void AssignDummyClone(Transform clone)
@@ -53,22 +45,12 @@ public class RotateObject : MonoBehaviour
 
     private IEnumerator Rotating()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 60f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 80f);
 
         while (true)
         {
-            if (Mathf.Abs(_pitch) > 0.005f || Mathf.Abs(_yaw) > 0.005f)
+            if (_isSwiping || _isAutoRotating)
             {
-                // Quaternion cachedRotation = transform.rotation;
-
-                // transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-                // transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
-
-                // _targetRotation = transform.rotation;
-                // transform.rotation = cachedRotation;
-
-                // cloneToCalculateRotation.rotation = transform.rotation;
-
                 if (!_isRotating)
                 {
                     cloneToCalculateRotation.rotation = transform.rotation;
@@ -76,8 +58,6 @@ public class RotateObject : MonoBehaviour
 
                 cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
                 cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
-
-                // _targetRotation = cloneToCalculateRotation.rotation;
 
                 _rotateLerpStep = 0;
                 _isRotating = true;
@@ -92,6 +72,7 @@ public class RotateObject : MonoBehaviour
                 if (_rotateLerpStep >= 3)
                 {
                     _rotateLerpStep = 0;
+                    _isSwiping = false;
                     _isRotating = false;
 
                     cloneToCalculateRotation.rotation = transform.rotation;
@@ -112,75 +93,15 @@ public class RotateObject : MonoBehaviour
         }
     }
 
-    // void Update()
-    // {
-    //     if (Mathf.Abs(_pitch) > 0.005f || Mathf.Abs(_yaw) > 0.005f)
-    //     {
-    //         Quaternion cachedRotation = transform.rotation;
-
-    //         transform.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-    //         transform.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
-
-    //         _targetRotation = transform.rotation;
-    //         transform.rotation = cachedRotation;
-
-    //         _rotateLerpStep = 0;
-    //         _isRotating = true;
-    //     }
-
-    //     if (_isRotating)
-    //     {
-    //         if (_rotateLerpStep % 6 == 0)
-    //         {
-    //             transform.rotation = Quaternion.Lerp(transform.rotation, _targetRotation, 1 / 3f);
-
-    //             Debug.Log("SAFERIO " + _targetRotation + "/" + transform.rotation);
-
-    //             // _rotateLerpStep++;
-
-    //             // if (_rotateLerpStep >= 3)
-    //             // {
-    //             //     _rotateLerpStep = 0;
-    //             //     _isRotating = false;
-    //             // }
-    //         }
-
-    //         _rotateLerpStep++;
-
-    //         if (_rotateLerpStep >= 18)
-    //         {
-    //             _rotateLerpStep = 0;
-    //             _isRotating = false;
-    //         }
-    //     }
-
-    //     if (!_isAutoRotating)
-    //     {
-    //         _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
-    //         _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
-    //     }
-    // }
-
-    void OnDestroy()
-    {
-        ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
-        SwipeGesture.swipeGestureEvent -= Rotate;
-    }
-
     private void Rotate(Vector2 direction)
     {
         _pitch = direction.y;
         _yaw = -direction.x * 1.15f;
 
-        // _pitch = Mathf.Clamp(_pitch, -100, 100);
-        // _yaw = Mathf.Clamp(_yaw, -100, 100);
-
+        _isSwiping = true;
         _isAutoRotating = false;
 
         _remainingTimeToAutoRotate = 10;
-        // // _acceleratedMultiplier += ACCELERATE_RATE;
-        // // _acceleratedMultiplier = Mathf.Min(_acceleratedMultiplier, MAX_ACCELERATE_MULTIPLIER);
-        // _resetAccelerationTime = 0;
     }
 
     private IEnumerator AutoRotating()
@@ -193,12 +114,7 @@ public class RotateObject : MonoBehaviour
         {
             if (_isAutoRotating)
             {
-                // if (_yaw != 1)
-                // {
-                //     // _pitch = 1;
-                //     _yaw = 0.5f;
-                //     // _yaw = -normalizedDirection.x;
-                // }
+
             }
             else
             {
