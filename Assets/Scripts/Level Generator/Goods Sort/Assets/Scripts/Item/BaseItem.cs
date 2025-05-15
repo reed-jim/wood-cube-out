@@ -114,7 +114,7 @@ public class BaseItem : MonoBehaviour
 
             shelf.AddItem(this);
 
-            float finalX = -0.35f;
+            float finalX = -0.9f;
             float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
             float nearestX = currentNearestX;
 
@@ -126,19 +126,23 @@ public class BaseItem : MonoBehaviour
                 finalX = 0;
             }
 
-            currentNearestX = Mathf.Abs(0.35f - transform.localPosition.x);
+            currentNearestX = Mathf.Abs(0.9f - transform.localPosition.x);
 
             if (currentNearestX < nearestX)
             {
-                finalX = 0.35f;
+                finalX = 0.9f;
             }
 
-            Tween.LocalPosition(transform, new Vector3(finalX, -0.55f, -1), duration: 0.3f)
+            Tween.LocalPosition(transform, new Vector3(finalX, -0.7f, -1), duration: 0.3f)
             .OnComplete(() =>
             {
-                shelf.CheckMatchedItems();
+                Tween.Scale(transform, 1.1f * transform.localScale, duration: 0.15f, cycles: 2, cycleMode: CycleMode.Yoyo)
+                .OnComplete(() =>
+                {
+                    shelf.CheckMatchedItems();
 
-                _isSnapping = false;
+                    _isSnapping = false;
+                });
             });
 
             _currentShelf = shelf;
