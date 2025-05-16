@@ -104,7 +104,7 @@ public class GoodsSortLevelTool : EditorWindow
 
     private Dictionary<int, GameObject> GenerateShelves()
     {
-        Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
+        Vector3 tileSize = shelfPrefab.GetComponent<BoxCollider2D>().size;
 
         Dictionary<int, GameObject> generatedShelves = new Dictionary<int, GameObject>();
 
@@ -157,7 +157,7 @@ public class GoodsSortLevelTool : EditorWindow
 
     private void GenerateItemsAllLayers(int maxLayer, int numShelf)
     {
-        Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
+        Vector3 tileSize = shelfPrefab.GetComponent<BoxCollider2D>().size;
 
         // Pools
         List<int> poolFactions = new List<int>();
@@ -245,12 +245,12 @@ public class GoodsSortLevelTool : EditorWindow
 
                         BaseItem item = itemObject.GetComponent<BaseItem>();
 
-                        position.x = -0.9f * (1 - k);
+                        position.x = -1.1f * (1 - k);
                         position.y = -0.7f;
                         position.z = -1 + 0.1f * randomLayer;
 
                         item.transform.localPosition = position;
-                        item.transform.localScale = 0.7f * Vector3.one;
+                        item.transform.localScale = 0.8f * Vector3.one;
 
                         poolFactions.Remove(randomFaction);
                         poolLayers.Remove(randomLayer);

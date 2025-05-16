@@ -25,7 +25,7 @@ public class BaseShelf : MonoBehaviour
 
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i].LAYER > 0)
+            if (items[i].LAYER > 0 || !items[i].IsActive())
             {
                 continue;
             }
@@ -81,6 +81,14 @@ public class BaseShelf : MonoBehaviour
         }
 
         return numItem;
+    }
+
+    public void TryBringUpAllItemsLayer()
+    {
+        if (GetRemainingItemsOfLayer(0) == 1)
+        {
+            BringUpAllItemsLayer();
+        }
     }
 
     private void BringUpAllItemsLayer()

@@ -98,7 +98,7 @@ public class BaseItem : MonoBehaviour
 
                 if (otherItem != null)
                 {
-                    if (otherItem.LAYER == 0)
+                    if (otherItem.IsActive() && otherItem.LAYER == 0)
                     {
                         isValid = false;
 
@@ -110,11 +110,12 @@ public class BaseItem : MonoBehaviour
 
         if (isFound && isValid)
         {
+            transform.parent.GetComponent<BaseShelf>().TryBringUpAllItemsLayer();
             transform.SetParent(shelf.transform);
 
             shelf.AddItem(this);
 
-            float finalX = -0.9f;
+            float finalX = -1.1f;
             float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
             float nearestX = currentNearestX;
 
@@ -126,11 +127,11 @@ public class BaseItem : MonoBehaviour
                 finalX = 0;
             }
 
-            currentNearestX = Mathf.Abs(0.9f - transform.localPosition.x);
+            currentNearestX = Mathf.Abs(1.1f - transform.localPosition.x);
 
             if (currentNearestX < nearestX)
             {
-                finalX = 0.9f;
+                finalX = 1.1f;
             }
 
             Tween.LocalPosition(transform, new Vector3(finalX, -0.7f, -1), duration: 0.3f)
@@ -177,5 +178,10 @@ public class BaseItem : MonoBehaviour
     public void Snap()
     {
 
+    }
+
+    public bool IsActive()
+    {
+        return gameObject.activeInHierarchy;
     }
 }
