@@ -13,6 +13,7 @@ public class BaseItem : MonoBehaviour
     private bool _isStopping;
     private bool _isMoving;
     [SerializeField] private int _layer;
+    [SerializeField] private int _slot;
     private Vector3 _offsetToTouch;
     private Vector3 _lastSnapPosition;
 
@@ -25,6 +26,11 @@ public class BaseItem : MonoBehaviour
         get => _spriteRenderer;
     }
 
+    public BoxCollider2D BoxCollider2D
+    {
+        get => _boxCollider;
+    }
+
     public string TYPE
     {
         get => _type;
@@ -35,6 +41,12 @@ public class BaseItem : MonoBehaviour
     {
         get => _layer;
         set => _layer = value;
+    }
+
+    public int SLOT
+    {
+        get => _slot;
+        set => _slot = value;
     }
     #endregion
 
@@ -60,7 +72,10 @@ public class BaseItem : MonoBehaviour
                 _offsetToTouch = ((Vector3)position - transform.position).ChangeZ(0);
             }
 
-            transform.position = new Vector3(position.x, position.y, transform.position.z) - _offsetToTouch;
+            Vector3 newPosition = new Vector3(position.x, position.y, transform.position.z) - _offsetToTouch;
+            newPosition.z = -1.1f;
+
+            transform.position = newPosition;
         }
     }
 
@@ -98,7 +113,7 @@ public class BaseItem : MonoBehaviour
 
                 if (otherItem != null)
                 {
-                    if (otherItem.IsActive() && otherItem.LAYER == 0)
+                    if (otherItem.IsActive() && otherItem.LAYER == 0 && IsOverlapOtherItemTooMuch(otherItem))
                     {
                         isValid = false;
 
@@ -115,29 +130,22 @@ public class BaseItem : MonoBehaviour
 
             shelf.AddItem(this);
 
-            float finalX = -1.1f;
-            float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
-            float nearestX = currentNearestX;
+            Vector3 snapPosition;
+            int snapSlot;
 
-            currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
+            GetSnapInfo(out snapPosition, out snapSlot);
 
-            if (currentNearestX < nearestX)
-            {
-                nearestX = currentNearestX;
-                finalX = 0;
-            }
-
-            currentNearestX = Mathf.Abs(1.1f - transform.localPosition.x);
-
-            if (currentNearestX < nearestX)
-            {
-                finalX = 1.1f;
-            }
-
-            Tween.LocalPosition(transform, new Vector3(finalX, -0.7f, -1), duration: 0.3f)
+            Tween.LocalPosition(transform, snapPosition, duration: 0.3f)
             .OnComplete(() =>
             {
-                Tween.Scale(transform, 1.1f * transform.localScale, duration: 0.15f, cycles: 2, cycleMode: CycleMode.Yoyo)
+                Vector3 initialLocalPosition = transform.localPosition;
+                Vector3 initialScale = transform.localScale;
+
+                Tween.Custom(0, 0.1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.15f, onValueChange: newVal =>
+                {
+                    transform.localPosition = initialLocalPosition.ChangeY(initialLocalPosition.y - newVal);
+                    transform.localScale = initialScale + new Vector3(newVal, -newVal, 0);
+                })
                 .OnComplete(() =>
                 {
                     shelf.CheckMatchedItems();
@@ -170,6 +178,36 @@ public class BaseItem : MonoBehaviour
         //     });
     }
 
+    private void GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
+    {
+        float finalX = -1.1f;
+        float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
+        float nearestX = currentNearestX;
+
+        snapSlot = -1;
+
+        currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
+
+        if (currentNearestX < nearestX)
+        {
+            nearestX = currentNearestX;
+            finalX = 0;
+            snapSlot = 0;
+        }
+
+        currentNearestX = Mathf.Abs(1.1f - transform.localPosition.x);
+
+        if (currentNearestX < nearestX)
+        {
+            finalX = 1.1f;
+            snapSlot = 1;
+        }
+
+        float finalZ = -1 + 0.1f * LAYER;
+
+        snapPosition = new Vector3(finalX, -0.7f, finalZ);
+    }
+
     private void SnapToShelf()
     {
 
@@ -183,5 +221,12 @@ public class BaseItem : MonoBehaviour
     public bool IsActive()
     {
         return gameObject.activeInHierarchy;
+    }
+
+    private bool IsOverlapOtherItemTooMuch(BaseItem other)
+    {
+        Vector3 size = _spriteRenderer.bounds.size;
+
+        return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.75f * size.x;
     }
 }
