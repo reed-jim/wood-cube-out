@@ -50,7 +50,7 @@ public class BaseShelf : MonoBehaviour
         {
             for (int i = 0; i < items.Length; i++)
             {
-                if (_items[i].LAYER == 0)
+                if (items[i].LAYER == 0)
                 {
                     items[i].gameObject.SetActive(false);
                 }
