@@ -56,6 +56,10 @@ public class BaseShelf : MonoBehaviour
                 }
             }
 
+            GamePersistentVariable.numItemsLeft -= 3;
+
+            GameplayUI.Instance.UpdateNumItems();
+
             BringUpAllItemsLayer();
         }
     }

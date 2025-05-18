@@ -58,6 +58,10 @@ public class BaseItem : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider2D>();
 
         _type = _spriteRenderer.sprite.name;
+
+        GamePersistentVariable.numItemsLeft++;
+
+        GameplayUI.Instance.UpdateNumItems();
     }
 
     public void Follow(Vector2 position)
