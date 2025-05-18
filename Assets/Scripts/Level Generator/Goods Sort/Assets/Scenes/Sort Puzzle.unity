@@ -647,7 +647,7 @@ RectTransform:
   m_Father: {fileID: 528622387}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.275, y: 0.3179054}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1146,11 +1146,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.275
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3179054
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3279,6 +3279,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1507326293}
   - component: {fileID: 1507326294}
+  - component: {fileID: 1507326295}
   m_Layer: 5
   m_Name: Gameplay Screen
   m_TagString: Untagged
@@ -3326,6 +3327,19 @@ MonoBehaviour:
   localizedLevelText: {fileID: 1472340507}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+--- !u!114 &1507326295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1507326292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65bf055a79b2cfa4b8ecb85dcde680e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numItemsLeftText: {fileID: 1062364169}
 --- !u!1 &1560200952
 GameObject:
   m_ObjectHideFlags: 0

@@ -99,4 +99,10 @@ public static class GamePersistentVariable
     #region WEEKLY CHALLENGE
     public static WeeklyChallengeData weeklyChallengeData;
     #endregion
+
+
+
+    #region SORT PUZZLE
+    public static int numItemsLeft;
+    #endregion
 }
