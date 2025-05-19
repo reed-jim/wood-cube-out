@@ -127,6 +127,13 @@ public class ScrewBox : MonoBehaviour
 
             boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
+            float hidePositionY = transform.position.y + 8;
+
+            if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+            {
+                hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+            }
+
             _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
                 .OnComplete(() =>
                 {
@@ -164,6 +171,16 @@ public class ScrewBox : MonoBehaviour
 
                                 rippleFx.gameObject.SetActive(true);
                                 rippleFx.transform.position = transform.position.ChangeZ(-9);
+
+                                if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+                                {
+                                    rippleFx.transform.localScale = 0.25f * Vector3.one;
+                                }
+                                else
+                                {
+                                    rippleFx.transform.localScale = 0.5f * Vector3.one;
+                                }
+
                                 rippleFx.Play();
                             }
                         }
@@ -176,7 +193,7 @@ public class ScrewBox : MonoBehaviour
                     }
                 })
                 .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
-                .Chain(Tween.LocalPositionY(transform, transform.position.y + 8, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
+                .Chain(Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
                 {
                     screwBoxCompletedEvent?.Invoke(this);
                     spawnNewScrewBoxEvent?.Invoke();
