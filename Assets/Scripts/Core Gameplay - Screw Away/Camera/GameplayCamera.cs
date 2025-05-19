@@ -18,6 +18,7 @@ public class GameplayCamera : MonoBehaviour
     {
         LevelLoader.startLevelEvent += OnLevelStart;
         LevelLoader.setTargetOrthographicSizeEvent += SetInitialOrthographicSize;
+        MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetInitialOrthographicSize;
         PinchGesture.pinchGestureEvent += Zoom;
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
@@ -36,6 +37,7 @@ public class GameplayCamera : MonoBehaviour
     {
         LevelLoader.startLevelEvent -= OnLevelStart;
         LevelLoader.setTargetOrthographicSizeEvent -= SetInitialOrthographicSize;
+        MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetInitialOrthographicSize;
         PinchGesture.pinchGestureEvent -= Zoom;
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
