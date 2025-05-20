@@ -291,7 +291,7 @@ public class BaseScrew : MonoBehaviour, IScrew
             ringFxMain.startSize = 1.2f * transform.lossyScale.x;
 
             looseScrewFx.gameObject.SetActive(true);
-            looseScrewFx.transform.SetParent(transform.parent);
+            // looseScrewFx.transform.SetParent(transform.parent);
 
             // looseScrewFx.transform.position = transform.position + 0.7f * screwSize.z * transform.forward;
             looseScrewFx.transform.rotation = transform.rotation;
@@ -300,6 +300,15 @@ public class BaseScrew : MonoBehaviour, IScrew
             ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
 
             looseScrewFx.Play();
+
+            ringFx.transform.SetParent(transform.parent);
+
+            _tweens.Add(Tween.Delay(1).OnComplete(() =>
+            {
+                ringFx.transform.SetParent(looseScrewFx.transform);
+                ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
+                ringFx.transform.localRotation = Quaternion.identity;
+            }));
         }
         //
 
