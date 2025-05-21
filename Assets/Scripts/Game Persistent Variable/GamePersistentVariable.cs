@@ -28,6 +28,7 @@ public static class GamePersistentVariable
     public static int numHolesAdded;
     public static bool isAllowedSkipLevel;
     public static bool isPassedStepOneTutorial;
+    public static float currentTargetOrthographicSize;
     public static Dictionary<int, List<Transform>> pieceDependencies;
     public static Vector3 levelOffset;
     public static Vector3 boxForOutsideScrewScreenPosition;
@@ -99,5 +100,11 @@ public static class GamePersistentVariable
 
     #region WEEKLY CHALLENGE
     public static WeeklyChallengeData weeklyChallengeData;
+    #endregion
+
+
+
+    #region SORT PUZZLE
+    public static int numItemsLeft;
     #endregion
 }

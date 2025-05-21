@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class BaseShelf : MonoBehaviour
@@ -25,7 +26,7 @@ public class BaseShelf : MonoBehaviour
 
         for (int i = 0; i < items.Length; i++)
         {
-            if (items[i].LAYER > 0)
+            if (items[i].LAYER > 0 || !items[i].IsActive())
             {
                 continue;
             }
@@ -49,11 +50,15 @@ public class BaseShelf : MonoBehaviour
         {
             for (int i = 0; i < items.Length; i++)
             {
-                if (_items[i].LAYER == 0)
+                if (items[i].LAYER == 0)
                 {
                     items[i].gameObject.SetActive(false);
                 }
             }
+
+            GamePersistentVariable.numItemsLeft -= 3;
+
+            GameplayUI.Instance.UpdateNumItems();
 
             BringUpAllItemsLayer();
         }
@@ -81,6 +86,14 @@ public class BaseShelf : MonoBehaviour
         }
 
         return numItem;
+    }
+
+    public void TryBringUpAllItemsLayer()
+    {
+        if (GetRemainingItemsOfLayer(0) == 1)
+        {
+            BringUpAllItemsLayer();
+        }
     }
 
     private void BringUpAllItemsLayer()

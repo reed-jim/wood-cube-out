@@ -21,6 +21,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
     public static event Action disableMultiPhaseLevelUIEvent;
     public static event Action resetCameraEvent;
     public static event Action<float> zoomCameraEvent;
+    public static event Action<float> setTargetOrthographicSizeEvent;
 
     private void Awake()
     {
@@ -106,23 +107,27 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
             switchPhaseEvent?.Invoke(_currentPhase);
 
-            for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
-            {
-                if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)
-                {
-                    for (int j = 0; j < multiPhaseLevelDataContainer.Items[i].PhasesData.Length; j++)
-                    {
-                        if (multiPhaseLevelDataContainer.Items[i].PhasesData[j].phase == _currentPhase)
-                        {
-                            zoomCameraEvent?.Invoke(multiPhaseLevelDataContainer.Items[i].PhasesData[j].cameraOrthographicSize);
+            GamePersistentVariable.currentTargetOrthographicSize *= 0.6f;
 
-                            _isCameraZoomed = true;
+            setTargetOrthographicSizeEvent?.Invoke(GamePersistentVariable.currentTargetOrthographicSize);
 
-                            break;
-                        }
-                    }
-                }
-            }
+            // for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
+            // {
+            //     if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)
+            //     {
+            //         for (int j = 0; j < multiPhaseLevelDataContainer.Items[i].PhasesData.Length; j++)
+            //         {
+            //             if (multiPhaseLevelDataContainer.Items[i].PhasesData[j].phase == _currentPhase)
+            //             {
+            //                 zoomCameraEvent?.Invoke(multiPhaseLevelDataContainer.Items[i].PhasesData[j].cameraOrthographicSize);
+
+            //                 _isCameraZoomed = true;
+
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         _totalScrewLoosened++;
