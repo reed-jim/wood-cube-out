@@ -23,7 +23,6 @@ public class ScrewBox : MonoBehaviour
     [SerializeField] private float scaleDownDuration;
     [SerializeField] private float delayMoveOutDuration;
     [SerializeField] private float moveOutDuration;
-    public bool isFreezeddddd;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] protected GameSetting gameSetting;
