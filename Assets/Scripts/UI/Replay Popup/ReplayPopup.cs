@@ -61,6 +61,7 @@ public class ReplayPopup : BasePopup
     {
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
+        // don't track loop level CostCenter
         if (currentLevel.Value <= levelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Replay.ToString());
