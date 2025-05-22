@@ -57,7 +57,8 @@ public class GameEnum : MonoBehaviour
         StarterPack,
         WeekendSale,
         GoldPassIntro,
-        MedalTournamentIntro
+        MedalTournamentIntro,
+        LivesShop
     }
 
     public enum GameFaction

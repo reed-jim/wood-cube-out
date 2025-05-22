@@ -112,6 +112,11 @@ public static class GameConstants
     public static string IS_BOUGHT_HOT_DEAL = "IS_BOUGHT_HOT_DEAL";
     #endregion
 
+    #region LIVES
+    public static string USER_LIVES_DATA = "USER_LIVES_DATA";
+    public static int DEFAULT_LIVES = 5;
+    #endregion
+
     #region TRACKING
     public static string RETENTION_D = "RETENTION_D";
     public static string PREVIOUS_REVENUE_D0_D1 = "PREVIOUS_REVENUE_D0_D1";

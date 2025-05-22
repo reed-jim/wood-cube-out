@@ -436,6 +436,8 @@ public class FirebaseConfig
     public const string REMOTE_CONFIG_LEVEL_LIST = "remote_config_level_list";
     public const string DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS = "difficulty_weight_group_of_five_levels";
     public const string BANNER_COOLDOWN = "banner_cooldown";
+    public const string MAX_LIVES = "max_lives";
+    public const string REPLENISH_LIFE_TIME = "replenish_life_time";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

@@ -5315,6 +5315,7 @@ Transform:
   - {fileID: 8310468995580669769}
   - {fileID: 7155741436982547562}
   - {fileID: 3047985053959780477}
+  - {fileID: 5376511619545113346}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -7213,6 +7214,7 @@ Transform:
   - {fileID: 3442741769211523240}
   - {fileID: 6629955821744465093}
   - {fileID: 7751665578971614947}
+  - {fileID: 1892475344800608237}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7479835907961905004
@@ -7680,6 +7682,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Int\xE9ntelo de nuevo m\xE1s tarde"
     Object: {fileID: 0}
+--- !u!1 &7698604972274186501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1892475344800608237}
+  - component: {fileID: 8939273778844032502}
+  m_Layer: 0
+  m_Name: Replenish Life Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1892475344800608237
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698604972274186501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 328848638671994766}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8939273778844032502
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7698604972274186501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49ee68e79c860e9439a9f55c1eb8be02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7713222313756030727
 GameObject:
   m_ObjectHideFlags: 0
@@ -8711,6 +8757,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: COMPLETAR TAREAS EN
+    Object: {fileID: 0}
+--- !u!1 &8525126651531963436
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5376511619545113346}
+  - component: {fileID: 8201233376423593495}
+  m_Layer: 0
+  m_Name: Open
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5376511619545113346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525126651531963436}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8201233376423593495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8525126651531963436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Open
+    Object: {fileID: 0}
+  - Language: French
+    Text: Ouvrir
+    Object: {fileID: 0}
+  - Language: German
+    Text: Offen
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Aprire
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u958B\u3051\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC5F4\uB824 \uC788\uB294"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Abrir
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0442\u043A\u0440\u044B\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Abierto
     Object: {fileID: 0}
 --- !u!1 &8600851324326877528
 GameObject:
