@@ -40,6 +40,15 @@ public static class GamePersistentVariable
     public static bool isLoadingLevelInProgress;
     #endregion
 
+    #region GAME FLOW
+    public static bool isPendingReplay;
+    #endregion
+
+    #region LIVES
+    public static LivesData livesData;
+    public static bool isLevelDirty;
+    #endregion
+
     #region AUTHENTICATION
     public static string FirebaseUserId;
     #endregion
