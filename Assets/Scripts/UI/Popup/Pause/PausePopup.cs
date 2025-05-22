@@ -50,35 +50,39 @@ public class PausePopup : BasePopup
 
     private void ReturnHome()
     {
-        // avoid spamming
-        returnHomeButton.interactable = false;
-        replayLevelButton.interactable = false;
+        switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
 
-        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
+        // // avoid spamming
+        // returnHomeButton.interactable = false;
+        // replayLevelButton.interactable = false;
 
-        // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
-        {
-            SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
-        }
+        // SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        // // don't track loop level CostCenter
+        // if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        // {
+        //     SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
+        // }
+
+        // Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 
     private void Replay()
     {
-        bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
+        switchRouteEvent?.Invoke(ScreenRoute.Replay);
 
-        if (isShowInterReplayLevel)
-        {
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
-        }
-        else
-        {
-            ActualReplay();
-        }
+        // bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-        Hide();
+        // if (isShowInterReplayLevel)
+        // {
+        //     AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+        // }
+        // else
+        // {
+        //     ActualReplay();
+        // }
+
+        // Hide();
     }
 
     private void ActualReplay()

@@ -52,6 +52,7 @@ public class LevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent += Replay;
         LosePopup.replayLevelEvent += Replay;
+        ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
         DebugPopup.nextLevelEvent += NextLevel;
         DebugPopup.prevLevelEvent += PrevLevel;
@@ -75,6 +76,7 @@ public class LevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent -= Replay;
         LosePopup.replayLevelEvent -= Replay;
+        ReplayPopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
         DebugPopup.nextLevelEvent -= NextLevel;
         DebugPopup.prevLevelEvent -= PrevLevel;
