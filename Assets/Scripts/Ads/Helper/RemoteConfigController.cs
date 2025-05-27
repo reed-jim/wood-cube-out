@@ -365,6 +365,7 @@ public class RemoteConfigController : MonoBehaviour
     //     //AdmobAds.Instance.Init();
     // }
 
+    #region SAFERIO
     public static async void FetchAndActivateAsync(Task fetchTask, ConfigInfo info)
     {
         await FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync();
@@ -396,7 +397,20 @@ public class RemoteConfigController : MonoBehaviour
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);
 
         Application.targetFrameRate = targetFPS;
+
+        SetRemoteConfigRewardedAds();
     }
+
+    private static void SetRemoteConfigRewardedAds()
+    {
+        GamePersistentVariable.isEnableRewardedAds = true;
+
+        if (GamePersistentVariable.currentLevel > 20)
+        {
+            GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_AD, true);
+        }
+    }
+    #endregion
 
     //static Dictionary<string, object> defaults = new Dictionary<string, object>();
     public static void RemoteConfigFirebaseInit()
@@ -432,21 +446,4 @@ public class RemoteConfigController : MonoBehaviour
     }
 
     #endregion Private Methods
-
-    //     public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
-    //     {
-    //         var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
-    //         PlayFabClientAPI.GetStoreItems(request,
-    //            (s) =>
-    //            {
-    //                var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
-    // #if LOG_VERBOSE
-    //                Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
-    // #endif
-    //                if (data != null)
-    //                    success?.Invoke(data);
-
-    //            },
-    //             (e) => error?.Invoke(e));
-    //     }
 }
