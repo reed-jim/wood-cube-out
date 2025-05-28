@@ -5392,6 +5392,8 @@ Transform:
   - {fileID: 5376511619545113346}
   - {fileID: 6836748034581862472}
   - {fileID: 5424510332154564126}
+  - {fileID: 1224922183140775992}
+  - {fileID: 1152835480700646257}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -7317,6 +7319,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f745d8f1fe0823f478883c1b8562fc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7260605558960898279
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1224922183140775992}
+  - component: {fileID: 2447865345756560432}
+  m_Layer: 0
+  m_Name: Refill your lives
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1224922183140775992
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260605558960898279}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2447865345756560432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7260605558960898279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Refill your lives
+    Object: {fileID: 0}
+  - Language: French
+    Text: Remplissez votre vie
+    Object: {fileID: 0}
+  - Language: German
+    Text: "F\xFCllen Sie Ihr Leben nach"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Riempita le tue vite
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3042\u306A\u305F\u306E\u4EBA\u751F\u3092\u88DC\u5145\u3057\u3066\u304F\u3060\u3055\u3044"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2F9\uC2E0\uC758 \uC0B6\uC744 \uB9AC\uD544\uD558\uC2ED\uC2DC\uC624"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Reabaste\xE7a suas vidas"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043E\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u0441\u0432\u043E\u044E
+      \u0436\u0438\u0437\u043D\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Vuelva a llenar sus vidas
+    Object: {fileID: 0}
 --- !u!1 &7346891784776583298
 GameObject:
   m_ObjectHideFlags: 0
@@ -7682,6 +7758,80 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Comercio
+    Object: {fileID: 0}
+--- !u!1 &7619614315257450510
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1152835480700646257}
+  - component: {fileID: 7238308086401333498}
+  m_Layer: 0
+  m_Name: Next life time
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1152835480700646257
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619614315257450510}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7238308086401333498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7619614315257450510}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Next life time:'
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Temps \xE0 vie suivante:"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "N\xE4chstes Leben:"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Next Life Time:'
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6B21\u306E\u751F\u6DAF\uFF1A"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2E4\uC74C \uC0DD\uBA85 \uC2DC\uAC04 :"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Pr\xF3ximo hor\xE1rio da vida:"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043B\u0435\u0434\u0443\u044E\u0449\u0435\u0435 \u0432\u0440\u0435\u043C\u044F
+      \u0436\u0438\u0437\u043D\u0438:"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "La pr\xF3xima vida:"
     Object: {fileID: 0}
 --- !u!1 &7634563409212463112
 GameObject:
