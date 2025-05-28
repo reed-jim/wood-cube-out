@@ -10,8 +10,6 @@ public class LivesShopPopup : BasePopup
     [SerializeField] private Button refillByCoinButton;
     [SerializeField] private TMP_Text currentLivesText;
 
-    private LivesData _livesData;
-
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -20,6 +18,7 @@ public class LivesShopPopup : BasePopup
     public static event Action runPendingReplayCommandEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<float> updateCoinTextEvent;
+    public static event Action lackCoinReplenishLiveEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -71,7 +70,11 @@ public class LivesShopPopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
+                // In Gameplay
                 openIAPShopPopupEvent?.Invoke(ScreenRoute.LivesShop);
+
+                // In Menu
+                lackCoinReplenishLiveEvent?.Invoke();
             });
         }
     }
