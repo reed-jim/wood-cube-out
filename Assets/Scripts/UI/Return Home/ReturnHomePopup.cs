@@ -21,14 +21,23 @@ public class ReturnHomePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
+        LivesShopPopup.runPendingReturnHomeCommandEvent += ReturnHome;
+
         homeButton.onClick.AddListener(ReturnHome);
+    }
+
+    protected override void MoreActionOnDestroy()
+    {
+        LivesShopPopup.runPendingReturnHomeCommandEvent -= ReturnHome;
     }
 
     private void ReturnHome()
     {
         if (GamePersistentVariable.livesData.CurrentLives <= 0)
         {
-            switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
+            GamePersistentVariable.isPendingReturnHome = true;
+
+            SwitchRoute(ScreenRoute.LivesShop);
 
             return;
         }

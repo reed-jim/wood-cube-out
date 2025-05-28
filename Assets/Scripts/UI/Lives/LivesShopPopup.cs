@@ -16,6 +16,7 @@ public class LivesShopPopup : BasePopup
     public static event Action<int> changeLivesNumberEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action runPendingReplayCommandEvent;
+    public static event Action runPendingReturnHomeCommandEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<float> updateCoinTextEvent;
     public static event Action lackCoinReplenishLiveEvent;
@@ -83,7 +84,17 @@ public class LivesShopPopup : BasePopup
     {
         changeLivesNumberEvent?.Invoke(1);
 
-        Hide();
+        Hide(
+            onCompletedAction: () =>
+            {
+                if (GamePersistentVariable.isPendingReturnHome)
+                {
+                    runPendingReturnHomeCommandEvent?.Invoke();
+
+                    GamePersistentVariable.isPendingReturnHome = false;
+                }
+            }
+        );
 
         if (GamePersistentVariable.isPendingReplay)
         {

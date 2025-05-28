@@ -354,6 +354,8 @@ public class LevelLoader : MonoBehaviour
         startLevelEvent?.Invoke();
 
         LoadLevel();
+
+        GamePersistentVariable.isLevelDirty = false;
     }
 
     private void NextLevel()

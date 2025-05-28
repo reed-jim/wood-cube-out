@@ -18,8 +18,6 @@ public class ReplayPopup : BasePopup
     public static event Action replayLevelEvent;
     public static event Action<int> changeLivesNumberEvent;
 
-    public static event Action<ScreenRoute> switchRouteEvent;
-
     protected override void MoreActionInAwake()
     {
         LivesShopPopup.runPendingReplayCommandEvent += ActualReplay;
@@ -38,7 +36,7 @@ public class ReplayPopup : BasePopup
         {
             GamePersistentVariable.isPendingReplay = true;
 
-            switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
+            SwitchRoute(ScreenRoute.LivesShop);
 
             return;
         }

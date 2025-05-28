@@ -263,6 +263,11 @@ public class BaseScrew : MonoBehaviour, IScrew
             return;
         }
 
+        if (!GamePersistentVariable.isLevelDirty)
+        {
+            GamePersistentVariable.isLevelDirty = true;
+        }
+
         screwStartLoosenedEvent?.Invoke(gameObject.GetInstanceID());
 
         _isMoving = true;
