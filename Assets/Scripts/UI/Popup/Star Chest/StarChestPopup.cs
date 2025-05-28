@@ -7,7 +7,17 @@ public class StarChestPopup : BasePopup
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
 
-    [SerializeField] private Button claimButton;
+    [SerializeField] private Button continueButton;
+
+    protected override void MoreActionInAwake()
+    {
+        continueButton.onClick.AddListener(Continue);
+    }
+
+    private void Continue()
+    {
+        Hide();
+    }
 
     // private void AnimateProgress()
     // {
