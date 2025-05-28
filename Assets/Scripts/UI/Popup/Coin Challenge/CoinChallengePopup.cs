@@ -14,6 +14,7 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button claimButton;
+    [SerializeField] private Button continueButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -28,6 +29,7 @@ public class CoinChallengePopup : BasePopup
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         claimButton.onClick.AddListener(Claim);
+        continueButton.onClick.AddListener(Hide);
     }
 
     protected override void UnregisterMoreEvent()
