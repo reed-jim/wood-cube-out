@@ -13,7 +13,7 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
     [SerializeField] private TMP_Text timeCounterText;
-    [SerializeField] private Button claimButton;
+    // [SerializeField] private Button claimButton;
     [SerializeField] private Button continueButton;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -28,7 +28,7 @@ public class CoinChallengePopup : BasePopup
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
-        claimButton.onClick.AddListener(Claim);
+        // claimButton.onClick.AddListener(Claim);
         continueButton.onClick.AddListener(Hide);
     }
 
@@ -58,8 +58,8 @@ public class CoinChallengePopup : BasePopup
         int remaining = requireGemForEachLevel - gemCollected;
         float progress = (float)gemCollected / requireGemForEachLevel;
 
-        claimButton.interactable = remaining == 0;
-        claimButton.image.color = remaining == 0 ? ColorUtil.WithAlpha(claimButton.image.color, 1) : ColorUtil.WithAlpha(claimButton.image.color, 0.5f);
+        // claimButton.interactable = remaining == 0;
+        // claimButton.image.color = remaining == 0 ? ColorUtil.WithAlpha(claimButton.image.color, 1) : ColorUtil.WithAlpha(claimButton.image.color, 0.5f);
 
         AnimateProgress(progress);
 
