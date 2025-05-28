@@ -42,6 +42,7 @@ public static class GamePersistentVariable
 
     #region GAME FLOW
     public static bool isPendingReplay;
+    public static bool isPendingReturnHome;
     #endregion
 
     #region LIVES

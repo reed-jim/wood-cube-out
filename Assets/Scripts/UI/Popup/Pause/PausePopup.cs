@@ -50,39 +50,49 @@ public class PausePopup : BasePopup
 
     private void ReturnHome()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
+        if (GamePersistentVariable.isLevelDirty)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
+        }
+        else
+        {
+            // avoid spamming
+            returnHomeButton.interactable = false;
+            replayLevelButton.interactable = false;
 
-        // // avoid spamming
-        // returnHomeButton.interactable = false;
-        // replayLevelButton.interactable = false;
+            SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 
-        // SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
+            // don't track loop level CostCenter
+            if (currentLevel.Value <= levelDataContainer.MaxLevel)
+            {
+                SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
+            }
 
-        // // don't track loop level CostCenter
-        // if (currentLevel.Value <= levelDataContainer.MaxLevel)
-        // {
-        //     SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
-        // }
-
-        // Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+            Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        }
     }
 
     private void Replay()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Replay);
+        if (GamePersistentVariable.isLevelDirty)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Replay);
+        }
+        else
+        {
+            bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-        // bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
+            if (isShowInterReplayLevel)
+            {
+                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+            }
+            else
+            {
+                ActualReplay();
+            }
 
-        // if (isShowInterReplayLevel)
-        // {
-        //     AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
-        // }
-        // else
-        // {
-        //     ActualReplay();
-        // }
-
-        // Hide();
+            Hide();
+        }
     }
 
     private void ActualReplay()
