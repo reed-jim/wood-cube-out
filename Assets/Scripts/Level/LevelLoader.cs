@@ -761,9 +761,7 @@ public class LevelLoader : MonoBehaviour
             isScaleByHeight = true;
         }
 
-        bool isThreeDimensionEqual =
-            Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f
-            || Mathf.Abs(expectedLevelSize.x - expectedLevelSize.z) < 0.5f || Mathf.Abs(expectedLevelSize.y - expectedLevelSize.z) < 0.5f;
+        bool isThreeDimensionEqual = Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f;
 
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
@@ -784,13 +782,25 @@ public class LevelLoader : MonoBehaviour
 
         float targetOrthographicSize = expectedScreenHeight / 2f;
 
+        if (currentLevel.Value == 228)
+        {
+            isThreeDimensionEqual = true;
+        }
+
         // 3 dimesion equal
         if (isThreeDimensionEqual)
         {
             targetOrthographicSize *= 1.3f;
         }
 
+        if (currentLevel.Value == 227)
+        {
+            targetOrthographicSize *= 0.7f;
+        }
+
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
+
+        GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
     }
 
     private void SetLevelGradientMinMaxIn(Vector3 levelCenter, float minWorldY, float maxWorldY)

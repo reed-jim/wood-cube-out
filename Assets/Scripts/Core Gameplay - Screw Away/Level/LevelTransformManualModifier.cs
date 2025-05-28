@@ -16,7 +16,7 @@ public class LevelTransformManualModifier : MonoBehaviour
 
         if (isApply)
         {
-            _tweens.Add(Tween.Delay(3f).OnComplete(() =>
+            _tweens.Add(Tween.Delay(1f).OnComplete(() =>
             {
                 transform.position += offset;
             }));
