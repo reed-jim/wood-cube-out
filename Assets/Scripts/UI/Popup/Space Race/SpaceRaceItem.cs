@@ -15,6 +15,13 @@ public class SpaceRaceItem : MonoBehaviour
     [SerializeField] private Sprite[] rewardSprites;
     [SerializeField] private Sprite[] medalSprites;
 
+    private Vector3 _shipInitialPosition;
+
+    void Awake()
+    {
+        _shipInitialPosition = spaceShip.localPosition;
+    }
+
     public void Setup(int index)
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
@@ -22,11 +29,11 @@ public class SpaceRaceItem : MonoBehaviour
         // Find rank
         int raceRank = 0;
 
-        LeaderboardUserData[] sortedArray = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.score).ToArray();
+        SpaceRacePlayerData[] sortedArray = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.scoreSinceRaceBegin).ToArray();
 
         for (int i = 0; i < sortedArray.Length; i++)
         {
-            if (sortedArray[i].score == spaceRaceData.spaceRacePlayerGroup[index].score)
+            if (sortedArray[i].id == spaceRaceData.spaceRacePlayerGroup[index].id)
             {
                 raceRank = i + 1;
 
@@ -51,9 +58,11 @@ public class SpaceRaceItem : MonoBehaviour
 
         int numLevelToWin = 15;
 
-        float progress = (float)(spaceRaceData.spaceRacePlayerGroup[index].score / numLevelToWin);
+        float progress = (float)(spaceRaceData.spaceRacePlayerGroup[index].scoreSinceRaceBegin / numLevelToWin);
 
-        UIUtil.SetLocalPositionX(spaceShip, spaceShip.localPosition.x + (1 - progress) * 1.5f * spaceShip.sizeDelta.x);
+        progress = Mathf.Clamp01(progress);
+
+        UIUtil.SetLocalPositionX(spaceShip, _shipInitialPosition.x + progress * 1.5f * spaceShip.sizeDelta.x);
     }
 
     private string GetTruncatedPlayerName(string originalName)

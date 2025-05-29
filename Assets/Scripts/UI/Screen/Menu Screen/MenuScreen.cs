@@ -274,7 +274,16 @@ public class MenuScreen : MonoBehaviour
 
     private void OpenSpaceRacePopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.SpaceRace);
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        if (spaceRaceData.isStarted)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.SpaceRace);
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.JoinSpaceRace);
+        }
     }
 
     private void OpenIAPOfferPopup()
