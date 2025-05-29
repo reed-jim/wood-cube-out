@@ -41,7 +41,7 @@ public class DailyRewardItem : MonoBehaviour
     {
         DailyRewardPopup.claimDailyRewardEvent += Claim;
 
-        // claimButton.onClick.AddListener(Claim);
+        claimButton.onClick.AddListener(Claim);
 
         Init();
     }
@@ -100,11 +100,11 @@ public class DailyRewardItem : MonoBehaviour
                 quantityTexts[i].gameObject.SetActive(false);
             }
 
-            // giftStateContainer.SetActive(true);
+            giftStateContainer.SetActive(true);
 
-            // claimButton.interactable = true;
-            // claimButtonImage.sprite = claimButtonSprites[0];
-            // claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 1f);
+            claimButton.interactable = true;
+            claimButtonImage.sprite = claimButtonSprites[0];
+            claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 1f);
             giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 1f);
         }
         else
@@ -117,9 +117,9 @@ public class DailyRewardItem : MonoBehaviour
                     quantityTexts[i].gameObject.SetActive(false);
                 }
 
-                // claimButton.interactable = false;
-                // claimButtonImage.sprite = claimButtonSprites[1];
-                // claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 0.3f);
+                claimButton.interactable = false;
+                claimButtonImage.sprite = claimButtonSprites[1];
+                claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 0.3f);
                 giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 0.3f);
             }
             else
