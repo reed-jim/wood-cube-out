@@ -57,6 +57,10 @@ namespace Saferio.Util
 
 
 
+        private Coroutine _poolingScrollCoroutine;
+
+
+
 
 
 
@@ -85,8 +89,16 @@ namespace Saferio.Util
             CreatePool();
 
             GenerateUI();
+        }
 
-            StartCoroutine(ObjectPoolingScrolling());
+        void OnEnable()
+        {
+            if (_poolingScrollCoroutine != null)
+            {
+                StopCoroutine(_poolingScrollCoroutine);
+            }
+
+            _poolingScrollCoroutine = StartCoroutine(ObjectPoolingScrolling());
         }
 
         private void CreatePool()
