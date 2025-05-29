@@ -200,7 +200,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 5611920150841437189}
   closeButton: {fileID: 7733255507953352378}
-  route: 43
+  detectClickOutsideButton: {fileID: 0}
+  route: 44
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
   buyButton: {fileID: 2935732150895560708}
@@ -911,7 +912,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 158}
-  m_SizeDelta: {x: 820, y: 804}
+  m_SizeDelta: {x: 860, y: 808}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6213988193207683403
 CanvasRenderer:
@@ -941,7 +942,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e1e83421af61b17499833ce7a72aa5bf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 033f2e0a137e28f4596866eabc2a35ec, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1168,7 +1169,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 36298e0ce36cd6440a0960718bde4a9b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 52cd4abcc3450014baeeb02f276729b2, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1937,8 +1938,8 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c09f353bdd79f144e8dba22f909ac1e0, type: 3}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 6d1da3bbf34ed5f42acd34100a863744, type: 3}
+  m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
   m_FillMethod: 4
