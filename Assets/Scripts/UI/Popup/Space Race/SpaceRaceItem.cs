@@ -1,4 +1,5 @@
 using System.Linq;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +30,7 @@ public class SpaceRaceItem : MonoBehaviour
         // Find rank
         int raceRank = 0;
 
-        SpaceRacePlayerData[] sortedArray = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.scoreSinceRaceBegin).ToArray();
+        SpaceRacePlayerData[] sortedArray = spaceRaceData.spaceRacePlayerGroup.OrderByDescending(item => item.scoreSinceRaceBegin).ToArray();
 
         for (int i = 0; i < sortedArray.Length; i++)
         {
@@ -62,7 +63,11 @@ public class SpaceRaceItem : MonoBehaviour
 
         progress = Mathf.Clamp01(progress);
 
-        UIUtil.SetLocalPositionX(spaceShip, _shipInitialPosition.x + progress * 1.5f * spaceShip.sizeDelta.x);
+        spaceShip.localPosition = _shipInitialPosition;
+
+        Tween.LocalPositionX(spaceShip, _shipInitialPosition.x + progress * 2f * spaceShip.sizeDelta.x, startDelay: 0.3f, duration: 0.3f);
+
+        // UIUtil.SetLocalPositionX(spaceShip, _shipInitialPosition.x + progress * 1.5f * spaceShip.sizeDelta.x);
     }
 
     private string GetTruncatedPlayerName(string originalName)
