@@ -47,6 +47,8 @@ public class MedalTournamentPopup : BasePopup
 
         StartCoroutine(Counting());
 
+        scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length);
+
         rewardCanvasGroup.gameObject.SetActive(false);
     }
 

@@ -11,6 +11,7 @@ public class BasePopup : MonoBehaviour
     [Header("UI")]
     [SerializeField] protected RectTransform container;
     [SerializeField] protected Button closeButton;
+    [SerializeField] protected Button detectClickOutsideButton;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
@@ -52,6 +53,11 @@ public class BasePopup : MonoBehaviour
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(Hide);
+        }
+
+        if (detectClickOutsideButton != null)
+        {
+            detectClickOutsideButton.onClick.AddListener(Hide);
         }
 
         RegisterMoreEvent();

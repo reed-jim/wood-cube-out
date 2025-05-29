@@ -26,7 +26,10 @@ public class StarChestPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        base.Show(onCompletedAction: () =>
+        {
+            AnimateProgress();
+        });
 
         Setup();
     }
@@ -36,11 +39,14 @@ public class StarChestPopup : BasePopup
         int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
 
         int remaining = requireGemForEachLevel - starCollected;
-        float progress = (float)starCollected / requireGemForEachLevel;
+        // float progress = (float)starCollected / requireGemForEachLevel;
 
-        AnimateProgress(progress);
+        // AnimateProgress(starCollected, requireGemForEachLevel, progress);
 
         localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
+
+        progressSlider.value = 0;
+        progressText.text = $"{0}/{requireGemForEachLevel}";
     }
 
     private void Continue()
@@ -48,8 +54,12 @@ public class StarChestPopup : BasePopup
         Hide();
     }
 
-    private void AnimateProgress(float progress)
+    private void AnimateProgress()
     {
+        int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
+
+        float progress = (float)starCollected / requireGemForEachLevel;
+
         if (progress > 0.19f)
         {
             progressSlider.value = 0;
@@ -57,13 +67,13 @@ public class StarChestPopup : BasePopup
             _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
             {
                 progressSlider.value = newVal;
-                progressText.text = $"{(newVal * 100).ToString("F0")}%";
+                progressText.text = $"{(int)(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
             }));
         }
         else
         {
             progressSlider.value = 0;
-            progressText.text = $"{(progress * 100).ToString("F0")}%";
+            progressText.text = $"{starCollected}/{requireGemForEachLevel}";
         }
     }
 }
