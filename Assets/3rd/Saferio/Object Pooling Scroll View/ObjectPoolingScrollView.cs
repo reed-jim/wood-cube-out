@@ -196,7 +196,9 @@ namespace Saferio.Util
 
         public void SetMaxItemNumber(int maxItem)
         {
-            _maxScrollPositionY = Mathf.Max(0, (maxItem - numVisibleItem) * _items[0].sizeDelta.y);
+            int neededItem = maxItem + 4;
+
+            _maxScrollPositionY = Mathf.Max(0, (neededItem - numVisibleItem) * _items[0].sizeDelta.y);
         }
 
         public void ScrollTo(float positionY)
