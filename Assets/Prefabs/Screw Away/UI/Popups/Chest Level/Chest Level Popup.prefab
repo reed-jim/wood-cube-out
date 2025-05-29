@@ -70,6 +70,7 @@ MonoBehaviour:
   popupCanvasGroup: {fileID: 9001182195133509965}
   claimCanvasGroup: {fileID: 36543056913148821}
   claimButton: {fileID: 1631701539771587283}
+  continueButton: {fileID: 4142761694996232521}
   claimMultiplierButton: {fileID: 4142761694996232521}
   localizedDescription: {fileID: 6674139120729163182}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
@@ -114,6 +115,7 @@ GameObject:
   - component: {fileID: 5496281992375045545}
   - component: {fileID: 8616284856535799467}
   - component: {fileID: 8386076482525759041}
+  - component: {fileID: 7832262653735165107}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -239,6 +241,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &7832262653735165107
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918988891085595728}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: Continue
+  parameter: 
+  FallbackText: Claim X3
 --- !u!1 &2481684099738721483
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,7 +561,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8488058399338415202
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1048,7 +1065,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 205}
+  m_AnchoredPosition: {x: 0, y: 43}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5549714925331146867
@@ -1127,7 +1144,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -395, y: -1027.3999}
+  m_AnchoredPosition: {x: -395, y: -1083}
   m_SizeDelta: {x: 704.512, y: 172}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &4570354199537433409

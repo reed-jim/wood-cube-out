@@ -9,6 +9,7 @@ public class ChestLevelPopup : BasePopup
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private CanvasGroup claimCanvasGroup;
     [SerializeField] private Button claimButton;
+    [SerializeField] private Button continueButton;
     [SerializeField] private Button claimMultiplierButton;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
 
@@ -23,8 +24,10 @@ public class ChestLevelPopup : BasePopup
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
-        claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
-        claimMultiplierButton.onClick.AddListener(ClaimX2);
+        // claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
+        // claimMultiplierButton.onClick.AddListener(ClaimX2);
+
+        continueButton.onClick.AddListener(Hide);
     }
 
     protected override void UnregisterMoreEvent()
@@ -45,8 +48,8 @@ public class ChestLevelPopup : BasePopup
 
         bool isClaimable = IsClaimable();
 
-        claimCanvasGroup.alpha = isClaimable ? 1 : 0.5f;
-        claimCanvasGroup.interactable = isClaimable;
+        // claimCanvasGroup.alpha = isClaimable ? 1 : 0.5f;
+        // claimCanvasGroup.interactable = isClaimable;
     }
 
     private void Claim(int multiplier, bool isSkipCheckClaimable)
