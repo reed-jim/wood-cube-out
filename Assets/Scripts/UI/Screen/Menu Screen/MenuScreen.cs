@@ -22,6 +22,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openStarChestPopupButton;
     [SerializeField] private Button openChestLevelPopupButton;
     [SerializeField] private Button openCoinChallengePopupButton;
+    [SerializeField] private Button openStarTournamentPopupButton;
     [SerializeField] private Button openMedalTournamentPopupButton;
     [SerializeField] private Button openSpaceRacePopupButton;
     [SerializeField] private Button openIAPOfferPopupButton;
@@ -59,6 +60,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
+        SpaceRacePopup.startGameEvent += StartGame;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -72,6 +74,7 @@ public class MenuScreen : MonoBehaviour
         openStarChestPopupButton.onClick.AddListener(OpenStarChestPopup);
         openChestLevelPopupButton.onClick.AddListener(OpenChestLevelPopup);
         openCoinChallengePopupButton.onClick.AddListener(OpenCoinChallengePopup);
+        openStarTournamentPopupButton.onClick.AddListener(OpenStarTournamentPopup);
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         openIAPOfferPopupButton.onClick.AddListener(OpenIAPOfferPopup);
@@ -128,6 +131,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        SpaceRacePopup.startGameEvent -= StartGame;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
 
@@ -253,6 +257,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenCoinChallengePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.CoinChallenge);
+    }
+
+    private void OpenStarTournamentPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.StarTournament);
     }
 
     private void OpenMedalTournamentPopup()

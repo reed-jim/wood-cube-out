@@ -17,6 +17,7 @@ public class SpaceRacePopup : BasePopup
     [SerializeField] private CanvasGroup rewardCanvasGroup;
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button helpButton;
+    [SerializeField] private Button continueButton;
 
     [SerializeField] private SkeletonGraphic gift;
 
@@ -25,11 +26,14 @@ public class SpaceRacePopup : BasePopup
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer spaceRaceRewardDataContainer;
 
+    public static event Action startGameEvent;
+
     protected override void MoreActionInAwake()
     {
         base.MoreActionInAwake();
 
         helpButton.onClick.AddListener(ShowTutorial);
+        continueButton.onClick.AddListener(ContinuePlaying);
 
         _spaceRaceItems = TransformUtil.GetComponentsFromAllChildren<SpaceRaceItem>(transform).ToArray();
     }
@@ -204,6 +208,14 @@ public class SpaceRacePopup : BasePopup
             {
                 Claim();
             });
+        });
+    }
+
+    private void ContinuePlaying()
+    {
+        Hide(() =>
+        {
+            startGameEvent?.Invoke();
         });
     }
 

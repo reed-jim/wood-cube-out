@@ -17,6 +17,7 @@ public class WinPopup : BasePopup
     [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TMP_Text starText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
     [SerializeField] private IntVariable currentLevel;
@@ -62,6 +63,7 @@ public class WinPopup : BasePopup
         AdmobAdsMax.Instance.ShowBannerCollap();
 
         coinText.text = $"{0}";
+        starText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
         continueButton.interactable = true;
@@ -123,6 +125,7 @@ public class WinPopup : BasePopup
         HandleGoldPass();
         HandleCoinChallenge();
         HandleWeeklyChallenge();
+        HandleStarChest();
         #endregion
 
         GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
@@ -157,6 +160,11 @@ public class WinPopup : BasePopup
                 onCompletedAction?.Invoke();
             })
         );
+
+        _tweens.Add(Tween.Custom(0, 3, duration: timeCollectCoin, onValueChange: newVal =>
+        {
+            starText.text = $"{(int)newVal}";
+        }));
     }
 
     private async void Continue()
@@ -269,7 +277,7 @@ public class WinPopup : BasePopup
         if (GamePersistentVariable.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
         {
             goldPassDataContainer.CurrentMilestone.IsPassed = true;
-            
+
             GamePersistentVariable.goldPassData.passLevel++;
             GamePersistentVariable.goldPassData.keyCollected = 0;
 
@@ -297,6 +305,15 @@ public class WinPopup : BasePopup
         challengeData.EventItemCollected++;
 
         DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, challengeData);
+    }
+
+    private void HandleStarChest()
+    {
+        StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+
+        data.starCollected += 3;
+
+        DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
     }
     #endregion
 }
