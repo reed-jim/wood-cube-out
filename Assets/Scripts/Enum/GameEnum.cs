@@ -60,7 +60,8 @@ public class GameEnum : MonoBehaviour
         MedalTournamentIntro,
         LivesShop,
         ReturnHome,
-        Replay
+        Replay,
+        StarChest
     }
 
     public enum GameFaction

@@ -685,6 +685,8 @@ public static class LevelDifficultyCalculatorUltility
             List<Transform> dependency = GetPieceDependency(pieces[i].transform);
 
             obstaclesOfPieces.Add(pieces[i].transform.GetInstanceID(), dependency);
+
+            Debug.Log("SAFERIO " + pieces[i].name + "/" + dependency.Count);
         }
 
         GamePersistentVariable.pieceDependencies = obstaclesOfPieces;

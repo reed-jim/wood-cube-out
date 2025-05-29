@@ -192,7 +192,8 @@ public static class GameConstants
 
     #region CHEST LEVEL
     public static string CHEST_LEVEL = "CHEST_LEVEL";
-    #endregion 
+    public static string STAR_LEVEL_DATA = "STAR_LEVEL_DATA";
+    #endregion
 
     #region COIN CHALLENGE
     public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";

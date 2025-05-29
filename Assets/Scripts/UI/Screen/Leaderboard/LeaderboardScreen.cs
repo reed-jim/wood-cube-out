@@ -31,14 +31,14 @@ public class LeaderboardScreen : UIScreen
         {
             int compensateDistanceBetweenTwoItem = 3;
 
-            if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
-            {
-                scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
-            }
-            else
-            {
-                scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
-            }
+            // if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
+            // {
+            //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
+            // }
+            // else
+            // {
+            //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
+            // }
 
             selfScore.UpdateUI(LeaderboardDataContainer.GetCurrentPlayerLeaderboardData());
         }
@@ -59,16 +59,16 @@ public class LeaderboardScreen : UIScreen
     {
         int compensateDistanceBetweenTwoItem = 3;
 
-        if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
-        {
-            scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
-        }
-        else
-        {
-            scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
-        }
+        // if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
+        // {
+        //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
+        // }
+        // else
+        // {
+        //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
+        // }
 
-        scrollView.ScrollTo(0);
+        // scrollView.ScrollTo(0);
 
         selfScore.UpdateUI(LeaderboardDataContainer.GetCurrentPlayerLeaderboardData());
     }
