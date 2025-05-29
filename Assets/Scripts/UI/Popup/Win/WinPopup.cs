@@ -18,6 +18,7 @@ public class WinPopup : BasePopup
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text starText;
+    [SerializeField] private TMP_Text goldPassKeyText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
     [SerializeField] private IntVariable currentLevel;
@@ -64,6 +65,7 @@ public class WinPopup : BasePopup
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
+        goldPassKeyText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
         continueButton.interactable = true;
@@ -164,6 +166,10 @@ public class WinPopup : BasePopup
         _tweens.Add(Tween.Custom(0, 3, duration: timeCollectCoin, onValueChange: newVal =>
         {
             starText.text = $"{(int)newVal}";
+        }));
+        _tweens.Add(Tween.Custom(0, 1, duration: timeCollectCoin, onValueChange: newVal =>
+        {
+            goldPassKeyText.text = $"{(int)newVal}";
         }));
     }
 
