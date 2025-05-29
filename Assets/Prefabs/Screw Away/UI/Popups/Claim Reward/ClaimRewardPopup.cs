@@ -33,6 +33,7 @@ public class ClaimRewardPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         DailyRewardItem.showClaimRewardPopupEvent += ShowClaimRewardPopup;
+        StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
@@ -42,6 +43,7 @@ public class ClaimRewardPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         DailyRewardItem.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
     }
 
     protected override void MoreActionInAwake()
@@ -94,6 +96,11 @@ public class ClaimRewardPopup : BasePopup
     private void ShowAdsNotLoadedPopup()
     {
         InvokeShowAdNotLoadedPopupEvent();
+    }
+
+    private void ShowClaimRewardPopup(DailyRewardData rewardData)
+    {
+        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, true);
     }
 
     private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
