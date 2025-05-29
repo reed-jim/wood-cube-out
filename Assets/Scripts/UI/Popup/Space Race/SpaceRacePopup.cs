@@ -80,10 +80,12 @@ public class SpaceRacePopup : BasePopup
 
         if (spaceRaceData.isStarted)
         {
+            CheatEnemyScores();
+
             return;
         }
 
-        spaceRaceData.spaceRacePlayerGroup = new LeaderboardUserData[4];
+        spaceRaceData.spaceRacePlayerGroup = new SpaceRacePlayerData[4];
 
         List<LeaderboardUserData> randomList = new List<LeaderboardUserData>();
 
@@ -94,7 +96,15 @@ public class SpaceRacePopup : BasePopup
         {
             if (randomList[i].id == AuthenticationService.Instance.PlayerId)
             {
-                spaceRaceData.spaceRacePlayerGroup[0] = randomList[i];
+                SpaceRacePlayerData spaceRacePlayerData = new SpaceRacePlayerData()
+                {
+                    id = randomList[i].id,
+                    name = randomList[i].name,
+                    scoreSinceRaceBegin = 0,
+                    isSelf = true
+                };
+
+                spaceRaceData.spaceRacePlayerGroup[0] = spaceRacePlayerData;
 
                 randomList.Remove(randomList[i]);
 
@@ -104,7 +114,14 @@ public class SpaceRacePopup : BasePopup
 
         for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length - 1; i++)
         {
-            spaceRaceData.spaceRacePlayerGroup[i + 1] = randomList[i];
+            SpaceRacePlayerData spaceRacePlayerData = new SpaceRacePlayerData()
+            {
+                id = randomList[i].id,
+                name = randomList[i].name,
+                scoreSinceRaceBegin = 0
+            };
+
+            spaceRaceData.spaceRacePlayerGroup[i + 1] = spaceRacePlayerData;
         }
 
         // Sort
@@ -113,6 +130,28 @@ public class SpaceRacePopup : BasePopup
         spaceRaceData.isStarted = true;
 
         DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+    }
+
+    private void CheatEnemyScores()
+    {
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        long currentTimestamp = CommonUtil.GetCurrentTimestamp();
+
+        if (currentTimestamp > spaceRaceData.nextTimestampCheatEnemyScore)
+        {
+            for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+            {
+                if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
+                {
+                    spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(0, 3);
+                }
+            }
+
+            spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
+
+            DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+        }
     }
 
     private IEnumerator Counting()
@@ -172,7 +211,7 @@ public class SpaceRacePopup : BasePopup
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
-        LeaderboardUserData[] items = spaceRaceData.spaceRacePlayerGroup;
+        SpaceRacePlayerData[] items = spaceRaceData.spaceRacePlayerGroup;
 
         int rank = 0;
 

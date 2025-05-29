@@ -61,7 +61,8 @@ public class GameEnum : MonoBehaviour
         LivesShop,
         ReturnHome,
         Replay,
-        StarChest
+        StarChest,
+        JoinSpaceRace
     }
 
     public enum GameFaction
