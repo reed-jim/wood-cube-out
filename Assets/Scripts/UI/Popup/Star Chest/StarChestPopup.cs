@@ -7,21 +7,37 @@ using UnityEngine.UI;
 
 public class StarChestPopup : BasePopup
 {
+    [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
 
     [SerializeField] private Button continueButton;
 
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private DailyRewardData rewardData;
+
     [SerializeField] private int requireGemForEachLevel;
 
     private StarLevelData _data;
+
+    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
 
     protected override void MoreActionInAwake()
     {
         continueButton.onClick.AddListener(Continue);
 
         _data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+    }
+
+    protected override void RegisterMoreEvent()
+    {
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+    }
+
+    protected override void UnregisterMoreEvent()
+    {
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -68,12 +84,56 @@ public class StarChestPopup : BasePopup
             {
                 progressSlider.value = newVal;
                 progressText.text = $"{(int)(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
-            }));
+            })
+            .OnComplete(() =>
+            {
+                if (progress >= 0)
+                {
+                    ShowReward();
+
+                    _data.starCollected -= requireGemForEachLevel;
+                    _data.starCollected = Math.Max(_data.starCollected, 0);
+
+                    DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+                }
+            })
+            );
         }
         else
         {
             progressSlider.value = 0;
             progressText.text = $"{starCollected}/{requireGemForEachLevel}";
         }
+    }
+
+    private void ShowReward()
+    {
+        showClaimRewardPopupEvent?.Invoke(rewardData);
+    }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        })
+            .OnComplete(() =>
+            {
+                if (!isShow)
+                {
+                    Setup();
+                    AnimateProgress();
+                }
+            })
+        );
     }
 }
