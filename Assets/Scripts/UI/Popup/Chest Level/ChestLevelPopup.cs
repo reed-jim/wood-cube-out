@@ -20,6 +20,8 @@ public class ChestLevelPopup : BasePopup
 
     private ChestLevelData _cachedchestLevelData;
 
+    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
+
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
@@ -37,14 +39,28 @@ public class ChestLevelPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        base.Show(onCompletedAction: () =>
+        {
+            bool isClaimable = IsClaimable();
+
+            if (isClaimable)
+            {
+                showClaimRewardPopupEvent?.Invoke(rewardData);
+
+                _cachedchestLevelData.currentRequiredLevel += 10;
+
+                DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
+            }
+        });
 
         Refresh();
     }
 
     private void Refresh()
     {
-        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{10}");
+        _cachedchestLevelData = DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData());
+
+        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{_cachedchestLevelData.currentRequiredLevel}");
 
         bool isClaimable = IsClaimable();
 
@@ -138,6 +154,11 @@ public class ChestLevelPopup : BasePopup
         {
             start = 1;
             end = 0;
+        }
+
+        if (!isShow)
+        {
+            Refresh();
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>

@@ -34,6 +34,7 @@ public class ClaimRewardPopup : BasePopup
     {
         DailyRewardItem.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
+        ChestLevelPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
@@ -44,6 +45,7 @@ public class ClaimRewardPopup : BasePopup
     {
         DailyRewardItem.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        ChestLevelPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
     }
 
     protected override void MoreActionInAwake()
@@ -58,7 +60,7 @@ public class ClaimRewardPopup : BasePopup
 
     private void Claim(int multiplier)
     {
-        int coinQuantity = _coinQuantity;
+        int coinQuantity = _coinQuantity * multiplier;
         int[] boosterQuantites = _boosterQuantities;
 
         for (int i = 0; i < boosterQuantites.Length; i++)
