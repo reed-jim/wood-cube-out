@@ -142,20 +142,32 @@ public class SpaceRacePopup : BasePopup
 
         long currentTimestamp = CommonUtil.GetCurrentTimestamp();
 
-        if (currentTimestamp > spaceRaceData.nextTimestampCheatEnemyScore)
+        for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
         {
-            for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+            if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
             {
-                if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
-                {
-                    spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(0, 3);
-                }
+                spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(1, 3);
             }
-
-            spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
-
-            DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
         }
+
+        spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
+
+        DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+
+        // if (currentTimestamp > spaceRaceData.nextTimestampCheatEnemyScore)
+        // {
+        //     for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+        //     {
+        //         if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
+        //         {
+        //             spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(1, 3);
+        //         }
+        //     }
+
+        //     spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
+
+        //     DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+        // }
     }
 
     private IEnumerator Counting()
