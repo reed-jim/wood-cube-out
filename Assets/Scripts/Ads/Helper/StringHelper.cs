@@ -282,7 +282,7 @@ public class PathPrefabs
     public const string SHOP_GAME_BOX = "UI/Popups/ShopBox";
     public const string CONGRATULATION_BOX = "UI/Popups/CongratulationBox";
 
-    public const string STARTER_PACK_BOX = "UI/Popups/PackBoxes/StarterPackBox";
+    public const string STARTER_PACK_BOX = "UI/Popups/SalePacks/StarterPackBox";
 
     public const string CREDIT_BOX = "UI/Popups/CreditBox";
     public const string TRACKING_BOX = "UI/Popups/TrackingBox";

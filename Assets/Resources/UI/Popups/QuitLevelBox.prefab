@@ -2532,6 +2532,7 @@ GameObject:
   - component: {fileID: 2230117138662881015}
   - component: {fileID: 8773292515122530250}
   - component: {fileID: 5458001052220380612}
+  - component: {fileID: 1018823600184866950}
   m_Layer: 5
   m_Name: BG
   m_TagString: Untagged
@@ -2652,6 +2653,24 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &1018823600184866950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6699910359707737388}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bec47e7b3943204fa25f21efd569071, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scrollRect: {fileID: 4878142623700185567}
+  parentContent: {fileID: 8902859850356721625}
+  otherContent: {fileID: 8877807265487508187}
+  parentSale: {fileID: 6447540645993313670}
+  newLocation: {fileID: 8470719726429701677}
+  oldLocation: {fileID: 7258238016249794129}
 --- !u!1 &8325866969417491657
 GameObject:
   m_ObjectHideFlags: 0
