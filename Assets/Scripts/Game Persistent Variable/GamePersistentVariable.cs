@@ -112,7 +112,9 @@ public static class GamePersistentVariable
     public static WeeklyChallengeData weeklyChallengeData;
     #endregion
 
-
+    #region SPACE RACE
+    public static int selfSpaceRaceRank;
+    #endregion
 
     #region SORT PUZZLE
     public static int numItemsLeft;

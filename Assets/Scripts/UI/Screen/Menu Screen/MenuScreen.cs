@@ -358,10 +358,10 @@ public class MenuScreen : MonoBehaviour
 
     private void ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(ScreenRoute screenRoute)
     {
-        if (UserData.IsRemoveAds)
-        {
-            return;
-        }
+        // if (UserData.IsRemoveAds)
+        // {
+        //     return;
+        // }
 
         CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 

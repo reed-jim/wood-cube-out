@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using PrimeTween;
 using TMPro;
@@ -18,6 +19,8 @@ public class SpaceRaceItem : MonoBehaviour
 
     private Vector3 _shipInitialPosition;
 
+    public static event Action refreshSpaceRacePopupEvent;
+
     void Awake()
     {
         _shipInitialPosition = spaceShip.localPosition;
@@ -37,6 +40,11 @@ public class SpaceRaceItem : MonoBehaviour
             if (sortedArray[i].id == spaceRaceData.spaceRacePlayerGroup[index].id)
             {
                 raceRank = i + 1;
+
+                if (sortedArray[i].isSelf)
+                {
+                    GamePersistentVariable.selfSpaceRaceRank = raceRank;
+                }
 
                 break;
             }
@@ -59,13 +67,28 @@ public class SpaceRaceItem : MonoBehaviour
 
         int numLevelToWin = 15;
 
-        float progress = (float)(spaceRaceData.spaceRacePlayerGroup[index].scoreSinceRaceBegin / numLevelToWin);
+        float progress = (float)spaceRaceData.spaceRacePlayerGroup[index].scoreSinceRaceBegin / numLevelToWin;
 
         progress = Mathf.Clamp01(progress);
 
         spaceShip.localPosition = _shipInitialPosition;
 
-        Tween.LocalPositionX(spaceShip, _shipInitialPosition.x + progress * 2f * spaceShip.sizeDelta.x, startDelay: 0.3f, duration: 0.3f);
+        float maxDistance = rewardIcon.rectTransform.localPosition.x - _shipInitialPosition.x;
+
+        Tween.LocalPositionX(spaceShip, _shipInitialPosition.x + progress * maxDistance, startDelay: 0.3f, duration: 0.6f)
+        .OnComplete(() =>
+        {
+            if (spaceRaceData.spaceRacePlayerGroup[index].isSelf && progress == 1)
+            {
+                // SpaceRaceData data = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+                // data.isEnded = true;
+
+                // DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
+
+                refreshSpaceRacePopupEvent?.Invoke();
+            }
+        });
 
         // UIUtil.SetLocalPositionX(spaceShip, _shipInitialPosition.x + progress * 1.5f * spaceShip.sizeDelta.x);
     }

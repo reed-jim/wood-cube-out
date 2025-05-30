@@ -87,7 +87,7 @@ public class StarChestPopup : BasePopup
             })
             .OnComplete(() =>
             {
-                if (progress >= 0)
+                if (progress >= 1)
                 {
                     ShowReward();
 
