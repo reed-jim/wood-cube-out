@@ -25,9 +25,12 @@ public enum TypeWeekday
 [System.Serializable]
 public class SalePackDataModel : BaseDataButtonEvent
 {
+    [ShowIf("isCanShowPopup", true)] 
     public BaseButtonEvent buttonShow;
     public int prioritySale;
+    [ShowIf("isShowShop", true)] 
     public ShopItemBase shopBanner;
+    [ShowIf("isShowInPopup", true)] 
     public PopupItemBase shopPopup;
     public TypePackIAP typePackIAP;
     public TypeSale typeSale;
@@ -43,6 +46,7 @@ public class SalePackDataModel : BaseDataButtonEvent
 
     public bool saleInDay;
     [HideIf("saleInDay", true)] public TimeType timeLifeType;
+
     public override bool Equals(System.Object obj)
     {
         SalePackDataModel other = (SalePackDataModel)obj;
@@ -92,7 +96,34 @@ public class SalePackDataModel : BaseDataButtonEvent
             return buyTimes - NumOfPurchased;
         }
     }
-     public DateTime PackTimeEnd
+
+    public bool HasActiveInDay
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(StringHelper.NUM_PACK_ACTIVATED_ + typePackIAP, 1) == 0;
+        }
+        set
+        {
+            GPlayerPrefs.SetInt(StringHelper.NUM_PACK_ACTIVATED_ + typePackIAP, value ? 0 : 1);
+            GPlayerPrefs.Save();
+        }
+    }
+
+    public bool IsActivated
+    {
+        get
+        {
+            return PlayerPrefs.GetInt(StringHelper.IS_PACK_ACTIVATED_ + typePackIAP, 1) == 0;
+        }
+        set
+        {
+            GPlayerPrefs.SetInt(StringHelper.IS_PACK_ACTIVATED_ + typePackIAP, value ? 0 : 1);
+            GPlayerPrefs.Save();
+        }
+    }
+
+    public DateTime PackTimeEnd
     {
         get
         {
@@ -155,53 +186,57 @@ public class SalePackDataModel : BaseDataButtonEvent
             }
         }
     }
-    public bool HasActiveInDay
+
+    public int boughtTimes
     {
         get
         {
-            return PlayerPrefs.GetInt(StringHelper.NUM_PACK_ACTIVATED_ + typePackIAP, 1) == 0;
+            switch (typePackIAP)
+            {
+                case TypePackIAP.DailyOffer:
+                    if (GPlayerPrefs.HasKey(StringHelper.DAILY_BUY_TIME))
+                    {
+                        GPlayerPrefs.SetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, PlayerPrefs.GetInt(StringHelper.DAILY_BUY_TIME));
+                        PlayerPrefs.DeleteKey(StringHelper.DAILY_TIME_END);
+                    }
+                    break;
+                case TypePackIAP.SaleCoin:
+                    if (GPlayerPrefs.HasKey(StringHelper.COIN_BUY_TIME))
+                    {
+                        GPlayerPrefs.SetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, PlayerPrefs.GetInt(StringHelper.COIN_BUY_TIME));
+                        PlayerPrefs.DeleteKey(StringHelper.COIN_BUY_TIME);
+                    }
+                    break;
+                case TypePackIAP.SaleItem:
+                    if (GPlayerPrefs.HasKey(StringHelper.ITEM_BUY_TIME))
+                    {
+                        GPlayerPrefs.SetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, PlayerPrefs.GetInt(StringHelper.ITEM_BUY_TIME));
+                        PlayerPrefs.DeleteKey(StringHelper.ITEM_BUY_TIME);
+                    }
+                    break;
+                case TypePackIAP.WeeklySale:
+                    if (GPlayerPrefs.HasKey(StringHelper.WEEKEND_BUY_TIME))
+                    {
+                        GPlayerPrefs.SetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, PlayerPrefs.GetInt(StringHelper.WEEKEND_BUY_TIME));
+                        PlayerPrefs.DeleteKey(StringHelper.WEEKEND_BUY_TIME);
+                    }
+                    break;
+            }
+            return PlayerPrefs.GetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, 0); ;
         }
         set
         {
-            GPlayerPrefs.SetInt(StringHelper.NUM_PACK_ACTIVATED_ + typePackIAP, value ? 0 : 1);
-            GPlayerPrefs.Save();
+            PlayerPrefs.SetInt(StringHelper.BOUGHT_TIMES_ + typePackIAP, value);
+            PlayerPrefs.Save();
         }
     }
 
-public bool IsActivated
-    {
-        get
-        {
-            return PlayerPrefs.GetInt(StringHelper.IS_PACK_ACTIVATED_ + typePackIAP, 1) == 0;
-        }
-        set
-        {
-            GPlayerPrefs.SetInt(StringHelper.IS_PACK_ACTIVATED_ + typePackIAP, value ? 0 : 1);
-            GPlayerPrefs.Save();
-        }
-    }
     public void CheckPurchased()
     {
         if (this.buyMany)
         {
             this.NumOfPurchased++;
-            switch (typePackIAP)
-            {
-                case TypePackIAP.WeeklySale:
-                    UseProfile.WeekendBought ++;
-                    break;
-                case TypePackIAP.DailyOffer:
-                    UseProfile.DailyBought ++;
-                    break;
-                case TypePackIAP.SaleItem:
-                    UseProfile.ItemBought ++;
-                    break;
-                case TypePackIAP.SaleCoin:
-                    UseProfile.CoinBought ++;
-                    break;
-                default:
-                    break;
-            }
+            this.boughtTimes++;
             if (this.NumOfPurchased == this.buyTimes)
             {
                 this.IsPurchased = true;
@@ -476,7 +511,6 @@ public class PackController : MonoBehaviour
                     {
                         packShow.OnShowPopupSuggetHome();
                         packShow.ShowPopup(true);
-                        Debug.Log("Anhtusz PAck: " + packShow.name);
                     },
                     priovity = SuggetPopupHomeController.PriovitySugget.Important
                 }

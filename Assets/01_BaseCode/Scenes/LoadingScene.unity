@@ -988,6 +988,136 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 551038257}
   m_CullTransparentMesh: 1
+--- !u!1 &566999746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 566999747}
+  - component: {fileID: 566999748}
+  m_Layer: 0
+  m_Name: MegaOfferController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &566999747
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566999746}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &566999748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 566999746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9cd255a97b6f1954391f371b59b78f5a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!1 &579428705
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 579428706}
+  - component: {fileID: 579428707}
+  m_Layer: 0
+  m_Name: ProBundleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &579428706
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579428705}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &579428707
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579428705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d5692129b611ab409ef98870989e1a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
 --- !u!114 &656819521 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 201482469892790310, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -999,6 +1129,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c9e443feb5c5cd4688158870e5505d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &678141886
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 678141887}
+  - component: {fileID: 678141888}
+  m_Layer: 0
+  m_Name: MasterOfferController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &678141887
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678141886}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &678141888
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 678141886}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3db9d5c56a40e334da21830ecfbaf5a7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
 --- !u!1 &698421240 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5451924456029150767, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -1225,6 +1420,118 @@ PrefabInstance:
       propertyPath: m_Name
       value: SegmentController
       objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.price
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.price
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.price
+      value: 120
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.packAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.price
+      value: 290
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.unlockLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.packAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.isOnVideoBuy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.unlockLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.isOnVideoBuy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.packAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.unlockLevel
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.packAmount
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.isOnVideoBuy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.unlockLevel
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.isOnVideoBuy
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.numItemAddBuyVideo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.numItemAddBuyVideo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.cappingWatchVideoBuy
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_box.spacingWatchVideoBuy
+      value: 1800
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.cappingWatchVideoBuy
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.add_hole.spacingWatchVideoBuy
+      value: 1800
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.numItemAddBuyVideo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.numItemAddBuyVideo
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.cappingWatchVideoBuy
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.clear_hole.spacingWatchVideoBuy
+      value: 1800
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.cappingWatchVideoBuy
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 2032842002633915971, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
+      propertyPath: segments.Array.data[0].coreGameData.config.bootsConfig.break_object.spacingWatchVideoBuy
+      value: 1800
+      objectReference: {fileID: 0}
     - target: {fileID: 3150855145846090399, guid: baa6c0700cc76be49bbf1c60db764650, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -1450,6 +1757,71 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1003536508
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1003536509}
+  - component: {fileID: 1003536510}
+  m_Layer: 0
+  m_Name: StarterPackController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1003536509
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003536508}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1003536510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003536508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56455fae205834b49a08999207ef2888, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
 --- !u!114 &1070703550 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5740087761589089530, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -1547,6 +1919,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b4d1040fa6ba5e48b1c852b198f46b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1218468062
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1218468063}
+  - component: {fileID: 1218468064}
+  m_Layer: 0
+  m_Name: GiantOfferController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1218468063
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218468062}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1218468064
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1218468062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cee0c567a9d06a44098d9603fe9d0ff2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
 --- !u!114 &1224127229 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3508337465709743097, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
@@ -2169,6 +2606,71 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e172fe8d5edbfa840902b04b568ddd0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1592110292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1592110294}
+  - component: {fileID: 1592110293}
+  m_Layer: 0
+  m_Name: UltraBundleController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1592110293
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592110292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ced63150c42e28b4480b134326d9ddce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  packModel:
+    icon: {fileID: 0}
+    scaleIcon: {x: 0, y: 0, z: 0}
+    timeLife: 0
+    titleIconShow: 
+    buttonShow: {fileID: 0}
+    prioritySale: 0
+    shopBanner: {fileID: 0}
+    shopPopup: {fileID: 0}
+    typePackIAP: 0
+    typeSale: 0
+    isOnlyActiveOnShop: 0
+    isCanShowPopup: 0
+    isShowShop: 0
+    isShowInPopup: 0
+    delayShowHome: 0
+    typeWeekday: 0
+    buyMany: 0
+    buyTimes: 0
+    saleInDay: 0
+    timeLifeType: 0
+--- !u!4 &1592110294
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1592110292}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5295920849544588601}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1915578446
 GameObject:
   m_ObjectHideFlags: 0
@@ -2679,6 +3181,58 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: allPacksInGame.Array.size
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[1]'
+      value: 
+      objectReference: {fileID: 5295920849544588607}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[2]'
+      value: 
+      objectReference: {fileID: 5295920849544588606}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[3]'
+      value: 
+      objectReference: {fileID: 5295920849544588605}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[4]'
+      value: 
+      objectReference: {fileID: 5295920849544588604}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[5]'
+      value: 
+      objectReference: {fileID: 5295920849544588603}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[6]'
+      value: 
+      objectReference: {fileID: 5295920849544588602}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[7]'
+      value: 
+      objectReference: {fileID: 566999748}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[8]'
+      value: 
+      objectReference: {fileID: 1218468064}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[9]'
+      value: 
+      objectReference: {fileID: 1003536510}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[10]'
+      value: 
+      objectReference: {fileID: 678141888}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[11]'
+      value: 
+      objectReference: {fileID: 579428707}
+    - target: {fileID: 7721603957805240251, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      propertyPath: 'allPacksInGame.Array.data[12]'
+      value: 
+      objectReference: {fileID: 1592110293}
     - target: {fileID: 8893301431322861509, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2732,6 +3286,24 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 8893301431322861509, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       insertIndex: 10
       addedObject: {fileID: 1316372314}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 566999747}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1218468063}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1003536509}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 678141887}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 579428706}
+    - targetCorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1592110294}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 5451924456029150767, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
       insertIndex: -1
@@ -2743,6 +3315,77 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 981327387}
   m_SourcePrefab: {fileID: 100100000, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+--- !u!4 &5295920849544588601 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2115794409858075652, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5295920849544588602 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3131631034872764621, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e6b88f64b009fa4ab7e726a6523f23f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5295920849544588603 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5581476497067441216, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 440566ce01147a24693b3062205ae660, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5295920849544588604 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7684137763770977537, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46e076b65ef89d745b6c2864176e5841, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5295920849544588605 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7744103116355942383, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 912402ddd24c19d43af3a91f03783b74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5295920849544588606 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5656330450246727924, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aaf3ee05a865c8f4dbac82f8d3ed8d6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &5295920849544588607 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3667120304759760326, guid: 16d380b003eb6654291ac45b3c614b84, type: 3}
+  m_PrefabInstance: {fileID: 5295920849544588600}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c78f008c1c2e9543b6447ea13e0ceb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -24,7 +24,7 @@ public class BeginerPackController : PackBaseController
 
     public override bool CheckActive()
     {
-        return base.CheckActive();
+        return base.CheckActive() && (CheckBought(TypePackIAP.SaleItem) <= 0 && CheckBought(TypePackIAP.SaleCoin) <= 0 && CheckBought(TypePackIAP.WeeklySale) <= 0);
     }
 
 

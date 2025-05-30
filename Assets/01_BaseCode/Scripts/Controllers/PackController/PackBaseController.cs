@@ -87,4 +87,10 @@ public abstract class PackBaseController : MonoBehaviour
     {
         packModel.SetTimeShowHomeNow();
     }
+
+    public static int CheckBought(TypePackIAP typePackIAP)
+    {
+        var pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePackIAP);
+        return pack.boughtTimes;
+    }
 }

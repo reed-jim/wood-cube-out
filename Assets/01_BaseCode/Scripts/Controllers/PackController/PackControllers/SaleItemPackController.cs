@@ -31,12 +31,9 @@ public class SaleItemPackController : PackBaseController
         {
             var timeEnd = UnbiasedTime.Instance.Now().AddDays(1);
             var newDayEndTime = new DateTime(timeEnd.Year, timeEnd.Month, timeEnd.Day, 0, 0, 0);
-            UseProfile.ItemSaleTimeEnd = newDayEndTime;
+            packModel.PackTimeEnd = newDayEndTime;
         }
-
-        if (segement.parmaExtral.Length > 0)
-            return base.CheckActive() && segement.IsPackReady() && UseProfile.ItemBought < segement.parmaExtral[0];
-        else return base.CheckActive() && segement.IsPackReady();
+        return base.CheckActive() && segement.IsPackReady() && packModel.boughtTimes < segement.parmaExtral[0] && CheckBought(TypePackIAP.StarterPack) > 0;
     }
 
     public override bool IsCanShowSugget()
@@ -54,7 +51,7 @@ public class SaleItemPackController : PackBaseController
         if (UseProfile.CurrentLevel < segement.level_unlock)
             return false;
 
-        if (/*UseProfile.ItemBought < segement.parmaExtral[0] &&*/TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
+        if (packModel.boughtTimes < segement.parmaExtral[0] && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
         {
             return true;
         }
@@ -84,6 +81,6 @@ public class SaleItemPackController : PackBaseController
 
     public override long GetTimeEnd()
     {
-        return (long)(UseProfile.ItemSaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
+        return (long)(packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
     }
 }

@@ -41,10 +41,9 @@ public class WeeklyPackController : PackBaseController
                     break;
             }
             var newDayEndTime = new DateTime(timeEnd.Year, timeEnd.Month, timeEnd.Day, 0, 0, 0);
-            UseProfile.WeekendSaleTimeEnd = newDayEndTime;
+            packModel.PackTimeEnd = newDayEndTime;
         }
-
-        return base.CheckActive() && segement.IsPackReady() && UseProfile.WeekendBought < segement.parmaExtral[0];
+        return base.CheckActive() && segement.IsPackReady() && packModel.boughtTimes < segement.parmaExtral[0] && CheckBought(TypePackIAP.StarterPack) > 0;
     }
 
     public override bool IsCanShowSugget()
@@ -62,7 +61,7 @@ public class WeeklyPackController : PackBaseController
         if (UseProfile.CurrentLevel < segement.level_unlock)
             return false;
 
-        if (UseProfile.WeekendBought < segement.parmaExtral[0] && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
+        if (packModel.boughtTimes < segement.parmaExtral[0] && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
         {
             return true;
         }
@@ -92,6 +91,6 @@ public class WeeklyPackController : PackBaseController
 
     public override long GetTimeEnd()
     {
-        return (long)(UseProfile.WeekendSaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
+        return (long)(packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
     }
 }

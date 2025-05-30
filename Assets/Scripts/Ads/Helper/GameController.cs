@@ -125,7 +125,20 @@ public class GameController : MonoBehaviour
             ShopItemVideoCoin.NumTurnVideoCoinInDay = 0;
 
             UseProfile.NumberLoseLevelInDay = 0;
+            
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.SuggetItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ReturnItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddBox, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddHole, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BreakObject, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddTimeItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BlockBrand_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ClearHole, 0);
 
+            packController.ResetDataNewDay();
+            videoPackController.ResetDataNewDay();
+            
+            challengeController.ResetDay();
             UseProfile.NumPlayedInDay = 0;
 
             UseProfile.ResetDayMiniGame();

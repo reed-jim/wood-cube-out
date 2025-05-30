@@ -31,10 +31,9 @@ public class SaleCoinPackController : PackBaseController
         {
             var timeEnd = UnbiasedTime.Instance.Now().AddDays(1);
             var newDayEndTime = new DateTime(timeEnd.Year, timeEnd.Month, timeEnd.Day, 0, 0, 0);
-            UseProfile.CoinSaleTimeEnd = newDayEndTime;
+            packModel.PackTimeEnd = newDayEndTime;
         }
-
-        return base.CheckActive() && segement.IsPackReady() && UseProfile.CoinBought < segement.parmaExtral[0];
+        return base.CheckActive() && segement.IsPackReady() && packModel.boughtTimes < segement.parmaExtral[0] && CheckBought(TypePackIAP.StarterPack) > 0;
     }
 
     public override bool IsCanShowSugget()
@@ -52,7 +51,7 @@ public class SaleCoinPackController : PackBaseController
         if (UseProfile.CurrentLevel < segement.level_unlock)
             return false;
 
-        if (UseProfile.CoinBought < segement.parmaExtral[0] && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
+        if (packModel.boughtTimes < segement.parmaExtral[0] && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
         {
             return true;
         }
@@ -81,6 +80,6 @@ public class SaleCoinPackController : PackBaseController
 
     public override long GetTimeEnd()
     {
-        return (long)(UseProfile.CoinSaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
+        return (long)(packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
     }
 }

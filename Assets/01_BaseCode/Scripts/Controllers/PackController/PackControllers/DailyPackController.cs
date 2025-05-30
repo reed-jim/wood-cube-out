@@ -33,16 +33,17 @@ public class DailyPackController : PackBaseController
         bool result = base.CheckActive()
             && segement.IsPackReady()
             && UseProfile.LevelPlayInDay >= segement.parmaExtral[1]
-            && UseProfile.DailyBought < segement.parmaExtral[0]
+            && packModel.boughtTimes < segement.parmaExtral[0]
+            && (CheckBought(TypePackIAP.SaleItem) <= 0 && CheckBought(TypePackIAP.SaleCoin) <= 0 && CheckBought(TypePackIAP.WeeklySale) <= 0)
             ;
 
         if (result)
         {
             isActive = true;
-            UseProfile.DailySaleTimeEnd = UnbiasedTime.Instance.Now().AddSeconds(segement.lifeTime);
+            packModel.PackTimeEnd = UnbiasedTime.Instance.Now().AddSeconds(segement.lifeTime);
         }
 
-        return result && !((UseProfile.DailySaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds < 1);
+        return result && !((packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds < 1);
     }
 
     public override bool IsCanShowSugget()
@@ -61,7 +62,7 @@ public class DailyPackController : PackBaseController
             return false;
 
         if (
-            UseProfile.LevelPlayInDay >= segement.parmaExtral[1] && UseProfile.DailyBought < segement.parmaExtral[0] &&
+            UseProfile.LevelPlayInDay >= segement.parmaExtral[1] && packModel.boughtTimes < segement.parmaExtral[0] &&
             TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
             return true;
 
@@ -92,15 +93,14 @@ public class DailyPackController : PackBaseController
 
     public override long GetTimeEnd()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.DailyOffer);
-        return segement.lifeTime > 0 ? segement.lifeTime : -1;
+        return (long)(packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
     }
 
     private void Update()
     {
         if (isActive)
         {
-            remainTime = (UseProfile.DailySaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
+            remainTime = (packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds;
             if (remainTime <= 0)
             {
                 remainTime = -1;
