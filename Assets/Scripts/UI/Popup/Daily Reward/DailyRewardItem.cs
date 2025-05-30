@@ -40,6 +40,7 @@ public class DailyRewardItem : MonoBehaviour
     void Awake()
     {
         DailyRewardPopup.claimDailyRewardEvent += Claim;
+        DailyRewardPopup.refreshDailyRewardEvent += Refresh;
 
         claimButton.onClick.AddListener(Claim);
 
@@ -49,6 +50,7 @@ public class DailyRewardItem : MonoBehaviour
     void OnDestroy()
     {
         DailyRewardPopup.claimDailyRewardEvent -= Claim;
+        DailyRewardPopup.refreshDailyRewardEvent -= Refresh;
     }
 
     private void Init()
@@ -86,6 +88,14 @@ public class DailyRewardItem : MonoBehaviour
         bool isRewardReadyForDay = DailyRewardUtil.IsDailyRewardReadyForDay(_day);
         bool IsClaimedDailyReward = DailyRewardUtil.IsClaimedDailyReward(_day);
 
+        if (_day == 1 && isRewardReadyForDay && DataUtility.Load($"is_claim_daily_reward_day_{7}", false) == true)
+        {
+            for (int i = 1; i <= 7; i++)
+            {
+                DataUtility.Save($"is_claim_daily_reward_day_{i}", false);
+            }
+        }
+
         for (int i = 0; i < rewardIcons.Length; i++)
         {
             rewardIcons[i].gameObject.SetActive(true);
@@ -121,6 +131,8 @@ public class DailyRewardItem : MonoBehaviour
                 claimButtonImage.sprite = claimButtonSprites[1];
                 claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 0.3f);
                 giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 0.3f);
+
+                giftStateContainer.SetActive(true);
             }
             else
             {
@@ -160,6 +172,11 @@ public class DailyRewardItem : MonoBehaviour
 
         // claimButton.gameObject.SetActive(false);
 
+        Init();
+    }
+
+    private void Refresh()
+    {
         Init();
     }
 }

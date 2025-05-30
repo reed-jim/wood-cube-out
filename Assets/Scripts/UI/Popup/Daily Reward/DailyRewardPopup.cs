@@ -9,10 +9,12 @@ public class DailyRewardPopup : BasePopup
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button claimButton;
     [SerializeField] private Button claimX2Button;
+    [SerializeField] private Button debugNextDayButton;
 
     private DailyRewardItem[] _dailyRewardItems;
 
     public static event Action claimDailyRewardEvent;
+    public static event Action refreshDailyRewardEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -20,6 +22,7 @@ public class DailyRewardPopup : BasePopup
         DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
         claimButton.onClick.AddListener(Claim);
+        debugNextDayButton.onClick.AddListener(DebugNextDay);
     }
 
     protected override void UnregisterMoreEvent()
@@ -93,5 +96,20 @@ public class DailyRewardPopup : BasePopup
                 claimX2Button.gameObject.SetActive(true);
             })
         );
+    }
+
+    private void DebugNextDay()
+    {
+        GamePersistentVariable.currentDailyRewardIndex++;
+
+        if (GamePersistentVariable.currentDailyRewardIndex > 7)
+        {
+            GamePersistentVariable.currentDailyRewardIndex = 1;
+        }
+
+        DataUtility.Save("last_timestamp_claim_daily_reward", 0);
+        DataUtility.Save("current_daily_reward_day", GamePersistentVariable.currentDailyRewardIndex);
+
+        refreshDailyRewardEvent?.Invoke();
     }
 }

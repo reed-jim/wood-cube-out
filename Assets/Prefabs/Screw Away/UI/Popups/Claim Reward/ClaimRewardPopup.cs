@@ -35,6 +35,7 @@ public class ClaimRewardPopup : BasePopup
         DailyRewardItem.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
+        SpaceRacePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
@@ -46,6 +47,7 @@ public class ClaimRewardPopup : BasePopup
         DailyRewardItem.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        SpaceRacePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
     }
 
     protected override void MoreActionInAwake()
