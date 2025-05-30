@@ -1,0 +1,94 @@
+using PrimeTween;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class PackageIAPUnderPopup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+{
+    [SerializeField] private RectTransform target;
+
+    [SerializeField] private RectTransform packOne;
+    [SerializeField] private RectTransform packTwo;
+
+    [SerializeField] private int maxPack;
+
+    private Vector2 _startPos;
+    private float _swipeThreshold = 50f; // Minimum distance for a swipe
+
+    private float _distance;
+
+    private bool _isSwiping;
+    private int _currentIndex;
+
+    void Awake()
+    {
+        _distance = packTwo.localPosition.x - packOne.localPosition.x;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        _startPos = eventData.position;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        if (_isSwiping)
+        {
+            return;
+        }
+
+        Vector2 endPos = eventData.position;
+        Vector2 delta = endPos - _startPos;
+
+        if (delta.magnitude >= _swipeThreshold)
+        {
+            if (Mathf.Abs(delta.x) > Mathf.Abs(delta.y))
+            {
+                // RIGHT
+                if (delta.x > 0)
+                {
+                    if (_currentIndex - 1 >= 0)
+                    {
+                        Tween.LocalPositionX(target, target.localPosition.x + _distance, duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+                            _isSwiping = false;
+                        });
+
+                        _currentIndex--;
+                    }
+                    else
+                    {
+                        Tween.LocalPositionX(target, target.localPosition.x + 100, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo)
+                        .OnComplete(() =>
+                            {
+                                _isSwiping = false;
+                            });
+                    }
+                }
+                else
+                {
+                    if (_currentIndex + 1 < maxPack)
+                    {
+                        Tween.LocalPositionX(target, target.localPosition.x - _distance, duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+                            _isSwiping = false;
+                        });
+
+                        _currentIndex++;
+                    }
+                    else
+                    {
+                        Tween.LocalPositionX(target, target.localPosition.x - 100, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo)
+                        .OnComplete(() =>
+                            {
+                                _isSwiping = false;
+                            });
+                    }
+                }
+
+                _isSwiping = true;
+            }
+        }
+    }
+}
