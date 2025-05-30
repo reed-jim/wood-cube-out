@@ -128,6 +128,7 @@ public class WinPopup : BasePopup
         HandleCoinChallenge();
         HandleWeeklyChallenge();
         HandleStarChest();
+        HandleSpaceRace();
         #endregion
 
         GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
@@ -320,6 +321,26 @@ public class WinPopup : BasePopup
         data.starCollected += 3;
 
         DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
+    }
+
+    private void HandleSpaceRace()
+    {
+        SpaceRaceData data = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        if (!data.isStarted)
+        {
+            return;
+        }
+
+        for (int i = 0; i < data.spaceRacePlayerGroup.Length; i++)
+        {
+            if (data.spaceRacePlayerGroup[i].isSelf)
+            {
+                data.spaceRacePlayerGroup[i].scoreSinceRaceBegin++;
+            }
+        }
+
+        DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
     }
     #endregion
 }

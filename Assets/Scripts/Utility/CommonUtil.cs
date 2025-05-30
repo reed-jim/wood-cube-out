@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Reflection;
 using PrimeTween;
 using UnityEngine;
@@ -177,9 +178,45 @@ public static class CommonUtil
                         time.Seconds);
     }
 
+    public static string ToHHMMSS(double totalSeconds)
+    {
+        TimeSpan time = TimeSpan.FromSeconds(totalSeconds);
+
+        return string.Format("{1:D2}:{2:D2}:{3:D2}",
+                        time.Hours,
+                        time.Minutes,
+                        time.Seconds);
+    }
+
+    public static DateTime TimestampToDateTime(long unixTimestampSeconds)
+    {
+        DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
+        return epoch.AddSeconds(unixTimestampSeconds).ToLocalTime();
+    }
+
     public static long GetCurrentTimestamp()
     {
         return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
+    }
+
+    public static bool IsNewWeek(DateTime timestamp)
+    {
+        DateTime now = DateTime.Now;
+
+        Calendar calendar = CultureInfo.CurrentCulture.Calendar;
+        CalendarWeekRule weekRule = CultureInfo.CurrentCulture.DateTimeFormat.CalendarWeekRule;
+        DayOfWeek firstDayOfWeek = CultureInfo.CurrentCulture.DateTimeFormat.FirstDayOfWeek;
+
+        int nowWeek = calendar.GetWeekOfYear(now, weekRule, firstDayOfWeek);
+        int timestampWeek = calendar.GetWeekOfYear(timestamp, weekRule, firstDayOfWeek);
+
+        // Also check the year to handle week 1 of new year
+        if (now.Year != timestamp.Year || nowWeek != timestampWeek)
+        {
+            return true; // It's a new week compared to the timestamp
+        }
+        return false;
     }
     #endregion
 }

@@ -5,8 +5,9 @@ using UnityEngine;
 public class SpaceRaceData
 {
     public bool isStarted;
+    public bool isEnded;
     public SpaceRacePlayerData[] spaceRacePlayerGroup;
-    [SerializeField] public long endTimestamp;
+    [SerializeField] public long startTimestamp;
     [SerializeField] public long nextTimestampCheatEnemyScore;
 }
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
 using JetBrains.Annotations;
+using Lean.Localization;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
@@ -18,6 +19,7 @@ public class SpaceRacePopup : BasePopup
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button helpButton;
     [SerializeField] private Button continueButton;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
 
     [SerializeField] private SkeletonGraphic gift;
 
@@ -27,6 +29,7 @@ public class SpaceRacePopup : BasePopup
     [SerializeField] private DailyRewardDataContainer spaceRaceRewardDataContainer;
 
     public static event Action startGameEvent;
+    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -41,11 +44,13 @@ public class SpaceRacePopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        SpaceRaceItem.refreshSpaceRacePopupEvent += StartRace;
     }
 
     protected override void UnregisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        SpaceRaceItem.refreshSpaceRacePopupEvent -= StartRace;
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -82,13 +87,34 @@ public class SpaceRacePopup : BasePopup
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
+        if (spaceRaceData.isEnded)
+        {
+            localizedDescription.TranslationName = "The Space Race Has Ended";
+            continueButton.gameObject.SetActive(false);
+
+            return;
+        }
+        else
+        {
+            localizedDescription.TranslationName = "The space race is underway";
+            continueButton.gameObject.SetActive(true);
+        }
+
         if (spaceRaceData.isStarted)
         {
+            EndLastRace();
+
+            if (CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(spaceRaceData.startTimestamp)))
+            {
+
+            }
+
             CheatEnemyScores();
 
             return;
         }
 
+        spaceRaceData.startTimestamp = CommonUtil.GetCurrentTimestamp();
         spaceRaceData.spaceRacePlayerGroup = new SpaceRacePlayerData[4];
 
         List<LeaderboardUserData> randomList = new List<LeaderboardUserData>();
@@ -140,34 +166,27 @@ public class SpaceRacePopup : BasePopup
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
-        long currentTimestamp = CommonUtil.GetCurrentTimestamp();
-
-        for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+        if (spaceRaceData.isEnded)
         {
-            if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
-            {
-                spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(1, 3);
-            }
+            return;
         }
 
-        spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
+        long currentTimestamp = CommonUtil.GetCurrentTimestamp();
 
-        DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+        if (currentTimestamp > spaceRaceData.nextTimestampCheatEnemyScore)
+        {
+            for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+            {
+                if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
+                {
+                    spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(1, 3);
+                }
+            }
 
-        // if (currentTimestamp > spaceRaceData.nextTimestampCheatEnemyScore)
-        // {
-        //     for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
-        //     {
-        //         if (!spaceRaceData.spaceRacePlayerGroup[i].isSelf)
-        //         {
-        //             spaceRaceData.spaceRacePlayerGroup[i].scoreSinceRaceBegin += UnityEngine.Random.Range(1, 3);
-        //         }
-        //     }
+            spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
 
-        //     spaceRaceData.nextTimestampCheatEnemyScore = currentTimestamp + 3 * 3600;
-
-        //     DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
-        // }
+            DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+        }
     }
 
     private IEnumerator Counting()
@@ -221,6 +240,30 @@ public class SpaceRacePopup : BasePopup
                 Claim();
             });
         });
+    }
+
+    private void EndLastRace()
+    {
+        int rank = GamePersistentVariable.selfSpaceRaceRank;
+
+
+
+        SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        spaceRaceData.isStarted = false;
+
+        DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
+
+        if (rank <= 3)
+        {
+            DailyRewardData rewardData = spaceRaceRewardDataContainer.Items[rank];
+
+            showClaimRewardPopupEvent?.Invoke(rewardData);
+
+            return;
+        }
+
+        SwitchRoute(GameEnum.ScreenRoute.JoinSpaceRace);
     }
 
     private void ContinuePlaying()
@@ -282,7 +325,15 @@ public class SpaceRacePopup : BasePopup
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
-        }));
+        })
+            .OnComplete(() =>
+            {
+                if (!isShow && gameObject.activeInHierarchy)
+                {
+                    SwitchRoute(GameEnum.ScreenRoute.JoinSpaceRace);
+                }
+            })
+        );
     }
 
     #region UTIL
