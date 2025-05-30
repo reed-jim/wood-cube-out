@@ -15,6 +15,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openRemoveAdPopupButton;
     [SerializeField] private Button openAllScrewBoxesForeverButton;
     [SerializeField] private CanvasGroup buttonsCanvasGroup;
+    [SerializeField] private RectTransform buttonsCanvasGroupRT;
     [SerializeField] private Button openDailyRewardPopupButton;
     [SerializeField] private Button openGoldPassPopupButton;
     [SerializeField] private Button openEndlessSalePopupButton;
@@ -29,6 +30,11 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
+
+    #region SALE PACK BUTTONS
+    [SerializeField] private Button openDailyOfferButton;
+    #endregion
+
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
     [SerializeField] private Image topBarDivider;
 
@@ -61,6 +67,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SpaceRacePopup.startGameEvent += StartGame;
+        SalePackIAPManager.suggestSalePackEvent += ShowSalePack;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -78,6 +85,7 @@ public class MenuScreen : MonoBehaviour
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         openIAPOfferPopupButton.onClick.AddListener(OpenIAPOfferPopup);
+        openDailyOfferButton.onClick.AddListener(OpenDailyOfferPopup);
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -132,6 +140,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SpaceRacePopup.startGameEvent -= StartGame;
+        SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
 
@@ -310,6 +319,20 @@ public class MenuScreen : MonoBehaviour
         switchRouteEvent?.Invoke(ScreenRoute.WeeklyTask);
     }
 
+    #region SALE PACKS
+    private void OpenDailyOfferPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.DailyOffer);
+    }
+
+    private void ShowSalePack()
+    {
+        openRemoveAdPopupButton.gameObject.SetActive(false);
+        openDailyOfferButton.gameObject.SetActive(true);
+    }
+
+    #endregion
+
     private void PlayClickSound()
     {
         AudioSource clickSound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CLICK_SOUND);
@@ -363,17 +386,17 @@ public class MenuScreen : MonoBehaviour
         //     return;
         // }
 
-        CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
+        // CommonUtil.StopTween(_openRemoveAdPopupButtonTween);
 
-        if (screenRoute == ScreenRoute.Home)
-        {
-            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
-        }
-        else
-        {
-            _openRemoveAdPopupButtonTween = Tween.LocalPositionY(
-                openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * GamePersistentVariable.canvasSize.y, 0.3f);
-        }
+        // if (screenRoute == ScreenRoute.Home)
+        // {
+        //     _openRemoveAdPopupButtonTween = Tween.LocalPositionY(openRemoveAdPopupButtonRT, _initialOpenRemoveAdPopupButtonPositionY, 0.3f);
+        // }
+        // else
+        // {
+        //     _openRemoveAdPopupButtonTween = Tween.LocalPositionY(
+        //         openRemoveAdPopupButtonRT, openRemoveAdPopupButtonRT.localPosition.y + 0.3f * GamePersistentVariable.canvasSize.y, 0.3f);
+        // }
 
         // Unlock All Screw boxes
         CommonUtil.StopTween(_openUnlockScrewBoxesPopupButtonTween);
@@ -382,13 +405,17 @@ public class MenuScreen : MonoBehaviour
         {
             buttonsCanvasGroup.interactable = true;
 
-            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 1, duration: 0.3f);
+            _openUnlockScrewBoxesPopupButtonTween = Tween.LocalPositionX(buttonsCanvasGroupRT, 0, duration: 0.3f);
+
+            // _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 1, duration: 0.3f);
         }
         else
         {
             buttonsCanvasGroup.interactable = false;
 
-            _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
+            _openUnlockScrewBoxesPopupButtonTween = Tween.LocalPositionX(buttonsCanvasGroupRT, 1.5f * GamePersistentVariable.canvasSize.x, duration: 0.3f);
+
+            // _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
         }
     }
 
