@@ -39,8 +39,7 @@ public enum TypePackIAP
     DailyOffer = 24,
     SaleItem = 25,
     SaleCoin = 26,
-    
-    
+
     MasterOffer = 27,
     MegaOffer = 28,
     GiantOffer = 29,
@@ -180,10 +179,10 @@ public class IAPPack
                 case TypePackIAP.None:
                     break;
                 case TypePackIAP.ConnectBirdMiniGame_Pack_1:
-                    //GamePlayController.Instance.miniGameController.connectBirdMG.ConnectBirdTurnBuy += item.Value;
+                    //GamePlayController_BirdSort.Instance.miniGameController.connectBirdMG.ConnectBirdTurnBuy += item.Value;
                     break;
                 case TypePackIAP.ConnectBirdMiniGame_Pack_2:
-                    //GamePlayController.Instance.miniGameController.connectBirdMG.ConnectBirdTurnBuy += item.Value;
+                    //GamePlayController_BirdSort.Instance.miniGameController.connectBirdMG.ConnectBirdTurnBuy += item.Value;
                     break;
             }
         }
