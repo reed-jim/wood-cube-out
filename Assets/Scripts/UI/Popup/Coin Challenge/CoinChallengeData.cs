@@ -12,4 +12,5 @@ public class CoinChallengeData
 public class StarLevelData
 {
     [SerializeField] public int starCollected;
+    [SerializeField] public int prevStarCollected;
 }
