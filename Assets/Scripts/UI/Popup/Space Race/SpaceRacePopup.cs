@@ -87,10 +87,17 @@ public class SpaceRacePopup : BasePopup
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
-        if (spaceRaceData.isEnded)
+        if (GameEventManager.Instance.IsSpaceRaceAvailable())
         {
             localizedDescription.TranslationName = "The Space Race Has Ended";
             continueButton.gameObject.SetActive(false);
+
+            if (spaceRaceData.isStarted)
+            {
+                EndLastRace();
+
+                spaceRaceData.isStarted = false;
+            }
 
             return;
         }
@@ -102,12 +109,10 @@ public class SpaceRacePopup : BasePopup
 
         if (spaceRaceData.isStarted)
         {
-            EndLastRace();
+            // if (CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(spaceRaceData.startTimestamp)))
+            // {
 
-            if (CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(spaceRaceData.startTimestamp)))
-            {
-
-            }
+            // }
 
             CheatEnemyScores();
 
@@ -245,8 +250,6 @@ public class SpaceRacePopup : BasePopup
     private void EndLastRace()
     {
         int rank = GamePersistentVariable.selfSpaceRaceRank;
-
-
 
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 

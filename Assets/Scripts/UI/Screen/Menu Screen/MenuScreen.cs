@@ -143,6 +143,8 @@ public class MenuScreen : MonoBehaviour
 
             StartGame();
         }
+
+        SetupEvent();
     }
 
     void OnDestroy()
@@ -389,6 +391,13 @@ public class MenuScreen : MonoBehaviour
         openSaleIAPPackButtons[(int)packType].gameObject.SetActive(true);
     }
 
+    #endregion
+
+    #region EVENT
+    private void SetupEvent()
+    {
+        openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
+    }
     #endregion
 
     private void PlayClickSound()
