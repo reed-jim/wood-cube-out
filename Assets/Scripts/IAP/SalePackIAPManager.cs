@@ -40,7 +40,10 @@ public class SalePackIAPManager : MonoBehaviour
             DataUtility.Save("num_level_play_in_day", 0);
         }
 
-        ShowSaleIAPSuggestion();
+        Tween.Delay(5).OnComplete(() =>
+        {
+            ShowSaleIAPSuggestion();
+        });
     }
 
     private void ShowSaleIAPSuggestion()
@@ -85,10 +88,9 @@ public class SalePackIAPManager : MonoBehaviour
             suggestionPack = SaleIAPPackType.WeekendSale;
         }
 
-        Tween.Delay(5).OnComplete(() =>
-        {
-            suggestSalePackEvent?.Invoke(suggestionPack);
-        });
+        GamePersistentVariable.saleIAPPackType = suggestionPack;
+
+        suggestSalePackEvent?.Invoke(suggestionPack);
     }
 
     private bool IsShowSuggestion()
@@ -113,7 +115,7 @@ public class SalePackIAPManager : MonoBehaviour
         bool isBoughtSaleItem = DataUtility.Load("is_bought_sale_item", false);
         bool isBoughtMasterOffer = DataUtility.Load("is_bought_master_offer", false);
 
-        return !isBoughtSaleItem && !isBoughtMasterOffer;
+        return !isBoughtSaleItem && !isBoughtMasterOffer && GamePersistentVariable.currentLevel >= salePacks[1].levelUnlock;
     }
 
     public bool IsShowSaleItem()

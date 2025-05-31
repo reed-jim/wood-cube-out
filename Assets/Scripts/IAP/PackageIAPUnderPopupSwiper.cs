@@ -6,6 +6,8 @@ public class PackageIAPUnderPopup : MonoBehaviour, IPointerDownHandler, IPointer
 {
     [SerializeField] private RectTransform target;
 
+    [SerializeField] private RectTransform[] packs;
+
     [SerializeField] private RectTransform packOne;
     [SerializeField] private RectTransform packTwo;
 
@@ -22,6 +24,52 @@ public class PackageIAPUnderPopup : MonoBehaviour, IPointerDownHandler, IPointer
     void Awake()
     {
         _distance = packTwo.localPosition.x - packOne.localPosition.x;
+    }
+
+    private void OnEnable()
+    {
+        Vector3 currentPosition = Vector3.zero;
+
+        int suggestionPackIndex = (int)GamePersistentVariable.saleIAPPackType;
+
+        currentPosition.y = packs[suggestionPackIndex].localPosition.y;
+
+        packs[suggestionPackIndex].localPosition = currentPosition;
+
+        for (int i = 0; i < packs.Length; i++)
+        {
+            if (i == suggestionPackIndex)
+            {
+                continue;
+            }
+
+            currentPosition.x += _distance;
+            currentPosition.y = packs[i].localPosition.y;
+
+            packs[i].gameObject.SetActive(true);
+
+            packs[i].localPosition = currentPosition;
+        }
+
+        if (suggestionPackIndex == 0 || suggestionPackIndex == 1)
+        {
+            for (int i = 2; i < packs.Length; i++)
+            {
+                packs[i].gameObject.SetActive(false);
+            }
+
+            maxPack = 2;
+        }
+
+        if (suggestionPackIndex >= 2 && suggestionPackIndex <= 4)
+        {
+            for (int i = 5; i < packs.Length; i++)
+            {
+                packs[i].gameObject.SetActive(false);
+            }
+
+            maxPack = 5;
+        }
     }
 
     public void OnPointerDown(PointerEventData eventData)
