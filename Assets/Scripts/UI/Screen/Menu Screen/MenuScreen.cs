@@ -26,13 +26,20 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openStarTournamentPopupButton;
     [SerializeField] private Button openMedalTournamentPopupButton;
     [SerializeField] private Button openSpaceRacePopupButton;
-    [SerializeField] private Button openIAPOfferPopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
 
     #region SALE PACK BUTTONS
-    [SerializeField] private Button openDailyOfferButton;
+    [SerializeField] private Button[] openSaleIAPPackButtons;
+    // [SerializeField] private Button openDailyOfferButton;
+    // [SerializeField] private Button openStarterPackButton;
+    // [SerializeField] private Button openSaleItemButton;
+    // [SerializeField] private Button openSaleCoinButton;
+    // [SerializeField] private Button openWeekendSaleButton;
+    // [SerializeField] private Button openMasterOfferButton;
+    // [SerializeField] private Button openMegaOfferButton;
+    // [SerializeField] private Button openGiantOfferButton;
     #endregion
 
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
@@ -84,8 +91,18 @@ public class MenuScreen : MonoBehaviour
         openStarTournamentPopupButton.onClick.AddListener(OpenStarTournamentPopup);
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
-        openIAPOfferPopupButton.onClick.AddListener(OpenIAPOfferPopup);
-        openDailyOfferButton.onClick.AddListener(OpenDailyOfferPopup);
+
+        #region SALE IAP PACKS
+        openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
+        openSaleIAPPackButtons[1].onClick.AddListener(OpenStarterPackPopup);
+        openSaleIAPPackButtons[2].onClick.AddListener(OpenSaleItemPopup);
+        openSaleIAPPackButtons[3].onClick.AddListener(OpenSaleCoinPopup);
+        // openSaleIAPPackButtons[4].onClick.AddListener(OpenWeekendSalePopup);
+        openSaleIAPPackButtons[5].onClick.AddListener(OpenMasterOfferPopup);
+        openSaleIAPPackButtons[6].onClick.AddListener(OpenMegaOfferPopup);
+        openSaleIAPPackButtons[7].onClick.AddListener(OpenGiantOfferPopup);
+        #endregion
+
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
 
@@ -325,10 +342,51 @@ public class MenuScreen : MonoBehaviour
         switchRouteEvent?.Invoke(ScreenRoute.DailyOffer);
     }
 
+    private void OpenStarterPackPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.StarterPack);
+    }
+
+    private void OpenSaleItemPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SaleItem);
+    }
+
+    private void OpenSaleCoinPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SaleCoin);
+    }
+
+    private void OpenWeekendSalePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.WeekendSale);
+    }
+
+    private void OpenMasterOfferPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.MasterOffer);
+    }
+
+    private void OpenMegaOfferPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.MegaOffer);
+    }
+
+    private void OpenGiantOfferPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.GiantOffer);
+    }
+
     private void ShowSalePack(SaleIAPPackType packType)
     {
         openRemoveAdPopupButton.gameObject.SetActive(false);
-        openDailyOfferButton.gameObject.SetActive(true);
+
+        for (int i = 0; i < openSaleIAPPackButtons.Length; i++)
+        {
+            openSaleIAPPackButtons[i].gameObject.SetActive(false);
+        }
+
+        openSaleIAPPackButtons[(int)packType].gameObject.SetActive(true);
     }
 
     #endregion
