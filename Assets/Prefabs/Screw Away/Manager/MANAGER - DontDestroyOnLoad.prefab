@@ -3606,6 +3606,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Fallido
     Object: {fileID: 0}
+--- !u!1 &3334727521343460239
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5983658462392147714}
+  - component: {fileID: 2332719234124660071}
+  m_Layer: 0
+  m_Name: Weekend Sale
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5983658462392147714
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334727521343460239}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2332719234124660071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3334727521343460239}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Weekend Sale
+    Object: {fileID: 0}
+  - Language: French
+    Text: Vente du week-end
+    Object: {fileID: 0}
+  - Language: German
+    Text: Wochenendverkauf
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Vendita per il fine settimana
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u9031\u672B\u306E\u30BB\u30FC\u30EB"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC8FC\uB9D0 \uD310\uB9E4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Venda de fim de semana
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u043E\u0434\u0430\u0436\u0430 \u0432\u044B\u0445\u043E\u0434\u043D\u044B\u0445"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Venta de fin de semana
+    Object: {fileID: 0}
 --- !u!1 &3447332618122708098
 GameObject:
   m_ObjectHideFlags: 0
@@ -5997,6 +6070,7 @@ Transform:
   - {fileID: 251688403071055784}
   - {fileID: 3195634283824755932}
   - {fileID: 4541886165200960805}
+  - {fileID: 5983658462392147714}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -10145,7 +10219,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unlockLevel: 0
-  salePacks: []
+  salePacks:
+  - {fileID: 11400000, guid: d2bd6d0fa98275648b2b5f7386ad83dc, type: 2}
+  - {fileID: 11400000, guid: bef7ca3b32c856c4baed5a2dbe2a722b, type: 2}
+  - {fileID: 11400000, guid: b831a41f2f617fc4d95fbb935202dc68, type: 2}
+  - {fileID: 11400000, guid: 781199e1249de724ba72b76bbfa2e0ae, type: 2}
+  - {fileID: 11400000, guid: dcef93802004700428962398e664ab6a, type: 2}
+  - {fileID: 11400000, guid: ef6c50e8c089acd4bbba6e4546e1e81b, type: 2}
+  - {fileID: 11400000, guid: 3e1f386ba0712834382ba79b9826421a, type: 2}
+  - {fileID: 11400000, guid: 60e9e91d0f02b2448878c22e8e55e6a8, type: 2}
 --- !u!1 &8900684697956777710
 GameObject:
   m_ObjectHideFlags: 0
