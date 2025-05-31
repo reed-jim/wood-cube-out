@@ -325,7 +325,7 @@ public class MenuScreen : MonoBehaviour
         switchRouteEvent?.Invoke(ScreenRoute.DailyOffer);
     }
 
-    private void ShowSalePack()
+    private void ShowSalePack(SaleIAPPackType packType)
     {
         openRemoveAdPopupButton.gameObject.SetActive(false);
         openDailyOfferButton.gameObject.SetActive(true);

@@ -3,6 +3,18 @@ using System.Linq;
 using PrimeTween;
 using UnityEngine;
 
+public enum SaleIAPPackType
+{
+    DailyOffer,
+    StarterPack,
+    SaleItem,
+    SaleCoin,
+    WeekendSale,
+    MasterOffer,
+    MegaOffer,
+    GiantOffer
+}
+
 public class SalePackIAPManager : MonoBehaviour
 {
     [SerializeField] private int unlockLevel;
@@ -15,7 +27,7 @@ public class SalePackIAPManager : MonoBehaviour
     [SerializeField] private SalePackData[] salePacks;
 
 
-    public static event Action suggestSalePackEvent;
+    public static event Action<SaleIAPPackType> suggestSalePackEvent;
 
     void Awake()
     {
@@ -28,9 +40,54 @@ public class SalePackIAPManager : MonoBehaviour
             DataUtility.Save("num_level_play_in_day", 0);
         }
 
+        ShowSaleIAPSuggestion();
+    }
+
+    private void ShowSaleIAPSuggestion()
+    {
+        #region COMMON
+        bool isBoughtStarterPack = DataUtility.Load("is_buy_all_starter_packs", false);
+        bool isBoughtSaleItem = DataUtility.Load("is_bought_sale_item", false);
+        bool isBoughtMasterOffer = DataUtility.Load("is_bought_master_offer", false);
+        #endregion
+
+        bool isShowDailyOffer = IsShowDailyOffer();
+        bool isShowStarterPack = IsShowStarterPack();
+
+        bool isSaleItemValid = IsShowPack(salePacks[2], isBoughtStarterPack && !isBoughtMasterOffer);
+        bool isSaleCoinValid = IsShowPack(salePacks[3], isBoughtStarterPack && !isBoughtMasterOffer);
+        bool isWeekendSaleValid = IsShowPack(salePacks[4], isBoughtStarterPack && !isBoughtMasterOffer);
+
+        bool isMasterOfferValid = IsShowPack(salePacks[5], isBoughtSaleItem);
+        bool isMegaOfferValid = IsShowPack(salePacks[6], isBoughtSaleItem);
+        bool isGiantOfferValid = IsShowPack(salePacks[7], isBoughtSaleItem);
+
+        SaleIAPPackType suggestionPack = SaleIAPPackType.DailyOffer;
+
+        if (isShowDailyOffer)
+        {
+            suggestionPack = SaleIAPPackType.DailyOffer;
+        }
+        else if (isShowStarterPack)
+        {
+            suggestionPack = SaleIAPPackType.StarterPack;
+        }
+        else if (isSaleItemValid)
+        {
+            suggestionPack = SaleIAPPackType.SaleItem;
+        }
+        else if (isSaleCoinValid)
+        {
+            suggestionPack = SaleIAPPackType.SaleItem;
+        }
+        else if (isWeekendSaleValid)
+        {
+            suggestionPack = SaleIAPPackType.WeekendSale;
+        }
+
         Tween.Delay(5).OnComplete(() =>
         {
-            suggestSalePackEvent?.Invoke();
+            suggestSalePackEvent?.Invoke(suggestionPack);
         });
     }
 
@@ -41,14 +98,22 @@ public class SalePackIAPManager : MonoBehaviour
 
     public bool IsShowDailyOffer()
     {
+        bool[] conditions = new bool[2];
+
         bool isPlayedAnyLevelInDay = DataUtility.Load("num_level_play_in_day", 0) > 0;
 
-        return isPlayedAnyLevelInDay;
+        conditions[0] = isPlayedAnyLevelInDay;
+        conditions[1] = GamePersistentVariable.currentLevel >= salePacks[0].levelUnlock;
+
+        return IsAllConditionPassed(conditions);
     }
 
     public bool IsShowStarterPack()
     {
-        return true;
+        bool isBoughtSaleItem = DataUtility.Load("is_bought_sale_item", false);
+        bool isBoughtMasterOffer = DataUtility.Load("is_bought_master_offer", false);
+
+        return !isBoughtSaleItem && !isBoughtMasterOffer;
     }
 
     public bool IsShowSaleItem()
@@ -66,6 +131,7 @@ public class SalePackIAPManager : MonoBehaviour
         }
 
         conditions[2] = DataUtility.Load("is_buy_all_starter_packs", false);
+        conditions[3] = DataUtility.Load("is_bought_master_offer", false) == false;
 
         foreach (var condition in conditions)
         {
@@ -78,20 +144,37 @@ public class SalePackIAPManager : MonoBehaviour
         return true;
     }
 
-    // public bool IsShowPack()
-    // {
-    //     bool[] conditions = new bool[4];
+    private bool IsAllConditionPassed(bool[] conditions)
+    {
+        foreach (var condition in conditions)
+        {
+            if (condition == false)
+            {
+                return false;
+            }
+        }
 
-    //     if (salePacks[1].availableDays.Contains(_dayOfWeek))
-    //     {
-    //         conditions[1] = true;
-    //     }
+        return true;
+    }
 
-    //     if (GamePersistentVariable.currentLevel >= salePacks[1].levelUnlock)
-    //     {
-    //         conditions[1] = true;
-    //     }
-    // }
+    public bool IsShowPack(SalePackData pack, bool additionalCondition)
+    {
+        bool[] conditions = new bool[4];
+
+        if (pack.availableDays.Contains(_dayOfWeek))
+        {
+            conditions[0] = true;
+        }
+
+        if (GamePersistentVariable.currentLevel >= pack.levelUnlock)
+        {
+            conditions[1] = true;
+        }
+
+        conditions[2] = additionalCondition;
+
+        return IsAllConditionPassed(conditions);
+    }
 
     #region UTIL
     public static bool IsNewDay()
