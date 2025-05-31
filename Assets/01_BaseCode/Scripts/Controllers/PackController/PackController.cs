@@ -92,7 +92,69 @@ public class SalePackDataModel : BaseDataButtonEvent
             return buyTimes - NumOfPurchased;
         }
     }
+     public DateTime PackTimeEnd
+    {
+        get
+        {
+            if (GPlayerPrefs.HasKey(StringHelper.PACK_END_TIME_ + typePackIAP))
+            {
+                return DateTime.Parse(PlayerPrefs.GetString(StringHelper.PACK_END_TIME_ + typePackIAP));
+            }
+            else
+            {
+                var defaultTime = UnbiasedTime.Instance.Now().AddDays(-1);
+                switch (typePackIAP)
+                {
+                    case TypePackIAP.DailyOffer:
+                        if (GPlayerPrefs.HasKey(StringHelper.DAILY_TIME_END))
+                        {
+                            GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, PlayerPrefs.GetString(StringHelper.DAILY_TIME_END));
+                            defaultTime = DateTime.Parse(PlayerPrefs.GetString(StringHelper.DAILY_TIME_END));
+                            PlayerPrefs.DeleteKey(StringHelper.DAILY_TIME_END);
+                        }
+                        break;
+                    case TypePackIAP.SaleCoin:
+                        if (GPlayerPrefs.HasKey(StringHelper.COIN_SALE_TIME_END))
+                        {
+                            GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, PlayerPrefs.GetString(StringHelper.COIN_SALE_TIME_END));
+                            defaultTime = DateTime.Parse(PlayerPrefs.GetString(StringHelper.COIN_SALE_TIME_END));
+                            PlayerPrefs.DeleteKey(StringHelper.COIN_SALE_TIME_END);
+                        }
+                        break;
+                    case TypePackIAP.SaleItem:
+                        if (GPlayerPrefs.HasKey(StringHelper.ITEM_SALE_TIME_END))
+                        {
+                            GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, PlayerPrefs.GetString(StringHelper.ITEM_SALE_TIME_END));
+                            defaultTime = DateTime.Parse(PlayerPrefs.GetString(StringHelper.ITEM_SALE_TIME_END));
+                            PlayerPrefs.DeleteKey(StringHelper.ITEM_SALE_TIME_END);
+                        }
+                        break;
+                    case TypePackIAP.WeeklySale:
+                        if (GPlayerPrefs.HasKey(StringHelper.WEEKEND_SALE_TIME_END))
+                        {
+                            GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, PlayerPrefs.GetString(StringHelper.WEEKEND_SALE_TIME_END));
+                            defaultTime = DateTime.Parse(PlayerPrefs.GetString(StringHelper.WEEKEND_SALE_TIME_END));
+                            PlayerPrefs.DeleteKey(StringHelper.WEEKEND_SALE_TIME_END);
+                        }
+                        break;
+                }
 
+                GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, defaultTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                GPlayerPrefs.Save();
+                return defaultTime;
+            }
+        }
+        set
+        {
+            var nowTime = UnbiasedTime.Instance.Now();
+            var newDayStartTime = new DateTime(nowTime.Year, nowTime.Month, nowTime.Day, 0, 0, 0);
+            if (this.PackTimeEnd < newDayStartTime)
+            {
+                GPlayerPrefs.SetString(StringHelper.PACK_END_TIME_ + typePackIAP, value.ToString("yyyy-MM-dd HH:mm:ss"));
+                GPlayerPrefs.Save();
+            }
+        }
+    }
     public bool HasActiveInDay
     {
         get

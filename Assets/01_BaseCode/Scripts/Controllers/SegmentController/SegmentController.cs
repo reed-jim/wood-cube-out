@@ -169,25 +169,25 @@ public class CoreGameData : BaseDataSegemnt
     [System.Serializable]
     public class BootsConfig
     {
-     
+
 
         [Header("-----------------------BirdSort--------------------------")]
         public BootsData addTime_BirdSort;
         public BootsData blockBrand_BirdSort;
         public BootsData return_BirdSort;
         public BootsData sugget_BirdSort;
-        public BootsData ice_BirdSort;
-        public BootsData AddHole;
-        public BootsData BreakObject;
-        public BootsData ClearHole;
-    
+        public BootsData break_object;
+        public BootsData add_hole;
+        public BootsData clear_hole;
+        public BootsData add_box;
+
 
 
         public BootsData GetBoot(GiftType type)
         {
             switch (type)
             {
-              
+
 
                 case GiftType.AddTimeItem_BirdSort:
                     return addTime_BirdSort;
@@ -197,14 +197,14 @@ public class CoreGameData : BaseDataSegemnt
                     return return_BirdSort;
                 case GiftType.SuggetItem_BirdSort:
                     return sugget_BirdSort;
-                case GiftType.AddBox:
-                    return ice_BirdSort;
-                case GiftType.AddHole:
-                    return AddHole;
                 case GiftType.BreakObject:
-                    return BreakObject;
+                    return break_object;
+                case GiftType.AddHole:
+                    return add_hole;
                 case GiftType.ClearHole:
-                    return ClearHole;
+                    return clear_hole;
+                case GiftType.AddBox:
+                    return add_box;
 
                 default:
                     return null;
@@ -234,10 +234,10 @@ public class CoreGameData : BaseDataSegemnt
         public int num_x_reward;
     }
 
-    [Serializable]
+    [System.Serializable]
     public class StartChestData
     {
-        [Serializable]
+        [System.Serializable]
         public class ChestReward
         {
             public List<RewardRandom> rewardData;
@@ -272,7 +272,7 @@ public class CoreGameData : BaseDataSegemnt
         public int num_x_reward;
     }
 
-    [Serializable]
+    [System.Serializable]
     public class LevelChestData
     {
         public int unlockLevel;
@@ -296,20 +296,20 @@ public class CoreGameData : BaseDataSegemnt
     public override void InitSegemnt(SegmentData data, int idSegment)
     {
         CoreGameConfig temp = default;
-    
-        
-        
-        
+
+
+
+
         if (!RemoteConfigController.GetJsonConfig(Core_Game_Config, out temp, true))
         {
             config = data.coreGameData.config;
-          
+
         }
         else
         {
-             config = temp;
-          
-          
+            config = temp;
+
+
         }
     }
 
@@ -450,10 +450,10 @@ public class SaleSegemntData : BaseDataSegemnt
         [Header("Weekdays")]
         [HideIf("AllWeek", true)] public bool Monday;
         [HideIf("AllWeek", true)] public bool Tuesday;
-        [HideIf("AllWeek", true)] public bool Wednesday; 
-        [HideIf("AllWeek", true)] public bool Thursday; 
-        [HideIf("AllWeek", true)] public bool Friday; 
-        [HideIf("AllWeek", true)] public bool Saturday; 
+        [HideIf("AllWeek", true)] public bool Wednesday;
+        [HideIf("AllWeek", true)] public bool Thursday;
+        [HideIf("AllWeek", true)] public bool Friday;
+        [HideIf("AllWeek", true)] public bool Saturday;
         [HideIf("AllWeek", true)] public bool Sunday;
 
         public float salePercent;
@@ -531,6 +531,13 @@ public class SaleSegemntData : BaseDataSegemnt
         public SaleDataConfig itemSalePack;
         public SaleDataConfig coinSalePack;
 
+        public SaleDataConfig masterOfferPack;
+        public SaleDataConfig megaOfferPack;
+        public SaleDataConfig giantOfferPack;
+        public SaleDataConfig starterPack;
+        public SaleDataConfig proBundle;
+        public SaleDataConfig utralBundle;
+
         //Sale config server - Temperatio
         public SaleDataConfig noelSalePack;
     }
@@ -583,6 +590,18 @@ public class SaleSegemntData : BaseDataSegemnt
                 return config.itemSalePack;
             case TypePackIAP.SaleCoin:
                 return config.coinSalePack;
+            case TypePackIAP.MasterOffer:
+                return config.masterOfferPack;
+            case TypePackIAP.MegaOffer:
+                return config.megaOfferPack;
+            case TypePackIAP.GiantOffer:
+                return config.giantOfferPack;
+            case TypePackIAP.StarterPack:
+                return config.starterPack;
+            case TypePackIAP.ProBundle:
+                return config.proBundle;
+            case TypePackIAP.UtralBundle:
+                return config.utralBundle;
 
         }
 
@@ -985,7 +1004,7 @@ public class SuggetBuyItemSegmentData : BaseDataSegemnt
 public class MinigameConnectSegmentData : BaseDataSegemnt
 {
     public const string MiniGameConnectConfig = "minigame_connect_config";
-    
+
 
     public MiniGameConfig config;
 
@@ -995,8 +1014,8 @@ public class MinigameConnectSegmentData : BaseDataSegemnt
         if (!RemoteConfigController.GetJsonConfig(MiniGameConnectConfig, out temp))
         {
             config = data.minigameConnectSegmentData.config;
-            DateTime.TryParse(this.config.str_start_date,out this.config.start_date);
-            DateTime.TryParse(this.config.str_end_date,out this.config.end_date);
+            DateTime.TryParse(this.config.str_start_date, out this.config.start_date);
+            DateTime.TryParse(this.config.str_end_date, out this.config.end_date);
         }
         else
         {

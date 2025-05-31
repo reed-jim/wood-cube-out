@@ -1,4 +1,5 @@
 using EventDispatcher;
+using Org.BouncyCastle.Crypto.Utilities;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
@@ -22,7 +23,6 @@ public class DailyOfferBox : BasePackBox
 
 
     [SerializeField] private Text SaleText;
-
     public override void InitState()
     {
         base.InitState();
@@ -36,10 +36,10 @@ public class DailyOfferBox : BasePackBox
 
     private void Update()
     {
-        if (EndTime != null && (UseProfile.DailySaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds > 0)
+        if (EndTime != null && (pack.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds > 0)
         {
-            EndTime.text = $"{TimeManager.ShowTime((long)(UseProfile.DailySaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds)}";
-            if ((UseProfile.DailySaleTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds < 1)
+            EndTime.text = $"{TimeManager.ShowTime((long)(pack.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds)}";
+            if ((pack.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds < 1)
             {
                 Close();
             }

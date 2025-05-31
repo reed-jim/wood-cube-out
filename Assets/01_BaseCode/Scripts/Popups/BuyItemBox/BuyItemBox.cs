@@ -185,7 +185,7 @@ public class BuyItemBox : BaseBox
         {
             buyVideoObj.gameObject.SetActive(true);
             buyVideoImg.sprite = activeVideoSpr;
-            turnLeftVideoObj.gameObject.SetActive(true);
+            //turnLeftVideoObj.gameObject.SetActive(true);
             numTurnLeftVideo.text = Mathf.Abs(bootsConfig.cappingWatchVideoBuy - UseProfile.GetCurrentTurnSuggetBuyItemVideo(typeItem)).ToString();
             timeResetCappingVideo.gameObject.SetActive(false);
             buyVideoBtn.interactable = true;

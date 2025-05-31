@@ -9,6 +9,8 @@ public class BasePackBox : BaseBox
     [SerializeField] protected Button buyBtn;
     [SerializeField] protected Text priceTxt;
     private Action<object> actionBuyPackSuccess;
+
+    protected SalePackDataModel pack;
     public void Init()
     {
         buyBtn.onClick.AddListener(OnClickBuy);
@@ -17,6 +19,8 @@ public class BasePackBox : BaseBox
     public virtual void InitState()
     {
         priceTxt.text = GameController.Instance.iapController.GetPrice(typePack);
+        pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
+
         actionBuyPackSuccess = (sender) => OnBuyPackSuccessHandle((TypePackIAP)sender);
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.BUY_PRODUCT_SUCCESS, actionBuyPackSuccess);
     }

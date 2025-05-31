@@ -11,12 +11,14 @@ public class ShopItemBase : MonoBehaviour
     [SerializeField] protected Text priceTxt;
 
     protected Action<object> actionIAPInited;
+    protected SalePackDataModel pack;
 
     public virtual void Init()
     {
         buyBtn.onClick.AddListener(Buy);
 
         priceTxt.text = GameController.Instance.iapController.GetPrice(typePack);
+        pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
 
         actionIAPInited = (s) => { priceTxt.text = GameController.Instance.iapController.GetPrice(typePack); };
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.IAP_INIT_DONE, actionIAPInited);

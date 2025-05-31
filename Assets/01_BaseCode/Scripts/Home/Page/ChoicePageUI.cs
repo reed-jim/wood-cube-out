@@ -50,7 +50,7 @@ public class ChoicePageUI : MonoBehaviour
         iconObj.gameObject.SetActive(false);
 
         sellectGruop.DOFade(1, 0.15f);
-        circleIconSellect.DOAnchorPosY(25, 0.3f);
+        //circleIconSellect.DOAnchorPosY(25, 0.3f);
     }
 
    
@@ -62,7 +62,7 @@ public class ChoicePageUI : MonoBehaviour
         sellectGruop.DOKill();
         sellectGruop.alpha = 0;
         circleIconSellect.DOKill();
-        circleIconSellect.anchoredPosition = new Vector2(circleIconSellect.anchoredPosition.x, 11);
+        //circleIconSellect.anchoredPosition = new Vector2(circleIconSellect.anchoredPosition.x, 11);
     }    
 
 

@@ -40,7 +40,7 @@ public class ShopPanel : MonoBehaviour
             coinPacks[i].Init();
         }
 
-        coinVideoPack.Init();
+        //coinVideoPack.Init();
 
         InitState();
         isInited = true;
@@ -60,7 +60,7 @@ public class ShopPanel : MonoBehaviour
 
     public virtual void InitState()
     {
-        coinVideoPack.InitState();
+        //coinVideoPack.InitState();
         for (int i = 0; i < bundlePacks.Length; i++)
         {
             bundlePacks[i].gameObject.SetActive(true);

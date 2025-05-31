@@ -9,13 +9,21 @@ public class PopupItemBase : ShopItemBase
 {
     [SerializeField] protected Text timeTxt = null;
 
-    [SerializeField] private Text SaleText;
+    [SerializeField] protected Text SaleText;
+    [SerializeField] protected bool IsLimitedOffer = false;
 
 
     public override void Init()
     {
         base.Init();
-        SaleText.text = string.Format(Localization.Get("s_sale_off"), GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(typePack).salePercent.ToString("0.##"));
+        if (IsLimitedOffer)
+        {
+            SaleText.text = Localization.Get("s_limited_offer");
+        }
+        else
+        {
+            SaleText.text = string.Format(Localization.Get("s_sale_off"), GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(typePack).salePercent.ToString("0.##"));
+        }
     }
 
     public virtual void Update()

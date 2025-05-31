@@ -24,7 +24,7 @@ public class LeaderBroadPage : PageBase
         worldBtn.onClick.AddListener(() => ShowWorld());
         localBtn.onClick.AddListener(() => ShowLocal());
 
-        leaderBoard.Init(this);
+        //leaderBoard.Init(this);
 
         base.Init(controller);
         
@@ -38,9 +38,9 @@ public class LeaderBroadPage : PageBase
     public override void OnChoicePage()
     {
         choicePageUI.OnChoicePage();
-        comingSoonText.gameObject.SetActive(false);
+        comingSoonText.gameObject.SetActive(true);
        
-        ShowWorld();
+        //ShowWorld();
     }
 
     #region Public Method

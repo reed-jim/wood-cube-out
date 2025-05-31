@@ -1,0 +1,1541 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &300519956244743208
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3150855145846090399}
+  - component: {fileID: 2032842002633915971}
+  m_Layer: 0
+  m_Name: SegmentController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3150855145846090399
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300519956244743208}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2032842002633915971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 300519956244743208}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 433b5edc37c1aa54fa8a115e1ad4b8aa, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  segments:
+  - nameSegment: Default Free
+    coreGameData:
+      config:
+        loadGameConfig:
+          isComeHomeWhenEndLevel: 0
+          typeSenceFirstOnOpenGame: 0
+          typeSenceFirstOnInstall: 0
+        levelConfig:
+          bonusIQ1Star: 100
+          bonusIQ2Star: 200
+          bonusIQ3Star: 300
+          coinEndLevel: 0
+        healthConfig:
+          timeReFillHealth: 600
+          priceCoinReFillHeath: 100
+          isAddHealthVideo: 1
+          addHeathVideo: 1
+        bootsConfig:
+          addTime_BirdSort:
+            unlockLevel: 14
+            price: 250
+            packAmount: 3
+            workValue:
+            - 30
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          blockBrand_BirdSort:
+            unlockLevel: 15
+            price: 290
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          return_BirdSort:
+            unlockLevel: 3
+            price: 120
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          sugget_BirdSort:
+            unlockLevel: 3
+            price: 120
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          ice_BirdSort:
+            unlockLevel: 10
+            price: 240
+            packAmount: 3
+            workValue:
+            - 10
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          shuffle_BirdSort:
+            unlockLevel: 7
+            price: 190
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          breakTheRule_BirdSort:
+            unlockLevel: 9
+            price: 200
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+          addBrand_BirdSort:
+            unlockLevel: 5
+            price: 200
+            packAmount: 3
+            workValue: []
+            isOnVideoBuy: 1
+            numItemAddBuyVideo: 1
+            cappingWatchVideoBuy: 10
+            spacingWatchVideoBuy: 1800
+        dailyLoginConfig:
+          unlockLevel: 12
+          is_video_x_reward: 1
+          num_x_reward: 2
+        starChestConfig:
+          unlockLevel: 0
+          startRequirement: 20
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 10
+              weight: 6
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1
+              amount: 20
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1005
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          is_video_x_reward: 1
+          num_x_reward: 2
+        levelChestConfig:
+          unlockLevel: 0
+          levelSpacing: 10
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 10
+              weight: 5
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1
+              amount: 20
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1
+              amount: 30
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 2
+              typeItem: 1005
+              amount: 1
+              weight: 4
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 1
+              isUnlimited: 0
+          is_video_x_reward: 1
+          num_x_reward: 2
+        rateConfig:
+          isActive: 1
+          levelStartShow: 6
+          levelMaxShow: 33
+    reviveData:
+      config:
+        isOnVideoRevive: 1
+        timeAddedReviveVideo: 45
+        cappingWatchVideoRevive: 10
+        spacingWatchVideoRevive: 3600
+        reviveData:
+        - numCoinReviveAddTime: 100
+          numCoinReviveOutSpace: 100
+          lightningRewardAmount: 0
+          timeAddedRevive: 60
+        - numCoinReviveAddTime: 150
+          numCoinReviveOutSpace: 150
+          lightningRewardAmount: 3
+          timeAddedRevive: 60
+        - numCoinReviveAddTime: 200
+          numCoinReviveOutSpace: 200
+          lightningRewardAmount: 6
+          timeAddedRevive: 60
+    adsData:
+      config:
+        banner:
+          minimumLevel: 0
+        interstitials:
+          minimumLevel: 3
+          minimumInterval: 90
+          showAfterDefeat: 1
+          showAfterQuit: 1
+          showOnAppResume: 1
+          appResumedThreshold: 60
+          showBeforeLevel: 1
+        reward:
+          minimumLevel: 0
+          isRewardedGetMoreLivesEnabled: 1
+          isRewardedStoreEnabled: 1
+          limitRVStoreEnabled: 1
+          maximumRVStorePerDay: 10
+          amountRV: 10
+    saleData:
+      config:
+        beginerPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        removeAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 5
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        bigRemoveAdsPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 9
+          time_delay_show: 1800
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 3
+          - 6
+        pickOneChoicePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        saleCoinPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        weeklySalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 1
+          Sunday: 1
+          salePercent: 50
+          parmaExtral:
+          - 3
+        dailyOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 600
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: 600
+          AllWeek: 0
+          Monday: 1
+          Tuesday: 1
+          Wednesday: 1
+          Thursday: 1
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 60
+          parmaExtral:
+          - 3
+          - 1
+        itemSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 1
+          Tuesday: 0
+          Wednesday: 1
+          Thursday: 0
+          Friday: 1
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        coinSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 1
+          Wednesday: 0
+          Thursday: 1
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        masterOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 1
+          Tuesday: 0
+          Wednesday: 1
+          Thursday: 0
+          Friday: 1
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        megaOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 1
+          Wednesday: 0
+          Thursday: 1
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 50
+          parmaExtral:
+          - 3
+        giantOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 20
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 0
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 1
+          Sunday: 1
+          salePercent: 50
+          parmaExtral:
+          - 3
+        starterPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 15
+          time_delay_show: 900
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 90
+          parmaExtral: []
+        proBundle:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        utralBundle:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        noelSalePack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+    saleVideoData:
+      config:
+        videoGirl:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 13
+          time_delay_show: 1800
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 2
+          rewards:
+          - rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1002
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1005
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 15
+              isUnlimited: 0
+            - id: 1
+              typeItem: 1006
+              amount: 2
+              weight: 5
+              isUnlimited: 0
+          - rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 20
+              weight: 5
+              isUnlimited: 0
+            - id: 3
+              typeItem: 1007
+              amount: 1
+              weight: 20
+              isUnlimited: 0
+        xCoinWinLevel:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 3
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral:
+          - 0
+          rewards: []
+    challengeData:
+      config:
+        weeklyChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 10
+          time_delay_show: 60
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards:
+          - numItemRequire: 3
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 13
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 20
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 43
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 83
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 123
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 900
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 193
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 243
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 303
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 403
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 543
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 40
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 583
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 653
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 703
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 763
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 863
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1003
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 100
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1043
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1113
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1163
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1223
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1323
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1463
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 200
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1503
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1573
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1623
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1723
+            rewardData:
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1863
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 300
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1903
+            rewardData:
+            - id: 0
+              typeItem: 15
+              amount: 1800
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 1973
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 2173
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 1000
+              weight: 0
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 2
+          - numItemSpawn: 2
+            weight: 3
+          parmaExtral: []
+          timeLife: 604800
+        coinChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 30
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 100
+              weight: 25
+              isUnlimited: 0
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 100
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 50
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 75
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 120
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 130
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 140
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 568
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 426
+              isUnlimited: 0
+          - numItemRequire: 300
+            rewardData:
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 142
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 150
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 160
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 170
+              weight: 524
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 524
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 393
+              isUnlimited: 0
+          - numItemRequire: 1050
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 262
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 13
+          parmaExtral:
+          - 50
+          - 300
+          - 1050
+          timeLife: 0
+        diamodChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 35
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 30
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 20
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 1
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 2
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 35
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 40
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 50
+              weight: 1
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 160
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 2
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 2
+              weight: 2
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1
+              amount: 60
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 70
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1
+              amount: 80
+              weight: 4
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 3
+              weight: 4
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 3
+              isUnlimited: 0
+          - numItemRequire: 540
+            rewardData:
+            - id: 0
+              typeItem: 1007
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 3
+              weight: 2
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 1
+            weight: 30
+          - numItemSpawn: 2
+            weight: 25
+          - numItemSpawn: 3
+            weight: 10
+          parmaExtral:
+          - 20
+          - 160
+          - 540
+          timeLife: 0
+        royalPass:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 16
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          rewards:
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          - numItemRequire: 0
+            rewardData: []
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          parmaExtral: []
+          timeLife: 2592000
+        raceSpaceChallenge:
+          version: 0
+          version_accept: 0
+          is_active: 1
+          time_start: 
+          time_end: 
+          level_unlock: 40
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 1
+          num_x_reward: 2
+          rewards:
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 2
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1005
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1006
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          - numItemRequire: 0
+            rewardData:
+            - id: 0
+              typeItem: 1002
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+            - id: 0
+              typeItem: 1007
+              amount: 1
+              weight: 0
+              isUnlimited: 0
+          percentSpawnItems:
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          - numItemSpawn: 0
+            weight: 0
+          parmaExtral: []
+          timeLife: 2592000
+    skillUserData:
+      config:
+        isActive: 1
+        level_start: 15
+        datas:
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 0.8
+          coPercentCover: 0.75
+        - coNumber: 0.85
+          coPercentCover: 0.8
+        - coNumber: 0.9
+          coPercentCover: 0.85
+        - coNumber: 0.95
+          coPercentCover: 0.9
+        - coNumber: 1
+          coPercentCover: 1
+        - coNumber: 1.1
+          coPercentCover: 1.25
+        - coNumber: 1.2
+          coPercentCover: 1.5
+        - coNumber: 1.3
+          coPercentCover: 1.75
+        - coNumber: 1.4
+          coPercentCover: 2
+    notificationData:
+      config:
+        isActive: 1
+        comeBackSeconds: 7200
+    suggetBuyerInGameSegmentData:
+      config:
+        suggetStartLevel:
+          is_active: 1
+          level_unlock: 4
+          suggets: 00000000
+          space_level_show_sugget: 1
+          num_sugget_in_day: 10
+        suggetEndLevel:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+        suggetOnPopup:
+          is_active: 0
+          level_unlock: 0
+          suggets: 
+          space_level_show_sugget: 0
+          num_sugget_in_day: 0
+    suggetBuyItemSegmentData:
+      config:
+        amountItem: 3
+        isHasBuyVideo: 1
+        isHasBuyCoin: 0
+        percentDiscount: 0
+    minigameConnectSegmentData:
+      config:
+        version: 0
+        version_accept: 0
+        num_watch_video_buy_egg: 3
+        num_turn_free: 3
+        is_active: 1
+        time_play: 00:01:40
+        min_level: 30
+        time_delay_show: 1800
+        str_start_date: 2024/12/1 00:00:00
+        str_end_date: 2025/1/20 00:00:00

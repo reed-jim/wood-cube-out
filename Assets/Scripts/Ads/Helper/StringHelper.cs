@@ -164,7 +164,7 @@ public static class StringHelper
 
     #endregion
 
-
+    
     public const string TIME_WATCHED_SPECIAL_VIDEO_ = "time_watched_special_video_";
 
 
@@ -259,6 +259,9 @@ public static class StringHelper
     public const string TIME_ME_FINISH_RACE_RACE_CHALLENGE = "time_me_finish_race_race_challenge";
     public const string LAST_TIME_MINIGAME_SHOW_HOME = "LAST_TIME_MINIGAME_SHOW_HOME";
     
+    //pack
+    public const string PACK_END_TIME_ = "PACK_END_TIME_";
+    public const string BOUGHT_TIMES_ = "BOUGHT_TIMES_";
     
 }
 
@@ -301,12 +304,20 @@ public class PathPrefabs
     public const string CANT_USE_ITEM_BOX = "UI/Popups/CantUseItemBox";
 
 
-    //Pack Sale
+    //Pack Sale 0
     public const string BIG_REMOVE_ADS_BOX = "UI/Popups/SalePacks/BigRemoveAdsBox";
+
+    //Pack Sale 1
     public const string DAILY_OFFER_BOX = "UI/Popups/SalePacks/DailyOfferBox";
     public const string SALE_COIN_BOX = "UI/Popups/SalePacks/SaleCoinBox";
     public const string SALE_ITEM_BOX = "UI/Popups/SalePacks/SaleItemBox";
     public const string WEEKLY_SALE_BOX = "UI/Popups/SalePacks/WeekendSaleBox";
+
+    //Pack Sale 2
+    public const string MASTER_OFFER_BOX = "UI/Popups/SalePacks/MasterOfferBox";
+    public const string MEGA_OFFER_BOX = "UI/Popups/SalePacks/MegaOfferBox";
+    public const string GIANT_OFFER_BOX = "UI/Popups/SalePacks/GiantOfferBox";
+
 
     //Star Chest
     public const string CHEST_STAR_INFO_BOX = "UI/Popups/ChestStarInfoBox";

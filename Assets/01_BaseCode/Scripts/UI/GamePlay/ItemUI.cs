@@ -12,6 +12,7 @@ public class ItemUI : MonoBehaviour
 
     [SerializeField] protected GameObject bodyUnlock;
     [SerializeField] protected Image iconItemImg;
+    [SerializeField] private Text itemName;
     [SerializeField] protected Text numItemTxt;
     [SerializeField] protected Button useBtn;
     [SerializeField] protected GameObject addObj;
@@ -23,6 +24,7 @@ public class ItemUI : MonoBehaviour
 
     [SerializeField] protected GameObject unlimitedObj;
     [SerializeField] protected Text timeCoolDownUnlimited;
+    
 
     [Header("Sugget Use")]
     [SerializeField] protected Image fxSuggetUse;
@@ -54,7 +56,8 @@ public class ItemUI : MonoBehaviour
 
     public virtual void InitState()
     {
-     
+        if (GameController.Instance.dataContain.giftDatabase.GetGift(typeItem, out Gift gift))
+            itemName.text = Localization.Get(gift.nameGift);
         numItemTxt.text = UseProfile.GetNumItem(typeItem).ToString();
 
         useObj.gameObject.SetActive(false);

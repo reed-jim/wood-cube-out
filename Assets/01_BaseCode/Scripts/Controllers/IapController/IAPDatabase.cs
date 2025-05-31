@@ -39,6 +39,13 @@ public enum TypePackIAP
     DailyOffer = 24,
     SaleItem = 25,
     SaleCoin = 26,
+    
+    
+    MasterOffer = 27,
+    MegaOffer = 28,
+    GiantOffer = 29,
+
+    StarterPack = 30,
 
     ConnectBirdMiniGame_Pack_1 = 76,
     ConnectBirdMiniGame_Pack_2 = 77

@@ -13,7 +13,7 @@ public class ShopSuggetPanel : ShopPanel
         base.Init();
         moreOffer.onClick.AddListener(OnClickMoreOffer);
     }
-
+//he he he 
     public override void InitState()
     {
         base.InitState();
