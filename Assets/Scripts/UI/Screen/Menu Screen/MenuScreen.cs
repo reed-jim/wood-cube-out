@@ -97,7 +97,7 @@ public class MenuScreen : MonoBehaviour
         openSaleIAPPackButtons[1].onClick.AddListener(OpenStarterPackPopup);
         openSaleIAPPackButtons[2].onClick.AddListener(OpenSaleItemPopup);
         openSaleIAPPackButtons[3].onClick.AddListener(OpenSaleCoinPopup);
-        // openSaleIAPPackButtons[4].onClick.AddListener(OpenWeekendSalePopup);
+        openSaleIAPPackButtons[4].onClick.AddListener(OpenWeekendSalePopup);
         openSaleIAPPackButtons[5].onClick.AddListener(OpenMasterOfferPopup);
         openSaleIAPPackButtons[6].onClick.AddListener(OpenMegaOfferPopup);
         openSaleIAPPackButtons[7].onClick.AddListener(OpenGiantOfferPopup);

@@ -29,7 +29,7 @@ public class SalePackIAPManager : MonoBehaviour
 
     public static event Action<SaleIAPPackType> suggestSalePackEvent;
 
-    void Awake()
+    void OnEnable()
     {
         _isNewDay = IsNewDay();
         _dayOfWeek = System.DateTime.Now.DayOfWeek;

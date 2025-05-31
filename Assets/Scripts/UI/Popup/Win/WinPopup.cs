@@ -131,6 +131,8 @@ public class WinPopup : BasePopup
         HandleSpaceRace();
         #endregion
 
+        DataUtility.Save("num_level_play_in_day", DataUtility.Load("num_level_play_in_day", 0) + 1);
+
         GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
 
