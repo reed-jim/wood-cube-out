@@ -26,7 +26,14 @@ public class PackageIAPUnderPopupSwiper : MonoBehaviour, IPointerDownHandler, IP
 
     void Awake()
     {
+        UnderPopupSaleIAPPackUI.refreshSuggestSaleIAPPackEvent += ShowSalePacks;
+
         _distance = packTwo.localPosition.x - packOne.localPosition.x;
+    }
+
+    void OnDestroy()
+    {
+        UnderPopupSaleIAPPackUI.refreshSuggestSaleIAPPackEvent -= ShowSalePacks;
     }
 
     private void OnEnable()
@@ -52,7 +59,7 @@ public class PackageIAPUnderPopupSwiper : MonoBehaviour, IPointerDownHandler, IP
     {
         Vector3 currentPosition = Vector3.zero;
 
-        int suggestionPackIndex = (int)GamePersistentVariable.saleIAPPackType;
+        int suggestionPackIndex = (int)SalePackIAPManager.Instance.GetSuggestionPack();
 
         currentPosition.y = packs[suggestionPackIndex].localPosition.y;
 
