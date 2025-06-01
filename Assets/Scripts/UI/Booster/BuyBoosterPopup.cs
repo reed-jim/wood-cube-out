@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ using static GameEnum;
 
 public class BuyBoosterPopup : BasePopup
 {
+    [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button buyWithDiamondButton;
     [SerializeField] private Image buyWithDiamondButtonForeground;
     [SerializeField] private Button getWithAdsButton;
@@ -40,6 +42,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         buyWithDiamondButton.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);
@@ -51,6 +54,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
@@ -220,5 +224,22 @@ public class BuyBoosterPopup : BasePopup
         switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
 
         isAbleToHideOnClickOutside = true;
+    }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
     }
 }

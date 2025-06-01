@@ -388,7 +388,14 @@ public class MenuScreen : MonoBehaviour
             openSaleIAPPackButtons[i].gameObject.SetActive(false);
         }
 
-        openSaleIAPPackButtons[(int)packType].gameObject.SetActive(true);
+        try
+        {
+            openSaleIAPPackButtons[(int)packType].gameObject.SetActive(true);
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     #endregion
