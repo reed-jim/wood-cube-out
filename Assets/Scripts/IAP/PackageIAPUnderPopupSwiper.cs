@@ -1,8 +1,9 @@
+using System;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PackageIAPUnderPopup : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class PackageIAPUnderPopupSwiper : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private RectTransform target;
 
@@ -21,12 +22,33 @@ public class PackageIAPUnderPopup : MonoBehaviour, IPointerDownHandler, IPointer
     private bool _isSwiping;
     private int _currentIndex;
 
+    public static event Action requestFetchIAPPrice;
+
     void Awake()
     {
         _distance = packTwo.localPosition.x - packOne.localPosition.x;
     }
 
     private void OnEnable()
+    {
+        try
+        {
+            target.gameObject.SetActive(true);
+
+            ShowSalePacks();
+
+            Tween.Delay(0.3f).OnComplete(() =>
+            {
+                requestFetchIAPPrice?.Invoke();
+            });
+        }
+        catch (System.Exception)
+        {
+            target.gameObject.SetActive(false);
+        }
+    }
+
+    private void ShowSalePacks()
     {
         Vector3 currentPosition = Vector3.zero;
 

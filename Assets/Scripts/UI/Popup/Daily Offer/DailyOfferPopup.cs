@@ -12,11 +12,13 @@ public class DailyOfferPopup : BasePopup
     [SerializeField] private TMP_Text timeCounterText;
 
     [SerializeField] private IAPPackageData packageData;
+    [SerializeField] private SalePackData salePackData;
 
     private SaleIAPData _saleIAPData;
 
     public static event Action<string> buyIAPEvent;
     public static event Action requestFetchIAPPrice;
+    public static event Action refreshSaleIAPPackEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -106,6 +108,19 @@ public class DailyOfferPopup : BasePopup
         if (isShow)
         {
             Hide();
+
+            try
+            {
+                int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
+
+                DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
+
+                refreshSaleIAPPackEvent?.Invoke();
+            }
+            catch (System.Exception)
+            {
+
+            }
         }
     }
 }

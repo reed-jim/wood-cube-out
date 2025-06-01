@@ -12,7 +12,8 @@ public enum SaleIAPPackType
     WeekendSale,
     MasterOffer,
     MegaOffer,
-    GiantOffer
+    GiantOffer,
+    None
 }
 
 public class SalePackIAPManager : MonoBehaviour
@@ -22,12 +23,23 @@ public class SalePackIAPManager : MonoBehaviour
     private bool _isNewDay;
     private DayOfWeek _dayOfWeek;
 
+    [SerializeField] private IntVariable currentLevel;
 
     [Header("SALE PACKS")]
     [SerializeField] private SalePackData[] salePacks;
 
 
     public static event Action<SaleIAPPackType> suggestSalePackEvent;
+
+    private void Awake()
+    {
+        DailyOfferPopup.refreshSaleIAPPackEvent += ShowSaleIAPSuggestion;
+    }
+
+    void OnDestroy()
+    {
+        DailyOfferPopup.refreshSaleIAPPackEvent -= ShowSaleIAPSuggestion;
+    }
 
     void OnEnable()
     {
@@ -65,7 +77,7 @@ public class SalePackIAPManager : MonoBehaviour
         bool isMegaOfferValid = IsShowPack(salePacks[6], isBoughtSaleItem);
         bool isGiantOfferValid = IsShowPack(salePacks[7], isBoughtSaleItem);
 
-        SaleIAPPackType suggestionPack = SaleIAPPackType.DailyOffer;
+        SaleIAPPackType suggestionPack = SaleIAPPackType.None;
 
         if (isShowDailyOffer)
         {
@@ -93,19 +105,15 @@ public class SalePackIAPManager : MonoBehaviour
         suggestSalePackEvent?.Invoke(suggestionPack);
     }
 
-    private bool IsShowSuggestion()
-    {
-        return GamePersistentVariable.currentLevel >= unlockLevel;
-    }
-
     public bool IsShowDailyOffer()
     {
-        bool[] conditions = new bool[2];
+        bool[] conditions = new bool[3];
 
         bool isPlayedAnyLevelInDay = DataUtility.Load("num_level_play_in_day", 0) > 0;
 
         conditions[0] = isPlayedAnyLevelInDay;
-        conditions[1] = GamePersistentVariable.currentLevel >= salePacks[0].levelUnlock;
+        conditions[1] = currentLevel.Value >= salePacks[0].levelUnlock;
+        conditions[2] = DataUtility.Load($"Time Bought {salePacks[0].name}", 0) < salePacks[0].maxPack;
 
         return IsAllConditionPassed(conditions);
     }
@@ -115,14 +123,14 @@ public class SalePackIAPManager : MonoBehaviour
         bool isBoughtSaleItem = DataUtility.Load("is_bought_sale_item", false);
         bool isBoughtMasterOffer = DataUtility.Load("is_bought_master_offer", false);
 
-        return !isBoughtSaleItem && !isBoughtMasterOffer && GamePersistentVariable.currentLevel >= salePacks[1].levelUnlock;
+        return !isBoughtSaleItem && !isBoughtMasterOffer && currentLevel.Value >= salePacks[1].levelUnlock;
     }
 
     public bool IsShowSaleItem()
     {
         bool[] conditions = new bool[4];
 
-        conditions[0] = GamePersistentVariable.currentLevel >= 20;
+        conditions[0] = currentLevel.Value >= 20;
 
         if (_dayOfWeek == System.DayOfWeek.Monday ||
             _dayOfWeek == System.DayOfWeek.Wednesday ||
@@ -168,7 +176,7 @@ public class SalePackIAPManager : MonoBehaviour
             conditions[0] = true;
         }
 
-        if (GamePersistentVariable.currentLevel >= pack.levelUnlock)
+        if (currentLevel.Value >= pack.levelUnlock)
         {
             conditions[1] = true;
         }
