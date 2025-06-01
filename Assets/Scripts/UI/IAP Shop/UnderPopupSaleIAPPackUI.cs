@@ -19,9 +19,12 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
     [SerializeField] private IAPPackageData packageData;
     [SerializeField] private SalePackData salePackData;
 
+    private bool _isProcessingPayment;
+
     #region EVENT
     public static event Action<string> buyIAPEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action refreshSuggestSaleIAPPackEvent;
     #endregion
 
     private void Awake()
@@ -83,6 +86,8 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         }
         else
         {
+            _isProcessingPayment = true;
+
             buyIAPEvent?.Invoke(packageData.ProductId);
         }
     }
@@ -101,9 +106,16 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         {
             try
             {
-                int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
+                if (gameObject.activeInHierarchy && _isProcessingPayment)
+                {
+                    int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
 
-                DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
+                    DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
+
+                    refreshSuggestSaleIAPPackEvent?.Invoke();
+
+                    _isProcessingPayment = false;
+                }
             }
             catch (System.Exception)
             {
