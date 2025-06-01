@@ -26,6 +26,7 @@ public class WeeklyChallengeData
     [SerializeField] private WeeklyChallengeItemData[] items;
     [SerializeField] private int currentChallengeIndex;
     [SerializeField] private int eventItemCollected;
+    public long startTimestamp;
 
     public WeeklyChallengeItemData[] Items
     {

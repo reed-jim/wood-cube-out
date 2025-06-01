@@ -30,6 +30,7 @@ namespace Saferio.Util
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private RectTransform content;
 
+        private List<Tween> _tweens;
         private List<string> _cachedItemList;
         private List<RectTransform> _items;
         private List<TMP_Text> _texts;
@@ -82,6 +83,8 @@ namespace Saferio.Util
 
         private void Awake()
         {
+            _tweens = new List<Tween>();
+
             _cachedItemList = new List<string>();
 
             // _canvasSize = canvas.sizeDelta;
@@ -99,6 +102,11 @@ namespace Saferio.Util
             }
 
             _poolingScrollCoroutine = StartCoroutine(ObjectPoolingScrolling());
+        }
+
+        void OnDestroy()
+        {
+            CommonUtil.StopAllTweens(_tweens);
         }
 
         private void CreatePool()
@@ -214,6 +222,19 @@ namespace Saferio.Util
         }
 
         public void ScrollTo(float positionY)
+        {
+            float overScrollDistance = content.localPosition.y > positionY ? -20 : 20;
+
+            _tweens.Add(
+                Tween.LocalPositionY(content, positionY + overScrollDistance, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.LocalPositionY(content, positionY, duration: 0.15f));
+                })
+            );
+        }
+
+        public void ScrollToImmediately(float positionY)
         {
             content.localPosition = content.localPosition.ChangeY(positionY);
         }

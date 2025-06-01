@@ -36,6 +36,7 @@ public class ClaimRewardPopup : BasePopup
         StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         SpaceRacePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
+        WeeklyChallengeUIItem.showClaimRewardPopupEvent += ShowClaimRewardPopupNoChest;
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
@@ -48,6 +49,7 @@ public class ClaimRewardPopup : BasePopup
         StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         SpaceRacePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        WeeklyChallengeUIItem.showClaimRewardPopupEvent -= ShowClaimRewardPopupNoChest;
     }
 
     protected override void MoreActionInAwake()
@@ -105,6 +107,11 @@ public class ClaimRewardPopup : BasePopup
     private void ShowClaimRewardPopup(DailyRewardData rewardData)
     {
         ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, true);
+    }
+
+    private void ShowClaimRewardPopupNoChest(DailyRewardData rewardData)
+    {
+        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, false);
     }
 
     private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
