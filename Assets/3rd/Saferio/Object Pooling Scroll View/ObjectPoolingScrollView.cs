@@ -225,11 +225,20 @@ namespace Saferio.Util
         {
             float overScrollDistance = content.localPosition.y > positionY ? -20 : 20;
 
+            CommonUtil.StopAllTweens(_tweens);
+
+            scrollRect.vertical = false;
+
             _tweens.Add(
                 Tween.LocalPositionY(content, positionY + overScrollDistance, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    _tweens.Add(Tween.LocalPositionY(content, positionY, duration: 0.15f));
+                    _tweens.Add(Tween.LocalPositionY(content, positionY, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        scrollRect.vertical = true;
+                    })
+                    );
                 })
             );
         }

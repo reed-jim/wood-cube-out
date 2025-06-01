@@ -36,6 +36,7 @@ public class ClaimRewardPopup : BasePopup
         StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         SpaceRacePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
+        WeeklyChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         WeeklyChallengeUIItem.showClaimRewardPopupEvent += ShowClaimRewardPopupNoChest;
 
         claimButton.onClick.AddListener(Claim);
@@ -49,6 +50,7 @@ public class ClaimRewardPopup : BasePopup
         StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         ChestLevelPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         SpaceRacePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        WeeklyChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         WeeklyChallengeUIItem.showClaimRewardPopupEvent -= ShowClaimRewardPopupNoChest;
     }
 

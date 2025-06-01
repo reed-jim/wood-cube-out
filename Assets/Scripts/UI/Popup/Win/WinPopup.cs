@@ -124,7 +124,7 @@ public class WinPopup : BasePopup
         _isAlreadyWatchRewardedAd = false;
 
         #region GOLD PASS
-        HandleGoldPass();
+        // HandleGoldPass();
         HandleCoinChallenge();
         HandleWeeklyChallenge();
         HandleStarChest();

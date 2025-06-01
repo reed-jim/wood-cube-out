@@ -19,6 +19,8 @@ public class WeeklyChallengePopup : BasePopup
 
     [SerializeField] private DailyRewardDataContainer weeklyChallengeDataContainer;
 
+    public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
+
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
@@ -38,7 +40,10 @@ public class WeeklyChallengePopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        base.Show(onCompletedAction: () =>
+        {
+            CheckEndLastChallenge();
+        });
 
         AnimateProgress();
 
@@ -77,6 +82,8 @@ public class WeeklyChallengePopup : BasePopup
 
     private void Refresh()
     {
+        LoadData();
+
         int currentIndex = GamePersistentVariable.weeklyChallengeData.CurrentChallengeIndex;
 
         int coinQuantity = weeklyChallengeDataContainer.Items[currentIndex].CoinQuantity;
@@ -104,14 +111,50 @@ public class WeeklyChallengePopup : BasePopup
         UIUtil.SetSizeKeepRatioY(nextRewardIcon, nextRewardIcon.rectTransform.sizeDelta.x);
     }
 
-    private void EndLastChallenge()
+    private void CheckEndLastChallenge()
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        if (CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(weeklyChallengeData.startTimestamp)))
+        int totalCoinQuantity = 0;
+        int[] totalBoosterQuantites = new int[3];
+
+        bool isAnyRewardLeft = false;
+
+        for (int i = 0; i < weeklyChallengeDataContainer.Items.Length; i++)
         {
-            weeklyChallengeData = new WeeklyChallengeData();
-            weeklyChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+            if (weeklyChallengeData.IsMilestoneClaimable(i))
+            {
+                int coinQuantity = weeklyChallengeDataContainer.Items[i].CoinQuantity;
+                int[] boosterQuantites = weeklyChallengeDataContainer.Items[i].BoosterQuantities;
+
+                totalCoinQuantity += coinQuantity;
+
+                for (int j = 0; j < totalBoosterQuantites.Length; j++)
+                {
+                    totalBoosterQuantites[j] += boosterQuantites[j];
+                }
+
+                isAnyRewardLeft = true;
+            }
+        }
+
+        if (isAnyRewardLeft)
+        {
+            showClaimRewardPopupEvent?.Invoke(totalCoinQuantity, totalBoosterQuantites, false, false);
+        }
+
+        weeklyChallengeData = new WeeklyChallengeData();
+        weeklyChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+
+        DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
+
+        Refresh();
+        scrollView.Refresh();
+        scrollView.ScrollTo(0);
+
+        if (!CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(weeklyChallengeData.startTimestamp)))
+        {
+
         }
     }
 

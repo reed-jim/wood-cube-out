@@ -45,4 +45,9 @@ public class WeeklyChallengeData
         get => eventItemCollected;
         set => eventItemCollected = value;
     }
+
+    public bool IsMilestoneClaimable(int milestoneIndex)
+    {
+        return milestoneIndex < currentChallengeIndex && !items[milestoneIndex].IsClaimed;
+    }
 }

@@ -162,14 +162,14 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
 
     private void TryScrollToThisItem()
     {
-        WeeklyChallengeData weeklyChallengeData = GamePersistentVariable.weeklyChallengeData;
+        // WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        if (_index == weeklyChallengeData.CurrentChallengeIndex)
-        {
-            _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
-            {
-                scrollToMilstoneEvent?.Invoke(-container.localPosition.y);
-            }));
-        }
+        // if (_index == weeklyChallengeData.CurrentChallengeIndex)
+        // {
+        //     _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
+        //     {
+        //         scrollToMilstoneEvent?.Invoke(-container.localPosition.y);
+        //     }));
+        // }
     }
 }
