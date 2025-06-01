@@ -11,6 +11,7 @@ public class WeeklyChallengePopup : BasePopup
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private TMP_Text timeCounterText;
+    [SerializeField] private Saferio.Util.ObjectPoolingScrollView scrollView;
 
     [SerializeField] private Image nextRewardIcon;
     [SerializeField] private TMP_Text nextRewardQuantity;
@@ -21,11 +22,13 @@ public class WeeklyChallengePopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        WeeklyChallengeUIItem.scrollToMilstoneEvent += ScrollToCurrentMilstone;
     }
 
     protected override void UnregisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        WeeklyChallengeUIItem.scrollToMilstoneEvent -= ScrollToCurrentMilstone;
     }
 
     protected override void MoreActionInAwake()
@@ -101,6 +104,17 @@ public class WeeklyChallengePopup : BasePopup
         UIUtil.SetSizeKeepRatioY(nextRewardIcon, nextRewardIcon.rectTransform.sizeDelta.x);
     }
 
+    private void EndLastChallenge()
+    {
+        WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
+
+        if (CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(weeklyChallengeData.startTimestamp)))
+        {
+            weeklyChallengeData = new WeeklyChallengeData();
+            weeklyChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+        }
+    }
+
     private void AnimateProgress()
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
@@ -122,6 +136,11 @@ public class WeeklyChallengePopup : BasePopup
             progressSlider.value = 0;
             progressText.text = $"{(progress * 100).ToString("F0")}%";
         }
+    }
+
+    private void ScrollToCurrentMilstone(float positionY)
+    {
+        scrollView.ScrollTo(positionY);
     }
 
     private IEnumerator Counting()

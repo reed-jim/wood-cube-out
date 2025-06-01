@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
 {
+    [SerializeField] private RectTransform container;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text orderText;
     [SerializeField] private Image rewardIcon;
@@ -20,13 +23,28 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer weeklyChallengeDataContainer;
 
+    private List<Tween> _tweens;
     private int _index;
 
+    public static event Action<float> scrollToMilstoneEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
 
     void Awake()
     {
+        _tweens = new List<Tween>();
+
         claimButton.onClick.AddListener(Claim);
+    }
+
+    void OnEnable()
+    {
+        TryScrollToThisItem();
+    }
+
+    void OnDestroy()
+    {
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     public bool IsValidAtIndex(int index)
@@ -39,6 +57,8 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
         WeeklyChallengeData weeklyChallengeData = GamePersistentVariable.weeklyChallengeData;
 
         orderText.text = $"{index + 1}";
+
+        TryScrollToThisItem();
 
         if (index <= weeklyChallengeData.CurrentChallengeIndex)
         {
@@ -130,12 +150,26 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
 
         userResourcesObserver.ChangeCoin(coinQuantity);
 
-        showResourcesEarnPopupEvent(coinQuantity, boosterQuantites, false);
+        // showResourcesEarnPopupEvent(coinQuantity, boosterQuantites, false);
+        showClaimRewardPopupEvent?.Invoke(weeklyChallengeDataContainer.Items[_index]);
 
         GamePersistentVariable.weeklyChallengeData.Items[_index].IsClaimed = true;
 
         DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, GamePersistentVariable.weeklyChallengeData);
 
         Refresh(_index);
+    }
+
+    private void TryScrollToThisItem()
+    {
+        WeeklyChallengeData weeklyChallengeData = GamePersistentVariable.weeklyChallengeData;
+
+        if (_index == weeklyChallengeData.CurrentChallengeIndex)
+        {
+            _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
+            {
+                scrollToMilstoneEvent?.Invoke(-container.localPosition.y);
+            }));
+        }
     }
 }
