@@ -64,6 +64,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 5611920150841437189}
   closeButton: {fileID: 7733255507953352378}
+  detectClickOutsideButton: {fileID: 0}
   route: 39
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
@@ -74,7 +75,7 @@ MonoBehaviour:
   timeCounterText: {fileID: 4384979098824987466}
   continueButton: {fileID: 1631701539771587283}
   userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
-  rewardData: {fileID: 11400000, guid: 0bdbf835058e3c844a0398274d9f2877, type: 2}
+  coinChallengeConfigContainer: {fileID: 11400000, guid: 6b37e2b8cef17ad42997185201663b7e, type: 2}
   requireGemForEachLevel: 15
 --- !u!114 &992490312628280195
 MonoBehaviour:
@@ -780,6 +781,7 @@ GameObject:
   - component: {fileID: 7993559682514552481}
   - component: {fileID: 5605307111713991737}
   - component: {fileID: 3096517201247669517}
+  - component: {fileID: 4385325819935903772}
   m_Layer: 5
   m_Name: Text (TMP)
   m_TagString: Untagged
@@ -803,8 +805,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 8}
-  m_SizeDelta: {x: 360, y: 120}
+  m_AnchoredPosition: {x: 0, y: 4}
+  m_SizeDelta: {x: 360, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5605307111713991737
 CanvasRenderer:
@@ -905,6 +907,21 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &4385325819935903772
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3270430360550513645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  translationName: Continue
+  parameter: 
+  FallbackText: Claim
 --- !u!1 &3933672704995325829
 GameObject:
   m_ObjectHideFlags: 0

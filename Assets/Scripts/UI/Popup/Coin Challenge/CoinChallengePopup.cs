@@ -18,11 +18,11 @@ public class CoinChallengePopup : BasePopup
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
-    [SerializeField] private DailyRewardData rewardData;
-
-    [SerializeField] private int requireGemForEachLevel;
+    [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     private CoinChallengeData _challengeData;
+
+    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -44,7 +44,10 @@ public class CoinChallengePopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        base.Show(onCompletedAction: () =>
+        {
+            CheckShowRewards();
+        });
 
         Setup();
 
@@ -53,24 +56,68 @@ public class CoinChallengePopup : BasePopup
 
     private void Setup()
     {
-        int gemCollected = Mathf.Min(_challengeData.gemCollected, requireGemForEachLevel);
+        int currentMilestone = _challengeData.CurrentMilestone;
 
-        int remaining = requireGemForEachLevel - gemCollected;
-        float progress = (float)gemCollected / requireGemForEachLevel;
+        int gemCollectedOfMilestone = _challengeData.EventItemCollectedOfMilstones[currentMilestone];
+        int requiredItemOfMilestone = coinChallengeConfigContainer.RequiredItems[currentMilestone];
+        int remaining = requiredItemOfMilestone - gemCollectedOfMilestone;
 
-        // claimButton.interactable = remaining == 0;
-        // claimButton.image.color = remaining == 0 ? ColorUtil.WithAlpha(claimButton.image.color, 1) : ColorUtil.WithAlpha(claimButton.image.color, 0.5f);
+        float progress = (float)gemCollectedOfMilestone / coinChallengeConfigContainer.RequiredItems[currentMilestone];
 
         AnimateProgress(progress);
-
-        // progressSlider.value = progress;
-        // progressText.text = $"{(progress * 100).ToString("F1")}%";
 
         localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
     }
 
+    private void CheckShowRewards()
+    {
+        int currentMilestone = _challengeData.CurrentMilestone;
+
+        DailyRewardData totalReward = new DailyRewardData();
+
+        totalReward.CoinQuantity = 0;
+        totalReward.BoosterQuantities = new int[3];
+
+        bool isClaimable = false;
+
+        for (int i = 0; i < _challengeData.IsMilestonesClaimed.Length; i++)
+        {
+            if (i >= currentMilestone)
+            {
+                continue;
+            }
+            else
+            {
+                if (!_challengeData.IsMilestonesClaimed[i])
+                {
+
+                    totalReward.CoinQuantity += coinChallengeConfigContainer.Rewards[i].CoinQuantity;
+
+                    for (int j = 0; j < totalReward.BoosterQuantities.Length; j++)
+                    {
+                        totalReward.BoosterQuantities[j] += coinChallengeConfigContainer.Rewards[i].BoosterQuantities[j];
+                    }
+
+                    _challengeData.IsMilestonesClaimed[i] = true;
+
+                    isClaimable = true;
+                }
+            }
+        }
+
+        if (isClaimable)
+        {
+            showClaimRewardPopupEvent?.Invoke(totalReward);
+
+            DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, _challengeData);
+        }
+    }
+
     private void AnimateProgress(float progress)
     {
+        int currentMilestone = _challengeData.CurrentMilestone;
+        int requiredItem = coinChallengeConfigContainer.RequiredItems[currentMilestone];
+
         if (progress > 0.19f)
         {
             progressSlider.value = 0;
@@ -79,33 +126,14 @@ public class CoinChallengePopup : BasePopup
             {
                 progressSlider.value = newVal;
                 progressText.text = $"{(newVal * 100).ToString("F0")}%";
+                progressText.text = $"{Mathf.RoundToInt(newVal * requiredItem)}/{requiredItem}";
             }));
         }
         else
         {
             progressSlider.value = 0;
-            progressText.text = $"{(progress * 100).ToString("F0")}%";
+            progressText.text = $"{_challengeData.EventItemCollectedOfMilstones[currentMilestone]}/{requiredItem}";
         }
-    }
-
-    private void Claim()
-    {
-        int coinQuantity = rewardData.CoinQuantity;
-        int[] boosterQuantites = rewardData.BoosterQuantities;
-
-        userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-        userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-        userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
-
-        userResourcesObserver.ChangeCoin(coinQuantity);
-
-        InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-
-        _challengeData.gemCollected = 0;
-
-        DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, _challengeData);
-
-        Setup();
     }
 
     private IEnumerator Counting()
@@ -144,6 +172,8 @@ public class CoinChallengePopup : BasePopup
         {
             start = 1;
             end = 0;
+
+            Setup();
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>

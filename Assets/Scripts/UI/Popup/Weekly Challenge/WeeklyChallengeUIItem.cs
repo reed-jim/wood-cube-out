@@ -60,7 +60,7 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
 
         TryScrollToThisItem();
 
-        if (index <= weeklyChallengeData.CurrentChallengeIndex)
+        if (index <= weeklyChallengeData.CurrentMilestone)
         {
             lockObject.SetActive(false);
         }
@@ -82,7 +82,7 @@ public class WeeklyChallengeUIItem : MonoBehaviour, ISaferioScrollViewItem
         {
             doneObject.SetActive(false);
 
-            if (index < weeklyChallengeData.CurrentChallengeIndex)
+            if (index < weeklyChallengeData.CurrentMilestone)
             {
                 activeState.SetActive(true);
                 glow.SetActive(true);

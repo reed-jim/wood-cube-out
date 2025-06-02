@@ -17,7 +17,7 @@ public class WeeklyChallengePopup : BasePopup
     [SerializeField] private TMP_Text nextRewardQuantity;
     [SerializeField] private Sprite[] rewardSprites;
 
-    [SerializeField] private DailyRewardDataContainer weeklyChallengeDataContainer;
+    [SerializeField] private WeeklyChallengeDataContainer weeklyChallengeDataContainer;
 
     public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
 
@@ -52,7 +52,7 @@ public class WeeklyChallengePopup : BasePopup
         Refresh();
     }
 
-    private void LoadData()
+    private WeeklyChallengeData LoadData()
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
@@ -68,26 +68,28 @@ public class WeeklyChallengePopup : BasePopup
             DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
         }
 
-        int currentChallengeLevel = (weeklyChallengeData.EventItemCollected - weeklyChallengeData.EventItemCollected % 2) / 2;
+        // int currentChallengeLevel = (weeklyChallengeData.EventItemCollected - weeklyChallengeData.EventItemCollected % 2) / 2;
 
-        if (currentChallengeLevel != weeklyChallengeData.CurrentChallengeIndex)
-        {
-            weeklyChallengeData.CurrentChallengeIndex = currentChallengeLevel;
+        // if (currentChallengeLevel != weeklyChallengeData.CurrentChallengeIndex)
+        // {
+        //     weeklyChallengeData.CurrentChallengeIndex = currentChallengeLevel;
 
-            DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
-        }
+        //     DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
+        // }
 
         GamePersistentVariable.weeklyChallengeData = weeklyChallengeData;
+
+        return weeklyChallengeData;
     }
 
     private void Refresh()
     {
-        LoadData();
+        WeeklyChallengeData data = LoadData();
 
-        int currentIndex = GamePersistentVariable.weeklyChallengeData.CurrentChallengeIndex;
+        int currentIndex = data.CurrentMilestone;
 
-        int coinQuantity = weeklyChallengeDataContainer.Items[currentIndex].CoinQuantity;
-        int[] boosterQuantites = weeklyChallengeDataContainer.Items[currentIndex].BoosterQuantities;
+        int coinQuantity = weeklyChallengeDataContainer.Rewards[currentIndex].CoinQuantity;
+        int[] boosterQuantites = weeklyChallengeDataContainer.Rewards[currentIndex].BoosterQuantities;
 
         if (coinQuantity > 0)
         {
@@ -120,12 +122,12 @@ public class WeeklyChallengePopup : BasePopup
 
         bool isAnyRewardLeft = false;
 
-        for (int i = 0; i < weeklyChallengeDataContainer.Items.Length; i++)
+        for (int i = 0; i < weeklyChallengeDataContainer.Rewards.Length; i++)
         {
             if (weeklyChallengeData.IsMilestoneClaimable(i))
             {
-                int coinQuantity = weeklyChallengeDataContainer.Items[i].CoinQuantity;
-                int[] boosterQuantites = weeklyChallengeDataContainer.Items[i].BoosterQuantities;
+                int coinQuantity = weeklyChallengeDataContainer.Rewards[i].CoinQuantity;
+                int[] boosterQuantites = weeklyChallengeDataContainer.Rewards[i].BoosterQuantities;
 
                 totalCoinQuantity += coinQuantity;
 
@@ -162,7 +164,9 @@ public class WeeklyChallengePopup : BasePopup
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        float progress = weeklyChallengeData.EventItemCollected % 2 / 2f;
+        int currentMilstone = weeklyChallengeData.CurrentMilestone;
+
+        float progress = weeklyChallengeData.EventItemCollectedOfMilstones[currentMilstone] / weeklyChallengeDataContainer.RequiredItems[currentMilstone];
 
         if (progress > 0.19f)
         {
