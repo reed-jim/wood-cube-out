@@ -1,3 +1,4 @@
+using System.Collections;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,8 @@ public class StarChestProgressBar : MonoBehaviour
     [SerializeField] private RectTransform starGroupRT;
     [SerializeField] private CanvasGroup starGroup;
     [SerializeField] private TMP_Text starText;
+    [SerializeField] private Transform claimNotification;
+    [SerializeField] private GameObject buttonNameContainer;
 
     [SerializeField] private ParticleSystem fx;
 
@@ -17,9 +20,73 @@ public class StarChestProgressBar : MonoBehaviour
 
     void Awake()
     {
+        StarChestPopup.claimStarChestEvent += Refresh;
+
         _starGroupInitialPosition = starGroupRT.localPosition;
 
+        Refresh();
+
         PlayFx();
+    }
+
+    void OnDestroy()
+    {
+        StarChestPopup.claimStarChestEvent -= Refresh;
+    }
+
+    private void Refresh()
+    {
+        bool isRewardAvailable = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData()).starCollected >= GameConstants.REQUIRE_STAR;
+
+        if (isRewardAvailable)
+        {
+            claimNotification.gameObject.SetActive(true);
+
+            StartCoroutine(AnimateClaimNotification());
+        }
+        else
+        {
+            claimNotification.gameObject.SetActive(false);
+        }
+
+        buttonNameContainer.SetActive(!isRewardAvailable);
+    }
+
+    private IEnumerator AnimateClaimNotification()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(0.3f);
+
+        int step = 0;
+        bool isWaiting = false;
+
+        while (true)
+        {
+            if (!isWaiting)
+            {
+                if (step == 0)
+                {
+                    Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        step = 1;
+                        isWaiting = false;
+                    });
+                }
+                else
+                {
+                    Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        step = 0;
+                        isWaiting = false;
+                    });
+                }
+
+                isWaiting = true;
+            }
+
+            yield return waitOneSecond;
+        }
     }
 
     private void SetProgress()
@@ -28,7 +95,7 @@ public class StarChestProgressBar : MonoBehaviour
 
         fill.fillAmount = 0;
 
-        Tween.Custom(0, data.starCollected % 10 / 10f, duration: 0.3f, onValueChange: newVal =>
+        Tween.Custom(0, data.starCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
         });
@@ -61,7 +128,7 @@ public class StarChestProgressBar : MonoBehaviour
 
         starGroup.alpha = 0;
 
-        fill.fillAmount = cachedPrevStarCollected % 10 / 10f;
+        fill.fillAmount = cachedPrevStarCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR;
 
         Tween.Alpha(starGroup, 1, duration: 0.3f, startDelay: 1)
         .Chain(

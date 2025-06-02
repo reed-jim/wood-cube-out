@@ -21,6 +21,7 @@ public class ChestLevelPopup : BasePopup
     private ChestLevelData _cachedchestLevelData;
 
     public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
+    public static event Action claimChestLevelEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -47,11 +48,12 @@ public class ChestLevelPopup : BasePopup
             {
                 int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10;
 
-                showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
-
                 _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
 
                 DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
+
+                showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
+                claimChestLevelEvent?.Invoke();
             }
         });
 
@@ -101,12 +103,9 @@ public class ChestLevelPopup : BasePopup
             userResourcesObserver.ChangeCoin(coinQuantity);
 
             InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-
-            _cachedchestLevelData.currentRequiredLevel += 10;
+            claimChestLevelEvent?.Invoke();
 
             Refresh();
-
-            DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
         }
     }
 
