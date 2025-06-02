@@ -99,7 +99,7 @@ public class ClaimRewardPopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
-        Claim(multiplier: 3);
+        Claim(multiplier: 2);
     }
 
     private void ShowAdsNotLoadedPopup()

@@ -120,7 +120,7 @@ public class ChestLevelPopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
-        Claim(multiplier: 3, isSkipCheckClaimable: true);
+        Claim(multiplier: 2, isSkipCheckClaimable: true);
     }
 
     private void ShowAdsNotLoadedPopup()
