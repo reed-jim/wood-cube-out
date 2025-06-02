@@ -24,12 +24,15 @@ public class StarChestPopup : BasePopup
 
     // public static event Action<DailyRewardData> showClaimRewardPopupEvent;
     public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
+    public static event Action claimStarChestEvent;
 
     protected override void MoreActionInAwake()
     {
         continueButton.onClick.AddListener(Continue);
 
         _data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+
+        requireGemForEachLevel = GameConstants.REQUIRE_STAR;
     }
 
     protected override void RegisterMoreEvent()
@@ -95,11 +98,11 @@ public class StarChestPopup : BasePopup
                 {
                     _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
 
-                    ShowReward();
-
                     _data.starCollected %= requireGemForEachLevel;
 
                     DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+
+                    ShowReward();
                 }
             })
             );
@@ -114,6 +117,7 @@ public class StarChestPopup : BasePopup
     private void ShowReward()
     {
         showClaimRewardPopupEvent?.Invoke(rewardData, _numAccumulatedChest);
+        claimStarChestEvent?.Invoke();
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)

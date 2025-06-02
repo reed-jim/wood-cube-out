@@ -188,6 +188,10 @@ public static class GameConstants
 
     #region GOLD PASS
     public static string GOLD_PASS_DATA_CONTAINER = "GOLD_PASS_DATA_CONTAINER";
+    #endregion
+
+    #region STAR CHEST
+    public static int REQUIRE_STAR = 20;
     #endregion 
 
     #region CHEST LEVEL
