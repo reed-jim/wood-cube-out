@@ -81,8 +81,6 @@ public class StarChestPopup : BasePopup
 
         float progress = (float)starCollected / requireGemForEachLevel;
 
-
-
         if (progress > 0.19f)
         {
             progressSlider.value = 0;

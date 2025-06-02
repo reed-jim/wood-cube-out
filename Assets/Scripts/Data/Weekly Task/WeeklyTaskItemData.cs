@@ -25,7 +25,8 @@ public class WeeklyChallengeData
 {
     [SerializeField] private WeeklyChallengeItemData[] items;
     [SerializeField] private int currentChallengeIndex;
-    [SerializeField] private int eventItemCollected;
+    [SerializeField] private int currentMilestone;
+    [SerializeField] private int[] eventItemCollectedOfMilstones;
     public long startTimestamp;
 
     public WeeklyChallengeItemData[] Items
@@ -34,20 +35,31 @@ public class WeeklyChallengeData
         set => items = value;
     }
 
-    public int CurrentChallengeIndex
+    // public int CurrentChallengeIndex
+    // {
+    //     get => currentChallengeIndex;
+    //     set => currentChallengeIndex = value;
+    // }
+
+    public int CurrentMilestone
     {
-        get => currentChallengeIndex;
-        set => currentChallengeIndex = value;
+        get => currentMilestone;
+        set => currentMilestone = value;
     }
 
-    public int EventItemCollected
+    public int[] EventItemCollectedOfMilstones
     {
-        get => eventItemCollected;
-        set => eventItemCollected = value;
+        get => eventItemCollectedOfMilstones;
+        set => eventItemCollectedOfMilstones = value;
     }
 
     public bool IsMilestoneClaimable(int milestoneIndex)
     {
         return milestoneIndex < currentChallengeIndex && !items[milestoneIndex].IsClaimed;
+    }
+
+    public void AddItemCurrentMilestone(int number = 1)
+    {
+        eventItemCollectedOfMilstones[number]++;
     }
 }

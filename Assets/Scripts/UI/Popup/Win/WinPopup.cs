@@ -28,6 +28,7 @@ public class WinPopup : BasePopup
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+    [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
@@ -126,7 +127,6 @@ public class WinPopup : BasePopup
         #region GOLD PASS
         // HandleGoldPass();
         HandleCoinChallenge();
-        HandleWeeklyChallenge();
         HandleStarChest();
         HandleSpaceRace();
         #endregion
@@ -302,7 +302,14 @@ public class WinPopup : BasePopup
     {
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
-        coinChallengeData.gemCollected++;
+        int currentMilestone = coinChallengeData.CurrentMilestone;
+
+        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += 25;
+
+        if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
+        {
+            coinChallengeData.CurrentMilestone++;
+        }
 
         DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
     }
@@ -311,7 +318,7 @@ public class WinPopup : BasePopup
     {
         WeeklyChallengeData challengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        challengeData.EventItemCollected++;
+        challengeData.AddItemCurrentMilestone();
 
         DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, challengeData);
     }
