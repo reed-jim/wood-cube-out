@@ -44,13 +44,13 @@ public class SpaceRacePopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
-        SpaceRaceItem.refreshSpaceRacePopupEvent += StartRace;
+        SpaceRaceItem.endSpaceRacePopupEvent += EndLastRace;
     }
 
     protected override void UnregisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
-        SpaceRaceItem.refreshSpaceRacePopupEvent -= StartRace;
+        SpaceRaceItem.endSpaceRacePopupEvent -= EndLastRace;
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -97,6 +97,8 @@ public class SpaceRacePopup : BasePopup
                 EndLastRace();
 
                 spaceRaceData.isStarted = false;
+
+                DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
             }
 
             return;
@@ -162,6 +164,7 @@ public class SpaceRacePopup : BasePopup
         // Sort
         // spaceRaceData.spaceRacePlayerGroup = spaceRaceData.spaceRacePlayerGroup.OrderBy(item => item.score).ToArray();
 
+        spaceRaceData.nextTimestampCheatEnemyScore = CommonUtil.GetCurrentTimestamp() + 3 * 3600;
         spaceRaceData.isStarted = true;
 
         DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);

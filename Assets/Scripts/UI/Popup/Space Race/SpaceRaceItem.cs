@@ -19,7 +19,7 @@ public class SpaceRaceItem : MonoBehaviour
 
     private Vector3 _shipInitialPosition;
 
-    public static event Action refreshSpaceRacePopupEvent;
+    public static event Action endSpaceRacePopupEvent;
 
     void Awake()
     {
@@ -86,7 +86,7 @@ public class SpaceRaceItem : MonoBehaviour
 
                 // DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
 
-                refreshSpaceRacePopupEvent?.Invoke();
+                endSpaceRacePopupEvent?.Invoke();
             }
         });
 
