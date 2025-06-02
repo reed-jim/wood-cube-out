@@ -1,15 +1,45 @@
 using System;
 using System.Collections;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 
 public class DailyRewardCounter : MonoBehaviour
 {
     [SerializeField] private TMP_Text timeCounterText;
+    [SerializeField] private Transform claimNotification;
+    [SerializeField] private GameObject buttonNameContainer;
 
     void Awake()
     {
+        DailyRewardItem.claimDailyRewardEvent += Refresh;
+
         StartCoroutine(Counting());
+
+        Refresh();
+    }
+
+    void OnDestroy()
+    {
+        DailyRewardItem.claimDailyRewardEvent -= Refresh;
+    }
+
+    private void Refresh()
+    {
+        bool isRewardAvailable = DailyRewardUtil.IsDailyRewardReadyForDay((int)DateTime.Now.DayOfWeek);
+
+        if (isRewardAvailable)
+        {
+            claimNotification.gameObject.SetActive(true);
+
+            StartCoroutine(AnimateClaimNotification());
+        }
+        else
+        {
+            claimNotification.gameObject.SetActive(false);
+        }
+
+        buttonNameContainer.SetActive(!isRewardAvailable);
     }
 
     private IEnumerator Counting()
@@ -19,6 +49,43 @@ public class DailyRewardCounter : MonoBehaviour
         while (true)
         {
             UpdateRemainingTime();
+
+            yield return waitOneSecond;
+        }
+    }
+
+    private IEnumerator AnimateClaimNotification()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(0.3f);
+
+        int step = 0;
+        bool isWaiting = false;
+
+        while (true)
+        {
+            if (!isWaiting)
+            {
+                if (step == 0)
+                {
+                    Tween.Scale(claimNotification, 1.05f, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        step = 1;
+                        isWaiting = false;
+                    });
+                }
+                else
+                {
+                    Tween.Scale(claimNotification, 0.95f, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        step = 0;
+                        isWaiting = false;
+                    });
+                }
+
+                isWaiting = true;
+            }
 
             yield return waitOneSecond;
         }

@@ -200,6 +200,35 @@ public static class CommonUtil
         return (long)(DateTime.UtcNow - new DateTime(1970, 1, 1)).TotalSeconds;
     }
 
+    public static bool IsNewDay(long timestamp)
+    {
+        // Convert the long timestamp to a DateTime object
+        DateTime timestampDate = DateTimeOffset.FromUnixTimeMilliseconds(timestamp).DateTime;
+
+        DateTime now = DateTime.Now;
+
+        // Compare the year, month, and day only (ignoring time)
+        if (now.Year != timestampDate.Year || now.Month != timestampDate.Month || now.Day != timestampDate.Day)
+        {
+            return true; // It's a new day compared to the timestamp
+        }
+
+        return false;
+    }
+
+    public static bool IsNewDay(DateTime timestamp)
+    {
+        DateTime now = DateTime.Now;
+
+        // Compare the year, month, and day only (ignoring time)
+        if (now.Year != timestamp.Year || now.Month != timestamp.Month || now.Day != timestamp.Day)
+        {
+            return true; // It's a new day compared to the timestamp
+        }
+
+        return false;
+    }
+
     public static bool IsNewWeek(DateTime timestamp)
     {
         DateTime now = DateTime.Now;

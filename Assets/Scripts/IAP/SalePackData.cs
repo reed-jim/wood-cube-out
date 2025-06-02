@@ -11,4 +11,5 @@ public class SalePackData : ScriptableObject
     public int maxPack;
     public int delayShow;
     public int priority;
+    public int lifetime;
 }

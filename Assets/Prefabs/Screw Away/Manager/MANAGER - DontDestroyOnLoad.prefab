@@ -2462,6 +2462,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: x{value} recompensa
     Object: {fileID: 0}
+--- !u!1 &2331834489442589578
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3960666977441167762}
+  - component: {fileID: 7648932068097005429}
+  m_Layer: 0
+  m_Name: Time left
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3960666977441167762
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331834489442589578}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7648932068097005429
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2331834489442589578}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: 'Time left:'
+    Object: {fileID: 0}
+  - Language: French
+    Text: 'Temps restant:'
+    Object: {fileID: 0}
+  - Language: German
+    Text: "\xDCbrige Zeit:"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Tempo rimasto:'
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6B8B\u308A\u6642\u9593\uFF1A"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB0A8\uC740 \uC2DC\uAC04 :"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: 'Tempo restante:'
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0441\u0442\u0430\u0432\u0448\u0435\u0435\u0441\u044F \u0432\u0440\u0435\u043C\u044F:"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: 'Tiempo restante:'
+    Object: {fileID: 0}
 --- !u!1 &2345420509969258935
 GameObject:
   m_ObjectHideFlags: 0
@@ -6145,6 +6218,7 @@ Transform:
   - {fileID: 4541886165200960805}
   - {fileID: 5983658462392147714}
   - {fileID: 3506375045831821090}
+  - {fileID: 3960666977441167762}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

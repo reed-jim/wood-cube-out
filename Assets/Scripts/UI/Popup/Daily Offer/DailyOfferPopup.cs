@@ -9,6 +9,7 @@ public class DailyOfferPopup : BasePopup
     [SerializeField] private Button buyButton;
     [SerializeField] private TMP_Text[] rewardQuantityTexts;
     [SerializeField] private TMP_Text localizedPriceText;
+    [SerializeField] private TMP_Text timeCounterContainer;
     [SerializeField] private TMP_Text timeCounterText;
 
     [SerializeField] private IAPPackageData packageData;
@@ -19,11 +20,13 @@ public class DailyOfferPopup : BasePopup
     public static event Action<string> buyIAPEvent;
     public static event Action requestFetchIAPPrice;
     public static event Action refreshSaleIAPPackEvent;
+    public static event Action countSaleIAPPackLifeTimeEvent;
 
     protected override void RegisterMoreEvent()
     {
         SaferioIAPManager.updatePriceEvent += FetchLocalizedPrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShown;
+        SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
         buyButton.onClick.AddListener(Buy);
     }
@@ -32,11 +35,13 @@ public class DailyOfferPopup : BasePopup
     {
         SaferioIAPManager.updatePriceEvent -= FetchLocalizedPrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShown;
+        SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
 
     protected override void MoreActionInAwake()
     {
         LoadData();
+        Setup();
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -46,8 +51,60 @@ public class DailyOfferPopup : BasePopup
         ShowRewards();
 
         requestFetchIAPPrice?.Invoke();
+    }
 
-        StartCoroutine(Counting());
+    private void Setup()
+    {
+        if (salePackData.lifetime <= 0)
+        {
+            timeCounterContainer.gameObject.SetActive(false);
+
+            return;
+        }
+        else
+        {
+            timeCounterContainer.gameObject.SetActive(true);
+        }
+
+        bool isVisitPack = DataUtility.Load($"Is Visit {salePackData.name}", false);
+        bool isPackExpired = DataUtility.Load($"Is Expired {salePackData.name}", false);
+        long packEndTimestamp = DataUtility.Load($"{salePackData.name} End Timestamp", 0);
+
+        if (!isVisitPack)
+        {
+            InitNewPack();
+        }
+        else
+        {
+            if (isPackExpired)
+            {
+                if (CommonUtil.IsNewDay(packEndTimestamp))
+                {
+                    InitNewPack();
+                }
+            }
+        }
+
+        void InitNewPack()
+        {
+            DataUtility.Save($"{salePackData.name} End Timestamp", CommonUtil.GetCurrentTimestamp() + salePackData.lifetime);
+            DataUtility.Save($"Is Visit {salePackData.name}", true);
+            DataUtility.Save($"Is Expired {salePackData.name}", false);
+
+            countSaleIAPPackLifeTimeEvent?.Invoke();
+        }
+    }
+
+    private void UpdateLifeTime(double seconds)
+    {
+        try
+        {
+            timeCounterText.text = $"{CommonUtil.ToHHMMSS(seconds)}";
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     private void ShowRewards()
