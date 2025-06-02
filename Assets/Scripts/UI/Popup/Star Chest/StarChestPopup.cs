@@ -20,8 +20,10 @@ public class StarChestPopup : BasePopup
     [SerializeField] private int requireGemForEachLevel;
 
     private StarLevelData _data;
+    private int _numAccumulatedChest;
 
-    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
+    // public static event Action<DailyRewardData> showClaimRewardPopupEvent;
+    public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -76,6 +78,8 @@ public class StarChestPopup : BasePopup
 
         float progress = (float)starCollected / requireGemForEachLevel;
 
+
+
         if (progress > 0.19f)
         {
             progressSlider.value = 0;
@@ -83,16 +87,17 @@ public class StarChestPopup : BasePopup
             _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
             {
                 progressSlider.value = newVal;
-                progressText.text = $"{(int)(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
+                progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
             })
             .OnComplete(() =>
             {
                 if (progress >= 1)
                 {
+                    _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
+
                     ShowReward();
 
-                    _data.starCollected -= requireGemForEachLevel;
-                    _data.starCollected = Math.Max(_data.starCollected, 0);
+                    _data.starCollected %= requireGemForEachLevel;
 
                     DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
                 }
@@ -108,7 +113,7 @@ public class StarChestPopup : BasePopup
 
     private void ShowReward()
     {
-        showClaimRewardPopupEvent?.Invoke(rewardData);
+        showClaimRewardPopupEvent?.Invoke(rewardData, _numAccumulatedChest);
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)

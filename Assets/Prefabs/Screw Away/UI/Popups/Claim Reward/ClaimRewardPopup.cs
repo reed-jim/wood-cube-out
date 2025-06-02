@@ -80,9 +80,10 @@ public class ClaimRewardPopup : BasePopup
 
         userResourcesObserver.ChangeCoin(coinQuantity);
 
-        InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-
-        Hide();
+        Hide(onCompletedAction: () =>
+        {
+            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
+        });
     }
 
     private void Claim()
@@ -109,6 +110,19 @@ public class ClaimRewardPopup : BasePopup
     private void ShowClaimRewardPopup(DailyRewardData rewardData)
     {
         ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, true);
+    }
+
+    private void ShowClaimRewardPopup(DailyRewardData rewardData, int multiplier)
+    {
+        int coinQuantity = rewardData.CoinQuantity * multiplier;
+        int[] boosterQuantities = rewardData.BoosterQuantities;
+
+        for (int i = 0; i < boosterQuantities.Length; i++)
+        {
+            boosterQuantities[i] *= multiplier;
+        }
+
+        ShowClaimRewardPopup(coinQuantity, boosterQuantities, false, true);
     }
 
     private void ShowClaimRewardPopupNoChest(DailyRewardData rewardData)
@@ -202,7 +216,10 @@ public class ClaimRewardPopup : BasePopup
 
                 Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
                 {
+                    // reset
+                    chest.AnimationState.SetAnimation(0, "idle", false);
 
+                    chestCanvasGroup.alpha = 1;
                 });
             });
         });
