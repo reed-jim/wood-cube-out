@@ -5835,6 +5835,82 @@ MonoBehaviour:
   - Language: Spanish
     Text: "\xA1Recoge las llaves!"
     Object: {fileID: 0}
+--- !u!1 &5352230395570542823
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8958321750404339324}
+  - component: {fileID: 5310823999112081275}
+  m_Layer: 0
+  m_Name: Collect stars to unlock the chest
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8958321750404339324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5352230395570542823}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5310823999112081275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5352230395570542823}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Collect stars to unlock the chest.
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Collectez des \xE9toiles pour d\xE9verrouiller la poitrine."
+    Object: {fileID: 0}
+  - Language: German
+    Text: Sammeln Sie Sterne, um die Brust freizuschalten.
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Raccogli le stelle per sbloccare il petto.
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u80F8\u3092\u89E3\u304D\u653E\u3064\u305F\u3081\u306B\u661F\u3092\u96C6\u3081\u307E\u3059\u3002"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC00\uC2B4\uC744 \uC7A0\uAE08 \uD574\uC81C\uD558\uAE30 \uC704\uD574
+      \uBCC4\uC744 \uBAA8\uC73C\uC2ED\uC2DC\uC624."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Colete estrelas para desbloquear o peito.
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0421\u043E\u0431\u0435\u0440\u0438\u0442\u0435 \u0437\u0432\u0435\u0437\u0434\u044B,
+      \u0447\u0442\u043E\u0431\u044B \u0440\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u0433\u0440\u0443\u0434\u044C."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Recoge estrellas para desbloquear el cofre.
+    Object: {fileID: 0}
 --- !u!1 &5437777867941391929
 GameObject:
   m_ObjectHideFlags: 0
@@ -6219,6 +6295,7 @@ Transform:
   - {fileID: 5983658462392147714}
   - {fileID: 3506375045831821090}
   - {fileID: 3960666977441167762}
+  - {fileID: 8958321750404339324}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

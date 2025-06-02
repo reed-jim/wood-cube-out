@@ -70,7 +70,7 @@ public class JoinSpaceRacePopup : BasePopup
 
             double remainingSeconds = timeLeft.TotalSeconds;
 
-            timeCounterText.text = $"{CommonUtil.ToHHMMSS(remainingSeconds)}";
+            timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remainingSeconds)}";
 
             yield return waitForSeconds;
         }
