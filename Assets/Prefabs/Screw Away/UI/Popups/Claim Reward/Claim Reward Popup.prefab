@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 4}
-  m_SizeDelta: {x: 360, y: 80}
+  m_SizeDelta: {x: 400, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4409273679571152392
 CanvasRenderer:
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 62.15
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -164,7 +164,7 @@ GameObject:
   - component: {fileID: 6414708317197448670}
   - component: {fileID: 4692417197842905234}
   - component: {fileID: 9001182195133509965}
-  - component: {fileID: 6405724711922877314}
+  - component: {fileID: 2433764413522762283}
   m_Layer: 5
   m_Name: Claim Reward Popup
   m_TagString: Untagged
@@ -217,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 5611920150841437189}
   closeButton: {fileID: 7733255507953352378}
+  detectClickOutsideButton: {fileID: 0}
   route: 0
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
@@ -249,7 +250,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &6405724711922877314
+--- !u!114 &2433764413522762283
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,7 +259,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 839226693648946329}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8703f8a895f717b408f34b24fca9e792, type: 3}
+  m_Script: {fileID: 11500000, guid: ef156ecbdc1a8c94b87faa623d10b6a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 7012652151622738283}

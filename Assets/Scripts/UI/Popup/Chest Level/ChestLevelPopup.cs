@@ -20,7 +20,7 @@ public class ChestLevelPopup : BasePopup
 
     private ChestLevelData _cachedchestLevelData;
 
-    public static event Action<DailyRewardData> showClaimRewardPopupEvent;
+    public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -45,9 +45,11 @@ public class ChestLevelPopup : BasePopup
 
             if (isClaimable)
             {
-                showClaimRewardPopupEvent?.Invoke(rewardData);
+                int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10;
 
-                _cachedchestLevelData.currentRequiredLevel += 10;
+                showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
+
+                _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
 
                 DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
             }
