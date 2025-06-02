@@ -4,13 +4,13 @@ using PrimeTween;
 using TMPro;
 using UnityEngine;
 
-public class DailyRewardCounter : MonoBehaviour
+public class DailyRewardCounter : SaferioTweenBehaviour
 {
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Transform claimNotification;
     [SerializeField] private GameObject buttonNameContainer;
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         DailyRewardItem.claimDailyRewardEvent += Refresh;
 
@@ -19,7 +19,7 @@ public class DailyRewardCounter : MonoBehaviour
         Refresh();
     }
 
-    void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         DailyRewardItem.claimDailyRewardEvent -= Refresh;
     }
@@ -67,21 +67,21 @@ public class DailyRewardCounter : MonoBehaviour
             {
                 if (step == 0)
                 {
-                    Tween.Scale(claimNotification, 1.05f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 1.05f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 1;
                         isWaiting = false;
-                    });
+                    }));
                 }
                 else
                 {
-                    Tween.Scale(claimNotification, 0.95f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 0.95f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 0;
                         isWaiting = false;
-                    });
+                    }));
                 }
 
                 isWaiting = true;

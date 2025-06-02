@@ -17,6 +17,11 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
 
+    #region REMOTE CONFIG REWARDED ADS
+    [SerializeField] private RectTransform coinButtonRT;
+    [SerializeField] private RectTransform adsButtonRT;
+    #endregion
+
     [Header("BOOSTER SPRITE")]
     [SerializeField] private Sprite[] boosterSprites;
     [SerializeField] private string[] leanTranslationTitle;
@@ -29,12 +34,20 @@ public class BuyBoosterPopup : BasePopup
 
     private BoosterType _boosterType;
     private bool _isBoughtBreakObjectBoosterByCoin;
+    private Vector3 _coinButtonPosition;
+    private Vector3 _adsButtonPosition;
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<int> updateBoosterQuantityEvent;
+
+    protected override void MoreActionInAwake()
+    {
+        _coinButtonPosition = coinButtonRT.localPosition;
+        _adsButtonPosition = adsButtonRT.localPosition;
+    }
 
     protected override void RegisterMoreEvent()
     {
@@ -81,6 +94,8 @@ public class BuyBoosterPopup : BasePopup
         {
             getWithAdsButton.onClick.AddListener(GetWithAds);
         }
+
+        SetupRewardedAdsButton();
     }
 
     private void GetWithCoin()
@@ -242,4 +257,23 @@ public class BuyBoosterPopup : BasePopup
             popupCanvasGroup.alpha = newVal;
         }));
     }
+
+    #region REMOTE CONFIG REWARDED AD
+    private void SetupRewardedAdsButton(bool forceEnable = false)
+    {
+        if (GamePersistentVariable.isEnableRewardedAds || forceEnable)
+        {
+            adsButtonRT.gameObject.SetActive(true);
+
+            coinButtonRT.localPosition = _coinButtonPosition;
+            adsButtonRT.localPosition = _adsButtonPosition;
+        }
+        else
+        {
+            adsButtonRT.gameObject.SetActive(false);
+
+            coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
+        }
+    }
+    #endregion
 }
