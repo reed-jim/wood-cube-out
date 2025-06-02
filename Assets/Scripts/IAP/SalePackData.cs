@@ -5,6 +5,7 @@ using UnityEngine;
 public class SalePackData : ScriptableObject
 {
     // public string packName;
+    public SaleIAPPackType packType;
     public int levelUnlock;
     public DayOfWeek[] availableDays;
     public int maxPack;

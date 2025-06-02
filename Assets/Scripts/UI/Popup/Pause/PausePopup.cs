@@ -37,7 +37,6 @@ public class PausePopup : BasePopup
 
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
-        openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);

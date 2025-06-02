@@ -90,15 +90,28 @@ public class PackageIAPUnderPopupSwiper : MonoBehaviour, IPointerDownHandler, IP
             maxPack = 2;
         }
 
-        if (suggestionPackIndex >= 2 && suggestionPackIndex <= 4)
+        if (suggestionPackIndex >= 2)
         {
-            for (int i = 5; i < packs.Length; i++)
+            for (int i = 0; i < packs.Length; i++)
             {
                 packs[i].gameObject.SetActive(false);
             }
 
-            maxPack = 5;
+            packs[suggestionPackIndex].gameObject.SetActive(true);
+
+            maxPack = 1;
         }
+
+        // if (suggestionPackIndex >= 2 && suggestionPackIndex <= 4)
+        // {
+        //     packs[suggestionPackIndex].gameObject.SetActive(true);
+        // for (int i = 5; i < packs.Length; i++)
+        // {
+        //     packs[i].gameObject.SetActive(false);
+        // }
+
+        //     maxPack = 5;
+        // }
     }
 
     public void OnPointerDown(PointerEventData eventData)
