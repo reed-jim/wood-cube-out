@@ -111,6 +111,7 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
                     int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
 
                     DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
+                    DataUtility.Save($"Bought {salePackData.name}", true);
 
                     refreshSuggestSaleIAPPackEvent?.Invoke();
 
