@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class StarChestProgressBar : MonoBehaviour
+public class StarChestProgressBar : SaferioTweenBehaviour
 {
     [SerializeField] private Image fill;
 
@@ -18,7 +18,7 @@ public class StarChestProgressBar : MonoBehaviour
 
     private Vector3 _starGroupInitialPosition;
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         StarChestPopup.claimStarChestEvent += Refresh;
 
@@ -29,7 +29,7 @@ public class StarChestProgressBar : MonoBehaviour
         PlayFx();
     }
 
-    void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         StarChestPopup.claimStarChestEvent -= Refresh;
     }
@@ -65,21 +65,21 @@ public class StarChestProgressBar : MonoBehaviour
             {
                 if (step == 0)
                 {
-                    Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 1;
                         isWaiting = false;
-                    });
+                    }));
                 }
                 else
                 {
-                    Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 0;
                         isWaiting = false;
-                    });
+                    }));
                 }
 
                 isWaiting = true;
@@ -95,10 +95,10 @@ public class StarChestProgressBar : MonoBehaviour
 
         fill.fillAmount = 0;
 
-        Tween.Custom(0, data.starCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR, duration: 0.3f, onValueChange: newVal =>
+        AddTween(Tween.Custom(0, data.starCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
-        });
+        }));
     }
 
     private void PlayFx()
@@ -130,20 +130,22 @@ public class StarChestProgressBar : MonoBehaviour
 
         fill.fillAmount = cachedPrevStarCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR;
 
-        Tween.Alpha(starGroup, 1, duration: 0.3f, startDelay: 1)
-        .Chain(
-            Tween.LocalPositionX(starGroupRT, _starGroupInitialPosition.x + 100, duration: 0.15f)
-        )
-        .Chain(
-            Tween.LocalPositionX(starGroupRT, fill.rectTransform.localPosition.x, duration: 0.3f)
-        )
-        .OnComplete(() =>
-        {
-            fx.Play();
+        AddSequence(
+            Tween.Alpha(starGroup, 1, duration: 0.3f, startDelay: 1)
+            .Chain(
+                Tween.LocalPositionX(starGroupRT, _starGroupInitialPosition.x + 100, duration: 0.15f)
+            )
+            .Chain(
+                Tween.LocalPositionX(starGroupRT, fill.rectTransform.localPosition.x, duration: 0.3f)
+            )
+            .OnComplete(() =>
+            {
+                fx.Play();
 
-            Tween.Alpha(starGroup, 0, duration: 0.3f);
+                AddTween(Tween.Alpha(starGroup, 0, duration: 0.3f));
 
-            SetProgress();
-        });
+                SetProgress();
+            })
+        );
     }
 }

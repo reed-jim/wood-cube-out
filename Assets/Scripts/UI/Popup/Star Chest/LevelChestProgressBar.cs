@@ -3,7 +3,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelChestProgressBar : MonoBehaviour
+public class LevelChestProgressBar : SaferioTweenBehaviour
 {
     [SerializeField] private Image fill;
     [SerializeField] private Transform claimNotification;
@@ -11,14 +11,14 @@ public class LevelChestProgressBar : MonoBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         ChestLevelPopup.claimChestLevelEvent += SetProgress;
 
         SetProgress();
     }
 
-    void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         ChestLevelPopup.claimChestLevelEvent -= SetProgress;
     }
@@ -55,21 +55,21 @@ public class LevelChestProgressBar : MonoBehaviour
             {
                 if (step == 0)
                 {
-                    Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 1;
                         isWaiting = false;
-                    });
+                    }));
                 }
                 else
                 {
-                    Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 0;
                         isWaiting = false;
-                    });
+                    }));
                 }
 
                 isWaiting = true;
