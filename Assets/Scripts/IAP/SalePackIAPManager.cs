@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using PrimeTween;
 using UnityEngine;
@@ -32,6 +33,7 @@ public class SalePackIAPManager : MonoBehaviour
 
 
     public static event Action<SaleIAPPackType> suggestSalePackEvent;
+    public static event Action<double> updateDailyOfferLifeTimeEvent;
 
     private void Awake()
     {
@@ -47,11 +49,15 @@ public class SalePackIAPManager : MonoBehaviour
         }
 
         DailyOfferPopup.refreshSaleIAPPackEvent += ShowSaleIAPSuggestion;
+        DailyOfferPopup.countSaleIAPPackLifeTimeEvent += StartCountPackLifeTime;
+
+        StartCountPackLifeTime();
     }
 
     void OnDestroy()
     {
         DailyOfferPopup.refreshSaleIAPPackEvent -= ShowSaleIAPSuggestion;
+        DailyOfferPopup.countSaleIAPPackLifeTimeEvent -= StartCountPackLifeTime;
     }
 
     void OnEnable()
@@ -137,13 +143,14 @@ public class SalePackIAPManager : MonoBehaviour
 
     public bool IsShowDailyOffer()
     {
-        bool[] conditions = new bool[3];
+        bool[] conditions = new bool[4];
 
         bool isPlayedAnyLevelInDay = DataUtility.Load("num_level_play_in_day", 0) > 0;
 
         conditions[0] = isPlayedAnyLevelInDay;
         conditions[1] = currentLevel.Value >= salePacks[0].levelUnlock;
         conditions[2] = DataUtility.Load($"Time Bought {salePacks[0].name}", 0) < salePacks[0].maxPack;
+        conditions[3] = !DataUtility.Load($"Is Expired {salePacks[0].name}", false);
 
         return IsAllConditionPassed(conditions);
     }
@@ -216,6 +223,45 @@ public class SalePackIAPManager : MonoBehaviour
         conditions[2] = additionalCondition;
 
         return IsAllConditionPassed(conditions);
+    }
+
+    private void StartCountPackLifeTime()
+    {
+        StartCoroutine(CountPackLifeTime());
+    }
+
+    private IEnumerator CountPackLifeTime()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+        bool isVisitPack = DataUtility.Load($"Is Visit {salePacks[0].name}", false);
+
+        while (isVisitPack)
+        {
+            double remainingTime = UpdateRemainingTime();
+
+            if (remainingTime <= 0)
+            {
+                DataUtility.Save($"Is Expired {salePacks[0].name}", true);
+
+                ShowSaleIAPSuggestion();
+
+                break;
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+
+    private double UpdateRemainingTime()
+    {
+        long endTimestamp = DataUtility.Load($"{salePacks[0].name} End Timestamp", 0);
+
+        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(endTimestamp).LocalDateTime - DateTime.Now).TotalSeconds;
+
+        updateDailyOfferLifeTimeEvent?.Invoke(remainingTime);
+
+        return remainingTime;
     }
 
     #region UTIL

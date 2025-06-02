@@ -1221,28 +1221,41 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void Update()
     {
-        if (!_isBannerLoaded)
+        if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
         {
-            if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
+            if (IsCooldownAdmobBanner)
             {
-                if (IsCooldownAdmobBanner)
+                _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
+                if (_cooldownAdmobBannerTimer <= 0)
                 {
-                    _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
-                    if (_cooldownAdmobBannerTimer <= 0)
-                    {
-                        RefreshAdmobBanner();
-                        _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
-
-                        _loadBannerRetryTime++;
-
-                        if (_loadBannerRetryTime >= 2)
-                        {
-                            _isBannerLoaded = true;
-                        }
-                    }
+                    RefreshAdmobBanner();
+                    _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
                 }
             }
         }
+
+        // if (!_isBannerLoaded)
+        // {
+        //     if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
+        //     {
+        //         if (IsCooldownAdmobBanner)
+        //         {
+        //             _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
+        //             if (_cooldownAdmobBannerTimer <= 0)
+        //             {
+        //                 RefreshAdmobBanner();
+        //                 _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
+
+        //                 _loadBannerRetryTime++;
+
+        //                 if (_loadBannerRetryTime >= 2)
+        //                 {
+        //                     _isBannerLoaded = true;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 
         if (isReloadBannerCollap)
         {

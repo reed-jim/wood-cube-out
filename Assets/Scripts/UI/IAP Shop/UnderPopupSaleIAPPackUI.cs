@@ -12,6 +12,7 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
     [SerializeField] private TMP_Text clearHolesQuantityText;
     [SerializeField] private TMP_Text priceText;
     [SerializeField] private Button buyButton;
+    [SerializeField] private TMP_Text timeCounterText;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isContainRemoveAd;
@@ -31,6 +32,7 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShown;
+        SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
         buyButton.onClick.AddListener(Buy);
 
@@ -41,6 +43,7 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShown;
+        SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
 
     public void Setup(IAPPackageData data)
@@ -76,6 +79,22 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         {
             priceText.text = $"{data.Price}$";
         }
+
+        try
+        {
+            if (salePackData.packType == SaleIAPPackType.DailyOffer)
+            {
+                timeCounterText.gameObject.SetActive(true);
+            }
+            else
+            {
+                timeCounterText.gameObject.SetActive(false);
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     private void Buy()
@@ -97,6 +116,18 @@ public class UnderPopupSaleIAPPackUI : MonoBehaviour
         if (productId == packageData.ProductId)
         {
             priceText.text = price;
+        }
+    }
+
+    private void UpdateLifeTime(double seconds)
+    {
+        try
+        {
+            timeCounterText.text = $"{CommonUtil.ToHHMMSS(seconds)}";
+        }
+        catch (System.Exception)
+        {
+
         }
     }
 
