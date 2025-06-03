@@ -67,7 +67,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
             {
                 if (step == 0)
                 {
-                    AddTween(Tween.Scale(claimNotification, 1.05f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 1.03f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 1;
@@ -76,7 +76,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
                 }
                 else
                 {
-                    AddTween(Tween.Scale(claimNotification, 0.95f, duration: 0.3f)
+                    AddTween(Tween.Scale(claimNotification, 0.97f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         step = 0;
