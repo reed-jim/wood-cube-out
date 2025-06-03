@@ -26,6 +26,7 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     private CoinChallengeData _challengeData;
+    private CoinChallengeData _lastChallengeData;
     private bool _isAvailable;
 
     public static event Action<DailyRewardData> showClaimRewardPopupEvent;
@@ -47,15 +48,14 @@ public class CoinChallengePopup : BasePopup
     protected override void MoreActionInAwake()
     {
         _challengeData = ResetChallenge();
-
-
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction: () =>
         {
-            CheckShowRewards();
+            CheckShowRewards(_challengeData);
+            CheckShowRewards(_lastChallengeData);
         });
 
         Setup();
@@ -67,6 +67,8 @@ public class CoinChallengePopup : BasePopup
 
         if (CommonUtil.IsNewWeek(data.startTimestamp))
         {
+            _lastChallengeData = data;
+
             data = new CoinChallengeData();
 
             data.startTimestamp = CommonUtil.GetCurrentTimestamp();
@@ -143,9 +145,9 @@ public class CoinChallengePopup : BasePopup
         }
     }
 
-    private void CheckShowRewards()
+    private void CheckShowRewards(CoinChallengeData data)
     {
-        int currentMilestone = _challengeData.CurrentMilestone;
+        int currentMilestone = data.CurrentMilestone;
 
         DailyRewardData totalReward = new DailyRewardData();
 
@@ -154,7 +156,7 @@ public class CoinChallengePopup : BasePopup
 
         bool isClaimable = false;
 
-        for (int i = 0; i < _challengeData.IsMilestonesClaimed.Length; i++)
+        for (int i = 0; i < data.IsMilestonesClaimed.Length; i++)
         {
             if (i > currentMilestone)
             {
@@ -166,8 +168,8 @@ public class CoinChallengePopup : BasePopup
 
                 if (i == currentMilestone)
                 {
-                    if (_challengeData.EventItemCollectedOfMilstones[i] >= coinChallengeConfigContainer.RequiredItems[i] &&
-                        !_challengeData.IsMilestonesClaimed[i]
+                    if (data.EventItemCollectedOfMilstones[i] >= coinChallengeConfigContainer.RequiredItems[i] &&
+                        !data.IsMilestonesClaimed[i]
                     )
                     {
                         isValid = true;
@@ -175,7 +177,7 @@ public class CoinChallengePopup : BasePopup
                 }
                 else
                 {
-                    if (!_challengeData.IsMilestonesClaimed[i])
+                    if (!data.IsMilestonesClaimed[i])
                     {
                         isValid = true;
                     }
@@ -190,7 +192,7 @@ public class CoinChallengePopup : BasePopup
                         totalReward.BoosterQuantities[j] += coinChallengeConfigContainer.Rewards[i].BoosterQuantities[j];
                     }
 
-                    _challengeData.IsMilestonesClaimed[i] = true;
+                    data.IsMilestonesClaimed[i] = true;
 
                     isClaimable = true;
                 }
@@ -201,7 +203,7 @@ public class CoinChallengePopup : BasePopup
         {
             showClaimRewardPopupEvent?.Invoke(totalReward);
 
-            DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, _challengeData);
+            DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, data);
 
             claimCoinChallengeEvent?.Invoke();
         }
