@@ -1,5 +1,6 @@
 using PrimeTween;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoinChallengeGameplayUI : SaferioTweenBehaviour
@@ -9,6 +10,8 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
     [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform container;
     [SerializeField] private TMP_Text counterText;
+
+    [SerializeField] private IntVariable currentLevel;
 
     protected override void MoreActionInAwake()
     {
@@ -24,11 +27,13 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
         }
 
         BaseScrew.updateEventItem += SetNumber;
+        LevelLoader.startLevelEvent += OnLevelLoaded;
     }
 
     protected override void MoreActionOnDestroy()
     {
         BaseScrew.updateEventItem -= SetNumber;
+        LevelLoader.startLevelEvent -= OnLevelLoaded;
     }
 
     private void SpawnFlyingItem()
@@ -42,6 +47,20 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
     public void SetNumber()
     {
+        bool isUnlocked = currentLevel.Value >= 30;
+
+        if (!isUnlocked)
+        {
+            return;
+        }
+
+        if (GamePersistentVariable.coinChallengeItemGainedInLevel == 0)
+        {
+            counterText.text = $"{GamePersistentVariable.coinChallengeItemGainedInLevel}";
+
+            return;
+        }
+
         SpawnFlyingItem();
 
         AddTween(Tween.Scale(container, 1.1f, duration: 0.3f)
@@ -51,5 +70,13 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
             AddTween(Tween.Scale(container, 1f, duration: 0.15f));
         }));
+    }
+
+    private void OnLevelLoaded()
+    {
+        bool isUnlocked = currentLevel.Value >= 30;
+        bool isCompleted = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData()).IsCompleted();
+
+        container.gameObject.SetActive(isUnlocked && !isCompleted);
     }
 }

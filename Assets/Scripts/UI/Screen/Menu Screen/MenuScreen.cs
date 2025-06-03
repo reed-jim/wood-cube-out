@@ -75,6 +75,7 @@ public class MenuScreen : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
         SpaceRacePopup.startGameEvent += StartGame;
         SalePackIAPManager.suggestSalePackEvent += ShowSalePack;
+        GameEventManager.suggestCoinChallengeEvent += OpenCoinChallengePopup;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -160,6 +161,7 @@ public class MenuScreen : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SpaceRacePopup.startGameEvent -= StartGame;
         SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
+        GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
 
@@ -404,6 +406,7 @@ public class MenuScreen : MonoBehaviour
     private void SetupEvent()
     {
         openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
+        openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsCoinChallengeUnlocked());
     }
     #endregion
 
