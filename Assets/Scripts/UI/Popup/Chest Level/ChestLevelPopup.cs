@@ -54,6 +54,8 @@ public class ChestLevelPopup : BasePopup
 
                 showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
                 claimChestLevelEvent?.Invoke();
+
+                GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
             }
         });
 

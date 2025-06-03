@@ -22,7 +22,6 @@ public class StarChestPopup : BasePopup
     private StarLevelData _data;
     private int _numAccumulatedChest;
 
-    // public static event Action<DailyRewardData> showClaimRewardPopupEvent;
     public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
     public static event Action claimStarChestEvent;
 
@@ -116,6 +115,8 @@ public class StarChestPopup : BasePopup
     {
         showClaimRewardPopupEvent?.Invoke(rewardData, _numAccumulatedChest);
         claimStarChestEvent?.Invoke();
+
+        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.StarChest;
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)
