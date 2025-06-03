@@ -117,6 +117,10 @@ public static class GamePersistentVariable
     public static int selfSpaceRaceRank;
     #endregion
 
+    #region COIN CHALLENGE
+    public static int coinChallengeItemGainedInLevel;
+    #endregion
+
     #region SORT PUZZLE
     public static int numItemsLeft;
     #endregion

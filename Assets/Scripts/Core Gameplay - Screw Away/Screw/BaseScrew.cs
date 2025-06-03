@@ -150,6 +150,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     public static event Action<int> screwStartLoosenedEvent;
     public static event Action screwLoosenedEvent;
     public static event Action updateOutsideScrewNumberEvent;
+    public static event Action updateEventItem;
     #endregion
 
     #region LIFE CYCLE
@@ -439,6 +440,17 @@ public class BaseScrew : MonoBehaviour, IScrew
                 }));
             }));
         }));
+
+        #region EVENT ITEM
+        bool isSpawn = UnityEngine.Random.Range(0, 4) == 0;
+
+        if (isSpawn)
+        {
+            GamePersistentVariable.coinChallengeItemGainedInLevel++;
+
+            updateEventItem?.Invoke();
+        }
+        #endregion
     }
 
     private async void AddScrewToList()
