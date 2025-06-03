@@ -185,6 +185,8 @@ public class DailyRewardItem : SaferioTweenBehaviour
         showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false, isChest);
         claimDailyRewardEvent?.Invoke();
 
+        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.DailyReward;
+
         // claimButton.gameObject.SetActive(false);
 
         Init();

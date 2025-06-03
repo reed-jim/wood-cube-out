@@ -96,7 +96,7 @@ public class ClaimRewardPopup : BasePopup
     private void ClaimMultiplier()
     {
         AdmobAdsMax.Instance.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: GamePersistentVariable.currentReasonRewardedAd);
     }
 
     private void OnRewaredAdCompleted()

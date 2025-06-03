@@ -203,6 +203,8 @@ public class CoinChallengePopup : BasePopup
         {
             showClaimRewardPopupEvent?.Invoke(totalReward);
 
+            GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.CoinChallenge;
+
             DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, data);
 
             claimCoinChallengeEvent?.Invoke();

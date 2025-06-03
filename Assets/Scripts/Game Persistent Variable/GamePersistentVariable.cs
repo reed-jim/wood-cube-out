@@ -80,6 +80,7 @@ public static class GamePersistentVariable
     public static bool remoteConfigIsShowMREC;
     public static int bannerCooldown = 30;
     public static bool isEnableRewardedAds;
+    public static ActionWatchVideo currentReasonRewardedAd;
     #endregion
 
     #region IAP
