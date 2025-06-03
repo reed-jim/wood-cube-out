@@ -20,6 +20,7 @@ public static class GameConstants
     public static string DESTROY_OBJECT_PART_FX = "Destroy Object Part Fx";
     public static string LOOSE_SCREW_FX = "LOOSE_SCREW_FX";
     public static string BOX_COMPLETED_FX = "BOX_COMPLETED_FX";
+    public static string EVENT_ITEM = "EVENT_ITEM";
     #endregion
 
     #region COMMON TEXT

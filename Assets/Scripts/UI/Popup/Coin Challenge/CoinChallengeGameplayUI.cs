@@ -6,6 +6,7 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 {
     public static CoinChallengeGameplayUI Instance;
 
+    [SerializeField] private RectTransform canvas;
     [SerializeField] private RectTransform container;
     [SerializeField] private TMP_Text counterText;
 
@@ -30,14 +31,25 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
         BaseScrew.updateEventItem -= SetNumber;
     }
 
+    private void SpawnFlyingItem()
+    {
+        EventItem eventItem = ObjectPoolingEverything.GetFromPool<EventItem>(GameConstants.EVENT_ITEM);
+
+        eventItem.transform.SetParent(canvas);
+
+        eventItem.ShowUp(onCompleteAction: () => ObjectPoolingEverything.ReturnToPool(GameConstants.EVENT_ITEM, eventItem.gameObject));
+    }
+
     public void SetNumber()
     {
-        Tween.Scale(container, 1.1f, duration: 0.3f)
+        SpawnFlyingItem();
+
+        AddTween(Tween.Scale(container, 1.1f, duration: 0.3f)
         .OnComplete(() =>
         {
             counterText.text = $"{GamePersistentVariable.coinChallengeItemGainedInLevel}";
 
-            Tween.Scale(container, 1f, duration: 0.15f);
-        });
+            AddTween(Tween.Scale(container, 1f, duration: 0.15f));
+        }));
     }
 }

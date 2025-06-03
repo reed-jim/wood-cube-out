@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,7 +32,7 @@ public class JoinSpaceRacePopup : BasePopup
         bool isSpaceRaceAvailable = GameEventManager.Instance.IsSpaceRaceAvailable();
 
         joinButton.interactable = isSpaceRaceAvailable;
-        joinButton.GetComponent<Image>().color = isSpaceRaceAvailable ? Color.white : Color.white.WithAlpha(0.5f);
+        joinButton.GetComponent<Image>().color = isSpaceRaceAvailable ? Color.white : ColorUtil.WithAlpha(Color.white, 0.5f);
 
         continueText.gameObject.SetActive(isSpaceRaceAvailable);
         nextEventTimeContainer.gameObject.SetActive(!isSpaceRaceAvailable);
