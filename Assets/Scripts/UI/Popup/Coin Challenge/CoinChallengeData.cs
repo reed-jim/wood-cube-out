@@ -4,11 +4,12 @@ using UnityEngine;
 [Serializable]
 public class CoinChallengeData
 {
-    public long endTimestamp;
+    public long startTimestamp;
     [SerializeField] private int currentMilestone;
     [SerializeField] private int[] eventItemCollectedOfMilstones;
     [SerializeField] private bool[] isMilestonesClaimed;
     public int newGainedItem;
+    public bool isCompleted;
 
     public int CurrentMilestone
     {
@@ -30,15 +31,17 @@ public class CoinChallengeData
 
     public bool IsCompleted()
     {
-        for (int i = 0; i < isMilestonesClaimed.Length; i++)
-        {
-            if (!isMilestonesClaimed[i])
-            {
-                return false;
-            }
-        }
+        // for (int i = 0; i < isMilestonesClaimed.Length; i++)
+        // {
+        //     if (!isMilestonesClaimed[i])
+        //     {
+        //         return false;
+        //     }
+        // }
 
-        return true;
+        // return true;
+
+        return isCompleted;
     }
 
     public CoinChallengeData()
