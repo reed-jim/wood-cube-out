@@ -1,12 +1,14 @@
 using System;
+using System.Collections;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class DailyRewardItem : MonoBehaviour
+public class DailyRewardItem : SaferioTweenBehaviour
 {
     // [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private RectTransform container;
     [SerializeField] private GameObject giftStateContainer;
     [SerializeField] private Button claimButton;
     [SerializeField] private Image claimButtonImage;
@@ -29,6 +31,7 @@ public class DailyRewardItem : MonoBehaviour
     [SerializeField] private int dayIndex;
 
     private int _day;
+    private Coroutine _animationCoroutine;
 
     #region EVENT
     public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
@@ -38,7 +41,7 @@ public class DailyRewardItem : MonoBehaviour
     public static event Action enableClaimDailyRewardButtonsEvent;
     #endregion
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         DailyRewardPopup.claimDailyRewardEvent += Claim;
         DailyRewardPopup.refreshDailyRewardEvent += Refresh;
@@ -48,7 +51,7 @@ public class DailyRewardItem : MonoBehaviour
         Init();
     }
 
-    void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         DailyRewardPopup.claimDailyRewardEvent -= Claim;
         DailyRewardPopup.refreshDailyRewardEvent -= Refresh;
@@ -117,6 +120,8 @@ public class DailyRewardItem : MonoBehaviour
             claimButtonImage.sprite = claimButtonSprites[0];
             claimButtonText.color = ColorUtil.WithAlpha(claimButtonText.color, 1f);
             giftIcon.color = ColorUtil.WithAlpha(giftIcon.color, 1f);
+
+            _animationCoroutine = StartCoroutine(Animate());
         }
         else
         {
@@ -138,6 +143,11 @@ public class DailyRewardItem : MonoBehaviour
             else
             {
                 giftStateContainer.SetActive(false);
+            }
+
+            if (_animationCoroutine != null)
+            {
+                StopCoroutine(_animationCoroutine);
             }
         }
 
@@ -180,5 +190,42 @@ public class DailyRewardItem : MonoBehaviour
     private void Refresh()
     {
         Init();
+    }
+
+    private IEnumerator Animate()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(1f);
+
+        int step = 0;
+        bool isWaiting = false;
+
+        while (true)
+        {
+            if (!isWaiting)
+            {
+                if (step == 0)
+                {
+                    AddTween(Tween.Scale(container, 1.03f, duration: 0.5f)
+                    .OnComplete(() =>
+                    {
+                        step = 1;
+                        isWaiting = false;
+                    }));
+                }
+                else
+                {
+                    AddTween(Tween.Scale(container, 0.97f, duration: 0.5f)
+                    .OnComplete(() =>
+                    {
+                        step = 0;
+                        isWaiting = false;
+                    }));
+                }
+
+                isWaiting = true;
+            }
+
+            yield return waitOneSecond;
+        }
     }
 }
