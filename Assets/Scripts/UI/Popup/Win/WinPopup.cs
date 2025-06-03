@@ -334,7 +334,14 @@ public class WinPopup : BasePopup
 
         if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
         {
-            coinChallengeData.CurrentMilestone++;
+            if (coinChallengeData.CurrentMilestone < coinChallengeData.EventItemCollectedOfMilstones.Length)
+            {
+                coinChallengeData.CurrentMilestone++;
+            }
+            else
+            {
+                coinChallengeData.isCompleted = true;
+            }
         }
 
         DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
@@ -381,7 +388,7 @@ public class WinPopup : BasePopup
 
     private bool HandleSuggestFeature()
     {
-        if (currentLevel.Value == 30 && DataUtility.Load("Is Coin Challenge Suggested", false))
+        if (currentLevel.Value == 30 && !DataUtility.Load("Is Coin Challenge Suggested", false))
         {
             ReturnHome();
 

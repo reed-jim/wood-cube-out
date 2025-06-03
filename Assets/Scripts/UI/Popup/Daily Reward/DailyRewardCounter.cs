@@ -15,8 +15,6 @@ public class DailyRewardCounter : SaferioTweenBehaviour
         DailyRewardItem.claimDailyRewardEvent += Refresh;
 
         StartCoroutine(Counting());
-
-        Refresh();
     }
 
     protected override void MoreActionOnDestroy()
@@ -24,9 +22,14 @@ public class DailyRewardCounter : SaferioTweenBehaviour
         DailyRewardItem.claimDailyRewardEvent -= Refresh;
     }
 
+    void OnEnable()
+    {
+        Refresh();
+    }
+
     private void Refresh()
     {
-        bool isRewardAvailable = DailyRewardUtil.IsDailyRewardReadyForDay((int)DateTime.Now.DayOfWeek);
+        bool isRewardAvailable = DailyRewardUtil.IsNewDay();
 
         if (isRewardAvailable)
         {

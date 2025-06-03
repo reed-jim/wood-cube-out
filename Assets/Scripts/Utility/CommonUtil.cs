@@ -229,6 +229,11 @@ public static class CommonUtil
         return false;
     }
 
+    public static bool IsNewWeek(long timestamp)
+    {
+        return IsNewWeek(TimestampToDateTime(timestamp));
+    }
+
     public static bool IsNewWeek(DateTime timestamp)
     {
         DateTime now = DateTime.Now;

@@ -12,15 +12,21 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
+    [SerializeField] private RectTransform timeCounterContainer;
     [SerializeField] private TMP_Text timeCounterText;
+    [SerializeField] private RectTransform nextEventTimeContainer;
+    [SerializeField] private TMP_Text nextEventTimeCounterText;
     // [SerializeField] private Button claimButton;
     [SerializeField] private Button continueButton;
+    [SerializeField] private Image continueButtonImage;
+    [SerializeField] private TMP_Text continueText;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     private CoinChallengeData _challengeData;
+    private bool _isAvailable;
 
     public static event Action<DailyRewardData> showClaimRewardPopupEvent;
     public static event Action claimCoinChallengeEvent;
@@ -40,7 +46,9 @@ public class CoinChallengePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        _challengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+        _challengeData = ResetChallenge();
+
+
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -51,8 +59,22 @@ public class CoinChallengePopup : BasePopup
         });
 
         Setup();
+    }
 
-        StartCoroutine(Counting());
+    private CoinChallengeData ResetChallenge()
+    {
+        CoinChallengeData data = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        if (CommonUtil.IsNewWeek(data.startTimestamp))
+        {
+            data = new CoinChallengeData();
+
+            data.startTimestamp = CommonUtil.GetCurrentTimestamp();
+
+            DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, data);
+        }
+
+        return data;
     }
 
     private void Setup()
@@ -62,6 +84,8 @@ public class CoinChallengePopup : BasePopup
         int gemCollectedOfMilestone = _challengeData.EventItemCollectedOfMilstones[currentMilestone];
         int requiredItemOfMilestone = coinChallengeConfigContainer.RequiredItems[currentMilestone];
         int remaining = requiredItemOfMilestone - gemCollectedOfMilestone;
+
+        remaining = Mathf.Max(remaining, 0);
 
         float progress = (float)gemCollectedOfMilestone / coinChallengeConfigContainer.RequiredItems[currentMilestone];
 
@@ -76,6 +100,46 @@ public class CoinChallengePopup : BasePopup
             localizedDescription.TranslationName = "Collect more gems to unlock your next reward";
 
             localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
+        }
+
+
+
+
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        _isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        if (_isAvailable)
+        {
+            if (_challengeData.IsCompleted())
+            {
+                _isAvailable = false;
+            }
+        }
+
+        if (_isAvailable)
+        {
+            nextEventTimeContainer.gameObject.SetActive(false);
+            continueText.gameObject.SetActive(true);
+            timeCounterContainer.gameObject.SetActive(true);
+
+            continueButton.interactable = true;
+
+            continueButtonImage.color = Color.white;
+
+            StartCoroutine(Counting());
+        }
+        else
+        {
+            nextEventTimeContainer.gameObject.SetActive(true);
+            continueText.gameObject.SetActive(false);
+            timeCounterContainer.gameObject.SetActive(false);
+
+            continueButton.interactable = false;
+
+            continueButtonImage.color = ColorUtil.WithAlpha(Color.white, 0.5f);
+
+            StartCoroutine(CountingNextEvent());
         }
     }
 
@@ -92,15 +156,33 @@ public class CoinChallengePopup : BasePopup
 
         for (int i = 0; i < _challengeData.IsMilestonesClaimed.Length; i++)
         {
-            if (i >= currentMilestone)
+            if (i > currentMilestone)
             {
                 continue;
             }
             else
             {
-                if (!_challengeData.IsMilestonesClaimed[i])
-                {
+                bool isValid = false;
 
+                if (i == currentMilestone)
+                {
+                    if (_challengeData.EventItemCollectedOfMilstones[i] >= coinChallengeConfigContainer.RequiredItems[i] &&
+                        !_challengeData.IsMilestonesClaimed[i]
+                    )
+                    {
+                        isValid = true;
+                    }
+                }
+                else
+                {
+                    if (!_challengeData.IsMilestonesClaimed[i])
+                    {
+                        isValid = true;
+                    }
+                }
+
+                if (isValid)
+                {
                     totalReward.CoinQuantity += coinChallengeConfigContainer.Rewards[i].CoinQuantity;
 
                     for (int j = 0; j < totalReward.BoosterQuantities.Length; j++)
@@ -160,6 +242,18 @@ public class CoinChallengePopup : BasePopup
         }
     }
 
+    private IEnumerator CountingNextEvent()
+    {
+        WaitForSeconds waitOneSecond = new WaitForSeconds(1);
+
+        while (true)
+        {
+            UpdateNextEventTime();
+
+            yield return waitOneSecond;
+        }
+    }
+
     private void UpdateRemainingTime()
     {
         DateTime now = DateTime.UtcNow;
@@ -179,6 +273,25 @@ public class CoinChallengePopup : BasePopup
         timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
 
+    private void UpdateNextEventTime()
+    {
+        DateTime now = DateTime.UtcNow;
+
+        int daysUntilEndOfWeek = ((int)DayOfWeek.Monday - (int)now.DayOfWeek + 7) % 7;
+
+        DateTime endOfWeek = new DateTime(now.Year, now.Month, now.Day)
+            .AddDays(daysUntilEndOfWeek)
+            .AddHours(23)
+            .AddMinutes(59)
+            .AddSeconds(59);
+
+        TimeSpan timeLeft = endOfWeek - now;
+
+        double remaningSecond = timeLeft.TotalSeconds;
+
+        nextEventTimeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
@@ -189,7 +302,10 @@ public class CoinChallengePopup : BasePopup
             start = 1;
             end = 0;
 
-            Setup();
+            if (gameObject.activeInHierarchy)
+            {
+                Setup();
+            }
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>

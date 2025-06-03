@@ -38,7 +38,7 @@ public class ClaimRewardPopup : BasePopup
         SpaceRacePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         WeeklyChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
         WeeklyChallengeUIItem.showClaimRewardPopupEvent += ShowClaimRewardPopupNoChest;
-        CoinChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopupNoChest;
+        CoinChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
@@ -53,7 +53,7 @@ public class ClaimRewardPopup : BasePopup
         SpaceRacePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         WeeklyChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
         WeeklyChallengeUIItem.showClaimRewardPopupEvent -= ShowClaimRewardPopupNoChest;
-        CoinChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopupNoChest;
+        CoinChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
     }
 
     protected override void MoreActionInAwake()
