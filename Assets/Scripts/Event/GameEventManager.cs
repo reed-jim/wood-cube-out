@@ -44,6 +44,13 @@ public class GameEventManager : MonoBehaviour
 
     public bool IsCoinChallengeUnlocked()
     {
+        DayOfWeek dayOfWeek = System.DateTime.Now.DayOfWeek;
+
+        if (dayOfWeek != DayOfWeek.Monday && dayOfWeek != DayOfWeek.Tuesday)
+        {
+            return false;
+        }
+
         return currentLevel.Value >= 30;
     }
 

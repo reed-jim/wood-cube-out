@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using TMPro;
 using Unity.VisualScripting;
@@ -12,6 +13,10 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
     [SerializeField] private TMP_Text counterText;
 
     [SerializeField] private IntVariable currentLevel;
+
+    private CoinChallengeData _data;
+    private bool _isAvailable;
+    private bool _isCompleted;
 
     protected override void MoreActionInAwake()
     {
@@ -28,6 +33,10 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
         BaseScrew.updateEventItem += SetNumber;
         LevelLoader.startLevelEvent += OnLevelLoaded;
+
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        _isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
     }
 
     protected override void MoreActionOnDestroy()
@@ -49,7 +58,7 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
     {
         bool isUnlocked = currentLevel.Value >= 30;
 
-        if (!isUnlocked)
+        if (!isUnlocked || _isCompleted)
         {
             return;
         }
@@ -74,8 +83,12 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
     private void OnLevelLoaded()
     {
+        _data = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
         bool isUnlocked = currentLevel.Value >= 30;
-        bool isCompleted = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData()).IsCompleted();
+        bool isCompleted = _data.IsCompleted();
+
+        _isCompleted = isCompleted;
 
         container.gameObject.SetActive(isUnlocked && !isCompleted);
     }
