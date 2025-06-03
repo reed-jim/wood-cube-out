@@ -2,6 +2,7 @@ using System.Collections;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class StarChestProgressBar : SaferioTweenBehaviour
@@ -21,6 +22,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
     protected override void MoreActionInAwake()
     {
         StarChestPopup.claimStarChestEvent += Refresh;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         _starGroupInitialPosition = starGroupRT.localPosition;
 
@@ -32,6 +34,12 @@ public class StarChestProgressBar : SaferioTweenBehaviour
     protected override void MoreActionOnDestroy()
     {
         StarChestPopup.claimStarChestEvent -= Refresh;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        PlayFx();
     }
 
     private void Refresh()
@@ -105,9 +113,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
     {
         StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
 
-        int cachedPrevStarCollected = data.prevStarCollected;
-
-        if (data.prevStarCollected == data.starCollected)
+        if (data.newGainedItem == 0)
         {
             starGroupRT.gameObject.SetActive(false);
 
@@ -117,9 +123,9 @@ public class StarChestProgressBar : SaferioTweenBehaviour
         }
         else
         {
-            starText.text = $"+{data.starCollected - data.prevStarCollected}";
+            starText.text = $"+{data.newGainedItem}";
 
-            data.prevStarCollected = data.starCollected;
+            data.newGainedItem = 0;
 
             DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
         }
@@ -128,10 +134,11 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
         starGroup.alpha = 0;
 
-        fill.fillAmount = cachedPrevStarCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR;
+        fill.fillAmount = 0;
+        // fill.fillAmount = cachedPrevStarCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR;
 
         AddSequence(
-            Tween.Alpha(starGroup, 1, duration: 0.3f, startDelay: 1)
+            Tween.Alpha(starGroup, 1, duration: 0.3f)
             .Chain(
                 Tween.LocalPositionX(starGroupRT, _starGroupInitialPosition.x + 100, duration: 0.15f)
             )

@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -19,6 +20,9 @@ public class WinPopup : BasePopup
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text starText;
     [SerializeField] private TMP_Text goldPassKeyText;
+    [SerializeField] private RectTransform coinGroup;
+    [SerializeField] private RectTransform starGroup;
+    [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
     [SerializeField] private IntVariable currentLevel;
@@ -99,6 +103,8 @@ public class WinPopup : BasePopup
         }
         //
 
+        CheckEvent();
+
         Show();
 
         SoundManager.Instance.PlaySoundWin();
@@ -170,10 +176,19 @@ public class WinPopup : BasePopup
         {
             starText.text = $"{(int)newVal}";
         }));
-        _tweens.Add(Tween.Custom(0, 1, duration: timeCollectCoin, onValueChange: newVal =>
+
+
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        bool isUnlocked = currentLevel.Value >= 30;
+
+        if (isUnlocked && !coinChallengeData.IsCompleted())
         {
-            goldPassKeyText.text = $"{(int)newVal}";
-        }));
+            _tweens.Add(Tween.Custom(0, GamePersistentVariable.coinChallengeItemGainedInLevel, duration: timeCollectCoin, onValueChange: newVal =>
+            {
+                goldPassKeyText.text = $"{(int)newVal}";
+            }));
+        }
     }
 
     private async void Continue()
@@ -201,7 +216,12 @@ public class WinPopup : BasePopup
             HideImmediately();
         }));
 
-        goLevelEvent?.Invoke(currentLevel.Value);
+        bool isBackHome = HandleSuggestFeature();
+
+        if (!isBackHome)
+        {
+            goLevelEvent?.Invoke(currentLevel.Value);
+        }
 
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
 
@@ -302,9 +322,15 @@ public class WinPopup : BasePopup
     {
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
+        if (coinChallengeData.IsCompleted())
+        {
+            return;
+        }
+
         int currentMilestone = coinChallengeData.CurrentMilestone;
 
-        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += 25;
+        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += GamePersistentVariable.coinChallengeItemGainedInLevel;
+        coinChallengeData.newGainedItem += GamePersistentVariable.coinChallengeItemGainedInLevel;
 
         if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
         {
@@ -328,6 +354,7 @@ public class WinPopup : BasePopup
         StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
 
         data.starCollected += 3;
+        data.newGainedItem += 3;
 
         DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
     }
@@ -350,6 +377,41 @@ public class WinPopup : BasePopup
         }
 
         DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
+    }
+
+    private bool HandleSuggestFeature()
+    {
+        if (currentLevel.Value == 30 && DataUtility.Load("Is Coin Challenge Suggested", false))
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void CheckEvent()
+    {
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        bool isUnlocked = currentLevel.Value >= 30;
+
+        if (isUnlocked && !coinChallengeData.IsCompleted())
+        {
+            eventItemGroup.gameObject.SetActive(true);
+
+            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-280);
+            starGroup.localPosition = coinGroup.localPosition.ChangeX(0);
+            eventItemGroup.localPosition = coinGroup.localPosition.ChangeX(280);
+        }
+        else
+        {
+            eventItemGroup.gameObject.SetActive(false);
+
+            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-140);
+            starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
+        }
     }
     #endregion
 }

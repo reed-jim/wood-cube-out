@@ -66,6 +66,11 @@ public class CoinChallengePopup : BasePopup
 
         AnimateProgress(progress);
 
+        if (_challengeData.IsCompleted())
+        {
+
+        }
+
         localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
     }
 

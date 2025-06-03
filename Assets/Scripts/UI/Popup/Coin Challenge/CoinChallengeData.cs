@@ -8,6 +8,7 @@ public class CoinChallengeData
     [SerializeField] private int currentMilestone;
     [SerializeField] private int[] eventItemCollectedOfMilstones;
     [SerializeField] private bool[] isMilestonesClaimed;
+    public int newGainedItem;
 
     public int CurrentMilestone
     {
@@ -27,6 +28,19 @@ public class CoinChallengeData
         set => isMilestonesClaimed = value;
     }
 
+    public bool IsCompleted()
+    {
+        for (int i = 0; i < isMilestonesClaimed.Length; i++)
+        {
+            if (!isMilestonesClaimed[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public CoinChallengeData()
     {
         eventItemCollectedOfMilstones = new int[9];
@@ -38,5 +52,6 @@ public class CoinChallengeData
 public class StarLevelData
 {
     [SerializeField] public int starCollected;
-    [SerializeField] public int prevStarCollected;
+    // [SerializeField] public int prevStarCollected;
+    public int newGainedItem;
 }

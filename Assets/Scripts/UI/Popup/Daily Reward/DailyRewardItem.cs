@@ -194,7 +194,7 @@ public class DailyRewardItem : SaferioTweenBehaviour
 
     private IEnumerator Animate()
     {
-        WaitForSeconds waitOneSecond = new WaitForSeconds(1f);
+        WaitForSeconds waitOneSecond = new WaitForSeconds(0.5f);
 
         int step = 0;
         bool isWaiting = false;

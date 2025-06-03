@@ -11,20 +11,24 @@ public class EventItem : SaferioTweenBehaviour
     {
         container.gameObject.SetActive(true);
 
-        container.localPosition = Vector3.zero;
-        canvasGroup.alpha = 1;
+        container.localPosition = new Vector3(0, 300, 0);
+        canvasGroup.alpha = 0;
 
         StopAllTweens();
 
-        AddTween(Tween.LocalPositionY(container, 300, duration: 1f)
+        AddTween(Tween.Alpha(canvasGroup, 1, duration: 0.3f)
         .OnComplete(() =>
         {
-            AddTween(Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+            AddTween(Tween.LocalPositionY(container, 600, duration: 1f)
             .OnComplete(() =>
             {
-                container.gameObject.SetActive(false);
+                AddTween(Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    container.gameObject.SetActive(false);
 
-                onCompleteAction?.Invoke();
+                    onCompleteAction?.Invoke();
+                }));
             }));
         }));
     }
