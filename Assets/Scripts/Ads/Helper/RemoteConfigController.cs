@@ -407,7 +407,7 @@ public class RemoteConfigController : MonoBehaviour
 
         if (GamePersistentVariable.currentLevel > 20)
         {
-            GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_AD, true);
+            GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
         }
 
         GamePersistentVariable.isEnableRewardedAds = false;

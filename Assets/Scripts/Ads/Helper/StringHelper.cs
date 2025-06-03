@@ -438,7 +438,8 @@ public class FirebaseConfig
     public const string BANNER_COOLDOWN = "banner_cooldown";
     public const string MAX_LIVES = "max_lives";
     public const string REPLENISH_LIFE_TIME = "replenish_life_time";
-    public const string ENABLE_REWARDED_AD = "ENABLE_REWARDED_AD";
+    public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads";
+    public const string STAR_CHEST_CONFIG = "star_chest_config";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

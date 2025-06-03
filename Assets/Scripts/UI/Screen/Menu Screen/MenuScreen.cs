@@ -407,6 +407,16 @@ public class MenuScreen : MonoBehaviour
     {
         openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
         openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsCoinChallengeUnlocked());
+
+        #region STAR CHEST
+        StarChestConfig starChestConfig;
+
+        RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out starChestConfig);
+
+        openStarChestPopupButton.gameObject.SetActive(starChestConfig.isActive);
+
+        GameConstants.REQUIRE_STAR = starChestConfig.requiredStar;
+        #endregion
     }
     #endregion
 
