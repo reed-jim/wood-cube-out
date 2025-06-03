@@ -42,4 +42,10 @@ public class SaferioTweenBehaviour : MonoBehaviour
     {
         _sequences.Add(sequence);
     }
+
+    protected void StopAllTweens()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+        CommonUtil.StopAllSequences(_sequences);
+    }
 }
