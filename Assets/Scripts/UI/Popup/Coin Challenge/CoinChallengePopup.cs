@@ -55,7 +55,15 @@ public class CoinChallengePopup : BasePopup
         base.Show(onCompletedAction: () =>
         {
             CheckShowRewards(_challengeData);
-            CheckShowRewards(_lastChallengeData);
+
+            try
+            {
+                CheckShowRewards(_lastChallengeData);
+            }
+            catch (System.Exception)
+            {
+
+            }
         });
 
         Setup();
