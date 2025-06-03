@@ -63,6 +63,11 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
             return;
         }
 
+        if (!_isAvailable)
+        {
+            return;
+        }
+
         if (GamePersistentVariable.coinChallengeItemGainedInLevel == 0)
         {
             counterText.text = $"{GamePersistentVariable.coinChallengeItemGainedInLevel}";
@@ -90,6 +95,6 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
         _isCompleted = isCompleted;
 
-        container.gameObject.SetActive(isUnlocked && !isCompleted);
+        container.gameObject.SetActive(isUnlocked && !isCompleted && _isAvailable);
     }
 }
