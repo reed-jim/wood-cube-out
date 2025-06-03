@@ -24,7 +24,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     protected override void MoreActionInAwake()
     {
-        StarChestPopup.claimStarChestEvent += Refresh;
+        CoinChallengePopup.claimCoinChallengeEvent += Refresh;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         _starGroupInitialPosition = starGroupRT.localPosition;
@@ -34,7 +34,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     protected override void MoreActionOnDestroy()
     {
-        StarChestPopup.claimStarChestEvent -= Refresh;
+        CoinChallengePopup.claimCoinChallengeEvent -= Refresh;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 

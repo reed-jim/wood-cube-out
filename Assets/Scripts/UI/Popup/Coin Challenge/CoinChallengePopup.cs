@@ -23,6 +23,7 @@ public class CoinChallengePopup : BasePopup
     private CoinChallengeData _challengeData;
 
     public static event Action<DailyRewardData> showClaimRewardPopupEvent;
+    public static event Action claimCoinChallengeEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -68,10 +69,14 @@ public class CoinChallengePopup : BasePopup
 
         if (_challengeData.IsCompleted())
         {
-
+            localizedDescription.TranslationName = "The challenge has been completed";
         }
+        else
+        {
+            localizedDescription.TranslationName = "Collect more gems to unlock your next reward";
 
-        localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
+            localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
+        }
     }
 
     private void CheckShowRewards()
@@ -115,6 +120,8 @@ public class CoinChallengePopup : BasePopup
             showClaimRewardPopupEvent?.Invoke(totalReward);
 
             DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, _challengeData);
+
+            claimCoinChallengeEvent?.Invoke();
         }
     }
 
@@ -155,17 +162,21 @@ public class CoinChallengePopup : BasePopup
 
     private void UpdateRemainingTime()
     {
-        if (_challengeData.endTimestamp == 0)
-        {
-            _challengeData.endTimestamp =
-                new DateTimeOffset(DateTime.Now).AddDays(7).ToUnixTimeSeconds();
+        DateTime now = DateTime.UtcNow;
 
-            DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, _challengeData);
-        }
+        int daysUntilEndOfWeek = ((int)DayOfWeek.Tuesday - (int)now.DayOfWeek + 7) % 7;
 
-        double remainingTime = (DateTimeOffset.FromUnixTimeSeconds(_challengeData.endTimestamp).LocalDateTime - DateTime.Now).TotalSeconds;
+        DateTime endOfWeek = new DateTime(now.Year, now.Month, now.Day)
+            .AddDays(daysUntilEndOfWeek)
+            .AddHours(23)
+            .AddMinutes(59)
+            .AddSeconds(59);
 
-        timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remainingTime)}";
+        TimeSpan timeLeft = endOfWeek - now;
+
+        double remaningSecond = timeLeft.TotalSeconds;
+
+        timeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)

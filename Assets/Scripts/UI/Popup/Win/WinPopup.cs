@@ -397,7 +397,11 @@ public class WinPopup : BasePopup
 
         bool isUnlocked = currentLevel.Value >= 30;
 
-        if (isUnlocked && !coinChallengeData.IsCompleted())
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
         {
             eventItemGroup.gameObject.SetActive(true);
 
