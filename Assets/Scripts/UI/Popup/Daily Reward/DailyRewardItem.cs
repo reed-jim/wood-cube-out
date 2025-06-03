@@ -26,6 +26,7 @@ public class DailyRewardItem : SaferioTweenBehaviour
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardDataContainer dailyRewardDataContainer;
+    [SerializeField] private Vector2Variable canvasSize;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private int dayIndex;
@@ -66,9 +67,10 @@ public class DailyRewardItem : SaferioTweenBehaviour
 
         if (coinQuantity > 0)
         {
-            // rewardIcons[0].sprite = iconSprites[0];
-
+            rewardIcons[0].sprite = iconSprites[0];
             quantityTexts[0].text = $"{coinQuantity}";
+
+            UIUtil.SetSizeKeepRatioY(rewardIcons[0].rectTransform, 0.1f * canvasSize.Value.x);
         }
         else
         {
@@ -76,9 +78,10 @@ public class DailyRewardItem : SaferioTweenBehaviour
             {
                 if (boosterQuantites[i] > 0)
                 {
-                    // rewardIcons[i].sprite = iconSprites[1 + i];
-
+                    rewardIcons[currentIndex].sprite = iconSprites[1 + i];
                     quantityTexts[currentIndex].text = $"{boosterQuantites[i]}";
+
+                    UIUtil.SetSizeKeepRatioY(rewardIcons[currentIndex].rectTransform, 0.1f * canvasSize.Value.x);
 
                     currentIndex++;
                 }
