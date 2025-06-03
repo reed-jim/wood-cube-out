@@ -330,6 +330,12 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 ShowSuggestion(nextLevel, isLoopLevel);
+
+                #region EVENT ITEMS
+                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
+
+                CoinChallengeGameplayUI.Instance.SetNumber();
+                #endregion
             }
         };
 
