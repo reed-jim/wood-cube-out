@@ -146,6 +146,11 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
+
+        // Change this later
+        GamePersistentVariable.remoteConfigIsShowMREC = true;
+
+
         if (GamePersistentVariable.isLoadingLevelInProgress)
         {
             LoadingLevelInProgress();
@@ -205,6 +210,8 @@ public class SceneTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
+                    AdmobAdsMax.Instance.ShowInterstitialAdmob();
+
                     loadLevelInProgressContainer.gameObject.SetActive(false);
                 })
             );

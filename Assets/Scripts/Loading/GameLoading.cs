@@ -187,6 +187,8 @@ public class GameLoading : MonoBehaviour
                 {
                     // blackBackground.gameObject.SetActive(false);
 
+                    // AdmobAdsMax.Instance.ShowInterstitialAdmob();
+
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));
 

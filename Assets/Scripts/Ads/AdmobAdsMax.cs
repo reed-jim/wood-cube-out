@@ -640,13 +640,16 @@ public class AdmobAdsMax : MonoBehaviour
             });
     }
 
-    public void ShowInterstitialAdmob(Action onAdClosed)
+    public void ShowInterstitialAdmob(Action onAdClosed = null)
     {
         _actionInterAdmobClosed = onAdClosed;
 
         if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
         {
-            _interstitialAdmob.Show();
+            AdsBreakScreen.Instance.Show(() =>
+            {
+                _interstitialAdmob.Show();
+            });
         }
         else
         {
