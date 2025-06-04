@@ -178,19 +178,27 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            _transitionAnimation.Hide(OnTransitionCompleted);
-
-            popupHideEvent?.Invoke();
-
-            _isShown = false;
-            _isInTransition = true;
-
-            AfterHide();
-
-            SoundManager.Instance.PlaySoundClose();
-
-            enableSwipingScreenEvent?.Invoke(true);
+            AdsBreakScreen.Instance.Show(onCompleteAction: () =>
+            {
+                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
+            });
         }
+    }
+
+    private void ActualHideAfterAd(Action onCompletedAction = null)
+    {
+        _transitionAnimation.Hide(OnTransitionCompleted);
+
+        popupHideEvent?.Invoke();
+
+        _isShown = false;
+        _isInTransition = true;
+
+        AfterHide();
+
+        SoundManager.Instance.PlaySoundClose();
+
+        enableSwipingScreenEvent?.Invoke(true);
 
         void OnTransitionCompleted()
         {
