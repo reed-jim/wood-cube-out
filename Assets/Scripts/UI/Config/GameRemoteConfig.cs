@@ -36,3 +36,14 @@ public class CoinChallengeConfig
     public DayOfWeek[] availableDays;
     public int levelToWin;
 }
+
+#region ADS
+public class DoubleInterAdsConfig
+{
+    public bool isEnable;
+    public bool isEnableMrec;
+    public bool isEnableDoubleInter;
+    public bool isEnableInterPopupInteract;
+    public bool isEnableInterSceneTransition;
+}
+#endregion
