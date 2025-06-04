@@ -13,6 +13,7 @@ public class SpaceRaceItem : MonoBehaviour
     [SerializeField] private RectTransform spaceShip;
     [SerializeField] private Image rewardIcon;
     [SerializeField] private Image medalIcon;
+    [SerializeField] private GameObject selfIndicator;
 
     [SerializeField] private Sprite[] rewardSprites;
     [SerializeField] private Sprite[] medalSprites;
@@ -44,6 +45,12 @@ public class SpaceRaceItem : MonoBehaviour
                 if (sortedArray[i].isSelf)
                 {
                     GamePersistentVariable.selfSpaceRaceRank = raceRank;
+
+                    selfIndicator.gameObject.SetActive(true);
+                }
+                else
+                {
+                    selfIndicator.gameObject.SetActive(false);
                 }
 
                 break;

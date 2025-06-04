@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public enum SaleIAPPackType
 {
@@ -50,6 +51,7 @@ public class SalePackIAPManager : MonoBehaviour
 
         DailyOfferPopup.refreshSaleIAPPackEvent += ShowSaleIAPSuggestion;
         DailyOfferPopup.countSaleIAPPackLifeTimeEvent += StartCountPackLifeTime;
+        SceneManager.sceneLoaded += OnSceneLoaded;
 
         StartCountPackLifeTime();
     }
@@ -58,6 +60,7 @@ public class SalePackIAPManager : MonoBehaviour
     {
         DailyOfferPopup.refreshSaleIAPPackEvent -= ShowSaleIAPSuggestion;
         DailyOfferPopup.countSaleIAPPackLifeTimeEvent -= StartCountPackLifeTime;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     void OnEnable()
@@ -75,6 +78,11 @@ public class SalePackIAPManager : MonoBehaviour
         {
             ShowSaleIAPSuggestion();
         });
+    }
+
+    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        ShowSaleIAPSuggestion();
     }
 
     public SaleIAPPackType GetSuggestionPack()

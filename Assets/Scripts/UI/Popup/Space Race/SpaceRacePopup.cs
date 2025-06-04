@@ -70,16 +70,21 @@ public class SpaceRacePopup : BasePopup
     {
         for (int i = 0; i < _spaceRaceItems.Length; i++)
         {
-            try
-            {
-                int playerIndex = i;
+            int playerIndex = i;
 
-                _spaceRaceItems[i].Setup(playerIndex);
-            }
-            catch (System.Exception)
-            {
-                _spaceRaceItems[i].gameObject.SetActive(false);
-            }
+            _spaceRaceItems[i].Setup(playerIndex);
+
+            // try
+            // {
+            //     int playerIndex = i;
+
+            //     _spaceRaceItems[i].Setup(playerIndex);
+            // }
+            // catch (System.Exception e)
+            // {
+            //     Debug.Log("SAFERIO " + i + "/" + e.Message);
+            //     _spaceRaceItems[i].gameObject.SetActive(false);
+            // }
         }
     }
 
@@ -87,7 +92,7 @@ public class SpaceRacePopup : BasePopup
     {
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
 
-        if (GameEventManager.Instance.IsSpaceRaceAvailable())
+        if (!GameEventManager.Instance.IsSpaceRaceAvailable())
         {
             localizedDescription.TranslationName = "The Space Race Has Ended";
             continueButton.gameObject.SetActive(false);
@@ -131,6 +136,7 @@ public class SpaceRacePopup : BasePopup
 
         for (int i = 0; i < randomList.Count; i++)
         {
+            Debug.Log("SAFERIO " + randomList[i].id + "/" + AuthenticationService.Instance.PlayerId);
             if (randomList[i].id == AuthenticationService.Instance.PlayerId)
             {
                 SpaceRacePlayerData spaceRacePlayerData = new SpaceRacePlayerData()

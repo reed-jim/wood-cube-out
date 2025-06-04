@@ -16,6 +16,7 @@ public class DailyOfferPopup : BasePopup
     [SerializeField] private SalePackData salePackData;
 
     private SaleIAPData _saleIAPData;
+    private bool _isProcessingPayment;
 
     public static event Action<string> buyIAPEvent;
     public static event Action requestFetchIAPPrice;
@@ -126,6 +127,8 @@ public class DailyOfferPopup : BasePopup
     private void Buy()
     {
         buyIAPEvent?.Invoke(packageData.ProductId);
+
+        _isProcessingPayment = true;
     }
 
     private void LoadData()
@@ -168,11 +171,16 @@ public class DailyOfferPopup : BasePopup
 
             try
             {
-                int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
+                if (gameObject.activeInHierarchy && _isProcessingPayment)
+                {
+                    int currentBought = DataUtility.Load($"Time Bought {salePackData.name}", 0);
 
-                DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
+                    DataUtility.Save($"Time Bought {salePackData.name}", currentBought + 1);
 
-                refreshSaleIAPPackEvent?.Invoke();
+                    refreshSaleIAPPackEvent?.Invoke();
+
+                    _isProcessingPayment = false;
+                }
             }
             catch (System.Exception)
             {

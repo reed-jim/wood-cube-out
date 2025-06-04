@@ -97,7 +97,6 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
     private void SetProgress()
     {
-        Debug.Log("SAFERIO set pro");
         StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
 
         fill.fillAmount = 0;
