@@ -402,6 +402,22 @@ public class WinPopup : BasePopup
             return true;
         }
 
+        StarLevelData starLevelData = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+
+        if (starLevelData.starCollected >= GameConstants.REQUIRE_STAR)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
         return false;
     }
 
