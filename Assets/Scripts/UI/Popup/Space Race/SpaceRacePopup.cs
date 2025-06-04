@@ -136,7 +136,6 @@ public class SpaceRacePopup : BasePopup
 
         for (int i = 0; i < randomList.Count; i++)
         {
-            Debug.Log("SAFERIO " + randomList[i].id + "/" + AuthenticationService.Instance.PlayerId);
             if (randomList[i].id == AuthenticationService.Instance.PlayerId)
             {
                 SpaceRacePlayerData spaceRacePlayerData = new SpaceRacePlayerData()
@@ -259,14 +258,30 @@ public class SpaceRacePopup : BasePopup
     private void EndLastRace()
     {
         int rank = GamePersistentVariable.selfSpaceRaceRank;
+        bool isFinishedRace = false;
 
         SpaceRaceData spaceRaceData = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        for (int i = 0; i < spaceRaceData.spaceRacePlayerGroup.Length; i++)
+        {
+            SpaceRacePlayerData spaceRacePlayerData = spaceRaceData.spaceRacePlayerGroup[i];
+
+            if (spaceRacePlayerData.isSelf)
+            {
+                if (spaceRacePlayerData.scoreSinceRaceBegin >= 15)
+                {
+                    isFinishedRace = true;
+                }
+
+                break;
+            }
+        }
 
         spaceRaceData.isStarted = false;
 
         DataUtility.Save(GameConstants.SPACE_RACE_DATA, spaceRaceData);
 
-        if (rank <= 3)
+        if (rank <= 3 && isFinishedRace)
         {
             DailyRewardData rewardData = spaceRaceRewardDataContainer.Items[rank];
 
