@@ -15,6 +15,9 @@ public class AdmobAdsMax : MonoBehaviour
     private int _loadBannerRetryTime;
     private bool _isBannerLoaded;
     private bool _remoteConfigIsShowBanner;
+
+
+    private InterstitialAd _interstitialAdmob;
     #endregion
 
 
@@ -149,7 +152,10 @@ public class AdmobAdsMax : MonoBehaviour
             {
                 //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
             });
+
             InitBannerAdmob();
+            LoadInterstitialAdmob();
+
             AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
             isAdmobInitDone = true;
             //nativeAdsManager.Instance.OnInitAdmobDone();
@@ -499,6 +505,190 @@ public class AdmobAdsMax : MonoBehaviour
         InitializeRewardedAds();
     }
 
+    #region Double Inter
+    bool interOneFinished = false;
+    bool interSecondFinished = false;
+    private bool _isShowingAds;
+
+    UnityAction _actionTwoIniterClose;
+    UnityAction _actionShowSecondInterAd;
+
+    public void ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
+    {
+        interOneFinished = false;
+        interSecondFinished = false;
+        _isShowingAds = true;
+
+        _actionTwoIniterClose = onDoubleInterClosed;
+        _actionShowSecondInterAd = () =>
+        {
+            ShowInterstitialAdmob(onAdClosed: () =>
+            {
+                interSecondFinished = true;
+                CheckAllAdsClosed();
+            });
+        };
+
+        if (isShowImmediatly)
+        {
+            //     GameController.Instance.AdsController.ShowInterstitial(
+            //    isShowImmediatly, actionWatchLog, () =>
+            //    {
+            //        interOneFinished = true;
+            //        CheckAllAdsClosed();
+            //    }, null, isShowBreakAds
+            //    );
+
+            //     if (!isShowBreakAds)
+            //     {
+            //         _actionIniterAd?.Invoke();
+            //     }
+        }
+        else
+        {
+            ShowInterstitial(
+                true,
+                actionWatchLog,
+                actionIniterClose: () =>
+                {
+                    interOneFinished = true;
+                    CheckAllAdsClosed();
+                }
+            );
+
+            if (!isShowBreakAds)
+            {
+                _actionShowSecondInterAd?.Invoke();
+            }
+
+            countdownAds = 0;
+
+            // if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 15))
+            // {
+            //     GameController.Instance.AdsController.ShowInterstitial(
+            //        true, actionWatchLog, () =>
+            //        {
+            //            interOneFinished = true;
+            //            CheckAllAdsClosed();
+            //        }, null, isShowBreakAds
+            //        );
+
+            //     if (!isShowBreakAds)
+            //     {
+            //         _actionIniterAd?.Invoke();
+            //     }
+            //     countdownAds = 0;
+            // }
+            // else
+            // {
+            //     actionIniterClose?.Invoke();
+            //     interOneFinished = true;
+            //     interSecondFinished = true;
+            //     _isShowingAds = false;
+            // }
+        }
+    }
+
+    void CheckAllAdsClosed()
+    {
+        if (interOneFinished && interSecondFinished)
+        {
+            _actionTwoIniterClose?.Invoke();
+
+            _isShowingAds = false;
+        }
+    }
+    #endregion
+
+    #region Admob Inter
+#if UNITY_ANDROID
+    private string _adUnitId = "ca-app-pub-8467610367562059/2389863144";
+#elif UNITY_IPHONE
+  private string _adUnitId = "ca-app-pub-3940256099942544/4411468910";
+#else
+  private string _adUnitId = "unused";
+#endif
+
+    private Action _actionInterAdmobClosed;
+
+    public void LoadInterstitialAdmob()
+    {
+        if (_interstitialAdmob != null)
+        {
+            _interstitialAdmob.Destroy();
+            _interstitialAdmob = null;
+        }
+
+        var adRequest = new AdRequest();
+
+        InterstitialAd.Load(_adUnitId, adRequest,
+            (InterstitialAd ad, LoadAdError error) =>
+            {
+                if (error != null || ad == null)
+                {
+                    Debug.LogError("interstitial ad failed to load an ad " +
+                                   "with error : " + error);
+                    return;
+                }
+
+                Debug.Log("Interstitial ad loaded with response : "
+                          + ad.GetResponseInfo());
+
+                _interstitialAdmob = ad;
+
+                RegisterEventHandlers(_interstitialAdmob);
+            });
+    }
+
+    public void ShowInterstitialAdmob(Action onAdClosed)
+    {
+        _actionInterAdmobClosed = onAdClosed;
+
+        if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
+        {
+            _interstitialAdmob.Show();
+        }
+        else
+        {
+
+        }
+    }
+
+    private void RegisterEventHandlers(InterstitialAd interstitialAd)
+    {
+        interstitialAd.OnAdPaid += (AdValue adValue) =>
+        {
+            Debug.Log(String.Format("Interstitial ad paid {0} {1}.",
+                adValue.Value,
+                adValue.CurrencyCode));
+        };
+        interstitialAd.OnAdImpressionRecorded += () =>
+        {
+            Debug.Log("Interstitial ad recorded an impression.");
+        };
+        interstitialAd.OnAdClicked += () =>
+        {
+            Debug.Log("Interstitial ad was clicked.");
+        };
+        interstitialAd.OnAdFullScreenContentOpened += () =>
+        {
+            Debug.Log("Interstitial ad full screen content opened.");
+        };
+        interstitialAd.OnAdFullScreenContentClosed += () =>
+        {
+            _actionInterAdmobClosed?.Invoke();
+
+            LoadInterstitialAdmob();
+        };
+        interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
+        {
+            _actionInterAdmobClosed?.Invoke();
+
+            LoadInterstitialAdmob();
+        };
+    }
+    #endregion
+
     #region Interstitial
     private void OnInterstitialLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
@@ -664,6 +854,7 @@ public class AdmobAdsMax : MonoBehaviour
                 AdsDurationObserver.startTime = DateTime.Now;
 
                 MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+
                 countdownAds = 0;
                 GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
 

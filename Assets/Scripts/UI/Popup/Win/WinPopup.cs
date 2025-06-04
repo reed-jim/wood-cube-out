@@ -205,7 +205,14 @@ public class WinPopup : BasePopup
         {
             continueButton.interactable = false;
 
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            // AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+            // (
+            //     OnInterstitialAdCompleted, false
+            // );
+
+            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: OnInterstitialAdCompleted);
+
+            // AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
     }
 
