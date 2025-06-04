@@ -178,10 +178,12 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            AdsBreakScreen.Instance.Show(onCompleteAction: () =>
-            {
-                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
-            });
+            ActualHideAfterAd();
+
+            // AdsBreakScreen.Instance.Show(onCompleteAction: () =>
+            // {
+            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
+            // });
         }
     }
 
