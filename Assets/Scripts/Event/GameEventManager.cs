@@ -77,8 +77,6 @@ public class GameEventManager : MonoBehaviour
     {
         currentLevel.Load();
 
-        Debug.Log("SAFERIO " + (currentLevel.Value) + "/" + DataUtility.Load("Is Coin Challenge Suggested", false));
-
         if (currentLevel.Value < 30)
         {
             return;

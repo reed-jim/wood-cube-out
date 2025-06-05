@@ -25,7 +25,9 @@ public class MenuScreenTransition : MonoBehaviour
 
         doubleInterAdsConfig.isEnable = true;
         doubleInterAdsConfig.isEnableDoubleInter = true;
-        doubleInterAdsConfig.cooldown = 15;
+        doubleInterAdsConfig.cooldown = 30;
+
+        blackBackgroundToPassPolicy.gameObject.SetActive(false);
 
         GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
 
@@ -48,8 +50,6 @@ public class MenuScreenTransition : MonoBehaviour
         {
             BlackScreenTransition();
         }
-
-        blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -76,12 +76,20 @@ public class MenuScreenTransition : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
+        blackBackgroundToPassPolicy.gameObject.SetActive(true);
+
         while (!GamePersistentVariable.isLoadingComplete)
         {
             yield return waitForSeconds;
         }
 
-        AdmobAdsMax.Instance.ShowInterstitialAdmob(isShowAdBreak: false);
+        AdmobAdsMax.Instance.ShowInterstitialAdmob(
+            onAdClosed: () =>
+            {
+                blackBackgroundToPassPolicy.gameObject.SetActive(false);
+            },
+            isShowAdBreak: false
+        );
     }
 
     private void FakeLoadingForAds()
