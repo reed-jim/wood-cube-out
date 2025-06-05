@@ -392,6 +392,12 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
 
+        DoubleInterAdsConfig doubleInterAdsConfig;
+
+        GetJsonConfig(FirebaseConfig.DOUBLE_INTER_ADS_CONFIG, out doubleInterAdsConfig);
+
+        // GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
+
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);

@@ -440,6 +440,7 @@ public class FirebaseConfig
     public const string REPLENISH_LIFE_TIME = "replenish_life_time";
     public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads";
     public const string STAR_CHEST_CONFIG = "star_chest_config";
+    public const string DOUBLE_INTER_ADS_CONFIG = "double_inter_ads_config";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
