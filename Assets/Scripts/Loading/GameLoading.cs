@@ -37,6 +37,12 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private float loadingDuration;
     [SerializeField] private float fadeOutDuration;
 
+
+
+    [SerializeField] private Image blackBackgroundToPassPolicy;
+
+
+
     private List<Tween> _tweens;
     private bool _isMenuSceneLoaded;
     private AsyncOperationHandle _menuSceneHandle;
@@ -51,6 +57,8 @@ public class GameLoading : MonoBehaviour
         _tweens = new List<Tween>();
 
         GamePersistentVariable.hasAppJustLaunched = true;
+
+        blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     void Start()
@@ -190,6 +198,8 @@ public class GameLoading : MonoBehaviour
                     // blackBackground.gameObject.SetActive(false);
 
                     // AdmobAdsMax.Instance.ShowInterstitialAdmob();
+
+                    blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
                     GamePersistentVariable.isLoadingComplete = true;
 
