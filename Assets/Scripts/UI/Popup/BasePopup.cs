@@ -17,6 +17,7 @@ public class BasePopup : MonoBehaviour
     [SerializeField] private ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
+    [SerializeField] protected bool isShowingInterAdOnInteract;
 
     #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
@@ -178,12 +179,30 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            ActualHideAfterAd();
+            if (isShowingInterAdOnInteract)
+            {
+                AdsBreakScreen.Instance.Show(onCompleteAction: () =>
+                {
+                    AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
+                });
+            }
+            else
+            {
+                ActualHideAfterAd();
+            }
+        }
+    }
 
-            // AdsBreakScreen.Instance.Show(onCompleteAction: () =>
-            // {
-            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
-            // });
+    protected virtual void HideWithoutAd(Action onCompletedAction = null)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+
+        if (_isShown)
+        {
+            ActualHideAfterAd();
         }
     }
 

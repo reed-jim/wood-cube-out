@@ -24,6 +24,7 @@ public class MenuScreenTransition : MonoBehaviour
 
         doubleInterAdsConfig.isEnable = true;
         doubleInterAdsConfig.isEnableDoubleInter = true;
+        doubleInterAdsConfig.cooldown = 15;
 
         GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
 
@@ -79,6 +80,13 @@ public class MenuScreenTransition : MonoBehaviour
             minWaitTime = 3;
         }
 
+        _tweens.Add(Tween.Delay(0.5f * minWaitTime)
+            .OnComplete(() =>
+            {
+                AdmobAdsMax.Instance.ShowInterstitialAdmob();
+            })
+        );
+
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
@@ -89,8 +97,6 @@ public class MenuScreenTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
-                    AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
-
                     fakeLoadingContainer.gameObject.SetActive(false);
                 })
             );

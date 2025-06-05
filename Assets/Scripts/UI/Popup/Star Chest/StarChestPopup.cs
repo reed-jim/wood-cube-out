@@ -71,7 +71,7 @@ public class StarChestPopup : BasePopup
 
     private void Continue()
     {
-        Hide();
+        HideWithoutAd();
     }
 
     private void AnimateProgress()
