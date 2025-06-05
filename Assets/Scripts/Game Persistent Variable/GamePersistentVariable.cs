@@ -81,6 +81,7 @@ public static class GamePersistentVariable
     public static int bannerCooldown = 30;
     public static bool isEnableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
+    public static DoubleInterAdsConfig doubleInterAdsConfig;
     #endregion
 
     #region IAP

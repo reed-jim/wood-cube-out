@@ -45,5 +45,7 @@ public class DoubleInterAdsConfig
     public bool isEnableDoubleInter;
     public bool isEnableInterPopupInteract;
     public bool isEnableInterSceneTransition;
+    public int minLevel;
+    public int cooldown;
 }
 #endregion

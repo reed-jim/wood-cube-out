@@ -20,9 +20,21 @@ public class MenuScreenTransition : MonoBehaviour
     {
         _tweens = new List<Tween>();
 
-        FakeLoadingForAds();
+        DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
-        // BlackScreenTransition();
+        doubleInterAdsConfig.isEnable = true;
+        doubleInterAdsConfig.isEnableDoubleInter = true;
+
+        GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
+
+        if (GamePersistentVariable.doubleInterAdsConfig.isEnable)
+        {
+            FakeLoadingForAds();
+        }
+        else
+        {
+            BlackScreenTransition();
+        }
     }
 
     private void OnDestroy()
@@ -77,7 +89,7 @@ public class MenuScreenTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
-                    AdmobAdsMax.Instance.ShowInterstitialAdmob();
+                    AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
 
                     fakeLoadingContainer.gameObject.SetActive(false);
                 })

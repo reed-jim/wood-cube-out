@@ -425,6 +425,7 @@ public class AdmobAdsMax : MonoBehaviour
         void OnAdPaid(AdValue adValue)
         {
             var revenue = adValue.Value / 1000000d;
+
             try
             {
                 AppFlyerGplay.LogRevenue("banner", "admob", "banner", "banner", revenue, "USD");
@@ -553,7 +554,8 @@ public class AdmobAdsMax : MonoBehaviour
                 {
                     interOneFinished = true;
                     CheckAllAdsClosed();
-                }
+                },
+                isShowAdBreak: isShowBreakAds
             );
 
             if (!isShowBreakAds)
@@ -646,10 +648,7 @@ public class AdmobAdsMax : MonoBehaviour
 
         if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
         {
-            AdsBreakScreen.Instance.Show(() =>
-            {
-                _interstitialAdmob.Show();
-            });
+            _interstitialAdmob.Show();
         }
         else
         {
@@ -661,9 +660,27 @@ public class AdmobAdsMax : MonoBehaviour
     {
         interstitialAd.OnAdPaid += (AdValue adValue) =>
         {
-            Debug.Log(String.Format("Interstitial ad paid {0} {1}.",
-                adValue.Value,
-                adValue.CurrencyCode));
+            try
+            {
+                var revenue = adValue.Value / 1000000d;
+
+                try
+                {
+                    AppFlyerGplay.LogRevenue("inter", "admob", "inter", "inter", revenue, "USD");
+
+                    AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
+                    AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
+                    AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+            catch (System.Exception)
+            {
+
+            }
         };
         interstitialAd.OnAdImpressionRecorded += () =>
         {
@@ -783,7 +800,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     public bool ShowInterstitial(bool isShowImmediatly = false, string actionWatchLog = "other",
         UnityAction actionIniterClose = null, UnityAction actionIniterShow = null, string level = null,
-        bool isInGame = true)
+        bool isInGame = true, bool isShowAdBreak = true)
     {
         // Debug.Log("show inter ========" + countdownAds);
 
@@ -810,8 +827,17 @@ public class AdmobAdsMax : MonoBehaviour
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
             isShowImmediatly)
         {
-            // Debug.Log("show inter ========" + countdownAds);
-            ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
+            if (isShowAdBreak)
+            {
+                AdsBreakScreen.Instance.Show(() =>
+                {
+                    ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
+                });
+            }
+            else
+            {
+                ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
+            }
         }
         else
         {

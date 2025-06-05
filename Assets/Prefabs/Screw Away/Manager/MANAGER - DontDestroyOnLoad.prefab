@@ -11539,6 +11539,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 328848638671994766}
     m_Modifications:
+    - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+      propertyPath: m_fontSize
+      value: 62.15
+      objectReference: {fileID: 0}
     - target: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -11619,6 +11623,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1127954695666064032, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 860
+      objectReference: {fileID: 0}
+    - target: {fileID: 1127954695666064032, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 1127954695666064032, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -160
+      objectReference: {fileID: 0}
     - target: {fileID: 6879963506280765834, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Name
       value: Ads Break Screen
@@ -11626,8 +11642,39 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6879963506280765834, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+      insertIndex: 3
+      addedObject: {fileID: 5632857769176426286}
   m_SourcePrefab: {fileID: 100100000, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+--- !u!1 &1870026379653017996 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6879963506280765834, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
+  m_PrefabInstance: {fileID: 5082630277186447366}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5632857769176426286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870026379653017996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ScreenMatchMode: 1
+  m_MatchWidthOrHeight: 0
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!224 &5168989241011953330 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}

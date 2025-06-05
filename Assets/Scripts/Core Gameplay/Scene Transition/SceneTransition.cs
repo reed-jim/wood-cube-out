@@ -210,7 +210,7 @@ public class SceneTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
-                    AdmobAdsMax.Instance.ShowInterstitialAdmob();
+                    AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
 
                     loadLevelInProgressContainer.gameObject.SetActive(false);
                 })

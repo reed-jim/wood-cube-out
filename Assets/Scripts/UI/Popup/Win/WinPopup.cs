@@ -205,12 +205,24 @@ public class WinPopup : BasePopup
         {
             continueButton.interactable = false;
 
+            if (GamePersistentVariable.doubleInterAdsConfig.isEnableDoubleInter)
+            {
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+                (
+                    OnInterstitialAdCompleted, false
+                );
+            }
+            else
+            {
+                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            }
+
             // AdmobAdsMax.Instance.ShowDoubleInterstitialAds
             // (
             //     OnInterstitialAdCompleted, false
             // );
 
-            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: OnInterstitialAdCompleted);
+            // AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: OnInterstitialAdCompleted);
 
             // AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
