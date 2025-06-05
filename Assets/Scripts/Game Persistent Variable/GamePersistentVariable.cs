@@ -41,6 +41,8 @@ public static class GamePersistentVariable
     #endregion
 
     #region GAME FLOW
+    public static bool hasAppJustLaunched;
+    public static bool isLoadingComplete;
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
     #endregion

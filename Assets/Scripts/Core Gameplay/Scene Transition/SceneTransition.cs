@@ -29,6 +29,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform loadLevelInProgressContainer;
     [SerializeField] private CanvasGroup loadLevelInProgressCanvasGroup;
     [SerializeField] private RectTransform rotatingLoadingIcon;
+    [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
 
     [Header("CUSTOMIZE")]
@@ -70,6 +71,8 @@ public class SceneTransition : MonoBehaviour
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
+
+        blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -200,16 +203,26 @@ public class SceneTransition : MonoBehaviour
             minWaitTime = 3;
         }
 
-        _tweens.Add(Tween.Delay(0.5f * minWaitTime)
-            .OnComplete(() =>
-            {
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
-            })
-        );
+        // _tweens.Add(Tween.Delay(0.8f * minWaitTime)
+        //     .OnComplete(() =>
+        //     {
+        //         AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
+        //     })
+        // );
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
+
+            blackBackgroundToPassPolicy.gameObject.SetActive(true);
+
+            AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
+                onDoubleInterClosed: () =>
+                {
+                    blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                },
+                isShowBreakAds: false
+            );
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {

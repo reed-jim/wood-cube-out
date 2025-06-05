@@ -49,6 +49,8 @@ public class GameLoading : MonoBehaviour
         retryConnectButton.onClick.AddListener(RetryConnection);
 
         _tweens = new List<Tween>();
+
+        GamePersistentVariable.hasAppJustLaunched = true;
     }
 
     void Start()
@@ -188,6 +190,8 @@ public class GameLoading : MonoBehaviour
                     // blackBackground.gameObject.SetActive(false);
 
                     // AdmobAdsMax.Instance.ShowInterstitialAdmob();
+
+                    GamePersistentVariable.isLoadingComplete = true;
 
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));

@@ -146,6 +146,18 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
+        if (isShowingInterAdOnInteract)
+        {
+            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
+        }
+        else
+        {
+            ActualShowAfterAd(onCompletedAction);
+        }
+    }
+
+    private void ActualShowAfterAd(Action onCompletedAction = null)
+    {
         gameObject.SetActive(true);
 
         _transitionAnimation.Show(OnTransitionCompleted);
@@ -181,14 +193,11 @@ public class BasePopup : MonoBehaviour
         {
             if (isShowingInterAdOnInteract)
             {
-                AdsBreakScreen.Instance.Show(onCompleteAction: () =>
-                {
-                    AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction));
-                });
+                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
             }
             else
             {
-                ActualHideAfterAd();
+                ActualHideAfterAd(onCompletedAction);
             }
         }
     }
@@ -202,7 +211,7 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            ActualHideAfterAd();
+            ActualHideAfterAd(onCompletedAction);
         }
     }
 
