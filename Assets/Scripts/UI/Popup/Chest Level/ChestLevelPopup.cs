@@ -30,7 +30,7 @@ public class ChestLevelPopup : BasePopup
         // claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
         // claimMultiplierButton.onClick.AddListener(ClaimX2);
 
-        continueButton.onClick.AddListener(Hide);
+        continueButton.onClick.AddListener(() => HideWithoutAd());
     }
 
     protected override void UnregisterMoreEvent()

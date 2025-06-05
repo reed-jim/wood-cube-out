@@ -200,6 +200,13 @@ public class SceneTransition : MonoBehaviour
             minWaitTime = 3;
         }
 
+        _tweens.Add(Tween.Delay(0.5f * minWaitTime)
+            .OnComplete(() =>
+            {
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
+            })
+        );
+
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
@@ -210,8 +217,6 @@ public class SceneTransition : MonoBehaviour
             })
             .OnComplete(() =>
                 {
-                    AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
-
                     loadLevelInProgressContainer.gameObject.SetActive(false);
                 })
             );

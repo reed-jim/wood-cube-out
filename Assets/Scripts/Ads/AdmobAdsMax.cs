@@ -547,23 +547,34 @@ public class AdmobAdsMax : MonoBehaviour
         }
         else
         {
-            ShowInterstitial(
-                true,
-                actionWatchLog,
-                actionIniterClose: () =>
-                {
-                    interOneFinished = true;
-                    CheckAllAdsClosed();
-                },
-                isShowAdBreak: isShowBreakAds
-            );
-
-            if (!isShowBreakAds)
+            if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
             {
-                _actionShowSecondInterAd?.Invoke();
-            }
+                ShowInterstitial(
+                    true,
+                    actionWatchLog,
+                    actionIniterClose: () =>
+                    {
+                        interOneFinished = true;
+                        CheckAllAdsClosed();
+                    },
+                    isShowAdBreak: isShowBreakAds
+                );
 
-            countdownAds = 0;
+                if (!isShowBreakAds)
+                {
+                    _actionShowSecondInterAd?.Invoke();
+                }
+
+                countdownAds = 0;
+            }
+            else
+            {
+                onDoubleInterClosed?.Invoke();
+
+                interOneFinished = true;
+                interSecondFinished = true;
+                _isShowingAds = false;
+            }
 
             // if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 15))
             // {
