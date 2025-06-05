@@ -52,8 +52,12 @@ public class CoinChallengePopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        nextEventTimeContainer.gameObject.SetActive(false);
+
         base.Show(onCompletedAction: () =>
         {
+            Setup();
+
             CheckShowRewards(_challengeData);
 
             try
@@ -65,8 +69,6 @@ public class CoinChallengePopup : BasePopup
 
             }
         });
-
-        Setup();
     }
 
     private CoinChallengeData ResetChallenge()
@@ -112,9 +114,11 @@ public class CoinChallengePopup : BasePopup
             localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
         }
 
+        CheckAvailabilty();
+    }
 
-
-
+    private void CheckAvailabilty()
+    {
         DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
 
         _isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;

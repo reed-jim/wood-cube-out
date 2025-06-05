@@ -12,6 +12,7 @@ public class MenuScreenTransition : MonoBehaviour
     [SerializeField] private RectTransform fakeLoadingContainer;
     [SerializeField] private CanvasGroup fakeLoadingCanvasGroup;
     [SerializeField] private RectTransform rotatingLoadingIcon;
+    [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _fakeLoadingCoroutine;
 
     private List<Tween> _tweens;
@@ -30,12 +31,25 @@ public class MenuScreenTransition : MonoBehaviour
 
         if (GamePersistentVariable.doubleInterAdsConfig.isEnable)
         {
-            FakeLoadingForAds();
+            if (GamePersistentVariable.hasAppJustLaunched)
+            {
+                fakeLoadingContainer.gameObject.SetActive(false);
+
+                StartCoroutine(WaitForShowAdAfterLoading());
+
+                GamePersistentVariable.hasAppJustLaunched = false;
+            }
+            else
+            {
+                FakeLoadingForAds();
+            }
         }
         else
         {
             BlackScreenTransition();
         }
+
+        blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -57,7 +71,19 @@ public class MenuScreenTransition : MonoBehaviour
         }));
     }
 
-    #region LOADING LEVEL IN PROGRESS
+    #region FAKE LOADING FOR ADS
+    private IEnumerator WaitForShowAdAfterLoading()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (!GamePersistentVariable.isLoadingComplete)
+        {
+            yield return waitForSeconds;
+        }
+
+        AdmobAdsMax.Instance.ShowInterstitialAdmob(isShowAdBreak: false);
+    }
+
     private void FakeLoadingForAds()
     {
         fakeLoadingContainer.gameObject.SetActive(true);
@@ -80,16 +106,19 @@ public class MenuScreenTransition : MonoBehaviour
             minWaitTime = 3;
         }
 
-        _tweens.Add(Tween.Delay(0.5f * minWaitTime)
-            .OnComplete(() =>
-            {
-                AdmobAdsMax.Instance.ShowInterstitialAdmob();
-            })
-        );
-
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
+
+            blackBackgroundToPassPolicy.gameObject.SetActive(true);
+
+            AdmobAdsMax.Instance.ShowInterstitialAdmob(
+                onAdClosed: () =>
+                {
+                    blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                },
+                isShowAdBreak: false
+            );
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {

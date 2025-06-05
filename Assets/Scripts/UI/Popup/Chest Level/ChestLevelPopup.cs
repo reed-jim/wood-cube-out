@@ -42,6 +42,8 @@ public class ChestLevelPopup : BasePopup
     {
         base.Show(onCompletedAction: () =>
         {
+            Refresh();
+
             bool isClaimable = IsClaimable();
 
             if (isClaimable)
@@ -58,20 +60,16 @@ public class ChestLevelPopup : BasePopup
                 GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
             }
         });
-
-        Refresh();
     }
 
     private void Refresh()
     {
         _cachedchestLevelData = DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData());
 
-        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{_cachedchestLevelData.currentRequiredLevel}");
-
-        bool isClaimable = IsClaimable();
-
-        // claimCanvasGroup.alpha = isClaimable ? 1 : 0.5f;
-        // claimCanvasGroup.interactable = isClaimable;
+        _tweens.Add(Tween.Custom(0, _cachedchestLevelData.currentRequiredLevel, duration: 0.3f, onValueChange: newVal =>
+        {
+            localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{(int)newVal}");
+        }));
     }
 
     private void Claim(int multiplier, bool isSkipCheckClaimable)

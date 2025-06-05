@@ -103,6 +103,8 @@ public class AdmobAdsMax : MonoBehaviour
         }
 
         Init();
+
+        countdownAds = int.MaxValue;
     }
 
     void OnDestroy()
@@ -653,17 +655,36 @@ public class AdmobAdsMax : MonoBehaviour
             });
     }
 
-    public void ShowInterstitialAdmob(Action onAdClosed = null)
+    public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true)
     {
-        _actionInterAdmobClosed = onAdClosed;
-
-        if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
+        if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
         {
-            _interstitialAdmob.Show();
+            _actionInterAdmobClosed = onAdClosed;
+
+            if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
+            {
+                if (isShowAdBreak)
+                {
+                    AdsBreakScreen.Instance.Show(onCompleteAction: () =>
+                    {
+                        _interstitialAdmob.Show();
+                    });
+                }
+                else
+                {
+                    _interstitialAdmob.Show();
+                }
+            }
+            else
+            {
+
+            }
+
+            countdownAds = 0;
         }
         else
         {
-
+            onAdClosed?.Invoke();
         }
     }
 
