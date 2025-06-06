@@ -209,7 +209,10 @@ public class MenuScreen : MonoBehaviour
         //     }
         // }
 
-        if (DataUtility.Load<LivesData>(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0)
+        if (
+            GamePersistentVariable.livesConfig.isActive &&
+            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
+        )
         {
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
 

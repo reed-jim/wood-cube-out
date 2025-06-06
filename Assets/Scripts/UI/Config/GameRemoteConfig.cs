@@ -37,6 +37,16 @@ public class CoinChallengeConfig
     public int levelToWin;
 }
 
+#region LIVES SYSTEM
+[System.Serializable]
+public class LivesConfig
+{
+    public bool isActive;
+    public int maxLive;
+    public int secondReplenishLive;
+}
+#endregion
+
 #region ADS
 [System.Serializable]
 public class DoubleInterAdsConfig

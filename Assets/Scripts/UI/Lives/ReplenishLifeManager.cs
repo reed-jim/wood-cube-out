@@ -31,8 +31,8 @@ public class ReplenishLifeManager : MonoBehaviour
 
         LivesData defaultLivesData = new LivesData();
 
-        MaxLives = RemoteConfigController.GetIntConfig(FirebaseConfig.MAX_LIVES, 5);
-        ReplenishTime = RemoteConfigController.GetIntConfig(FirebaseConfig.REPLENISH_LIFE_TIME, 1800);
+        MaxLives = GamePersistentVariable.livesConfig.maxLive;
+        ReplenishTime = GamePersistentVariable.livesConfig.secondReplenishLive;
 
         defaultLivesData.CurrentLives = MaxLives;
         defaultLivesData.LastReplenishTime = DateTime.Now;
@@ -106,8 +106,8 @@ public class ReplenishLifeManager : MonoBehaviour
         {
             if (GamePersistentVariable.isFirebaseRemoteConfigLoaded)
             {
-                MaxLives = RemoteConfigController.GetIntConfig(FirebaseConfig.MAX_LIVES, 5);
-                ReplenishTime = RemoteConfigController.GetIntConfig(FirebaseConfig.REPLENISH_LIFE_TIME, 1800);
+                MaxLives = GamePersistentVariable.livesConfig.maxLive;
+                ReplenishTime = GamePersistentVariable.livesConfig.secondReplenishLive;
 
                 _isFetchRemoteConfig = true;
             }

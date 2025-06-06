@@ -49,7 +49,7 @@ public class PausePopup : BasePopup
 
     private void ReturnHome()
     {
-        if (GamePersistentVariable.isLevelDirty)
+        if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
             switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
         }
@@ -73,7 +73,7 @@ public class PausePopup : BasePopup
 
     private void Replay()
     {
-        if (GamePersistentVariable.isLevelDirty)
+        if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
             switchRouteEvent?.Invoke(ScreenRoute.Replay);
         }

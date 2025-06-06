@@ -88,6 +88,10 @@ public static class GamePersistentVariable
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     #endregion
 
+    #region LIVES SYSTEM
+    public static LivesConfig livesConfig;
+    #endregion
+
     #region IAP
     public static string IAPLocation;
     public static int IAPAddition;

@@ -49,6 +49,7 @@ public class GameVariableInitializer : MonoBehaviour
         }
 
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
+        GamePersistentVariable.livesConfig = new LivesConfig();
     }
 
     private void Start()
