@@ -100,8 +100,8 @@ public class ScrewBox : MonoBehaviour
         float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
         float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
 
-        scaleWithWidth *= 1.1f;
-        scaleWithHeight *= 1.1f;
+        scaleWithWidth *= 1.05f;
+        scaleWithHeight *= 1.05f;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 

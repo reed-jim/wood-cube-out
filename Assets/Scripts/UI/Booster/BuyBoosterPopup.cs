@@ -261,7 +261,9 @@ public class BuyBoosterPopup : BasePopup
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
-        if (GamePersistentVariable.isEnableRewardedAds || forceEnable)
+        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+
+        if (isEnableRewardedAds || forceEnable)
         {
             adsButtonRT.gameObject.SetActive(true);
 

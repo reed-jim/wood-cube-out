@@ -393,6 +393,9 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
 
+        GamePersistentVariable.isShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+        GamePersistentVariable.isShowBanner = false;
+
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
         GetJsonConfig(FirebaseConfig.DOUBLE_INTER_ADS_CONFIG, out doubleInterAdsConfig);
@@ -413,12 +416,11 @@ public class RemoteConfigController : MonoBehaviour
 
     private static void SetRemoteConfigRewardedAds()
     {
-        GamePersistentVariable.isEnableRewardedAds = true;
+        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
+        GamePersistentVariable.minLevelDisableRewardedAds = GetIntConfig(FirebaseConfig.LEVEL_DISABLE_REWARDED_ADS, 20);
 
-        if (GamePersistentVariable.currentLevel > 20)
-        {
-            GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
-        }
+        GamePersistentVariable.isEnableRewardedAds = false;
+        GamePersistentVariable.minLevelDisableRewardedAds = 1;
     }
     #endregion
 

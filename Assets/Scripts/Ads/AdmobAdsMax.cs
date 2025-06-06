@@ -14,7 +14,6 @@ public class AdmobAdsMax : MonoBehaviour
     #region SAFERIO
     private int _loadBannerRetryTime;
     private bool _isBannerLoaded;
-    private bool _remoteConfigIsShowBanner;
 
 
     private InterstitialAd _interstitialAdmob;
@@ -370,11 +369,7 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
-        bool remoteConfigIsShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
-
-        _remoteConfigIsShowBanner = remoteConfigIsShowBanner;
-
-        if (!remoteConfigIsShowBanner)
+        if (!GamePersistentVariable.isShowBanner)
         {
             return;
         }
@@ -525,11 +520,15 @@ public class AdmobAdsMax : MonoBehaviour
         _actionTwoIniterClose = onDoubleInterClosed;
         _actionShowSecondInterAd = () =>
         {
-            ShowInterstitialAdmob(onAdClosed: () =>
-            {
-                interSecondFinished = true;
-                CheckAllAdsClosed();
-            });
+            ShowInterstitialAdmob(
+                onAdClosed: () =>
+                {
+                    interSecondFinished = true;
+
+                    CheckAllAdsClosed();
+                },
+                isShowAdBreak: false
+            );
         };
 
         if (isShowImmediatly)
@@ -551,20 +550,16 @@ public class AdmobAdsMax : MonoBehaviour
         {
             if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
             {
-                ShowInterstitial(
-                    true,
-                    actionWatchLog,
-                    actionIniterClose: () =>
-                    {
-                        interOneFinished = true;
-                        CheckAllAdsClosed();
-                    },
-                    isShowAdBreak: isShowBreakAds
-                );
-
-                if (!isShowBreakAds)
+                if (isShowBreakAds)
                 {
-                    _actionShowSecondInterAd?.Invoke();
+                    AdsBreakScreen.Instance.Show(() =>
+                    {
+                        StartShowDoubleInter();
+                    });
+                }
+                else
+                {
+                    StartShowDoubleInter();
                 }
 
                 countdownAds = 0;
@@ -577,30 +572,22 @@ public class AdmobAdsMax : MonoBehaviour
                 interSecondFinished = true;
                 _isShowingAds = false;
             }
+        }
 
-            // if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 15))
-            // {
-            //     GameController.Instance.AdsController.ShowInterstitial(
-            //        true, actionWatchLog, () =>
-            //        {
-            //            interOneFinished = true;
-            //            CheckAllAdsClosed();
-            //        }, null, isShowBreakAds
-            //        );
+        void StartShowDoubleInter()
+        {
+            ShowInterstitial(
+                true,
+                actionWatchLog,
+                actionIniterClose: () =>
+                {
+                    interOneFinished = true;
+                    CheckAllAdsClosed();
+                },
+                isShowAdBreak: false
+            );
 
-            //     if (!isShowBreakAds)
-            //     {
-            //         _actionIniterAd?.Invoke();
-            //     }
-            //     countdownAds = 0;
-            // }
-            // else
-            // {
-            //     actionIniterClose?.Invoke();
-            //     interOneFinished = true;
-            //     interSecondFinished = true;
-            //     _isShowingAds = false;
-            // }
+            _actionShowSecondInterAd?.Invoke();
         }
     }
 
@@ -677,7 +664,7 @@ public class AdmobAdsMax : MonoBehaviour
             }
             else
             {
-
+                onAdClosed?.Invoke();
             }
 
             countdownAds = 0;
@@ -1167,7 +1154,7 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
-        if (!_remoteConfigIsShowBanner)
+        if (!GamePersistentVariable.isShowBanner)
         {
             return;
         }
@@ -1185,12 +1172,12 @@ public class AdmobAdsMax : MonoBehaviour
             }
             else
             {
-                ShowBannerMax();
+                // ShowBannerMax();
             }
         }
         else
         {
-            ShowBannerMax();
+            // ShowBannerMax();
         }
     }
 
@@ -1473,41 +1460,38 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void Update()
     {
-        if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
+        if (!_isBannerLoaded)
         {
-            if (IsCooldownAdmobBanner)
+            if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
             {
-                _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
-                if (_cooldownAdmobBannerTimer <= 0)
+                if (IsCooldownAdmobBanner)
                 {
-                    RefreshAdmobBanner();
-                    _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
+                    _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
+                    if (_cooldownAdmobBannerTimer <= 0)
+                    {
+                        RefreshAdmobBanner();
+                        _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
+
+                        _loadBannerRetryTime++;
+
+                        if (_loadBannerRetryTime >= 2)
+                        {
+                            _isBannerLoaded = true;
+                        }
+                    }
                 }
             }
+
+            if (!_isShowAdmobBanner)
+            {
+                if (GamePersistentVariable.isShowBanner)
+                {
+                    ShowBannerMax();
+                }
+
+                _isBannerLoaded = true;
+            }
         }
-
-        // if (!_isBannerLoaded)
-        // {
-        //     if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
-        //     {
-        //         if (IsCooldownAdmobBanner)
-        //         {
-        //             _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
-        //             if (_cooldownAdmobBannerTimer <= 0)
-        //             {
-        //                 RefreshAdmobBanner();
-        //                 _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
-
-        //                 _loadBannerRetryTime++;
-
-        //                 if (_loadBannerRetryTime >= 2)
-        //                 {
-        //                     _isBannerLoaded = true;
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
 
         if (isReloadBannerCollap)
         {

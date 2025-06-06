@@ -391,7 +391,7 @@ public class MenuScreen : MonoBehaviour
     private void ShowSalePack(SaleIAPPackType packType)
     {
         return;
-        
+
         openRemoveAdPopupButton.gameObject.SetActive(false);
 
         for (int i = 0; i < openSaleIAPPackButtons.Length; i++)
@@ -447,7 +447,8 @@ public class MenuScreen : MonoBehaviour
     #region EVENT
     private void SetupEvent()
     {
-        openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
+        openSpaceRacePopupButton.gameObject.SetActive(false);
+        // openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
         openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsCoinChallengeUnlocked());
 
         #region STAR CHEST

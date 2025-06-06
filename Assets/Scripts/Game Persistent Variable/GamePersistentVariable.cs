@@ -79,9 +79,11 @@ public static class GamePersistentVariable
     #endregion
 
     #region ADS
+    public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;
     public static int bannerCooldown = 30;
     public static bool isEnableRewardedAds;
+    public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
     #endregion
