@@ -204,7 +204,9 @@ public class RevivePopup : BasePopup
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
-        if (GamePersistentVariable.isEnableRewardedAds || forceEnable)
+        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+
+        if (isEnableRewardedAds || forceEnable)
         {
             reviveByAdsButton.gameObject.SetActive(true);
 
