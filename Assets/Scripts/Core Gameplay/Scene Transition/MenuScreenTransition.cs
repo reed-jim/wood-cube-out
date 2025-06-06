@@ -23,7 +23,7 @@ public class MenuScreenTransition : MonoBehaviour
 
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
-        doubleInterAdsConfig.isEnable = true;
+        doubleInterAdsConfig.isEnable = false;
         doubleInterAdsConfig.isEnableDoubleInter = true;
         doubleInterAdsConfig.cooldown = 30;
 
@@ -48,6 +48,8 @@ public class MenuScreenTransition : MonoBehaviour
         }
         else
         {
+            fakeLoadingContainer.gameObject.SetActive(false);
+            
             BlackScreenTransition();
         }
     }

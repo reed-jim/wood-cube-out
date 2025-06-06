@@ -162,7 +162,7 @@ public class SceneTransition : MonoBehaviour
         }
         else
         {
-            if (GamePersistentVariable.remoteConfigIsShowMREC)
+            if (GamePersistentVariable.doubleInterAdsConfig.isEnable)
             {
                 LoadingLevelInProgress();
             }
