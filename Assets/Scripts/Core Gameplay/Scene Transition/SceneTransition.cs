@@ -32,6 +32,8 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
 
+    [SerializeField] private IntVariable currentLevel;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private float startDelay;
     [SerializeField] private float blackScreenStartDelay;
@@ -149,11 +151,6 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
-
-        // Change this later
-        GamePersistentVariable.remoteConfigIsShowMREC = true;
-
-
         if (GamePersistentVariable.isLoadingLevelInProgress)
         {
             LoadingLevelInProgress();
@@ -162,7 +159,7 @@ public class SceneTransition : MonoBehaviour
         }
         else
         {
-            if (GamePersistentVariable.doubleInterAdsConfig.isEnable)
+            if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
             {
                 LoadingLevelInProgress();
             }

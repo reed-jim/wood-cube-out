@@ -38,6 +38,7 @@ public class CoinChallengeConfig
 }
 
 #region ADS
+[System.Serializable]
 public class DoubleInterAdsConfig
 {
     public bool isEnable;
