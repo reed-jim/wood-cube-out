@@ -18,14 +18,24 @@ public class UserLivesUI : MonoBehaviour
     {
         ReplenishLifeManager.updateLivesReplenishTimeEvent += UpdateLivesReplenishTime;
         ReplenishLifeManager.updateLivesNumberEvent += UpdateLivesNumber;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         openLivesShopPopupButton.onClick.AddListener(OpenLivesShopPopup);
+    }
+
+    void Start()
+    {
+        if (!GamePersistentVariable.livesConfig.isActive)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     void OnDestroy()
     {
         ReplenishLifeManager.updateLivesReplenishTimeEvent -= UpdateLivesReplenishTime;
         ReplenishLifeManager.updateLivesNumberEvent -= UpdateLivesNumber;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     private void UpdateLivesReplenishTime(string time)
@@ -54,5 +64,10 @@ public class UserLivesUI : MonoBehaviour
     private void OpenLivesShopPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
+    }
+
+    private void OnRemoteConfigReady()
+    {
+        gameObject.SetActive(GamePersistentVariable.livesConfig.isActive);
     }
 }

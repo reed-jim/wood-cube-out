@@ -396,6 +396,7 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.isShowBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
         GamePersistentVariable.isShowBanner = false;
 
+        #region DOUBLE INTER
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
         GetJsonConfig(FirebaseConfig.DOUBLE_INTER_ADS_CONFIG, out doubleInterAdsConfig);
@@ -404,6 +405,18 @@ public class RemoteConfigController : MonoBehaviour
         {
             GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
         }
+        #endregion
+
+        #region LIVES SYSTEM
+        LivesConfig livesConfig = new LivesConfig();
+
+        GetJsonConfig(FirebaseConfig.LIVES_SYSTEM_CONFIG, out livesConfig);
+
+        if (livesConfig != null)
+        {
+            GamePersistentVariable.livesConfig = livesConfig;
+        }
+        #endregion
 
         remoteConfigReadyEvent?.Invoke();
 
