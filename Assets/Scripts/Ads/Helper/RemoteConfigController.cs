@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Newtonsoft.Json;
 using Firebase.Extensions;
+using PrimeTween;
+using System.Linq;
 
 public class RemoteConfigController : MonoBehaviour
 {
@@ -199,7 +201,6 @@ public class RemoteConfigController : MonoBehaviour
         {
             result = default;
             return false;
-
         }
 
         try
@@ -392,11 +393,14 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
 
-        DoubleInterAdsConfig doubleInterAdsConfig;
+        DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
         GetJsonConfig(FirebaseConfig.DOUBLE_INTER_ADS_CONFIG, out doubleInterAdsConfig);
 
-        // GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
+        if (doubleInterAdsConfig != null)
+        {
+            GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
+        }
 
         remoteConfigReadyEvent?.Invoke();
 

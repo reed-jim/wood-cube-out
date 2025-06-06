@@ -390,6 +390,8 @@ public class MenuScreen : MonoBehaviour
 
     private void ShowSalePack(SaleIAPPackType packType)
     {
+        return;
+        
         openRemoveAdPopupButton.gameObject.SetActive(false);
 
         for (int i = 0; i < openSaleIAPPackButtons.Length; i++)

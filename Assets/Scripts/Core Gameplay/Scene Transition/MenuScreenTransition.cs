@@ -15,29 +15,23 @@ public class MenuScreenTransition : MonoBehaviour
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _fakeLoadingCoroutine;
 
+    [SerializeField] private IntVariable currentLevel;
+
     private List<Tween> _tweens;
 
     void Awake()
     {
         _tweens = new List<Tween>();
 
-        DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
-
-        doubleInterAdsConfig.isEnable = false;
-        doubleInterAdsConfig.isEnableDoubleInter = true;
-        doubleInterAdsConfig.cooldown = 30;
-
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
 
-        GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
-
-        if (GamePersistentVariable.doubleInterAdsConfig.isEnable)
+        if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
         {
             if (GamePersistentVariable.hasAppJustLaunched)
             {
                 fakeLoadingContainer.gameObject.SetActive(false);
 
-                StartCoroutine(WaitForShowAdAfterLoading());
+                // StartCoroutine(WaitForShowAdAfterLoading());
 
                 GamePersistentVariable.hasAppJustLaunched = false;
             }
@@ -49,7 +43,7 @@ public class MenuScreenTransition : MonoBehaviour
         else
         {
             fakeLoadingContainer.gameObject.SetActive(false);
-            
+
             BlackScreenTransition();
         }
     }

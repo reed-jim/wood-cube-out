@@ -47,6 +47,8 @@ public class GameVariableInitializer : MonoBehaviour
         {
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
+
+        GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
     }
 
     private void Start()

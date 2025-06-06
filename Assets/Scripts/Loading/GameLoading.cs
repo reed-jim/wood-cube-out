@@ -39,7 +39,7 @@ public class GameLoading : MonoBehaviour
 
 
 
-    [SerializeField] private Image blackBackgroundToPassPolicy;
+    // [SerializeField] private Image blackBackgroundToPassPolicy;
 
 
 
@@ -58,7 +58,7 @@ public class GameLoading : MonoBehaviour
 
         GamePersistentVariable.hasAppJustLaunched = true;
 
-        blackBackgroundToPassPolicy.gameObject.SetActive(false);
+        // blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     void Start()
@@ -199,9 +199,9 @@ public class GameLoading : MonoBehaviour
 
                     // AdmobAdsMax.Instance.ShowInterstitialAdmob();
 
-                    blackBackgroundToPassPolicy.gameObject.SetActive(true);
+                    // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                    GamePersistentVariable.isLoadingComplete = true;
+                    // GamePersistentVariable.isLoadingComplete = true;
 
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));
