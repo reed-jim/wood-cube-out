@@ -23,6 +23,7 @@ public class ReplenishLifeManager : MonoBehaviour
         LivesShopPopup.changeLivesNumberEvent += ChangeLivesNumber;
         ReplayPopup.changeLivesNumberEvent += ChangeLivesNumber;
         SceneManager.sceneLoaded += OnSceneChanged;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
     }
 
     void Start()
@@ -48,17 +49,10 @@ public class ReplenishLifeManager : MonoBehaviour
         updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
     }
 
-    private async Task WaitForFirebaseReadyAsync()
+    private void OnRemoteConfigReady()
     {
-        int maxTryTime = 8;
-        int tryTime = 1;
-
-        while (!GamePersistentVariable.isFirebaseRemoteConfigLoaded && tryTime <= maxTryTime)
-        {
-            await Task.Delay(500);
-
-            tryTime++;
-        }
+        MaxLives = GamePersistentVariable.livesConfig.maxLive;
+        ReplenishTime = GamePersistentVariable.livesConfig.secondReplenishLive;
     }
 
     void OnDestroy()
@@ -67,6 +61,7 @@ public class ReplenishLifeManager : MonoBehaviour
         LivesShopPopup.changeLivesNumberEvent -= ChangeLivesNumber;
         ReplayPopup.changeLivesNumberEvent -= ChangeLivesNumber;
         SceneManager.sceneLoaded -= OnSceneChanged;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     void OnSceneChanged(Scene scene, LoadSceneMode loadSceneMode)
@@ -88,8 +83,6 @@ public class ReplenishLifeManager : MonoBehaviour
             if (_livesData.CurrentLives < MaxLives)
             {
                 UpdateRemainingReplenishLife();
-
-
             }
             else
             {
@@ -128,8 +121,10 @@ public class ReplenishLifeManager : MonoBehaviour
 
             updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
         }
-
-        updateLivesReplenishTimeEvent?.Invoke(ConvertTimeFormat(remainingTime));
+        else
+        {
+            updateLivesReplenishTimeEvent?.Invoke(ConvertTimeFormat(remainingTime));
+        }
 
         DataUtility.Save(GameConstants.USER_LIVES_DATA, _livesData);
 
