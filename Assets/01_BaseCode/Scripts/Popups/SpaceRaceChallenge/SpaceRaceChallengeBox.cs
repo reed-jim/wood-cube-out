@@ -4,6 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using static ChallengeSegemtData;
 using DG.Tweening;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
 
 public class SpaceRaceChallengeBox : BaseBox
 {
@@ -38,7 +41,9 @@ public class SpaceRaceChallengeBox : BaseBox
 
     private void Init()
     {
-        challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+        challengeController =
+            (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType
+                .RaceSpaceChallenge);
         config = challengeController.config;
 
         InitRaceMemeber();
@@ -64,7 +69,7 @@ public class SpaceRaceChallengeBox : BaseBox
                 }
             }
         }
-    }    
+    }
 
     private void InitState()
     {
@@ -74,7 +79,7 @@ public class SpaceRaceChallengeBox : BaseBox
             closeBGBtn.interactable = false;
             continueBtn.gameObject.SetActive(false);
             playCanvasG.alpha = 0;
-        }    
+        }
         else
         {
             closeBtn.interactable = true;
@@ -83,7 +88,6 @@ public class SpaceRaceChallengeBox : BaseBox
             playCanvasG.alpha = 1;
             stateTxt.text = Localization.Get("s_space_race_began");
         }
-        
     }
 
     private void Update()
@@ -98,81 +102,42 @@ public class SpaceRaceChallengeBox : BaseBox
     {
         closeBtn.interactable = true;
         closeBGBtn.interactable = true;
-    }    
+    }
 
     private void OnClickContinueRace()
     {
         string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
-        if (lvJson != null)
+        AsyncOperationHandle<GameObject> handle =
+            Addressables.LoadAssetAsync<GameObject>($"Level {UseProfile.CurrentLevel}");
+
+        handle.Completed += (op) =>
         {
-            var levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
-
-            if (levelConfig != null)
+            if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                Close();
-                //PlayCampainBox.Setup().Show(levelConfig.idHardMode);
-                bool isCanPlay = false;
-                if (UseProfile.IsUnlimitedHealth)
-                {
-                    isCanPlay = true;
-                }
-                else
-                {
-                    if (UseProfile.Health >= 1)
-                    {
-                        isCanPlay = true;
-                        //UseProfile.Health -= 1;
-                        if (!UseProfile.IsRefillHealth)
-                        {
-                            UseProfile.TimeLastOverHealth = UnbiasedTime.Instance.Now();
-                            UseProfile.IsRefillHealth = true;
-                        }
-                    }
-                }
-
-                if (isCanPlay)
-                {
-                    Close();
-                    GameController.Instance.LoadScene(SceneName.GAME_PLAY);
-                }
-                else
-                {
-                    //Hiện popup mua Health
-                    OutOfHealthBox.Setup().Show();
-                    GameController.Instance.musicManager.PlayClickSound();
-                }
+                GameObject level = op.Result;
+                GameController.Instance.LoadScene(SceneName.GAME_PLAY);
             }
             else
             {
                 GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                       (
-                       continueBtn.transform.position,
-                       Localization.Get("s_comming_soon"),
-                       Color.white,
-                       isSpawnItemPlayer: true
-                       );
+                (
+                    continueBtn.transform.position,
+                    Localization.Get("s_comming_soon"),
+                    Color.white,
+                    isSpawnItemPlayer: true
+                );
+                
             }
-            GameController.Instance.musicManager.PlayClickSound();
-        }
-        else
-        {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
-                      (
-                      continueBtn.transform.position,
-                      Localization.Get("s_comming_soon"),
-                      Color.white,
-                      isSpawnItemPlayer: true
-                      );
-            GameController.Instance.musicManager.PlayClickSound();
-        }
-    }    
+        };
+        GameController.Instance.musicManager.PlayClickSound();
+    }
+    
 
     public void OnClickTut()
     {
         SpaceRaceTutBox.Setup().Show();
         GameController.Instance.musicManager.PlayClickSound();
-    }    
+    }
 
     public void OnMeFinishRace()
     {
@@ -184,5 +149,5 @@ public class SpaceRaceChallengeBox : BaseBox
         continueBtn.gameObject.SetActive(true);
         playCanvasG.DOKill();
         playCanvasG.DOFade(1, 0.35f);
-    }    
+    }
 }

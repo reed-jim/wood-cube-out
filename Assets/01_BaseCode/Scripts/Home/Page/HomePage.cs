@@ -45,31 +45,6 @@ public class HomePage : PageBase
             {
                 GameObject level = op.Result;
                 levelTxt.text = GameController.Instance.useProfile.CurrentLevelPlay.ToString();
-                // int idHardMode = levelConfig.idHardMode;
-                //
-                // if (idHardMode > 0)
-                // {
-                //     for (int i = 0; i < hardModeObj.Length; i++)
-                //     {
-                //         hardModeObj[i].gameObject.SetActive(false);
-                //     }
-                //
-                //     hardModeObj[idHardMode - 1].gameObject.SetActive(true);
-                //     playBtn.GetComponent<Image>().sprite = hardModeSprt[idHardMode];
-                //     playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(43f, 7);
-                //     playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[idHardMode];
-                // }
-                // else
-                // {
-                //     for (int i = 0; i < hardModeObj.Length; i++)
-                //     {
-                //         hardModeObj[i].gameObject.SetActive(false);
-                //     }
-                //
-                //     playTxt.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 7);
-                //     playBtn.GetComponent<Image>().sprite = hardModeSprt[0];
-                //     playTxt.transform.GetComponent<UnityEngine.UI.Outline>().effectColor = outLineColor[0];
-                // }
             }
             else
             {
