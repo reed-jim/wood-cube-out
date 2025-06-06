@@ -48,6 +48,7 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
 
+        GamePersistentVariable.currentLevel = currentLevel.Value;
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
         GamePersistentVariable.livesConfig = new LivesConfig();
     }

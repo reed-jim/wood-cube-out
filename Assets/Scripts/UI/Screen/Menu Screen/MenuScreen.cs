@@ -544,9 +544,17 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
+            float positionX = 1.5f * GamePersistentVariable.canvasSize.x;
+            
+            // leaderboard
+            if (screenRoute == ScreenRoute.Screen2)
+            {
+                positionX = -1.5f * GamePersistentVariable.canvasSize.x;
+            }
+
             buttonsCanvasGroup.interactable = false;
 
-            _openUnlockScrewBoxesPopupButtonTween = Tween.LocalPositionX(buttonsCanvasGroupRT, 1.5f * GamePersistentVariable.canvasSize.x, duration: 0.3f);
+            _openUnlockScrewBoxesPopupButtonTween = Tween.LocalPositionX(buttonsCanvasGroupRT, positionX, duration: 0.3f);
 
             // _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
         }
