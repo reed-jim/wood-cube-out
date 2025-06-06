@@ -146,7 +146,7 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
-        if (isShowingInterAdOnInteract)
+        if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
         {
             AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
         }
@@ -191,7 +191,7 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            if (isShowingInterAdOnInteract)
+            if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
             {
                 AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
             }

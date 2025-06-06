@@ -200,26 +200,27 @@ public class SceneTransition : MonoBehaviour
             minWaitTime = 3;
         }
 
-        // _tweens.Add(Tween.Delay(0.8f * minWaitTime)
-        //     .OnComplete(() =>
-        //     {
-        //         AdmobAdsMax.Instance.ShowDoubleInterstitialAds(null, isShowBreakAds: false);
-        //     })
-        // );
-
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
 
-            blackBackgroundToPassPolicy.gameObject.SetActive(true);
+            // double inter
+            if (!_isFirstTimeEnterScene)
+            {
+                blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-            AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
-                onDoubleInterClosed: () =>
-                {
-                    blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                },
-                isShowBreakAds: false
-            );
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
+                    onDoubleInterClosed: () =>
+                    {
+                        blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                    },
+                    isShowBreakAds: false
+                );
+            }
+            else
+            {
+                _isFirstTimeEnterScene = false;
+            }
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {

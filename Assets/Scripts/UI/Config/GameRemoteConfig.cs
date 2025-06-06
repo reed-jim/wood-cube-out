@@ -58,5 +58,10 @@ public class DoubleInterAdsConfig
     public bool isEnableInterSceneTransition;
     public int minLevel;
     public int cooldown;
+
+    public bool IsValidShowInterInteractPopup()
+    {
+        return isEnable && GamePersistentVariable.currentLevel >= minLevel && isEnableInterPopupInteract;
+    }
 }
 #endregion
