@@ -29,7 +29,7 @@ public class WinBox : BaseBox
     [SerializeField] private Button exitBtn;
     [SerializeField] private Text timeTxt;
 
-    public IQScorePassController iqScorePassController;
+    //public IQScorePassController iqScorePassController;
     public RectTransform completeContent;
     private float firstCompleteContentY;
 
@@ -115,14 +115,14 @@ public class WinBox : BaseBox
             coinRewardEndLevelObj.gameObject.SetActive(false);
         }
 
-        iqScorePassController.Init(this);
+        //iqScorePassController.Init(this);
     }
 
     public void InitState()
     {
         firstCompleteContentY = completeContent.anchoredPosition.y;
-        MoveUpCompleteContent();
-        UpdateIQScore();
+        //MoveUpCompleteContent();
+        //UpdateIQScore();
         GConnection.UpdateDataTableBackground(GDataTable.PlayerData, isFromDisk: true);
 
         GameController.Instance.admobAds.ShowBannerCollap();
@@ -132,7 +132,7 @@ public class WinBox : BaseBox
     {
         StartCoroutine(ShowStar(star));
         timeTxt.text = TimeManager.ShowTime2(time);
-        iqScorePassController.iqScoreText.text = "IQ: " + BirdSort2.GamePlayController_BirdSort.Instance.scoreController.currentScore.ToString();
+        //iqScorePassController.iqScoreText.text = "IQ: " + BirdSort2.GamePlayController_BirdSort.Instance.scoreController.currentScore.ToString();
 
         //Challenge
         List<RewardRandom> rewardClaim = new List<RewardRandom>();
@@ -315,8 +315,8 @@ public class WinBox : BaseBox
 
     public void UpdateScoreIQ()
     {
-        iqScorePassController.UpdateIQValue(iqScoreLast);
-        iqScorePassController.StartAnim();
+        //iqScorePassController.UpdateIQValue(iqScoreLast);
+        //iqScorePassController.StartAnim();
         fxAddIQ.gameObject.SetActive(true);
     }    
 
