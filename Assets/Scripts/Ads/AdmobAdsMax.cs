@@ -568,6 +568,8 @@ public class AdmobAdsMax : MonoBehaviour
             {
                 onDoubleInterClosed?.Invoke();
 
+                AdsBreakScreen.Instance.Hide();
+
                 interOneFinished = true;
                 interSecondFinished = true;
                 _isShowingAds = false;
@@ -717,11 +719,15 @@ public class AdmobAdsMax : MonoBehaviour
         {
             _actionInterAdmobClosed?.Invoke();
 
+            AdsBreakScreen.Instance.HideAnim();
+
             LoadInterstitialAdmob();
         };
         interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
         {
             _actionInterAdmobClosed?.Invoke();
+
+            AdsBreakScreen.Instance.HideAnim();
 
             LoadInterstitialAdmob();
         };
@@ -875,7 +881,13 @@ public class AdmobAdsMax : MonoBehaviour
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
         UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
-        actionIniterClose += () => { IsCooldownAdmobBanner = true; };
+        actionIniterClose += () =>
+        {
+            AdsBreakScreen.Instance.Hide();
+
+            IsCooldownAdmobBanner = true;
+        };
+
         if (IsLoadedInterstitial())
         {
             isShowingAds = true;

@@ -130,10 +130,10 @@ public class SceneTransition : MonoBehaviour
         //     return;
         // }
 
-        if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
-        {
-            LoadingLevelInProgress();
-        }
+        // if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
+        // {
+        //     LoadingLevelInProgress();
+        // }
 
         if (_waitForLevelLoadedCoroutine != null)
         {
@@ -180,6 +180,17 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
+        if (_isFirstTimeEnterScene)
+        {
+            loadLevelInProgressContainer.gameObject.SetActive(false);
+
+            _isFirstTimeEnterScene = false;
+
+            return;
+        }
+
+
+
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
         loadLevelInProgressCanvasGroup.alpha = 1;
