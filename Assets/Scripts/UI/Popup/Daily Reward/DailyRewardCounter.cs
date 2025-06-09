@@ -1,14 +1,22 @@
 using System;
 using System.Collections;
+using Lean.Localization;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DailyRewardCounter : SaferioTweenBehaviour
 {
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Transform claimNotification;
     [SerializeField] private GameObject buttonNameContainer;
+
+    [SerializeField] private GameObject lockContainer;
+    [SerializeField] private Button selectButton;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI unlockLevelText;
+
+    [SerializeField] private IntVariable currentLevel;
 
     protected override void MoreActionInAwake()
     {
@@ -43,6 +51,26 @@ public class DailyRewardCounter : SaferioTweenBehaviour
         }
 
         buttonNameContainer.SetActive(!isRewardAvailable);
+
+        DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
+
+        if (currentLevel.Value >= dailyRewardConfig.unlockLevel)
+        {
+            lockContainer.SetActive(false);
+
+            // selectButton.interactable = true;
+        }
+        else
+        {
+            AddTween(Tween.Delay(0.3f).OnComplete(() =>
+            {
+                lockContainer.SetActive(true);
+
+                unlockLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{dailyRewardConfig.unlockLevel}");
+
+                // selectButton.interactable = false;
+            }));
+        }
     }
 
     private IEnumerator Counting()
