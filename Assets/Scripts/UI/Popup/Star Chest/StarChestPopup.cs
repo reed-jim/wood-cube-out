@@ -36,11 +36,13 @@ public class StarChestPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
     }
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
@@ -139,6 +141,25 @@ public class StarChestPopup : BasePopup
         claimStarChestEvent?.Invoke();
 
         GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.StarChest;
+    }
+
+    private void OnClaimRewardPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)
