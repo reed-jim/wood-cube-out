@@ -22,6 +22,7 @@ public class ReplenishLifeManager : MonoBehaviour
         ReturnHomePopup.changeLivesNumberEvent += ChangeLivesNumber;
         LivesShopPopup.changeLivesNumberEvent += ChangeLivesNumber;
         ReplayPopup.changeLivesNumberEvent += ChangeLivesNumber;
+        LosePopup.changeLivesNumberEvent += ChangeLivesNumber;
         SceneManager.sceneLoaded += OnSceneChanged;
         RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
     }
@@ -60,6 +61,7 @@ public class ReplenishLifeManager : MonoBehaviour
         ReturnHomePopup.changeLivesNumberEvent -= ChangeLivesNumber;
         LivesShopPopup.changeLivesNumberEvent -= ChangeLivesNumber;
         ReplayPopup.changeLivesNumberEvent -= ChangeLivesNumber;
+        LosePopup.changeLivesNumberEvent -= ChangeLivesNumber;
         SceneManager.sceneLoaded -= OnSceneChanged;
         RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }

@@ -59,6 +59,7 @@ public class MenuScreen : MonoBehaviour
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<ScreenRoute> switchRouteNoAdEvent;
     public static event Action<bool> showMenuBlackScreenEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<string, string, string, string> showNotificationWithParamEvent;
@@ -166,8 +167,8 @@ public class MenuScreen : MonoBehaviour
         SpaceRacePopup.startGameEvent -= StartGame;
         SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
-        StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
-        LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopup;
+        StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopupWithoutAd;
+        LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopupWithoutAd;
         RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
@@ -308,6 +309,16 @@ public class MenuScreen : MonoBehaviour
     private void OpenChestLevelPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.ChestLevel);
+    }
+
+    private void OpenStarChestPopupWithoutAd()
+    {
+        switchRouteNoAdEvent?.Invoke(ScreenRoute.StarChest);
+    }
+
+    private void OpenChestLevelPopupWithoutAd()
+    {
+        switchRouteNoAdEvent?.Invoke(ScreenRoute.ChestLevel);
     }
 
     private void OpenCoinChallengePopup()

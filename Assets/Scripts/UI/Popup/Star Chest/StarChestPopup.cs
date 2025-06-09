@@ -80,15 +80,13 @@ public class StarChestPopup : BasePopup
 
         float progress = (float)starCollected / requireGemForEachLevel;
 
-        if (progress > 0.19f)
-        {
-            // progressSlider.value = 0;
+        progressSlider.value = 0;
 
-            _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
-            {
-                progressSlider.value = newVal;
-                progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
-            })
+        _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
+        {
+            progressSlider.value = newVal;
+            progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
+        })
             .OnComplete(() =>
             {
                 if (progress >= 1)
@@ -102,13 +100,37 @@ public class StarChestPopup : BasePopup
                     ShowReward();
                 }
             })
-            );
-        }
-        else
-        {
-            progressSlider.value = 0;
-            progressText.text = $"{starCollected}/{requireGemForEachLevel}";
-        }
+        );
+
+        // if (progress > 0.19f)
+        // {
+        //     progressSlider.value = 0;
+
+        //     _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
+        //     {
+        //         progressSlider.value = newVal;
+        //         progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
+        //     })
+        //     .OnComplete(() =>
+        //     {
+        //         if (progress >= 1)
+        //         {
+        //             _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
+
+        //             _data.starCollected %= requireGemForEachLevel;
+
+        //             DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+
+        //             ShowReward();
+        //         }
+        //     })
+        //     );
+        // }
+        // else
+        // {
+        //     progressSlider.value = 0;
+        //     progressText.text = $"{starCollected}/{requireGemForEachLevel}";
+        // }
     }
 
     private void ShowReward()

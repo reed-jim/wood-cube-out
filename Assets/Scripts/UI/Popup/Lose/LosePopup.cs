@@ -30,6 +30,7 @@ public class LosePopup : BasePopup
 
     public static event Action replayLevelEvent;
     public static event Action skipLevelEvent;
+    public static event Action<int> changeLivesNumberEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -76,6 +77,8 @@ public class LosePopup : BasePopup
 
         progressText.text = $"{0}%";
 
+        changeLivesNumberEvent?.Invoke(-1);
+
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
         // don't track loop level CostCenter
@@ -108,6 +111,7 @@ public class LosePopup : BasePopup
             DataUtility.Save($"Time Lose Level {currentLevel.Value}", timeLoseLevel);
         }
 
+        #region SKIP LEVEL
         GamePersistentVariable.isAllowedSkipLevel = false;
 
         if (!_isAllowedSkipLevel)
@@ -125,6 +129,7 @@ public class LosePopup : BasePopup
         {
             skipLevelButton.gameObject.SetActive(false);
         }
+        #endregion
     }
 
     private void Replay()

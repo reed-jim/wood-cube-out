@@ -42,6 +42,7 @@ public class BasePopup : MonoBehaviour
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
+        MenuScreen.switchRouteNoAdEvent += OnRouteSwitchedWithoutAd;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
@@ -91,6 +92,7 @@ public class BasePopup : MonoBehaviour
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
+        MenuScreen.switchRouteNoAdEvent -= OnRouteSwitchedWithoutAd;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
@@ -139,6 +141,18 @@ public class BasePopup : MonoBehaviour
         }
     }
 
+    private void OnRouteSwitchedWithoutAd(ScreenRoute route)
+    {
+        if (route == this.route)
+        {
+            ShowWithoutAd();
+        }
+        else
+        {
+
+        }
+    }
+
     protected virtual void Show(Action onCompletedAction = null)
     {
         if (_isInTransition)
@@ -154,6 +168,18 @@ public class BasePopup : MonoBehaviour
         {
             ActualShowAfterAd(onCompletedAction);
         }
+
+        _isInTransition = true;
+    }
+
+    protected void ShowWithoutAd(Action onCompletedAction = null)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+
+        ActualShowAfterAd(onCompletedAction);
     }
 
     private void ActualShowAfterAd(Action onCompletedAction = null)
@@ -199,6 +225,8 @@ public class BasePopup : MonoBehaviour
             {
                 ActualHideAfterAd(onCompletedAction);
             }
+
+            _isInTransition = true;
         }
     }
 
