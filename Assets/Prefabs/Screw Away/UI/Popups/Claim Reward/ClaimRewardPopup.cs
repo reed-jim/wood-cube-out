@@ -102,6 +102,8 @@ public class ClaimRewardPopup : BasePopup
     private void OnRewaredAdCompleted()
     {
         Claim(multiplier: 2);
+
+        SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"{GamePersistentVariable.currentReasonRewardedAd}");
     }
 
     private void ShowAdsNotLoadedPopup()
