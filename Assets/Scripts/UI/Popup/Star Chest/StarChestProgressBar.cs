@@ -161,6 +161,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
             .OnComplete(() =>
             {
                 fx.Play();
+                SoundManager.Instance.PlaySoundUnlockScrewBox();
 
                 AddTween(Tween.Alpha(starGroup, 0, duration: 0.3f));
 

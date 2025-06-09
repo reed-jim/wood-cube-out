@@ -20,6 +20,17 @@ public class ClaimRewardPopup : BasePopup
     [SerializeField] private CanvasGroup chestCanvasGroup;
     [SerializeField] private SkeletonGraphic chest;
     [SerializeField] private Button openChestButton;
+
+    [SerializeField] private RectTransform[] chestResourceGroups;
+    [SerializeField] private ParticleSystem[] chestRewardFXs;
+    [SerializeField] private Button chestClaimButton;
+    [SerializeField] private Button chestClaimMultiplierButton;
+
+    [SerializeField] private Image openChestButtonImage;
+    [SerializeField] private Image chestClaimButtonImage;
+    [SerializeField] private Image chestClaimMultiplierButtonImage;
+
+    private ResourceGroupUI[] _chestResourceGroupsUI;
     #endregion
 
     private int _coinQuantity;
@@ -45,6 +56,8 @@ public class ClaimRewardPopup : BasePopup
 
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
+        chestClaimButton.onClick.AddListener(Claim);
+        chestClaimMultiplierButton.onClick.AddListener(ClaimMultiplier);
         openChestButton.onClick.AddListener(OpenChest);
     }
 
@@ -66,6 +79,40 @@ public class ClaimRewardPopup : BasePopup
         for (int i = 0; i < resourceGroups.Length; i++)
         {
             _resourceGroupsUI[i] = resourceGroups[i].GetComponent<ResourceGroupUI>();
+        }
+
+        _chestResourceGroupsUI = new ResourceGroupUI[chestResourceGroups.Length];
+
+        for (int i = 0; i < chestResourceGroups.Length; i++)
+        {
+            _chestResourceGroupsUI[i] = chestResourceGroups[i].GetComponent<ResourceGroupUI>();
+        }
+    }
+
+    private void OnEnable()
+    {
+        Reset();
+    }
+
+    private void Reset()
+    {
+        openChestButton.gameObject.SetActive(true);
+
+        chestClaimButton.gameObject.SetActive(false);
+        chestClaimMultiplierButton.gameObject.SetActive(false);
+
+        openChestButtonImage.color = ColorUtil.WithAlpha(Color.white, 1);
+
+        chestClaimButton.transform.localScale = Vector3.zero;
+        chestClaimMultiplierButton.transform.localScale = Vector3.zero;
+
+        openChestButton.interactable = true;
+        chestClaimButton.interactable = false;
+        chestClaimMultiplierButton.interactable = false;
+
+        for (int i = 0; i < chestRewardFXs.Length; i++)
+        {
+            chestRewardFXs[i].gameObject.SetActive(false);
         }
     }
 
@@ -147,6 +194,11 @@ public class ClaimRewardPopup : BasePopup
         {
             rewardCanvasGroup.gameObject.SetActive(false);
             chestCanvasGroup.gameObject.SetActive(true);
+
+            for (int i = 0; i < chestResourceGroups.Length; i++)
+            {
+                chestResourceGroups[i].gameObject.SetActive(false);
+            }
         }
         else
         {
@@ -212,25 +264,116 @@ public class ClaimRewardPopup : BasePopup
     {
         chest.AnimationState.SetAnimation(0, "open", false);
 
-        Tween.Delay(1.233f).OnComplete(() =>
+        _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>
         {
             chest.AnimationState.SetAnimation(0, "end", true);
 
-            Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+            SetupChest(_coinQuantity, _boosterQuantities, _isRemoveAds);
+
+            chestClaimButton.gameObject.SetActive(true);
+            chestClaimMultiplierButton.gameObject.SetActive(true);
+
+            _tweens.Add(Tween.Alpha(openChestButtonImage, 0, duration: 0.3f));
+            _tweens.Add(Tween.Scale(chestClaimButton.transform, 1, duration: 0.3f));
+            _tweens.Add(Tween.Scale(chestClaimMultiplierButton.transform, 1, duration: 0.3f)
+            .OnComplete(() =>
             {
-                chestCanvasGroup.gameObject.SetActive(false);
-                rewardCanvasGroup.gameObject.SetActive(true);
+                openChestButton.interactable = false;
+                chestClaimButton.interactable = true;
+                chestClaimMultiplierButton.interactable = true;
+            }));
 
-                rewardCanvasGroup.alpha = 0;
+            // Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
+            // {
+            //     chestCanvasGroup.gameObject.SetActive(false);
+            //     rewardCanvasGroup.gameObject.SetActive(true);
 
-                Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
+            //     rewardCanvasGroup.alpha = 0;
+
+            //     Tween.Alpha(rewardCanvasGroup, 1, duration: 0.3f).OnComplete(() =>
+            //     {
+            //         // reset
+            //         chest.AnimationState.SetAnimation(0, "idle", false);
+
+            //         chestCanvasGroup.alpha = 1;
+            //     });
+            // });
+        }));
+    }
+
+    private void SetupChest(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
+    {
+        List<RectTransform> validResourceGroups = new List<RectTransform>();
+
+        if (isRemoveAd)
+        {
+            validResourceGroups.Add(chestResourceGroups[0]);
+
+            _isRemoveAds = true;
+        }
+
+        if (GamePersistentVariable.isUnlockedAllScrewBoxes)
+        {
+            validResourceGroups.Add(chestResourceGroups[5]);
+
+            GamePersistentVariable.isUnlockedAllScrewBoxes = false;
+        }
+
+        if (coinQuantity > 0)
+        {
+            _chestResourceGroupsUI[1].SetQuantity(coinQuantity);
+
+            validResourceGroups.Add(chestResourceGroups[1]);
+        }
+
+        for (int i = 0; i < boosterQuantities.Length; i++)
+        {
+            if (boosterQuantities[i] > 0)
+            {
+                _chestResourceGroupsUI[2 + i].SetQuantity(boosterQuantities[i]);
+
+                validResourceGroups.Add(chestResourceGroups[2 + i]);
+            }
+        }
+
+        for (int i = 0; i < chestResourceGroups.Length; i++)
+        {
+            chestResourceGroups[i].gameObject.SetActive(false);
+        }
+
+        for (int i = 0; i < validResourceGroups.Count; i++)
+        {
+            int index = i;
+
+            Vector3 position = Vector3.zero;
+            position.x = (-(validResourceGroups.Count - 1) / 2f + i) * 0.23f * container.sizeDelta.x;
+            position.y = 0.15f * GamePersistentVariable.canvasSize.y;
+
+            validResourceGroups[i].gameObject.SetActive(true);
+
+            validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.00f * GamePersistentVariable.canvasSize.y);
+            validResourceGroups[i].localScale = Vector3.zero;
+
+            float duration = 0.3f + 0.15f * i;
+
+            _tweens.Add(Tween.LocalPosition(validResourceGroups[i], 1.05f * position, duration: duration, ease: Ease.InOutSine)
+                .OnComplete(() =>
                 {
-                    // reset
-                    chest.AnimationState.SetAnimation(0, "idle", false);
+                    _tweens.Add(Tween.LocalPosition(validResourceGroups[index], 1.05f * position, duration: 0.15f, ease: Ease.InOutSine)
+                        .OnComplete(() =>
+                        {
+                            chestRewardFXs[index].gameObject.SetActive(true);
 
-                    chestCanvasGroup.alpha = 1;
-                });
-            });
-        });
+                            chestRewardFXs[index].transform.position = validResourceGroups[index].position;
+                            chestRewardFXs[index].Play();
+                        })
+                    );
+                })
+            );
+            _tweens.Add(Tween.Scale(validResourceGroups[i], 1, duration: duration));
+        }
+
+        _coinQuantity = coinQuantity;
+        _boosterQuantities = boosterQuantities;
     }
 }

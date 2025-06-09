@@ -169,6 +169,8 @@ public class StarChestPopup : BasePopup
 
         if (isShow)
         {
+            return;
+
             start = 1;
             end = 0;
 
