@@ -285,8 +285,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
                         }
 
-                        // SaferioTracking.TrackIAPEvent(productData.ProductId);
-                        // SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
+                        SaferioTracking.TrackIAPEvent(productData.ProductId);
+                        SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
 
                         // // Simulate DELAY on iOS    
                         // Tween.Delay(3).OnComplete(() =>
