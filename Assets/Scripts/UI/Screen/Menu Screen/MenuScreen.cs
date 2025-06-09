@@ -76,6 +76,8 @@ public class MenuScreen : MonoBehaviour
         SpaceRacePopup.startGameEvent += StartGame;
         SalePackIAPManager.suggestSalePackEvent += ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent += OpenCoinChallengePopup;
+        StarChestProgressBar.openStarChestPopupEvent += OpenStarChestPopup;
+        LevelChestProgressBar.openLevelChestPopupEvent += OpenChestLevelPopup;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -162,6 +164,8 @@ public class MenuScreen : MonoBehaviour
         SpaceRacePopup.startGameEvent -= StartGame;
         SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
+        StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
+        LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopup;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
 
@@ -545,7 +549,7 @@ public class MenuScreen : MonoBehaviour
         else
         {
             float positionX = 1.5f * GamePersistentVariable.canvasSize.x;
-            
+
             // leaderboard
             if (screenRoute == ScreenRoute.Screen2)
             {
