@@ -60,6 +60,8 @@ public class ChestLevelPopup : BasePopup
                 GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
             }
         });
+
+        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{1}");
     }
 
     private void Refresh()
@@ -155,6 +157,8 @@ public class ChestLevelPopup : BasePopup
         {
             start = 1;
             end = 0;
+
+            popupCanvasGroup.interactable = false;
         }
 
         if (!isShow)
@@ -165,7 +169,15 @@ public class ChestLevelPopup : BasePopup
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
-        }));
+        })
+        .OnComplete(() =>
+            {
+                if (!isShow)
+                {
+                    popupCanvasGroup.interactable = true;
+                }
+            })
+        );
     }
 }
 

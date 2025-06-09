@@ -318,6 +318,8 @@ public class CoinChallengePopup : BasePopup
             start = 1;
             end = 0;
 
+            popupCanvasGroup.interactable = false;
+
             if (gameObject.activeInHierarchy)
             {
                 Setup();
@@ -327,6 +329,14 @@ public class CoinChallengePopup : BasePopup
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
-        }));
+        })
+            .OnComplete(() =>
+            {
+                if (!isShow)
+                {
+                    popupCanvasGroup.interactable = true;
+                }
+            })
+        );
     }
 }

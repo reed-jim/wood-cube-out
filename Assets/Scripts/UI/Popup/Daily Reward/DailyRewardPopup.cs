@@ -74,16 +74,20 @@ public class DailyRewardPopup : BasePopup
         {
             start = 1;
             end = 0;
+
+            popupCanvasGroup.interactable = false;
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
         })
-        .OnComplete(() =>
-        {
-            Refresh();
-        })
+            .OnComplete(() =>
+            {
+                Refresh();
+
+                popupCanvasGroup.interactable = true;
+            })
         );
     }
 
