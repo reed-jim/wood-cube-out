@@ -18,6 +18,7 @@ public class DailyRewardPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
@@ -27,6 +28,7 @@ public class DailyRewardPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent -= EnableClaimButtons;
     }
@@ -65,6 +67,25 @@ public class DailyRewardPopup : BasePopup
         claimDailyRewardEvent?.Invoke();
     }
 
+    private void OnClaimRewardPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
@@ -72,6 +93,8 @@ public class DailyRewardPopup : BasePopup
 
         if (isShow)
         {
+            return;
+
             start = 1;
             end = 0;
 

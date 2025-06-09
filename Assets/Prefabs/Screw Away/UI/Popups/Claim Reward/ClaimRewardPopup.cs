@@ -264,10 +264,8 @@ public class ClaimRewardPopup : BasePopup
     {
         chest.AnimationState.SetAnimation(0, "open", false);
 
-        _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>
+        _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
         {
-            chest.AnimationState.SetAnimation(0, "end", true);
-
             SetupChest(_coinQuantity, _boosterQuantities, _isRemoveAds);
 
             chestClaimButton.gameObject.SetActive(true);
@@ -282,6 +280,11 @@ public class ClaimRewardPopup : BasePopup
                 chestClaimButton.interactable = true;
                 chestClaimMultiplierButton.interactable = true;
             }));
+        }));
+
+        _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>
+        {
+            chest.AnimationState.SetAnimation(0, "end", true);
 
             // Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
             // {
