@@ -32,8 +32,8 @@ public class ReplenishLifeManager : MonoBehaviour
 
         LivesData defaultLivesData = new LivesData();
 
-        MaxLives = GamePersistentVariable.livesConfig.maxLive;
-        ReplenishTime = GamePersistentVariable.livesConfig.secondReplenishLive;
+        MaxLives = 5;
+        ReplenishTime = 60 * 20;
 
         defaultLivesData.CurrentLives = MaxLives;
         defaultLivesData.LastReplenishTime = DateTime.Now;
