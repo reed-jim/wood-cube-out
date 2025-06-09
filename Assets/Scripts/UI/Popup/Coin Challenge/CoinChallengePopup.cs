@@ -37,7 +37,7 @@ public class CoinChallengePopup : BasePopup
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         // claimButton.onClick.AddListener(Claim);
-        continueButton.onClick.AddListener(Hide);
+        continueButton.onClick.AddListener(Continue);
     }
 
     protected override void UnregisterMoreEvent()
@@ -53,6 +53,10 @@ public class CoinChallengePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         nextEventTimeContainer.gameObject.SetActive(false);
+
+        localizedDescription.TranslationName = "Collect more gems to unlock your next reward";
+
+        localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{0}");
 
         base.Show(onCompletedAction: () =>
         {
@@ -115,6 +119,11 @@ public class CoinChallengePopup : BasePopup
         }
 
         CheckAvailabilty();
+    }
+
+    private void Continue()
+    {
+        HideWithoutAd();
     }
 
     private void CheckAvailabilty()
@@ -237,6 +246,8 @@ public class CoinChallengePopup : BasePopup
                 progressSlider.value = newVal;
                 progressText.text = $"{(newVal * 100).ToString("F0")}%";
                 progressText.text = $"{Mathf.RoundToInt(newVal * requiredItem)}/{requiredItem}";
+
+                localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{(int)(requiredItem * (1 - newVal))}");
             }));
         }
         else
