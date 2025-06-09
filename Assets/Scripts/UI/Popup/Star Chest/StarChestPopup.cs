@@ -65,7 +65,7 @@ public class StarChestPopup : BasePopup
 
         // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
 
-        progressSlider.value = 0;
+        // progressSlider.value = 0;
         progressText.text = $"{0}/{requireGemForEachLevel}";
     }
 
@@ -82,7 +82,7 @@ public class StarChestPopup : BasePopup
 
         if (progress > 0.19f)
         {
-            progressSlider.value = 0;
+            // progressSlider.value = 0;
 
             _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
             {
@@ -128,6 +128,8 @@ public class StarChestPopup : BasePopup
         {
             start = 1;
             end = 0;
+
+            popupCanvasGroup.interactable = false;
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
@@ -140,6 +142,8 @@ public class StarChestPopup : BasePopup
                 {
                     Setup();
                     AnimateProgress();
+
+                    popupCanvasGroup.interactable = true;
                 }
             })
         );
