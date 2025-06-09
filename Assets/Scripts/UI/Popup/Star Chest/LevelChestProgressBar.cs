@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class LevelChestProgressBar : SaferioTweenBehaviour
@@ -11,35 +13,42 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
+    public static event Action openLevelChestPopupEvent;
+
     protected override void MoreActionInAwake()
     {
         ChestLevelPopup.claimChestLevelEvent += SetProgress;
-
-        SetProgress();
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     protected override void MoreActionOnDestroy()
     {
         ChestLevelPopup.claimChestLevelEvent -= SetProgress;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        SetProgress();
     }
 
     private void Refresh()
     {
-        bool isRewardAvailable = currentLevel.Value >=
-            DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
+        // bool isRewardAvailable = currentLevel.Value >=
+        //     DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
 
-        if (isRewardAvailable)
-        {
-            claimNotification.gameObject.SetActive(true);
+        // if (isRewardAvailable)
+        // {
+        //     claimNotification.gameObject.SetActive(true);
 
-            StartCoroutine(AnimateClaimNotification());
-        }
-        else
-        {
-            claimNotification.gameObject.SetActive(false);
-        }
+        //     StartCoroutine(AnimateClaimNotification());
+        // }
+        // else
+        // {
+        //     claimNotification.gameObject.SetActive(false);
+        // }
 
-        buttonNameContainer.SetActive(!isRewardAvailable);
+        // buttonNameContainer.SetActive(!isRewardAvailable);
     }
 
     private IEnumerator AnimateClaimNotification()
@@ -83,6 +92,20 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
     {
         Refresh();
 
-        fill.fillAmount = currentLevel.Value % 10 / 10f;
+        fill.fillAmount = 0;
+
+        float finalAmount = currentLevel.Value % 10 / 10f;
+
+        AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, startDelay: 2, onValueChange: newVal =>
+        {
+            fill.fillAmount = newVal;
+
+            bool isRewardAvailable = currentLevel.Value >= DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
+
+            if (isRewardAvailable)
+            {
+                openLevelChestPopupEvent?.Invoke();
+            }
+        }));
     }
 }

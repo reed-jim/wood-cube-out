@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using PrimeTween;
 using TMPro;
@@ -18,6 +19,8 @@ public class StarChestProgressBar : SaferioTweenBehaviour
     [SerializeField] private ParticleSystem fx;
 
     private Vector3 _starGroupInitialPosition;
+
+    public static event Action openStarChestPopupEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -42,20 +45,22 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
     private void Refresh()
     {
-        bool isRewardAvailable = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData()).starCollected >= GameConstants.REQUIRE_STAR;
+        // bool isRewardAvailable = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData()).starCollected >= GameConstants.REQUIRE_STAR;
 
-        if (isRewardAvailable)
-        {
-            claimNotification.gameObject.SetActive(true);
+        // claimNotification.gameObject.SetActive(false);
 
-            StartCoroutine(AnimateClaimNotification());
-        }
-        else
-        {
-            claimNotification.gameObject.SetActive(false);
-        }
+        // if (isRewardAvailable)
+        // {
+        //     claimNotification.gameObject.SetActive(true);
 
-        buttonNameContainer.SetActive(!isRewardAvailable);
+        //     StartCoroutine(AnimateClaimNotification());
+        // }
+        // else
+        // {
+        //     claimNotification.gameObject.SetActive(false);
+        // }
+
+        // buttonNameContainer.SetActive(!isRewardAvailable);
     }
 
     private IEnumerator AnimateClaimNotification()
@@ -104,6 +109,16 @@ public class StarChestProgressBar : SaferioTweenBehaviour
         AddTween(Tween.Custom(0, data.starCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
+
+            AddTween(Tween.Delay(1).OnComplete(() =>
+            {
+                bool isRewardAvailable = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData()).starCollected >= GameConstants.REQUIRE_STAR;
+
+                if (isRewardAvailable)
+                {
+                    openStarChestPopupEvent?.Invoke();
+                }
+            }));
         }));
     }
 
