@@ -25,6 +25,7 @@ public class NotificationPopup : BasePopup
         CompensatePopup.showNotificationEvent += ShowNotification;
         BackupPopup.showNotificationEvent += ShowNotification;
         MenuScreen.showNotificationEvent += ShowNotification;
+        MenuScreen.showNotificationWithParamEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -42,6 +43,7 @@ public class NotificationPopup : BasePopup
         CompensatePopup.showNotificationEvent -= ShowNotification;
         BackupPopup.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationEvent -= ShowNotification;
+        MenuScreen.showNotificationWithParamEvent -= ShowNotification;
 
         showNotificationEvent -= ShowNotification;
     }
@@ -88,6 +90,19 @@ public class NotificationPopup : BasePopup
     {
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
+
+        Show();
+    }
+
+    private void ShowNotification(string titleTranslation, string descriptionTranslation, string parameter, string value)
+    {
+        localizedTitle.TranslationName = titleTranslation;
+        localizedDescription.TranslationName = descriptionTranslation;
+
+        _tweens.Add(Tween.Delay(0.1f).OnComplete(() =>
+        {
+            localizedDescription.UpdateTranslationWithParameter(parameter, value);
+        }));
 
         Show();
     }

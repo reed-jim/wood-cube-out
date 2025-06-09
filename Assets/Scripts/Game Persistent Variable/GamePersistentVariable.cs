@@ -107,6 +107,7 @@ public static class GamePersistentVariable
     #region DAILY REWARD
     public static int currentDailyRewardIndex;
     public static bool isCurrentDailyRewardIndexLoaded;
+    public static DailyRewardConfig dailyRewardConfig;
     #endregion
 
     #region GOLD PASS

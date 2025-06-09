@@ -61,6 +61,7 @@ public class MenuScreen : MonoBehaviour
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<bool> showMenuBlackScreenEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<string, string, string, string> showNotificationWithParamEvent;
 
     private void Awake()
     {
@@ -78,6 +79,7 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.suggestCoinChallengeEvent += OpenCoinChallengePopup;
         StarChestProgressBar.openStarChestPopupEvent += OpenStarChestPopup;
         LevelChestProgressBar.openLevelChestPopupEvent += OpenChestLevelPopup;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
@@ -166,6 +168,7 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
         StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
         LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopup;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
 
@@ -258,7 +261,16 @@ public class MenuScreen : MonoBehaviour
 
     private void OpenDailyRewardPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.DailyReward);
+        DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
+
+        if (dailyRewardConfig.IsAvailable(currentLevel.Value))
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.DailyReward);
+        }
+        else
+        {
+            showNotificationWithParamEvent?.Invoke("Locked", "Unlocked at Level", GameConstants.LEVEL_PARAMETER, $"{dailyRewardConfig.unlockLevel}");
+        }
     }
 
     private void OpenGoldPassPopup()
@@ -300,7 +312,14 @@ public class MenuScreen : MonoBehaviour
 
     private void OpenCoinChallengePopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.CoinChallenge);
+        if (currentLevel.Value >= 30)
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.CoinChallenge);
+        }
+        else
+        {
+            showNotificationWithParamEvent?.Invoke("Locked", "Unlocked at Level", GameConstants.LEVEL_PARAMETER, $"{30}");
+        }
     }
 
     private void OpenStarTournamentPopup()
@@ -456,7 +475,13 @@ public class MenuScreen : MonoBehaviour
     {
         openSpaceRacePopupButton.gameObject.SetActive(false);
         // openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
-        openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsCoinChallengeUnlocked());
+        openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsShowCoinChallengeButton());
+
+        #region DAILY REWARD
+        // bool isDailyRewardAvailable = GamePersistentVariable.dailyRewardConfig.IsAvailable(currentLevel.Value);
+
+        // openDailyRewardPopupButton.gameObject.SetActive(isDailyRewardAvailable);
+        #endregion
 
         #region STAR CHEST
         // StarChestConfig starChestConfig;
@@ -467,6 +492,13 @@ public class MenuScreen : MonoBehaviour
 
         // GameConstants.REQUIRE_STAR = starChestConfig.requiredStar;
         #endregion
+    }
+
+    private void OnRemoteConfigReady()
+    {
+        // bool isDailyRewardAvailable = GamePersistentVariable.dailyRewardConfig.IsAvailable(currentLevel.Value);
+
+        // openDailyRewardPopupButton.gameObject.SetActive(isDailyRewardAvailable);
     }
     #endregion
 

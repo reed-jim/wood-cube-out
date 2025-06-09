@@ -443,6 +443,7 @@ public class FirebaseConfig
     public const string STAR_CHEST_CONFIG = "star_chest_config";
     public const string DOUBLE_INTER_ADS_CONFIG = "double_inter_ads_config";
     public const string LIVES_SYSTEM_CONFIG = "lives_system_config";
+    public const string DAILY_REWARD_CONFIG = "daily_reward_config";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

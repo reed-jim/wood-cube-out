@@ -21,6 +21,18 @@ public class LevelChestConfig
 public class DailyRewardConfig
 {
     public bool isActive;
+    public int unlockLevel;
+
+    public DailyRewardConfig()
+    {
+        isActive = true;
+        unlockLevel = 12;
+    }
+
+    public bool IsAvailable(int level)
+    {
+        return isActive && level >= unlockLevel;
+    }
 }
 
 public class SpaceRaceConfig
