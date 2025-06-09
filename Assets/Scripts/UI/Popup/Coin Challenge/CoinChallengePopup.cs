@@ -56,11 +56,26 @@ public class CoinChallengePopup : BasePopup
     {
         nextEventTimeContainer.gameObject.SetActive(false);
 
-        progressSlider.value = 0;
+
+        #region DISABLE ANIMATION
+        int currentMilestone = _challengeData.CurrentMilestone;
+
+        int gemCollectedOfMilestone = _challengeData.EventItemCollectedOfMilstones[currentMilestone];
+        int requiredItemOfMilestone = coinChallengeConfigContainer.RequiredItems[currentMilestone];
+        int remaining = requiredItemOfMilestone - gemCollectedOfMilestone;
+
+        float progress = (float)gemCollectedOfMilestone / coinChallengeConfigContainer.RequiredItems[currentMilestone];
+
+        int requiredItem = coinChallengeConfigContainer.RequiredItems[currentMilestone];
+
+        progressSlider.value = progress;
+        progressText.text = $"{Mathf.RoundToInt(progress * requiredItem)}/{requiredItem}";
+        #endregion
+
 
         base.Show(onCompletedAction: () =>
         {
-            Setup();
+            // Setup();
 
             CheckShowRewards(_challengeData);
 
@@ -241,10 +256,10 @@ public class CoinChallengePopup : BasePopup
         {
             progressSlider.value = 0;
 
-            _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
+            _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.0f, onValueChange: newVal =>
             {
                 progressSlider.value = newVal;
-                progressText.text = $"{(newVal * 100).ToString("F0")}%";
+                // progressText.text = $"{(newVal * 100).ToString("F0")}%";
                 progressText.text = $"{Mathf.RoundToInt(newVal * requiredItem)}/{requiredItem}";
 
                 localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{(int)(requiredItem * (1 - newVal))}");
