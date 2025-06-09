@@ -21,6 +21,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     protected override void MoreActionInAwake()
     {
         DailyRewardItem.claimDailyRewardEvent += Refresh;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         StartCoroutine(Counting());
     }
@@ -28,11 +29,35 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     protected override void MoreActionOnDestroy()
     {
         DailyRewardItem.claimDailyRewardEvent -= Refresh;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
     }
 
     void OnEnable()
     {
         Refresh();
+    }
+
+    private void OnRemoteConfigReady()
+    {
+        DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
+
+        if (currentLevel.Value >= dailyRewardConfig.unlockLevel)
+        {
+            lockContainer.SetActive(false);
+
+            // selectButton.interactable = true;
+        }
+        else
+        {
+            AddTween(Tween.Delay(0.3f).OnComplete(() =>
+            {
+                lockContainer.SetActive(true);
+
+                unlockLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{dailyRewardConfig.unlockLevel}");
+
+                // selectButton.interactable = false;
+            }));
+        }
     }
 
     private void Refresh()
@@ -51,6 +76,8 @@ public class DailyRewardCounter : SaferioTweenBehaviour
         }
 
         buttonNameContainer.SetActive(!isRewardAvailable);
+
+        currentLevel.Load();
 
         DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
 
