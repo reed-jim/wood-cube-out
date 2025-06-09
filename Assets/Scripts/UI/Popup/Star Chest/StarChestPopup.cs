@@ -65,7 +65,7 @@ public class StarChestPopup : BasePopup
 
         // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
 
-        // progressSlider.value = 0;
+        progressSlider.value = 0;
         progressText.text = $"{0}/{requireGemForEachLevel}";
     }
 
