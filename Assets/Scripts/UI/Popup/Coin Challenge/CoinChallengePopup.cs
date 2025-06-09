@@ -54,9 +54,7 @@ public class CoinChallengePopup : BasePopup
     {
         nextEventTimeContainer.gameObject.SetActive(false);
 
-        localizedDescription.TranslationName = "Collect more gems to unlock your next reward";
-
-        localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{0}");
+        progressSlider.value = 0;
 
         base.Show(onCompletedAction: () =>
         {
@@ -113,9 +111,9 @@ public class CoinChallengePopup : BasePopup
         }
         else
         {
-            localizedDescription.TranslationName = "Collect more gems to unlock your next reward";
+            localizedDescription.TranslationName = "Coin Challenge Description";
 
-            localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
+            // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
         }
 
         CheckAvailabilty();

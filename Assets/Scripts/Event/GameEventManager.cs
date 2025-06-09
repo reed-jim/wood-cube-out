@@ -87,23 +87,23 @@ public class GameEventManager : MonoBehaviour
 
     private void SuggestCoinChallenge()
     {
-        currentLevel.Load();
+        // currentLevel.Load();
 
-        if (currentLevel.Value < 30)
-        {
-            return;
-        }
+        // if (currentLevel.Value < 30)
+        // {
+        //     return;
+        // }
 
-        bool isSuggested = DataUtility.Load("Is Coin Challenge Suggested", false);
+        // bool isSuggested = DataUtility.Load("Is Coin Challenge Suggested", false);
 
-        if (!isSuggested)
-        {
-            Tween.Delay(1).OnComplete(() =>
-            {
-                suggestCoinChallengeEvent?.Invoke();
+        // if (!isSuggested)
+        // {
+        //     Tween.Delay(1).OnComplete(() =>
+        //     {
+        //         suggestCoinChallengeEvent?.Invoke();
 
-                DataUtility.Save("Is Coin Challenge Suggested", true);
-            });
-        }
+        //         DataUtility.Save("Is Coin Challenge Suggested", true);
+        //     });
+        // }
     }
 }
