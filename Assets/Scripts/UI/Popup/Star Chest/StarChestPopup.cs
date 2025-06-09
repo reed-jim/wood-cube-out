@@ -61,14 +61,14 @@ public class StarChestPopup : BasePopup
         int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
 
         int remaining = requireGemForEachLevel - starCollected;
-        // float progress = (float)starCollected / requireGemForEachLevel;
+        float progress = (float)starCollected / requireGemForEachLevel;
 
         // AnimateProgress(starCollected, requireGemForEachLevel, progress);
 
         // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
 
-        progressSlider.value = 0;
-        progressText.text = $"{0}/{requireGemForEachLevel}";
+        progressSlider.value = progress;
+        progressText.text = $"{Mathf.RoundToInt(progress * requireGemForEachLevel)}/{requireGemForEachLevel}";
     }
 
     private void Continue()
@@ -84,7 +84,7 @@ public class StarChestPopup : BasePopup
 
         progressSlider.value = 0;
 
-        _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.0f, onValueChange: newVal =>
         {
             progressSlider.value = newVal;
             progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
