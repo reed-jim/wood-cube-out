@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PrimeTween;
 using Spine.Unity;
@@ -29,6 +30,8 @@ public class ClaimRewardPopup : BasePopup
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private DailyRewardData rewardData;
+
+    public static event Action<bool> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -136,6 +139,8 @@ public class ClaimRewardPopup : BasePopup
 
     private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
     {
+        showClaimRewardPopupEvent?.Invoke(true);
+
         Show();
 
         if (isChest)
