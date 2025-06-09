@@ -46,27 +46,23 @@ public class AdsBreakScreen : SaferioTweenBehaviour
 
     public void Hide()
     {
-        Debug.Log("SAFERIO adbreak " + container.gameObject.activeInHierarchy + "/" + container.name);
+        // container.gameObject.SetActive(false);
 
-        container.gameObject.SetActive(false);
+        if (!container.gameObject.activeInHierarchy)
+        {
+            return;
+        }
 
-        // if (!container.gameObject.activeInHierarchy)
-        // {
-        //     return;
-        // }
-
-        // AddTween(Tween.Alpha(canvasGroup, 0, duration: 0.3f)
-        //     .OnComplete(() =>
-        //     {
-        //         container.gameObject.SetActive(false);
-        //     })
-        // );
+        AddTween(Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                container.gameObject.SetActive(false);
+            })
+        );
     }
 
     public void HideAnim()
     {
-        Debug.Log("SAFERIO adbreak " + container.gameObject.activeInHierarchy + "/" + container.name);
-
         if (!container.gameObject.activeInHierarchy)
         {
             return;
