@@ -34,6 +34,7 @@ public class CoinChallengePopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         // claimButton.onClick.AddListener(Claim);
@@ -42,6 +43,7 @@ public class CoinChallengePopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
@@ -317,6 +319,25 @@ public class CoinChallengePopup : BasePopup
         nextEventTimeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
 
+    private void OnClaimRewardPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
@@ -333,6 +354,8 @@ public class CoinChallengePopup : BasePopup
             {
                 Setup();
             }
+
+            return;
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>

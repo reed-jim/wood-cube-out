@@ -25,6 +25,7 @@ public class ChestLevelPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         // claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
@@ -35,6 +36,7 @@ public class ChestLevelPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
@@ -148,6 +150,25 @@ public class ChestLevelPopup : BasePopup
         return currentLevel.Value >= chestLevelData.currentRequiredLevel;
     }
 
+    private void OnClaimRewardPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
@@ -155,6 +176,8 @@ public class ChestLevelPopup : BasePopup
 
         if (isShow)
         {
+            return;
+
             start = 1;
             end = 0;
 
