@@ -120,6 +120,8 @@ public class MenuScreenTransition : MonoBehaviour
                 onAdClosed: () =>
                 {
                     blackBackgroundToPassPolicy.gameObject.SetActive(false);
+
+                    SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "Switch to Menu");
                 },
                 isShowAdBreak: false
             );

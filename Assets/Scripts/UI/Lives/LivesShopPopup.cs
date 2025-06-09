@@ -48,6 +48,8 @@ public class LivesShopPopup : BasePopup
         {
             ActualRefill();
         });
+
+        SaferioTracking.TrackRewardedAdCompleted(GamePersistentVariable.currentLevel, "Refill Live");
     }
 
     private void ShowAdsNotLoadedPopup()
