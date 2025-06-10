@@ -72,7 +72,6 @@ public class CoinChallengePopup : BasePopup
         progressText.text = $"{Mathf.RoundToInt(progress * requiredItem)}/{requiredItem}";
         #endregion
 
-
         base.Show(onCompletedAction: () =>
         {
             // Setup();
@@ -88,6 +87,8 @@ public class CoinChallengePopup : BasePopup
 
             }
         });
+
+        CheckAvailabilty();
     }
 
     private CoinChallengeData ResetChallenge()
