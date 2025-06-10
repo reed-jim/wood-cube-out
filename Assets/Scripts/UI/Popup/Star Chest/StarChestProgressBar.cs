@@ -40,8 +40,10 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        starGroupRT.gameObject.SetActive(false);
+        fill.fillAmount = 0;
         
+        starGroupRT.gameObject.SetActive(false);
+
         StartCoroutine(WaitForMenuLoaded());
     }
 
