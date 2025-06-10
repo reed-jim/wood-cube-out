@@ -23,6 +23,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject unlockAdsScrewBoxSoundPrefab;
     [SerializeField] private GameObject clearScrewPortsSoundPrefab;
     [SerializeField] private GameObject countingTimeSoundPrefab;
+    [SerializeField] private GameObject chestAppearSoundPrefab;
     [SerializeField] private GameObject openChestSoundPrefab;
     [SerializeField] private GameObject rewardItemSoundPrefab;
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -74,6 +75,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.UNLOCK_ADS_SCREW_BOX_SOUND, unlockAdsScrewBoxSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.CLEAR_SCREW_PORTS_SOUND, clearScrewPortsSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.COUNTING_TIME_SOUND, countingTimeSoundPrefab, 1);
+        RegisterPool<AudioSource>(GameConstants.CHEST_APPEAR_SOUND, chestAppearSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.OPEN_CHEST_SOUND, openChestSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.REWARD_ITEM_SOUND, rewardItemSoundPrefab, 1);
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
