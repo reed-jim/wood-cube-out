@@ -114,7 +114,7 @@ public class MenuScreenTransition : MonoBehaviour
         {
             AdmobAdsMax.Instance.HideMRec();
 
-            blackBackgroundToPassPolicy.gameObject.SetActive(true);
+            // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
             AdmobAdsMax.Instance.ShowInterstitialAdmob(
                 onAdClosed: () =>
@@ -123,7 +123,7 @@ public class MenuScreenTransition : MonoBehaviour
 
                     SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "Switch to Menu");
                 },
-                isShowAdBreak: false
+                isShowAdBreak: true
             );
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
