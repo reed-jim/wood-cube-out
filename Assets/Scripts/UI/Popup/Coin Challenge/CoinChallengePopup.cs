@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class CoinChallengePopup : BasePopup
 {
+    [Header("UI")]
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
@@ -16,7 +17,6 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private RectTransform nextEventTimeContainer;
     [SerializeField] private TMP_Text nextEventTimeCounterText;
-    // [SerializeField] private Button claimButton;
     [SerializeField] private Button continueButton;
     [SerializeField] private Image continueButtonImage;
     [SerializeField] private TMP_Text continueText;
@@ -55,7 +55,6 @@ public class CoinChallengePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         nextEventTimeContainer.gameObject.SetActive(false);
-
 
         #region DISABLE ANIMATION
         int currentMilestone = _challengeData.CurrentMilestone;
@@ -272,6 +271,7 @@ public class CoinChallengePopup : BasePopup
         }
     }
 
+    #region COUTING TIME
     private IEnumerator Counting()
     {
         WaitForSeconds waitOneSecond = new WaitForSeconds(1);
@@ -333,7 +333,9 @@ public class CoinChallengePopup : BasePopup
 
         nextEventTimeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
+    #endregion
 
+    #region CLAIM REWARD
     private void OnClaimRewardPopupShown(bool isShow)
     {
         float start = 0;
@@ -391,4 +393,5 @@ public class CoinChallengePopup : BasePopup
             })
         );
     }
+    #endregion
 }

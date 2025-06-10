@@ -513,6 +513,17 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
     {
+        if (UserData.IsRemoveAds)
+        {
+            onDoubleInterClosed?.Invoke();
+
+            interOneFinished = true;
+            interSecondFinished = true;
+            _isShowingAds = false;
+
+            return;
+        }
+
         interOneFinished = false;
         interSecondFinished = false;
         _isShowingAds = true;
@@ -650,6 +661,13 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true, bool isIgnoreCooldown = false)
     {
+        if (UserData.IsRemoveAds)
+        {
+            onAdClosed?.Invoke();
+
+            return;
+        }
+
         bool isInCooldown = countdownAds <= GamePersistentVariable.doubleInterAdsConfig.cooldown && !isIgnoreCooldown;
 
         if (!isInCooldown)
