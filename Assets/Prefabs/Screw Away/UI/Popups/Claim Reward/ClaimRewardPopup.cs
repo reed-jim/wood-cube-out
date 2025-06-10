@@ -264,7 +264,9 @@ public class ClaimRewardPopup : BasePopup
     {
         chest.AnimationState.SetAnimation(0, "open", false);
 
-        _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
+        SoundManager.Instance.PlaySoundOpenChest();
+
+        _tweens.Add(Tween.Delay(0.4f).OnComplete(() =>
         {
             SetupChest(_coinQuantity, _boosterQuantities, _isRemoveAds);
 
@@ -357,7 +359,7 @@ public class ClaimRewardPopup : BasePopup
             validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.00f * GamePersistentVariable.canvasSize.y);
             validResourceGroups[i].localScale = Vector3.zero;
 
-            float duration = 0.3f + 0.15f * i;
+            float duration = 0.3f + 0.23f * i;
 
             _tweens.Add(Tween.LocalPosition(validResourceGroups[i], 1.05f * position, duration: duration, ease: Ease.InOutSine)
                 .OnComplete(() =>
@@ -369,6 +371,8 @@ public class ClaimRewardPopup : BasePopup
 
                             chestRewardFXs[index].transform.position = validResourceGroups[index].position;
                             chestRewardFXs[index].Play();
+
+                            SoundManager.Instance.PlaySoundRewardItem();
                         })
                     );
                 })
