@@ -52,6 +52,9 @@ public class ChestLevelPopup : BasePopup
             {
                 int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10 + 1;
 
+                // Avoid giving out too many chests for old users
+                numChest = 1;
+
                 _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
 
                 DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
