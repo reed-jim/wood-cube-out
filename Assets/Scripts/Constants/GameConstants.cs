@@ -67,6 +67,7 @@ public static class GameConstants
     public static string UNLOCK_ADS_SCREW_BOX_SOUND = "Unlock Ads Screw Box Sound";
     public static string CLEAR_SCREW_PORTS_SOUND = "Clear Screw Ports Sound";
     public static string COUNTING_TIME_SOUND = "Counting Time Sound";
+    public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
     public static string OPEN_CHEST_SOUND = "Open Chest Sound";
     public static string REWARD_ITEM_SOUND = "Reward Item Sound";
     #endregion
