@@ -90,6 +90,8 @@ public class MenuScreenTransition : MonoBehaviour
 
     private void FakeLoadingForAds()
     {
+        GamePersistentVariable.isMenuLoading = true;
+
         fakeLoadingContainer.gameObject.SetActive(true);
 
         fakeLoadingCanvasGroup.alpha = 1;
@@ -114,7 +116,7 @@ public class MenuScreenTransition : MonoBehaviour
         {
             AdmobAdsMax.Instance.HideMRec();
 
-            // blackBackgroundToPassPolicy.gameObject.SetActive(true);
+            blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
             AdmobAdsMax.Instance.ShowInterstitialAdmob(
                 onAdClosed: () =>
@@ -122,6 +124,8 @@ public class MenuScreenTransition : MonoBehaviour
                     blackBackgroundToPassPolicy.gameObject.SetActive(false);
 
                     SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "Switch to Menu");
+
+                    GamePersistentVariable.isMenuLoading = false;
                 },
                 isShowAdBreak: true
             );

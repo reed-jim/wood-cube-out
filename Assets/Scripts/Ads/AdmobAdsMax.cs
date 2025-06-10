@@ -652,8 +652,6 @@ public class AdmobAdsMax : MonoBehaviour
     {
         bool isInCooldown = countdownAds <= GamePersistentVariable.doubleInterAdsConfig.cooldown && !isIgnoreCooldown;
 
-        Debug.Log("SAFERIO inter " + _interstitialAdmob + "/" + _interstitialAdmob.CanShowAd());
-
         if (!isInCooldown)
         {
             _actionInterAdmobClosed = onAdClosed;
@@ -1270,10 +1268,15 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
-        if (!GamePersistentVariable.remoteConfigIsShowMREC)
-        {
-            return;
-        }
+        // if (!GamePersistentVariable.remoteConfigIsShowMREC)
+        // {
+        //     return;
+        // }
+
+        // if (!GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
+        // {
+        //     return;
+        // }
 
         MaxSdk.ShowMRec(mrecAdUnitId);
     }
@@ -1535,4 +1538,11 @@ public class AdmobAdsMax : MonoBehaviour
 
         countdownAds += Time.unscaledDeltaTime;
     }
+
+    #region CALLBACK
+    public void ResetAdsCooldown()
+    {
+        countdownAds = 0;
+    }
+    #endregion
 }

@@ -42,7 +42,6 @@ public class BasePopup : MonoBehaviour
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
-        MenuScreen.switchRouteNoAdEvent += OnRouteSwitchedWithoutAd;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
@@ -92,7 +91,6 @@ public class BasePopup : MonoBehaviour
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
-        MenuScreen.switchRouteNoAdEvent -= OnRouteSwitchedWithoutAd;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
@@ -141,17 +139,17 @@ public class BasePopup : MonoBehaviour
         }
     }
 
-    private void OnRouteSwitchedWithoutAd(ScreenRoute route)
-    {
-        if (route == this.route)
-        {
-            ShowWithoutAd();
-        }
-        else
-        {
+    // private void OnRouteSwitchedWithoutAd(ScreenRoute route)
+    // {
+    //     if (route == this.route)
+    //     {
+    //         ShowWithoutAd();
+    //     }
+    //     else
+    //     {
 
-        }
-    }
+    //     }
+    // }
 
     protected virtual void Show(Action onCompletedAction = null)
     {
@@ -172,15 +170,15 @@ public class BasePopup : MonoBehaviour
         _isInTransition = true;
     }
 
-    protected void ShowWithoutAd(Action onCompletedAction = null)
-    {
-        if (_isInTransition)
-        {
-            return;
-        }
+    // protected void ShowWithoutAd(Action onCompletedAction = null)
+    // {
+    //     if (_isInTransition)
+    //     {
+    //         return;
+    //     }
 
-        ActualShowAfterAd(onCompletedAction);
-    }
+    //     ActualShowAfterAd(onCompletedAction);
+    // }
 
     private void ActualShowAfterAd(Action onCompletedAction = null)
     {
