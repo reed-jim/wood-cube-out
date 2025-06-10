@@ -211,6 +211,30 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundOpenChest()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.OPEN_CHEST_SOUND);
+
+        sound.Play();
+    }
+
+    public void PlaySoundRewardItem()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.REWARD_ITEM_SOUND);
+
+        sound.Play();
+    }
+
     private void FadeOutBackgroundMusic()
     {
         _tweens.Add(Tween.Custom(0.5f, 0, duration: 0.3f, onValueChange: newVal =>

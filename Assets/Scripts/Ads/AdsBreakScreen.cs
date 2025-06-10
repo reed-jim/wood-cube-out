@@ -68,7 +68,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
             return;
         }
 
-        AddTween(Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+        AddTween(Tween.Alpha(canvasGroup, 0, startDelay: 0.7f, duration: 0.3f)
             .OnComplete(() =>
             {
                 container.gameObject.SetActive(false);
