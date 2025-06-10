@@ -66,7 +66,15 @@ public class ChestLevelPopup : BasePopup
             }
         });
 
-        _cachedchestLevelData = DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData());
+        _cachedchestLevelData = DataUtility.Load<ChestLevelData>(GameConstants.CHEST_LEVEL, null);
+
+        if (_cachedchestLevelData == null)
+        {
+            _cachedchestLevelData = new ChestLevelData();
+            _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
+
+            DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
+        }
 
         localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{_cachedchestLevelData.currentRequiredLevel}");
     }
