@@ -74,6 +74,7 @@ public class CoinChallengePopup : BasePopup
 
         base.Show(onCompletedAction: () =>
         {
+            CheckAvailabilty();
             // Setup();
 
             CheckShowRewards(_challengeData);
@@ -87,8 +88,6 @@ public class CoinChallengePopup : BasePopup
 
             }
         });
-
-        CheckAvailabilty();
     }
 
     private CoinChallengeData ResetChallenge()
