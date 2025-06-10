@@ -23,7 +23,15 @@ public class DailyRewardPopup : BasePopup
         DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
         claimButton.onClick.AddListener(Claim);
-        debugNextDayButton.onClick.AddListener(DebugNextDay);
+
+        try
+        {
+            debugNextDayButton.onClick.AddListener(DebugNextDay);
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     protected override void UnregisterMoreEvent()

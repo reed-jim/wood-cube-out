@@ -82,27 +82,38 @@ public class StarChestPopup : BasePopup
 
         float progress = (float)starCollected / requireGemForEachLevel;
 
-        progressSlider.value = 0;
-
-        _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.0f, onValueChange: newVal =>
+        if (progress >= 1)
         {
-            progressSlider.value = newVal;
-            progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
-        })
-            .OnComplete(() =>
-            {
-                if (progress >= 1)
-                {
-                    _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
+            _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
 
-                    _data.starCollected %= requireGemForEachLevel;
+            _data.starCollected %= requireGemForEachLevel;
 
-                    DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+            DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
 
-                    ShowReward();
-                }
-            })
-        );
+            ShowReward();
+        }
+
+        // progressSlider.value = 0;
+
+        // _tweens.Add(Tween.Custom(progressSlider.value, progress, duration: 0.0f, onValueChange: newVal =>
+        // {
+        //     progressSlider.value = newVal;
+        //     progressText.text = $"{Mathf.RoundToInt(newVal * requireGemForEachLevel)}/{requireGemForEachLevel}";
+        // })
+        //     .OnComplete(() =>
+        //     {
+        //         if (progress >= 1)
+        //         {
+        //             _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
+
+        //             _data.starCollected %= requireGemForEachLevel;
+
+        //             DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+
+        //             ShowReward();
+        //         }
+        //     })
+        // );
 
         // if (progress > 0.19f)
         // {
