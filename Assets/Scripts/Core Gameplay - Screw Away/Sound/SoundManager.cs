@@ -211,6 +211,18 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundChestAppear()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CHEST_APPEAR_SOUND);
+
+        sound.Play();
+    }
+
     public void PlaySoundOpenChest()
     {
         if (!_isEnableGameSound)

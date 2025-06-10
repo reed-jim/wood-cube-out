@@ -114,6 +114,8 @@ public class ClaimRewardPopup : BasePopup
         {
             chestRewardFXs[i].gameObject.SetActive(false);
         }
+
+        chest.AnimationState.SetAnimation(0, "idle", true);
     }
 
     private void Claim(int multiplier)
@@ -188,7 +190,13 @@ public class ClaimRewardPopup : BasePopup
     {
         showClaimRewardPopupEvent?.Invoke(true);
 
-        Show();
+        Show(onCompletedAction: () =>
+        {
+            if (isChest)
+            {
+                SoundManager.Instance.PlaySoundChestAppear();
+            }
+        });
 
         if (isChest)
         {
@@ -356,10 +364,10 @@ public class ClaimRewardPopup : BasePopup
 
             validResourceGroups[i].gameObject.SetActive(true);
 
-            validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.00f * GamePersistentVariable.canvasSize.y);
+            validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.02f * GamePersistentVariable.canvasSize.y);
             validResourceGroups[i].localScale = Vector3.zero;
 
-            float duration = 0.3f + 0.23f * i;
+            float duration = 0.3f + 0.15f * i;
 
             _tweens.Add(Tween.LocalPosition(validResourceGroups[i], 1.05f * position, duration: duration, ease: Ease.InOutSine)
                 .OnComplete(() =>
@@ -372,7 +380,10 @@ public class ClaimRewardPopup : BasePopup
                             chestRewardFXs[index].transform.position = validResourceGroups[index].position;
                             chestRewardFXs[index].Play();
 
-                            SoundManager.Instance.PlaySoundRewardItem();
+                            if (index == 0)
+                            {
+                                SoundManager.Instance.PlaySoundRewardItem();
+                            }
                         })
                     );
                 })

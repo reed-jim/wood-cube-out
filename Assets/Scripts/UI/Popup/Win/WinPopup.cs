@@ -42,6 +42,10 @@ public class WinPopup : BasePopup
     private int _currentCollectedCoin;
     private bool _isAlreadyWatchRewardedAd;
 
+    #region EVENT
+    private bool _isCoinChallengeClaimable;
+    #endregion
+
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
@@ -344,6 +348,8 @@ public class WinPopup : BasePopup
         coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += GamePersistentVariable.coinChallengeItemGainedInLevel;
         coinChallengeData.newGainedItem += GamePersistentVariable.coinChallengeItemGainedInLevel;
 
+        _isCoinChallengeClaimable = false;
+
         if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
         {
             if (coinChallengeData.CurrentMilestone < coinChallengeData.EventItemCollectedOfMilstones.Length)
@@ -354,6 +360,8 @@ public class WinPopup : BasePopup
             {
                 coinChallengeData.isCompleted = true;
             }
+
+            _isCoinChallengeClaimable = true;
         }
 
         DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
@@ -417,6 +425,13 @@ public class WinPopup : BasePopup
         }
 
         if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        if (_isCoinChallengeClaimable)
         {
             ReturnHome();
 

@@ -76,8 +76,6 @@ public class DailyRewardCounter : SaferioTweenBehaviour
             claimNotification.gameObject.SetActive(false);
         }
 
-        buttonNameContainer.SetActive(!isRewardAvailable);
-
         currentLevel.Load();
 
         DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;

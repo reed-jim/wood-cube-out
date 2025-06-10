@@ -96,16 +96,39 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
         float finalAmount = currentLevel.Value % 10 / 10f;
 
+        bool isRewardAvailable = currentLevel.Value >= DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
+
+        GamePersistentVariable.isLevelChestClaimable = isRewardAvailable;
+
         AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, startDelay: 2, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
-
-            bool isRewardAvailable = currentLevel.Value >= DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
-
-            if (isRewardAvailable)
+        })
+            .OnComplete(() =>
             {
-                openLevelChestPopupEvent?.Invoke();
-            }
-        }));
+                if (isRewardAvailable)
+                {
+                    StartCoroutine(WaitForMenuLoaded());
+
+                    // openLevelChestPopupEvent?.Invoke();
+                }
+            })
+        );
+    }
+
+    private IEnumerator WaitForMenuLoaded()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (GamePersistentVariable.isMenuLoading)
+        {
+            yield return waitForSeconds;
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
+        AdmobAdsMax.Instance.ResetAdsCooldown();
+
+        openLevelChestPopupEvent?.Invoke();
     }
 }
