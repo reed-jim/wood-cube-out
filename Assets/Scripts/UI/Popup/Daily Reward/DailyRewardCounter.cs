@@ -63,8 +63,9 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     private void Refresh()
     {
         bool isRewardAvailable = DailyRewardUtil.IsNewDay();
+        bool isUnlocked = currentLevel.Value >= GamePersistentVariable.dailyRewardConfig.unlockLevel;
 
-        if (isRewardAvailable)
+        if (isRewardAvailable && isUnlocked)
         {
             claimNotification.gameObject.SetActive(true);
 

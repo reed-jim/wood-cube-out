@@ -205,7 +205,9 @@ public class WinPopup : BasePopup
         {
             continueButton.interactable = false;
 
-            if (GamePersistentVariable.doubleInterAdsConfig.isEnableDoubleInter)
+            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
+
+            if (doubleInterAdsConfig.isEnableDoubleInter && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
                 AdmobAdsMax.Instance.ShowDoubleInterstitialAds
                 (
@@ -216,8 +218,6 @@ public class WinPopup : BasePopup
             {
                 AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
-
-            // AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
     }
 
