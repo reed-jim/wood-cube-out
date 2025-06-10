@@ -90,6 +90,8 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
     {
         _data = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
+        currentLevel.Load();
+
         bool isUnlocked = currentLevel.Value >= 30;
         bool isCompleted = _data.IsCompleted();
 

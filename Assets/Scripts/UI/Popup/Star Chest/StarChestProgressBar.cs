@@ -40,7 +40,9 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        PlayFx();
+        starGroupRT.gameObject.SetActive(false);
+        
+        StartCoroutine(WaitForMenuLoaded());
     }
 
     private void Refresh()
@@ -109,17 +111,44 @@ public class StarChestProgressBar : SaferioTweenBehaviour
         AddTween(Tween.Custom(0, data.starCollected % GameConstants.REQUIRE_STAR / (float)GameConstants.REQUIRE_STAR, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
-
-            AddTween(Tween.Delay(1).OnComplete(() =>
+        })
+            .OnComplete(() =>
             {
                 bool isRewardAvailable = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData()).starCollected >= GameConstants.REQUIRE_STAR;
 
                 if (isRewardAvailable)
                 {
-                    openStarChestPopupEvent?.Invoke();
+                    if (GamePersistentVariable.isLevelChestClaimable)
+                    {
+                        GamePersistentVariable.isLevelChestClaimable = false;
+                    }
+                    else
+                    {
+                        AdmobAdsMax.Instance.ResetAdsCooldown();
+
+                        openStarChestPopupEvent?.Invoke();
+                    }
+
+                    GamePersistentVariable.isStarChestClaimable = true;
                 }
-            }));
-        }));
+            })
+        );
+    }
+
+    private IEnumerator WaitForMenuLoaded()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        GamePersistentVariable.isStarChestClaimable = false;
+
+        while (GamePersistentVariable.isMenuLoading)
+        {
+            yield return waitForSeconds;
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
+        PlayFx();
     }
 
     private void PlayFx()

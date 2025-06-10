@@ -45,6 +45,7 @@ public static class GamePersistentVariable
     public static bool isLoadingComplete;
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
+    public static bool isMenuLoading;
     #endregion
 
     #region LIVES
@@ -134,5 +135,10 @@ public static class GamePersistentVariable
 
     #region SORT PUZZLE
     public static int numItemsLeft;
+    #endregion
+
+    #region CHEST
+    public static bool isStarChestClaimable;
+    public static bool isLevelChestClaimable;
     #endregion
 }

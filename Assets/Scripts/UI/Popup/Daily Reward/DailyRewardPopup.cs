@@ -99,6 +99,11 @@ public class DailyRewardPopup : BasePopup
         float start = 0;
         float end = 1;
 
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (isShow)
         {
             return;

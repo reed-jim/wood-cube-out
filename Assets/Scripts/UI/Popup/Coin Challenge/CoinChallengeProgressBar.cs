@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using PrimeTween;
 using TMPro;
@@ -22,6 +23,8 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     private Vector3 _starGroupInitialPosition;
 
+    public static event Action openCoinChallengePopupEvent;
+
     protected override void MoreActionInAwake()
     {
         CoinChallengePopup.claimCoinChallengeEvent += Refresh;
@@ -40,7 +43,9 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        PlayFx();
+        starGroupRT.gameObject.SetActive(false);
+        
+        StartCoroutine(WaitForMenuLoaded());
     }
 
     private bool IsClaimable()
@@ -139,7 +144,72 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
         AddTween(Tween.Custom(0, progress, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
-        }));
+        })
+            .OnComplete(() =>
+            {
+                bool isClaimable = false;
+
+                for (int i = 0; i < data.IsMilestonesClaimed.Length; i++)
+                {
+                    if (i > currentMilestone)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        bool isValid = false;
+
+                        if (i == currentMilestone)
+                        {
+                            if (data.EventItemCollectedOfMilstones[i] >= coinChallengeConfigContainer.RequiredItems[i] &&
+                                !data.IsMilestonesClaimed[i]
+                            )
+                            {
+                                isValid = true;
+                            }
+                        }
+                        else
+                        {
+                            if (!data.IsMilestonesClaimed[i])
+                            {
+                                isValid = true;
+                            }
+                        }
+
+                        if (isValid)
+                        {
+                            isClaimable = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (isClaimable)
+                {
+                    if (!GamePersistentVariable.isStarChestClaimable && !GamePersistentVariable.isLevelChestClaimable)
+                    {
+                        AdmobAdsMax.Instance.ResetAdsCooldown();
+
+                        openCoinChallengePopupEvent?.Invoke();
+                    }
+                }
+            })
+        );
+    }
+
+    private IEnumerator WaitForMenuLoaded()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (GamePersistentVariable.isMenuLoading)
+        {
+            yield return waitForSeconds;
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
+        PlayFx();
     }
 
     private void PlayFx()
