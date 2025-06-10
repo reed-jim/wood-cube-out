@@ -367,7 +367,7 @@ public class ClaimRewardPopup : BasePopup
             validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.02f * GamePersistentVariable.canvasSize.y);
             validResourceGroups[i].localScale = Vector3.zero;
 
-            float duration = 0.3f + 0.15f * i;
+            float duration = 0.3f + 0.13f * i;
 
             _tweens.Add(Tween.LocalPosition(validResourceGroups[i], 1.05f * position, duration: duration, ease: Ease.InOutSine)
                 .OnComplete(() =>

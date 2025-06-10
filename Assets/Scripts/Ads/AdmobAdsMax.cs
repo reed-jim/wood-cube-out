@@ -1268,15 +1268,15 @@ public class AdmobAdsMax : MonoBehaviour
             return;
         }
 
-        // if (!GamePersistentVariable.remoteConfigIsShowMREC)
-        // {
-        //     return;
-        // }
+        if (!GamePersistentVariable.remoteConfigIsShowMREC)
+        {
+            return;
+        }
 
-        // if (!GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
-        // {
-        //     return;
-        // }
+        if (!GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
+        {
+            return;
+        }
 
         MaxSdk.ShowMRec(mrecAdUnitId);
     }
