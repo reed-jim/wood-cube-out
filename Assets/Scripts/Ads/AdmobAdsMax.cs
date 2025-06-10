@@ -527,7 +527,8 @@ public class AdmobAdsMax : MonoBehaviour
 
                     CheckAllAdsClosed();
                 },
-                isShowAdBreak: false
+                isShowAdBreak: false,
+                isIgnoreCooldown: true
             );
         };
 
@@ -584,12 +585,15 @@ public class AdmobAdsMax : MonoBehaviour
                 actionIniterClose: () =>
                 {
                     interOneFinished = true;
+
                     CheckAllAdsClosed();
+
+                    _actionShowSecondInterAd?.Invoke();
                 },
                 isShowAdBreak: false
             );
 
-            _actionShowSecondInterAd?.Invoke();
+            // _actionShowSecondInterAd?.Invoke();
         }
     }
 
@@ -644,9 +648,13 @@ public class AdmobAdsMax : MonoBehaviour
             });
     }
 
-    public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true)
+    public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true, bool isIgnoreCooldown = false)
     {
-        if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
+        bool isInCooldown = countdownAds <= GamePersistentVariable.doubleInterAdsConfig.cooldown && !isIgnoreCooldown;
+
+        Debug.Log("SAFERIO inter " + _interstitialAdmob + "/" + _interstitialAdmob.CanShowAd());
+
+        if (!isInCooldown)
         {
             _actionInterAdmobClosed = onAdClosed;
 

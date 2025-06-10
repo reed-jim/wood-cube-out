@@ -151,6 +151,8 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
+        Debug.Log("SAFERIO " + GamePersistentVariable.doubleInterAdsConfig.isEnable + "/" + currentLevel.Value);
+
         if (GamePersistentVariable.isLoadingLevelInProgress)
         {
             LoadingLevelInProgress();
@@ -218,14 +220,14 @@ public class SceneTransition : MonoBehaviour
             // double inter
             if (!_isFirstTimeEnterScene)
             {
-                blackBackgroundToPassPolicy.gameObject.SetActive(true);
+                // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
                 AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
                     onDoubleInterClosed: () =>
                     {
                         blackBackgroundToPassPolicy.gameObject.SetActive(false);
                     },
-                    isShowBreakAds: false
+                    isShowBreakAds: true
                 );
             }
             else
