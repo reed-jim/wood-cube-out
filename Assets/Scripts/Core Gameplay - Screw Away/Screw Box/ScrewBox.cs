@@ -183,7 +183,7 @@ public class ScrewBox : MonoBehaviour
                                 // }
 
                                 float initialScale = 0.5f;
-                                float BEST_ORTHOGRAPHIC_SIZE = 21;
+                                float BEST_ORTHOGRAPHIC_SIZE = 20;
 
                                 rippleFx.transform.localScale =
                                     initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
@@ -208,7 +208,7 @@ public class ScrewBox : MonoBehaviour
                 // Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
                 // .Chain(Tween.LocalPositionY(transform, transform.localPosition.y - 0.3f, duration: 0.15f))
                 .Chain(
-                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.Linear)
+                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
                     .OnComplete(() =>
                     {
                         screwBoxCompletedEvent?.Invoke(this);
