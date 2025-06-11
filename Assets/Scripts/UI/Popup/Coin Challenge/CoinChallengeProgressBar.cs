@@ -189,6 +189,11 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
                     }
                 }
 
+                if (GamePersistentVariable.currentLevel < 30)
+                {
+                    isClaimable = false;
+                }
+
                 if (isClaimable)
                 {
                     if (!GamePersistentVariable.isStarChestClaimable && !GamePersistentVariable.isLevelChestClaimable)
