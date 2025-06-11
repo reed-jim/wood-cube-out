@@ -338,6 +338,11 @@ public class WinPopup : BasePopup
     {
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
+        if (currentLevel.Value < 30)
+        {
+            return;
+        }
+
         if (coinChallengeData.IsCompleted())
         {
             return;
