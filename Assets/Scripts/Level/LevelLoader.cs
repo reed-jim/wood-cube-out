@@ -636,7 +636,7 @@ public class LevelLoader : MonoBehaviour
 
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
-            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f, ease: Ease.InOutSine));
         }
         catch (System.Exception)
         {

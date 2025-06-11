@@ -376,14 +376,14 @@ public class ClaimRewardPopup : BasePopup
 
             Vector3 position = Vector3.zero;
             position.x = (-(validResourceGroups.Count - 1) / 2f + i) * 0.23f * container.sizeDelta.x;
-            position.y = 0.15f * GamePersistentVariable.canvasSize.y;
+            position.y = 0.2f * GamePersistentVariable.canvasSize.y;
 
             validResourceGroups[i].gameObject.SetActive(true);
 
             validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.02f * GamePersistentVariable.canvasSize.y);
             validResourceGroups[i].localScale = Vector3.zero;
 
-            float duration = 0.3f + 0.13f * i;
+            float duration = 0.3f + 0.1f * i;
 
             _tweens.Add(Tween.LocalPosition(validResourceGroups[i], 1.05f * position, duration: duration, ease: Ease.InOutSine)
                 .OnComplete(() =>
