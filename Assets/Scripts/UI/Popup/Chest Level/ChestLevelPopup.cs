@@ -46,7 +46,7 @@ public class ChestLevelPopup : BasePopup
 
             if (isClaimable)
             {
-                int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10;
+                int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10 + 1;
 
                 _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
 

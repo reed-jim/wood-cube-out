@@ -393,6 +393,39 @@ public class MenuScreen : MonoBehaviour
         try
         {
             openSaleIAPPackButtons[(int)packType].gameObject.SetActive(true);
+
+            // if (packType == SaleIAPPackType.DailyOffer)
+            // {
+            //     OpenDailyOfferPopup();
+            // }
+            // else if (packType == SaleIAPPackType.StarterPack)
+            // {
+            //     OpenStarterPackPopup();
+            // }
+            // else if (packType == SaleIAPPackType.SaleItem)
+            // {
+            //     OpenSaleItemPopup();
+            // }
+            // else if (packType == SaleIAPPackType.SaleCoin)
+            // {
+            //     OpenSaleCoinPopup();
+            // }
+            // else if (packType == SaleIAPPackType.WeekendSale)
+            // {
+            //     OpenWeekendSalePopup();
+            // }
+            // else if (packType == SaleIAPPackType.MasterOffer)
+            // {
+            //     OpenMasterOfferPopup();
+            // }
+            // else if (packType == SaleIAPPackType.MegaOffer)
+            // {
+            //     OpenMegaOfferPopup();
+            // }
+            // else if (packType == SaleIAPPackType.GiantOffer)
+            // {
+            //     OpenGiantOfferPopup();
+            // }
         }
         catch (System.Exception)
         {
@@ -409,13 +442,13 @@ public class MenuScreen : MonoBehaviour
         openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsCoinChallengeUnlocked());
 
         #region STAR CHEST
-        StarChestConfig starChestConfig;
+        // StarChestConfig starChestConfig;
 
-        RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out starChestConfig);
+        // RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out starChestConfig);
 
-        openStarChestPopupButton.gameObject.SetActive(starChestConfig.isActive);
+        // openStarChestPopupButton.gameObject.SetActive(starChestConfig.isActive);
 
-        GameConstants.REQUIRE_STAR = starChestConfig.requiredStar;
+        // GameConstants.REQUIRE_STAR = starChestConfig.requiredStar;
         #endregion
     }
     #endregion
