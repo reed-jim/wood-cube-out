@@ -338,7 +338,11 @@ public class WinPopup : BasePopup
     {
         CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
-        if (currentLevel.Value < 30)
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        if (currentLevel.Value < 30 || !isAvailable)
         {
             return;
         }

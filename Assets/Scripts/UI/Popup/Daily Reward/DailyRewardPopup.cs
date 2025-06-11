@@ -48,6 +48,13 @@ public class DailyRewardPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        bool isRewardAvailable = DailyRewardUtil.IsNewDay();
+
+        if (isRewardAvailable)
+        {
+            AdmobAdsMax.Instance.ResetAdsCooldown();
+        }
+
         base.Show(onCompletedAction);
 
         Refresh();
