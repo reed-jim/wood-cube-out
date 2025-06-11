@@ -475,8 +475,6 @@ public class MenuScreen : MonoBehaviour
     #region EVENT
     private void SetupEvent()
     {
-        currentLevel.Load();
-
         openSpaceRacePopupButton.gameObject.SetActive(false);
         // openSpaceRacePopupButton.gameObject.SetActive(GameEventManager.Instance.IsSpaceRaceUnlocked());
         openCoinChallengePopupButton.gameObject.SetActive(GameEventManager.Instance.IsShowCoinChallengeButton());

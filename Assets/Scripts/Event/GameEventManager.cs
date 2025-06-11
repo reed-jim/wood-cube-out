@@ -51,6 +51,8 @@ public class GameEventManager : MonoBehaviour
         //     return false;
         // }
 
+        currentLevel.Load();
+
         return currentLevel.Value >= 12;
     }
 
