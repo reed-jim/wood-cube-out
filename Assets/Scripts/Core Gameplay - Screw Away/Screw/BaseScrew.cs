@@ -478,7 +478,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         }));
 
         #region EVENT ITEM
-        bool isSpawn = UnityEngine.Random.Range(0, 20) == 0;
+        bool isSpawn = UnityEngine.Random.Range(0, 4) == 0;
 
         if (isSpawn)
         {
