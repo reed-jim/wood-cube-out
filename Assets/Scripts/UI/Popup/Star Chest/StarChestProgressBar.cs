@@ -27,8 +27,6 @@ public class StarChestProgressBar : SaferioTweenBehaviour
         _starGroupInitialPosition = starGroupRT.localPosition;
 
         Refresh();
-
-        PlayFx();
     }
 
     protected override void MoreActionOnDestroy()
@@ -99,6 +97,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
     private void SetProgress()
     {
+        Debug.Log("SAFERIO set pro");
         StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
 
         fill.fillAmount = 0;
@@ -140,7 +139,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
         AddSequence(
             Tween.Alpha(starGroup, 1, duration: 0.3f)
             .Chain(
-                Tween.LocalPositionX(starGroupRT, _starGroupInitialPosition.x + 100, duration: 0.15f)
+                Tween.LocalPositionX(starGroupRT, _starGroupInitialPosition.x - 100, duration: 0.15f)
             )
             .Chain(
                 Tween.LocalPositionX(starGroupRT, fill.rectTransform.localPosition.x, duration: 0.3f)

@@ -71,7 +71,7 @@ public class SalePackIAPManager : MonoBehaviour
             DataUtility.Save("num_level_play_in_day", 0);
         }
 
-        Tween.Delay(5).OnComplete(() =>
+        Tween.Delay(0.3f).OnComplete(() =>
         {
             ShowSaleIAPSuggestion();
         });

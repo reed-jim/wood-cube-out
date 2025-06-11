@@ -409,8 +409,6 @@ public class RemoteConfigController : MonoBehaviour
         {
             GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
         }
-
-        GamePersistentVariable.isEnableRewardedAds = false;
     }
     #endregion
 
