@@ -103,9 +103,12 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
         bool isRewardAvailable = currentLevel.Value >= DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData()).currentRequiredLevel;
 
-        GamePersistentVariable.isLevelChestClaimable = isRewardAvailable;
+        if (isRewardAvailable)
+        {
+            GamePersistentVariable.isLevelChestClaimable = true;
+        }
 
-        AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, startDelay: 2, onValueChange: newVal =>
+        AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, onValueChange: newVal =>
         {
             fill.fillAmount = newVal;
         })

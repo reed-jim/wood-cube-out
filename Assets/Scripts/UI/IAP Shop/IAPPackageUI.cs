@@ -30,22 +30,22 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
-        SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
-        SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
+        // SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
+        // SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
         buyButton.onClick.AddListener(Buy);
 
         Setup(_packageData);
 
-        UpdateVisibility();
+        // UpdateVisibility();
     }
 
     void OnDestroy()
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
-        SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
-        SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
+        // SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
+        // SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
 
     public void Setup(IAPPackageData data)
