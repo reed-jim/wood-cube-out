@@ -52,6 +52,8 @@ public class GameVariableInitializer : MonoBehaviour
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
         GamePersistentVariable.livesConfig = new LivesConfig();
         GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
+
+        GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
     }
 
     private void Start()

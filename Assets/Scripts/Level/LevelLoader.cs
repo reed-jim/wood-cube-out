@@ -70,6 +70,8 @@ public class LevelLoader : MonoBehaviour
         _maxLevel = levelDataContainer.MaxLevel;
 
         GoLevel(currentLevel.Value);
+
+        GamePersistentVariable.hasPlayerReachedGameplay = true;
     }
 
     void OnDestroy()

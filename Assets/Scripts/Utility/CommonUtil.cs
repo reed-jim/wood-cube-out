@@ -253,4 +253,13 @@ public static class CommonUtil
         return false;
     }
     #endregion
+
+    #region RANDOMIZE
+    public static bool RandomizeWithProbability(float probability)
+    {
+        probability = Mathf.Clamp(probability, 0f, 1f);
+
+        return UnityEngine.Random.Range(0f, 1f) < probability;
+    }
+    #endregion
 }

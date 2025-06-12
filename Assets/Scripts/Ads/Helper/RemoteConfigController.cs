@@ -416,6 +416,8 @@ public class RemoteConfigController : MonoBehaviour
             GamePersistentVariable.livesConfig = livesConfig;
         }
         #endregion
+
+        #region DAILY REWARD
         DailyRewardConfig dailyRewardConfig = new DailyRewardConfig();
 
         GetJsonConfig(FirebaseConfig.DAILY_REWARD_CONFIG, out dailyRewardConfig);
@@ -424,8 +426,17 @@ public class RemoteConfigController : MonoBehaviour
         {
             GamePersistentVariable.dailyRewardConfig = dailyRewardConfig;
         }
-        #region DAILY REWARD
+        #endregion
 
+        #region COIN CHALLENGE
+        CoinChallengeConfig coinChallengeConfig = new CoinChallengeConfig();
+
+        GetJsonConfig(FirebaseConfig.COIN_CHALLENGE_CONFIG, out coinChallengeConfig);
+
+        if (coinChallengeConfig != null)
+        {
+            GamePersistentVariable.coinChallengeConfig = coinChallengeConfig;
+        }
         #endregion
 
         remoteConfigReadyEvent?.Invoke();
