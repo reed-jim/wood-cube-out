@@ -47,6 +47,12 @@ public class CoinChallengeConfig
     public bool isActive;
     public DayOfWeek[] availableDays;
     public int levelToWin;
+    public float ratioSpawnItem;
+
+    public CoinChallengeConfig()
+    {
+        ratioSpawnItem = 1 / 6f;
+    }
 }
 
 #region LIVES SYSTEM

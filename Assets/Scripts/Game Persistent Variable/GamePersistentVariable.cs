@@ -133,6 +133,7 @@ public static class GamePersistentVariable
 
     #region COIN CHALLENGE
     public static int coinChallengeItemGainedInLevel;
+    public static CoinChallengeConfig coinChallengeConfig;
     #endregion
 
     #region SORT PUZZLE
