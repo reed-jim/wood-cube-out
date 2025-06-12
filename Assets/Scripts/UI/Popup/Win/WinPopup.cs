@@ -368,9 +368,12 @@ public class WinPopup : BasePopup
 
         if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
         {
+            int overflowItem = coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] - coinChallengeConfigContainer.RequiredItems[currentMilestone];
+
             if (coinChallengeData.CurrentMilestone < coinChallengeData.EventItemCollectedOfMilstones.Length)
             {
                 coinChallengeData.CurrentMilestone++;
+                coinChallengeData.EventItemCollectedOfMilstones[coinChallengeData.CurrentMilestone] += overflowItem;
             }
             else
             {

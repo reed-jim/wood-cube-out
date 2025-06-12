@@ -29,6 +29,7 @@ public class CoinChallengePopup : BasePopup
     private CoinChallengeData _challengeData;
     private CoinChallengeData _lastChallengeData;
     private bool _isAvailable;
+    private Coroutine _countingCoroutine;
 
     public static event Action<DailyRewardData> showClaimRewardPopupEvent;
     public static event Action claimCoinChallengeEvent;
@@ -105,6 +106,8 @@ public class CoinChallengePopup : BasePopup
 
             }
         });
+
+        CheckAvailabilty();
     }
 
     private CoinChallengeData ResetChallenge()
@@ -150,7 +153,7 @@ public class CoinChallengePopup : BasePopup
             // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
         }
 
-        CheckAvailabilty();
+        // CheckAvailabilty();
     }
 
     private void Continue()
@@ -182,7 +185,15 @@ public class CoinChallengePopup : BasePopup
 
             continueButtonImage.color = Color.white;
 
-            StartCoroutine(Counting());
+            if (_countingCoroutine != null)
+            {
+                StopCoroutine(_countingCoroutine);
+            }
+
+            if (gameObject.activeInHierarchy)
+            {
+                _countingCoroutine = StartCoroutine(Counting());
+            }
         }
         else
         {
@@ -194,7 +205,15 @@ public class CoinChallengePopup : BasePopup
 
             continueButtonImage.color = ColorUtil.WithAlpha(Color.white, 0.5f);
 
-            StartCoroutine(CountingNextEvent());
+            if (_countingCoroutine != null)
+            {
+                StopCoroutine(_countingCoroutine);
+            }
+
+            if (gameObject.activeInHierarchy)
+            {
+                _countingCoroutine = StartCoroutine(CountingNextEvent());
+            }
         }
     }
 

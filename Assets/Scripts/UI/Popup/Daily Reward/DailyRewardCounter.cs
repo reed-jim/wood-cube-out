@@ -41,7 +41,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     {
         DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
 
-        if (currentLevel.Value >= dailyRewardConfig.unlockLevel)
+        if (currentLevel.ValueUsingPureJson >= dailyRewardConfig.unlockLevel)
         {
             lockContainer.SetActive(false);
 
@@ -63,7 +63,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     private void Refresh()
     {
         bool isRewardAvailable = DailyRewardUtil.IsNewDay();
-        bool isUnlocked = currentLevel.Value >= GamePersistentVariable.dailyRewardConfig.unlockLevel;
+        bool isUnlocked = currentLevel.ValueUsingPureJson >= GamePersistentVariable.dailyRewardConfig.unlockLevel;
 
         if (isRewardAvailable && isUnlocked)
         {
@@ -76,11 +76,9 @@ public class DailyRewardCounter : SaferioTweenBehaviour
             claimNotification.gameObject.SetActive(false);
         }
 
-        currentLevel.Load();
-
         DailyRewardConfig dailyRewardConfig = GamePersistentVariable.dailyRewardConfig;
 
-        if (currentLevel.Value >= dailyRewardConfig.unlockLevel)
+        if (currentLevel.ValueUsingPureJson >= dailyRewardConfig.unlockLevel)
         {
             lockContainer.SetActive(false);
 

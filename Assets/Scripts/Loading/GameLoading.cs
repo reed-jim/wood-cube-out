@@ -201,7 +201,7 @@ public class GameLoading : MonoBehaviour
 
                     // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                    // GamePersistentVariable.isLoadingComplete = true;
+                    GamePersistentVariable.isLoadingComplete = true;
 
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));

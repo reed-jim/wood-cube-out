@@ -1,6 +1,7 @@
 using Lean.Localization;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CoinChallengeMenuButton : SaferioTweenBehaviour
@@ -11,8 +12,23 @@ public class CoinChallengeMenuButton : SaferioTweenBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
-    void OnEnable()
+    protected override void MoreActionInAwake()
     {
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    protected override void MoreActionOnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+    {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         Refresh();
     }
 
@@ -20,7 +36,7 @@ public class CoinChallengeMenuButton : SaferioTweenBehaviour
     {
         int unlockLevel = 30;
 
-        if (currentLevel.Value >= unlockLevel)
+        if (currentLevel.ValueUsingPureJson >= unlockLevel)
         {
             lockContainer.SetActive(false);
 
@@ -28,14 +44,9 @@ public class CoinChallengeMenuButton : SaferioTweenBehaviour
         }
         else
         {
-            AddTween(Tween.Delay(0.3f).OnComplete(() =>
-            {
-                lockContainer.SetActive(true);
+            lockContainer.SetActive(true);
 
-                unlockLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{unlockLevel}");
-
-                // selectButton.interactable = false;
-            }));
+            unlockLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{unlockLevel}");
         }
     }
 }

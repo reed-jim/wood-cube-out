@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -89,23 +90,39 @@ public class GameEventManager : MonoBehaviour
 
     private void SuggestCoinChallenge()
     {
-        // currentLevel.Load();
+        if (currentLevel.ValueUsingPureJson < 30)
+        {
+            return;
+        }
 
-        // if (currentLevel.Value < 30)
-        // {
-        //     return;
-        // }
+        bool isSuggested = DataUtility.Load("Is Coin Challenge Suggested", false);
 
-        // bool isSuggested = DataUtility.Load("Is Coin Challenge Suggested", false);
+        if (!isSuggested)
+        {
+            GamePersistentVariable.isClaimedLevelChest = false;
 
-        // if (!isSuggested)
-        // {
-        //     Tween.Delay(1).OnComplete(() =>
-        //     {
-        //         suggestCoinChallengeEvent?.Invoke();
+            StartCoroutine(PendingSuggestCoinChallenge());
+        }
+    }
 
-        //         DataUtility.Save("Is Coin Challenge Suggested", true);
-        //     });
-        // }
+    private IEnumerator PendingSuggestCoinChallenge()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (!GamePersistentVariable.isLoadingComplete)
+        {
+            yield return waitForSeconds;
+        }
+
+        while (!GamePersistentVariable.isClaimedLevelChest)
+        {
+            yield return waitForSeconds;
+        }
+
+        yield return new WaitForSeconds(0.8f);
+
+        suggestCoinChallengeEvent?.Invoke();
+
+        DataUtility.Save("Is Coin Challenge Suggested", true);
     }
 }

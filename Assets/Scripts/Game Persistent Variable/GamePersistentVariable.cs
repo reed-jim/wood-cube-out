@@ -46,6 +46,7 @@ public static class GamePersistentVariable
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
     public static bool isMenuLoading;
+    public static bool hasPlayerReachedGameplay;
     #endregion
 
     #region LIVES
@@ -142,5 +143,6 @@ public static class GamePersistentVariable
     public static bool isStarChestClaimable;
     public static bool isLevelChestClaimable;
     public static string currentChestReason;
+    public static bool isClaimedLevelChest;
     #endregion
 }

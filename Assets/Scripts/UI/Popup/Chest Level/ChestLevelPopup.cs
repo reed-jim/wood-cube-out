@@ -144,6 +144,11 @@ public class ChestLevelPopup : BasePopup
         float start = 0;
         float end = 1;
 
+        if (!isShow)
+        {
+            GamePersistentVariable.isClaimedLevelChest = true;
+        }
+
         if (!gameObject.activeInHierarchy)
         {
             return;
