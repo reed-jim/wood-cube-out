@@ -105,6 +105,7 @@ public class ClaimRewardPopup : BasePopup
         chestClaimButton.gameObject.SetActive(false);
         chestClaimMultiplierButton.gameObject.SetActive(false);
 
+        openChestButton.transform.localScale = Vector3.one;
         openChestButtonImage.color = ColorUtil.WithAlpha(Color.white, 1);
 
         chestClaimButton.transform.localScale = Vector3.zero;
@@ -282,6 +283,8 @@ public class ClaimRewardPopup : BasePopup
 
         SoundManager.Instance.PlaySoundOpenChest();
 
+        openChestButton.interactable = false;
+
         _tweens.Add(Tween.Delay(0.4f).OnComplete(() =>
         {
             SetupChest(_coinQuantity, _boosterQuantities, _isRemoveAds);
@@ -289,12 +292,11 @@ public class ClaimRewardPopup : BasePopup
             chestClaimButton.gameObject.SetActive(true);
             chestClaimMultiplierButton.gameObject.SetActive(true);
 
-            _tweens.Add(Tween.Alpha(openChestButtonImage, 0, duration: 0.3f));
+            _tweens.Add(Tween.Scale(openChestButton.transform, 0, duration: 0.3f));
             _tweens.Add(Tween.Scale(chestClaimButton.transform, 1, duration: 0.3f));
             _tweens.Add(Tween.Scale(chestClaimMultiplierButton.transform, 1, duration: 0.3f)
             .OnComplete(() =>
             {
-                openChestButton.interactable = false;
                 chestClaimButton.interactable = true;
                 chestClaimMultiplierButton.interactable = true;
             }));
