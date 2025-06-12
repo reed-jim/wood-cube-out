@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class SalePackIAPManager : MonoBehaviour
 
     public static event Action<SaleIAPPackType> suggestSalePackEvent;
     public static event Action<double> updateDailyOfferLifeTimeEvent;
+    public static event Action updateSalePackVisibilityEvent;
 
     private void Awake()
     {
@@ -103,6 +105,22 @@ public class SalePackIAPManager : MonoBehaviour
         bool isMasterOfferValid = IsShowPack(salePacks[5], isBoughtAllSaleItem);
         bool isMegaOfferValid = IsShowPack(salePacks[6], isBoughtAllSaleItem);
         bool isGiantOfferValid = IsShowPack(salePacks[7], isBoughtAllSaleItem);
+
+        Dictionary<SaleIAPPackType, bool> isShowSalePacks = new Dictionary<SaleIAPPackType, bool>
+        {
+            { SaleIAPPackType.DailyOffer, isShowDailyOffer },
+            { SaleIAPPackType.StarterPack, isShowStarterPack },
+            { SaleIAPPackType.SaleItem, isSaleItemValid },
+            { SaleIAPPackType.SaleCoin, isSaleCoinValid },
+            { SaleIAPPackType.WeekendSale, isWeekendSaleValid },
+            { SaleIAPPackType.MasterOffer, isMasterOfferValid },
+            { SaleIAPPackType.MegaOffer, isMegaOfferValid },
+            { SaleIAPPackType.GiantOffer, isGiantOfferValid }
+        };
+
+        GamePersistentVariable.isShowSalePacks = isShowSalePacks;
+
+        updateSalePackVisibilityEvent?.Invoke();
 
         SaleIAPPackType suggestionPack = SaleIAPPackType.None;
 
