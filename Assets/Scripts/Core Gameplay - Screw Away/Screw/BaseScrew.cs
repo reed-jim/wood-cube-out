@@ -344,7 +344,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
         // transform.eulerAngles = transform.eulerAngles.ChangeZ(0);
         _tweens.Add(Tween.LocalRotation(
-                            transform, transform.eulerAngles + new Vector3(0, 0, 135), cycles: 2, cycleMode: CycleMode.Incremental,
+                            transform, transform.eulerAngles - new Vector3(0, 0, 135), cycles: 2, cycleMode: CycleMode.Incremental,
                             duration: durationMoveOut / 2, ease: Ease.Linear
                         ));
         _tweens.Add(Tween.Position(transform, transform.position + screwSize.z * transform.forward, duration: durationMoveOut, ease: Ease.InOutSine).OnComplete(() =>
