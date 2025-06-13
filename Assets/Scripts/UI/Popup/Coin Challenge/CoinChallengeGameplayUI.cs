@@ -37,6 +37,8 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
         DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
 
         _isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        _isAvailable = false;
     }
 
     protected override void MoreActionOnDestroy()

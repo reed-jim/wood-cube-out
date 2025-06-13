@@ -477,16 +477,16 @@ public class BaseScrew : MonoBehaviour, IScrew
             }));
         }));
 
-        #region EVENT ITEM
-        bool isSpawn = CommonUtil.RandomizeWithProbability(GamePersistentVariable.coinChallengeConfig.ratioSpawnItem);
+        // #region EVENT ITEM
+        // bool isSpawn = CommonUtil.RandomizeWithProbability(GamePersistentVariable.coinChallengeConfig.ratioSpawnItem);
 
-        if (isSpawn)
-        {
-            GamePersistentVariable.coinChallengeItemGainedInLevel++;
+        // if (isSpawn)
+        // {
+        //     GamePersistentVariable.coinChallengeItemGainedInLevel++;
 
-            updateEventItem?.Invoke();
-        }
-        #endregion
+        //     updateEventItem?.Invoke();
+        // }
+        // #endregion
     }
 
     private async void AddScrewToList()

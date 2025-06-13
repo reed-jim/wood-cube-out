@@ -78,7 +78,7 @@ public class GameEventManager : MonoBehaviour
             yield return waitForSeconds;
         }
 
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(0.8f);
 
         AvoidClickScreen.Instance.Hide();
     }
@@ -90,6 +90,8 @@ public class GameEventManager : MonoBehaviour
 
     public bool IsShowCoinChallengeButton()
     {
+        return false;
+
         DayOfWeek dayOfWeek = System.DateTime.Now.DayOfWeek;
 
         if (dayOfWeek != DayOfWeek.Monday && dayOfWeek != DayOfWeek.Tuesday)
@@ -135,6 +137,8 @@ public class GameEventManager : MonoBehaviour
 
     private void SuggestCoinChallenge()
     {
+        return;
+        
         if (currentLevel.ValueUsingPureJson < 30)
         {
             return;
