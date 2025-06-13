@@ -20,6 +20,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
+    [SerializeField] private IntVariable currentLevel;
 
     private Vector3 _starGroupInitialPosition;
 
@@ -195,7 +196,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
                     }
                 }
 
-                if (GamePersistentVariable.currentLevel < 30)
+                if (currentLevel.ValueUsingPureJson < 30)
                 {
                     isClaimable = false;
                 }

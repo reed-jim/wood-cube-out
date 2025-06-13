@@ -45,6 +45,8 @@ public class MenuScreenTransition : MonoBehaviour
             fakeLoadingContainer.gameObject.SetActive(false);
 
             BlackScreenTransition();
+
+            GamePersistentVariable.isMenuLoading = false;
         }
     }
 
