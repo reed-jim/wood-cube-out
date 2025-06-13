@@ -39,6 +39,7 @@ public class ScrewBox : MonoBehaviour
     #region PRIVATE FIELD
     private List<Sequence> _sequences;
     private Vector3 _initialScale;
+    private Vector3 _initialSize;
     private bool _isInTransition;
     private bool _isPlayBoxCompleteFx;
     #endregion
@@ -108,6 +109,7 @@ public class ScrewBox : MonoBehaviour
         transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
 
         _initialScale = transform.localScale;
+        _initialSize = screwBoxSpriteRenderer.bounds.size;
 
         _isPlayBoxCompleteFx = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_PLAY_BOX_COMPLETE_FX, true);
     }
@@ -120,7 +122,8 @@ public class ScrewBox : MonoBehaviour
 
             SoundManager.Instance.PlaySoundScrewBoxDone();
 
-            float initialPositionY = transform.position.y;
+            float initialPositionY = transform.localPosition.y;
+            float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
 
             boxLid.gameObject.SetActive(true);
 
@@ -139,7 +142,6 @@ public class ScrewBox : MonoBehaviour
                 .OnComplete(() =>
                 {
                     shakeCameraEvent?.Invoke();
-                    // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
 
                     if (GamePersistentVariable.IsVibrate)
                     {
@@ -199,28 +201,31 @@ public class ScrewBox : MonoBehaviour
                         playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
                     }
                 })
-                .Chain(
+                .Chain
+                (
                     Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
                     {
                         transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
-                        transform.position = transform.position.ChangeY(initialPositionY - 1.5f * (1 - newVal));
-                    })
-                // Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
-                // .Chain(Tween.LocalPositionY(transform, transform.localPosition.y - 0.3f, duration: 0.15f))
-                .Chain(
-                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
-                    .OnComplete(() =>
+                        transform.localPosition =
+                            transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
+                    }
+                    ).OnComplete(() =>
                     {
-                        screwBoxCompletedEvent?.Invoke(this);
-                        spawnNewScrewBoxEvent?.Invoke();
+                        Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+                        Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
+                        .OnComplete(() =>
+                        {
+                            screwBoxCompletedEvent?.Invoke(this);
+                            spawnNewScrewBoxEvent?.Invoke();
 
-                        transform.position = transform.position.ChangeY(initialPositionY);
-                        transform.localScale = _initialScale;
+                            transform.position = transform.position.ChangeY(initialPositionY);
+                            transform.localScale = _initialScale;
 
-                        boxLid.gameObject.SetActive(false);
+                            boxLid.gameObject.SetActive(false);
 
-                        ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
-                    }))
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+                        });
+                    })
                 )
             );
         }
