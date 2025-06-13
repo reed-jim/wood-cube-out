@@ -13,6 +13,10 @@ public class RevivePopup : BasePopup
     [SerializeField] private Button reviveByAdsButton;
     [SerializeField] private TMP_Text costText;
 
+    [Header("COIN BALANCE")]
+    [SerializeField] private RectTransform coinBalanceCointaner;
+    [SerializeField] private TMP_Text coinBalanceText;
+
     [Header("SPRITE")]
     [SerializeField] private Sprite unlockBoxSprite;
     [SerializeField] private Sprite clearHolesSprite;
@@ -65,14 +69,16 @@ public class RevivePopup : BasePopup
     {
         base.Show(onCompletedAction);
 
-        _popupShowTime++;
+        SetupRewardedAdsButton();
 
-        if (_popupShowTime == 2)
-        {
-            SetupRewardedAdsButton(forceEnable: true);
+        // _popupShowTime++;
 
-            _popupShowTime = 0;
-        }
+        // if (_popupShowTime == 2)
+        // {
+        //     SetupRewardedAdsButton(forceEnable: true);
+
+        //     _popupShowTime = 0;
+        // }
     }
 
     protected override void Hide()
@@ -111,7 +117,7 @@ public class RevivePopup : BasePopup
 
         _currentBoosterOnRevive = boosterType;
 
-        SetupRewardedAdsButton();
+        // SetupRewardedAdsButton();
     }
 
     private void ReviveByDiamond()
@@ -209,6 +215,7 @@ public class RevivePopup : BasePopup
         if (isEnableRewardedAds || forceEnable)
         {
             reviveByAdsButton.gameObject.SetActive(true);
+            coinBalanceCointaner.gameObject.SetActive(false);
 
             _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
             _reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
@@ -216,8 +223,13 @@ public class RevivePopup : BasePopup
         else
         {
             reviveByAdsButton.gameObject.SetActive(false);
+            coinBalanceCointaner.gameObject.SetActive(true);
 
-            _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
+            // _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
+
+            userResourcesObserver.Load();
+
+            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
         }
     }
     #endregion
