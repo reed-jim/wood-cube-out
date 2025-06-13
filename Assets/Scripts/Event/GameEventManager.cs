@@ -45,12 +45,12 @@ public class GameEventManager : MonoBehaviour
 
     public bool IsShowCoinChallengeButton()
     {
-        // DayOfWeek dayOfWeek = System.DateTime.Now.DayOfWeek;
+        DayOfWeek dayOfWeek = System.DateTime.Now.DayOfWeek;
 
-        // if (dayOfWeek != DayOfWeek.Monday && dayOfWeek != DayOfWeek.Tuesday)
-        // {
-        //     return false;
-        // }
+        if (dayOfWeek != DayOfWeek.Monday && dayOfWeek != DayOfWeek.Tuesday)
+        {
+            return false;
+        }
 
         currentLevel.Load();
 
