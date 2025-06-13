@@ -10,7 +10,12 @@ public class GameEventManager : MonoBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
+    private Coroutine _openingChestsCoroutine;
+
     public static event Action suggestCoinChallengeEvent;
+    public static event Action openStarChestPopupEvent;
+    public static event Action openLevelChestPopupEvent;
+    public static event Action openCoinChallengePopupEvent;
 
     private void Awake()
     {
@@ -25,11 +30,17 @@ public class GameEventManager : MonoBehaviour
             Instance = this;
         }
 
+        StarChestProgressBar.openChestEvent += StartOpenChests;
+        LevelChestProgressBar.openChestEvent += StartOpenChests;
+        CoinChallengeProgressBar.openChestEvent += StartOpenChests;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     void OnDestroy()
     {
+        StarChestProgressBar.openChestEvent -= StartOpenChests;
+        LevelChestProgressBar.openChestEvent -= StartOpenChests;
+        CoinChallengeProgressBar.openChestEvent -= StartOpenChests;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -124,5 +135,47 @@ public class GameEventManager : MonoBehaviour
         suggestCoinChallengeEvent?.Invoke();
 
         DataUtility.Save("Is Coin Challenge Suggested", true);
+    }
+
+    private void StartOpenChests()
+    {
+        if (_openingChestsCoroutine == null)
+        {
+            _openingChestsCoroutine = StartCoroutine(OpeningChests());
+        }
+    }
+
+    private IEnumerator OpeningChests()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        string nextChest;
+
+        while (GamePersistentVariable.chestQueue.Count > 0)
+        {
+            if (!GamePersistentVariable.isChestOpenning)
+            {
+                nextChest = GamePersistentVariable.chestQueue.Dequeue();
+
+                Debug.Log("SAFERIO " + nextChest);
+
+                if (nextChest == "Star Chest")
+                {
+                    openStarChestPopupEvent?.Invoke();
+                }
+                else if (nextChest == "Level Chest")
+                {
+                    openLevelChestPopupEvent?.Invoke();
+                }
+                else if (nextChest == "Coin Challenge")
+                {
+                    openCoinChallengePopupEvent?.Invoke();
+                }
+
+                GamePersistentVariable.isChestOpenning = true;
+            }
+
+            yield return waitForSeconds;
+        }
     }
 }

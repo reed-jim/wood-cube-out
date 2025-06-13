@@ -80,6 +80,9 @@ public class MenuScreen : MonoBehaviour
         StarChestProgressBar.openStarChestPopupEvent += OpenStarChestPopup;
         LevelChestProgressBar.openLevelChestPopupEvent += OpenChestLevelPopup;
         CoinChallengeProgressBar.openCoinChallengePopupEvent += OpenCoinChallengePopup;
+        GameEventManager.openStarChestPopupEvent += OpenStarChestPopup;
+        GameEventManager.openLevelChestPopupEvent += OpenChestLevelPopup;
+        GameEventManager.openCoinChallengePopupEvent += OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
@@ -170,6 +173,9 @@ public class MenuScreen : MonoBehaviour
         StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
         LevelChestProgressBar.openLevelChestPopupEvent -= OpenChestLevelPopup;
         CoinChallengeProgressBar.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
+        GameEventManager.openStarChestPopupEvent -= OpenStarChestPopup;
+        GameEventManager.openLevelChestPopupEvent -= OpenChestLevelPopup;
+        GameEventManager.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;

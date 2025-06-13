@@ -24,6 +24,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
     private Vector3 _starGroupInitialPosition;
 
     public static event Action openCoinChallengePopupEvent;
+    public static event Action openChestEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -201,12 +202,16 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
                 if (isClaimable)
                 {
-                    if (!GamePersistentVariable.isStarChestClaimable && !GamePersistentVariable.isLevelChestClaimable)
-                    {
-                        AdmobAdsMax.Instance.ResetAdsCooldown();
+                    // if (!GamePersistentVariable.isStarChestClaimable && !GamePersistentVariable.isLevelChestClaimable)
+                    // {
+                    //     AdmobAdsMax.Instance.ResetAdsCooldown();
 
-                        openCoinChallengePopupEvent?.Invoke();
-                    }
+                    //     openCoinChallengePopupEvent?.Invoke();
+                    // }
+
+                    GamePersistentVariable.chestQueue.Enqueue("Coin Challenge");
+
+                    openChestEvent?.Invoke();
                 }
             })
         );

@@ -107,6 +107,11 @@ public static class GamePersistentVariable
     public static GameEnum.LeaderboardScope leaderboardScope;
     #endregion
 
+    #region EVENT
+    public static Queue<string> chestQueue;
+    public static bool isChestOpenning;
+    #endregion
+
     #region DAILY REWARD
     public static int currentDailyRewardIndex;
     public static bool isCurrentDailyRewardIndexLoaded;

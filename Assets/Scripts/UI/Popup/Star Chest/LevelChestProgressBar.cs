@@ -14,6 +14,7 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
     [SerializeField] private IntVariable currentLevel;
 
     public static event Action openLevelChestPopupEvent;
+    public static event Action openChestEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -105,7 +106,11 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
         if (isRewardAvailable)
         {
-            GamePersistentVariable.isLevelChestClaimable = true;
+            // GamePersistentVariable.isLevelChestClaimable = true;
+
+            GamePersistentVariable.chestQueue.Enqueue("Level Chest");
+
+            openChestEvent?.Invoke();
         }
 
         AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, onValueChange: newVal =>
