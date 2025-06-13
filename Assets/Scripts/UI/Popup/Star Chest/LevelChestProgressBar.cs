@@ -134,7 +134,7 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
             yield return waitForSeconds;
         }
 
-        yield return new WaitForSeconds(1.8f);
+        yield return new WaitForSeconds(0.8f);
 
         // AdmobAdsMax.Instance.ResetAdsCooldown();
 

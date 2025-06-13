@@ -483,6 +483,8 @@ public class WinPopup : BasePopup
 
         bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
 
+        isAvailable = false;
+
         if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
         {
             eventItemGroup.gameObject.SetActive(true);
