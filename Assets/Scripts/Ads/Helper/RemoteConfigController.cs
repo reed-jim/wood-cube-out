@@ -452,6 +452,12 @@ public class RemoteConfigController : MonoBehaviour
     {
         GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
         GamePersistentVariable.minLevelDisableRewardedAds = GetIntConfig(FirebaseConfig.MIN_LEVEL_DISABLE_REWARDED_ADS, 20);
+
+        if (!GamePersistentVariable.isEnableRewardedAds)
+        {
+            GamePersistentVariable.doubleInterAdsConfig.isEnable = false;
+            GamePersistentVariable.isShowBanner = false;
+        }
     }
     #endregion
 
