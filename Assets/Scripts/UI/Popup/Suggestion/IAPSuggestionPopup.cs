@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Lean.Localization;
 using PrimeTween;
@@ -15,11 +16,13 @@ public class IAPSuggestionPopup : BasePopup
     private ResourceGroupUI[] _resourceGroupsUI;
     [SerializeField] private Button buyButton;
     [SerializeField] private Button noThanksButton;
+    [SerializeField] private TMP_Text timeText;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private IAPDataContainer IAPDataContainer;
     [SerializeField] private IAPPackageData packageData;
 
+    private Coroutine _countingCoroutine;
     private int _coinQuantity;
     private bool _isRemoveAds;
 
@@ -92,6 +95,8 @@ public class IAPSuggestionPopup : BasePopup
         buyButton.transform.localScale = Vector3.zero;
         noThanksButton.transform.localScale = Vector3.zero;
 
+        timeText.text = $"{10}s";
+
         base.Show(ShowButtons);
 
         void ShowButtons()
@@ -104,9 +109,39 @@ public class IAPSuggestionPopup : BasePopup
                     closeButton.interactable = true;
                     buyButton.interactable = true;
                     noThanksButton.interactable = true;
+
+                    _countingCoroutine = StartCoroutine(Counting());
                 })
             );
         }
+    }
+
+    private IEnumerator Counting()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+        int remaningTime = 10;
+
+        while (remaningTime > 0)
+        {
+            // CommonUtil.StopAllTweens(_tweens);
+
+            // SoundManager.Instance.PlaySoundTightenScrew();
+
+            _tweens.Add(Tween.Scale(buyButton.transform, 1.05f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.4f)
+            .OnComplete(() =>
+            {
+                remaningTime--;
+
+                timeText.text = $"{remaningTime}s";
+
+                _tweens.Add(Tween.Scale(buyButton.transform, 1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f, ease: Ease.Linear));
+            }));
+
+            yield return waitForSeconds;
+        }
+
+        Hide();
     }
 
     private void ShowRewards(int coinQuantity, int[] boosterQuantities, bool isRemoveAd)
@@ -159,6 +194,13 @@ public class IAPSuggestionPopup : BasePopup
 
     private void Buy()
     {
+        if (_countingCoroutine != null)
+        {
+            StopCoroutine(_countingCoroutine);
+
+            _tweens.Add(Tween.Scale(buyButton.transform, 1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f, ease: Ease.Linear));
+        }
+
         GamePersistentVariable.IAPLocation = "IAP Suggestion";
         GamePersistentVariable.IAPAddition = 2;
 
