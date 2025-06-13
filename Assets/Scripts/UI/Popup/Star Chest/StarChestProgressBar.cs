@@ -21,6 +21,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
     private Vector3 _starGroupInitialPosition;
 
     public static event Action openStarChestPopupEvent;
+    public static event Action openChestEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -125,18 +126,22 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
                 if (isRewardAvailable)
                 {
-                    if (GamePersistentVariable.isLevelChestClaimable)
-                    {
-                        GamePersistentVariable.isLevelChestClaimable = false;
-                    }
-                    else
-                    {
-                        AdmobAdsMax.Instance.ResetAdsCooldown();
+                    // if (GamePersistentVariable.isLevelChestClaimable)
+                    // {
+                    //     GamePersistentVariable.isLevelChestClaimable = false;
+                    // }
+                    // else
+                    // {
+                    //     AdmobAdsMax.Instance.ResetAdsCooldown();
 
-                        openStarChestPopupEvent?.Invoke();
-                    }
+                    //     openStarChestPopupEvent?.Invoke();
+                    // }
 
-                    GamePersistentVariable.isStarChestClaimable = true;
+                    // GamePersistentVariable.isStarChestClaimable = true;
+
+                    GamePersistentVariable.chestQueue.Enqueue("Star Chest");
+
+                    openChestEvent?.Invoke();
                 }
             })
         );

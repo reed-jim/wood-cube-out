@@ -48,6 +48,8 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
 
+        GamePersistentVariable.chestQueue = new System.Collections.Generic.Queue<string>();
+
         GamePersistentVariable.currentLevel = currentLevel.Value;
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
         GamePersistentVariable.livesConfig = new LivesConfig();

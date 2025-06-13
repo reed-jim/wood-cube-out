@@ -59,6 +59,8 @@ public class ResourceEarnPopup : BasePopup
         base.Hide(onCompletedAction: () =>
         {
             showResourcesEarnPopupEvent?.Invoke(false);
+
+            GamePersistentVariable.isChestOpenning = false;
         });
 
         if (_coinQuantity > 0)
