@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,7 @@ public class GameEventManager : MonoBehaviour
 
     [SerializeField] private IntVariable currentLevel;
 
+    private List<Tween> _tweens;
     private Coroutine _openingChestsCoroutine;
 
     public static event Action suggestCoinChallengeEvent;
@@ -34,6 +36,8 @@ public class GameEventManager : MonoBehaviour
         LevelChestProgressBar.openChestEvent += StartOpenChests;
         CoinChallengeProgressBar.openChestEvent += StartOpenChests;
         SceneManager.sceneLoaded += OnSceneLoaded;
+
+        _tweens = new List<Tween>();
     }
 
     void OnDestroy()
@@ -42,11 +46,41 @@ public class GameEventManager : MonoBehaviour
         LevelChestProgressBar.openChestEvent -= StartOpenChests;
         CoinChallengeProgressBar.openChestEvent -= StartOpenChests;
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        CommonUtil.StopAllTweens(_tweens);
     }
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         SuggestCoinChallenge();
+
+        if (scene.name == "Menu" && GamePersistentVariable.hasPlayerReachedGameplay)
+        {
+            try
+            {
+                AvoidClickScreen.Instance.Show();
+
+                StartCoroutine(WaitHideAvoidClickScreen());
+            }
+            catch (System.Exception)
+            {
+
+            }
+        }
+    }
+
+    private IEnumerator WaitHideAvoidClickScreen()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        while (GamePersistentVariable.isMenuLoading)
+        {
+            yield return waitForSeconds;
+        }
+
+        yield return new WaitForSeconds(1.8f);
+
+        AvoidClickScreen.Instance.Hide();
     }
 
     public bool IsSpaceRaceUnlocked()
@@ -139,10 +173,12 @@ public class GameEventManager : MonoBehaviour
 
     private void StartOpenChests()
     {
-        if (_openingChestsCoroutine == null)
+        if (_openingChestsCoroutine != null)
         {
-            _openingChestsCoroutine = StartCoroutine(OpeningChests());
+            StopCoroutine(_openingChestsCoroutine);
         }
+
+        _openingChestsCoroutine = StartCoroutine(OpeningChests());
     }
 
     private IEnumerator OpeningChests()
@@ -157,7 +193,7 @@ public class GameEventManager : MonoBehaviour
             {
                 nextChest = GamePersistentVariable.chestQueue.Dequeue();
 
-                Debug.Log("SAFERIO " + nextChest);
+                AdmobAdsMax.Instance.ResetAdsCooldown();
 
                 if (nextChest == "Star Chest")
                 {
@@ -177,5 +213,7 @@ public class GameEventManager : MonoBehaviour
 
             yield return waitForSeconds;
         }
+
+        _openingChestsCoroutine = null;
     }
 }

@@ -212,7 +212,7 @@ public class WinPopup : BasePopup
 
             DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
 
-            if (doubleInterAdsConfig.isEnableDoubleInter && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
                 AdmobAdsMax.Instance.ShowDoubleInterstitialAds
                 (

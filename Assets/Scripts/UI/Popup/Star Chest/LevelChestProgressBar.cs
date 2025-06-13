@@ -107,10 +107,6 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
         if (isRewardAvailable)
         {
             // GamePersistentVariable.isLevelChestClaimable = true;
-
-            GamePersistentVariable.chestQueue.Enqueue("Level Chest");
-
-            openChestEvent?.Invoke();
         }
 
         AddTween(Tween.Custom(0, finalAmount, duration: 0.3f, onValueChange: newVal =>
@@ -138,10 +134,14 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
             yield return waitForSeconds;
         }
 
-        yield return new WaitForSeconds(0.8f);
+        yield return new WaitForSeconds(1.8f);
 
-        AdmobAdsMax.Instance.ResetAdsCooldown();
+        // AdmobAdsMax.Instance.ResetAdsCooldown();
 
-        openLevelChestPopupEvent?.Invoke();
+        // openLevelChestPopupEvent?.Invoke();
+
+        GamePersistentVariable.chestQueue.Enqueue("Level Chest");
+
+        openChestEvent?.Invoke();
     }
 }

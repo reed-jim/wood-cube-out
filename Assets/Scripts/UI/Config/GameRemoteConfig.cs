@@ -77,6 +77,11 @@ public class DoubleInterAdsConfig
     public int minLevel;
     public int cooldown;
 
+    public bool IsValidDoubleInter()
+    {
+        return isEnable && isEnableDoubleInter;
+    }
+
     public bool IsValidShowInterInteractPopup()
     {
         return isEnable && GamePersistentVariable.currentLevel >= minLevel && isEnableInterPopupInteract;
