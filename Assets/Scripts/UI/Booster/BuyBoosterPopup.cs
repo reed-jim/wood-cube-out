@@ -17,6 +17,10 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
 
+    [Header("COIN BALANCE")]
+    [SerializeField] private RectTransform coinBalanceCointaner;
+    [SerializeField] private TMP_Text coinBalanceText;
+
     #region REMOTE CONFIG REWARDED ADS
     [SerializeField] private RectTransform coinButtonRT;
     [SerializeField] private RectTransform adsButtonRT;
@@ -252,6 +256,11 @@ public class BuyBoosterPopup : BasePopup
             end = 0;
         }
 
+        if (!isShow)
+        {
+            SetupRewardedAdsButton();
+        }
+
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
@@ -266,6 +275,7 @@ public class BuyBoosterPopup : BasePopup
         if (isEnableRewardedAds || forceEnable)
         {
             adsButtonRT.gameObject.SetActive(true);
+            coinBalanceCointaner.gameObject.SetActive(false);
 
             coinButtonRT.localPosition = _coinButtonPosition;
             adsButtonRT.localPosition = _adsButtonPosition;
@@ -273,8 +283,13 @@ public class BuyBoosterPopup : BasePopup
         else
         {
             adsButtonRT.gameObject.SetActive(false);
+            coinBalanceCointaner.gameObject.SetActive(true);
 
-            coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
+            // coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
+
+            userResourcesObserver.Load();
+
+            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
         }
     }
     #endregion

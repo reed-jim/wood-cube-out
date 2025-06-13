@@ -916,6 +916,11 @@ public class LevelLoader : MonoBehaviour
             return false;
         }
 
+        if (!GamePersistentVariable.isEnableRewardedAds)
+        {
+            return false;
+        }
+
         return true;
     }
 
