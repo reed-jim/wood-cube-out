@@ -126,11 +126,11 @@ public class ScrewBox : MonoBehaviour
 
             boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
-            float hidePositionY = transform.position.y + 8;
+            float hidePositionY = transform.position.y + 12;
 
             if (GamePersistentVariable.currentTargetOrthographicSize < 10)
             {
-                hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+                hidePositionY = transform.position.y + 12 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
             }
 
             _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
@@ -191,7 +191,14 @@ public class ScrewBox : MonoBehaviour
                         playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
                     }
                 })
-                .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
+                .Chain(
+                    Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
+                    {
+                        transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
+                        transform.position = transform.position.ChangeY(initialPositionY - 1.3f * (1 - newVal));
+                    })
+                // Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
+                // .Chain(Tween.LocalPositionY(transform, transform.localPosition.y - 0.3f, duration: 0.15f))
                 .Chain(Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
                 {
                     screwBoxCompletedEvent?.Invoke(this);
