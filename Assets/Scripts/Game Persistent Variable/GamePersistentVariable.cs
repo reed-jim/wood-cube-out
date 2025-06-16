@@ -140,5 +140,6 @@ public static class GamePersistentVariable
     #region CHEST
     public static bool isStarChestClaimable;
     public static bool isLevelChestClaimable;
+    public static string currentChestReason;
     #endregion
 }

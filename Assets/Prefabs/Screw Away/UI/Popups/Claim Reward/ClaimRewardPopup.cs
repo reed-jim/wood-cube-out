@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Lean.Localization;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,6 +13,8 @@ public class ClaimRewardPopup : BasePopup
     [SerializeField] private CanvasGroup rewardCanvasGroup;
     [SerializeField] private Button claimButton;
     [SerializeField] private Button claimMultiplierButton;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedTitle;
+    [SerializeField] private RectTransform localizedTitleRT;
 
     [SerializeField] private RectTransform[] resourceGroups;
 
@@ -264,6 +268,10 @@ public class ClaimRewardPopup : BasePopup
             UIUtil.SetLocalPositionX(validResourceGroups[i], position.x);
         }
 
+        localizedTitle.TranslationName = GamePersistentVariable.currentChestReason;
+
+        localizedTitle.gameObject.SetActive(false);
+
         _coinQuantity = coinQuantity;
         _boosterQuantities = boosterQuantities;
     }
@@ -290,6 +298,14 @@ public class ClaimRewardPopup : BasePopup
                 chestClaimButton.interactable = true;
                 chestClaimMultiplierButton.interactable = true;
             }));
+
+            float initialTitlePositionY = localizedTitleRT.localPosition.y;
+
+            localizedTitle.gameObject.SetActive(true);
+
+            localizedTitleRT.localPosition = localizedTitleRT.localPosition.ChangeY(initialTitlePositionY + 400);
+
+            _tweens.Add(Tween.LocalPositionY(localizedTitleRT, initialTitlePositionY, duration: 0.3f));
         }));
 
         _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>

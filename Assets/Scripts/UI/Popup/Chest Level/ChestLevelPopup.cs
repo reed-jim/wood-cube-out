@@ -42,6 +42,13 @@ public class ChestLevelPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        if (IsClaimable())
+        {
+            AutoClaimRewards();
+
+            return;
+        }
+
         base.Show(onCompletedAction: () =>
         {
             Refresh();
@@ -50,19 +57,7 @@ public class ChestLevelPopup : BasePopup
 
             if (isClaimable)
             {
-                int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10 + 1;
-
-                // Avoid giving out too many chests for old users
-                numChest = 1;
-
-                _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
-
-                DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
-
-                showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
-                claimChestLevelEvent?.Invoke();
-
-                GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
+                AutoClaimRewards();
             }
         });
 
@@ -89,62 +84,6 @@ public class ChestLevelPopup : BasePopup
         }));
     }
 
-    private void Claim(int multiplier, bool isSkipCheckClaimable)
-    {
-        if (isSkipCheckClaimable)
-        {
-            ActualClaim();
-
-            return;
-        }
-
-        if (IsClaimable())
-        {
-            ActualClaim();
-        }
-
-        void ActualClaim()
-        {
-            int coinQuantity = multiplier * rewardData.CoinQuantity;
-            int[] boosterQuantites = rewardData.BoosterQuantities;
-
-            for (int i = 0; i < boosterQuantites.Length; i++)
-            {
-                boosterQuantites[i] *= multiplier;
-            }
-
-            userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-            userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-            userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
-
-            userResourcesObserver.ChangeCoin(coinQuantity);
-
-            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-            claimChestLevelEvent?.Invoke();
-
-            Refresh();
-        }
-    }
-
-    private void ClaimX2()
-    {
-        if (IsClaimable())
-        {
-            AdmobAdsMax.Instance.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
-        }
-    }
-
-    private void OnRewaredAdCompleted()
-    {
-        Claim(multiplier: 2, isSkipCheckClaimable: true);
-    }
-
-    private void ShowAdsNotLoadedPopup()
-    {
-        InvokeShowAdNotLoadedPopupEvent();
-    }
-
     private bool IsClaimable()
     {
         ChestLevelData chestLevelData;
@@ -163,23 +102,41 @@ public class ChestLevelPopup : BasePopup
         return currentLevel.Value >= chestLevelData.currentRequiredLevel;
     }
 
+    private void AutoClaimRewards()
+    {
+        int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10 + 1;
+
+        // Avoid giving out too many chests for old users
+        numChest = 1;
+
+        _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
+
+        DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
+
+        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
+        GamePersistentVariable.currentChestReason = "Chest Level";
+
+        showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
+        claimChestLevelEvent?.Invoke();
+    }
+
     private void OnClaimRewardPopupShown(bool isShow)
     {
-        float start = 0;
-        float end = 1;
+        // float start = 0;
+        // float end = 1;
 
-        if (isShow)
-        {
-            start = 1;
-            end = 0;
+        // if (isShow)
+        // {
+        //     start = 1;
+        //     end = 0;
 
-            popupCanvasGroup.interactable = false;
-        }
+        //     popupCanvasGroup.interactable = false;
+        // }
 
-        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
-        {
-            popupCanvasGroup.alpha = newVal;
-        }));
+        // _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        // {
+        //     popupCanvasGroup.alpha = newVal;
+        // }));
     }
 
     private void OnResourcesEarnPopupShown(bool isShow)
@@ -207,18 +164,28 @@ public class ChestLevelPopup : BasePopup
             Refresh();
         }
 
-        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        if (isShow)
         {
-            popupCanvasGroup.alpha = newVal;
-        })
-        .OnComplete(() =>
+            _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
             {
-                if (!isShow)
-                {
-                    popupCanvasGroup.interactable = true;
-                }
+                popupCanvasGroup.alpha = newVal;
             })
-        );
+            .OnComplete(() =>
+                {
+                    if (!isShow)
+                    {
+                        popupCanvasGroup.interactable = true;
+                    }
+                })
+            );
+        }
+        else
+        {
+            popupCanvasGroup.alpha = 1;
+            popupCanvasGroup.interactable = true;
+
+            HideImmediately();
+        }
     }
 }
 

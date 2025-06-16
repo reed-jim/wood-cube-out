@@ -48,6 +48,13 @@ public class StarChestPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        if (IsClaimable())
+        {
+            ShowReward();
+
+            return;
+        }
+
         base.Show(onCompletedAction: () =>
         {
             AnimateProgress();
@@ -60,12 +67,7 @@ public class StarChestPopup : BasePopup
     {
         int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
 
-        int remaining = requireGemForEachLevel - starCollected;
         float progress = (float)starCollected / requireGemForEachLevel;
-
-        // AnimateProgress(starCollected, requireGemForEachLevel, progress);
-
-        // localizedDescription.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{remaining}");
 
         progressSlider.value = progress;
         progressText.text = $"{Mathf.RoundToInt(progress * requireGemForEachLevel)}/{requireGemForEachLevel}";
@@ -78,6 +80,8 @@ public class StarChestPopup : BasePopup
 
     private void AnimateProgress()
     {
+        return;
+        
         int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
 
         float progress = (float)starCollected / requireGemForEachLevel;
@@ -148,10 +152,17 @@ public class StarChestPopup : BasePopup
 
     private void ShowReward()
     {
+        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.StarChest;
+        GamePersistentVariable.currentChestReason = "Star Chest";
+
+        _numAccumulatedChest = _data.starCollected / requireGemForEachLevel;
+
+        _data.starCollected %= requireGemForEachLevel;
+
+        DataUtility.Save(GameConstants.STAR_LEVEL_DATA, _data);
+
         showClaimRewardPopupEvent?.Invoke(rewardData, _numAccumulatedChest);
         claimStarChestEvent?.Invoke();
-
-        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.StarChest;
     }
 
     private void OnClaimRewardPopupShown(bool isShow)
@@ -208,5 +219,20 @@ public class StarChestPopup : BasePopup
                 }
             })
         );
+    }
+
+    private bool IsClaimable()
+    {
+        if (_data == null)
+        {
+            _data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+        }
+
+        int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
+
+        int remaining = requireGemForEachLevel - starCollected;
+        float progress = (float)starCollected / requireGemForEachLevel;
+
+        return progress >= 1;
     }
 }

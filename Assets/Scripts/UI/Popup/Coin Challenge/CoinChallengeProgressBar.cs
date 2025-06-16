@@ -44,7 +44,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
         fill.fillAmount = 0;
-        
+
         starGroupRT.gameObject.SetActive(false);
 
         StartCoroutine(WaitForMenuLoaded());
@@ -80,20 +80,20 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     private void Refresh()
     {
-        bool isClaimable = IsClaimable();
+        // bool isClaimable = IsClaimable();
 
-        if (IsClaimable())
-        {
-            claimNotification.gameObject.SetActive(true);
+        // if (IsClaimable())
+        // {
+        //     claimNotification.gameObject.SetActive(true);
 
-            StartCoroutine(AnimateClaimNotification());
-        }
-        else
-        {
-            claimNotification.gameObject.SetActive(false);
-        }
+        //     StartCoroutine(AnimateClaimNotification());
+        // }
+        // else
+        // {
+        //     claimNotification.gameObject.SetActive(false);
+        // }
 
-        buttonNameContainer.SetActive(!isClaimable);
+        // buttonNameContainer.SetActive(!isClaimable);
     }
 
     private IEnumerator AnimateClaimNotification()
