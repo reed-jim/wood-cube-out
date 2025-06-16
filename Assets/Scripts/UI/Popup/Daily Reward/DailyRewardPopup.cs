@@ -113,6 +113,13 @@ public class DailyRewardPopup : BasePopup
 
             popupCanvasGroup.interactable = false;
         }
+        else
+        {
+            popupCanvasGroup.alpha = 1;
+            popupCanvasGroup.interactable = true;
+
+            HideImmediately();
+        }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {

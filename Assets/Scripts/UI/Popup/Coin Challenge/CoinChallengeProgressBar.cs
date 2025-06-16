@@ -80,6 +80,8 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
 
     private void Refresh()
     {
+        claimNotification.gameObject.SetActive(false);
+
         // bool isClaimable = IsClaimable();
 
         // if (IsClaimable())
