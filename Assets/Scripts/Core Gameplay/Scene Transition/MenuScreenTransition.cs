@@ -107,9 +107,9 @@ public class MenuScreenTransition : MonoBehaviour
 
         float minWaitTime = 2;
 
-        if (GamePersistentVariable.remoteConfigIsShowMREC)
+        if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
         {
-            minWaitTime = 3;
+            minWaitTime = 4.5f;
         }
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
