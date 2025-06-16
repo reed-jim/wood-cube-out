@@ -358,7 +358,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                 float timeMultiplier = Vector3.Distance(new Vector3(0, 0.3f, -0.3f), transform.localPosition);
                 timeMultiplier = Mathf.Min(timeMultiplier, 8);
 
-                Vector3 preFinalLocalPosition = new Vector3(0, 0.4f, -36f);
+                Vector3 preFinalLocalPosition = new Vector3(0, 0.4f, -24f);
                 Vector3 finalLocalPosition = new Vector3(0, -0.1f, 0.25f);
                 _localRotationOnScrewSlot = new Vector3(-25f, 180 + 0f, 0);
 
@@ -374,6 +374,9 @@ public class BaseScrew : MonoBehaviour, IScrew
                 durationMultiplier = Mathf.Clamp(durationMultiplier, 0.6f, 1);
 
                 float finalDurationMoveToScrewPort = durationMultiplier * durationMoveToScrewPort;
+
+                // Avoid screw left under screw holes area
+                transform.localPosition = transform.localPosition.ChangeZ(preFinalLocalPosition.z);
 
                 _tweens.Add(
                     Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot),
@@ -475,7 +478,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         }));
 
         #region EVENT ITEM
-        bool isSpawn = UnityEngine.Random.Range(0, 4) == 0;
+        bool isSpawn = UnityEngine.Random.Range(0, 20) == 0;
 
         if (isSpawn)
         {
