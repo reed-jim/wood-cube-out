@@ -11,6 +11,11 @@ public class CoinChallengeData
     public int newGainedItem;
     public bool isCompleted;
 
+    public int TotalMilestone
+    {
+        get => eventItemCollectedOfMilstones.Length;
+    }
+
     public int CurrentMilestone
     {
         get => currentMilestone;

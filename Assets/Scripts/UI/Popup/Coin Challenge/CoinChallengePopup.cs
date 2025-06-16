@@ -20,6 +20,7 @@ public class CoinChallengePopup : BasePopup
     [SerializeField] private Button continueButton;
     [SerializeField] private Image continueButtonImage;
     [SerializeField] private TMP_Text continueText;
+    [SerializeField] private Button debugButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -39,6 +40,15 @@ public class CoinChallengePopup : BasePopup
 
         // claimButton.onClick.AddListener(Claim);
         continueButton.onClick.AddListener(Continue);
+
+        try
+        {
+            debugButton.onClick.AddListener(DebugAddItems);
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     protected override void UnregisterMoreEvent()
@@ -54,6 +64,14 @@ public class CoinChallengePopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        if (IsAvailable())
+        {
+            if (CheckShowRewards(_challengeData))
+            {
+                return;
+            }
+        }
+
         nextEventTimeContainer.gameObject.SetActive(false);
 
         #region DISABLE ANIMATION
@@ -180,7 +198,7 @@ public class CoinChallengePopup : BasePopup
         }
     }
 
-    private void CheckShowRewards(CoinChallengeData data)
+    private bool CheckShowRewards(CoinChallengeData data)
     {
         int currentMilestone = data.CurrentMilestone;
 
@@ -236,14 +254,17 @@ public class CoinChallengePopup : BasePopup
 
         if (isClaimable)
         {
-            showClaimRewardPopupEvent?.Invoke(totalReward);
-
             GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.CoinChallenge;
+            GamePersistentVariable.currentChestReason = "Coin Challenge";
+
+            showClaimRewardPopupEvent?.Invoke(totalReward);
 
             DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, data);
 
             claimCoinChallengeEvent?.Invoke();
         }
+
+        return isClaimable;
     }
 
     private void AnimateProgress(float progress)
@@ -333,6 +354,23 @@ public class CoinChallengePopup : BasePopup
 
         nextEventTimeCounterText.text = $"{CommonUtil.ConvertTimeFormat(remaningSecond)}";
     }
+
+    private bool IsAvailable()
+    {
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        _isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        if (_isAvailable)
+        {
+            if (_challengeData.IsCompleted())
+            {
+                _isAvailable = false;
+            }
+        }
+
+        return _isAvailable;
+    }
     #endregion
 
     #region CLAIM REWARD
@@ -392,6 +430,23 @@ public class CoinChallengePopup : BasePopup
                 }
             })
         );
+    }
+    #endregion
+
+    #region DEBUG
+    private void DebugAddItems()
+    {
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        int currentMilestone = coinChallengeData.CurrentMilestone;
+
+        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] = coinChallengeConfigContainer.RequiredItems[currentMilestone] - 1;
+
+        DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
+
+        _challengeData = coinChallengeData;
+
+        Setup();
     }
     #endregion
 }

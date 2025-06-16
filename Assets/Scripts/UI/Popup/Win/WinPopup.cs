@@ -364,6 +364,19 @@ public class WinPopup : BasePopup
             _isCoinChallengeClaimable = true;
         }
 
+        for (int i = 0; i < coinChallengeData.TotalMilestone; i++)
+        {
+            if (i < currentMilestone)
+            {
+                if (!coinChallengeData.IsMilestonesClaimed[i])
+                {
+                    _isCoinChallengeClaimable = true;
+
+                    break;
+                }
+            }
+        }
+
         DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
     }
 
