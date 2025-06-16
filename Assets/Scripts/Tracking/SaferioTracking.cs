@@ -195,19 +195,26 @@ public static class SaferioTracking
     )
     {
 #if !UNITY_EDITOR
-        Parameter[] parameters =
+        try
         {
-            new Parameter("play_mode", "normal"),
-            new Parameter("level", level.ToString()),
-            new Parameter("name", resourceName),
-            new Parameter("amount", amount),
-            new Parameter("balance", balance),
-            new Parameter("item", reason),
-            new Parameter("item_type", "game_resources"),
-            new Parameter("booster", "none"),
-        };
+            Parameter[] parameters =
+                {
+                    new Parameter("play_mode", "normal"),
+                    new Parameter("level", level.ToString()),
+                    new Parameter("name", resourceName),
+                    new Parameter("amount", amount),
+                    new Parameter("balance", balance),
+                    new Parameter("item", reason),
+                    new Parameter("item_type", "game_resources"),
+                    new Parameter("booster", "none"),
+                };
 
-        FirebaseAnalytics.LogEvent("resource_source", parameters);
+                FirebaseAnalytics.LogEvent("resource_source", parameters);
+        }
+        catch (System.Exception)
+        {
+
+        }
 #endif
     }
 

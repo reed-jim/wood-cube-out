@@ -30,6 +30,8 @@ public class PinchGesture : MonoBehaviour
     private void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
+        LevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
+        MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
@@ -44,34 +46,12 @@ public class PinchGesture : MonoBehaviour
     void OnDestroy()
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
+        LevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
+        MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
         CommonUtil.StopAllTweens(_tweens);
-    }
-
-    private void OnZoomSliderValueChanged(float value)
-    {
-        if (_isDisabled)
-        {
-            return;
-        }
-
-        pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
-
-        if (!_isZoomByPinching)
-        {
-            enableSwipingEvent?.Invoke(false);
-        }
-
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
-        {
-            enableSwipingEvent?.Invoke(true);
-        }));
-
-        _lastZoomPercent = value;
     }
 
     private void Update()
@@ -132,11 +112,46 @@ public class PinchGesture : MonoBehaviour
     {
         _isDisabled = false;
 
-        zoomSlider.value = 0;
+        zoomSlider.value = 0f;
 
-        // OnZoomSliderValueChanged(0);
+        // OnZoomSliderValueChanged(zoomSlider.value);
 
         // pinchGestureEvent?.Invoke(maxZoom);
+    }
+
+    private void OnZoomSliderValueChanged(float value)
+    {
+        if (_isDisabled)
+        {
+            return;
+        }
+
+        pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
+
+        if (!_isZoomByPinching)
+        {
+            enableSwipingEvent?.Invoke(false);
+        }
+
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
+        {
+            enableSwipingEvent?.Invoke(true);
+        }));
+
+        _lastZoomPercent = value;
+    }
+
+    private void SetNewCameraOrthographicSize(float orthographicSize)
+    {
+        maxZoom = orthographicSize;
+        minZoom = 0.5f * orthographicSize;
+
+        Tween.Delay(0.2f).OnComplete(() =>
+        {
+            zoomSlider.value = 0.5f;
+        });
     }
 
     private void EnablePinching(bool isEnable)

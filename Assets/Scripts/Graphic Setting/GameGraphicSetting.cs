@@ -9,7 +9,7 @@ public class GameGraphicSetting : MonoBehaviour
 
     void Awake()
     {
-        // SettingGraphic();
+        SettingGraphic();
     }
 
     private void SettingGraphic()

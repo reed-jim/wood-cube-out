@@ -1,0 +1,73 @@
+using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using static GameEnum;
+
+public class UserLivesUI : MonoBehaviour
+{
+    [SerializeField] private TMP_Text numLivesText;
+    [SerializeField] private TMP_Text replenishLifeTimeText;
+    [SerializeField] private Button openLivesShopPopupButton;
+
+    private int _numLives;
+
+    public static Action<ScreenRoute> switchRouteEvent;
+
+    void Awake()
+    {
+        ReplenishLifeManager.updateLivesReplenishTimeEvent += UpdateLivesReplenishTime;
+        ReplenishLifeManager.updateLivesNumberEvent += UpdateLivesNumber;
+        RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
+
+        openLivesShopPopupButton.onClick.AddListener(OpenLivesShopPopup);
+    }
+
+    void Start()
+    {
+        if (!GamePersistentVariable.livesConfig.isActive)
+        {
+            gameObject.SetActive(false);
+        }
+    }
+
+    void OnDestroy()
+    {
+        ReplenishLifeManager.updateLivesReplenishTimeEvent -= UpdateLivesReplenishTime;
+        ReplenishLifeManager.updateLivesNumberEvent -= UpdateLivesNumber;
+        RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
+    }
+
+    private void UpdateLivesReplenishTime(string time)
+    {
+        replenishLifeTimeText.text = time;
+    }
+
+    private void UpdateLivesNumber(int lives)
+    {
+        numLivesText.text = $"{lives}";
+
+        if (lives == GameConstants.DEFAULT_LIVES)
+        {
+            replenishLifeTimeText.text = $"Full";
+
+            openLivesShopPopupButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            openLivesShopPopupButton.gameObject.SetActive(true);
+        }
+
+        _numLives = lives;
+    }
+
+    private void OpenLivesShopPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
+    }
+
+    private void OnRemoteConfigReady()
+    {
+        gameObject.SetActive(GamePersistentVariable.livesConfig.isActive);
+    }
+}

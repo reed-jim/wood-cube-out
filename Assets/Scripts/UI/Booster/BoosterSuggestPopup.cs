@@ -16,7 +16,6 @@ public class BoosterSuggestPopup : BasePopup
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private IntVariable currentLevel;
 
-    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action<int> updateBoosterQuantityEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
@@ -70,7 +69,7 @@ public class BoosterSuggestPopup : BasePopup
         {
             int[] boosterQuantites = new int[3] { 0, 0, rewardQuantity };
 
-            showResourcesEarnPopupEvent?.Invoke(0, boosterQuantites, false);
+            InvokeShowResourcesEarnPopupPopupEvent(0, boosterQuantites, false);
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{BoosterType.ClearScrewPorts}");
             SaferioTracking.TrackResourceSource(

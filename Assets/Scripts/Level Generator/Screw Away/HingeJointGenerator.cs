@@ -1,13 +1,17 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 
 public class HingeJointGenerator : EditorWindow
@@ -56,6 +60,8 @@ public class HingeJointGenerator : EditorWindow
         GetWindow<HingeJointGenerator>("Level Tool");
     }
 
+    private CountryDataContainer countryDataContainer;
+
     private void OnGUI()
     {
         float padding = 20f;
@@ -71,6 +77,7 @@ public class HingeJointGenerator : EditorWindow
         screwPrefab = (GameObject)EditorGUILayout.ObjectField("Screw Prefab", screwPrefab, typeof(GameObject), true);
         // targetMaterial = (Material)EditorGUILayout.ObjectField("Target Material", targetMaterial, typeof(Material), true);
         piecePrefab = (GameObject)EditorGUILayout.ObjectField("Piece Prefab", piecePrefab, typeof(GameObject), true);
+        countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
 
         // dimensionSize = EditorGUILayout.Vector3Field("Dimension Size", dimensionSize);
         // distance = EditorGUILayout.Vector3Field("Distance", distance);
@@ -99,6 +106,11 @@ public class HingeJointGenerator : EditorWindow
         };
 
         GUILayout.Label("Generate", centeredStyle);
+
+        if (GUILayout.Button("AutoAssignSprites"))
+        {
+            AutoAssignSprites();
+        }
 
         if (GUILayout.Button("Generate Level"))
         {
@@ -165,6 +177,11 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Generate Hinge Joint All"))
         {
             GenerateHingeJointAll(Selection.activeTransform);
+        }
+
+        if (GUILayout.Button("Remove Mesh Colliders"))
+        {
+            RemoveAllMeshColliders();
         }
 
         // if (GUILayout.Button("Generate Hinge Joint All Levels"))
@@ -276,6 +293,11 @@ public class HingeJointGenerator : EditorWindow
         GUILayout.Space(16);
         GUILayout.Label("Extract other games' level", centeredStyle);
 
+        // if (GUILayout.Button("ChangeMesh"))
+        // {
+        //     ChangeMesh();
+        // }
+
         if (GUILayout.Button("Extract Pieces"))
         {
             ExtractPieces();
@@ -299,9 +321,29 @@ public class HingeJointGenerator : EditorWindow
             CheckLevelIssues();
         }
 
+        if (GUILayout.Button("Check Level Concave Colliders"))
+        {
+            CheckForConcaveColliderAllLevels();
+        }
+
+        if (GUILayout.Button("Check Missing Components"))
+        {
+            CheckMissingComponents();
+        }
+
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
+        }
+
+        if (GUILayout.Button("Check Null HingeJoint's Rigidbody"))
+        {
+            CheckForNullHingeJointRigidbody(Selection.activeTransform);
+        }
+
+        if (GUILayout.Button("CheckAddressablesLevels"))
+        {
+            CheckAddressablesLevels();
         }
 
         if (GUILayout.Button("Fold All"))
@@ -316,6 +358,28 @@ public class HingeJointGenerator : EditorWindow
 
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
+    }
+
+    private void AutoAssignSprites()
+    {
+        string[] files = Directory.GetFiles("Assets/Sprites/Country Flags", "flag_*.png");
+
+        var sortedFiles = files.OrderBy(file =>
+        {
+            var match = Regex.Match(Path.GetFileNameWithoutExtension(file), @"flag_(\d+)");
+            return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
+        });
+
+        int index = 0;
+
+        foreach (string file in sortedFiles)
+        {
+            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(file);
+
+            countryDataContainer.Countries[index].Flag = sprite;
+
+            index++;
+        }
     }
 
     bool IsOverlapping(Vector3 spawnPosition, GameObject target)
@@ -586,9 +650,9 @@ public class HingeJointGenerator : EditorWindow
                     continue;
                 }
 
-                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
+                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.3f * screwSize.x)
                 {
-                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name}</color>");
+                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name} {checkScrew.name}</color>");
 
                     break;
                 }
@@ -720,7 +784,7 @@ public class HingeJointGenerator : EditorWindow
 
     private void CheckHingeJointNumberAllLevels()
     {
-        for (int i = 1; i <= 125; i++)
+        for (int i = 1; i <= 225; i++)
         {
             CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
         }
@@ -751,6 +815,103 @@ public class HingeJointGenerator : EditorWindow
 
                     break;
                 }
+            }
+        }
+    }
+
+    private void CheckAddressablesLevels()
+    {
+        int total = 0;
+
+        for (int i = 1; i <= 175; i++)
+        {
+            int level = i;
+
+            string levelPrefab = $"Level {level}";
+
+            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+
+            handle.Completed += (op) =>
+            {
+                if (op.Status == AsyncOperationStatus.Succeeded)
+                {
+                    total++;
+
+                    Debug.Log($"<color=#32CD32>SAFERIO Level {level} Passed</color> - Total: {total}");
+                }
+            };
+        }
+    }
+
+    private void CheckForConcaveColliderAllLevels()
+    {
+        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < levels.Length; i++)
+        {
+            if (levels[i].name.Contains("Level"))
+            {
+                totalConcavePieces += CheckForConcaveCollider(levels[i].transform);
+            }
+        }
+
+        Debug.Log("SAFERIO " + totalConcavePieces);
+    }
+
+    private int CheckForNullHingeJointRigidbody(Transform level)
+    {
+        HingeJoint[] hingeJoints = GetComponentsFromAllChildren<HingeJoint>(level).ToArray();
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < hingeJoints.Length; i++)
+        {
+            if (hingeJoints[i].connectedBody == null)
+            {
+                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + hingeJoints[i].transform.parent.name + "</color>");
+
+                totalConcavePieces++;
+            }
+        }
+
+        return totalConcavePieces;
+    }
+
+    private int CheckForConcaveCollider(Transform level)
+    {
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
+
+        int totalConcavePieces = 0;
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            if (!pieces[i].GetComponent<MeshCollider>().convex)
+            {
+                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + pieces[i].name + "</color>");
+
+                totalConcavePieces++;
+            }
+        }
+
+        return totalConcavePieces;
+    }
+
+    private void CheckMissingComponents()
+    {
+        Transform selected = Selection.activeTransform;
+
+        GameObject go = selected.gameObject;
+        Component[] components = go.GetComponents<Component>();
+
+        Debug.Log("SAFERIO " + components.Length);
+
+        for (int i = 0; i < components.Length; i++)
+        {
+            if (components[i] == null)
+            {
+                Debug.Log($"SAFERIO Missing Component found on GameObject: {go.name}", go);
             }
         }
     }
@@ -992,6 +1153,34 @@ public class HingeJointGenerator : EditorWindow
 
         EditorUtility.SetDirty(Selection.activeTransform);
     }
+
+    private void RemoveAllMeshColliders()
+    {
+        Transform[] selections = Selection.transforms;
+
+        for (int i = 0; i < selections.Length; i++)
+        {
+            RemoveAllMeshColliders(selections[i]);
+        }
+    }
+
+    private void RemoveAllMeshColliders(Transform selection)
+    {
+        MeshCollider[] meshColliders = selection.GetComponents<MeshCollider>();
+
+        // Remove all existing blocks
+        List<MeshCollider> toRemoveList = new List<MeshCollider>();
+
+        for (int i = 0; i < meshColliders.Length; i++)
+        {
+            toRemoveList.Add(meshColliders[i]);
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item);
+        }
+    }
     #endregion
 
     #region INFO
@@ -1077,12 +1266,27 @@ public class HingeJointGenerator : EditorWindow
             }
             else
             {
-                RaycastAgain();
+                SnapByDirection(selectedObject.forward);
+                // RaycastAgain();
             }
         }
         else
         {
-            RaycastAgain();
+            SnapByDirection(selectedObject.forward);
+            // RaycastAgain();
+        }
+
+        void SnapByDirection(Vector3 raycastDirection)
+        {
+            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, raycastDirection, out hit, maxRaycastDistance))
+            {
+                IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+                if (objectPart != null)
+                {
+                    Snap();
+                }
+            }
         }
 
         void RaycastAgain()
@@ -1109,6 +1313,7 @@ public class HingeJointGenerator : EditorWindow
             Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
 
             selectedObject.rotation = surfaceRotation;
+            selectedObject.localEulerAngles = selectedObject.localEulerAngles.ChangeZ(0);
         }
     }
 
@@ -1235,9 +1440,13 @@ public class HingeJointGenerator : EditorWindow
             pieces[i].AddComponent<BasicObjectPart>();
             pieces[i].AddComponent<ObjectPartMaterialPropertyBlock>();
             pieces[i].AddComponent<Rigidbody>();
-            MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
 
-            meshCollider.convex = true;
+            if (pieces[i].GetComponent<MeshCollider>() == null)
+            {
+                MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
+
+                meshCollider.convex = true;
+            }
         }
 
         EditorUtility.SetDirty(level);
@@ -2221,7 +2430,10 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateLevelRubikQuarter()
     {
-        piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like (3 Screws).prefab");
+        if (piecePrefab == null)
+        {
+            piecePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Prefabs/Screw Away/Levels/Common/Box - Rubik-like (3 Screws) Variant 2.prefab");
+        }
 
         // Remove all existing blocks
         List<GameObject> toRemoveList = new List<GameObject>();
@@ -2751,6 +2963,7 @@ public class HingeJointGenerator : EditorWindow
             Vector3 halfSize = 0.5f * pieceSize;
 
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
+            Vector3 pieceBoundCenter = piece.GetComponent<MeshFilter>().sharedMesh.bounds.center;
 
             int maxScrewX = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.x / screwSize.x);
             int maxScrewY = (int)(0.4f * piece.GetComponent<Collider>().bounds.size.y / screwSize.y);
@@ -2845,9 +3058,9 @@ public class HingeJointGenerator : EditorWindow
 
                         screw.transform.position = piece.transform.position +
                         new Vector3(
-                            (-(maxScrewX - 1) / 2f + i) * 0.9f * pieceSize.x / maxScrewX,
-                            (-(maxScrewY - 1) / 2f + j) * 0.9f * pieceSize.y / maxScrewY,
-                            (-(maxScrewZ - 1) / 2f + k) * 0.9f * pieceSize.z / maxScrewZ
+                            (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
+                            (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
+                            (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
                             );
 
                         int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
@@ -2905,6 +3118,8 @@ public class HingeJointGenerator : EditorWindow
                             }
                         }
 
+                        // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
+                        screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
                         RaycastHit hit;
@@ -2942,11 +3157,49 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region EXTRACT OTHER GAMES' LEVEL
+    private void ChangeMesh()
+    {
+        Transform selection = Selection.activeTransform;
+
+        MeshFilter meshFilter = selection.GetComponent<MeshFilter>();
+
+        Mesh originalMesh = meshFilter.sharedMesh;
+
+        Mesh newMesh = new Mesh();
+
+        newMesh.vertices = originalMesh.vertices;
+        newMesh.triangles = originalMesh.triangles;
+
+        Vector3[] newVertices = originalMesh.vertices;
+
+        for (int i = 0; i < newMesh.vertexCount; i++)
+        {
+            int random = UnityEngine.Random.Range(0, 2);
+
+            if (random == 0)
+            {
+                newVertices[i].x *= 1.2f;
+            }
+        }
+
+        newMesh.vertices = newVertices;
+
+        newMesh.RecalculateNormals();
+        newMesh.RecalculateBounds();
+
+        newMesh.name = "Generated";
+
+        meshFilter.mesh = newMesh;
+    }
     private void ExtractPieces()
     {
         Transform level = Selection.activeTransform;
 
         Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 
         for (int i = 0; i < allChildren.Length; i++)
         {
@@ -2956,14 +3209,34 @@ public class HingeJointGenerator : EditorWindow
             {
                 Transform piece = Instantiate(child, level);
 
+                piece.transform.position = child.position;
+
                 Component[] components = piece.GetComponents<Component>();
 
                 foreach (Component component in components)
                 {
-                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer))
+                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer) && !(component is MeshCollider))
                     {
                         DestroyImmediate(component, allowDestroyingAssets: true);
                     }
+
+                    if (component == null)
+                    {
+                        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(piece.gameObject);
+                    }
+                }
+
+                MeshRenderer meshRenderer = piece.GetComponent<MeshRenderer>();
+
+                if (meshRenderer != null)
+                {
+                    meshRenderer.sharedMaterial = randomMaterial;
+                }
+                else
+                {
+                    DestroyImmediate(piece.gameObject, allowDestroyingAssets: true);
+
+                    continue;
                 }
 
                 // Remove all existing blocks

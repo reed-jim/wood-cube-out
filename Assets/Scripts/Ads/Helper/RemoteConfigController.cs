@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Globalization;
 using Newtonsoft.Json;
 using Firebase.Extensions;
+using PrimeTween;
+using System.Linq;
 
 public class RemoteConfigController : MonoBehaviour
 {
@@ -199,7 +201,6 @@ public class RemoteConfigController : MonoBehaviour
         {
             result = default;
             return false;
-
         }
 
         try
@@ -365,6 +366,7 @@ public class RemoteConfigController : MonoBehaviour
     //     //AdmobAds.Instance.Init();
     // }
 
+    #region SAFERIO
     public static async void FetchAndActivateAsync(Task fetchTask, ConfigInfo info)
     {
         await FirebaseRemoteConfig.DefaultInstance.FetchAndActivateAsync();
@@ -389,13 +391,75 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.isFirebaseRemoteConfigLoaded = true;
         GamePersistentVariable.isEnableLoadingLevelInProgress = GetBoolConfig(FirebaseConfig.IS_ENABLE_LOAD_LEVEL_PROGRESS, true);
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
+        GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
+
+        GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+
+        #region DOUBLE INTER
+        DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
+
+        GetJsonConfig(FirebaseConfig.DOUBLE_INTER_ADS_CONFIG, out doubleInterAdsConfig);
+
+        if (doubleInterAdsConfig != null)
+        {
+            GamePersistentVariable.doubleInterAdsConfig = doubleInterAdsConfig;
+        }
+        #endregion
+
+        #region LIVES SYSTEM
+        LivesConfig livesConfig = new LivesConfig();
+
+        GetJsonConfig(FirebaseConfig.LIVES_SYSTEM_CONFIG, out livesConfig);
+
+        if (livesConfig != null)
+        {
+            GamePersistentVariable.livesConfig = livesConfig;
+        }
+        #endregion
+
+        #region DAILY REWARD
+        DailyRewardConfig dailyRewardConfig = new DailyRewardConfig();
+
+        GetJsonConfig(FirebaseConfig.DAILY_REWARD_CONFIG, out dailyRewardConfig);
+
+        if (dailyRewardConfig != null)
+        {
+            GamePersistentVariable.dailyRewardConfig = dailyRewardConfig;
+        }
+        #endregion
+
+        #region COIN CHALLENGE
+        CoinChallengeConfig coinChallengeConfig = new CoinChallengeConfig();
+
+        GetJsonConfig(FirebaseConfig.COIN_CHALLENGE_CONFIG, out coinChallengeConfig);
+
+        if (coinChallengeConfig != null)
+        {
+            GamePersistentVariable.coinChallengeConfig = coinChallengeConfig;
+        }
+        #endregion
 
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);
 
         Application.targetFrameRate = targetFPS;
+
+        SetRemoteConfigRewardedAds();
     }
+
+    private static void SetRemoteConfigRewardedAds()
+    {
+        GamePersistentVariable.isEnableRewardedAds = GetBoolConfig(FirebaseConfig.ENABLE_REWARDED_ADS, true);
+        GamePersistentVariable.minLevelDisableRewardedAds = GetIntConfig(FirebaseConfig.MIN_LEVEL_DISABLE_REWARDED_ADS, 20);
+
+        if (!GamePersistentVariable.isEnableRewardedAds)
+        {
+            GamePersistentVariable.doubleInterAdsConfig.isEnable = false;
+            GamePersistentVariable.isShowBanner = false;
+        }
+    }
+    #endregion
 
     //static Dictionary<string, object> defaults = new Dictionary<string, object>();
     public static void RemoteConfigFirebaseInit()
@@ -431,21 +495,4 @@ public class RemoteConfigController : MonoBehaviour
     }
 
     #endregion Private Methods
-
-    //     public static void GetPlayFabConfig<T>(string nameConfig, UnityAction<T> success, UnityAction<PlayFabError> error, int indexStore)
-    //     {
-    //         var request = new GetStoreItemsRequest() { CatalogVersion = nameConfig, StoreId = Config.StoreIDPlayFab };
-    //         PlayFabClientAPI.GetStoreItems(request,
-    //            (s) =>
-    //            {
-    //                var data = JsonConvert.DeserializeObject<T>(s.Store[indexStore].CustomData.ToString());
-    // #if LOG_VERBOSE
-    //                Debug.Log("PlayFab Config:".Color(ColorDefine.Purple) +"\n"+s.Store[indexStore].CustomData.ToString());
-    // #endif
-    //                if (data != null)
-    //                    success?.Invoke(data);
-
-    //            },
-    //             (e) => error?.Invoke(e));
-    //     }
 }

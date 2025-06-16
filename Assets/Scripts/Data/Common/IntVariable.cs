@@ -22,6 +22,12 @@ public class IntVariable : ScriptableObject
         }
     }
 
+    public int ValueUsingPureJson
+    {
+        get => DataUtility.Load(saveKey, 1);
+        set => DataUtility.Save(saveKey, value);
+    }
+
     public void Save(string key)
     {
         DataUtility.SaveAsync(key, value);

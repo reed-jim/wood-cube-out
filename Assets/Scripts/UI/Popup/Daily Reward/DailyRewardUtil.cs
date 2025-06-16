@@ -3,29 +3,61 @@ using UnityEngine;
 
 public static class DailyRewardUtil
 {
-    public static bool IsClaimedTodayReward(int day)
+    public static bool IsDailyRewardReadyForDay(int day)
     {
-        int lastDay = DataUtility.Load(GameConstants.LAST_DAY_CLAIM_DAILY_REWARD, -1);
-        int numDayClaimedReward = DataUtility.Load(GameConstants.NUM_DAY_CLAIMED_REWARD, 0);
-        int today = DateTime.Now.Day;
-
-        if (today == lastDay)
+        if (day == CurrentDailyRewardIndex() && IsNewDay())
         {
             return true;
-        }
-
-        if (numDayClaimedReward % 7 == day - 1)
-        {
-            return false;
         }
         else
         {
-            return true;
+            return false;
         }
     }
 
-    public static int GetTodayRewardIndex()
+    public static int CurrentDailyRewardIndex()
     {
-        return DateTime.Now.Day & 7;
+        if (!GamePersistentVariable.isCurrentDailyRewardIndexLoaded)
+        {
+            int index = DataUtility.Load($"current_daily_reward_day", 1) % 7;
+
+            GamePersistentVariable.currentDailyRewardIndex = index;
+            GamePersistentVariable.isCurrentDailyRewardIndexLoaded = true;
+
+            return index;
+        }
+        else
+        {
+            return GamePersistentVariable.currentDailyRewardIndex;
+        }
+    }
+
+    public static bool IsNewDay()
+    {
+        long lastTimestampClaimDailyReward = DataUtility.Load<long>("last_timestamp_claim_daily_reward", 0);
+
+        if (lastTimestampClaimDailyReward == 0)
+        {
+            return true;
+        }
+        else
+        {
+            long currentTimestamp = new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds();
+
+            DateTimeOffset firstOffset = DateTimeOffset.FromUnixTimeSeconds(lastTimestampClaimDailyReward).Date;
+            DateTimeOffset secondOffset = DateTimeOffset.FromUnixTimeSeconds(currentTimestamp).Date;
+
+            return firstOffset != secondOffset;
+        }
+    }
+
+    public static bool IsClaimedDailyReward(int day)
+    {
+        return DataUtility.Load($"is_claim_daily_reward_day_{day}", false);
+    }
+
+    public static bool IsClaimedTodayDailyReward()
+    {
+        return DataUtility.Load("is_claim_today_daily_reward", false);
     }
 }

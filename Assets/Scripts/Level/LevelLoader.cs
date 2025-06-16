@@ -44,12 +44,15 @@ public class LevelLoader : MonoBehaviour
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
     public static event Action<bool> enableSwipingEvent;
+    public static event Action<float> setTargetOrthographicSizeEvent;
+    public static event Action<bool> showLoadLevelErrorEvent;
     #endregion
 
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
         LosePopup.replayLevelEvent += Replay;
+        ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
         DebugPopup.nextLevelEvent += NextLevel;
         DebugPopup.prevLevelEvent += PrevLevel;
@@ -57,6 +60,7 @@ public class LevelLoader : MonoBehaviour
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
+        LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
@@ -66,12 +70,15 @@ public class LevelLoader : MonoBehaviour
         _maxLevel = levelDataContainer.MaxLevel;
 
         GoLevel(currentLevel.Value);
+
+        GamePersistentVariable.hasPlayerReachedGameplay = true;
     }
 
     void OnDestroy()
     {
         PausePopup.replayLevelEvent -= Replay;
         LosePopup.replayLevelEvent -= Replay;
+        ReplayPopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
         DebugPopup.nextLevelEvent -= NextLevel;
         DebugPopup.prevLevelEvent -= PrevLevel;
@@ -79,14 +86,28 @@ public class LevelLoader : MonoBehaviour
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
+        LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
 
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
 
     #region LEVEL
-    private async Task LoadLevel()
+    private async void LoadLevel()
     {
+        // // NO INTERNET
+        // if (Application.internetReachability == NetworkReachability.NotReachable)
+        // {
+        //     showLoadLevelErrorEvent?.Invoke(true);
+
+        //     return;
+        // }
+        // else
+        // {
+        //     showLoadLevelErrorEvent?.Invoke(false);
+        // }
+        // //
+
         int nextLevel = 1;
 
         bool isLoopLevel = false;
@@ -137,6 +158,8 @@ public class LevelLoader : MonoBehaviour
 
         setLevelNumberEvent?.Invoke();
 
+        nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
+
         string levelPrefab = $"Level {nextLevel}";
 
         // A/B TEST LEVEL 4
@@ -153,6 +176,21 @@ public class LevelLoader : MonoBehaviour
                 levelPrefab = $"Level {nextLevel} - Variant 2";
             }
         }
+
+        // // REMOTE LEVELS
+        // if (nextLevel > 10)
+        // {
+        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
+        //     {
+        //         showLoadLevelErrorEvent?.Invoke(true);
+
+        //         return;
+        //     }
+        //     else
+        //     {
+        //         showLoadLevelErrorEvent?.Invoke(false);
+        //     }
+        // }
 
         AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
 
@@ -188,6 +226,21 @@ public class LevelLoader : MonoBehaviour
                     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
                 }
+
+                // // GENERATE CONVEX COLLIDERS
+                // for (int i = 0; i < pieces.Count; i++)
+                // {
+                //     BasicObjectPart piece = pieces[i];
+                //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
+                //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
+
+                //     if (!pieceCollider.convex)
+                //     {
+                //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
+
+                //         Destroy(pieceCollider);
+                //     }
+                // }
 
 
 
@@ -278,15 +331,13 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
-                {
-                    DelayShowBoosterSuggest();
-                }
+                ShowSuggestion(nextLevel, isLoopLevel);
 
-                if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
-                {
-                    DelayShowIAPSuggestion();
-                }
+                #region EVENT ITEMS
+                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
+
+                CoinChallengeGameplayUI.Instance.SetNumber();
+                #endregion
             }
         };
 
@@ -311,6 +362,8 @@ public class LevelLoader : MonoBehaviour
         startLevelEvent?.Invoke();
 
         LoadLevel();
+
+        GamePersistentVariable.isLevelDirty = false;
     }
 
     private void NextLevel()
@@ -585,7 +638,7 @@ public class LevelLoader : MonoBehaviour
 
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
-            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f, ease: Ease.InOutSine));
         }
         catch (System.Exception)
         {
@@ -675,9 +728,92 @@ public class LevelLoader : MonoBehaviour
         Vector3 currentCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
         Vector3 newCenter = -currentCenter / _currentLevelContainer.transform.localScale.x;
 
-        float halfDistance = (maxY - minY) / 2;
-        float shaderMinY = newCenter.y - halfDistance;
-        float shaderMaxY = newCenter.y + halfDistance;
+        if (!_isSetLevelGradientBound)
+        {
+            SetLevelGradientMinMaxIn(newCenter, minY, maxY);
+
+            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
+        }
+
+        // float halfDistance = (maxY - minY) / 2;
+        // float shaderMinY = newCenter.y - halfDistance;
+        // float shaderMaxY = newCenter.y + halfDistance;
+
+        // if (!_isSetLevelGradientBound)
+        // {
+        //     if (_pieces != null)
+        //     {
+        //         for (int i = 0; i < _pieces.Length; i++)
+        //         {
+        //             if (_pieces[i] != null)
+        //             {
+        //                 _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
+        //             }
+        //         }
+
+        //         _isSetLevelGradientBound = true;
+        //     }
+        // }
+
+        return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
+    }
+    #endregion
+
+    #region LEVEL SETUP
+    private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
+    {
+        bool isScaleByHeight = false;
+
+        float maxExpectedLevelSize = expectedLevelSize.x;
+
+        if (expectedLevelSize.y > 1.05f * maxExpectedLevelSize)
+        {
+            maxExpectedLevelSize = expectedLevelSize.y;
+
+            isScaleByHeight = true;
+        }
+
+        bool isThreeDimensionEqual = Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f;
+        // || Mathf.Abs(expectedLevelSize.y - expectedLevelSize.z) < 0.5f;
+
+        if (expectedLevelSize.z > maxExpectedLevelSize)
+        {
+            maxExpectedLevelSize = 1f * expectedLevelSize.z;
+
+            isScaleByHeight = false;
+        }
+
+        Camera mainCamera = Camera.main;
+
+        float expectedScreenWidth = 1.5f * maxExpectedLevelSize;
+        float expectedScreenHeight = 3f * maxExpectedLevelSize;
+
+        if (!isScaleByHeight)
+        {
+            expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
+        }
+
+        float targetOrthographicSize = expectedScreenHeight / 2f;
+
+        // 3 dimesion equal
+        if (isThreeDimensionEqual)
+        {
+            targetOrthographicSize *= 1.3f;
+        }
+
+        setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
+
+        GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
+    }
+
+    private void SetLevelGradientMinMaxIn(Vector3 levelCenter, float minWorldY, float maxWorldY)
+    {
+        float halfDistance = (maxWorldY - minWorldY) / 2;
+        float shaderMinY = levelCenter.y - halfDistance;
+        float shaderMaxY = levelCenter.y + halfDistance;
+
+        shaderMinY = Mathf.Min(shaderMinY, 0);
+        shaderMaxY = Mathf.Max(shaderMaxY, 1);
 
         if (!_isSetLevelGradientBound)
         {
@@ -694,12 +830,49 @@ public class LevelLoader : MonoBehaviour
                 _isSetLevelGradientBound = true;
             }
         }
-
-        return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
     }
     #endregion
 
     #region BOOSTER SUGGESTION
+    private void ShowSuggestion(int nextLevel, bool isLoopLevel)
+    {
+        int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
+
+        if (randomSuggestionIndex == 0)
+        {
+            if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+            {
+                DelayShowDoubleScrewBoxesSuggestion();
+            }
+            else
+            {
+                if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+                {
+                    DelayShowIAPSuggestion();
+                }
+            }
+        }
+        else
+        {
+            if (IsShowIAPSuggestion(nextLevel, isLoopLevel))
+            {
+                DelayShowIAPSuggestion();
+            }
+            else
+            {
+                if (IsShowDoubleScrewBoxesSuggestion(nextLevel))
+                {
+                    DelayShowDoubleScrewBoxesSuggestion();
+                }
+            }
+        }
+
+        // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
+        // {
+        //     DelayShowBoosterSuggest();
+        // }
+    }
+
     private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
     {
         // if (isLoopLevel)
@@ -716,6 +889,34 @@ public class LevelLoader : MonoBehaviour
         }
 
         if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
+        {
+            return false;
+        }
+
+        return true;
+    }
+
+    private bool IsShowDoubleScrewBoxesSuggestion(int level)
+    {
+        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
+        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 1);
+
+        if (!remoteConfigIsShowBoosterSuggestion)
+        {
+            return false;
+        }
+
+        if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
+        {
+            return false;
+        }
+
+        if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
+        {
+            return false;
+        }
+
+        if (!GamePersistentVariable.isEnableRewardedAds)
         {
             return false;
         }
@@ -756,6 +957,16 @@ public class LevelLoader : MonoBehaviour
         _tweens.Add(Tween.Delay(3).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
+        }));
+    }
+
+    private void DelayShowDoubleScrewBoxesSuggestion()
+    {
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
         }));
     }
 

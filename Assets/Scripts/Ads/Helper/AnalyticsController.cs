@@ -700,7 +700,13 @@ public enum ActionWatchVideo
     UnlockScrewBox,
     SkipLevel,
     MultiplyCoinWinLevel,
-    BoosterSuggestion
+    BoosterSuggestion,
+    ClaimDoubleScrewBoxes,
+    DailyReward,
+    StarChest,
+    LevelChest,
+    SpaceRace,
+    CoinChallenge
 }
 
 public enum ActionShowInter

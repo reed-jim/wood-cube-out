@@ -11,12 +11,15 @@ public class IAPPackageUI : MonoBehaviour
     [SerializeField] private TMP_Text breakObjectQuantityText;
     [SerializeField] private TMP_Text clearHolesQuantityText;
     [SerializeField] private TMP_Text priceText;
+    [SerializeField] private TMP_Text timeCounterText;
     [SerializeField] private Button buyButton;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isContainRemoveAd;
 
     [SerializeField] private IAPPackageData _packageData;
+    [SerializeField] private bool isSalePack;
+    [SerializeField] private SaleIAPPackType packType;
 
     #region EVENT
     public static event Action<string> buyIAPEvent;
@@ -27,16 +30,22 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        // SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
+        // SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
         buyButton.onClick.AddListener(Buy);
 
         Setup(_packageData);
+
+        // UpdateVisibility();
     }
 
     void OnDestroy()
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        // SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
+        // SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }
 
     public void Setup(IAPPackageData data)
@@ -100,5 +109,34 @@ public class IAPPackageUI : MonoBehaviour
         // {
         //     gameObject.SetActive(false);
         // }
+    }
+
+    private void UpdateVisibility()
+    {
+        if (!isSalePack)
+        {
+            return;
+        }
+
+        try
+        {
+            gameObject.SetActive(GamePersistentVariable.isShowSalePacks[packType]);
+        }
+        catch (System.Exception)
+        {
+
+        }
+    }
+
+    private void UpdateLifeTime(double seconds)
+    {
+        try
+        {
+            timeCounterText.text = $"{CommonUtil.ToHHMMSS(seconds)}";
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 }

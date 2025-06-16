@@ -174,9 +174,9 @@ public static class DataUtility
                 return defaultValue;
             }
         }
-        catch
+        catch (Exception e)
         {
-
+            
         }
 
         return defaultValue;

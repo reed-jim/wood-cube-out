@@ -31,9 +31,10 @@ public class ResourceEarnPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        BoosterSuggestPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        CompensatePopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
         DailyRewardItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        GoldPassMilestoneItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        BasePopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
+        WeeklyChallengeUIItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
@@ -46,9 +47,10 @@ public class ResourceEarnPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
-        BoosterSuggestPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
-        CompensatePopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         DailyRewardItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        GoldPassMilestoneItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        BasePopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
+        WeeklyChallengeUIItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 
@@ -57,6 +59,8 @@ public class ResourceEarnPopup : BasePopup
         base.Hide(onCompletedAction: () =>
         {
             showResourcesEarnPopupEvent?.Invoke(false);
+
+            GamePersistentVariable.isChestOpenning = false;
         });
 
         if (_coinQuantity > 0)
@@ -90,6 +94,13 @@ public class ResourceEarnPopup : BasePopup
             validResourceGroups.Add(resourceGroups[0]);
 
             _isRemoveAds = true;
+        }
+
+        if (GamePersistentVariable.isUnlockedAllScrewBoxes)
+        {
+            validResourceGroups.Add(resourceGroups[5]);
+
+            GamePersistentVariable.isUnlockedAllScrewBoxes = false;
         }
 
         if (coinQuantity > 0)

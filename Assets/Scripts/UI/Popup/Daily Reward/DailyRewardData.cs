@@ -9,10 +9,12 @@ public class DailyRewardData : ScriptableObject
     public int CoinQuantity
     {
         get => coinQuantity;
+        set => coinQuantity = value;
     }
 
     public int[] BoosterQuantities
     {
         get => boosterQuantities;
+        set => boosterQuantities = value;
     }
 }

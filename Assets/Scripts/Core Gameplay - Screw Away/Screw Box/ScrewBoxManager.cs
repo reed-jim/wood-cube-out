@@ -148,7 +148,7 @@ public class ScrewBoxManager : MonoBehaviour
                 screwPorts[i].Screw = null;
             }
         }
-        
+
         GamePersistentVariable.numHolesAdded = 0;
 
         int toRemoveStartIndex = 0;
@@ -175,7 +175,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[i].transform.lossyScale.x;
 
             screwPorts[i].transform.position = screwPortPosition;
         }
@@ -215,7 +215,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            screwPortPosition.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[i].transform.lossyScale.x;
 
             screwPorts[i].transform.position = screwPortPosition;
         }
@@ -373,7 +373,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
 
-            if (numScrewPortsEmpty <= 1 && !_isCheckingLose)
+            if (numScrewPortsEmpty <= 0 && !_isCheckingLose)
             {
                 _tweens.Add(Tween.Delay(3).OnComplete(() =>
                 {
@@ -476,7 +476,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.IsInTransition = true;
 
-        _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
+        _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f).OnComplete(() =>
         {
             screwBox.IsInTransition = false;
 
@@ -548,7 +548,7 @@ public class ScrewBoxManager : MonoBehaviour
                 // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
                 // destination.z = -0.001f * index;
 
-                _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f)
                 .OnComplete(() =>
                 {
                     screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
@@ -588,7 +588,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
                 else
                 {
-                    _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                    _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f)
                     .OnComplete(() =>
                     {
                         screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
@@ -600,6 +600,31 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         _isSpawnScrewBoxFirstTimeInLevel = false;
+    }
+
+    public void UnlockAllScrewBoxes()
+    {
+        int totalBoxUnlocked = 0;
+
+        for (int i = 0; i < screwBoxs.Length; i++)
+        {
+            if (screwBoxs[i] == null)
+            {
+                continue;
+            }
+
+            if (screwBoxs[i].IsLocked)
+            {
+                screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
+
+                totalBoxUnlocked++;
+
+                if (totalBoxUnlocked == 2)
+                {
+                    break;
+                }
+            }
+        }
     }
     #endregion
 
@@ -766,15 +791,22 @@ public class ScrewBoxManager : MonoBehaviour
     #region BOOSTER
     private void LoosenScrewOnObjectBroken(BaseScrew screw)
     {
-        ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: false);
+        try
+        {
+            ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(screw.Faction, isIncludeScrewPorts: false);
 
-        if (screwBoxSlot != null)
-        {
-            looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            if (screwBoxSlot != null)
+            {
+                looseScrewWithoutCheckingObstaclesEvent?.Invoke(screw.ScrewId, screw.Faction, screwBoxSlot);
+            }
+            else
+            {
+                screw.ForceUnscrew();
+            }
         }
-        else
+        catch (System.Exception)
         {
-            screw.ForceUnscrew();
+
         }
     }
 
@@ -798,7 +830,7 @@ public class ScrewBoxManager : MonoBehaviour
         {
             int index = i;
 
-            position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.08f;
+            position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[0].transform.lossyScale.x;
 
             _tweens.Add(Tween.Position(screwPorts[i].transform, position, duration: 0.3f)
             .OnComplete(() =>

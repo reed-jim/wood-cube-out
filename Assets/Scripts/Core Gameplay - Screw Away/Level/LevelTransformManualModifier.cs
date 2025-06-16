@@ -1,16 +1,30 @@
+using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 
 public class LevelTransformManualModifier : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private bool isApply;
+
+    [SerializeField] private Vector3 offset;
+
+    private List<Tween> _tweens;
+
+    void Awake()
     {
-        
+        _tweens = new List<Tween>();
+
+        if (isApply)
+        {
+            _tweens.Add(Tween.Delay(3f).OnComplete(() =>
+            {
+                transform.position += offset;
+            }));
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnDestroy()
     {
-        
+        CommonUtil.StopAllTweens(_tweens);
     }
 }

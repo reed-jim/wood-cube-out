@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,12 +30,16 @@ namespace Saferio.Util
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private RectTransform content;
 
+        private List<Tween> _tweens;
         private List<string> _cachedItemList;
         private List<RectTransform> _items;
         private List<TMP_Text> _texts;
 
         [Header("CUSTOMIZE")]
+        [SerializeField] private int numVisibleItem = 4;
         [SerializeField] private int poolSize;
+        [SerializeField] private int expectedMaxSize;
+        [SerializeField] private bool isAutoSetItemSize;
 
         #region PRIVATE FIELD
         private Vector2 _canvasSize;
@@ -50,6 +55,10 @@ namespace Saferio.Util
 
         private float _currentHighestItemPositionY;
         private float _currentLowestItemPositionY;
+
+
+
+        private Coroutine _poolingScrollCoroutine;
 
 
 
@@ -74,15 +83,30 @@ namespace Saferio.Util
 
         private void Awake()
         {
+            _tweens = new List<Tween>();
+
             _cachedItemList = new List<string>();
 
-            _canvasSize = canvas.sizeDelta;
+            // _canvasSize = canvas.sizeDelta;
 
             CreatePool();
 
             GenerateUI();
+        }
 
-            StartCoroutine(ObjectPoolingScrolling());
+        void OnEnable()
+        {
+            if (_poolingScrollCoroutine != null)
+            {
+                StopCoroutine(_poolingScrollCoroutine);
+            }
+
+            _poolingScrollCoroutine = StartCoroutine(ObjectPoolingScrolling());
+        }
+
+        void OnDestroy()
+        {
+            CommonUtil.StopAllTweens(_tweens);
         }
 
         private void CreatePool()
@@ -115,7 +139,7 @@ namespace Saferio.Util
 
             _viewAreaSize = viewArea.sizeDelta;
 
-            _itemSize = new Vector2(0.9f * _viewAreaSize.x, 0.25f * _viewAreaSize.y);
+            _itemSize = new Vector2(0.9f * _viewAreaSize.x, 1f / numVisibleItem * _viewAreaSize.y);
 
             // UIUtil.SetSize(content, new Vector2(_canvasSize.x, 1.4f * (poolSize * _itemSize.y + (poolSize - 1) * 0.1f * _itemSize.y)));
             UIUtil.SetSize(content, _viewAreaSize);
@@ -123,7 +147,10 @@ namespace Saferio.Util
 
             for (int i = 0; i < _items.Count; i++)
             {
-                UIUtil.SetSize(_items[i], _itemSize);
+                if (isAutoSetItemSize)
+                {
+                    UIUtil.SetSize(_items[i], _itemSize);
+                }
 
 
 
@@ -157,10 +184,12 @@ namespace Saferio.Util
             _topMostVisibleItemIndex = 0;
             _bottomMostVisibleItemIndex = poolSize - 1;
 
-            _maxScrollPositionY = (poolSize - _bottomMostVisibleItemIndex) * _itemSize.y;
+            // _maxScrollPositionY = (poolSize - _bottomMostVisibleItemIndex) * _itemSize.y;
 
-            _maxScrollPositionY = (poolSize - 3) * _items[0].sizeDelta.y;
-            _maxScrollPositionY = 0.5f * _viewAreaSize.y;
+            // _maxScrollPositionY = (poolSize - 3) * _items[0].sizeDelta.y;
+            // _maxScrollPositionY = 0.5f * _viewAreaSize.y;
+
+            _maxScrollPositionY = Mathf.Max(0, (expectedMaxSize - numVisibleItem) * _items[0].sizeDelta.y);
             _minScrollPositionY = 0;
 
             _currentHighestItemPositionY = _items.First().localPosition.y;
@@ -185,95 +214,134 @@ namespace Saferio.Util
             }
         }
 
+        public void SetMaxItemNumber(int maxItem)
+        {
+            int neededItem = maxItem + 4;
+
+            _maxScrollPositionY = Mathf.Max(0, (neededItem - numVisibleItem) * _items[0].sizeDelta.y);
+        }
+
+        public void ScrollTo(float positionY)
+        {
+            float overScrollDistance = content.localPosition.y > positionY ? -20 : 20;
+
+            CommonUtil.StopAllTweens(_tweens);
+
+            scrollRect.vertical = false;
+
+            _tweens.Add(
+                Tween.LocalPositionY(content, positionY + overScrollDistance, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.LocalPositionY(content, positionY, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        scrollRect.vertical = true;
+                    })
+                    );
+                })
+            );
+        }
+
+        public void ScrollToImmediately(float positionY)
+        {
+            content.localPosition = content.localPosition.ChangeY(positionY);
+        }
+
         private IEnumerator ObjectPoolingScrolling()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
             yield return waitForSeconds;
 
+            bool isSkip;
+
             while (true)
             {
+                isSkip = false;
 
                 ScrollBackToValidPosition(300);
 
                 ScrollDirection scrollDirection = GetScrollDirection();
 
-                for (int i = 0; i < poolSize; i++)
+                // if (content.localPosition.y > 4000)
+                // {
+                //     content.localPosition = content.localPosition.ChangeY(content.localPosition.y - 3000);
+
+                //     for (int i = 0; i < poolSize; i++)
+                //     {
+                //         _items[i].localPosition = _items[i].localPosition.ChangeY(_items[i].localPosition.y + 3000);
+                //     }
+
+                //     _currentHighestItemPositionY += 3000;
+                //     _currentLowestItemPositionY += 3000;
+
+                //     isSkip = true;
+                // }
+
+                if (!isSkip)
                 {
-                    bool isOutsideTop = false;
-                    bool isOutsideBottom = false;
-
-                    if (_items[i].localPosition.y - 0.5f * _items[i].sizeDelta.y + content.localPosition.y > 0.5f * _viewAreaSize.y)
+                    for (int i = 0; i < poolSize; i++)
                     {
-                        int index = i;
+                        bool isOutsideTop = false;
+                        bool isOutsideBottom = false;
 
-                        if (IsHighestItem(index))
+                        if (_items[i].localPosition.y - 0.5f * _items[i].sizeDelta.y + content.localPosition.y > 0.5f * _viewAreaSize.y)
                         {
-                            isOutsideTop = true;
+                            int index = i;
+
+                            if (IsHighestItem(index))
+                            {
+                                isOutsideTop = true;
+                            }
+                        }
+
+                        if (_items[i].localPosition.y + 0.5f * _items[i].sizeDelta.y + content.localPosition.y < -0.5f * _viewAreaSize.y)
+                        {
+                            int index = i;
+
+                            if (IsLowestItem(index))
+                            {
+                                isOutsideBottom = true;
+                            }
+                        }
+
+                        if (isOutsideTop && scrollDirection == ScrollDirection.Up && _scrollViewItems[i].IsValidAtIndex(_bottomMostVisibleItemIndex + 1))
+                        {
+                            UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
+
+                            _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
+                            _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
+
+                            _bottomMostVisibleItemIndex++;
+                            _topMostVisibleItemIndex++;
+
+                            _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
+
+                            // _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
+
+                            break;
+                        }
+
+                        if (isOutsideBottom && scrollDirection == ScrollDirection.Down && _scrollViewItems[i].IsValidAtIndex(_topMostVisibleItemIndex - 1))
+                        {
+                            UIUtil.SetLocalPositionY(_items[i], _currentHighestItemPositionY + 1.1f * _items[i].sizeDelta.y);
+
+                            _currentHighestItemPositionY += 1.1f * _items[i].sizeDelta.y;
+                            _currentLowestItemPositionY += 1.1f * _items[i].sizeDelta.y;
+
+                            _bottomMostVisibleItemIndex--;
+                            _topMostVisibleItemIndex--;
+
+                            _scrollViewItems[i].Refresh(_topMostVisibleItemIndex);
+
+                            // _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
+
+                            break;
                         }
                     }
-
-                    if (_items[i].localPosition.y + 0.5f * _items[i].sizeDelta.y + content.localPosition.y < -0.5f * _viewAreaSize.y)
-                    {
-                        int index = i;
-
-                        if (IsLowestItem(index))
-                        {
-                            isOutsideBottom = true;
-                        }
-                    }
-
-                    if (isOutsideTop && scrollDirection == ScrollDirection.Up && _scrollViewItems[i].IsValidAtIndex(_bottomMostVisibleItemIndex + 1))
-                    {
-                        UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
-
-                        _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-                        _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                        _bottomMostVisibleItemIndex++;
-                        _topMostVisibleItemIndex++;
-
-                        _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
-
-                        _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                        break;
-                    }
-
-                    if (isOutsideBottom && scrollDirection == ScrollDirection.Down && _scrollViewItems[i].IsValidAtIndex(_topMostVisibleItemIndex - 1))
-                    {
-                        UIUtil.SetLocalPositionY(_items[i], _currentHighestItemPositionY + 1.1f * _items[i].sizeDelta.y);
-
-                        _currentHighestItemPositionY += 1.1f * _items[i].sizeDelta.y;
-                        _currentLowestItemPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                        _bottomMostVisibleItemIndex--;
-                        _topMostVisibleItemIndex--;
-
-                        _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
-
-                        _minScrollPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                        break;
-                    }
-
-                    // if (isOutsideTop && scrollDirection == ScrollDirection.Up && IsValidScrollingNext(isScrollUp: true))
-                    // {
-                    //     UIUtil.SetLocalPositionY(_items[i], _currentLowestItemPositionY - 1.1f * _items[i].sizeDelta.y);
-
-                    //     _currentHighestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-                    //     _currentLowestItemPositionY -= 1.1f * _items[i].sizeDelta.y;
-
-                    //     _bottomMostVisibleItemIndex++;
-                    //     _topMostVisibleItemIndex++;
-
-                    //     _scrollViewItems[i].Refresh(_bottomMostVisibleItemIndex);
-
-                    //     _maxScrollPositionY += 1.1f * _items[i].sizeDelta.y;
-
-                    //     break;
-                    // }
                 }
+
 
 
 
@@ -550,20 +618,24 @@ namespace Saferio.Util
             if (content.localPosition.y < _minScrollPositionY - scrollOverLimitTolerance && scrollRect.vertical)
             {
                 scrollRect.vertical = false;
+                scrollRect.inertia = false;
 
-                Tween.LocalPositionY(content, _minScrollPositionY, duration: 0.3f).OnComplete(() =>
+                Tween.LocalPositionY(content, _minScrollPositionY, duration: 0.5f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
+                    scrollRect.inertia = true;
                 });
             }
 
             if (content.localPosition.y > _maxScrollPositionY + scrollOverLimitTolerance && scrollRect.vertical)
             {
                 scrollRect.vertical = false;
+                scrollRect.inertia = false;
 
-                Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.3f).OnComplete(() =>
+                Tween.LocalPositionY(content, _maxScrollPositionY, duration: 0.5f).OnComplete(() =>
                 {
                     scrollRect.vertical = true;
+                    scrollRect.inertia = true;
                 });
             }
         }

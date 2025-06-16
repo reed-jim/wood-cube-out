@@ -11,11 +11,13 @@ public class BasePopup : MonoBehaviour
     [Header("UI")]
     [SerializeField] protected RectTransform container;
     [SerializeField] protected Button closeButton;
+    [SerializeField] protected Button detectClickOutsideButton;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
+    [SerializeField] protected bool isShowingInterAdOnInteract;
 
     #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
@@ -24,12 +26,15 @@ public class BasePopup : MonoBehaviour
     protected List<Tween> _tweens;
     #endregion
 
+    #region EVENT
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    #endregion
 
     private void Awake()
     {
@@ -44,10 +49,16 @@ public class BasePopup : MonoBehaviour
         RevivePopup.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         PausePopup.switchRouteEvent += OnRouteSwitched;
+        UserLivesUI.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
             closeButton.onClick.AddListener(Hide);
+        }
+
+        if (detectClickOutsideButton != null)
+        {
+            detectClickOutsideButton.onClick.AddListener(Hide);
         }
 
         RegisterMoreEvent();
@@ -87,6 +98,7 @@ public class BasePopup : MonoBehaviour
         RevivePopup.switchRouteEvent -= OnRouteSwitched;
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
         PausePopup.switchRouteEvent -= OnRouteSwitched;
+        UserLivesUI.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 
@@ -127,6 +139,18 @@ public class BasePopup : MonoBehaviour
         }
     }
 
+    // private void OnRouteSwitchedWithoutAd(ScreenRoute route)
+    // {
+    //     if (route == this.route)
+    //     {
+    //         ShowWithoutAd();
+    //     }
+    //     else
+    //     {
+
+    //     }
+    // }
+
     protected virtual void Show(Action onCompletedAction = null)
     {
         if (_isInTransition)
@@ -134,6 +158,30 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
+        if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+        {
+            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
+        }
+        else
+        {
+            ActualShowAfterAd(onCompletedAction);
+        }
+
+        _isInTransition = true;
+    }
+
+    // protected void ShowWithoutAd(Action onCompletedAction = null)
+    // {
+    //     if (_isInTransition)
+    //     {
+    //         return;
+    //     }
+
+    //     ActualShowAfterAd(onCompletedAction);
+    // }
+
+    private void ActualShowAfterAd(Action onCompletedAction = null)
+    {
         gameObject.SetActive(true);
 
         _transitionAnimation.Show(OnTransitionCompleted);
@@ -167,19 +215,46 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            _transitionAnimation.Hide(OnTransitionCompleted);
+            if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+            {
+                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
+            }
+            else
+            {
+                ActualHideAfterAd(onCompletedAction);
+            }
 
-            popupHideEvent?.Invoke();
-
-            _isShown = false;
             _isInTransition = true;
-
-            AfterHide();
-
-            SoundManager.Instance.PlaySoundClose();
-
-            enableSwipingScreenEvent?.Invoke(true);
         }
+    }
+
+    protected virtual void HideWithoutAd(Action onCompletedAction = null)
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+
+        if (_isShown)
+        {
+            ActualHideAfterAd(onCompletedAction);
+        }
+    }
+
+    private void ActualHideAfterAd(Action onCompletedAction = null)
+    {
+        _transitionAnimation.Hide(OnTransitionCompleted);
+
+        popupHideEvent?.Invoke();
+
+        _isShown = false;
+        _isInTransition = true;
+
+        AfterHide();
+
+        SoundManager.Instance.PlaySoundClose();
+
+        enableSwipingScreenEvent?.Invoke(true);
 
         void OnTransitionCompleted()
         {
@@ -247,12 +322,24 @@ public class BasePopup : MonoBehaviour
 
             bool clickedOutside = true;
 
+            RectTransform[] children = TransformUtil.GetComponentsFromAllChildren<RectTransform>(transform).ToArray();
+
+            bool isFound = false;
+
             foreach (var result in raycastResults)
             {
-                if (result.gameObject == container.gameObject)
+                for (int i = 0; i < children.Length; i++)
                 {
-                    clickedOutside = false;
+                    if (result.gameObject == children[i].gameObject)
+                    {
+                        clickedOutside = false;
 
+                        break;
+                    }
+                }
+
+                if (isFound)
+                {
                     break;
                 }
             }
@@ -277,5 +364,10 @@ public class BasePopup : MonoBehaviour
     protected void InvokeShowAdNotLoadedPopupEvent()
     {
         showAdNotLoadedPopupEvent?.Invoke();
+    }
+
+    protected void InvokeShowResourcesEarnPopupPopupEvent(int coinQuantity, int[] boosterQuantites, bool isRemoveAds)
+    {
+        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);
     }
 }

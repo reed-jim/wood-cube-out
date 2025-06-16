@@ -12,30 +12,6 @@ public class BasicScrew : BaseScrew
     private Vector3 _obstacleHitPointWorld;
     #endregion
 
-    private void Update()
-    {
-        if (_isRotating)
-        {
-            transform.RotateAround(transform.forward, rotateSpeed);
-        }
-
-        // if (_isRotatingToCorrectAngleOnScrewBox)
-        // {
-        //     transform.localRotation = Quaternion.Slerp(transform.localRotation, Quaternion.Euler(_localRotationOnScrewSlot), 1f / 3);
-
-        //     stepRotateToCorrectAngleOnScrewBox++;
-
-        //     if (stepRotateToCorrectAngleOnScrewBox == 3)
-        //     {
-        //         transform.localRotation = Quaternion.Euler(_localRotationOnScrewSlot);
-
-        //         _isRotatingToCorrectAngleOnScrewBox = false;
-
-        //         stepRotateToCorrectAngleOnScrewBox = 0;
-        //     }
-        // }
-    }
-
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot)
     {
         Loose(screwId, faction, screwBoxSlot, isCheckObstacles: true);
@@ -143,8 +119,9 @@ public class BasicScrew : BaseScrew
 
             if (joint != null)
             {
+                joint.breakForce = 0;
+
                 Destroy(joint);
-                // joint.breakForce = 0;
 
                 InvokeBreakJointEvent();
             }

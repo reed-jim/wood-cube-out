@@ -20,6 +20,7 @@ public static class GameConstants
     public static string DESTROY_OBJECT_PART_FX = "Destroy Object Part Fx";
     public static string LOOSE_SCREW_FX = "LOOSE_SCREW_FX";
     public static string BOX_COMPLETED_FX = "BOX_COMPLETED_FX";
+    public static string EVENT_ITEM = "EVENT_ITEM";
     #endregion
 
     #region COMMON TEXT
@@ -65,6 +66,10 @@ public static class GameConstants
     public static string CLOSE_POPUP_SOUND = "Close Popup Sound";
     public static string UNLOCK_ADS_SCREW_BOX_SOUND = "Unlock Ads Screw Box Sound";
     public static string CLEAR_SCREW_PORTS_SOUND = "Clear Screw Ports Sound";
+    public static string COUNTING_TIME_SOUND = "Counting Time Sound";
+    public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
+    public static string OPEN_CHEST_SOUND = "Open Chest Sound";
+    public static string REWARD_ITEM_SOUND = "Reward Item Sound";
     #endregion
 
     #region ANIMATION
@@ -88,6 +93,7 @@ public static class GameConstants
 
     #region IAP
     public static string REMOVE_AD_ID = "remove_ad";
+    public static string IS_UNLOCKED_ALL_SCREW_BOXES = "IS_UNLOCKED_ALL_SCREW_BOXES";
     #endregion
 
     #region SAVE/LOAD
@@ -108,6 +114,11 @@ public static class GameConstants
     public static string IS_COLLECT_COIN_WIN_LEVEL_SET = "IS_COLLECT_COIN_WIN_LEVEL_SET";
     public static string IS_COLLECT_COIN_WIN_LEVEL = "IS_COLLECT_COIN_WIN_LEVEL";
     public static string IS_BOUGHT_HOT_DEAL = "IS_BOUGHT_HOT_DEAL";
+    #endregion
+
+    #region LIVES
+    public static string USER_LIVES_DATA = "USER_LIVES_DATA";
+    public static int DEFAULT_LIVES = 5;
     #endregion
 
     #region TRACKING
@@ -165,8 +176,50 @@ public static class GameConstants
     public static string NUM_DAY_CLAIMED_REWARD = "NUM_DAY_CLAIMED_REWARD";
     #endregion
 
+    #region ENDLESS SALE
+    public static string ENDLESS_SALE_DATA = "ENDLESS_SALE_DATA";
+    #endregion
+
     #region COMPENSATE
     public static string IS_CLAIMED_COMPENSATE_REMOVE_ADS = "IS_CLAIMED_COMPENSATE_REMOVE_ADS";
     public static string IS_CLAIMED_COMPENSATE_BIG_REWARD = "IS_CLAIMED_COMPENSATE_BIG_REWARD";
-    #endregion  
+    #endregion
+
+    #region LEADERBOARD
+    public static string DID_USER_LOGIN = "DID_USER_LOGIN";
+    public static string SELECTED_COUNTRY_INDEX = "SELECTED_COUNTRY_INDEX";
+    #endregion
+
+    #region GOLD PASS
+    public static string GOLD_PASS_DATA_CONTAINER = "GOLD_PASS_DATA_CONTAINER";
+    #endregion
+
+    #region STAR CHEST
+    public static int REQUIRE_STAR = 20;
+    #endregion 
+
+    #region CHEST LEVEL
+    public static string CHEST_LEVEL = "CHEST_LEVEL";
+    public static string STAR_LEVEL_DATA = "STAR_LEVEL_DATA";
+    #endregion
+
+    #region COIN CHALLENGE
+    public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";
+    #endregion 
+
+    #region WEEKLY CHALLENGE
+    public static string WEEKLY_CHALLENGE_DATA = "WEEKLY_CHALLENGE_DATA";
+    #endregion 
+
+    #region SPACE RACE
+    public static string SPACE_RACE_DATA = "SPACE_RACE_DATA";
+    #endregion
+
+    #region SALE IAP
+    public static string SALE_IAP_DATA = "SALE_IAP_DATA";
+    #endregion 
+
+    #region MEDAL TOURNAMENT
+    public static string MEDAL_TOURNAMENT_DATA = "MEDAL_TOURNAMENT_DATA";
+    #endregion 
 }
