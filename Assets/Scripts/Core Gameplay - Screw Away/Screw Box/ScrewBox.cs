@@ -39,6 +39,7 @@ public class ScrewBox : MonoBehaviour
     #region PRIVATE FIELD
     private List<Sequence> _sequences;
     private Vector3 _initialScale;
+    private Vector3 _initialSize;
     private bool _isInTransition;
     private bool _isPlayBoxCompleteFx;
     #endregion
@@ -100,14 +101,15 @@ public class ScrewBox : MonoBehaviour
         float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
         float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
 
-        // scaleWithWidth *= 1.25f;
-        // scaleWithHeight *= 1.25f;
+        scaleWithWidth *= 1.05f;
+        scaleWithHeight *= 1.05f;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
         transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
 
         _initialScale = transform.localScale;
+        _initialSize = screwBoxSpriteRenderer.bounds.size;
 
         _isPlayBoxCompleteFx = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_PLAY_BOX_COMPLETE_FX, true);
     }
@@ -120,24 +122,26 @@ public class ScrewBox : MonoBehaviour
 
             SoundManager.Instance.PlaySoundScrewBoxDone();
 
-            float initialPositionY = transform.position.y;
+            float initialPositionY = transform.localPosition.y;
+            float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
 
             boxLid.gameObject.SetActive(true);
 
             boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
-            float hidePositionY = transform.position.y + 8;
+            // float hidePositionY = transform.position.y + 8;
 
-            if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-            {
-                hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
-            }
+            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+            // {
+            //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+            // }
+
+            float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
 
             _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
                 .OnComplete(() =>
                 {
                     shakeCameraEvent?.Invoke();
-                    // Tween.ShakeCamera(Camera.main, strengthFactor: 0.3f, duration: closeBoxLidDuration);
 
                     if (GamePersistentVariable.IsVibrate)
                     {
@@ -171,14 +175,20 @@ public class ScrewBox : MonoBehaviour
                                 rippleFx.gameObject.SetActive(true);
                                 rippleFx.transform.position = transform.position.ChangeZ(-9);
 
-                                if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-                                {
-                                    rippleFx.transform.localScale = 0.25f * Vector3.one;
-                                }
-                                else
-                                {
-                                    rippleFx.transform.localScale = 0.5f * Vector3.one;
-                                }
+                                // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+                                // {
+                                //     rippleFx.transform.localScale = 0.25f * Vector3.one;
+                                // }
+                                // else
+                                // {
+                                //     rippleFx.transform.localScale = 0.5f * Vector3.one;
+                                // }
+
+                                float initialScale = 0.5f;
+                                float BEST_ORTHOGRAPHIC_SIZE = 20;
+
+                                rippleFx.transform.localScale =
+                                    initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
 
                                 rippleFx.Play();
                             }
@@ -191,19 +201,32 @@ public class ScrewBox : MonoBehaviour
                         playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
                     }
                 })
-                .Chain(Tween.ScaleY(transform, 0.6f * _initialScale.y, duration: scaleDownDuration)
-                .Chain(Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration).OnComplete(() =>
-                {
-                    screwBoxCompletedEvent?.Invoke(this);
-                    spawnNewScrewBoxEvent?.Invoke();
+                .Chain
+                (
+                    Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
+                    {
+                        transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
+                        transform.localPosition =
+                            transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
+                    }
+                    ).OnComplete(() =>
+                    {
+                        Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+                        Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
+                        .OnComplete(() =>
+                        {
+                            screwBoxCompletedEvent?.Invoke(this);
+                            spawnNewScrewBoxEvent?.Invoke();
 
-                    transform.position = transform.position.ChangeY(initialPositionY);
-                    transform.localScale = _initialScale;
+                            transform.position = transform.position.ChangeY(initialPositionY);
+                            transform.localScale = _initialScale;
 
-                    boxLid.gameObject.SetActive(false);
+                            boxLid.gameObject.SetActive(false);
 
-                    ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
-                })))
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+                        });
+                    })
+                )
             );
         }
     }

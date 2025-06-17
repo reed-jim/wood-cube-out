@@ -9,6 +9,7 @@ public class ChestLevelPopup : BasePopup
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private CanvasGroup claimCanvasGroup;
     [SerializeField] private Button claimButton;
+    [SerializeField] private Button continueButton;
     [SerializeField] private Button claimMultiplierButton;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
 
@@ -19,93 +20,68 @@ public class ChestLevelPopup : BasePopup
 
     private ChestLevelData _cachedchestLevelData;
 
+    public static event Action<DailyRewardData, int> showClaimRewardPopupEvent;
+    public static event Action claimChestLevelEvent;
+
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
-        claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
-        claimMultiplierButton.onClick.AddListener(ClaimX2);
+        // claimButton.onClick.AddListener(() => Claim(multiplier: 1, isSkipCheckClaimable: false));
+        // claimMultiplierButton.onClick.AddListener(ClaimX2);
+
+        continueButton.onClick.AddListener(() => HideWithoutAd());
     }
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
-
-        Refresh();
-    }
-
-    private void Refresh()
-    {
-        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{10}");
-
-        bool isClaimable = IsClaimable();
-
-        claimCanvasGroup.alpha = isClaimable ? 1 : 0.5f;
-        claimCanvasGroup.interactable = isClaimable;
-    }
-
-    private void Claim(int multiplier, bool isSkipCheckClaimable)
-    {
-        if (isSkipCheckClaimable)
+        if (IsClaimable())
         {
-            ActualClaim();
+            AutoClaimRewards();
 
             return;
         }
 
-        if (IsClaimable())
+        base.Show(onCompletedAction: () =>
         {
-            ActualClaim();
-        }
-
-        void ActualClaim()
-        {
-            int coinQuantity = multiplier * rewardData.CoinQuantity;
-            int[] boosterQuantites = rewardData.BoosterQuantities;
-
-            for (int i = 0; i < boosterQuantites.Length; i++)
-            {
-                boosterQuantites[i] *= multiplier;
-            }
-
-            userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
-            userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
-            userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
-
-            userResourcesObserver.ChangeCoin(coinQuantity);
-
-            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
-
-            _cachedchestLevelData.currentRequiredLevel += 10;
-
             Refresh();
+
+            bool isClaimable = IsClaimable();
+
+            if (isClaimable)
+            {
+                AutoClaimRewards();
+            }
+        });
+
+        _cachedchestLevelData = DataUtility.Load<ChestLevelData>(GameConstants.CHEST_LEVEL, null);
+
+        if (_cachedchestLevelData == null)
+        {
+            _cachedchestLevelData = new ChestLevelData();
+            _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
 
             DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
         }
+
+        localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{_cachedchestLevelData.currentRequiredLevel}");
     }
 
-    private void ClaimX2()
+    private void Refresh()
     {
-        if (IsClaimable())
+        _cachedchestLevelData = DataUtility.Load(GameConstants.CHEST_LEVEL, new ChestLevelData());
+
+        _tweens.Add(Tween.Custom(0, _cachedchestLevelData.currentRequiredLevel, duration: 0.0f, onValueChange: newVal =>
         {
-            AdmobAdsMax.Instance.ShowVideoReward(
-                OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
-        }
-    }
-
-    private void OnRewaredAdCompleted()
-    {
-        Claim(multiplier: 3, isSkipCheckClaimable: true);
-    }
-
-    private void ShowAdsNotLoadedPopup()
-    {
-        InvokeShowAdNotLoadedPopupEvent();
+            localizedDescription.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{(int)newVal}");
+        }));
     }
 
     private bool IsClaimable()
@@ -126,21 +102,95 @@ public class ChestLevelPopup : BasePopup
         return currentLevel.Value >= chestLevelData.currentRequiredLevel;
     }
 
+    private void AutoClaimRewards()
+    {
+        int numChest = (currentLevel.Value - _cachedchestLevelData.currentRequiredLevel) / 10 + 1;
+
+        // Avoid giving out too many chests for old users
+        numChest = 1;
+
+        _cachedchestLevelData.currentRequiredLevel = currentLevel.Value + (10 - currentLevel.Value % 10);
+
+        DataUtility.Save(GameConstants.CHEST_LEVEL, _cachedchestLevelData);
+
+        GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.LevelChest;
+        GamePersistentVariable.currentChestReason = "Chest Level";
+
+        showClaimRewardPopupEvent?.Invoke(rewardData, numChest);
+        claimChestLevelEvent?.Invoke();
+    }
+
+    private void OnClaimRewardPopupShown(bool isShow)
+    {
+        // float start = 0;
+        // float end = 1;
+
+        // if (isShow)
+        // {
+        //     start = 1;
+        //     end = 0;
+
+        //     popupCanvasGroup.interactable = false;
+        // }
+
+        // _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        // {
+        //     popupCanvasGroup.alpha = newVal;
+        // }));
+    }
+
     private void OnResourcesEarnPopupShown(bool isShow)
     {
         float start = 0;
         float end = 1;
 
-        if (isShow)
+        if (!isShow)
         {
-            start = 1;
-            end = 0;
+            GamePersistentVariable.isClaimedLevelChest = true;
         }
 
-        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        if (!gameObject.activeInHierarchy)
         {
-            popupCanvasGroup.alpha = newVal;
-        }));
+            return;
+        }
+
+        if (isShow)
+        {
+            return;
+
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        if (!isShow)
+        {
+            Refresh();
+        }
+
+        if (isShow)
+        {
+            _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+            {
+                popupCanvasGroup.alpha = newVal;
+            })
+            .OnComplete(() =>
+                {
+                    if (!isShow)
+                    {
+                        popupCanvasGroup.interactable = true;
+                    }
+                })
+            );
+        }
+        else
+        {
+            popupCanvasGroup.alpha = 1;
+            popupCanvasGroup.interactable = true;
+
+            HideImmediately();
+        }
     }
 }
 

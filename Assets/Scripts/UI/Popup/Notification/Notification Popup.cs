@@ -25,6 +25,7 @@ public class NotificationPopup : BasePopup
         CompensatePopup.showNotificationEvent += ShowNotification;
         BackupPopup.showNotificationEvent += ShowNotification;
         MenuScreen.showNotificationEvent += ShowNotification;
+        MenuScreen.showNotificationWithParamEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -42,6 +43,7 @@ public class NotificationPopup : BasePopup
         CompensatePopup.showNotificationEvent -= ShowNotification;
         BackupPopup.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationEvent -= ShowNotification;
+        MenuScreen.showNotificationWithParamEvent -= ShowNotification;
 
         showNotificationEvent -= ShowNotification;
     }
@@ -50,6 +52,8 @@ public class NotificationPopup : BasePopup
     {
         base.Show(onCompletedAction);
 
+        blackBackground.gameObject.SetActive(false);
+
         _tweens.Add(Tween.Delay(duration: 0.3f)
             .OnComplete(() =>
             {
@@ -57,8 +61,6 @@ public class NotificationPopup : BasePopup
 
                 if (numActivePopup < 3)
                 {
-                    blackBackground.gameObject.SetActive(false);
-
                     return;
                 }
 
@@ -78,9 +80,9 @@ public class NotificationPopup : BasePopup
         if (blackBackground.gameObject.activeSelf)
         {
             _tweens.Add(Tween.Alpha(blackBackground, 0, duration: 0.3f).OnComplete(() =>
-       {
-           blackBackground.gameObject.SetActive(false);
-       }));
+            {
+                blackBackground.gameObject.SetActive(false);
+            }));
         }
     }
 
@@ -88,6 +90,19 @@ public class NotificationPopup : BasePopup
     {
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
+
+        Show();
+    }
+
+    private void ShowNotification(string titleTranslation, string descriptionTranslation, string parameter, string value)
+    {
+        localizedTitle.TranslationName = titleTranslation;
+        localizedDescription.TranslationName = descriptionTranslation;
+
+        _tweens.Add(Tween.Delay(0.1f).OnComplete(() =>
+        {
+            localizedDescription.UpdateTranslationWithParameter(parameter, value);
+        }));
 
         Show();
     }

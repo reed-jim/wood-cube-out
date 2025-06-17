@@ -29,7 +29,10 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform loadLevelInProgressContainer;
     [SerializeField] private CanvasGroup loadLevelInProgressCanvasGroup;
     [SerializeField] private RectTransform rotatingLoadingIcon;
+    [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
+
+    [SerializeField] private IntVariable currentLevel;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float startDelay;
@@ -70,6 +73,8 @@ public class SceneTransition : MonoBehaviour
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
+
+        blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     private void OnDestroy()
@@ -125,10 +130,10 @@ public class SceneTransition : MonoBehaviour
         //     return;
         // }
 
-        if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
-        {
-            LoadingLevelInProgress();
-        }
+        // if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
+        // {
+        //     LoadingLevelInProgress();
+        // }
 
         if (_waitForLevelLoadedCoroutine != null)
         {
@@ -154,7 +159,7 @@ public class SceneTransition : MonoBehaviour
         }
         else
         {
-            if (GamePersistentVariable.remoteConfigIsShowMREC)
+            if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
             {
                 LoadingLevelInProgress();
             }
@@ -175,6 +180,17 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
+        if (_isFirstTimeEnterScene)
+        {
+            loadLevelInProgressContainer.gameObject.SetActive(false);
+
+            _isFirstTimeEnterScene = false;
+
+            return;
+        }
+
+
+
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
         loadLevelInProgressCanvasGroup.alpha = 1;
@@ -190,14 +206,32 @@ public class SceneTransition : MonoBehaviour
 
         float minWaitTime = 2;
 
-        if (GamePersistentVariable.remoteConfigIsShowMREC)
+        if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
         {
-            minWaitTime = 3;
+            minWaitTime = 4.5f;
         }
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
             AdmobAdsMax.Instance.HideMRec();
+
+            // double inter
+            if (!_isFirstTimeEnterScene)
+            {
+                blackBackgroundToPassPolicy.gameObject.SetActive(true);
+
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
+                    onDoubleInterClosed: () =>
+                    {
+                        blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                    },
+                    isShowBreakAds: true
+                );
+            }
+            else
+            {
+                _isFirstTimeEnterScene = false;
+            }
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
             {

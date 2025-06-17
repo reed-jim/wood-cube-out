@@ -37,7 +37,6 @@ public class PausePopup : BasePopup
 
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
-        openReviewIAPPopupButton.onClick.AddListener(OpenReviewIAPPopup);
         turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
         turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
@@ -50,35 +49,49 @@ public class PausePopup : BasePopup
 
     private void ReturnHome()
     {
-        // avoid spamming
-        returnHomeButton.interactable = false;
-        replayLevelButton.interactable = false;
-
-        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
-
-        // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
+            switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
         }
+        else
+        {
+            // avoid spamming
+            returnHomeButton.interactable = false;
+            replayLevelButton.interactable = false;
 
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+            SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
+
+            // don't track loop level CostCenter
+            if (currentLevel.Value <= levelDataContainer.MaxLevel)
+            {
+                SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
+            }
+
+            Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+        }
     }
 
     private void Replay()
     {
-        bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
-
-        if (isShowInterReplayLevel)
+        if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+            switchRouteEvent?.Invoke(ScreenRoute.Replay);
         }
         else
         {
-            ActualReplay();
-        }
+            bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
-        Hide();
+            if (isShowInterReplayLevel)
+            {
+                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+            }
+            else
+            {
+                ActualReplay();
+            }
+
+            Hide();
+        }
     }
 
     private void ActualReplay()

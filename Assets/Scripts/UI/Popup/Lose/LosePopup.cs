@@ -12,7 +12,7 @@ public class LosePopup : BasePopup
     [SerializeField] private Button replayButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button returnHomeButton;
-    [SerializeField] private Slider levelProgress;
+    [SerializeField] private Image levelProgressFill;
     [SerializeField] private TMP_Text progressText;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -30,6 +30,7 @@ public class LosePopup : BasePopup
 
     public static event Action replayLevelEvent;
     public static event Action skipLevelEvent;
+    public static event Action<int> changeLivesNumberEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -72,18 +73,11 @@ public class LosePopup : BasePopup
 
     private void OnLevelLose()
     {
-        levelProgress.value = 0;
+        levelProgressFill.fillAmount = 0;
 
         progressText.text = $"{0}%";
 
-        if (levelObserver.Progress > 0.25f)
-        {
-            progressText.gameObject.SetActive(true);
-        }
-        else
-        {
-            progressText.gameObject.SetActive(false);
-        }
+        changeLivesNumberEvent?.Invoke(-1);
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
@@ -93,15 +87,12 @@ public class LosePopup : BasePopup
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Lose.ToString());
         }
 
-        // for better progress bar visual
-        levelProgress.value = 0.1f;
-
         Show(onCompletedAction: () =>
         {
             Tween.Custom(0, levelObserver.Progress, duration: transitionDuration, onValueChange: newVal =>
             {
                 // +0.1f for better progress bar visual
-                levelProgress.value = Mathf.Min(newVal + 0.1f, 1);
+                levelProgressFill.fillAmount = newVal;
 
                 progressText.text = $"{(int)(newVal * 100)}%";
             });
@@ -120,6 +111,7 @@ public class LosePopup : BasePopup
             DataUtility.Save($"Time Lose Level {currentLevel.Value}", timeLoseLevel);
         }
 
+        #region SKIP LEVEL
         GamePersistentVariable.isAllowedSkipLevel = false;
 
         if (!_isAllowedSkipLevel)
@@ -137,6 +129,7 @@ public class LosePopup : BasePopup
         {
             skipLevelButton.gameObject.SetActive(false);
         }
+        #endregion
     }
 
     private void Replay()

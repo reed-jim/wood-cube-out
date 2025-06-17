@@ -5,12 +5,17 @@ using UnityEngine;
 public class SpaceRaceData
 {
     public bool isStarted;
-    public LeaderboardUserData[] spaceRacePlayerGroup;
-    [SerializeField] public long endTimestamp;
+    public bool isEnded;
+    public SpaceRacePlayerData[] spaceRacePlayerGroup;
+    [SerializeField] public long startTimestamp;
+    [SerializeField] public long nextTimestampCheatEnemyScore;
 }
 
 [Serializable]
-public class SpaceRacePlayer
+public class SpaceRacePlayerData
 {
-
+    public string id;
+    public string name;
+    public int scoreSinceRaceBegin;
+    public bool isSelf;
 }

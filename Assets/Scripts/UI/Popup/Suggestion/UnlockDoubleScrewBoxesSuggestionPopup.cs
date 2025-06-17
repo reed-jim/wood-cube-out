@@ -73,12 +73,19 @@ public class UnlockDoubleScrewBoxesSuggestionPopup : BasePopup
 
             // SoundManager.Instance.PlaySoundTightenScrew();
 
-            _tweens.Add(Tween.Scale(claimButton.transform, 1.05f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.4f)
-            .OnComplete(() =>
+            _tweens.Add(Tween.Delay(0.36f).OnComplete(() =>
             {
                 remaningTime--;
 
                 timeText.text = $"{remaningTime}s";
+            }));
+
+            _tweens.Add(Tween.Scale(claimButton.transform, 1.05f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.4f, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                // remaningTime--;
+
+                // timeText.text = $"{remaningTime}s";
 
                 _tweens.Add(Tween.Scale(claimButton.transform, 1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f, ease: Ease.Linear));
             }));

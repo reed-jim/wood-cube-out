@@ -40,6 +40,20 @@ public static class GamePersistentVariable
     public static bool isLoadingLevelInProgress;
     #endregion
 
+    #region GAME FLOW
+    public static bool hasAppJustLaunched;
+    public static bool isLoadingComplete;
+    public static bool isPendingReplay;
+    public static bool isPendingReturnHome;
+    public static bool isMenuLoading;
+    public static bool hasPlayerReachedGameplay;
+    #endregion
+
+    #region LIVES
+    public static LivesData livesData;
+    public static bool isLevelDirty;
+    #endregion
+
     #region AUTHENTICATION
     public static string FirebaseUserId;
     #endregion
@@ -68,14 +82,25 @@ public static class GamePersistentVariable
     #endregion
 
     #region ADS
+    public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;
     public static int bannerCooldown = 30;
+    public static bool isEnableRewardedAds;
+    public static int minLevelDisableRewardedAds;
+    public static ActionWatchVideo currentReasonRewardedAd;
+    public static DoubleInterAdsConfig doubleInterAdsConfig;
+    #endregion
+
+    #region LIVES SYSTEM
+    public static LivesConfig livesConfig;
     #endregion
 
     #region IAP
     public static string IAPLocation;
     public static int IAPAddition;
     public static bool isUnlockedAllScrewBoxes;
+    public static SaleIAPPackType saleIAPPackType;
+    public static Dictionary<SaleIAPPackType, bool> isShowSalePacks;
     #endregion
 
     #region LEADERBOARD
@@ -83,9 +108,15 @@ public static class GamePersistentVariable
     public static GameEnum.LeaderboardScope leaderboardScope;
     #endregion
 
+    #region EVENT
+    public static Queue<string> chestQueue;
+    public static bool isChestOpenning;
+    #endregion
+
     #region DAILY REWARD
     public static int currentDailyRewardIndex;
     public static bool isCurrentDailyRewardIndexLoaded;
+    public static DailyRewardConfig dailyRewardConfig;
     #endregion
 
     #region GOLD PASS
@@ -102,9 +133,23 @@ public static class GamePersistentVariable
     public static WeeklyChallengeData weeklyChallengeData;
     #endregion
 
+    #region SPACE RACE
+    public static int selfSpaceRaceRank;
+    #endregion
 
+    #region COIN CHALLENGE
+    public static int coinChallengeItemGainedInLevel;
+    public static CoinChallengeConfig coinChallengeConfig;
+    #endregion
 
     #region SORT PUZZLE
     public static int numItemsLeft;
+    #endregion
+
+    #region CHEST
+    public static bool isStarChestClaimable;
+    public static bool isLevelChestClaimable;
+    public static string currentChestReason;
+    public static bool isClaimedLevelChest;
     #endregion
 }

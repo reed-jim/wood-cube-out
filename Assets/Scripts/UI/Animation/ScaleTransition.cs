@@ -3,7 +3,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
-public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
+public class ScaleTransition : SaferioTweenBehaviour, ISaferioUIAnimation
 {
     [SerializeField] private RectTransform target;
     [SerializeField] private CanvasGroup canvasGroup;
@@ -47,13 +47,13 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
         canvasGroup.interactable = false;
 
-        Tween.Scale(target, 1.1f, duration: 0.5f * duration)
+        AddSequence(Tween.Scale(target, 1.1f, duration: 0.5f * duration)
             .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
             {
                 _isInTransition = false;
 
                 canvasGroup.interactable = true;
-            }));
+            })));
 
         // SaferioTween.LocalPositionAsync(target, Vector2.zero, duration: duration);
     }
@@ -75,7 +75,7 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
         canvasGroup.interactable = false;
 
-        Tween.Scale(target, 1.1f, duration: 0.5f * duration)
+        AddSequence(Tween.Scale(target, 1.1f, duration: 0.5f * duration)
             .Chain(Tween.Scale(target, 1f, duration: 0.5f * duration).OnComplete(() =>
             {
                 _isInTransition = false;
@@ -83,14 +83,14 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
                 canvasGroup.interactable = true;
 
                 onCompletedAction?.Invoke();
-            }));
+            })));
 
         canvasGroup.alpha = 0;
 
-        Tween.Custom(0, 1, duration: 0.5f * duration, onValueChange: newVal =>
+        AddTween(Tween.Custom(0, 1, duration: 0.5f * duration, onValueChange: newVal =>
         {
             canvasGroup.alpha = newVal;
-        });
+        }));
     }
 
     public void Hide()
@@ -111,21 +111,21 @@ public class ScaleTransition : MonoBehaviour, ISaferioUIAnimation
 
         canvasGroup.interactable = false;
 
-        Tween.Scale(target, 1.1f, duration: 0.5f * duration).OnComplete(() =>
+        AddTween(Tween.Scale(target, 1.1f, duration: 0.5f * duration).OnComplete(() =>
         {
-            Tween.Scale(target, 0.5f, duration: 0.5f * duration).OnComplete(() =>
+            AddTween(Tween.Scale(target, 0.5f, duration: 0.5f * duration).OnComplete(() =>
             {
                 target.gameObject.SetActive(false);
 
                 _isInTransition = false;
 
                 onCompletedAction?.Invoke();
-            });
+            }));
 
-            Tween.Custom(1, 0, duration: 0.5f * duration, onValueChange: newVal =>
+            AddTween(Tween.Custom(1, 0, duration: 0.5f * duration, onValueChange: newVal =>
             {
                 canvasGroup.alpha = newVal;
-            });
-        });
+            }));
+        }));
     }
 }

@@ -52,6 +52,7 @@ public class LevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent += Replay;
         LosePopup.replayLevelEvent += Replay;
+        ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
         DebugPopup.nextLevelEvent += NextLevel;
         DebugPopup.prevLevelEvent += PrevLevel;
@@ -69,12 +70,15 @@ public class LevelLoader : MonoBehaviour
         _maxLevel = levelDataContainer.MaxLevel;
 
         GoLevel(currentLevel.Value);
+
+        GamePersistentVariable.hasPlayerReachedGameplay = true;
     }
 
     void OnDestroy()
     {
         PausePopup.replayLevelEvent -= Replay;
         LosePopup.replayLevelEvent -= Replay;
+        ReplayPopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
         DebugPopup.nextLevelEvent -= NextLevel;
         DebugPopup.prevLevelEvent -= PrevLevel;
@@ -328,6 +332,12 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 ShowSuggestion(nextLevel, isLoopLevel);
+
+                #region EVENT ITEMS
+                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
+
+                CoinChallengeGameplayUI.Instance.SetNumber();
+                #endregion
             }
         };
 
@@ -352,6 +362,8 @@ public class LevelLoader : MonoBehaviour
         startLevelEvent?.Invoke();
 
         LoadLevel();
+
+        GamePersistentVariable.isLevelDirty = false;
     }
 
     private void NextLevel()
@@ -626,7 +638,7 @@ public class LevelLoader : MonoBehaviour
 
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
-            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f));
+            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f, ease: Ease.InOutSine));
         }
         catch (System.Exception)
         {
@@ -762,6 +774,7 @@ public class LevelLoader : MonoBehaviour
         }
 
         bool isThreeDimensionEqual = Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f;
+        // || Mathf.Abs(expectedLevelSize.y - expectedLevelSize.z) < 0.5f;
 
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
@@ -909,6 +922,11 @@ public class LevelLoader : MonoBehaviour
         }
 
         if (level <= 3 || level % numLevelShowBoosterSuggestion != 0)
+        {
+            return false;
+        }
+
+        if (!GamePersistentVariable.isEnableRewardedAds)
         {
             return false;
         }

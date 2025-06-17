@@ -36,6 +36,7 @@ public class GameLeaderboardManager : MonoBehaviour
         await UnityServices.InitializeAsync();
         // AddTestScoreEntries();
         await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        await AddPlayerScoreToLeaderboard();
         await GetLeaderboardData();
     }
 
@@ -149,7 +150,7 @@ public class GameLeaderboardManager : MonoBehaviour
         LeaderboardDataContainer.LocalLeaderboardItems = localLeaderboard.ToArray();
     }
 
-    public async void AddPlayerScoreToLeaderboard()
+    public async Task AddPlayerScoreToLeaderboard()
     {
         // SAFERIO Remove later
         if (GamePersistentVariable.selectedCountryIndex == 0)

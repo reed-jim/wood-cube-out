@@ -17,7 +17,7 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private RectTransform loadingScreenContainer;
     [SerializeField] private Image staticLoadingImage;
     [SerializeField] private Image blackBackground;
-    [SerializeField] private Slider progressBar;
+    // [SerializeField] private Slider progressBar;
     [SerializeField] private Image progressBarFill;
     [SerializeField] private Image splashScreen;
     [SerializeField] private Image splashScreenBackground;
@@ -37,6 +37,12 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private float loadingDuration;
     [SerializeField] private float fadeOutDuration;
 
+
+
+    // [SerializeField] private Image blackBackgroundToPassPolicy;
+
+
+
     private List<Tween> _tweens;
     private bool _isMenuSceneLoaded;
     private AsyncOperationHandle _menuSceneHandle;
@@ -49,6 +55,10 @@ public class GameLoading : MonoBehaviour
         retryConnectButton.onClick.AddListener(RetryConnection);
 
         _tweens = new List<Tween>();
+
+        GamePersistentVariable.hasAppJustLaunched = true;
+
+        // blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     void Start()
@@ -107,17 +117,19 @@ public class GameLoading : MonoBehaviour
 
         while (!isReadyToBurst)
         {
-            progressBar.value = progress;
-            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 2 * (progress - 0.08f));
+            progressBarFill.fillAmount = progress;
+            // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 2 * (progress - 0.08f));
 
-            if (progress >= 0.08f)
-            {
-                loadingText.text = $"{(int)(progress * 100)}%";
-            }
-            else
-            {
-                loadingText.text = $"{(int)(0 * 100)}%";
-            }
+            // if (progress >= 0.08f)
+            // {
+            //     loadingText.text = $"{(int)(progress * 100)}%";
+            // }
+            // else
+            // {
+            //     loadingText.text = $"{(int)(0 * 100)}%";
+            // }
+
+            loadingText.text = $"{(int)(progress * 100)}%";
 
             progress += deltaProgress;
 
@@ -165,10 +177,10 @@ public class GameLoading : MonoBehaviour
 
     private void BurstTransition()
     {
-        _tweens.Add(Tween.Custom(progressBar.value, 1, duration: loadingDuration, ease: Ease.Linear, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(progressBarFill.fillAmount, 1, duration: loadingDuration, ease: Ease.Linear, onValueChange: newVal =>
         {
-            progressBar.value = newVal;
-            progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
+            progressBarFill.fillAmount = newVal;
+            // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
 
             loadingText.text = $"{(int)(newVal * 100)}%";
         }));
@@ -184,6 +196,12 @@ public class GameLoading : MonoBehaviour
                 _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
                 {
                     // blackBackground.gameObject.SetActive(false);
+
+                    // AdmobAdsMax.Instance.ShowInterstitialAdmob();
+
+                    // blackBackgroundToPassPolicy.gameObject.SetActive(true);
+
+                    GamePersistentVariable.isLoadingComplete = true;
 
                     SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
                 }));

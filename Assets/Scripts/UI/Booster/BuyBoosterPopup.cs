@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +8,7 @@ using static GameEnum;
 
 public class BuyBoosterPopup : BasePopup
 {
+    [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button buyWithDiamondButton;
     [SerializeField] private Image buyWithDiamondButtonForeground;
     [SerializeField] private Button getWithAdsButton;
@@ -14,6 +16,15 @@ public class BuyBoosterPopup : BasePopup
     [SerializeField] private TMP_Text costText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI title;
     [SerializeField] private LeanLocalizedTextMeshProUGUI boosterDescription;
+
+    [Header("COIN BALANCE")]
+    [SerializeField] private RectTransform coinBalanceCointaner;
+    [SerializeField] private TMP_Text coinBalanceText;
+
+    #region REMOTE CONFIG REWARDED ADS
+    [SerializeField] private RectTransform coinButtonRT;
+    [SerializeField] private RectTransform adsButtonRT;
+    #endregion
 
     [Header("BOOSTER SPRITE")]
     [SerializeField] private Sprite[] boosterSprites;
@@ -27,6 +38,8 @@ public class BuyBoosterPopup : BasePopup
 
     private BoosterType _boosterType;
     private bool _isBoughtBreakObjectBoosterByCoin;
+    private Vector3 _coinButtonPosition;
+    private Vector3 _adsButtonPosition;
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
@@ -34,12 +47,19 @@ public class BuyBoosterPopup : BasePopup
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<int> updateBoosterQuantityEvent;
 
+    protected override void MoreActionInAwake()
+    {
+        _coinButtonPosition = coinButtonRT.localPosition;
+        _adsButtonPosition = adsButtonRT.localPosition;
+    }
+
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
         buyWithDiamondButton.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);
@@ -51,6 +71,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
@@ -77,6 +98,8 @@ public class BuyBoosterPopup : BasePopup
         {
             getWithAdsButton.onClick.AddListener(GetWithAds);
         }
+
+        SetupRewardedAdsButton();
     }
 
     private void GetWithCoin()
@@ -221,4 +244,53 @@ public class BuyBoosterPopup : BasePopup
 
         isAbleToHideOnClickOutside = true;
     }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (isShow)
+        {
+            start = 1;
+            end = 0;
+        }
+
+        if (!isShow)
+        {
+            SetupRewardedAdsButton();
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
+    }
+
+    #region REMOTE CONFIG REWARDED AD
+    private void SetupRewardedAdsButton(bool forceEnable = false)
+    {
+        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+
+        if (isEnableRewardedAds || forceEnable)
+        {
+            adsButtonRT.gameObject.SetActive(true);
+            coinBalanceCointaner.gameObject.SetActive(false);
+
+            coinButtonRT.localPosition = _coinButtonPosition;
+            adsButtonRT.localPosition = _adsButtonPosition;
+        }
+        else
+        {
+            adsButtonRT.gameObject.SetActive(false);
+            coinBalanceCointaner.gameObject.SetActive(true);
+
+            // coinButtonRT.localPosition = _coinButtonPosition - (_coinButtonPosition - _adsButtonPosition) / 2;
+
+            userResourcesObserver.Load();
+
+            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        }
+    }
+    #endregion
 }

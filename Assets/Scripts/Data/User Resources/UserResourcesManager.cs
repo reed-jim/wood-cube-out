@@ -23,6 +23,8 @@ public class UserResourcesManager : MonoBehaviour
     {
         // userResourcesObserver.ChangeCoin(value);
 
+        userResourcesObserver.Load();
+
         updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
     }
 }

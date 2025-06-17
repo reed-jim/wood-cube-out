@@ -12,15 +12,15 @@ public class LeaderboardScreen : UIScreen
 
     protected override void RegisterMoreEvent()
     {
-        GameLeaderboardManager.fetchLeaderboardDataCompletedEvent += OnLeaderboardDataFetchCompleted;
+        // GameLeaderboardManager.fetchLeaderboardDataCompletedEvent += OnLeaderboardDataFetchCompleted;
 
-        globalButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Global));
-        localButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Local));
+        // globalButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Global));
+        // localButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Local));
     }
 
     protected override void UnregisterMoreEvent()
     {
-        GameLeaderboardManager.fetchLeaderboardDataCompletedEvent -= OnLeaderboardDataFetchCompleted;
+        // GameLeaderboardManager.fetchLeaderboardDataCompletedEvent -= OnLeaderboardDataFetchCompleted;
     }
 
     protected override void Show()
@@ -31,14 +31,14 @@ public class LeaderboardScreen : UIScreen
         {
             int compensateDistanceBetweenTwoItem = 3;
 
-            if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
-            {
-                scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
-            }
-            else
-            {
-                scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
-            }
+            // if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
+            // {
+            //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
+            // }
+            // else
+            // {
+            //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
+            // }
 
             selfScore.UpdateUI(LeaderboardDataContainer.GetCurrentPlayerLeaderboardData());
         }
@@ -59,16 +59,16 @@ public class LeaderboardScreen : UIScreen
     {
         int compensateDistanceBetweenTwoItem = 3;
 
-        if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
-        {
-            scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
-        }
-        else
-        {
-            scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
-        }
+        // if (GamePersistentVariable.leaderboardScope == GameEnum.LeaderboardScope.Global)
+        // {
+        //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.Items.Length + compensateDistanceBetweenTwoItem);
+        // }
+        // else
+        // {
+        //     scrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
+        // }
 
-        scrollView.ScrollTo(0);
+        // scrollView.ScrollTo(0);
 
         selfScore.UpdateUI(LeaderboardDataContainer.GetCurrentPlayerLeaderboardData());
     }

@@ -373,7 +373,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
 
-            if (numScrewPortsEmpty <= 1 && !_isCheckingLose)
+            if (numScrewPortsEmpty <= 0 && !_isCheckingLose)
             {
                 _tweens.Add(Tween.Delay(3).OnComplete(() =>
                 {
@@ -476,7 +476,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.IsInTransition = true;
 
-        _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
+        _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f).OnComplete(() =>
         {
             screwBox.IsInTransition = false;
 
@@ -548,7 +548,7 @@ public class ScrewBoxManager : MonoBehaviour
                 // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
                 // destination.z = -0.001f * index;
 
-                _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f)
                 .OnComplete(() =>
                 {
                     screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();
@@ -588,7 +588,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
                 else
                 {
-                    _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f)
+                    _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f)
                     .OnComplete(() =>
                     {
                         screwBox.ScrewBoxServiceLocator.screwBoxUI.SetUnlockByAdsButtonPosition();

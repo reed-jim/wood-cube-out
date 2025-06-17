@@ -57,7 +57,13 @@ public class GameEnum : MonoBehaviour
         StarterPack,
         WeekendSale,
         GoldPassIntro,
-        MedalTournamentIntro
+        MedalTournamentIntro,
+        LivesShop,
+        ReturnHome,
+        Replay,
+        StarChest,
+        JoinSpaceRace,
+        StarTournament
     }
 
     public enum GameFaction

@@ -13,6 +13,10 @@ public class RevivePopup : BasePopup
     [SerializeField] private Button reviveByAdsButton;
     [SerializeField] private TMP_Text costText;
 
+    [Header("COIN BALANCE")]
+    [SerializeField] private RectTransform coinBalanceCointaner;
+    [SerializeField] private TMP_Text coinBalanceText;
+
     [Header("SPRITE")]
     [SerializeField] private Sprite unlockBoxSprite;
     [SerializeField] private Sprite clearHolesSprite;
@@ -25,6 +29,11 @@ public class RevivePopup : BasePopup
 
     #region PRIVATE FIELD
     private BoosterType _currentBoosterOnRevive;
+    private RectTransform _reviveByDiamondButtonRT;
+    private RectTransform _reviveByAdsButtonRT;
+    private Vector3 _reviveCoinButtonPosition;
+    private Vector3 _reviveAdsButtonPosition;
+    private int _popupShowTime;
     #endregion
 
     public static event Action<BoosterType> reviveEvent;
@@ -35,6 +44,12 @@ public class RevivePopup : BasePopup
     protected override void MoreActionInAwake()
     {
         costText.text = $"{boosterDataObserver.BoosterCosts.Last()}";
+
+        _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
+        _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
+
+        _reviveCoinButtonPosition = _reviveByDiamondButtonRT.localPosition;
+        _reviveAdsButtonPosition = _reviveByAdsButtonRT.localPosition;
     }
 
     protected override void RegisterMoreEvent()
@@ -48,6 +63,22 @@ public class RevivePopup : BasePopup
     protected override void MoreActionOnDestroy()
     {
         GameStateLose.showRevivePopupEvent -= ShowRevivePopup;
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+
+        SetupRewardedAdsButton();
+
+        // _popupShowTime++;
+
+        // if (_popupShowTime == 2)
+        // {
+        //     SetupRewardedAdsButton(forceEnable: true);
+
+        //     _popupShowTime = 0;
+        // }
     }
 
     protected override void Hide()
@@ -87,6 +118,8 @@ public class RevivePopup : BasePopup
         reviveByDiamondButton.interactable = true;
 
         _currentBoosterOnRevive = boosterType;
+
+        // SetupRewardedAdsButton();
     }
 
     private void ReviveByDiamond()
@@ -175,4 +208,31 @@ public class RevivePopup : BasePopup
 
         // switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }
+
+    #region REMOTE CONFIG REWARDED AD
+    private void SetupRewardedAdsButton(bool forceEnable = false)
+    {
+        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+
+        if (isEnableRewardedAds || forceEnable)
+        {
+            reviveByAdsButton.gameObject.SetActive(true);
+            coinBalanceCointaner.gameObject.SetActive(false);
+
+            _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
+            _reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
+        }
+        else
+        {
+            reviveByAdsButton.gameObject.SetActive(false);
+            coinBalanceCointaner.gameObject.SetActive(true);
+
+            // _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
+
+            userResourcesObserver.Load();
+
+            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        }
+    }
+    #endregion
 }

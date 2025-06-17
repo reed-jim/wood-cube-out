@@ -30,6 +30,7 @@ namespace Saferio.Util
         [SerializeField] private ScrollRect scrollRect;
         [SerializeField] private RectTransform content;
 
+        private List<Tween> _tweens;
         private List<string> _cachedItemList;
         private List<RectTransform> _items;
         private List<TMP_Text> _texts;
@@ -57,6 +58,10 @@ namespace Saferio.Util
 
 
 
+        private Coroutine _poolingScrollCoroutine;
+
+
+
 
 
 
@@ -78,6 +83,8 @@ namespace Saferio.Util
 
         private void Awake()
         {
+            _tweens = new List<Tween>();
+
             _cachedItemList = new List<string>();
 
             // _canvasSize = canvas.sizeDelta;
@@ -85,8 +92,21 @@ namespace Saferio.Util
             CreatePool();
 
             GenerateUI();
+        }
 
-            StartCoroutine(ObjectPoolingScrolling());
+        void OnEnable()
+        {
+            if (_poolingScrollCoroutine != null)
+            {
+                StopCoroutine(_poolingScrollCoroutine);
+            }
+
+            _poolingScrollCoroutine = StartCoroutine(ObjectPoolingScrolling());
+        }
+
+        void OnDestroy()
+        {
+            CommonUtil.StopAllTweens(_tweens);
         }
 
         private void CreatePool()
@@ -196,10 +216,34 @@ namespace Saferio.Util
 
         public void SetMaxItemNumber(int maxItem)
         {
-            _maxScrollPositionY = Mathf.Max(0, (maxItem - numVisibleItem) * _items[0].sizeDelta.y);
+            int neededItem = maxItem + 4;
+
+            _maxScrollPositionY = Mathf.Max(0, (neededItem - numVisibleItem) * _items[0].sizeDelta.y);
         }
 
         public void ScrollTo(float positionY)
+        {
+            float overScrollDistance = content.localPosition.y > positionY ? -20 : 20;
+
+            CommonUtil.StopAllTweens(_tweens);
+
+            scrollRect.vertical = false;
+
+            _tweens.Add(
+                Tween.LocalPositionY(content, positionY + overScrollDistance, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    _tweens.Add(Tween.LocalPositionY(content, positionY, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        scrollRect.vertical = true;
+                    })
+                    );
+                })
+            );
+        }
+
+        public void ScrollToImmediately(float positionY)
         {
             content.localPosition = content.localPosition.ChangeY(positionY);
         }

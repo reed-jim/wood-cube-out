@@ -20,6 +20,7 @@ public static class GameConstants
     public static string DESTROY_OBJECT_PART_FX = "Destroy Object Part Fx";
     public static string LOOSE_SCREW_FX = "LOOSE_SCREW_FX";
     public static string BOX_COMPLETED_FX = "BOX_COMPLETED_FX";
+    public static string EVENT_ITEM = "EVENT_ITEM";
     #endregion
 
     #region COMMON TEXT
@@ -66,6 +67,9 @@ public static class GameConstants
     public static string UNLOCK_ADS_SCREW_BOX_SOUND = "Unlock Ads Screw Box Sound";
     public static string CLEAR_SCREW_PORTS_SOUND = "Clear Screw Ports Sound";
     public static string COUNTING_TIME_SOUND = "Counting Time Sound";
+    public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
+    public static string OPEN_CHEST_SOUND = "Open Chest Sound";
+    public static string REWARD_ITEM_SOUND = "Reward Item Sound";
     #endregion
 
     #region ANIMATION
@@ -110,6 +114,11 @@ public static class GameConstants
     public static string IS_COLLECT_COIN_WIN_LEVEL_SET = "IS_COLLECT_COIN_WIN_LEVEL_SET";
     public static string IS_COLLECT_COIN_WIN_LEVEL = "IS_COLLECT_COIN_WIN_LEVEL";
     public static string IS_BOUGHT_HOT_DEAL = "IS_BOUGHT_HOT_DEAL";
+    #endregion
+
+    #region LIVES
+    public static string USER_LIVES_DATA = "USER_LIVES_DATA";
+    public static int DEFAULT_LIVES = 5;
     #endregion
 
     #region TRACKING
@@ -183,11 +192,16 @@ public static class GameConstants
 
     #region GOLD PASS
     public static string GOLD_PASS_DATA_CONTAINER = "GOLD_PASS_DATA_CONTAINER";
+    #endregion
+
+    #region STAR CHEST
+    public static int REQUIRE_STAR = 20;
     #endregion 
 
     #region CHEST LEVEL
     public static string CHEST_LEVEL = "CHEST_LEVEL";
-    #endregion 
+    public static string STAR_LEVEL_DATA = "STAR_LEVEL_DATA";
+    #endregion
 
     #region COIN CHALLENGE
     public static string COIN_CHALLENGE_DATA = "COIN_CHALLENGE_DATA";

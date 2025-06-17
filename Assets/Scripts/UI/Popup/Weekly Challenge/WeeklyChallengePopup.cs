@@ -11,21 +11,26 @@ public class WeeklyChallengePopup : BasePopup
     [SerializeField] private Slider progressSlider;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private TMP_Text timeCounterText;
+    [SerializeField] private Saferio.Util.ObjectPoolingScrollView scrollView;
 
     [SerializeField] private Image nextRewardIcon;
     [SerializeField] private TMP_Text nextRewardQuantity;
     [SerializeField] private Sprite[] rewardSprites;
 
-    [SerializeField] private DailyRewardDataContainer weeklyChallengeDataContainer;
+    [SerializeField] private WeeklyChallengeDataContainer weeklyChallengeDataContainer;
+
+    public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        WeeklyChallengeUIItem.scrollToMilstoneEvent += ScrollToCurrentMilstone;
     }
 
     protected override void UnregisterMoreEvent()
     {
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
+        WeeklyChallengeUIItem.scrollToMilstoneEvent -= ScrollToCurrentMilstone;
     }
 
     protected override void MoreActionInAwake()
@@ -35,7 +40,10 @@ public class WeeklyChallengePopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        base.Show(onCompletedAction: () =>
+        {
+            CheckEndLastChallenge();
+        });
 
         AnimateProgress();
 
@@ -44,7 +52,7 @@ public class WeeklyChallengePopup : BasePopup
         Refresh();
     }
 
-    private void LoadData()
+    private WeeklyChallengeData LoadData()
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
@@ -60,24 +68,28 @@ public class WeeklyChallengePopup : BasePopup
             DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
         }
 
-        int currentChallengeLevel = (weeklyChallengeData.EventItemCollected - weeklyChallengeData.EventItemCollected % 2) / 2;
+        // int currentChallengeLevel = (weeklyChallengeData.EventItemCollected - weeklyChallengeData.EventItemCollected % 2) / 2;
 
-        if (currentChallengeLevel != weeklyChallengeData.CurrentChallengeIndex)
-        {
-            weeklyChallengeData.CurrentChallengeIndex = currentChallengeLevel;
+        // if (currentChallengeLevel != weeklyChallengeData.CurrentChallengeIndex)
+        // {
+        //     weeklyChallengeData.CurrentChallengeIndex = currentChallengeLevel;
 
-            DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
-        }
+        //     DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, weeklyChallengeData);
+        // }
 
         GamePersistentVariable.weeklyChallengeData = weeklyChallengeData;
+
+        return weeklyChallengeData;
     }
 
     private void Refresh()
     {
-        int currentIndex = GamePersistentVariable.weeklyChallengeData.CurrentChallengeIndex;
+        WeeklyChallengeData data = LoadData();
 
-        int coinQuantity = weeklyChallengeDataContainer.Items[currentIndex].CoinQuantity;
-        int[] boosterQuantites = weeklyChallengeDataContainer.Items[currentIndex].BoosterQuantities;
+        int currentIndex = data.CurrentMilestone;
+
+        int coinQuantity = weeklyChallengeDataContainer.Rewards[currentIndex].CoinQuantity;
+        int[] boosterQuantites = weeklyChallengeDataContainer.Rewards[currentIndex].BoosterQuantities;
 
         if (coinQuantity > 0)
         {
@@ -101,11 +113,60 @@ public class WeeklyChallengePopup : BasePopup
         UIUtil.SetSizeKeepRatioY(nextRewardIcon, nextRewardIcon.rectTransform.sizeDelta.x);
     }
 
+    private void CheckEndLastChallenge()
+    {
+        WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
+
+        int totalCoinQuantity = 0;
+        int[] totalBoosterQuantites = new int[3];
+
+        bool isAnyRewardLeft = false;
+
+        for (int i = 0; i < weeklyChallengeDataContainer.Rewards.Length; i++)
+        {
+            if (weeklyChallengeData.IsMilestoneClaimable(i))
+            {
+                int coinQuantity = weeklyChallengeDataContainer.Rewards[i].CoinQuantity;
+                int[] boosterQuantites = weeklyChallengeDataContainer.Rewards[i].BoosterQuantities;
+
+                totalCoinQuantity += coinQuantity;
+
+                for (int j = 0; j < totalBoosterQuantites.Length; j++)
+                {
+                    totalBoosterQuantites[j] += boosterQuantites[j];
+                }
+
+                isAnyRewardLeft = true;
+            }
+        }
+
+        if (isAnyRewardLeft)
+        {
+            showClaimRewardPopupEvent?.Invoke(totalCoinQuantity, totalBoosterQuantites, false, false);
+        }
+
+        weeklyChallengeData = new WeeklyChallengeData();
+        weeklyChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+
+        DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
+
+        Refresh();
+        scrollView.Refresh();
+        scrollView.ScrollTo(0);
+
+        if (!CommonUtil.IsNewWeek(CommonUtil.TimestampToDateTime(weeklyChallengeData.startTimestamp)))
+        {
+
+        }
+    }
+
     private void AnimateProgress()
     {
         WeeklyChallengeData weeklyChallengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        float progress = weeklyChallengeData.EventItemCollected % 2 / 2f;
+        int currentMilstone = weeklyChallengeData.CurrentMilestone;
+
+        float progress = weeklyChallengeData.EventItemCollectedOfMilstones[currentMilstone] / weeklyChallengeDataContainer.RequiredItems[currentMilstone];
 
         if (progress > 0.19f)
         {
@@ -122,6 +183,11 @@ public class WeeklyChallengePopup : BasePopup
             progressSlider.value = 0;
             progressText.text = $"{(progress * 100).ToString("F0")}%";
         }
+    }
+
+    private void ScrollToCurrentMilstone(float positionY)
+    {
+        scrollView.ScrollTo(positionY);
     }
 
     private IEnumerator Counting()

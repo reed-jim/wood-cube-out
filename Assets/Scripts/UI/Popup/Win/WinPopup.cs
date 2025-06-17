@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Experimental.AI;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -17,6 +19,11 @@ public class WinPopup : BasePopup
     [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TMP_Text starText;
+    [SerializeField] private TMP_Text goldPassKeyText;
+    [SerializeField] private RectTransform coinGroup;
+    [SerializeField] private RectTransform starGroup;
+    [SerializeField] private RectTransform eventItemGroup;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedMultiplyCoinText;
 
     [SerializeField] private IntVariable currentLevel;
@@ -26,6 +33,7 @@ public class WinPopup : BasePopup
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+    [SerializeField] private CoinChallengeConfigContainer coinChallengeConfigContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
@@ -34,6 +42,10 @@ public class WinPopup : BasePopup
     private int _multiplierCoinWinLevel;
     private int _currentCollectedCoin;
     private bool _isAlreadyWatchRewardedAd;
+
+    #region EVENT
+    private bool _isCoinChallengeClaimable;
+    #endregion
 
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
@@ -62,6 +74,8 @@ public class WinPopup : BasePopup
         AdmobAdsMax.Instance.ShowBannerCollap();
 
         coinText.text = $"{0}";
+        starText.text = $"{0}";
+        goldPassKeyText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
         continueButton.interactable = true;
@@ -94,6 +108,8 @@ public class WinPopup : BasePopup
         }
         //
 
+        CheckEvent();
+
         Show();
 
         SoundManager.Instance.PlaySoundWin();
@@ -120,10 +136,13 @@ public class WinPopup : BasePopup
         _isAlreadyWatchRewardedAd = false;
 
         #region GOLD PASS
-        HandleGoldPass();
+        // HandleGoldPass();
         HandleCoinChallenge();
-        HandleWeeklyChallenge();
+        HandleStarChest();
+        HandleSpaceRace();
         #endregion
+
+        DataUtility.Save("num_level_play_in_day", DataUtility.Load("num_level_play_in_day", 0) + 1);
 
         GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
@@ -157,6 +176,24 @@ public class WinPopup : BasePopup
                 onCompletedAction?.Invoke();
             })
         );
+
+        _tweens.Add(Tween.Custom(0, 3, duration: timeCollectCoin, onValueChange: newVal =>
+        {
+            starText.text = $"{(int)newVal}";
+        }));
+
+
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        bool isUnlocked = currentLevel.Value >= 30;
+
+        if (isUnlocked && !coinChallengeData.IsCompleted())
+        {
+            _tweens.Add(Tween.Custom(0, GamePersistentVariable.coinChallengeItemGainedInLevel, duration: timeCollectCoin, onValueChange: newVal =>
+            {
+                goldPassKeyText.text = $"{(int)newVal}";
+            }));
+        }
     }
 
     private async void Continue()
@@ -173,7 +210,19 @@ public class WinPopup : BasePopup
         {
             continueButton.interactable = false;
 
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
+
+            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+            {
+                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+                (
+                    OnInterstitialAdCompleted, isShowBreakAds: true
+                );
+            }
+            else
+            {
+                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            }
         }
     }
 
@@ -184,7 +233,12 @@ public class WinPopup : BasePopup
             HideImmediately();
         }));
 
-        goLevelEvent?.Invoke(currentLevel.Value);
+        bool isBackHome = HandleSuggestFeature();
+
+        if (!isBackHome)
+        {
+            goLevelEvent?.Invoke(currentLevel.Value);
+        }
 
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
 
@@ -269,7 +323,7 @@ public class WinPopup : BasePopup
         if (GamePersistentVariable.goldPassData.keyCollected >= goldPassDataContainer.CurrentMilestone.KeyRequired)
         {
             goldPassDataContainer.CurrentMilestone.IsPassed = true;
-            
+
             GamePersistentVariable.goldPassData.passLevel++;
             GamePersistentVariable.goldPassData.keyCollected = 0;
 
@@ -283,9 +337,64 @@ public class WinPopup : BasePopup
     #region COIN CHALLENGE
     private void HandleCoinChallenge()
     {
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+        CoinChallengeData coinChallengeData = DataUtility.Load<CoinChallengeData>(GameConstants.COIN_CHALLENGE_DATA, null);
 
-        coinChallengeData.gemCollected++;
+        if (coinChallengeData == null)
+        {
+            coinChallengeData = new CoinChallengeData();
+            coinChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+        }
+
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        if (currentLevel.ValueUsingPureJson < 30 || !isAvailable)
+        {
+            return;
+        }
+
+        if (coinChallengeData.IsCompleted())
+        {
+            return;
+        }
+
+        int currentMilestone = coinChallengeData.CurrentMilestone;
+
+        coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] += GamePersistentVariable.coinChallengeItemGainedInLevel;
+        coinChallengeData.newGainedItem += GamePersistentVariable.coinChallengeItemGainedInLevel;
+
+        _isCoinChallengeClaimable = false;
+
+        if (coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] >= coinChallengeConfigContainer.RequiredItems[currentMilestone])
+        {
+            int overflowItem = coinChallengeData.EventItemCollectedOfMilstones[currentMilestone] - coinChallengeConfigContainer.RequiredItems[currentMilestone];
+
+            if (coinChallengeData.CurrentMilestone < coinChallengeData.EventItemCollectedOfMilstones.Length)
+            {
+                coinChallengeData.CurrentMilestone++;
+                coinChallengeData.EventItemCollectedOfMilstones[coinChallengeData.CurrentMilestone] += overflowItem;
+            }
+            else
+            {
+                coinChallengeData.isCompleted = true;
+            }
+
+            _isCoinChallengeClaimable = true;
+        }
+
+        for (int i = 0; i < coinChallengeData.TotalMilestone; i++)
+        {
+            if (i < currentMilestone)
+            {
+                if (!coinChallengeData.IsMilestonesClaimed[i])
+                {
+                    _isCoinChallengeClaimable = true;
+
+                    break;
+                }
+            }
+        }
 
         DataUtility.Save(GameConstants.COIN_CHALLENGE_DATA, coinChallengeData);
     }
@@ -294,9 +403,103 @@ public class WinPopup : BasePopup
     {
         WeeklyChallengeData challengeData = DataUtility.Load(GameConstants.WEEKLY_CHALLENGE_DATA, new WeeklyChallengeData());
 
-        challengeData.EventItemCollected++;
+        challengeData.AddItemCurrentMilestone();
 
         DataUtility.Save(GameConstants.WEEKLY_CHALLENGE_DATA, challengeData);
+    }
+
+    private void HandleStarChest()
+    {
+        StarLevelData data = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+
+        data.starCollected += 3;
+        data.newGainedItem += 3;
+
+        DataUtility.Save(GameConstants.STAR_LEVEL_DATA, data);
+    }
+
+    private void HandleSpaceRace()
+    {
+        SpaceRaceData data = DataUtility.Load(GameConstants.SPACE_RACE_DATA, new SpaceRaceData());
+
+        if (!data.isStarted)
+        {
+            return;
+        }
+
+        for (int i = 0; i < data.spaceRacePlayerGroup.Length; i++)
+        {
+            if (data.spaceRacePlayerGroup[i].isSelf)
+            {
+                data.spaceRacePlayerGroup[i].scoreSinceRaceBegin++;
+            }
+        }
+
+        DataUtility.Save(GameConstants.SPACE_RACE_DATA, data);
+    }
+
+    private bool HandleSuggestFeature()
+    {
+        if (currentLevel.Value == 30 && !DataUtility.Load("Is Coin Challenge Suggested", false))
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        StarLevelData starLevelData = DataUtility.Load(GameConstants.STAR_LEVEL_DATA, new StarLevelData());
+
+        if (starLevelData.starCollected >= GameConstants.REQUIRE_STAR)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        if (_isCoinChallengeClaimable)
+        {
+            ReturnHome();
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void CheckEvent()
+    {
+        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+
+        bool isUnlocked = currentLevel.Value >= 30;
+
+        DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
+
+        bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
+
+        isAvailable = false;
+
+        if (isUnlocked && isAvailable && !coinChallengeData.IsCompleted())
+        {
+            eventItemGroup.gameObject.SetActive(true);
+
+            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-280);
+            starGroup.localPosition = coinGroup.localPosition.ChangeX(0);
+            eventItemGroup.localPosition = coinGroup.localPosition.ChangeX(280);
+        }
+        else
+        {
+            eventItemGroup.gameObject.SetActive(false);
+
+            coinGroup.localPosition = coinGroup.localPosition.ChangeX(-140);
+            starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
+        }
     }
     #endregion
 }

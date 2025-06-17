@@ -42,12 +42,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPSuggestionPopup.buyIAPEvent += BuyProduct;
         UnlockAllScrewBoxesForeverPopup.buyIAPEvent += BuyProduct;
         DailyOfferPopup.buyIAPEvent += BuyProduct;
+        UnderPopupSaleIAPPackUI.buyIAPEvent += BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent += FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice += FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice += FetchLocalizedPrice;
+        PackageIAPUnderPopupSwiper.requestFetchIAPPrice += FetchLocalizedPrice;
 
         for (int i = 0; i < IAPDataContainer.ProductsData.Length; i++)
         {
@@ -82,12 +84,14 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         IAPSuggestionPopup.buyIAPEvent -= BuyProduct;
         UnlockAllScrewBoxesForeverPopup.buyIAPEvent -= BuyProduct;
         DailyOfferPopup.buyIAPEvent -= BuyProduct;
+        UnderPopupSaleIAPPackUI.buyIAPEvent -= BuyProduct;
         IAPShopScreen.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPShopPopup.fetchLocalizedPriceIAPEvent -= FetchLocalizedPrice;
         IAPReviewPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         IAPSuggestionPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
+        PackageIAPUnderPopupSwiper.requestFetchIAPPrice -= FetchLocalizedPrice;
     }
 
     private void Init()

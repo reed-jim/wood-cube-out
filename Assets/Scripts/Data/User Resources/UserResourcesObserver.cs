@@ -24,12 +24,12 @@ public class UserResourcesObserver : ScriptableObject
     {
         UserResources defaultUserResources = new UserResources();
 
-        defaultUserResources.CoinQuantity = 100;
+        defaultUserResources.CoinQuantity = 500;
         defaultUserResources.BoosterQuantities = new int[3];
 
         for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
         {
-            defaultUserResources.BoosterQuantities[i] = 1;
+            defaultUserResources.BoosterQuantities[i] = 2;
         }
 
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);

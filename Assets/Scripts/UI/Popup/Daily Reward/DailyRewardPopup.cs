@@ -9,21 +9,34 @@ public class DailyRewardPopup : BasePopup
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button claimButton;
     [SerializeField] private Button claimX2Button;
+    [SerializeField] private Button debugNextDayButton;
 
     private DailyRewardItem[] _dailyRewardItems;
 
     public static event Action claimDailyRewardEvent;
+    public static event Action refreshDailyRewardEvent;
 
     protected override void RegisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent += OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent += EnableClaimButtons;
 
         claimButton.onClick.AddListener(Claim);
+
+        try
+        {
+            debugNextDayButton.onClick.AddListener(DebugNextDay);
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     protected override void UnregisterMoreEvent()
     {
+        ClaimRewardPopup.showClaimRewardPopupEvent -= OnClaimRewardPopupShown;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
         DailyRewardItem.enableClaimDailyRewardButtonsEvent -= EnableClaimButtons;
     }
@@ -35,6 +48,13 @@ public class DailyRewardPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
+        bool isRewardAvailable = DailyRewardUtil.IsNewDay();
+
+        if (isRewardAvailable)
+        {
+            AdmobAdsMax.Instance.ResetAdsCooldown();
+        }
+
         base.Show(onCompletedAction);
 
         Refresh();
@@ -62,7 +82,7 @@ public class DailyRewardPopup : BasePopup
         claimDailyRewardEvent?.Invoke();
     }
 
-    private void OnResourcesEarnPopupShown(bool isShow)
+    private void OnClaimRewardPopupShown(bool isShow)
     {
         float start = 0;
         float end = 1;
@@ -71,16 +91,53 @@ public class DailyRewardPopup : BasePopup
         {
             start = 1;
             end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+
+        _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
+        {
+            popupCanvasGroup.alpha = newVal;
+        }));
+    }
+
+    private void OnResourcesEarnPopupShown(bool isShow)
+    {
+        float start = 0;
+        float end = 1;
+
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
+        if (isShow)
+        {
+            return;
+
+            start = 1;
+            end = 0;
+
+            popupCanvasGroup.interactable = false;
+        }
+        else
+        {
+            popupCanvasGroup.alpha = 1;
+            popupCanvasGroup.interactable = true;
+
+            HideImmediately();
         }
 
         _tweens.Add(Tween.Custom(start, end, duration: 0.3f, onValueChange: newVal =>
         {
             popupCanvasGroup.alpha = newVal;
         })
-        .OnComplete(() =>
-        {
-            Refresh();
-        })
+            .OnComplete(() =>
+            {
+                Refresh();
+
+                popupCanvasGroup.interactable = true;
+            })
         );
     }
 
@@ -93,5 +150,20 @@ public class DailyRewardPopup : BasePopup
                 claimX2Button.gameObject.SetActive(true);
             })
         );
+    }
+
+    private void DebugNextDay()
+    {
+        GamePersistentVariable.currentDailyRewardIndex++;
+
+        if (GamePersistentVariable.currentDailyRewardIndex > 7)
+        {
+            GamePersistentVariable.currentDailyRewardIndex = 1;
+        }
+
+        DataUtility.Save("last_timestamp_claim_daily_reward", 0);
+        DataUtility.Save("current_daily_reward_day", GamePersistentVariable.currentDailyRewardIndex);
+
+        refreshDailyRewardEvent?.Invoke();
     }
 }

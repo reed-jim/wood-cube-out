@@ -48,7 +48,14 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
 
-        UserData.IsRemoveAds = true;
+        GamePersistentVariable.chestQueue = new System.Collections.Generic.Queue<string>();
+
+        GamePersistentVariable.currentLevel = currentLevel.Value;
+        GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
+        GamePersistentVariable.livesConfig = new LivesConfig();
+        GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
+
+        GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
     }
 
     private void Start()
