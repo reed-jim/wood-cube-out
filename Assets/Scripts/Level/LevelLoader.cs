@@ -669,6 +669,8 @@ public class LevelLoader : MonoBehaviour
         _pivotAdjust.transform.position = Vector3.zero;
         _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
+        transform.rotation = Quaternion.identity;
+
         foreach (BasicObjectPart obj in objects)
         {
             if (!obj.transform.IsChildOf(_pivotAdjust))
@@ -773,8 +775,11 @@ public class LevelLoader : MonoBehaviour
             isScaleByHeight = true;
         }
 
-        bool isThreeDimensionEqual = Mathf.Abs(expectedLevelSize.x - expectedLevelSize.y) < 0.5f;
-        // || Mathf.Abs(expectedLevelSize.y - expectedLevelSize.z) < 0.5f;
+        bool isYEqualX = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.x);
+        bool isYEqualZ = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.z);
+        bool isXEqualZ = AreRoughlySimilar(expectedLevelSize.x, expectedLevelSize.z);
+
+        bool isThreeDimensionEqual = isYEqualX && isYEqualZ;
 
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
@@ -785,25 +790,63 @@ public class LevelLoader : MonoBehaviour
 
         Camera mainCamera = Camera.main;
 
-        float expectedScreenWidth = 1.5f * maxExpectedLevelSize;
+        float expectedScreenWidth = 1.3f * maxExpectedLevelSize;
         float expectedScreenHeight = 3f * maxExpectedLevelSize;
+
+        if (!isThreeDimensionEqual)
+        {
+            if (isYEqualX || isYEqualZ)
+            {
+                maxExpectedLevelSize = expectedLevelSize.y;
+                isScaleByHeight = true;
+            }
+        }
+
+        isScaleByHeight = true;
 
         if (!isScaleByHeight)
         {
             expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
         }
 
+        // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize = expectedScreenHeight / 2f;
 
-        // 3 dimesion equal
-        if (isThreeDimensionEqual)
+        // if (isXEqualZ && !isScaleByHeight)
+        // {
+        //     targetOrthographicSize *= 1.5f;
+        // }
+
+        if (expectedLevelSize.x > expectedLevelSize.y)
         {
-            targetOrthographicSize *= 1.3f;
+            targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
         }
+
+        Debug.Log("SAFERIO " + expectedLevelSize + "/" + isScaleByHeight + "/" + isXEqualZ);
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
         GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
+    }
+
+    private bool AreRoughlySimilar(float a, float b)
+    {
+        if (a < b)
+        {
+            if (a > 0.75f * b)
+            {
+                return true;
+            }
+        }
+        else
+        {
+            if (b > 0.75f * a)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void SetLevelGradientMinMaxIn(Vector3 levelCenter, float minWorldY, float maxWorldY)

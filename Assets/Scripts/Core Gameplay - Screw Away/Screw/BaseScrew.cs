@@ -294,8 +294,10 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                 Color factionColor = FactionUtility.GetColorForFaction(Faction);
 
-                looseScrewFxMain.startColor = 1.2f * factionColor;
-                ringFxMain.startColor = 1.2f * factionColor;
+                Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
+
+                looseScrewFxMain.startColor = brighterFactionColor;
+                ringFxMain.startColor = brighterFactionColor;
                 ringFxMain.startSize = 1.2f * transform.lossyScale.x;
 
                 looseScrewFx.gameObject.SetActive(true);
