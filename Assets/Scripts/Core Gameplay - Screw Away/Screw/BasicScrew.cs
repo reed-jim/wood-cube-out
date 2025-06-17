@@ -81,7 +81,7 @@ public class BasicScrew : BaseScrew
 
                 if (gameSetting.IsVibrate)
                 {
-                    HapticFeedback.MediumFeedback();
+                    HapticFeedback.LightFeedback();
                 }
 
                 _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
