@@ -101,12 +101,11 @@ public static class ColorUtil
         return Color.HSVToRGB(h, s, v);
     }
 
-    public static Color GetNearWhiteColor(Color color, float saturationAmount = 0.5f, float brightness = 0.5f)
+    public static Color GetNearWhiteColor(Color color, float saturationAmount = 0.2f, float brightness = 1f)
     {
         Color.RGBToHSV(color, out float h, out float s, out float v);
 
         s = Mathf.Clamp01(saturationAmount);
-
         v = Mathf.Clamp01(brightness);
 
         return Color.HSVToRGB(h, s, v);

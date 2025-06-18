@@ -142,7 +142,7 @@ public class BasicScrew : BaseScrew
 
                 if (gameSetting.IsVibrate)
                 {
-                    HapticFeedback.MediumFeedback();
+                    HapticFeedback.LightFeedback();
                 }
             }
         }
