@@ -802,8 +802,6 @@ public class LevelLoader : MonoBehaviour
             }
         }
 
-        isScaleByHeight = true;
-
         if (!isScaleByHeight)
         {
             expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
@@ -812,15 +810,24 @@ public class LevelLoader : MonoBehaviour
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize = expectedScreenHeight / 2f;
 
+        // TEMP
+        targetOrthographicSize = 1.5f * expectedLevelSize.y;
+
+        if (expectedLevelSize.y < expectedLevelSize.x || expectedLevelSize.y < expectedLevelSize.z)
+        {
+            targetOrthographicSize *= 1.2f;
+        }
+        //
+
         // if (isXEqualZ && !isScaleByHeight)
         // {
         //     targetOrthographicSize *= 1.5f;
         // }
 
-        if (expectedLevelSize.x > expectedLevelSize.y)
-        {
-            targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
-        }
+        // if (expectedLevelSize.x > expectedLevelSize.y)
+        // {
+        //     targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
+        // }
 
         Debug.Log("SAFERIO " + expectedLevelSize + "/" + isScaleByHeight + "/" + isXEqualZ);
 
