@@ -130,11 +130,23 @@ public class LosePopup : BasePopup
             skipLevelButton.gameObject.SetActive(false);
         }
         #endregion
+
+        GamePersistentVariable.isLevelLost = true;
     }
 
     private void Replay()
     {
-        // GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat
+        if (
+            GamePersistentVariable.livesConfig.isActive &&
+            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
+        )
+        {
+            GamePersistentVariable.isPendingReplay = true;
+
+            SwitchRoute(ScreenRoute.LivesShop);
+
+            return;
+        }
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {

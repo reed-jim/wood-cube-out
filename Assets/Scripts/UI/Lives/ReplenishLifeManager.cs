@@ -146,6 +146,7 @@ public class ReplenishLifeManager : MonoBehaviour
         }
 
         _livesData.CurrentLives += value;
+        _livesData.CurrentLives = Math.Clamp(_livesData.CurrentLives, 0, MaxLives);
 
         DataUtility.Save(GameConstants.USER_LIVES_DATA, _livesData);
 
