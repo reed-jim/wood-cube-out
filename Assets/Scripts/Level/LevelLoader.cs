@@ -338,6 +338,8 @@ public class LevelLoader : MonoBehaviour
 
                 CoinChallengeGameplayUI.Instance.SetNumber();
                 #endregion
+
+                GamePersistentVariable.isLevelLost = false;
             }
         };
 

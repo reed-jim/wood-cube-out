@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -8,6 +9,7 @@ public class LivesShopPopup : BasePopup
 {
     [SerializeField] private Button refillByAdsButton;
     [SerializeField] private Button refillByCoinButton;
+    [SerializeField] private Button refuseButton;
     [SerializeField] private TMP_Text currentLivesText;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -25,6 +27,7 @@ public class LivesShopPopup : BasePopup
     {
         refillByCoinButton.onClick.AddListener(RefillByCoin);
         refillByAdsButton.onClick.AddListener(RefillByAds);
+        refuseButton.onClick.AddListener(Refuse);
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -104,5 +107,23 @@ public class LivesShopPopup : BasePopup
 
             GamePersistentVariable.isPendingReplay = false;
         }
+    }
+
+    private void Refuse()
+    {
+        base.Hide(onCompletedAction: () =>
+        {
+            if (GamePersistentVariable.isLevelLost)
+            {
+                ReturnHomeOnRejectedToRefillLive();
+            }
+        });
+    }
+
+    private void ReturnHomeOnRejectedToRefillLive()
+    {
+        GamePersistentVariable.isLevelLost = false;
+
+        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 }

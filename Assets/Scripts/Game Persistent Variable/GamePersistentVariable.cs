@@ -47,6 +47,7 @@ public static class GamePersistentVariable
     public static bool isPendingReturnHome;
     public static bool isMenuLoading;
     public static bool hasPlayerReachedGameplay;
+    public static bool isLevelLost;
     #endregion
 
     #region LIVES
