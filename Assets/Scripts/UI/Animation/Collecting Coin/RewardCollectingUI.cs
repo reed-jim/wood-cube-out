@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using PrimeTween;
 using UnityEngine;
 
-public class RewardCollectingUI : MonoBehaviour
+public class RewardCollectingUI : SaferioTweenBehaviour
 {
     [SerializeField] private GameObject prefab;
     [SerializeField] private GameObject container;
@@ -15,10 +15,10 @@ public class RewardCollectingUI : MonoBehaviour
 
     #region EVENT
     public static event Action<float> addCoinEvent;
+    public static event Action<float> updateCoinTextEvent;
     #endregion
 
-
-    private void Awake()
+    protected override void MoreActionInAwake()
     {
         CoinContainerUI.collectCoinEvent += Collect;
         WinPopup.collectCoinEvent += Collect;
@@ -26,7 +26,7 @@ public class RewardCollectingUI : MonoBehaviour
         CreatePool();
     }
 
-    private void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         CoinContainerUI.collectCoinEvent -= Collect;
         WinPopup.collectCoinEvent -= Collect;
@@ -44,7 +44,7 @@ public class RewardCollectingUI : MonoBehaviour
         }
     }
 
-    private async void Collect(Vector3 position)
+    private void Collect(Vector3 position)
     {
         Collect(position);
     }
@@ -58,21 +58,72 @@ public class RewardCollectingUI : MonoBehaviour
             _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
             _rewards[i].localScale = Vector3.zero;
 
-            Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f));
+            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
 
         await Task.Delay(620);
+
+        float remainValue = totalValue % poolSize;
+        float unitValue = (float)(totalValue - remainValue) / poolSize;
 
         for (int i = 0; i < poolSize; i++)
         {
             int index = i;
 
-            Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
             {
-                addCoinEvent?.Invoke((float)totalValue / poolSize);
+                // addCoinEvent?.Invoke((float)totalValue / poolSize);
+
+                float valueLeft = (poolSize - index - 1) * unitValue;
+
+                if (index == poolSize - 1)
+                {
+                    valueLeft = 0;
+                }
+
+                UserResourcesManager.Instance.UpdateCoinTextAnimation(valueLeft);
 
                 _rewards[index].gameObject.SetActive(false);
-            });
+            }));
+        }
+    }
+
+    private async void CollectItem(Vector3 position, int totalValue = 0)
+    {
+        for (int i = 0; i < poolSize; i++)
+        {
+            _rewards[i].gameObject.SetActive(true);
+
+            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
+            _rewards[i].localScale = Vector3.zero;
+
+            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+        }
+
+        await Task.Delay(620);
+
+        float remainValue = totalValue % poolSize;
+        float unitValue = (float)(totalValue - remainValue) / poolSize;
+
+        for (int i = 0; i < poolSize; i++)
+        {
+            int index = i;
+
+            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            {
+                // addCoinEvent?.Invoke((float)totalValue / poolSize);
+
+                float valueLeft = (poolSize - index - 1) * unitValue;
+
+                if (index == poolSize - 1)
+                {
+                    valueLeft = 0;
+                }
+
+                UserResourcesManager.Instance.UpdateCoinTextAnimation(valueLeft);
+
+                _rewards[index].gameObject.SetActive(false);
+            }));
         }
     }
 }

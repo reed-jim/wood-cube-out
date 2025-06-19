@@ -831,8 +831,6 @@ public class LevelLoader : MonoBehaviour
         //     targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
         // }
 
-        Debug.Log("SAFERIO " + expectedLevelSize + "/" + isScaleByHeight + "/" + isXEqualZ);
-
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
         GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
