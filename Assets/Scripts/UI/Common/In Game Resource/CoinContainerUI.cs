@@ -25,6 +25,7 @@ public class CoinContainerUI : MonoBehaviour
 
     #region EVENT
     public static event Action<Vector3, int> collectCoinEvent;
+    public static event Action<ResourceType, Vector3, int> collectItemsEvent;
     public static event Action goToIAPShopEvent;
     #endregion
 
@@ -114,6 +115,7 @@ public class CoinContainerUI : MonoBehaviour
 
         Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
 
-        collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
+        // collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
+        collectItemsEvent?.Invoke(ResourceType.Live, positionRelativeToCanvas, value);
     }
 }

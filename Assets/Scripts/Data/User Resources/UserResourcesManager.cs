@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class UserResourcesManager : MonoBehaviour
 {
+    public static UserResourcesManager Instance;
+
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     #region EVENT
@@ -11,6 +13,17 @@ public class UserResourcesManager : MonoBehaviour
 
     void Awake()
     {
+        if (Instance != null && Instance != this)
+        {
+            gameObject.SetActive(false);
+
+            Destroy(gameObject);
+        }
+        else
+        {
+            Instance = this;
+        }
+
         RewardCollectingUI.addCoinEvent += AddCoin;
     }
 
@@ -26,5 +39,12 @@ public class UserResourcesManager : MonoBehaviour
         userResourcesObserver.Load();
 
         updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
+    }
+
+    public void UpdateCoinTextAnimation()
+    {
+        userResourcesObserver.Load();
+
+        updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity - GamePersistentVariable.spawnedRewardItemsData.GetValueLeft());
     }
 }

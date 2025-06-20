@@ -47,6 +47,7 @@ public static class GamePersistentVariable
     public static bool isPendingReturnHome;
     public static bool isMenuLoading;
     public static bool hasPlayerReachedGameplay;
+    public static bool isLevelLost;
     #endregion
 
     #region LIVES
@@ -150,5 +151,9 @@ public static class GamePersistentVariable
     public static bool isLevelChestClaimable;
     public static string currentChestReason;
     public static bool isClaimedLevelChest;
+    #endregion
+
+    #region SPAWNED FLYING REWARD ITEMS
+    public static SpawnedRewardItemsData spawnedRewardItemsData;
     #endregion
 }

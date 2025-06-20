@@ -136,6 +136,12 @@ public class GameEnum : MonoBehaviour
         Local
     }
 
+    public enum ResourceType
+    {
+        Coin,
+        Live
+    }
+
     public static T GetRandomEnumValue<T>()
     {
         Array enumValues = Enum.GetValues(typeof(T));
