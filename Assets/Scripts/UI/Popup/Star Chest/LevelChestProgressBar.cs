@@ -29,6 +29,11 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         SetProgress();
     }
 
