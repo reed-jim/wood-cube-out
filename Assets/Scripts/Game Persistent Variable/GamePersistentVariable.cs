@@ -152,4 +152,8 @@ public static class GamePersistentVariable
     public static string currentChestReason;
     public static bool isClaimedLevelChest;
     #endregion
+
+    #region SPAWNED FLYING REWARD ITEMS
+    public static SpawnedRewardItemsData spawnedRewardItemsData;
+    #endregion
 }

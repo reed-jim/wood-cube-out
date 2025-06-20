@@ -66,6 +66,14 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         float remainValue = totalValue % poolSize;
         float unitValue = (float)(totalValue - remainValue) / poolSize;
 
+        SpawnedRewardItemsData spawnedRewardItemsData = new SpawnedRewardItemsData();
+
+        spawnedRewardItemsData.totalItems = poolSize;
+        spawnedRewardItemsData.remaningItems = poolSize;
+        spawnedRewardItemsData.unitValue = unitValue;
+
+        GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
+
         for (int i = 0; i < poolSize; i++)
         {
             int index = i;
@@ -81,7 +89,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                     valueLeft = 0;
                 }
 
-                UserResourcesManager.Instance.UpdateCoinTextAnimation(valueLeft);
+                UserResourcesManager.Instance.UpdateCoinTextAnimation();
 
                 _rewards[index].gameObject.SetActive(false);
             }));
@@ -120,10 +128,22 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                     valueLeft = 0;
                 }
 
-                UserResourcesManager.Instance.UpdateCoinTextAnimation(valueLeft);
-
                 _rewards[index].gameObject.SetActive(false);
             }));
         }
+    }
+}
+
+public class SpawnedRewardItemsData
+{
+    public int totalItems;
+    public int remaningItems;
+    public float unitValue;
+
+    public float GetValueLeft()
+    {
+        remaningItems--;
+
+        return remaningItems * unitValue;
     }
 }

@@ -41,10 +41,10 @@ public class UserResourcesManager : MonoBehaviour
         updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
     }
 
-    public void UpdateCoinTextAnimation(float valueLeft)
+    public void UpdateCoinTextAnimation()
     {
         userResourcesObserver.Load();
 
-        updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity - valueLeft);
+        updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity - GamePersistentVariable.spawnedRewardItemsData.GetValueLeft());
     }
 }
