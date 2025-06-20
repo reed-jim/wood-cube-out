@@ -52,6 +52,7 @@ public class UserLivesUI : SaferioTweenBehaviour
 
     private void UpdateLivesNumber(int lives)
     {
+        ActualUpdate();
 
         // numLivesText.text = $"{lives}";
 
@@ -74,21 +75,23 @@ public class UserLivesUI : SaferioTweenBehaviour
 
         _numLives = lives;
 
-        try
-        {
-            Vector2 positionRelativeToCanvas = ((Vector2)liveIcon.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
+        // try
+        // {
+        //     Vector2 positionRelativeToCanvas = ((Vector2)liveIcon.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
 
-            RewardCollectingUI.Instance.CollectItem(
-                ResourceType.Live,
-                positionRelativeToCanvas,
-                onCompleteAction: () => ActualUpdate(),
-                totalValue: 1
-            );
-        }
-        catch (System.Exception)
-        {
-            ActualUpdate();
-        }
+        //     RewardCollectingUI.Instance.CollectItem(
+        //         ResourceType.Live,
+        //         positionRelativeToCanvas,
+        //         onCompleteAction: () => ActualUpdate(),
+        //         totalValue: 1,
+        //         poolSize: 1,
+        //         itemSizeX: liveIcon.sizeDelta.x
+        //     );
+        // }
+        // catch (System.Exception)
+        // {
+        //     ActualUpdate();
+        // }
 
         void ActualUpdate()
         {
@@ -111,7 +114,7 @@ public class UserLivesUI : SaferioTweenBehaviour
                 }
             }
 
-            AddTween(Tween.Scale(container, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f));
+            AddTween(Tween.Scale(numLivesText.transform, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f));
         }
     }
 

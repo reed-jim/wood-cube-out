@@ -94,7 +94,7 @@ public class CoinContainerUI : MonoBehaviour
 
         if (!_isInTransition && isPlayAnimation)
         {
-            _tweens.Add(Tween.Scale(container, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f)
+            _tweens.Add(Tween.Scale(coinText.transform, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f)
             .OnComplete(() => _isInTransition = false));
 
             _isInTransition = true;
@@ -115,7 +115,17 @@ public class CoinContainerUI : MonoBehaviour
 
         Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
 
+        RewardCollectingUI.Instance.CollectItem
+        (
+            ResourceType.Coin,
+            positionRelativeToCanvas,
+            onCompleteAction: () => UserResourcesManager.Instance.UpdateCoinTextAnimation(),
+            totalValue: value,
+            poolSize: 16,
+            itemSizeX: iconRT.sizeDelta.x
+        );
+
         // collectCoinEvent?.Invoke(positionRelativeToCanvas, value);
-        collectItemsEvent?.Invoke(ResourceType.Live, positionRelativeToCanvas, value);
+        // collectItemsEvent?.Invoke(ResourceType.Live, positionRelativeToCanvas, value);
     }
 }
