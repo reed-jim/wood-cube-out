@@ -299,13 +299,11 @@ public class ClaimRewardPopup : BasePopup
                 chestClaimMultiplierButton.interactable = true;
             }));
 
-            float initialTitlePositionY = localizedTitleRT.localPosition.y;
-
             localizedTitle.gameObject.SetActive(true);
 
-            localizedTitleRT.localPosition = localizedTitleRT.localPosition.ChangeY(initialTitlePositionY + 400);
+            UIUtil.SetLocalPositionY(localizedTitleRT, 0.5f * (GamePersistentVariable.canvasSize.y + localizedTitleRT.sizeDelta.y));
 
-            _tweens.Add(Tween.LocalPositionY(localizedTitleRT, initialTitlePositionY, duration: 0.3f));
+            _tweens.Add(Tween.LocalPositionY(localizedTitleRT, 0.35f * GamePersistentVariable.canvasSize.y, duration: 0.3f));
         }));
 
         _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>

@@ -8,6 +8,7 @@ using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.Experimental.AI;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -336,13 +337,19 @@ public class WinPopup : BasePopup
     #region COIN CHALLENGE
     private void HandleCoinChallenge()
     {
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
+        CoinChallengeData coinChallengeData = DataUtility.Load<CoinChallengeData>(GameConstants.COIN_CHALLENGE_DATA, null);
+
+        if (coinChallengeData == null)
+        {
+            coinChallengeData = new CoinChallengeData();
+            coinChallengeData.startTimestamp = CommonUtil.GetCurrentTimestamp();
+        }
 
         DayOfWeek dayOfWeek = DateTime.Now.DayOfWeek;
 
         bool isAvailable = dayOfWeek == DayOfWeek.Monday || dayOfWeek == DayOfWeek.Tuesday;
 
-        if (currentLevel.Value < 30 || !isAvailable)
+        if (currentLevel.ValueUsingPureJson < 30 || !isAvailable)
         {
             return;
         }
