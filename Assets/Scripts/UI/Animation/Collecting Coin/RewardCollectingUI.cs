@@ -118,17 +118,21 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         }
     }
 
-    public async void CollectItem(ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue = 0, int poolSize = 1)
+    public async void CollectItem
+    (
+        ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, int poolSize, float itemSizeX
+    )
     {
         for (int i = 0; i < poolSize; i++)
         {
             _rewards[i].gameObject.SetActive(true);
 
             _rewardImages[i].sprite = resourceSprites[(int)resourceType];
+            _rewardImages[i].color = Color.white;
 
-            UIUtil.SetSizeKeepRatioY(_rewards[i], 0.1f * GamePersistentVariable.canvasSize.x);
+            UIUtil.SetSizeKeepRatioY(_rewards[i], itemSizeX);
 
-            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
+            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
             _rewards[i].localScale = Vector3.zero;
 
             AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
@@ -151,19 +155,25 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         {
             int index = i;
 
-            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+            Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
+
+            AddTween(Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: Ease.Linear)
+            .OnComplete(() =>
             {
-                float valueLeft = (poolSize - index - 1) * unitValue;
-
-                if (index == poolSize - 1)
+                AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f), ease: Ease.InOutSine)
+                .OnComplete(() =>
                 {
-                    valueLeft = 0;
-                }
+                    float valueLeft = (poolSize - index - 1) * unitValue;
 
-                onCompleteAction?.Invoke();
-                // UserResourcesManager.Instance.UpdateCoinTextAnimation();
+                    if (index == poolSize - 1)
+                    {
+                        valueLeft = 0;
+                    }
 
-                _rewards[index].gameObject.SetActive(false);
+                    onCompleteAction?.Invoke();
+
+                    _rewards[index].gameObject.SetActive(false);
+                }));
             }));
         }
     }
