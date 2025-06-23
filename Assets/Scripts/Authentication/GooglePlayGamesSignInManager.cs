@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Firebase.Auth;
-using GooglePlayGames;
-using GooglePlayGames.BasicApi;
+// using GooglePlayGames;
+// using GooglePlayGames.BasicApi;
 using UnityEngine;
 
 public class GooglePlayGamesSignInManager : MonoBehaviour
