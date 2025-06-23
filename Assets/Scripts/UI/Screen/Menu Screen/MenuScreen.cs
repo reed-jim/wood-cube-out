@@ -75,6 +75,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
         SpaceRacePopup.startGameEvent += StartGame;
+        LivesShopPopup.startGameEvent += StartGame;
         SalePackIAPManager.suggestSalePackEvent += ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent += OpenCoinChallengePopup;
         StarChestProgressBar.openStarChestPopupEvent += OpenStarChestPopup;
@@ -168,6 +169,7 @@ public class MenuScreen : MonoBehaviour
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
         SpaceRacePopup.startGameEvent -= StartGame;
+        LivesShopPopup.startGameEvent -= StartGame;
         SalePackIAPManager.suggestSalePackEvent -= ShowSalePack;
         GameEventManager.suggestCoinChallengeEvent -= OpenCoinChallengePopup;
         StarChestProgressBar.openStarChestPopupEvent -= OpenStarChestPopup;
@@ -230,6 +232,8 @@ public class MenuScreen : MonoBehaviour
         )
         {
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
+
+            GamePersistentVariable.isPendingStartLevel = true;
 
             return;
         }

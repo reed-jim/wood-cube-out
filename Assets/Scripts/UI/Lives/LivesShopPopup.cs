@@ -22,6 +22,7 @@ public class LivesShopPopup : BasePopup
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<float> updateCoinTextEvent;
     public static event Action lackCoinReplenishLiveEvent;
+    public static event Action startGameEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -47,10 +48,7 @@ public class LivesShopPopup : BasePopup
 
     private void OnRewaredAdCompletedToRefillLives()
     {
-        Hide(onCompletedAction: () =>
-        {
-            ActualRefill();
-        });
+        ActualRefill();
 
         SaferioTracking.TrackRewardedAdCompleted(GamePersistentVariable.currentLevel, "Refill Live");
     }
@@ -92,11 +90,11 @@ public class LivesShopPopup : BasePopup
         Hide(
             onCompletedAction: () =>
             {
-                if (GamePersistentVariable.isPendingReturnHome)
+                if (GamePersistentVariable.isPendingStartLevel)
                 {
-                    runPendingReturnHomeCommandEvent?.Invoke();
+                    startGameEvent?.Invoke();
 
-                    GamePersistentVariable.isPendingReturnHome = false;
+                    GamePersistentVariable.isPendingStartLevel = false;
                 }
             }
         );
@@ -118,6 +116,9 @@ public class LivesShopPopup : BasePopup
                 ReturnHomeOnRejectedToRefillLive();
             }
         });
+
+        GamePersistentVariable.isPendingStartLevel = false;
+        GamePersistentVariable.isPendingReplay = false;
     }
 
     private void ReturnHomeOnRejectedToRefillLive()
