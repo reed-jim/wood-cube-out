@@ -623,7 +623,7 @@ public class AdmobAdsMax : MonoBehaviour
 #if UNITY_ANDROID
     private string _adUnitId = "ca-app-pub-8467610367562059/2389863144";
 #elif UNITY_IPHONE
-  private string _adUnitId = "ca-app-pub-3940256099942544/4411468910";
+  private string _adUnitId = "ca-app-pub-8467610367562059/3541554484";
 #else
   private string _adUnitId = "unused";
 #endif
