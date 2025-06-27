@@ -20559,7 +20559,7 @@ RectTransform:
   m_Father: {fileID: 1673665026}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1.9538671, y: 3.310962}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -54273,10 +54273,10 @@ RectTransform:
   - {fileID: 960359781323948673}
   m_Father: {fileID: 1972218272}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 1080, y: 0}
-  m_SizeDelta: {x: 1080, y: 0}
+  m_SizeDelta: {x: -2160, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2700983700853025478
 GameObject:
@@ -69706,6 +69706,7 @@ GameObject:
   - component: {fileID: 7234103587805970723}
   - component: {fileID: 6043275837386889011}
   - component: {fileID: 4348495932956909513}
+  - component: {fileID: 7234103587805970724}
   m_Layer: 5
   m_Name: Leaderboard Screen
   m_TagString: Untagged
@@ -70180,6 +70181,19 @@ MonoBehaviour:
   globalButton: {fileID: 8776497840315176909}
   localButton: {fileID: 4131507419435946141}
   selfScore: {fileID: 3821356690801768109}
+--- !u!114 &7234103587805970724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5411041681797085725}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e09569afa75b9549bcbd03536337c4c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvas: {fileID: 1673665025}
 --- !u!222 &7246564330680280820
 CanvasRenderer:
   m_ObjectHideFlags: 0
