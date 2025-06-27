@@ -10,6 +10,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
     [SerializeField] private TMP_Text rankText;
     [SerializeField] private TMP_Text scoreText;
     [SerializeField] private Image medalIcon;
+    [SerializeField] private RectTransform flagContainer;
     [SerializeField] private Image flag;
 
     [SerializeField] private CountryDataContainer countryDataContainer;
@@ -68,6 +69,8 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
             }
 
             flag.sprite = countryDataContainer.Countries[items[index].countryIndex].Flag;
+
+            UIUtil.SetSizeKeepRatioY(flag.rectTransform, flag.rectTransform.sizeDelta.x);
         }
         catch (System.Exception)
         {
