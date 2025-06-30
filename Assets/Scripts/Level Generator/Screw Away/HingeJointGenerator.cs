@@ -2997,7 +2997,13 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
 
+            Debug.Log("SAFERIO " + piece.name + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
+
             int numScrewSpawned = 0;
+
+            Quaternion cachedPieceRotation = piece.transform.rotation;
+
+            piece.transform.rotation = Quaternion.identity;
 
             for (int i = 0; i < maxScrewX; i++)
             {
@@ -3034,7 +3040,7 @@ public class HingeJointGenerator : EditorWindow
 
                         poolDirection.Add(FaceDirection.Front);
                         poolDirection.Add(FaceDirection.Top);
-                        poolDirection.Add(FaceDirection.Rear);
+                        poolDirection.Add(FaceDirection.Side);
 
                         if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.y > pieceSize.y)
                         {
@@ -3042,7 +3048,7 @@ public class HingeJointGenerator : EditorWindow
                         }
                         if (1.6f * screwSize.y > pieceSize.y || 1.6f * screwSize.z > pieceSize.z)
                         {
-                            poolDirection.Remove(FaceDirection.Rear);
+                            poolDirection.Remove(FaceDirection.Side);
                         }
                         if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.z > pieceSize.z)
                         {
@@ -3057,16 +3063,19 @@ public class HingeJointGenerator : EditorWindow
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
 
                         screw.transform.position = piece.transform.position +
-                        new Vector3(
-                            (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
-                            (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
-                            (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
+                            new Vector3
+                            (
+                                (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
+                                (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
+                                (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
                             );
 
                         int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
 
                         // prevent invalid screw generation
                         direction = 1;
+
+                        Debug.Log("SAFERIO " + piece.name + "/" + faceDirection);
 
                         if (faceDirection == FaceDirection.Front)
                         {
@@ -3105,7 +3114,15 @@ public class HingeJointGenerator : EditorWindow
                             }
 
                             screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
+
+                            if (direction == 1)
+                            {
+                                screw.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+                            }
+                            else
+                            {
+                                screw.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
+                            }
 
                             for (int m = 0; m < maxScrewX; m++)
                             {
@@ -3140,6 +3157,8 @@ public class HingeJointGenerator : EditorWindow
                     }
                 }
             }
+
+            piece.transform.rotation = cachedPieceRotation;
         }
 
         bool IsValidTile(int x, int y, int z, Dictionary<Vector3, bool> isTilesEmpty)
@@ -3262,5 +3281,5 @@ enum FaceDirection
 {
     Front,
     Top,
-    Rear
+    Side
 }
