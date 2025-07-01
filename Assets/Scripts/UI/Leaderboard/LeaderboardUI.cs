@@ -117,7 +117,20 @@ public class LeaderboardUI : MonoBehaviour
 
     private void OpenCountryPicker()
     {
-        countryPicker.gameObject.SetActive(!countryPicker.gameObject.activeInHierarchy);
+        countryPicker.gameObject.SetActive(true);
+
+        countryPicker.localScale = new Vector3(1, 0, 1);
+
+        Tween.ScaleY(countryPicker, 1, duration: 0.3f);
+    }
+
+    private void HideCountryPicker()
+    {
+        Tween.ScaleY(countryPicker, 0, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            countryPicker.gameObject.SetActive(false);
+        });
     }
 
     IEnumerator FetchCountries()
@@ -213,6 +226,8 @@ public class LeaderboardUI : MonoBehaviour
         selectedCountryFlag.sprite = country.Flag;
         selectedCountryName.text = country.Name;
 
+        UIUtil.SetSizeKeepRatioY(selectedCountryFlag, selectedCountryFlag.rectTransform.sizeDelta.x);
+
         for (int i = 0; i < countryDataContainer.Countries.Count; i++)
         {
             if (countryDataContainer.Countries[i].Name == country.Name)
@@ -222,6 +237,8 @@ public class LeaderboardUI : MonoBehaviour
                 break;
             }
         }
+
+        HideCountryPicker();
     }
 
     [System.Serializable]
