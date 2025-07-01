@@ -2959,6 +2959,12 @@ public class HingeJointGenerator : EditorWindow
 
         void GenerateScrewForPiece(BasicObjectPart piece)
         {
+            // // reset rotation
+            // Quaternion cachedPieceRotation = piece.transform.rotation;
+
+            // piece.transform.rotation = Quaternion.identity;
+            // //
+
             Vector3 pieceSize = piece.GetComponent<MeshCollider>().bounds.size;
             Vector3 halfSize = 0.5f * pieceSize;
 
@@ -2997,13 +3003,9 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
 
-            Debug.Log("SAFERIO " + piece.name + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
+            Debug.Log("SAFERIO " + piece.name + "/" + screwSize + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             int numScrewSpawned = 0;
-
-            Quaternion cachedPieceRotation = piece.transform.rotation;
-
-            piece.transform.rotation = Quaternion.identity;
 
             for (int i = 0; i < maxScrewX; i++)
             {
@@ -3038,26 +3040,50 @@ public class HingeJointGenerator : EditorWindow
 
                         List<FaceDirection> poolDirection = new List<FaceDirection>();
 
-                        poolDirection.Add(FaceDirection.Front);
-                        poolDirection.Add(FaceDirection.Top);
-                        poolDirection.Add(FaceDirection.Side);
+                        // poolDirection.Add(FaceDirection.Front);
+                        // poolDirection.Add(FaceDirection.Top);
+                        // poolDirection.Add(FaceDirection.Side);
 
-                        if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.y > pieceSize.y)
+                        // if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.y > pieceSize.y)
+                        // {
+                        //     poolDirection.Remove(FaceDirection.Front);
+                        // }
+                        // if (1.6f * screwSize.y > pieceSize.y || 1.6f * screwSize.z > pieceSize.z)
+                        // {
+                        //     poolDirection.Remove(FaceDirection.Side);
+                        // }
+                        // if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.z > pieceSize.z)
+                        // {
+                        //     poolDirection.Remove(FaceDirection.Top);
+                        // }
+
+                        // if (poolDirection.Count == 0)
+                        // {
+                        //     poolDirection.Add(FaceDirection.Top);
+                        // }
+
+                        // FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
+
+                        float areaFront = pieceSize.x * pieceSize.y;
+                        float areaTop = pieceSize.x * pieceSize.z;
+                        float areaSide = pieceSize.y * pieceSize.z;
+
+                        if (areaFront >= areaTop && areaFront >= areaSide)
                         {
-                            poolDirection.Remove(FaceDirection.Front);
-                        }
-                        if (1.6f * screwSize.y > pieceSize.y || 1.6f * screwSize.z > pieceSize.z)
-                        {
-                            poolDirection.Remove(FaceDirection.Side);
-                        }
-                        if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.z > pieceSize.z)
-                        {
-                            poolDirection.Remove(FaceDirection.Top);
+                            poolDirection.Add(FaceDirection.Front);
+                            // poolDirection.Add(FaceDirection.Top);
                         }
 
-                        if (poolDirection.Count == 0)
+                        if (areaTop >= areaFront && areaTop >= areaSide)
                         {
                             poolDirection.Add(FaceDirection.Top);
+                            // poolDirection.Add(FaceDirection.Side);
+                        }
+
+                        if (areaSide >= areaFront && areaSide >= areaTop)
+                        {
+                            poolDirection.Add(FaceDirection.Side);
+                            // poolDirection.Add(FaceDirection.Top);
                         }
 
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
@@ -3114,15 +3140,7 @@ public class HingeJointGenerator : EditorWindow
                             }
 
                             screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-
-                            if (direction == 1)
-                            {
-                                screw.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
-                            }
-                            else
-                            {
-                                screw.transform.rotation = Quaternion.Euler(new Vector3(0, 180, 0));
-                            }
+                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
 
                             for (int m = 0; m < maxScrewX; m++)
                             {
@@ -3139,26 +3157,27 @@ public class HingeJointGenerator : EditorWindow
                         screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
-                        RaycastHit hit;
+                        // // Remove invalid screw
+                        // RaycastHit hit;
 
-                        level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
+                        // level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
 
-                        if (hit.collider == null)
-                        {
-                            DestroyImmediate(screw.gameObject);
-                        }
-                        else
-                        {
-                            // if (hit.collider.GetComponent<BaseScrew>() != null)
-                            // {
-                            //     DestroyImmediate(screw.gameObject);
-                            // }
-                        }
+                        // if (hit.collider == null)
+                        // {
+                        //     DestroyImmediate(screw.gameObject);
+                        // }
+                        // else
+                        // {
+                        //     // if (hit.collider.GetComponent<BaseScrew>() != null)
+                        //     // {
+                        //     //     DestroyImmediate(screw.gameObject);
+                        //     // }
+                        // }
                     }
                 }
             }
 
-            piece.transform.rotation = cachedPieceRotation;
+            // piece.transform.rotation = cachedPieceRotation;
         }
 
         bool IsValidTile(int x, int y, int z, Dictionary<Vector3, bool> isTilesEmpty)
