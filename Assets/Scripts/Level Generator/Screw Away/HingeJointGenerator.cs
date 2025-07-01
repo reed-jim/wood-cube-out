@@ -3088,6 +3088,8 @@ public class HingeJointGenerator : EditorWindow
 
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
 
+                        faceDirection = FaceDirection.Side;
+
                         screw.transform.position = piece.transform.position +
                             new Vector3
                             (
@@ -3108,6 +3110,9 @@ public class HingeJointGenerator : EditorWindow
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
 
+                            // transform.position = parent.position + parent.forward * distance;
+                            // transform.rotation = Quaternion.LookRotation(-parent.forward, parent.up);
+
                             for (int m = 0; m < maxScrewZ; m++)
                             {
                                 isTilesEmpty[new Vector3(i, j, m)] = false;
@@ -3117,6 +3122,9 @@ public class HingeJointGenerator : EditorWindow
                         {
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+
+                            // transform.position = parent.position + parent.up * distance;
+                            // transform.rotation = Quaternion.LookRotation(-parent.up, parent.forward);
 
                             for (int m = 0; m < maxScrewY; m++)
                             {
@@ -3139,8 +3147,11 @@ public class HingeJointGenerator : EditorWindow
                                 }
                             }
 
-                            screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-                            screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
+                            // screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
+                            // screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
+
+                            screw.transform.position = piece.transform.position + piece.transform.forward * pieceSize.x;
+                            screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
 
                             for (int m = 0; m < maxScrewX; m++)
                             {
