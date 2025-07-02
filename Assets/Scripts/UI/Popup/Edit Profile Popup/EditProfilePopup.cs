@@ -23,6 +23,8 @@ public class EditProfilePopup : BasePopup
     #region COUNTRY PICKER
     [SerializeField] private Button openCountryPickerButton;
     [SerializeField] private RectTransform countryPicker;
+    [SerializeField] private CanvasGroup countryPickerCanvasGroup;
+    [SerializeField] private Image countryPickerMaskImage;
     [SerializeField] private Image selectedCountryFlag;
     [SerializeField] private TMP_Text selectedCountryName;
     [SerializeField] private CountryDataContainer countryDataContainer;
@@ -30,7 +32,6 @@ public class EditProfilePopup : BasePopup
 
     #region PRIVATE
     private int _selectedCountryIndex;
-    private float _initialCountryDropdownTopMostPositionY;
     #endregion
 
     protected override void MoreActionInAwake()
@@ -43,8 +44,6 @@ public class EditProfilePopup : BasePopup
         countrySearch.onValueChanged.AddListener(SearchCountry);
 
         countryPicker.gameObject.SetActive(false);
-
-        _initialCountryDropdownTopMostPositionY = countryPicker.localPosition.y + 0.5f * countryPicker.sizeDelta.y;
     }
 
     protected override void MoreActionOnDestroy()
@@ -123,38 +122,44 @@ public class EditProfilePopup : BasePopup
     {
         GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
 
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
+        // await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        // await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
 
-        await GameLeaderboardManager.Instance.GetLeaderboardData();
+        // await GameLeaderboardManager.Instance.GetLeaderboardData();
 
         scrollView.Refresh();
 
         DataUtility.Save(GameConstants.DID_USER_LOGIN, true);
         DataUtility.Save(GameConstants.SELECTED_COUNTRY_INDEX, _selectedCountryIndex);
+
+        Hide();
     }
 
     private void OpenCountryPicker()
     {
+        if (countryPicker.gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         countryPicker.gameObject.SetActive(true);
 
-        countryPicker.localScale = new Vector3(1, 0, 1);
+        countryPickerCanvasGroup.alpha = 0;
+        countryPickerMaskImage.fillAmount = 0;
 
-        _tweens.Add(Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(0, 1, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
         {
-            countryPicker.localScale = new Vector3(1, newVal, 1);
-
-            UIUtil.SetLocalPositionY(countryPicker, _initialCountryDropdownTopMostPositionY - 0.5f * countryPicker.sizeDelta.y * newVal);
+            countryPickerCanvasGroup.alpha = newVal;
+            countryPickerMaskImage.fillAmount = newVal;
         }));
     }
 
     private void HideCountryPicker()
     {
-        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
         {
-            countryPicker.localScale = new Vector3(1, newVal, 1);
-
-            UIUtil.SetLocalPositionY(countryPicker, _initialCountryDropdownTopMostPositionY - 0.5f * countryPicker.sizeDelta.y * newVal);
+            // countryPickerCanvasGroup.alpha = newVal;
+            countryPickerMaskImage.fillAmount = newVal;
         })
         .OnComplete(() =>
         {

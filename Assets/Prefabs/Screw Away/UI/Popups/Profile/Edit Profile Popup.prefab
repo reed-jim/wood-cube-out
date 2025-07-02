@@ -116,6 +116,8 @@ MonoBehaviour:
   countryDisplay: {fileID: 5237351757891164124}
   openCountryPickerButton: {fileID: 6553825755552120409}
   countryPicker: {fileID: 8744539300742604709}
+  countryPickerCanvasGroup: {fileID: 4463328785306400153}
+  countryPickerMaskImage: {fileID: 816228562027041997}
   selectedCountryFlag: {fileID: 3904382957028728212}
   selectedCountryName: {fileID: 8104032980559746814}
   countryDataContainer: {fileID: 11400000, guid: 36ca2a8258be41f4197e861ce152d272, type: 2}
@@ -1424,6 +1426,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8744539300742604709}
   - component: {fileID: 428642985210010792}
+  - component: {fileID: 4463328785306400153}
   - component: {fileID: 816228562027041997}
   - component: {fileID: 7206749271316174579}
   m_Layer: 5
@@ -1462,6 +1465,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3867790514605858864}
   m_CullTransparentMesh: 1
+--- !u!225 &4463328785306400153
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3867790514605858864}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &816228562027041997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1482,14 +1497,14 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
+  m_Sprite: {fileID: 21300000, guid: 82bd4fda3432eee4b8601be890106553, type: 3}
+  m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
-  m_FillMethod: 4
+  m_FillMethod: 1
   m_FillAmount: 1
   m_FillClockwise: 1
-  m_FillOrigin: 0
+  m_FillOrigin: 1
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
 --- !u!114 &7206749271316174579
