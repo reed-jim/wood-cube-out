@@ -3150,7 +3150,7 @@ public class HingeJointGenerator : EditorWindow
                             // screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
                             // screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
 
-                            screw.transform.position = piece.transform.position + piece.transform.forward * pieceSize.x;
+                            screw.transform.position = piece.transform.position - piece.transform.right * pieceSize.x;
                             screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
 
                             for (int m = 0; m < maxScrewX; m++)
