@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -11,6 +12,7 @@ using Unity.Services.Authentication;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class LeaderboardUI : MonoBehaviour
 {
@@ -27,14 +29,15 @@ public class LeaderboardUI : MonoBehaviour
     [SerializeField] private CountryDataContainer countryDataContainer;
     #endregion
 
-    [SerializeField] private CanvasGroup inputNameCanvasGroup;
     [SerializeField] private CanvasGroup leaderboardCanvasGroup;
 
     #region PRIVATE
     private int _numCountriesFetched;
     private int _totalCountries;
     private int _selectedCountryIndex;
-    #endregion  
+    #endregion
+
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     void Awake()
     {
@@ -52,12 +55,13 @@ public class LeaderboardUI : MonoBehaviour
         CountryItem.selectCountryEvent -= SelectCountry;
     }
 
-    void Start()
+    void OnEnable()
     {
         CheckShowLeaderboardAsync();
+    }
 
-        // StartCoroutine(FetchCountries());
-
+    void Start()
+    {
         _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
 
         if (_selectedCountryIndex != -1)
@@ -84,13 +88,16 @@ public class LeaderboardUI : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.DID_USER_LOGIN, false))
         {
-            inputNameCanvasGroup.gameObject.SetActive(false);
             leaderboardCanvasGroup.gameObject.SetActive(true);
 
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             await GameLeaderboardManager.Instance.GetLeaderboardData();
 
             scrollView.Refresh();
+        }
+        else
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
         }
     }
 
@@ -106,7 +113,6 @@ public class LeaderboardUI : MonoBehaviour
         leaderboardCanvasGroup.gameObject.SetActive(true);
         leaderboardCanvasGroup.alpha = 0;
 
-        Tween.Alpha(inputNameCanvasGroup, 0, duration: 0.3f);
         Tween.Alpha(leaderboardCanvasGroup, 1, duration: 0.3f);
 
         scrollView.Refresh();
