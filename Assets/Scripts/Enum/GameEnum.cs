@@ -63,7 +63,8 @@ public class GameEnum : MonoBehaviour
         Replay,
         StarChest,
         JoinSpaceRace,
-        StarTournament
+        StarTournament,
+        EditProfile
     }
 
     public enum GameFaction

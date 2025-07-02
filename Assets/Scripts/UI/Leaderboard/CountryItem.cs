@@ -1,5 +1,8 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,14 +32,29 @@ public class CountryItem : MonoBehaviour, ISaferioScrollViewItem
     {
         try
         {
-            _currentCountry = countryDataContainer.Countries[index];
+            List<Country> countries = countryDataContainer.Countries;
+
+            if (!string.IsNullOrEmpty(GamePersistentVariable.countrySearchQuery))
+            {
+                List<Country> filterCountries =
+                    countryDataContainer.Countries.
+                        Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+
+                countries = filterCountries;
+            }
+
+            _currentCountry = countries[index];
 
             flag.sprite = _currentCountry.Flag;
             countryNameText.text = _currentCountry.Name;
+
+            gameObject.SetActive(true);
         }
         catch (System.Exception e)
         {
+            gameObject.SetActive(false);
 
+            Debug.Log("SAFERIO " + e.Message);
         }
     }
 

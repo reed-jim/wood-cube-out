@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
 using Saferio.Util;
@@ -9,9 +12,13 @@ using UnityEngine.UI;
 public class EditProfilePopup : BasePopup
 {
     [SerializeField] private TMP_InputField nameInput;
-    [SerializeField] private Button continueButton;
+    [SerializeField] private TMP_InputField countrySearch;
+    [SerializeField] private Button saveButton;
     [SerializeField] private ObjectPoolingScrollView scrollView;
     [SerializeField] private ObjectPoolingScrollView countryPickerScrollView;
+
+    [SerializeField] private TMP_Text placeholderCountry;
+    [SerializeField] private CanvasGroup countryDisplay;
 
     #region COUNTRY PICKER
     [SerializeField] private Button openCountryPickerButton;
@@ -23,21 +30,39 @@ public class EditProfilePopup : BasePopup
 
     #region PRIVATE
     private int _selectedCountryIndex;
+    private float _initialCountryDropdownTopMostPositionY;
     #endregion
 
     protected override void MoreActionInAwake()
     {
         CountryItem.selectCountryEvent += SelectCountry;
 
-        continueButton.onClick.AddListener(ConfirmNameAsync);
+        saveButton.onClick.AddListener(ConfirmNameAsync);
         openCountryPickerButton.onClick.AddListener(OpenCountryPicker);
 
+        countrySearch.onValueChanged.AddListener(SearchCountry);
+
         countryPicker.gameObject.SetActive(false);
+
+        _initialCountryDropdownTopMostPositionY = countryPicker.localPosition.y + 0.5f * countryPicker.sizeDelta.y;
     }
 
     protected override void MoreActionOnDestroy()
     {
         CountryItem.selectCountryEvent -= SelectCountry;
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        Reset();
+
+        base.Show(onCompletedAction);
+    }
+
+    private void Reset()
+    {
+        placeholderCountry.gameObject.SetActive(true);
+        countryPicker.gameObject.SetActive(false);
     }
 
     void Start()
@@ -52,6 +77,11 @@ public class EditProfilePopup : BasePopup
         {
             SetupCountryPicker();
         }
+
+        if (_selectedCountryIndex == -1)
+        {
+
+        }
     }
 
     private void SetupCountryPicker()
@@ -62,6 +92,31 @@ public class EditProfilePopup : BasePopup
         selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
 
         countryPickerScrollView.Refresh();
+    }
+
+    private void Setup()
+    {
+        if (_selectedCountryIndex == -1)
+        {
+            placeholderCountry.gameObject.SetActive(true);
+            countryDisplay.gameObject.SetActive(false);
+
+            saveButton.interactable = false;
+        }
+        else
+        {
+            countryDisplay.gameObject.SetActive(true);
+
+            countryDisplay.alpha = 0;
+
+            _tweens.Add(Tween.Alpha(placeholderCountry, 0, duration: 0.3f).OnComplete(() =>
+            {
+                placeholderCountry.gameObject.SetActive(false);
+            }));
+            _tweens.Add(Tween.Alpha(countryDisplay, 1, duration: 0.3f));
+
+            saveButton.interactable = true;
+        }
     }
 
     private async void ConfirmNameAsync()
@@ -85,16 +140,26 @@ public class EditProfilePopup : BasePopup
 
         countryPicker.localScale = new Vector3(1, 0, 1);
 
-        Tween.ScaleY(countryPicker, 1, duration: 0.3f);
+        _tweens.Add(Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+        {
+            countryPicker.localScale = new Vector3(1, newVal, 1);
+
+            UIUtil.SetLocalPositionY(countryPicker, _initialCountryDropdownTopMostPositionY - 0.5f * countryPicker.sizeDelta.y * newVal);
+        }));
     }
 
     private void HideCountryPicker()
     {
-        Tween.ScaleY(countryPicker, 0, duration: 0.3f)
+        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        {
+            countryPicker.localScale = new Vector3(1, newVal, 1);
+
+            UIUtil.SetLocalPositionY(countryPicker, _initialCountryDropdownTopMostPositionY - 0.5f * countryPicker.sizeDelta.y * newVal);
+        })
         .OnComplete(() =>
         {
             countryPicker.gameObject.SetActive(false);
-        });
+        }));
     }
 
     private void SelectCountry(Country country)
@@ -115,5 +180,19 @@ public class EditProfilePopup : BasePopup
         }
 
         HideCountryPicker();
+
+        Setup();
+    }
+
+    private void SearchCountry(string text)
+    {
+        GamePersistentVariable.countrySearchQuery = text;
+
+        List<Country> filterCountries =
+                    countryDataContainer.Countries.
+                        Where(c => c.Name.StartsWith(GamePersistentVariable.countrySearchQuery, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        countryPickerScrollView.SetMaxItemNumber(filterCountries.Count);
+        countryPickerScrollView.Refresh();
     }
 }
