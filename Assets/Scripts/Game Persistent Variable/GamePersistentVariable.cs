@@ -157,4 +157,8 @@ public static class GamePersistentVariable
     #region SPAWNED FLYING REWARD ITEMS
     public static SpawnedRewardItemsData spawnedRewardItemsData;
     #endregion
+
+    #region PROFILE
+    public static string countrySearchQuery;
+    #endregion
 }
