@@ -445,6 +445,7 @@ public class FirebaseConfig
     public const string LIVES_SYSTEM_CONFIG = "lives_system_config";
     public const string DAILY_REWARD_CONFIG = "daily_reward_config";
     public const string COIN_CHALLENGE_CONFIG = "coin_challenge_config";
+    public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

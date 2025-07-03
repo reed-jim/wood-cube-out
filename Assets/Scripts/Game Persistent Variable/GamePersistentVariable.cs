@@ -105,6 +105,7 @@ public static class GamePersistentVariable
     #endregion
 
     #region LEADERBOARD
+    public static bool isEnableLeaderboard;
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
     #endregion
