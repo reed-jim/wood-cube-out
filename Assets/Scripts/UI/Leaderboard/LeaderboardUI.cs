@@ -14,19 +14,12 @@ using UnityEngine.Networking;
 using UnityEngine.UI;
 using static GameEnum;
 
-public class LeaderboardUI : MonoBehaviour
+public class LeaderboardUI : Singleton<LeaderboardUI>
 {
-    [SerializeField] private TMP_InputField nameInput;
-    [SerializeField] private Button continueButton;
-    [SerializeField] private ObjectPoolingScrollView scrollView;
-    [SerializeField] private ObjectPoolingScrollView countryPickerScrollView;
+    [SerializeField] private ObjectPoolingScrollView leaderboardScrollView;
 
     #region COUNTRY PICKER
-    [SerializeField] private Button openCountryPickerButton;
-    [SerializeField] private RectTransform countryPicker;
-    [SerializeField] private Image selectedCountryFlag;
-    [SerializeField] private TMP_Text selectedCountryName;
-    [SerializeField] private CountryDataContainer countryDataContainer;
+    // [SerializeField] private RectTransform countryPicker;
     #endregion
 
     [SerializeField] private CanvasGroup leaderboardCanvasGroup;
@@ -39,20 +32,9 @@ public class LeaderboardUI : MonoBehaviour
 
     public static event Action<ScreenRoute> switchRouteEvent;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
-        CountryItem.selectCountryEvent += SelectCountry;
-
-        continueButton.onClick.AddListener(ConfirmNameAsync);
-        openCountryPickerButton.onClick.AddListener(OpenCountryPicker);
-
         leaderboardCanvasGroup.gameObject.SetActive(false);
-        countryPicker.gameObject.SetActive(false);
-    }
-
-    void OnDestroy()
-    {
-        CountryItem.selectCountryEvent -= SelectCountry;
     }
 
     void OnEnable()
@@ -60,29 +42,29 @@ public class LeaderboardUI : MonoBehaviour
         CheckShowLeaderboardAsync();
     }
 
-    void Start()
-    {
-        _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
+    // void Start()
+    // {
+    //     _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
 
-        if (_selectedCountryIndex != -1)
-        {
-            GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
-        }
-        else
-        {
-            SetupCountryPicker();
-        }
-    }
+    //     if (_selectedCountryIndex != -1)
+    //     {
+    //         GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
+    //     }
+    //     else
+    //     {
+    //         SetupCountryPicker();
+    //     }
+    // }
 
-    private void SetupCountryPicker()
-    {
-        _selectedCountryIndex = 244;
+    // private void SetupCountryPicker()
+    // {
+    //     _selectedCountryIndex = 244;
 
-        selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
-        selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
+    //     selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
+    //     selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
 
-        countryPickerScrollView.Refresh();
-    }
+    //     countryPickerScrollView.Refresh();
+    // }
 
     private async Task CheckShowLeaderboardAsync()
     {
@@ -93,50 +75,22 @@ public class LeaderboardUI : MonoBehaviour
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
             await GameLeaderboardManager.Instance.GetLeaderboardData();
 
-            scrollView.Refresh();
+            leaderboardScrollView.Refresh();
         }
         else
         {
+            leaderboardCanvasGroup.gameObject.SetActive(false);
+
             switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
         }
     }
 
-    private async void ConfirmNameAsync()
+    public void ShowLeaderboard()
     {
-        GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
-
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
-
-        await GameLeaderboardManager.Instance.GetLeaderboardData();
-
         leaderboardCanvasGroup.gameObject.SetActive(true);
         leaderboardCanvasGroup.alpha = 0;
 
         Tween.Alpha(leaderboardCanvasGroup, 1, duration: 0.3f);
-
-        scrollView.Refresh();
-
-        DataUtility.Save(GameConstants.DID_USER_LOGIN, true);
-        DataUtility.Save(GameConstants.SELECTED_COUNTRY_INDEX, _selectedCountryIndex);
-    }
-
-    private void OpenCountryPicker()
-    {
-        countryPicker.gameObject.SetActive(true);
-
-        countryPicker.localScale = new Vector3(1, 0, 1);
-
-        Tween.ScaleY(countryPicker, 1, duration: 0.3f);
-    }
-
-    private void HideCountryPicker()
-    {
-        Tween.ScaleY(countryPicker, 0, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            countryPicker.gameObject.SetActive(false);
-        });
     }
 
     IEnumerator FetchCountries()
@@ -225,26 +179,6 @@ public class LeaderboardUI : MonoBehaviour
                 // }
             }
         }
-    }
-
-    private void SelectCountry(Country country)
-    {
-        selectedCountryFlag.sprite = country.Flag;
-        selectedCountryName.text = country.Name;
-
-        UIUtil.SetSizeKeepRatioY(selectedCountryFlag, selectedCountryFlag.rectTransform.sizeDelta.x);
-
-        for (int i = 0; i < countryDataContainer.Countries.Count; i++)
-        {
-            if (countryDataContainer.Countries[i].Name == country.Name)
-            {
-                _selectedCountryIndex = i;
-
-                break;
-            }
-        }
-
-        HideCountryPicker();
     }
 
     [System.Serializable]
