@@ -392,7 +392,6 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.isEnableLoadingLevelInProgress = GetBoolConfig(FirebaseConfig.IS_ENABLE_LOAD_LEVEL_PROGRESS, true);
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
-
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
 
         #region DOUBLE INTER
@@ -437,6 +436,10 @@ public class RemoteConfigController : MonoBehaviour
         {
             GamePersistentVariable.coinChallengeConfig = coinChallengeConfig;
         }
+        #endregion
+
+        #region LEADERBOARD
+        GamePersistentVariable.isEnableLeaderboard = GetBoolConfig(FirebaseConfig.IS_ENABLE_LEADERBOARD, false);
         #endregion
 
         remoteConfigReadyEvent?.Invoke();

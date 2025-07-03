@@ -1,12 +1,16 @@
 using Saferio.Util;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class LeaderboardScreen : UIScreen
 {
+    [SerializeField] private GameObject leaderboardContainer;
     [SerializeField] private ObjectPoolingScrollView scrollView;
     [SerializeField] private Button globalButton;
     [SerializeField] private Button localButton;
+
+    [SerializeField] private GameObject commingSoon;
 
     [SerializeField] private LeaderboardItem selfScore;
 
@@ -23,8 +27,18 @@ public class LeaderboardScreen : UIScreen
         // GameLeaderboardManager.fetchLeaderboardDataCompletedEvent -= OnLeaderboardDataFetchCompleted;
     }
 
+    private void Setup()
+    {
+        bool isEnableLeaderboard = GamePersistentVariable.isEnableLeaderboard;
+
+        leaderboardContainer.gameObject.SetActive(isEnableLeaderboard);
+        commingSoon.gameObject.SetActive(!isEnableLeaderboard);
+    }
+
     protected override void Show()
     {
+        Setup();
+
         base.Show();
 
         try
