@@ -15,6 +15,8 @@ public class LeaderboardScreen : UIScreen
     [SerializeField] private ObjectPoolingScrollView leaderboardScrollView;
     [SerializeField] private Button globalButton;
     [SerializeField] private Button localButton;
+    [SerializeField] private Button openEditProfilePopupButton;
+    [SerializeField] private Button editProfileButton;
 
     [SerializeField] private GameObject commingSoon;
 
@@ -29,6 +31,8 @@ public class LeaderboardScreen : UIScreen
 
         // globalButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Global));
         // localButton.onClick.AddListener(() => SwitchLeaderboardScope(GameEnum.LeaderboardScope.Local));
+        openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
+        editProfileButton.onClick.AddListener(OpenEditProfilePopup);
     }
 
     protected override void UnregisterMoreEvent()
@@ -43,6 +47,7 @@ public class LeaderboardScreen : UIScreen
 
         leaderboardContainer.gameObject.SetActive(isEnableLeaderboard);
         commingSoon.gameObject.SetActive(!isEnableLeaderboard);
+        openEditProfilePopupButton.gameObject.SetActive(false);
 
         if (DataUtility.Load(GameConstants.DID_USER_LOGIN, false))
         {
@@ -56,6 +61,7 @@ public class LeaderboardScreen : UIScreen
         else
         {
             leaderboardCanvasGroup.gameObject.SetActive(false);
+            openEditProfilePopupButton.gameObject.SetActive(true);
 
             AddTween(Tween.Delay(0.3f).OnComplete(() =>
             {
@@ -70,6 +76,11 @@ public class LeaderboardScreen : UIScreen
 
         base.Show();
 
+        RefreshLeaderboard();
+    }
+
+    private void RefreshLeaderboard()
+    {
         try
         {
             int compensateDistanceBetweenTwoItem = 3;
@@ -83,12 +94,19 @@ public class LeaderboardScreen : UIScreen
                 leaderboardScrollView.SetMaxItemNumber(LeaderboardDataContainer.LocalLeaderboardItems.Length + compensateDistanceBetweenTwoItem);
             }
 
+            selfScore.gameObject.SetActive(true);
+
             selfScore.UpdateUI(LeaderboardDataContainer.GetCurrentPlayerLeaderboardData());
         }
         catch (System.Exception)
         {
-
+            selfScore.gameObject.SetActive(false);
         }
+    }
+
+    private void OpenEditProfilePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
     }
 
     public void ShowLeaderboard()
@@ -96,7 +114,11 @@ public class LeaderboardScreen : UIScreen
         leaderboardCanvasGroup.gameObject.SetActive(true);
         leaderboardCanvasGroup.alpha = 0;
 
+        openEditProfilePopupButton.gameObject.SetActive(false);
+
         Tween.Alpha(leaderboardCanvasGroup, 1, duration: 0.3f);
+
+        RefreshLeaderboard();
     }
 
     private void SwitchLeaderboardScope(GameEnum.LeaderboardScope leaderboardScope)

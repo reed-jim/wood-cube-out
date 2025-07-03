@@ -104,6 +104,9 @@ public class EditProfilePopup : BasePopup
         }
         else
         {
+            selectedCountryFlag.sprite = countryDataContainer.Countries[_selectedCountryIndex].Flag;
+            selectedCountryName.text = countryDataContainer.Countries[_selectedCountryIndex].Name;
+
             countryDisplay.gameObject.SetActive(true);
 
             countryDisplay.alpha = 0;
@@ -152,8 +155,12 @@ public class EditProfilePopup : BasePopup
 
         GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
 
-        // await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        // await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
+        if (!AuthenticationService.Instance.IsSignedIn)
+        {
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        }
+        await AuthenticationService.Instance.UpdatePlayerNameAsync(nameInput.text);
+        await GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
 
         // await GameLeaderboardManager.Instance.GetLeaderboardData();
 
