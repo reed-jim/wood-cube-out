@@ -34,6 +34,8 @@ public class EditProfilePopup : BasePopup
     private int _selectedCountryIndex;
     #endregion
 
+    public static event Action saveProfileEvent;
+
     protected override void MoreActionInAwake()
     {
         CountryItem.selectCountryEvent += SelectCountry;
@@ -54,6 +56,7 @@ public class EditProfilePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         Reset();
+        Setup();
 
         base.Show(onCompletedAction);
     }
@@ -66,21 +69,16 @@ public class EditProfilePopup : BasePopup
 
     void Start()
     {
-        _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
+        // _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
 
-        if (_selectedCountryIndex != -1)
-        {
-            GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
-        }
-        else
-        {
-            SetupCountryPicker();
-        }
-
-        if (_selectedCountryIndex == -1)
-        {
-
-        }
+        // if (_selectedCountryIndex != -1)
+        // {
+        //     GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
+        // }
+        // else
+        // {
+        //     SetupCountryPicker();
+        // }
     }
 
     private void SetupCountryPicker()
@@ -95,12 +93,14 @@ public class EditProfilePopup : BasePopup
 
     private void Setup()
     {
+        _selectedCountryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1);
+
+        GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
+
         if (_selectedCountryIndex == -1)
         {
             placeholderCountry.gameObject.SetActive(true);
             countryDisplay.gameObject.SetActive(false);
-
-            saveButton.interactable = false;
         }
         else
         {
@@ -113,13 +113,43 @@ public class EditProfilePopup : BasePopup
                 placeholderCountry.gameObject.SetActive(false);
             }));
             _tweens.Add(Tween.Alpha(countryDisplay, 1, duration: 0.3f));
-
-            saveButton.interactable = true;
         }
+    }
+
+    private bool IsInputValid()
+    {
+        if (string.IsNullOrEmpty(nameInput.text) || string.IsNullOrWhiteSpace(nameInput.text) || nameInput.text.Length > 36)
+        {
+            Tween.Scale(nameInput.transform, 1.05f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.Scale(nameInput.transform, 1f, duration: 0.15f);
+                });
+
+            return false;
+        }
+
+        if (_selectedCountryIndex == -1)
+        {
+            Tween.Scale(openCountryPickerButton.transform, 1.05f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.Scale(openCountryPickerButton.transform, 1f, duration: 0.15f);
+                });
+
+            return false;
+        }
+
+        return true;
     }
 
     private async void ConfirmNameAsync()
     {
+        if (!IsInputValid())
+        {
+            return;
+        }
+
         GamePersistentVariable.selectedCountryIndex = _selectedCountryIndex;
 
         // await AuthenticationService.Instance.SignInAnonymouslyAsync();
@@ -133,6 +163,8 @@ public class EditProfilePopup : BasePopup
         DataUtility.Save(GameConstants.SELECTED_COUNTRY_INDEX, _selectedCountryIndex);
 
         Hide();
+
+        saveProfileEvent?.Invoke();
     }
 
     private void OpenCountryPicker()
@@ -185,6 +217,8 @@ public class EditProfilePopup : BasePopup
         }
 
         HideCountryPicker();
+
+        DataUtility.Save(GameConstants.SELECTED_COUNTRY_INDEX, _selectedCountryIndex);
 
         Setup();
     }

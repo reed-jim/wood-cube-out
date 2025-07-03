@@ -617,8 +617,8 @@ GameObject:
   - component: {fileID: 6024373688370426182}
   - component: {fileID: 4263812983865437706}
   - component: {fileID: 8511595220474793989}
-  - component: {fileID: 8069715291425918854}
   - component: {fileID: 7782080459585578416}
+  - component: {fileID: 8069715291425918854}
   - component: {fileID: 6627189882321104915}
   m_Layer: 5
   m_Name: Leaderboard Screen
@@ -643,7 +643,7 @@ RectTransform:
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.44444445, y: 0.16216215}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -673,11 +673,24 @@ MonoBehaviour:
   route: 4
   isRouteActiveFromStart: 1
   leaderboardContainer: {fileID: 9052241474306103625}
-  scrollView: {fileID: 1022688119463938478}
+  leaderboardCanvasGroup: {fileID: 1031317141568659816}
+  leaderboardScrollView: {fileID: 1022688119463938478}
   globalButton: {fileID: 1122348858438729207}
   localButton: {fileID: 5723272252156785171}
   commingSoon: {fileID: 125257800811410036}
   selfScore: {fileID: 8469801168570893808}
+--- !u!225 &7782080459585578416
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2615699318292959703}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!114 &8069715291425918854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -693,18 +706,6 @@ MonoBehaviour:
   target: {fileID: 6024373688370426182}
   canvasSize: {fileID: 11400000, guid: cff3c506c9f63d645a923fa57c7a07c1, type: 2}
   duration: 0.5
---- !u!225 &7782080459585578416
-CanvasGroup:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2615699318292959703}
-  m_Enabled: 1
-  m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
-  m_IgnoreParentGroups: 0
 --- !u!114 &6627189882321104915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1383,7 +1384,7 @@ GameObject:
   - component: {fileID: 1031317141568659816}
   - component: {fileID: 3454646463294585997}
   m_Layer: 5
-  m_Name: Container
+  m_Name: Leaderboard Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
