@@ -82,9 +82,21 @@ public class GameLeaderboardManager : MonoBehaviour
             return;
         }
 
+        var selfScoreResponse = await LeaderboardsService.Instance.GetPlayerScoreAsync("wood_cube_out");
+
+        LeaderboardUserData selfScore = new LeaderboardUserData()
+        {
+            id = selfScoreResponse.PlayerId,
+            name = selfScoreResponse.PlayerName,
+            score = selfScoreResponse.Score,
+            countryIndex = DataUtility.Load(GameConstants.SELECTED_COUNTRY_INDEX, -1)
+        };
+
+        GamePersistentVariable.selfScore = selfScore;
+
         var scoresResponse = await LeaderboardsService.Instance.GetScoresAsync(
             "wood_cube_out",
-            new GetScoresOptions { Offset = 0, Limit = 50, IncludeMetadata = true }
+            new GetScoresOptions { Offset = 0, Limit = 100, IncludeMetadata = true }
         );
 
         List<LeaderboardUserData> items = new List<LeaderboardUserData>();
@@ -152,12 +164,6 @@ public class GameLeaderboardManager : MonoBehaviour
 
     public async Task AddPlayerScoreToLeaderboard()
     {
-        // SAFERIO Remove later
-        if (GamePersistentVariable.selectedCountryIndex == 0)
-        {
-            GamePersistentVariable.selectedCountryIndex = 244;
-        }
-
         var scoreMetadata = new ScoreMetadata { countryIndex = GamePersistentVariable.selectedCountryIndex };
 
         await LeaderboardsService.Instance.AddPlayerScoreAsync("wood_cube_out", GamePersistentVariable.currentLevel, new AddPlayerScoreOptions { Metadata = scoreMetadata });

@@ -108,6 +108,7 @@ public static class GamePersistentVariable
     public static bool isEnableLeaderboard;
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
+    public static LeaderboardUserData selfScore;
     #endregion
 
     #region EVENT
