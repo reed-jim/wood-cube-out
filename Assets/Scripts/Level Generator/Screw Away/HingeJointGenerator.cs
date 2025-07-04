@@ -3168,22 +3168,22 @@ public class HingeJointGenerator : EditorWindow
                         screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
-                        // // Remove invalid screw
-                        // RaycastHit hit;
+                        // Remove invalid screw
+                        RaycastHit hit;
 
-                        // level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
+                        level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
 
-                        // if (hit.collider == null)
-                        // {
-                        //     DestroyImmediate(screw.gameObject);
-                        // }
-                        // else
-                        // {
-                        //     // if (hit.collider.GetComponent<BaseScrew>() != null)
-                        //     // {
-                        //     //     DestroyImmediate(screw.gameObject);
-                        //     // }
-                        // }
+                        if (hit.collider == null)
+                        {
+                            DestroyImmediate(screw.gameObject);
+                        }
+                        else
+                        {
+                            // if (hit.collider.GetComponent<BaseScrew>() != null)
+                            // {
+                            //     DestroyImmediate(screw.gameObject);
+                            // }
+                        }
                     }
                 }
             }
