@@ -2959,11 +2959,11 @@ public class HingeJointGenerator : EditorWindow
 
         void GenerateScrewForPiece(BasicObjectPart piece)
         {
-            // // reset rotation
-            // Quaternion cachedPieceRotation = piece.transform.rotation;
+            // reset rotation
+            Quaternion cachedPieceRotation = piece.transform.rotation;
 
-            // piece.transform.rotation = Quaternion.identity;
-            // //
+            piece.transform.rotation = Quaternion.identity;
+            //
 
             Vector3 pieceSize = piece.GetComponent<MeshCollider>().bounds.size;
             Vector3 halfSize = 0.5f * pieceSize;
@@ -3088,8 +3088,6 @@ public class HingeJointGenerator : EditorWindow
 
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
 
-                        faceDirection = FaceDirection.Side;
-
                         screw.transform.position = piece.transform.position +
                             new Vector3
                             (
@@ -3108,10 +3106,10 @@ public class HingeJointGenerator : EditorWindow
                         if (faceDirection == FaceDirection.Front)
                         {
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
-                            screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
+                            // screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
 
-                            // transform.position = parent.position + parent.forward * distance;
-                            // transform.rotation = Quaternion.LookRotation(-parent.forward, parent.up);
+                            // screw.transform.position = piece.transform.position + piece.transform.forward * pieceSize.z;
+                            screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
 
                             for (int m = 0; m < maxScrewZ; m++)
                             {
@@ -3121,10 +3119,10 @@ public class HingeJointGenerator : EditorWindow
                         else if (faceDirection == FaceDirection.Top)
                         {
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
-                            screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
+                            // screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
 
-                            // transform.position = parent.position + parent.up * distance;
-                            // transform.rotation = Quaternion.LookRotation(-parent.up, parent.forward);
+                            // screw.transform.position = piece.transform.position + piece.transform.up * pieceSize.y;
+                            screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
 
                             for (int m = 0; m < maxScrewY; m++)
                             {
@@ -3188,7 +3186,7 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
 
-            // piece.transform.rotation = cachedPieceRotation;
+            piece.transform.rotation = cachedPieceRotation;
         }
 
         bool IsValidTile(int x, int y, int z, Dictionary<Vector3, bool> isTilesEmpty)
