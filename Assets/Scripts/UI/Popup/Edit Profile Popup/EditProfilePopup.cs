@@ -123,11 +123,13 @@ public class EditProfilePopup : BasePopup
     {
         if (string.IsNullOrEmpty(nameInput.text) || string.IsNullOrWhiteSpace(nameInput.text) || nameInput.text.Length > 36)
         {
-            Tween.Scale(nameInput.transform, 1.05f, duration: 0.3f)
-                .OnComplete(() =>
-                {
-                    Tween.Scale(nameInput.transform, 1f, duration: 0.15f);
-                });
+            AddTween(Tween.ShakeScale(nameInput.transform, 0.05f * Vector3.one, duration: 0.3f));
+
+            // Tween.Scale(nameInput.transform, 1.05f, duration: 0.3f)
+            //     .OnComplete(() =>
+            //     {
+            //         Tween.Scale(nameInput.transform, 1f, duration: 0.15f);
+            //     });
 
             return false;
         }

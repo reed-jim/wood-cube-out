@@ -372,4 +372,9 @@ public class BasePopup : MonoBehaviour
     {
         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);
     }
+
+    protected void AddTween(Tween tween)
+    {
+        _tweens.Add(tween);
+    }
 }
