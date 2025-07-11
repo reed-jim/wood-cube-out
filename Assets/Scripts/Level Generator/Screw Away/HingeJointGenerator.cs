@@ -2950,6 +2950,15 @@ public class HingeJointGenerator : EditorWindow
 
         BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
 
+        Vector3 centerPoint = Vector3.zero;
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            centerPoint += pieces[i].transform.position;
+        }
+
+        centerPoint /= pieces.Length;
+
         for (int i = 0; i < pieces.Length; i++)
         {
             GenerateScrewForPiece(pieces[i]);
@@ -3003,7 +3012,7 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
 
-            Debug.Log("SAFERIO " + piece.name + "/" + screwSize + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
+            // Debug.Log("SAFERIO " + piece.name + "/" + screwSize + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             int numScrewSpawned = 0;
 
@@ -3105,11 +3114,20 @@ public class HingeJointGenerator : EditorWindow
 
                         if (faceDirection == FaceDirection.Front)
                         {
-                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z - direction * pieceSize.z);
+                            direction = piece.transform.position.z > centerPoint.z ? 1 : -1;
+
+                            Debug.Log("SAFERIO " + piece.name + "/" + direction);
+
+                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + 2 * direction * pieceSize.z);
                             // screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
 
                             // screw.transform.position = piece.transform.position + piece.transform.forward * pieceSize.z;
                             screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
+
+                            if (direction == 1)
+                            {
+                                screw.transform.eulerAngles += new Vector3(180, 0, 0);
+                            }
 
                             for (int m = 0; m < maxScrewZ; m++)
                             {
@@ -3118,6 +3136,8 @@ public class HingeJointGenerator : EditorWindow
                         }
                         else if (faceDirection == FaceDirection.Top)
                         {
+                            direction = piece.transform.position.y > centerPoint.y ? 1 : -1;
+
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             // screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
 
@@ -3131,25 +3151,28 @@ public class HingeJointGenerator : EditorWindow
                         }
                         else
                         {
-                            direction = UnityEngine.Random.Range(0, 10) < 5 ? -1 : 1;
+                            direction = piece.transform.position.x > centerPoint.x ? 1 : -1;
+                            // direction = UnityEngine.Random.Range(0, 10) < 5 ? -1 : 1;
 
-                            if (direction == -1)
-                            {
-                                RaycastHit hitFromPiece;
+                            // if (direction == -1)
+                            // {
+                            //     RaycastHit hitFromPiece;
 
-                                level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, Vector3.left, out hitFromPiece);
+                            //     level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, Vector3.left, out hitFromPiece);
 
-                                if (hitFromPiece.collider != null)
-                                {
-                                    direction = 1;
-                                }
-                            }
+                            //     if (hitFromPiece.collider != null)
+                            //     {
+                            //         direction = 1;
+                            //     }
+                            // }
 
-                            // screw.transform.position = screw.transform.position.ChangeX(piece.transform.position.x + direction * pieceSize.x);
-                            // screw.transform.rotation = Quaternion.Euler(new Vector3(0, direction * 90, 0));
-
-                            screw.transform.position = piece.transform.position - piece.transform.right * pieceSize.x;
+                            screw.transform.position = piece.transform.position + piece.transform.right * pieceSize.x;
                             screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
+
+                            if (direction == 1)
+                            {
+                                screw.transform.eulerAngles += new Vector3(180, 0, 0);
+                            }
 
                             for (int m = 0; m < maxScrewX; m++)
                             {
@@ -3166,22 +3189,22 @@ public class HingeJointGenerator : EditorWindow
                         screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
 
-                        // Remove invalid screw
-                        RaycastHit hit;
+                        // // Remove invalid screw
+                        // RaycastHit hit;
 
-                        level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
+                        // level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
 
-                        if (hit.collider == null)
-                        {
-                            DestroyImmediate(screw.gameObject);
-                        }
-                        else
-                        {
-                            // if (hit.collider.GetComponent<BaseScrew>() != null)
-                            // {
-                            //     DestroyImmediate(screw.gameObject);
-                            // }
-                        }
+                        // if (hit.collider == null)
+                        // {
+                        //     DestroyImmediate(screw.gameObject);
+                        // }
+                        // else
+                        // {
+                        //     // if (hit.collider.GetComponent<BaseScrew>() != null)
+                        //     // {
+                        //     //     DestroyImmediate(screw.gameObject);
+                        //     // }
+                        // }
                     }
                 }
             }
