@@ -3116,8 +3116,6 @@ public class HingeJointGenerator : EditorWindow
                         {
                             direction = piece.transform.position.z > centerPoint.z ? 1 : -1;
 
-                            Debug.Log("SAFERIO " + piece.name + "/" + direction);
-
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + 2 * direction * pieceSize.z);
                             // screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
 
@@ -3137,6 +3135,8 @@ public class HingeJointGenerator : EditorWindow
                         else if (faceDirection == FaceDirection.Top)
                         {
                             direction = piece.transform.position.y > centerPoint.y ? 1 : -1;
+
+                            direction = 1;
 
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
                             // screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
