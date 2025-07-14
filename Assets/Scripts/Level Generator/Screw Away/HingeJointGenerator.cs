@@ -361,6 +361,11 @@ public class HingeJointGenerator : EditorWindow
             CheckAddressablesLevels();
         }
 
+        if (GUILayout.Button("Find Pieces With Missing Mesh"))
+        {
+            FindPiecesWithMissingMesh();
+        }
+
         if (GUILayout.Button("Fold All"))
         {
             FoldAllInPrefabMode();
@@ -1626,6 +1631,19 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return obstacleInstanceIds;
+    }
+
+    private void FindPiecesWithMissingMesh()
+    {
+        Transform level = Selection.activeTransform;
+
+        for (int i = 0; i < level.childCount; i++)
+        {
+            if (level.GetChild(i).GetComponent<MeshCollider>().sharedMesh == null)
+            {
+                Debug.Log("SAFERIO missing mesh - " + level.GetChild(i).name);
+            }
+        }
     }
     #endregion
 
