@@ -1436,29 +1436,36 @@ public class HingeJointGenerator : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
-        Transform[] pieces = GetComponentsFromAllChildren<Transform>(level).ToArray();
+        // Transform[] pieces = GetComponentsFromAllChildren<Transform>(level).ToArray();
 
-        for (int i = 0; i < pieces.Length; i++)
+        if (level.GetComponent<RotateObject>() == null)
         {
-            // Level Container
-            if (pieces[i] == level)
-            {
-                if (pieces[i].GetComponent<RotateObject>() == null)
-                {
-                    pieces[i].AddComponent<RotateObject>();
-                }
+            level.AddComponent<RotateObject>();
+        }
 
-                continue;
-            }
+        for (int i = 0; i < level.childCount; i++)
+        {
+            Transform piece = level.GetChild(i);
+
+            // // Level Container
+            // if (pieces[i] == level)
+            // {
+            //     if (pieces[i].GetComponent<RotateObject>() == null)
+            //     {
+            //         pieces[i].AddComponent<RotateObject>();
+            //     }
+
+            //     continue;
+            // }
 
             // Pieces
-            pieces[i].AddComponent<BasicObjectPart>();
-            pieces[i].AddComponent<ObjectPartMaterialPropertyBlock>();
-            pieces[i].AddComponent<Rigidbody>();
+            piece.AddComponent<BasicObjectPart>();
+            piece.AddComponent<ObjectPartMaterialPropertyBlock>();
+            piece.AddComponent<Rigidbody>();
 
-            if (pieces[i].GetComponent<MeshCollider>() == null)
+            if (piece.GetComponent<MeshCollider>() == null)
             {
-                MeshCollider meshCollider = pieces[i].AddComponent<MeshCollider>();
+                MeshCollider meshCollider = piece.AddComponent<MeshCollider>();
 
                 meshCollider.convex = true;
             }
@@ -3595,10 +3602,11 @@ public class HingeJointGenerator : EditorWindow
                     screw.SetParent(piece);
 
                     screw.position = child.GetChild(j).position;
-                    screw.localScale = (0.4f / screw.lossyScale.x) * Vector3.one;
+                    screw.localScale = (0.5f / screw.lossyScale.x) * Vector3.one;
                     screw.rotation = child.GetChild(j).rotation;
                     screw.Rotate(-90f, 0f, 0f, Space.Self);
-                    // screw.RotateAround(screw.right, 270);
+
+                    screw.transform.position -= screw.forward * 0.15f;
                 }
             }
         }
