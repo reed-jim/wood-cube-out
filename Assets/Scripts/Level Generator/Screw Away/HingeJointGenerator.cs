@@ -313,6 +313,11 @@ public class HingeJointGenerator : EditorWindow
             ExtractPieces();
         }
 
+        if (GUILayout.Button("Extract Full Level"))
+        {
+            ExtractFullLevel();
+        }
+
         GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
 
@@ -3511,6 +3516,89 @@ public class HingeJointGenerator : EditorWindow
                 foreach (var item in toRemoveList)
                 {
                     DestroyImmediate(item, allowDestroyingAssets: true);
+                }
+            }
+        }
+    }
+
+    private void ExtractFullLevel()
+    {
+        Transform level = Selection.activeTransform;
+
+        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+
+        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
+
+        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[2];
+
+        Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
+
+        bool flag = false;
+
+        for (int i = 0; i < allChildren.Length; i++)
+        {
+            Transform child = allChildren[i];
+
+            if (child.name.Contains(matchName))
+            {
+                Transform piece = Instantiate(child, level);
+
+                piece.position = child.position;
+                piece.localScale = child.parent.parent.localScale.x * Vector3.one;
+
+                Component[] components = piece.GetComponents<Component>();
+
+                foreach (Component component in components)
+                {
+                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer) && !(component is MeshCollider))
+                    {
+                        DestroyImmediate(component, allowDestroyingAssets: true);
+                    }
+
+                    if (component == null)
+                    {
+                        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(piece.gameObject);
+                    }
+                }
+
+                MeshRenderer meshRenderer = piece.GetComponent<MeshRenderer>();
+
+                if (meshRenderer != null)
+                {
+                    meshRenderer.sharedMaterial = randomMaterial;
+                }
+                else
+                {
+                    DestroyImmediate(piece.gameObject, allowDestroyingAssets: true);
+
+                    continue;
+                }
+
+                // Remove uneccesary objects in piece
+                List<GameObject> toRemoveList = new List<GameObject>();
+
+                for (int j = 0; j < piece.childCount; j++)
+                {
+                    toRemoveList.Add(piece.GetChild(j).gameObject);
+                }
+
+                foreach (var item in toRemoveList)
+                {
+                    DestroyImmediate(item, allowDestroyingAssets: true);
+                }
+
+                // Spawn screws
+                for (int j = 0; j < child.childCount; j++)
+                {
+                    Transform screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece).GetComponent<Transform>();
+
+                    screw.SetParent(piece);
+
+                    screw.position = child.GetChild(j).position;
+                    screw.localScale = (0.4f / screw.lossyScale.x) * Vector3.one;
+                    screw.rotation = child.GetChild(j).rotation;
+                    screw.Rotate(-90f, 0f, 0f, Space.Self);
+                    // screw.RotateAround(screw.right, 270);
                 }
             }
         }
