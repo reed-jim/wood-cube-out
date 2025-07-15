@@ -366,6 +366,11 @@ public class HingeJointGenerator : EditorWindow
             FindPiecesWithMissingMesh();
         }
 
+        if (GUILayout.Button("SwitchToMasterMaterial"))
+        {
+            SwitchToMasterMaterial();
+        }
+
         if (GUILayout.Button("Fold All"))
         {
             FoldAllInPrefabMode();
@@ -1643,6 +1648,18 @@ public class HingeJointGenerator : EditorWindow
             {
                 Debug.Log("SAFERIO missing mesh - " + level.GetChild(i).name);
             }
+        }
+    }
+
+    private void SwitchToMasterMaterial()
+    {
+        Transform level = Selection.activeTransform;
+
+        Material material = LoadMaterialAtPath("Assets/Materials/Wood/Textured/Wood Texture Master.mat");
+
+        for (int i = 0; i < level.childCount; i++)
+        {
+            level.GetChild(i).GetComponent<MeshRenderer>().material = material;
         }
     }
     #endregion
@@ -2937,6 +2954,11 @@ public class HingeJointGenerator : EditorWindow
         }
 
         return prefabs.ToArray();
+    }
+
+    private Material LoadMaterialAtPath(string path)
+    {
+        return AssetDatabase.LoadAssetAtPath<Material>(path);
     }
 
     private Vector3Int GetAbsoluteVector3(Vector3Int input)
