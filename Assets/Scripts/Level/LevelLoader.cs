@@ -685,14 +685,14 @@ public class LevelLoader : MonoBehaviour
 
             Vector3 objectPosition = (obj.transform.position + meshRenderer.bounds.center) / 2;
 
-            objectPosition = obj.transform.position;
+            // objectPosition = obj.transform.position;
 
-            float boundXMin = obj.transform.position.x - 0.5f * obj.BoundSize.x;
-            float boundXMax = obj.transform.position.x + 0.5f * obj.BoundSize.x;
-            float boundYMin = obj.transform.position.y - 0.5f * obj.BoundSize.y;
-            float boundYMax = obj.transform.position.y + 0.5f * obj.BoundSize.y;
-            float boundZMin = obj.transform.position.z - 0.5f * obj.BoundSize.z;
-            float boundZMax = obj.transform.position.z + 0.5f * obj.BoundSize.z;
+            float boundXMin = objectPosition.x - 0.5f * obj.BoundSize.x;
+            float boundXMax = objectPosition.x + 0.5f * obj.BoundSize.x;
+            float boundYMin = objectPosition.y - 0.5f * obj.BoundSize.y;
+            float boundYMax = objectPosition.y + 0.5f * obj.BoundSize.y;
+            float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
+            float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
 
             if (boundXMin < minX)
             {
@@ -812,12 +812,18 @@ public class LevelLoader : MonoBehaviour
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize = expectedScreenHeight / 2f;
 
+        Debug.Log("SAFERIO " + expectedLevelSize);
         // TEMP
         targetOrthographicSize = 1.5f * expectedLevelSize.y;
 
         if (expectedLevelSize.y < expectedLevelSize.x || expectedLevelSize.y < expectedLevelSize.z)
         {
             targetOrthographicSize *= 1.2f;
+        }
+
+        if (expectedLevelSize.x > 2.5f * expectedLevelSize.y || expectedLevelSize.z > 2.5f * expectedLevelSize.y)
+        {
+            targetOrthographicSize *= 1.5f;
         }
         //
 
