@@ -277,6 +277,11 @@ public class HingeJointGenerator : EditorWindow
             ClearScrews();
         }
 
+        if (GUILayout.Button("Reduce Screws"))
+        {
+            ReduceScrews();
+        }
+
         GUILayout.Space(16);
         GUILayout.Label("Snap", centeredStyle);
 
@@ -2983,6 +2988,45 @@ public class HingeJointGenerator : EditorWindow
         List<BaseScrew> toRemoveList = new List<BaseScrew>();
 
         toRemoveList.AddRange(screws);
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
+    private void ReduceScrews()
+    {
+        Transform level = Selection.activeTransform;
+
+        List<GameObject> toRemoveList = new List<GameObject>();
+
+        int expectedScrews = UnityEngine.Random.Range(120, 162);
+
+        expectedScrews -= expectedScrews % 3;
+
+        int remaningScrews = GetComponentsFromAllChildren<BaseScrew>(level).ToArray().Length;
+
+        for (int i = 0; i < level.childCount; i++)
+        {
+            if (remaningScrews <= expectedScrews)
+            {
+                break;
+            }
+
+            Transform piece = level.GetChild(i);
+
+            int skipNumber = UnityEngine.Random.Range(1, 3);
+
+            for (int j = piece.childCount - 1; j > skipNumber - 1; j--)
+            {
+                toRemoveList.Add(piece.GetChild(j).gameObject);
+
+                remaningScrews--;
+            }
+        }
 
         foreach (var item in toRemoveList)
         {
