@@ -821,7 +821,7 @@ public class LevelLoader : MonoBehaviour
             targetOrthographicSize *= 1.2f;
         }
 
-        if (expectedLevelSize.x > 2.5f * expectedLevelSize.y || expectedLevelSize.z > 2.5f * expectedLevelSize.y)
+        if (expectedLevelSize.x > 2f * expectedLevelSize.y || expectedLevelSize.z > 2f * expectedLevelSize.y)
         {
             targetOrthographicSize *= 1.5f;
         }
