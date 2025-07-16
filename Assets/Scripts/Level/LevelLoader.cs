@@ -1075,8 +1075,13 @@ public class LevelLoader : MonoBehaviour
 
         Material material = null;
 
+        float randomTilingX = UnityEngine.Random.Range(0, 129) / 129f;
+        float randomTilingY = UnityEngine.Random.Range(0, 129) / 129f;
+
         for (int i = 0; i < objectParts.Length; i++)
         {
+            objectPartRenderers[i].sharedMaterial.SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
+            
             if (!materialPool.Contains(objectPartRenderers[i].sharedMaterial))
             {
                 return;
