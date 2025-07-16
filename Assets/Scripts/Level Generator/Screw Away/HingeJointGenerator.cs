@@ -1666,6 +1666,8 @@ public class HingeJointGenerator : EditorWindow
         {
             level.GetChild(i).GetComponent<MeshRenderer>().material = material;
         }
+
+        EditorUtility.SetDirty(level);
     }
     #endregion
 
