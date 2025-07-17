@@ -332,6 +332,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                     gameObject.SetActive(false);
                 }
 
+                HandleRewardPiece();
+
                 // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
         }
@@ -477,6 +479,18 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private bool IsMeshConcave()
     {
         return !meshCollider.convex;
+    }
+    #endregion
+
+    #region SPECIAL
+    private void HandleRewardPiece()
+    {
+        RewardPiece rewardPiece = GetComponent<RewardPiece>();
+
+        if (rewardPiece != null)
+        {
+            rewardPiece.EarnReward();
+        }
     }
     #endregion
 }
