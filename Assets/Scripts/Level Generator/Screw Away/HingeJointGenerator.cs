@@ -1664,7 +1664,18 @@ public class HingeJointGenerator : EditorWindow
 
         for (int i = 0; i < level.childCount; i++)
         {
-            level.GetChild(i).GetComponent<MeshRenderer>().material = material;
+            MeshRenderer renderer = level.GetChild(i).GetComponent<MeshRenderer>();
+
+            int materialCount = renderer.sharedMaterials.Length;
+
+            Material[] newMaterials = new Material[materialCount];
+
+            for (int j = 0; j < materialCount; j++)
+            {
+                newMaterials[j] = material;
+            }
+
+            renderer.sharedMaterials = newMaterials;
         }
 
         EditorUtility.SetDirty(level);
