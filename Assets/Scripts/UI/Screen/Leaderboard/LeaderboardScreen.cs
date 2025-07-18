@@ -45,9 +45,16 @@ public class LeaderboardScreen : UIScreen
     {
         bool isEnableLeaderboard = GamePersistentVariable.isEnableLeaderboard;
 
+        isEnableLeaderboard = false;
+
         leaderboardContainer.gameObject.SetActive(isEnableLeaderboard);
         commingSoon.gameObject.SetActive(!isEnableLeaderboard);
         openEditProfilePopupButton.gameObject.SetActive(false);
+
+        if (!isEnableLeaderboard)
+        {
+            return;
+        }
 
         if (DataUtility.Load(GameConstants.DID_USER_LOGIN, false))
         {

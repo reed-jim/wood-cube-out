@@ -160,14 +160,16 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
-        if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-        {
-            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
-        }
-        else
-        {
-            ActualShowAfterAd(onCompletedAction);
-        }
+        ActualShowAfterAd(onCompletedAction);
+
+        // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+        // {
+        //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
+        // }
+        // else
+        // {
+        //     ActualShowAfterAd(onCompletedAction);
+        // }
 
         _isInTransition = true;
     }
@@ -217,14 +219,16 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-            {
-                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
-            }
-            else
-            {
-                ActualHideAfterAd(onCompletedAction);
-            }
+            ActualHideAfterAd(onCompletedAction);
+
+            // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+            // {
+            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
+            // }
+            // else
+            // {
+            //     ActualHideAfterAd(onCompletedAction);
+            // }
 
             _isInTransition = true;
         }

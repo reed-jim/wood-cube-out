@@ -210,27 +210,27 @@ public class RevivePopup : BasePopup
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)
     {
-        bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
+        // bool isEnableRewardedAds = GamePersistentVariable.isEnableRewardedAds || currentLevel.Value < GamePersistentVariable.minLevelDisableRewardedAds;
 
-        if (isEnableRewardedAds || forceEnable)
-        {
-            reviveByAdsButton.gameObject.SetActive(true);
-            coinBalanceCointaner.gameObject.SetActive(false);
+        // if (isEnableRewardedAds || forceEnable)
+        // {
+        //     reviveByAdsButton.gameObject.SetActive(true);
+        //     coinBalanceCointaner.gameObject.SetActive(false);
 
-            _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
-            _reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
-        }
-        else
-        {
-            reviveByAdsButton.gameObject.SetActive(false);
-            coinBalanceCointaner.gameObject.SetActive(true);
+        //     _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition;
+        //     _reviveByAdsButtonRT.localPosition = _reviveAdsButtonPosition;
+        // }
+        // else
+        // {
+        //     reviveByAdsButton.gameObject.SetActive(false);
+        //     coinBalanceCointaner.gameObject.SetActive(true);
 
-            // _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
+        //     // _reviveByDiamondButtonRT.localPosition = _reviveCoinButtonPosition - (_reviveCoinButtonPosition - _reviveAdsButtonPosition) / 2;
 
-            userResourcesObserver.Load();
+        //     userResourcesObserver.Load();
 
-            coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
-        }
+        //     coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        // }
     }
     #endregion
 }
