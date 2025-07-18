@@ -217,7 +217,7 @@ public class RemoteConfigController : MonoBehaviour
 
         #region LEADERBOARD
         GamePersistentVariable.isEnableLeaderboard = GetBoolConfig(FirebaseConfig.IS_ENABLE_LEADERBOARD, false);
-        GamePersistentVariable.isEnableLeaderboard = true;
+        GamePersistentVariable.isEnableLeaderboard = false;
         #endregion
 
         remoteConfigReadyEvent?.Invoke();

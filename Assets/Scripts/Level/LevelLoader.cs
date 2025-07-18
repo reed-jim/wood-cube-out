@@ -112,45 +112,47 @@ public class LevelLoader : MonoBehaviour
 
         bool isLoopLevel = false;
 
-        if (!UserData.IsLoopLevel)
-        {
-            if (currentLevel.Value <= _maxLevel)
-            {
-                nextLevel = currentLevel.Value;
-            }
-            else
-            {
-                nextLevel = GetLoopLevel();
+        Debug.Log("SAFERIO " + _maxLevel);
 
-                await UserData.SetIsLoopLevel(true);
-                await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
-
-                isLoopLevel = true;
-            }
-        }
-        else
-        {
-            if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
-            {
-                nextLevel = GetLoopLevel();
-            }
-            else
-            {
-                nextLevel = currentLevel.Value - UserData.NumLevelLoop;
-            }
-
-            isLoopLevel = true;
-        }
-
-        // // NOT LOOP
-        // if (isLoopLevel)
+        // if (!UserData.IsLoopLevel)
         // {
-        //     showSceneTransitionEvent?.Invoke();
-        //     setIsLevelLoadedEvent?.Invoke();
-        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        //     if (currentLevel.Value <= _maxLevel)
+        //     {
+        //         nextLevel = currentLevel.Value;
+        //     }
+        //     else
+        //     {
+        //         nextLevel = GetLoopLevel();
 
-        //     return;
+        //         await UserData.SetIsLoopLevel(true);
+        //         await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+
+        //         isLoopLevel = true;
+        //     }
         // }
+        // else
+        // {
+        //     if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+        //     {
+        //         nextLevel = GetLoopLevel();
+        //     }
+        //     else
+        //     {
+        //         nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+        //     }
+
+        //     isLoopLevel = true;
+        // }
+
+        // NOT LOOP
+        if (isLoopLevel)
+        {
+            showSceneTransitionEvent?.Invoke();
+            setIsLevelLoadedEvent?.Invoke();
+            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+
+            return;
+        }
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -321,6 +323,8 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
+
+                RandomizeLevelModelColor(level);
 
                 if (isLoopLevel)
                 {
@@ -821,7 +825,7 @@ public class LevelLoader : MonoBehaviour
             targetOrthographicSize *= 1.2f;
         }
 
-        if (expectedLevelSize.x > 2f * expectedLevelSize.y || expectedLevelSize.z > 2f * expectedLevelSize.y)
+        if (expectedLevelSize.x > 1.7f * expectedLevelSize.y || expectedLevelSize.z > 1.7f * expectedLevelSize.y)
         {
             targetOrthographicSize *= 1.5f;
         }
@@ -1078,10 +1082,28 @@ public class LevelLoader : MonoBehaviour
         float randomTilingX = UnityEngine.Random.Range(0, 129) / 129f;
         float randomTilingY = UnityEngine.Random.Range(0, 129) / 129f;
 
+        bool isUsingTexturedMaterial = false;
+
+        Debug.Log("SAFERIO " + objectPartRenderers[0].sharedMaterial.name);
+
+        if (objectPartRenderers[0].sharedMaterial.name == "Wood Texture Master")
+        {
+            isUsingTexturedMaterial = true;
+        }
+
+        if (isUsingTexturedMaterial)
+        {
+            for (int i = 0; i < objectParts.Length; i++)
+            {
+                objectPartRenderers[i].sharedMaterial.SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
+            }
+
+            return;
+        }
+
+        // Use gradient materials
         for (int i = 0; i < objectParts.Length; i++)
         {
-            objectPartRenderers[i].sharedMaterial.SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
-            
             if (!materialPool.Contains(objectPartRenderers[i].sharedMaterial))
             {
                 return;

@@ -8,22 +8,22 @@ public class GooglePlayGamesSignInManager : MonoBehaviour
 {
     void Start()
     {
-        if (!PlayGamesPlatform.Instance.IsAuthenticated())
-        {
-            PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
-        }
+        // if (!PlayGamesPlatform.Instance.IsAuthenticated())
+        // {
+        //     PlayGamesPlatform.Instance.Authenticate(ProcessAuthentication);
+        // }
     }
 
     internal void ProcessAuthentication(SignInStatus status)
     {
-        if (status == SignInStatus.Success)
-        {
-            GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
-        }
-        else
-        {
-            FallbackLoginAnonymously();
-        }
+        // if (status == SignInStatus.Success)
+        // {
+        //     GamePersistentVariable.FirebaseUserId = PlayGamesPlatform.Instance.GetUserId();
+        // }
+        // else
+        // {
+        //     FallbackLoginAnonymously();
+        // }
     }
 
     private async Task FallbackLoginAnonymously()
