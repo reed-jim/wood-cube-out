@@ -144,6 +144,11 @@ public class LevelLoader : MonoBehaviour
         //     isLoopLevel = true;
         // }
 
+        if (currentLevel.Value > _maxLevel)
+        {
+            isLoopLevel = true;
+        }
+
         // NOT LOOP
         if (isLoopLevel)
         {
@@ -323,8 +328,6 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
-
-                RandomizeLevelModelColor(level);
 
                 if (isLoopLevel)
                 {
