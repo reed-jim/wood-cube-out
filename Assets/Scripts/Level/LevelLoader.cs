@@ -22,6 +22,9 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
+    [Header("Textured Material Level")]
+    [SerializeField] private Material texturedMaterial;
+
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
@@ -112,52 +115,51 @@ public class LevelLoader : MonoBehaviour
 
         bool isLoopLevel = false;
 
-        Debug.Log("SAFERIO " + _maxLevel);
-
-        // if (!UserData.IsLoopLevel)
-        // {
-        //     if (currentLevel.Value <= _maxLevel)
-        //     {
-        //         nextLevel = currentLevel.Value;
-        //     }
-        //     else
-        //     {
-        //         nextLevel = GetLoopLevel();
-
-        //         await UserData.SetIsLoopLevel(true);
-        //         await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
-
-        //         isLoopLevel = true;
-        //     }
-        // }
-        // else
-        // {
-        //     if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
-        //     {
-        //         nextLevel = GetLoopLevel();
-        //     }
-        //     else
-        //     {
-        //         nextLevel = currentLevel.Value - UserData.NumLevelLoop;
-        //     }
-
-        //     isLoopLevel = true;
-        // }
-
-        if (currentLevel.Value > _maxLevel)
+        if (!UserData.IsLoopLevel)
         {
+            if (currentLevel.Value <= _maxLevel)
+            {
+                nextLevel = currentLevel.Value;
+            }
+            else
+            {
+                nextLevel = GetLoopLevel();
+
+                await UserData.SetIsLoopLevel(true);
+                await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+
+                isLoopLevel = true;
+            }
+        }
+        else
+        {
+            if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+            {
+                nextLevel = GetLoopLevel();
+            }
+            else
+            {
+                nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+            }
+
             isLoopLevel = true;
         }
 
-        // NOT LOOP
-        if (isLoopLevel)
-        {
-            showSceneTransitionEvent?.Invoke();
-            setIsLevelLoadedEvent?.Invoke();
-            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        // // NOT LOOP
+        // if (currentLevel.Value > _maxLevel)
+        // {
+        //     isLoopLevel = true;
+        // }
 
-            return;
-        }
+        // if (isLoopLevel)
+        // {
+        //     showSceneTransitionEvent?.Invoke();
+        //     setIsLevelLoadedEvent?.Invoke();
+        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+
+        //     return;
+        // }
+        // // NOT LOOP
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -328,6 +330,8 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
+
+                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
                 if (isLoopLevel)
                 {
@@ -773,54 +777,23 @@ public class LevelLoader : MonoBehaviour
     #region LEVEL SETUP
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
     {
-        bool isScaleByHeight = false;
-
         float maxExpectedLevelSize = expectedLevelSize.x;
 
-        if (expectedLevelSize.y > 1.05f * maxExpectedLevelSize)
+        if (expectedLevelSize.y > maxExpectedLevelSize)
         {
             maxExpectedLevelSize = expectedLevelSize.y;
-
-            isScaleByHeight = true;
         }
-
-        bool isYEqualX = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.x);
-        bool isYEqualZ = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.z);
-        bool isXEqualZ = AreRoughlySimilar(expectedLevelSize.x, expectedLevelSize.z);
-
-        bool isThreeDimensionEqual = isYEqualX && isYEqualZ;
 
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
             maxExpectedLevelSize = 1f * expectedLevelSize.z;
-
-            isScaleByHeight = false;
-        }
-
-        Camera mainCamera = Camera.main;
-
-        float expectedScreenWidth = 1.3f * maxExpectedLevelSize;
-        float expectedScreenHeight = 3f * maxExpectedLevelSize;
-
-        if (!isThreeDimensionEqual)
-        {
-            if (isYEqualX || isYEqualZ)
-            {
-                maxExpectedLevelSize = expectedLevelSize.y;
-                isScaleByHeight = true;
-            }
-        }
-
-        if (!isScaleByHeight)
-        {
-            expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
         }
 
         // the higher targetOrthographicSize, the smaller model
-        float targetOrthographicSize = expectedScreenHeight / 2f;
+        float targetOrthographicSize;
 
         Debug.Log("SAFERIO " + expectedLevelSize);
-        // TEMP
+
         targetOrthographicSize = 1.5f * expectedLevelSize.y;
 
         if (expectedLevelSize.y < expectedLevelSize.x || expectedLevelSize.y < expectedLevelSize.z)
@@ -830,19 +803,8 @@ public class LevelLoader : MonoBehaviour
 
         if (expectedLevelSize.x > 1.7f * expectedLevelSize.y || expectedLevelSize.z > 1.7f * expectedLevelSize.y)
         {
-            targetOrthographicSize *= 1.5f;
+            targetOrthographicSize *= 1.5f + 0.2f * (maxExpectedLevelSize / expectedLevelSize.y);
         }
-        //
-
-        // if (isXEqualZ && !isScaleByHeight)
-        // {
-        //     targetOrthographicSize *= 1.5f;
-        // }
-
-        // if (expectedLevelSize.x > expectedLevelSize.y)
-        // {
-        //     targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
-        // }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
@@ -1086,8 +1048,6 @@ public class LevelLoader : MonoBehaviour
         float randomTilingY = UnityEngine.Random.Range(0, 129) / 129f;
 
         bool isUsingTexturedMaterial = false;
-
-        Debug.Log("SAFERIO " + objectPartRenderers[0].sharedMaterial.name);
 
         if (objectPartRenderers[0].sharedMaterial.name == "Wood Texture Master")
         {
