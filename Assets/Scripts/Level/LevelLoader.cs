@@ -684,6 +684,8 @@ public class LevelLoader : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
 
+        float pieceLossyScale = objects[0].transform.lossyScale.x;
+
         foreach (BasicObjectPart obj in objects)
         {
             if (!obj.transform.IsChildOf(_pivotAdjust))
@@ -694,9 +696,7 @@ public class LevelLoader : MonoBehaviour
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
 
-            Vector3 objectPosition = (obj.transform.position + meshRenderer.bounds.center) / 2;
-
-            // objectPosition = obj.transform.position;
+            Vector3 objectPosition = obj.transform.position + meshFilter.mesh.bounds.center * pieceLossyScale;
 
             float boundXMin = objectPosition.x - 0.5f * obj.BoundSize.x;
             float boundXMax = objectPosition.x + 0.5f * obj.BoundSize.x;
@@ -792,18 +792,13 @@ public class LevelLoader : MonoBehaviour
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize;
 
-        Debug.Log("SAFERIO " + expectedLevelSize);
-
         targetOrthographicSize = 1.5f * expectedLevelSize.y;
 
-        if (expectedLevelSize.y < expectedLevelSize.x || expectedLevelSize.y < expectedLevelSize.z)
+        if (maxExpectedLevelSize > expectedLevelSize.y)
         {
-            targetOrthographicSize *= 1.2f;
-        }
+            float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
 
-        if (expectedLevelSize.x > 1.7f * expectedLevelSize.y || expectedLevelSize.z > 1.7f * expectedLevelSize.y)
-        {
-            targetOrthographicSize *= 1.5f + 0.2f * (maxExpectedLevelSize / expectedLevelSize.y);
+            targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
         }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
