@@ -33,11 +33,11 @@ public class GameLeaderboardManager : MonoBehaviour
             Instance = this;
         }
 
-        await UnityServices.InitializeAsync();
-        // AddTestScoreEntries();
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
-        await AddPlayerScoreToLeaderboard();
-        await GetLeaderboardData();
+        // await UnityServices.InitializeAsync();
+        // // AddTestScoreEntries();
+        // await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        // await AddPlayerScoreToLeaderboard();
+        // await GetLeaderboardData();
     }
 
     // private void Awake()
