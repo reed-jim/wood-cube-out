@@ -13,7 +13,9 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
     [SerializeField] private RectTransform flagContainer;
     [SerializeField] private Image flag;
 
+    [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private CountryDataContainer countryDataContainer;
+    [SerializeField] private LevelDataContainer levelDataContainer;
 
     [SerializeField] private Sprite[] medalSprites;
 
@@ -57,7 +59,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 
             nameText.text = $"{playerName}";
             rankText.text = $"{index + 1}";
-            scoreText.text = $"{items[index].score}";
+            scoreText.text = $"{GetRealOrFakeScore(items[index])}";
 
             if (index > 2)
             {
@@ -111,7 +113,7 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
 
             nameText.text = $"{playerName}";
             rankText.text = $"{rank + 1}";
-            scoreText.text = $"{data.score}";
+            scoreText.text = $"{GetRealOrFakeScore(data)}";
 
             if (rank > 2)
             {
@@ -146,5 +148,17 @@ public class LeaderboardItem : MonoBehaviour, ISaferioScrollViewItem
     private void OnLeaderboardDataFetchCompleted()
     {
         Refresh(_index);
+    }
+
+    private double GetRealOrFakeScore(LeaderboardUserData data)
+    {
+        if (!GamePersistentVariable.useFakeLeaderboardScore)
+        {
+            return data.score;
+        }
+        else
+        {
+            return levelDataContainer.MaxLevel;
+        }
     }
 }

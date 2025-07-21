@@ -35,6 +35,10 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
+    #region LEVEL DIFFICULTY
+    public static float levelDifficultyFixed;
+    #endregion
+
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
@@ -109,6 +113,7 @@ public static class GamePersistentVariable
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
     public static LeaderboardUserData selfScore;
+    public static bool useFakeLeaderboardScore;
     #endregion
 
     #region EVENT

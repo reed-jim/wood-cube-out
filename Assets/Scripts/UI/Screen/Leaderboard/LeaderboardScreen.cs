@@ -45,7 +45,7 @@ public class LeaderboardScreen : UIScreen
     {
         bool isEnableLeaderboard = GamePersistentVariable.isEnableLeaderboard;
 
-        isEnableLeaderboard = false;
+        isEnableLeaderboard = true;
 
         leaderboardContainer.gameObject.SetActive(isEnableLeaderboard);
         commingSoon.gameObject.SetActive(!isEnableLeaderboard);
