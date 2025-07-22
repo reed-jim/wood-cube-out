@@ -118,7 +118,7 @@ public class WinPopup : BasePopup
 
         _currentCollectedCoin = 0;
 
-        int coinQuantity = GamePersistentVariable.isHardMode ? 25 : 10;
+        int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
 
         CollectCoin(coinQuantity);
 

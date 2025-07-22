@@ -36,6 +36,8 @@ public class LevelLoader : MonoBehaviour
     private bool _isNotAutoCenterLevel;
     private bool _isSetLevelGradientBound;
     private bool _isNewLoopLevel;
+    private int _nextLevel;
+    private bool _isLoopLevel;
     #endregion
 
     #region EVENT
@@ -64,6 +66,7 @@ public class LevelLoader : MonoBehaviour
         LosePopup.skipLevelEvent += NextLevel;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
+        ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
@@ -90,6 +93,7 @@ public class LevelLoader : MonoBehaviour
         LosePopup.skipLevelEvent -= NextLevel;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
+        ChooseDifficultyPopup.hardModeSuggestionClosedEvent -= OnHardModeSuggestionClosed;
 
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
@@ -342,7 +346,10 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                ShowSuggestion(nextLevel, isLoopLevel);
+                _nextLevel = nextLevel;
+                _isLoopLevel = isLoopLevel;
+
+                // ShowSuggestion(nextLevel, isLoopLevel);
                 SuggestHardMode();
 
                 #region EVENT ITEMS
@@ -790,6 +797,8 @@ public class LevelLoader : MonoBehaviour
             maxExpectedLevelSize = 1f * expectedLevelSize.z;
         }
 
+        Debug.Log("SAFERIO " + expectedLevelSize);
+
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize;
 
@@ -985,7 +994,9 @@ public class LevelLoader : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
+
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
         }));
@@ -995,7 +1006,9 @@ public class LevelLoader : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
+
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
         }));
@@ -1005,7 +1018,15 @@ public class LevelLoader : MonoBehaviour
     #region HARD MODE
     private void SuggestHardMode()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty);
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty);
+        }));
+    }
+
+    private void OnHardModeSuggestionClosed()
+    {
+        ShowSuggestion(_nextLevel, _isLoopLevel);
     }
     #endregion
 
