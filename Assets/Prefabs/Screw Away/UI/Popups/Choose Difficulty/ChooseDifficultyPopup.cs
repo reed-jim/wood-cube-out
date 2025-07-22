@@ -14,7 +14,7 @@ public class ChooseDifficultyPopup : BasePopup
 
     private void Accept()
     {
-        GamePersistentVariable.userBasedLevelDifficulty = 0.4f;
+        GamePersistentVariable.isHardMode = true;
 
         GameplayScreen.Instance.SwitchToHardMode();
 
@@ -23,7 +23,7 @@ public class ChooseDifficultyPopup : BasePopup
 
     private void Refuse()
     {
-        GamePersistentVariable.userBasedLevelDifficulty = 0;
+        GamePersistentVariable.isHardMode = false;
 
         Hide();
     }

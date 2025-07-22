@@ -118,7 +118,9 @@ public class WinPopup : BasePopup
 
         _currentCollectedCoin = 0;
 
-        CollectCoin(10);
+        int coinQuantity = GamePersistentVariable.isHardMode ? 25 : 10;
+
+        CollectCoin(coinQuantity);
 
         TrackLevelWin();
 

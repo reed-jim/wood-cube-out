@@ -37,6 +37,7 @@ public static class GamePersistentVariable
 
     #region LEVEL DIFFICULTY
     public static float userBasedLevelDifficulty;
+    public static bool isHardMode;
     #endregion
 
     #region LEVEL IN PROGRESS
