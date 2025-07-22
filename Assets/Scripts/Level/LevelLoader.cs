@@ -343,6 +343,7 @@ public class LevelLoader : MonoBehaviour
                 }
 
                 ShowSuggestion(nextLevel, isLoopLevel);
+                SuggestHardMode();
 
                 #region EVENT ITEMS
                 GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
@@ -998,6 +999,13 @@ public class LevelLoader : MonoBehaviour
         {
             switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
         }));
+    }
+    #endregion
+
+    #region HARD MODE
+    private void SuggestHardMode()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty);
     }
     #endregion
 

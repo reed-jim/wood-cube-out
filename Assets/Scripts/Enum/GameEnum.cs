@@ -64,7 +64,8 @@ public class GameEnum : MonoBehaviour
         StarChest,
         JoinSpaceRace,
         StarTournament,
-        EditProfile
+        EditProfile,
+        ChooseDifficulty
     }
 
     public enum GameFaction

@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
-public class GameplayScreen : MonoBehaviour
+public class GameplayScreen : Singleton<GameplayScreen>
 {
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button skipLevelButton;
@@ -19,12 +20,15 @@ public class GameplayScreen : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
 
+    [Header("HARD MODE")]
+    [SerializeField] private CanvasGroup hardModeCanvasGroup;
+
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
         LevelLoader.startLevelEvent += OnLevelStarted;
@@ -113,4 +117,15 @@ public class GameplayScreen : MonoBehaviour
     {
         return currentLevel.Value;
     }
+
+    #region HARD MODE
+    public void SwitchToHardMode()
+    {
+        hardModeCanvasGroup.gameObject.SetActive(true);
+
+        hardModeCanvasGroup.alpha = 0;
+
+        Tween.Alpha(hardModeCanvasGroup, 1, duration: 0.3f);
+    }
+    #endregion      
 }

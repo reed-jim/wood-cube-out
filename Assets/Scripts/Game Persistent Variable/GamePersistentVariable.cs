@@ -36,7 +36,7 @@ public static class GamePersistentVariable
     #endregion
 
     #region LEVEL DIFFICULTY
-    public static float levelDifficultyFixed;
+    public static float userBasedLevelDifficulty;
     #endregion
 
     #region LEVEL IN PROGRESS
