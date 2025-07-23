@@ -63,7 +63,9 @@ public class GameEnum : MonoBehaviour
         Replay,
         StarChest,
         JoinSpaceRace,
-        StarTournament
+        StarTournament,
+        EditProfile,
+        ChooseDifficulty
     }
 
     public enum GameFaction
@@ -134,6 +136,12 @@ public class GameEnum : MonoBehaviour
     {
         Global,
         Local
+    }
+
+    public enum ResourceType
+    {
+        Coin,
+        Live
     }
 
     public static T GetRandomEnumValue<T>()

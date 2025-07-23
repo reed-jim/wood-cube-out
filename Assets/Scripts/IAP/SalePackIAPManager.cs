@@ -164,6 +164,8 @@ public class SalePackIAPManager : MonoBehaviour
 
     private void ShowSaleIAPSuggestion()
     {
+        return;
+        
         suggestSalePackEvent?.Invoke(GetSuggestionPack());
     }
 

@@ -115,6 +115,28 @@ public class AnalyticsController : MonoBehaviour
         // }
     }
 
+    public static void TryLogAdsRevenue(string name_event, int level, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
+    {
+        try
+        {
+            Parameter[] AdRevenueParameters =
+        {
+                new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
+                new Parameter("play_mode", "normal"),
+                new Parameter("ad_source", ad_source),
+                new Parameter("ad_unit_name", ad_unit_name),
+                new Parameter("ad_format",  ad_format ?? ""),
+                new Parameter(FirebaseAnalytics.ParameterValue, value),
+                new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
+        };
+
+            FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
+        }
+        catch (System.Exception)
+        {
+
+        }
+    }
 
     public void LogWatchVideo(ActionWatchVideo action, bool isHasVideo, bool isHasInternet, string level)
     {

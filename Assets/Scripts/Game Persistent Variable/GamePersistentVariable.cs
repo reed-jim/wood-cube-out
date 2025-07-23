@@ -35,6 +35,11 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
+    #region LEVEL DIFFICULTY
+    public static float userBasedLevelDifficulty;
+    public static bool isHardMode;
+    #endregion
+
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
@@ -45,8 +50,10 @@ public static class GamePersistentVariable
     public static bool isLoadingComplete;
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
+    public static bool isPendingStartLevel;
     public static bool isMenuLoading;
     public static bool hasPlayerReachedGameplay;
+    public static bool isLevelLost;
     #endregion
 
     #region LIVES
@@ -104,8 +111,11 @@ public static class GamePersistentVariable
     #endregion
 
     #region LEADERBOARD
+    public static bool isEnableLeaderboard;
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
+    public static LeaderboardUserData selfScore;
+    public static bool useFakeLeaderboardScore;
     #endregion
 
     #region EVENT
@@ -151,5 +161,13 @@ public static class GamePersistentVariable
     public static bool isLevelChestClaimable;
     public static string currentChestReason;
     public static bool isClaimedLevelChest;
+    #endregion
+
+    #region SPAWNED FLYING REWARD ITEMS
+    public static SpawnedRewardItemsData spawnedRewardItemsData;
+    #endregion
+
+    #region PROFILE
+    public static string countrySearchQuery;
     #endregion
 }

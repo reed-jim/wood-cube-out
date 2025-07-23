@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
 using static GameEnum;
 
@@ -8,6 +9,7 @@ public class LivesShopPopup : BasePopup
 {
     [SerializeField] private Button refillByAdsButton;
     [SerializeField] private Button refillByCoinButton;
+    [SerializeField] private Button refuseButton;
     [SerializeField] private TMP_Text currentLivesText;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -20,11 +22,13 @@ public class LivesShopPopup : BasePopup
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<float> updateCoinTextEvent;
     public static event Action lackCoinReplenishLiveEvent;
+    public static event Action startGameEvent;
 
     protected override void MoreActionInAwake()
     {
         refillByCoinButton.onClick.AddListener(RefillByCoin);
         refillByAdsButton.onClick.AddListener(RefillByAds);
+        refuseButton.onClick.AddListener(Refuse);
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -44,10 +48,7 @@ public class LivesShopPopup : BasePopup
 
     private void OnRewaredAdCompletedToRefillLives()
     {
-        Hide(onCompletedAction: () =>
-        {
-            ActualRefill();
-        });
+        ActualRefill();
 
         SaferioTracking.TrackRewardedAdCompleted(GamePersistentVariable.currentLevel, "Refill Live");
     }
@@ -89,11 +90,11 @@ public class LivesShopPopup : BasePopup
         Hide(
             onCompletedAction: () =>
             {
-                if (GamePersistentVariable.isPendingReturnHome)
+                if (GamePersistentVariable.isPendingStartLevel)
                 {
-                    runPendingReturnHomeCommandEvent?.Invoke();
+                    startGameEvent?.Invoke();
 
-                    GamePersistentVariable.isPendingReturnHome = false;
+                    GamePersistentVariable.isPendingStartLevel = false;
                 }
             }
         );
@@ -104,5 +105,26 @@ public class LivesShopPopup : BasePopup
 
             GamePersistentVariable.isPendingReplay = false;
         }
+    }
+
+    private void Refuse()
+    {
+        base.Hide(onCompletedAction: () =>
+        {
+            if (GamePersistentVariable.isLevelLost)
+            {
+                ReturnHomeOnRejectedToRefillLive();
+            }
+        });
+
+        GamePersistentVariable.isPendingStartLevel = false;
+        GamePersistentVariable.isPendingReplay = false;
+    }
+
+    private void ReturnHomeOnRejectedToRefillLive()
+    {
+        GamePersistentVariable.isLevelLost = false;
+
+        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
     }
 }

@@ -88,8 +88,27 @@ public static class ColorUtil
     public static Color ToGrayscale(Color color)
     {
         float grayValue = (color.r + color.g + color.b) / 3f;
-        
+
         return new Color(grayValue, grayValue, grayValue);
+    }
+
+    public static Color GetBrighterColor(Color color, float increase)
+    {
+        Color.RGBToHSV(color, out float h, out float s, out float v);
+
+        v = Mathf.Clamp01(v + increase);
+
+        return Color.HSVToRGB(h, s, v);
+    }
+
+    public static Color GetNearWhiteColor(Color color, float saturationAmount = 0.2f, float brightness = 1f)
+    {
+        Color.RGBToHSV(color, out float h, out float s, out float v);
+
+        s = Mathf.Clamp01(saturationAmount);
+        v = Mathf.Clamp01(brightness);
+
+        return Color.HSVToRGB(h, s, v);
     }
 
     #region MATH

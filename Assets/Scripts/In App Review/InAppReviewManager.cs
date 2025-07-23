@@ -1,6 +1,7 @@
 using System.Collections;
 using Google.Play.Review;
 using UnityEngine;
+// using UnityEngine.iOS;
 
 public class InAppReviewManager : MonoBehaviour
 {

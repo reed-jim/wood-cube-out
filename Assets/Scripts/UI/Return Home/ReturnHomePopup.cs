@@ -33,19 +33,13 @@ public class ReturnHomePopup : BasePopup
 
     private void ReturnHome()
     {
-        if (GamePersistentVariable.livesData.CurrentLives <= 0)
-        {
-            GamePersistentVariable.isPendingReturnHome = true;
-
-            SwitchRoute(ScreenRoute.LivesShop);
-
-            return;
-        }
-
         // avoid spamming
         homeButton.interactable = false;
 
-        changeLivesNumberEvent?.Invoke(-1);
+        if (GamePersistentVariable.livesData.CurrentLives > 0)
+        {
+            changeLivesNumberEvent?.Invoke(-1);
+        }
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 

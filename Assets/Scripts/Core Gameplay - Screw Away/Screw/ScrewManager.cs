@@ -660,6 +660,12 @@ public class ScrewManager : MonoBehaviour
             difficultyLevel = 0;
         }
 
+        // HARD MODE
+        if (GamePersistentVariable.isHardMode)
+        {
+            difficultyLevel = _currentLevelDifficultyConfiguration.LevelPhases.Length - 1;
+        }
+
         Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);

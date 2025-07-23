@@ -50,6 +50,7 @@ public class BasePopup : MonoBehaviour
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         PausePopup.switchRouteEvent += OnRouteSwitched;
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
+        LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -99,6 +100,7 @@ public class BasePopup : MonoBehaviour
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
         PausePopup.switchRouteEvent -= OnRouteSwitched;
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
+        LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 
@@ -158,14 +160,16 @@ public class BasePopup : MonoBehaviour
             return;
         }
 
-        if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-        {
-            AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
-        }
-        else
-        {
-            ActualShowAfterAd(onCompletedAction);
-        }
+        ActualShowAfterAd(onCompletedAction);
+
+        // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+        // {
+        //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
+        // }
+        // else
+        // {
+        //     ActualShowAfterAd(onCompletedAction);
+        // }
 
         _isInTransition = true;
     }
@@ -215,14 +219,16 @@ public class BasePopup : MonoBehaviour
 
         if (_isShown)
         {
-            if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-            {
-                AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
-            }
-            else
-            {
-                ActualHideAfterAd(onCompletedAction);
-            }
+            ActualHideAfterAd(onCompletedAction);
+
+            // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
+            // {
+            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
+            // }
+            // else
+            // {
+            //     ActualHideAfterAd(onCompletedAction);
+            // }
 
             _isInTransition = true;
         }
@@ -369,5 +375,10 @@ public class BasePopup : MonoBehaviour
     protected void InvokeShowResourcesEarnPopupPopupEvent(int coinQuantity, int[] boosterQuantites, bool isRemoveAds)
     {
         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);
+    }
+
+    protected void AddTween(Tween tween)
+    {
+        _tweens.Add(tween);
     }
 }
