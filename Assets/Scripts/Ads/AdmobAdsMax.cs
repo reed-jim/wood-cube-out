@@ -1227,6 +1227,11 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void ShowBannerMax()
     {
+        if (UserData.IsRemoveAds)
+        {
+            return;
+        }
+
         MaxSdk.ShowBanner(BanerAdUnitId);
         // RequestBanner();
         _bannerView?.Hide();

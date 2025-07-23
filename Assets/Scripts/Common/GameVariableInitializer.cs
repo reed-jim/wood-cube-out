@@ -56,6 +56,8 @@ public class GameVariableInitializer : MonoBehaviour
         GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
 
         GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
+
+        UserData.IsRemoveAds = true;
     }
 
     private void Start()

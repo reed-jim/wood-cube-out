@@ -149,21 +149,21 @@ public class LevelLoader : MonoBehaviour
             isLoopLevel = true;
         }
 
-        // // NOT LOOP
-        // if (currentLevel.Value > _maxLevel)
-        // {
-        //     isLoopLevel = true;
-        // }
+        // NOT LOOP
+        if (currentLevel.Value > _maxLevel)
+        {
+            isLoopLevel = true;
+        }
 
-        // if (isLoopLevel)
-        // {
-        //     showSceneTransitionEvent?.Invoke();
-        //     setIsLevelLoadedEvent?.Invoke();
-        //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+        if (isLoopLevel)
+        {
+            showSceneTransitionEvent?.Invoke();
+            setIsLevelLoadedEvent?.Invoke();
+            switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
-        //     return;
-        // }
-        // // NOT LOOP
+            return;
+        }
+        // NOT LOOP
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -350,7 +350,7 @@ public class LevelLoader : MonoBehaviour
                 _isLoopLevel = isLoopLevel;
 
                 // ShowSuggestion(nextLevel, isLoopLevel);
-                SuggestHardMode();
+                // SuggestHardMode();
 
                 #region EVENT ITEMS
                 GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
