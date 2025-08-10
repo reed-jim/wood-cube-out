@@ -40,6 +40,10 @@ public class LevelLoader : MonoBehaviour
     private bool _isLoopLevel;
     #endregion
 
+    #region Memory Management
+    AsyncOperationHandle<GameObject> _loadLevelHandle;
+    #endregion
+
     #region EVENT
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
@@ -205,9 +209,18 @@ public class LevelLoader : MonoBehaviour
         //     }
         // }
 
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        // Memory Management
+        Resources.UnloadUnusedAssets();
 
-        handle.Completed += (op) =>
+        if (_loadLevelHandle.IsValid())
+        {
+            Addressables.Release(_loadLevelHandle);
+        }
+        //
+        
+        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+
+        _loadLevelHandle.Completed += (op) =>
         {
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
