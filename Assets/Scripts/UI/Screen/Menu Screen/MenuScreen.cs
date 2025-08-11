@@ -26,6 +26,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button openStarTournamentPopupButton;
     [SerializeField] private Button openMedalTournamentPopupButton;
     [SerializeField] private Button openSpaceRacePopupButton;
+    [SerializeField] private Button openEditProfilePopupButton;
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
@@ -101,6 +102,7 @@ public class MenuScreen : MonoBehaviour
         openStarTournamentPopupButton.onClick.AddListener(OpenStarTournamentPopup);
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
+        openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
 
         #region SALE IAP PACKS
         openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
@@ -383,6 +385,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenWeeklyTaskScreen()
     {
         switchRouteEvent?.Invoke(ScreenRoute.WeeklyTask);
+    }
+
+    private void OpenEditProfilePopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
     }
 
     #region SALE PACKS

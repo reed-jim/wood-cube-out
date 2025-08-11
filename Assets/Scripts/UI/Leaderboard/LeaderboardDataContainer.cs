@@ -10,6 +10,7 @@ public static class LeaderboardDataContainer
 
     public static LeaderboardUserData GetCurrentPlayerLeaderboardData()
     {
-        return Items.First(item => item.id == AuthenticationService.Instance.PlayerId);
+        // return Items.First(item => item.id == AuthenticationService.Instance.PlayerId);
+        return GamePersistentVariable.selfScore;
     }
 }

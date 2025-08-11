@@ -22,6 +22,9 @@ public class LevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
+    [Header("Textured Material Level")]
+    [SerializeField] private Material texturedMaterial;
+
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
@@ -33,6 +36,12 @@ public class LevelLoader : MonoBehaviour
     private bool _isNotAutoCenterLevel;
     private bool _isSetLevelGradientBound;
     private bool _isNewLoopLevel;
+    private int _nextLevel;
+    private bool _isLoopLevel;
+    #endregion
+
+    #region Memory Management
+    AsyncOperationHandle<GameObject> _loadLevelHandle;
     #endregion
 
     #region EVENT
@@ -61,6 +70,7 @@ public class LevelLoader : MonoBehaviour
         LosePopup.skipLevelEvent += NextLevel;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
+        ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
@@ -87,6 +97,7 @@ public class LevelLoader : MonoBehaviour
         LosePopup.skipLevelEvent -= NextLevel;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
+        ChooseDifficultyPopup.hardModeSuggestionClosedEvent -= OnHardModeSuggestionClosed;
 
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
@@ -143,6 +154,11 @@ public class LevelLoader : MonoBehaviour
         }
 
         // // NOT LOOP
+        // if (currentLevel.Value > _maxLevel)
+        // {
+        //     isLoopLevel = true;
+        // }
+
         // if (isLoopLevel)
         // {
         //     showSceneTransitionEvent?.Invoke();
@@ -151,6 +167,7 @@ public class LevelLoader : MonoBehaviour
 
         //     return;
         // }
+        // // NOT LOOP
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -192,9 +209,18 @@ public class LevelLoader : MonoBehaviour
         //     }
         // }
 
-        AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        // Memory Management
+        Resources.UnloadUnusedAssets();
 
-        handle.Completed += (op) =>
+        if (_loadLevelHandle.IsValid())
+        {
+            Addressables.Release(_loadLevelHandle);
+        }
+        //
+
+        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+
+        _loadLevelHandle.Completed += (op) =>
         {
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
@@ -322,6 +348,8 @@ public class LevelLoader : MonoBehaviour
 
                 AutoAssignScrewFactionMultiPhaseLevel(level);
 
+                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
+
                 if (isLoopLevel)
                 {
                     RandomizeLevelModelColor(level);
@@ -331,7 +359,14 @@ public class LevelLoader : MonoBehaviour
                     SaferioTracking.TrackLevelStart(currentLevel.Value);
                 }
 
-                ShowSuggestion(nextLevel, isLoopLevel);
+                _nextLevel = nextLevel;
+                _isLoopLevel = isLoopLevel;
+
+                _tweens.Add(Tween.Delay(3).OnComplete(() =>
+                {
+                    ShowSuggestion(nextLevel, isLoopLevel);
+                }));
+                // SuggestHardMode();
 
                 #region EVENT ITEMS
                 GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
@@ -673,6 +708,8 @@ public class LevelLoader : MonoBehaviour
 
         transform.rotation = Quaternion.identity;
 
+        float pieceLossyScale = objects[0].transform.lossyScale.x;
+
         foreach (BasicObjectPart obj in objects)
         {
             if (!obj.transform.IsChildOf(_pivotAdjust))
@@ -683,16 +720,14 @@ public class LevelLoader : MonoBehaviour
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
             MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
 
-            Vector3 objectPosition = (obj.transform.position + meshRenderer.bounds.center) / 2;
+            Vector3 objectPosition = obj.transform.position + meshFilter.mesh.bounds.center * pieceLossyScale;
 
-            objectPosition = obj.transform.position;
-
-            float boundXMin = obj.transform.position.x - 0.5f * obj.BoundSize.x;
-            float boundXMax = obj.transform.position.x + 0.5f * obj.BoundSize.x;
-            float boundYMin = obj.transform.position.y - 0.5f * obj.BoundSize.y;
-            float boundYMax = obj.transform.position.y + 0.5f * obj.BoundSize.y;
-            float boundZMin = obj.transform.position.z - 0.5f * obj.BoundSize.z;
-            float boundZMax = obj.transform.position.z + 0.5f * obj.BoundSize.z;
+            float boundXMin = objectPosition.x - 0.5f * obj.BoundSize.x;
+            float boundXMax = objectPosition.x + 0.5f * obj.BoundSize.x;
+            float boundYMin = objectPosition.y - 0.5f * obj.BoundSize.y;
+            float boundYMax = objectPosition.y + 0.5f * obj.BoundSize.y;
+            float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
+            float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
 
             if (boundXMin < minX)
             {
@@ -766,70 +801,29 @@ public class LevelLoader : MonoBehaviour
     #region LEVEL SETUP
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
     {
-        bool isScaleByHeight = false;
-
         float maxExpectedLevelSize = expectedLevelSize.x;
 
-        if (expectedLevelSize.y > 1.05f * maxExpectedLevelSize)
+        if (expectedLevelSize.y > maxExpectedLevelSize)
         {
             maxExpectedLevelSize = expectedLevelSize.y;
-
-            isScaleByHeight = true;
         }
-
-        bool isYEqualX = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.x);
-        bool isYEqualZ = AreRoughlySimilar(expectedLevelSize.y, expectedLevelSize.z);
-        bool isXEqualZ = AreRoughlySimilar(expectedLevelSize.x, expectedLevelSize.z);
-
-        bool isThreeDimensionEqual = isYEqualX && isYEqualZ;
 
         if (expectedLevelSize.z > maxExpectedLevelSize)
         {
             maxExpectedLevelSize = 1f * expectedLevelSize.z;
-
-            isScaleByHeight = false;
-        }
-
-        Camera mainCamera = Camera.main;
-
-        float expectedScreenWidth = 1.3f * maxExpectedLevelSize;
-        float expectedScreenHeight = 3f * maxExpectedLevelSize;
-
-        if (!isThreeDimensionEqual)
-        {
-            if (isYEqualX || isYEqualZ)
-            {
-                maxExpectedLevelSize = expectedLevelSize.y;
-                isScaleByHeight = true;
-            }
-        }
-
-        if (!isScaleByHeight)
-        {
-            expectedScreenHeight = expectedScreenWidth / mainCamera.aspect;
         }
 
         // the higher targetOrthographicSize, the smaller model
-        float targetOrthographicSize = expectedScreenHeight / 2f;
+        float targetOrthographicSize;
 
-        // TEMP
         targetOrthographicSize = 1.5f * expectedLevelSize.y;
 
-        if (expectedLevelSize.y < expectedLevelSize.x || expectedLevelSize.y < expectedLevelSize.z)
+        if (maxExpectedLevelSize > expectedLevelSize.y)
         {
-            targetOrthographicSize *= 1.2f;
+            float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
+
+            targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
         }
-        //
-
-        // if (isXEqualZ && !isScaleByHeight)
-        // {
-        //     targetOrthographicSize *= 1.5f;
-        // }
-
-        // if (expectedLevelSize.x > expectedLevelSize.y)
-        // {
-        //     targetOrthographicSize *= expectedLevelSize.x / expectedLevelSize.y;
-        // }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
@@ -1014,7 +1008,9 @@ public class LevelLoader : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
+
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.UnlockDoubleScrewBoxesSuggestion);
         }));
@@ -1024,10 +1020,27 @@ public class LevelLoader : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
+
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
         }));
+    }
+    #endregion
+
+    #region HARD MODE
+    private void SuggestHardMode()
+    {
+        _tweens.Add(Tween.Delay(3).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty);
+        }));
+    }
+
+    private void OnHardModeSuggestionClosed()
+    {
+        ShowSuggestion(_nextLevel, _isLoopLevel);
     }
     #endregion
 
@@ -1069,6 +1082,27 @@ public class LevelLoader : MonoBehaviour
 
         Material material = null;
 
+        float randomTilingX = UnityEngine.Random.Range(0, 129) / 129f;
+        float randomTilingY = UnityEngine.Random.Range(0, 129) / 129f;
+
+        bool isUsingTexturedMaterial = false;
+
+        if (objectPartRenderers[0].sharedMaterial.name == "Wood Texture Master")
+        {
+            isUsingTexturedMaterial = true;
+        }
+
+        if (isUsingTexturedMaterial)
+        {
+            for (int i = 0; i < objectParts.Length; i++)
+            {
+                objectPartRenderers[i].sharedMaterial.SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
+            }
+
+            return;
+        }
+
+        // Use gradient materials
         for (int i = 0; i < objectParts.Length; i++)
         {
             if (!materialPool.Contains(objectPartRenderers[i].sharedMaterial))

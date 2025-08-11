@@ -35,6 +35,11 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
+    #region LEVEL DIFFICULTY
+    public static float userBasedLevelDifficulty;
+    public static bool isHardMode;
+    #endregion
+
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
@@ -105,8 +110,11 @@ public static class GamePersistentVariable
     #endregion
 
     #region LEADERBOARD
+    public static bool isEnableLeaderboard;
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
+    public static LeaderboardUserData selfScore;
+    public static bool useFakeLeaderboardScore;
     #endregion
 
     #region EVENT
@@ -156,5 +164,9 @@ public static class GamePersistentVariable
 
     #region SPAWNED FLYING REWARD ITEMS
     public static SpawnedRewardItemsData spawnedRewardItemsData;
+    #endregion
+
+    #region PROFILE
+    public static string countrySearchQuery;
     #endregion
 }

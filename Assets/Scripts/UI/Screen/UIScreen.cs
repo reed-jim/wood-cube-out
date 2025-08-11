@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -16,6 +18,7 @@ public class UIScreen : MonoBehaviour
     [SerializeField] private bool isRouteActiveFromStart;
 
     #region PRIVATE FIELD
+    private List<Tween> _tweens;
     private Vector3 _initialContainerPosititon;
     protected ISaferioUIAnimation _transitionAnimation;
     private bool _isShown;
@@ -36,6 +39,8 @@ public class UIScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent += OnRouteSwitched;
         SwipingScreen.hideOutsideScreenEvent += HideOutsideScreen;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
+
+        _tweens = new List<Tween>();
 
         RegisterMoreEvent();
 
@@ -60,6 +65,8 @@ public class UIScreen : MonoBehaviour
         BottomBarItem.switchRouteEvent -= OnRouteSwitched;
         SwipingScreen.hideOutsideScreenEvent -= HideOutsideScreen;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
+
+        CommonUtil.StopAllTweens(_tweens);
 
         UnregisterMoreEvent();
     }
@@ -132,5 +139,10 @@ public class UIScreen : MonoBehaviour
         {
             content.gameObject.SetActive(true);
         }
+    }
+
+    protected void AddTween(Tween tween)
+    {
+        _tweens.Add(tween);
     }
 }

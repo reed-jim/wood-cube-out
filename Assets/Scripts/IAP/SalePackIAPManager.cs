@@ -51,8 +51,8 @@ public class SalePackIAPManager : MonoBehaviour
             Instance = this;
         }
 
-        // DailyOfferPopup.refreshSaleIAPPackEvent += ShowSaleIAPSuggestion;
-        // DailyOfferPopup.countSaleIAPPackLifeTimeEvent += StartCountPackLifeTime;
+        DailyOfferPopup.refreshSaleIAPPackEvent += ShowSaleIAPSuggestion;
+        DailyOfferPopup.countSaleIAPPackLifeTimeEvent += StartCountPackLifeTime;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         StartCountPackLifeTime();
@@ -60,8 +60,8 @@ public class SalePackIAPManager : MonoBehaviour
 
     void OnDestroy()
     {
-        // DailyOfferPopup.refreshSaleIAPPackEvent -= ShowSaleIAPSuggestion;
-        // DailyOfferPopup.countSaleIAPPackLifeTimeEvent -= StartCountPackLifeTime;
+        DailyOfferPopup.refreshSaleIAPPackEvent -= ShowSaleIAPSuggestion;
+        DailyOfferPopup.countSaleIAPPackLifeTimeEvent -= StartCountPackLifeTime;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -164,7 +164,9 @@ public class SalePackIAPManager : MonoBehaviour
 
     private void ShowSaleIAPSuggestion()
     {
-        // suggestSalePackEvent?.Invoke(GetSuggestionPack());
+        return;
+        
+        suggestSalePackEvent?.Invoke(GetSuggestionPack());
     }
 
     public bool IsShowDailyOffer()
