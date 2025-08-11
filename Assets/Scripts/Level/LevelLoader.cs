@@ -217,7 +217,7 @@ public class LevelLoader : MonoBehaviour
             Addressables.Release(_loadLevelHandle);
         }
         //
-        
+
         _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
 
         _loadLevelHandle.Completed += (op) =>
@@ -362,8 +362,11 @@ public class LevelLoader : MonoBehaviour
                 _nextLevel = nextLevel;
                 _isLoopLevel = isLoopLevel;
 
-                // ShowSuggestion(nextLevel, isLoopLevel);
-                SuggestHardMode();
+                _tweens.Add(Tween.Delay(3).OnComplete(() =>
+                {
+                    ShowSuggestion(nextLevel, isLoopLevel);
+                }));
+                // SuggestHardMode();
 
                 #region EVENT ITEMS
                 GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
@@ -809,8 +812,6 @@ public class LevelLoader : MonoBehaviour
         {
             maxExpectedLevelSize = 1f * expectedLevelSize.z;
         }
-
-        Debug.Log("SAFERIO " + expectedLevelSize);
 
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize;
