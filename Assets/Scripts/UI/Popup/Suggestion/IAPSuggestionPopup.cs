@@ -201,17 +201,24 @@ public class IAPSuggestionPopup : BasePopup
 
     private void Buy()
     {
-        if (_countingCoroutine != null)
+        if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            StopCoroutine(_countingCoroutine);
-
-            _tweens.Add(Tween.Scale(buyButton.transform, 1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f, ease: Ease.Linear));
+            ShowNotification(GameConstants.NO_INTERNET, GameConstants.PLEASE_CHECK_YOUR_INTERNET_CONNECTION);
         }
+        else
+        {
+            if (_countingCoroutine != null)
+            {
+                StopCoroutine(_countingCoroutine);
 
-        GamePersistentVariable.IAPLocation = "IAP Suggestion";
-        GamePersistentVariable.IAPAddition = 2;
+                _tweens.Add(Tween.Scale(buyButton.transform, 1f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f, ease: Ease.Linear));
+            }
 
-        buyIAPEvent?.Invoke(packageData.ProductId);
+            GamePersistentVariable.IAPLocation = "IAP Suggestion";
+            GamePersistentVariable.IAPAddition = 2;
+
+            buyIAPEvent?.Invoke(packageData.ProductId);
+        }
     }
 
     private void FetchLocalizedPrice(string productId, string localizedPrice)

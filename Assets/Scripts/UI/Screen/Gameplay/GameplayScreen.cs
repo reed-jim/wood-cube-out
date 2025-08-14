@@ -30,7 +30,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     protected override void MoreActionOnAwake()
     {
-        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
         LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
@@ -52,7 +51,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     void OnDestroy()
     {
-        localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
         LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;

@@ -57,6 +57,7 @@ public class MenuScreen : MonoBehaviour
     private Tween _openRemoveAdPopupButtonTween;
     private Tween _openUnlockScrewBoxesPopupButtonTween;
     private Tween _topBarDividerTween;
+    private bool _isGameStarted;
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
@@ -86,8 +87,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openLevelChestPopupEvent += OpenChestLevelPopup;
         GameEventManager.openCoinChallengePopupEvent += OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
-
-        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
 
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
@@ -136,9 +135,14 @@ public class MenuScreen : MonoBehaviour
         currentLevel.Load();
         canvasSize.Load();
 
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
 
         // PreventSpammingStartButton();
+    }
+
+    void OnEnable()
+    {
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private async Task Start()
@@ -182,8 +186,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
-        localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
-
         CommonUtil.StopAllTweens(_tweens);
     }
 
@@ -213,11 +215,20 @@ public class MenuScreen : MonoBehaviour
 
     private void OnLevelTextTranslated()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void StartGame()
     {
+        if (_isGameStarted)
+        {
+            return;
+        }
+        else
+        {
+            _isGameStarted = true;
+        }
+
         // if (currentLevel.Value > 10)
         // {
         //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
@@ -528,14 +539,14 @@ public class MenuScreen : MonoBehaviour
 
     private void UpdateCurrentLevelText()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void UpdateCurrentLevelTextOnBackup()
     {
         currentLevel.Load();
 
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)
