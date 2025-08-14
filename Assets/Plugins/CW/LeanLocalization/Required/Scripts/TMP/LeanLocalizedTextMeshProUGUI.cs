@@ -1,6 +1,5 @@
-﻿using UnityEngine;
+﻿﻿using UnityEngine;
 using TMPro;
-using UnityEngine.UI;
 using System.Text;
 using System;
 
@@ -13,14 +12,13 @@ namespace Lean.Localization
 	[AddComponentMenu(LeanLocalization.ComponentPathPrefix + "Localized TextMeshProUGUI")]
 	public class LeanLocalizedTextMeshProUGUI : LeanLocalizedBehaviour
 	{
-		[SerializeField] private string parameter;
-
 		#region PRIVATE FIELD
 		private LeanTranslation _cachedTranslation;
+		private string _cachedParameter;
 		private string _cachedParameterValue;
 		#endregion
 
-		public event Action textTranslatedEvent;
+		// public event Action textTranslatedEvent;
 
 		[Tooltip("If PhraseName couldn't be found, this text will be used")]
 		public string FallbackText;
@@ -42,12 +40,12 @@ namespace Lean.Localization
 				text.text = LeanTranslation.FormatText(FallbackText, text.text, this, gameObject);
 			}
 
-			// if (!String.IsNullOrEmpty(parameter))
-			// {
-			// 	UpdateTranslationWithParameter(parameter, _cachedParameterValue);
-			// }
+			if (!String.IsNullOrEmpty(_cachedParameter))
+			{
+				UpdateTranslationWithParameter(_cachedParameter, _cachedParameterValue);
+			}
 
-			textTranslatedEvent?.Invoke();
+			// textTranslatedEvent?.Invoke();
 
 			_cachedTranslation = translation;
 		}
@@ -56,8 +54,6 @@ namespace Lean.Localization
 		public void UpdateTranslationWithParameter(string parameter, string value)
 		{
 			var textMeshPro = GetComponent<TextMeshProUGUI>();
-
-
 
 			if (_cachedTranslation != null && _cachedTranslation.Data is string)
 			{
@@ -76,6 +72,7 @@ namespace Lean.Localization
 
 			textMeshPro.text = textMeshPro.text.Replace(pattern.ToString(), value);
 
+			_cachedParameter = parameter;
 			_cachedParameterValue = value;
 		}
 

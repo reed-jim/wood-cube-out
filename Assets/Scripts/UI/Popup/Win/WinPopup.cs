@@ -55,7 +55,6 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent += OnLevelWinAsync;
         DebugPopup.winLevelEvent += OnLevelWinAsync;
-        localizedMultiplyCoinText.textTranslatedEvent += OnMultiplyCoinTextTranslated;
 
         continueButton.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
@@ -66,7 +65,6 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent -= OnLevelWinAsync;
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
-        localizedMultiplyCoinText.textTranslatedEvent -= OnMultiplyCoinTextTranslated;
     }
 
     private async void OnLevelWinAsync()
