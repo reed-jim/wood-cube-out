@@ -1,4 +1,4 @@
-﻿﻿using UnityEngine;
+﻿using UnityEngine;
 using TMPro;
 using System.Text;
 using System;
@@ -28,6 +28,14 @@ namespace Lean.Localization
 		{
 			// Get the TextMeshProUGUI component attached to this GameObject
 			var text = GetComponent<TextMeshProUGUI>();
+
+			// avoid TMP_SubMeshUI duplicate
+			TMP_SubMeshUI subMeshUI = text.GetComponentInChildren<TMP_SubMeshUI>();
+
+			if (subMeshUI != null)
+			{
+				Destroy(subMeshUI.gameObject);
+			}
 
 			// Use translation?
 			if (translation != null && translation.Data is string)
