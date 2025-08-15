@@ -15,6 +15,9 @@ public class RotateObject : MonoBehaviour
     private float _remainingTimeToAutoRotate;
     public Transform cloneToCalculateRotation;
 
+    private float rotationX;
+    private float rotationY;
+
     void Awake()
     {
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
@@ -49,35 +52,45 @@ public class RotateObject : MonoBehaviour
 
         while (true)
         {
-            if (_isSwiping || _isAutoRotating)
-            {
-                if (!_isRotating)
-                {
-                    cloneToCalculateRotation.rotation = transform.rotation;
-                }
+            // float smoothRotateX = Mathf.Lerp(0, _pitch, 0.3f * Time.deltaTime);
+            // float smoothRotateY = Mathf.Lerp(0, _yaw, 0.3f * Time.deltaTime);
 
-                cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-                cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
+            float smoothRotateX = _pitch * 0.0045f;
+            float smoothRotateY = _yaw * 0.0045f;
 
-                _rotateLerpStep = 0;
-                _isRotating = true;
-            }
+            transform.RotateAround(Vector3.up, smoothRotateY);
+            transform.RotateAround(Vector3.right, smoothRotateX);
 
-            if (_isRotating)
-            {
-                transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 6f);
+            // if (_isSwiping || _isAutoRotating)
+            // {
+            //     if (!_isRotating)
+            //     {
+            //         cloneToCalculateRotation.rotation = transform.rotation;
+            //     }
 
-                _rotateLerpStep++;
+            //     cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
+            //     cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
 
-                if (_rotateLerpStep >= 6)
-                {
-                    _rotateLerpStep = 0;
-                    _isSwiping = false;
-                    _isRotating = false;
+            //     _rotateLerpStep = 0;
+            //     _isRotating = true;
+            //     _isSwiping = false;
+            // }
 
-                    cloneToCalculateRotation.rotation = transform.rotation;
-                }
-            }
+            // if (_isRotating)
+            // {
+            //     transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 6f);
+
+            //     _rotateLerpStep++;
+
+            //     if (_rotateLerpStep >= 6)
+            //     {
+            //         _rotateLerpStep = 0;
+            //         _isSwiping = false;
+            //         _isRotating = false;
+
+            //         cloneToCalculateRotation.rotation = transform.rotation;
+            //     }
+            // }
 
             if (!_isAutoRotating)
             {
