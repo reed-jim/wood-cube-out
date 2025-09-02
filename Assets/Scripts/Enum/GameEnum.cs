@@ -68,7 +68,8 @@ public class GameEnum : MonoBehaviour
         ChooseDifficulty,
         Decision,
         Suspect,
-        SuspectDetail
+        SuspectDetail,
+        SuspectResult
     }
 
     public enum GameFaction

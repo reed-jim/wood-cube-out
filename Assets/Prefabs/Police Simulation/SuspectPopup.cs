@@ -80,6 +80,6 @@ public class SuspectPopup : BasePopup
 
     private void Finish()
     {
-        // SwitchRoute(GameEnum.ScreenRoute.SuspectDetail);
+        SwitchRoute(GameEnum.ScreenRoute.SuspectResult);
     }
 }
