@@ -65,7 +65,10 @@ public class GameEnum : MonoBehaviour
         JoinSpaceRace,
         StarTournament,
         EditProfile,
-        ChooseDifficulty
+        ChooseDifficulty,
+        Decision,
+        Suspect,
+        SuspectDetail
     }
 
     public enum GameFaction
