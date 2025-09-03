@@ -171,6 +171,10 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
 
+        #region CORE GAMEPLAY CONFIG
+        GamePersistentVariable.screwHoleLeftToLose = GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 0);
+        #endregion
+
         #region DOUBLE INTER
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 

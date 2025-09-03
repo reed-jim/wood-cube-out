@@ -373,7 +373,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
 
-            if (numScrewPortsEmpty <= 0 && !_isCheckingLose)
+            if (numScrewPortsEmpty <= GamePersistentVariable.screwHoleLeftToLose && !_isCheckingLose)
             {
                 _tweens.Add(Tween.Delay(3).OnComplete(() =>
                 {

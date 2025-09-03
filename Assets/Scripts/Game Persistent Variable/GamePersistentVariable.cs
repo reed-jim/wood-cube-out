@@ -87,6 +87,10 @@ public static class GamePersistentVariable
     public static bool isFirebaseRemoteConfigLoaded;
     #endregion
 
+    #region CORE GAMEPLAY CONFIG
+    public static int screwHoleLeftToLose;
+    #endregion
+
     #region ADS
     public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;

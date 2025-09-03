@@ -446,6 +446,7 @@ public class FirebaseConfig
     public const string DAILY_REWARD_CONFIG = "daily_reward_config";
     public const string COIN_CHALLENGE_CONFIG = "coin_challenge_config";
     public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
+    public const string SCREW_HOLE_LEFT_TO_LOSE = "screw_hole_left_to_lose";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
