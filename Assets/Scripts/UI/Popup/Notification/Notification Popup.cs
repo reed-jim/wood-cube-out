@@ -28,6 +28,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationWithParamEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
+        showNotificationNoLocalizedEvent += ShowNotificationWithoutLocalized;
 
         okButton.onClick.AddListener(Hide);
     }
@@ -46,6 +47,7 @@ public class NotificationPopup : BasePopup
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
 
         showNotificationEvent -= ShowNotification;
+        showNotificationNoLocalizedEvent -= ShowNotificationWithoutLocalized;
     }
 
     protected override void Show(Action onCompletedAction = null)
@@ -88,8 +90,22 @@ public class NotificationPopup : BasePopup
 
     private void ShowNotification(string titleTranslation, string descriptionTranslation)
     {
+        localizedTitle.enabled = true;
+        localizedDescription.enabled = true;
+
         localizedTitle.TranslationName = titleTranslation;
         localizedDescription.TranslationName = descriptionTranslation;
+
+        Show();
+    }
+
+    private void ShowNotificationWithoutLocalized(string titleTranslation, string descriptionTranslation)
+    {
+        localizedTitle.enabled = false;
+        localizedDescription.enabled = false;
+
+        localizedTitle.GetComponent<TMP_Text>().text = titleTranslation;
+        localizedDescription.GetComponent<TMP_Text>().text = descriptionTranslation;
 
         Show();
     }

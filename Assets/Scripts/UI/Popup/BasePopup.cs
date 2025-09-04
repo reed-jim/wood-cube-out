@@ -33,7 +33,9 @@ public class BasePopup : MonoBehaviour
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<string, string> showNotificationNoLocalizedEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    public static event Action unpauseDayTimeEvent;
     #endregion
 
     private void Awake()
@@ -81,7 +83,7 @@ public class BasePopup : MonoBehaviour
         MoreActionInAwake();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         HideOnClickOutside();
     }
@@ -367,6 +369,11 @@ public class BasePopup : MonoBehaviour
         showNotificationEvent?.Invoke(title, description);
     }
 
+    protected void ShowNotificationNoLocalized(string title, string description)
+    {
+        showNotificationNoLocalizedEvent?.Invoke(title, description);
+    }
+
     protected void InvokeShowAdNotLoadedPopupEvent()
     {
         showAdNotLoadedPopupEvent?.Invoke();
@@ -375,6 +382,11 @@ public class BasePopup : MonoBehaviour
     protected void InvokeShowResourcesEarnPopupPopupEvent(int coinQuantity, int[] boosterQuantites, bool isRemoveAds)
     {
         showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, isRemoveAds);
+    }
+
+    protected void UnpauseDayTime()
+    {
+        unpauseDayTimeEvent?.Invoke();
     }
 
     protected void AddTween(Tween tween)

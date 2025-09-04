@@ -9,6 +9,10 @@ public enum CloudStorageRequest
 
 public static class GamePersistentVariable
 {
+    #region POLICE SIMULATION
+    public static float judgmentScore;
+    #endregion
+
     public static Vector2 canvasSize;
     public static Vector2 canvasSizeAfterCanvasScaler;
     public static Vector2 canvasScale;

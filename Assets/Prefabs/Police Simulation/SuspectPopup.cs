@@ -49,7 +49,7 @@ public class SuspectPopup : BasePopup
         }
         else
         {
-            ShowNotification("Invalid", "No previous suspect");
+            ShowNotification("Warning", "No previous suspect");
         }
     }
 
@@ -63,7 +63,7 @@ public class SuspectPopup : BasePopup
         }
         else
         {
-            ShowNotification("Invalid", "No more suspect");
+            ShowNotification("Warning", "No more suspect");
         }
     }
 
@@ -80,6 +80,15 @@ public class SuspectPopup : BasePopup
 
     private void Finish()
     {
-        SwitchRoute(GameEnum.ScreenRoute.SuspectResult);
+        int numSuspectNotTakenVerdict = SuspectManager.Instance.NumSuspectNotTakenVerdict();
+
+        if (numSuspectNotTakenVerdict > 0)
+        {
+            ShowNotificationNoLocalized("Warning", $"{numSuspectNotTakenVerdict} suspects have not received a verdict yet.");
+        }
+        else
+        {
+            SwitchRoute(GameEnum.ScreenRoute.SuspectResult);
+        }
     }
 }

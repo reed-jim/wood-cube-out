@@ -63,16 +63,7 @@ public class GameLoading : MonoBehaviour
 
     void Start()
     {
-        if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
-        {
-            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
-
-            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
-        }
-        else
-        {
-            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
-        }
+        _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
 
         // StartCoroutine(LoadFromGitHub());
 

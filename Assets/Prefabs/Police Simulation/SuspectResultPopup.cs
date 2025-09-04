@@ -1,13 +1,20 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SuspectResultPopup : BasePopup
 {
     [SerializeField] private TMP_Text totalScore;
     [SerializeField] private TMP_Text status;
+    [SerializeField] private Button finishButton;
 
     [SerializeField] private GameObject suspectResultItemPrefab;
     [SerializeField] private Transform suspectResultContainer;
+
+    protected override void RegisterMoreEvent()
+    {
+        finishButton.onClick.AddListener(Finish);
+    }
 
     void OnEnable()
     {
@@ -17,6 +24,11 @@ public class SuspectResultPopup : BasePopup
     private void ShowResult()
     {
         int totalScoreValue = SuspectManager.Instance.GetTotalScore();
+        int maxScoreValue = SuspectManager.Instance.GetMaxScore();
+
+        GamePersistentVariable.judgmentScore += totalScoreValue / maxScoreValue / 2f;
+
+        Debug.Log("SAFERIO " + GamePersistentVariable.judgmentScore + "/" + totalScoreValue + "/" + maxScoreValue);
 
         totalScore.text = $"{totalScoreValue}";
 
@@ -43,5 +55,13 @@ public class SuspectResultPopup : BasePopup
 
             suspectResultItem.GetComponent<SuspectResultItem>().ShowResult(SuspectManager.Instance.suspects[i]);
         }
+    }
+
+    private void Finish()
+    {
+        Hide(() =>
+        {
+            UnpauseDayTime();
+        });
     }
 }

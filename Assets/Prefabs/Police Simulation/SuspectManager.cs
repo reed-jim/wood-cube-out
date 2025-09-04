@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class SuspectManager : Singleton<SuspectManager>
@@ -8,6 +9,38 @@ public class SuspectManager : Singleton<SuspectManager>
     [SerializeField] private LevelConfigContainer levelConfigContainer;
 
     public int currentSuspectIndex;
+
+    public Suspect FindSuspectNotTakenVerdict()
+    {
+        Suspect suspect = null;
+
+        for (int i = 0; i < suspects.Length; i++)
+        {
+            if (suspects[i].decision == Decision.None)
+            {
+                suspect = suspects[i];
+
+                break;
+            }
+        }
+
+        return suspect;
+    }
+
+    public int NumSuspectNotTakenVerdict()
+    {
+        int count = 0;
+
+        for (int i = 0; i < suspects.Length; i++)
+        {
+            if (suspects[i].decision == Decision.None)
+            {
+                count++;
+            }
+        }
+
+        return count;
+    }
 
     public int GetTotalScore()
     {
@@ -29,6 +62,22 @@ public class SuspectManager : Singleton<SuspectManager>
         }
 
         return totalScore;
+    }
+
+    public int GetMaxScore()
+    {
+        SuspectResult[] suspectResults = levelConfigContainer.levelConfigs[0].suspectResults;
+
+        int maxScore = 0;
+
+        for (int i = 0; i < suspectResults.Length; i++)
+        {
+            int maxScoreForSuspect = suspectResults[i].results.Max(item => item.value);
+
+            maxScore += maxScoreForSuspect;
+        }
+
+        return maxScore;
     }
 
     public int GetScore(Suspect suspect)

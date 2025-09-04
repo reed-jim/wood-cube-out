@@ -149,6 +149,8 @@ public class MenuScreen : MonoBehaviour
 
         PreventSpammingStartButton();
 
+        UserData.IsFirstTimeOpenApp = false;
+
         if (UserData.IsFirstTimeOpenApp)
         {
             await Task.Delay(1500);
