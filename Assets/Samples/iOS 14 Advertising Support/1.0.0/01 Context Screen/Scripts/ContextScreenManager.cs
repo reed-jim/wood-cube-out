@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using Unity.Advertisement.IosSupport.Components;
+#if UNITY_IOS
 using Unity.Notifications.iOS;
+#endif
 using UnityEngine;
 using UnityEngine.SceneManagement;
 

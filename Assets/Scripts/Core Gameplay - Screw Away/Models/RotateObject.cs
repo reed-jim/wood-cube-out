@@ -1,4 +1,6 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class RotateObject : MonoBehaviour
@@ -17,6 +19,21 @@ public class RotateObject : MonoBehaviour
 
     private float rotationX;
     private float rotationY;
+
+
+
+    public float followDelay = 0.5f;         // Delay in seconds
+    public float rotationSpeed = 5f;         // How smoothly A rotates to the target rotation
+
+    private Queue<Quaternion> rotationHistory = new Queue<Quaternion>();
+    private float timer = 0f;
+    private float fixedDelta;
+    private int _counter;
+    private Quaternion _currentTargetQuaternion;
+
+
+    private float _smoothRotateX;
+    private float _smoothRotateY;
 
     void Awake()
     {
@@ -55,18 +72,21 @@ public class RotateObject : MonoBehaviour
             // float smoothRotateX = Mathf.Lerp(0, _pitch, 0.3f * Time.deltaTime);
             // float smoothRotateY = Mathf.Lerp(0, _yaw, 0.3f * Time.deltaTime);
 
-            float smoothRotateX = _pitch * 0.0045f;
-            float smoothRotateY = _yaw * 0.0045f;
+            // float smoothRotateX = _pitch * 0.003f;
+            // float smoothRotateY = _yaw * 0.003f;
 
-            transform.RotateAround(Vector3.up, smoothRotateY);
-            transform.RotateAround(Vector3.right, smoothRotateX);
+            _smoothRotateX = Mathf.Lerp(_smoothRotateX, _pitch * 0.006f, 1 / 6f);
+            _smoothRotateY = Mathf.Lerp(_smoothRotateY, _yaw * 0.006f, 1 / 6f);
+
+            transform.RotateAround(Vector3.up, _smoothRotateY);
+            transform.RotateAround(Vector3.right, _smoothRotateX);
 
             // if (_isSwiping || _isAutoRotating)
             // {
-            //     if (!_isRotating)
-            //     {
-            //         cloneToCalculateRotation.rotation = transform.rotation;
-            //     }
+            //     // if (!_isRotating)
+            //     // {
+            //     //     cloneToCalculateRotation.rotation = transform.rotation;
+            //     // }
 
             //     cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
             //     cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
@@ -78,7 +98,7 @@ public class RotateObject : MonoBehaviour
 
             // if (_isRotating)
             // {
-            //     transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 6f);
+            //     // transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 6f);
 
             //     _rotateLerpStep++;
 
