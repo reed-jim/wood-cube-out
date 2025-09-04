@@ -7,10 +7,17 @@ public enum CloudStorageRequest
     Download
 }
 
+public enum ShiftType
+{
+    Morning,
+    Afternoon
+}
+
 public static class GamePersistentVariable
 {
     #region POLICE SIMULATION
     public static float judgmentScore;
+    public static ShiftType currentShiftType;
     #endregion
 
     public static Vector2 canvasSize;

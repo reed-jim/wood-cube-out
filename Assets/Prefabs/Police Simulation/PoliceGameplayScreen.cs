@@ -42,7 +42,9 @@ public class PoliceGameplayScreen : BasePopup
 
         if (timeOfDay > 1f)
         {
-            SwitchRoute(GameEnum.ScreenRoute.DayEndPopup);
+            GamePersistentVariable.currentShiftType = ShiftType.Afternoon;
+
+            SwitchRoute(GameEnum.ScreenRoute.ShiftBreak);
 
             _isPaused = true;
             _isNoonBreakDone = false;
@@ -62,6 +64,8 @@ public class PoliceGameplayScreen : BasePopup
         {
             if (timeOfDay >= 0.5f)
             {
+                GamePersistentVariable.currentShiftType = ShiftType.Morning;
+
                 SwitchRoute(GameEnum.ScreenRoute.ShiftBreak);
 
                 _isPaused = true;

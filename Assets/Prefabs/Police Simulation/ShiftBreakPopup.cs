@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class ShiftBreakPopup : BasePopup
 {
+    [SerializeField] private TMP_Text title;
     [SerializeField] private TMP_Text countdownText;
 
     protected override void Show(Action onCompletedAction = null)
     {
+        title.text = $"{GamePersistentVariable.currentShiftType} Shift Break";
+
         base.Show(onCompletedAction: () =>
         {
             StartCountdown();
@@ -41,10 +44,17 @@ public class ShiftBreakPopup : BasePopup
         {
             AdmobAdsMax.Instance.HideMRec();
 
-            Hide(onCompletedAction: () =>
+            if (GamePersistentVariable.currentShiftType == ShiftType.Morning)
             {
-                UnpauseDayTime();
-            });
+                Hide(onCompletedAction: () =>
+                {
+                    UnpauseDayTime();
+                });
+            }
+            else
+            {
+                SwitchRoute(GameEnum.ScreenRoute.DayEndPopup);
+            }
         });
     }
 }

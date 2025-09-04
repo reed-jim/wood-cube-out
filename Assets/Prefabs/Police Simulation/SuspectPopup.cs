@@ -88,7 +88,11 @@ public class SuspectPopup : BasePopup
         }
         else
         {
-            SwitchRoute(GameEnum.ScreenRoute.SuspectResult);
+
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: () =>
+            {
+                SwitchRoute(GameEnum.ScreenRoute.SuspectResult);
+            });
         }
     }
 }
