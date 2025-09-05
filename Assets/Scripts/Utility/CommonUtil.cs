@@ -157,15 +157,6 @@ public static class CommonUtil
         return new Vector2(screenWidth, screenHeight);
     }
 
-    #region LEVEL
-    public static bool IsLevelInProgress(int level)
-    {
-        LevelProgressData levelProgressData = DataUtility.Load($"{GameConstants.SCREWS_DATA}_{level}", new LevelProgressData());
-
-        return levelProgressData.ScrewsData != null;
-    }
-    #endregion
-
     #region TIME
     public static string ConvertTimeFormat(double totalSeconds)
     {

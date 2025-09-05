@@ -76,7 +76,7 @@ public class SaferioButton : MonoBehaviour, IPointerEnterHandler
     {
         if (isPlaySound)
         {
-            SoundManager.Instance.PlaySoundClick();
+            // SoundManager.Instance.PlaySoundClick();
         }
     }
 

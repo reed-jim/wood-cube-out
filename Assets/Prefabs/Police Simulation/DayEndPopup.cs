@@ -45,8 +45,6 @@ public class DayEndPopup : BasePopup
 
         coinText.text = $"{10}";
 
-        SoundManager.Instance.PlaySoundWin();
-
         judgmentScore.fillAmount = 0;
         rewardProgress.fillAmount = 0;
 

@@ -68,7 +68,7 @@ public static class GamePersistentVariable
     #endregion
 
     #region LIVES
-    public static LivesData livesData;
+    // public static LivesData livesData;
     public static bool isLevelDirty;
     #endregion
 
@@ -116,15 +116,15 @@ public static class GamePersistentVariable
     public static string IAPLocation;
     public static int IAPAddition;
     public static bool isUnlockedAllScrewBoxes;
-    public static SaleIAPPackType saleIAPPackType;
-    public static Dictionary<SaleIAPPackType, bool> isShowSalePacks;
+    // public static SaleIAPPackType saleIAPPackType;
+    // public static Dictionary<SaleIAPPackType, bool> isShowSalePacks;
     #endregion
 
     #region LEADERBOARD
     public static bool isEnableLeaderboard;
     public static int selectedCountryIndex;
     public static GameEnum.LeaderboardScope leaderboardScope;
-    public static LeaderboardUserData selfScore;
+    // public static LeaderboardUserData selfScore;
     public static bool useFakeLeaderboardScore;
     #endregion
 
@@ -137,20 +137,6 @@ public static class GamePersistentVariable
     public static int currentDailyRewardIndex;
     public static bool isCurrentDailyRewardIndexLoaded;
     public static DailyRewardConfig dailyRewardConfig;
-    #endregion
-
-    #region GOLD PASS
-    public static bool isGoldPassUnlocked;
-    public static int goldPassMultiplier = 10;
-    public static GoldPassData goldPassData;
-    #endregion
-
-    #region MEDAL TOURNAMENT
-    public static MedalTournamentData medalTournamentData;
-    #endregion
-
-    #region WEEKLY CHALLENGE
-    public static WeeklyChallengeData weeklyChallengeData;
     #endregion
 
     #region SPACE RACE

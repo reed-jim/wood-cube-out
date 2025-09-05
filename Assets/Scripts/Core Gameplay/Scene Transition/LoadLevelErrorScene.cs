@@ -21,10 +21,6 @@ public class LoadLevelErrorScene : MonoBehaviour
 
     void Awake()
     {
-        LevelLoader.showLoadLevelErrorEvent += Show;
-        RemoteAddressablesLoader.updateDownloadProgressEvent += UpdateRemoteContentDownloadProgress;
-        RemoteAddressablesLoader.downloadRemoteContentCompletedEvent += OnRemoteContentDownloaded;
-
         retryButton.onClick.AddListener(Retry);
         retryLoadLevelButton.onClick.AddListener(RetryLoadLevel);
 
@@ -36,10 +32,6 @@ public class LoadLevelErrorScene : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.showLoadLevelErrorEvent -= Show;
-        RemoteAddressablesLoader.updateDownloadProgressEvent -= UpdateRemoteContentDownloadProgress;
-        RemoteAddressablesLoader.downloadRemoteContentCompletedEvent -= OnRemoteContentDownloaded;
-
         CommonUtil.StopAllTweens(_tweens);
     }
 

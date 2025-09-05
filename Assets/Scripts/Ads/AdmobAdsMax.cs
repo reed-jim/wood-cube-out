@@ -40,11 +40,11 @@ public class AdmobAdsMax : MonoBehaviour
     private const string mrecAdUnitId = "mrecAdUnitId";
 #elif UNITY_IOS
     private const string MaxSdkKey =
-"eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
-    private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
-    private const string RewardedAdUnitId = "5a5d29ce1c57f419";
-    private const string BanerAdUnitId = "515e33c5e1389ee4";
-    private const string mrecAdUnitId = "f28550c606ced4ca";
+"InterstitialAdUnitId";
+    private const string InterstitialAdUnitId = "InterstitialAdUnitId";
+    private const string RewardedAdUnitId = "InterstitialAdUnitId";
+    private const string BanerAdUnitId = "InterstitialAdUnitId";
+    private const string mrecAdUnitId = "InterstitialAdUnitId";
 #endif
     // #if UNITY_ANDROID
     //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
@@ -190,14 +190,14 @@ public class AdmobAdsMax : MonoBehaviour
 #endif
 #elif UNITY_IOS
 #if TESTER
-        private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
+        private const string BANNER_ADMOB_ID = "InterstitialAdUnitId";
 #else
-        private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/4521130713";
+        private const string BANNER_ADMOB_ID = "InterstitialAdUnitId";
 #endif
 #if TESTER
-        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
+        private const string BANNER_COLLAPSE_ADMOB_ID = "InterstitialAdUnitId";
 #else
-        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/7255105261";
+        private const string BANNER_COLLAPSE_ADMOB_ID = "InterstitialAdUnitId";
 #endif
 #endif
     private bool _isShowAdmobBanner;
@@ -621,9 +621,9 @@ public class AdmobAdsMax : MonoBehaviour
 
     #region Admob Inter
 #if UNITY_ANDROID
-    private string _adUnitId = "ca-app-pub-3940256099942544/1033173712";
+    private string _adUnitId = "InterstitialAdUnitId";
 #elif UNITY_IPHONE
-  private string _adUnitId = "ca-app-pub-3940256099942544/4411468910";
+  private string _adUnitId = "InterstitialAdUnitId";
 #else
   private string _adUnitId = "unused";
 #endif

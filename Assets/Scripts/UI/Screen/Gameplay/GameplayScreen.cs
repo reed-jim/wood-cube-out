@@ -31,10 +31,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     protected override void MoreActionOnAwake()
     {
         localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
-        LevelLoader.startLevelEvent += OnLevelStarted;
-        LevelLoader.setLevelNumberEvent += SetLevelText;
-        ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
-        ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
         skipLevelButton.onClick.AddListener(SkipLevel);
@@ -53,10 +49,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     void OnDestroy()
     {
         localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
-        LevelLoader.startLevelEvent -= OnLevelStarted;
-        LevelLoader.setLevelNumberEvent -= SetLevelText;
-        ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
-        ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
     private async void Pause()

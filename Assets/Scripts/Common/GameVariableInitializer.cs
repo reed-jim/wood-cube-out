@@ -17,7 +17,7 @@ public class GameVariableInitializer : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private GameSetting gameSetting;
-    [SerializeField] private GoldPassDataContainer goldPassDataContainer;
+    // [SerializeField] private GoldPassDataContainer goldPassDataContainer;
 
     private Vector2 _cachedCanvasSize;
 
@@ -69,22 +69,6 @@ public class GameVariableInitializer : MonoBehaviour
         if (DataUtility.Load(GameConstants.IS_UNLOCKED_ALL_SCREW_BOXES, false))
         {
             GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 4;
-        }
-
-        GoldPassData savedGoldPassData = DataUtility.Load(GameConstants.GOLD_PASS_DATA_CONTAINER, new GoldPassData());
-
-        GamePersistentVariable.goldPassData = savedGoldPassData;
-
-        if (savedGoldPassData.endTimestamp == 0)
-        {
-            savedGoldPassData.endTimestamp =
-                new DateTimeOffset(DateTime.Now).AddDays(goldPassDataContainer.numDays).ToUnixTimeSeconds();
-
-            GamePersistentVariable.goldPassData.goldPassMilestones = goldPassDataContainer.goldPassMilestones;
-
-            DataUtility.Save(GameConstants.GOLD_PASS_DATA_CONTAINER, savedGoldPassData);
-
-            GamePersistentVariable.goldPassData = savedGoldPassData;
         }
 
         currentLevelFetchedEvent?.Invoke();

@@ -33,12 +33,9 @@ public class CoinContainerUI : MonoBehaviour
     {
         // SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
-        SaferioIAPManager.collectCoinEvent += CollectCoin;
         ResourceEarnPopup.collectCoinEvent += CollectCoin;
         DayEndPopup.collectCoinEvent += CollectCoin;
         BackupPopup.updateCoinTextEvent += UpdateCoinText;
-        CompensatePopup.updateCoinTextEvent += UpdateCoinText;
-        LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -61,12 +58,9 @@ public class CoinContainerUI : MonoBehaviour
     {
         // SaferioIAPManager.iapProductPurchasedCompletedEvent -= OnCoinPurchased;
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
-        SaferioIAPManager.collectCoinEvent -= CollectCoin;
         ResourceEarnPopup.collectCoinEvent -= CollectCoin;
         DayEndPopup.collectCoinEvent -= CollectCoin;
         BackupPopup.updateCoinTextEvent -= UpdateCoinText;
-        CompensatePopup.updateCoinTextEvent -= UpdateCoinText;
-        LivesShopPopup.updateCoinTextEvent -= UpdateCoinText;
 
         CommonUtil.StopAllTweens(_tweens);
     }

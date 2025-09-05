@@ -44,20 +44,11 @@ public class ClaimRewardPopup : BasePopup
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
-    [SerializeField] private DailyRewardData rewardData;
 
     public static event Action<bool> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
-        DailyRewardItem.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-        StarChestPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-        ChestLevelPopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-        SpaceRacePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-        WeeklyChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-        WeeklyChallengeUIItem.showClaimRewardPopupEvent += ShowClaimRewardPopupNoChest;
-        CoinChallengePopup.showClaimRewardPopupEvent += ShowClaimRewardPopup;
-
         claimButton.onClick.AddListener(Claim);
         claimMultiplierButton.onClick.AddListener(ClaimMultiplier);
         chestClaimButton.onClick.AddListener(Claim);
@@ -67,13 +58,7 @@ public class ClaimRewardPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
-        DailyRewardItem.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
-        StarChestPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
-        ChestLevelPopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
-        SpaceRacePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
-        WeeklyChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
-        WeeklyChallengeUIItem.showClaimRewardPopupEvent -= ShowClaimRewardPopupNoChest;
-        CoinChallengePopup.showClaimRewardPopupEvent -= ShowClaimRewardPopup;
+        
     }
 
     protected override void MoreActionInAwake()
@@ -168,29 +153,6 @@ public class ClaimRewardPopup : BasePopup
         InvokeShowAdNotLoadedPopupEvent();
     }
 
-    private void ShowClaimRewardPopup(DailyRewardData rewardData)
-    {
-        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, true);
-    }
-
-    private void ShowClaimRewardPopup(DailyRewardData rewardData, int multiplier)
-    {
-        int coinQuantity = rewardData.CoinQuantity * multiplier;
-        int[] boosterQuantities = rewardData.BoosterQuantities;
-
-        for (int i = 0; i < boosterQuantities.Length; i++)
-        {
-            boosterQuantities[i] *= multiplier;
-        }
-
-        ShowClaimRewardPopup(coinQuantity, boosterQuantities, false, true);
-    }
-
-    private void ShowClaimRewardPopupNoChest(DailyRewardData rewardData)
-    {
-        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, false);
-    }
-
     private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
     {
         showClaimRewardPopupEvent?.Invoke(true);
@@ -199,7 +161,7 @@ public class ClaimRewardPopup : BasePopup
         {
             if (isChest)
             {
-                SoundManager.Instance.PlaySoundChestAppear();
+                // SoundManager.Instance.PlaySoundChestAppear();
             }
         });
 
@@ -281,7 +243,7 @@ public class ClaimRewardPopup : BasePopup
     {
         chest.AnimationState.SetAnimation(0, "open", false);
 
-        SoundManager.Instance.PlaySoundOpenChest();
+        // SoundManager.Instance.PlaySoundOpenChest();
 
         openChestButton.interactable = false;
 
@@ -398,7 +360,7 @@ public class ClaimRewardPopup : BasePopup
 
                             if (index == 0)
                             {
-                                SoundManager.Instance.PlaySoundRewardItem();
+                                // SoundManager.Instance.PlaySoundRewardItem();
                             }
                         })
                     );

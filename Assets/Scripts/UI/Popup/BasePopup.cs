@@ -44,16 +44,7 @@ public class BasePopup : MonoBehaviour
         switchPopupRouteEvent += OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
-        MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
-        SettingPopup.switchRouteEvent += OnRouteSwitched;
-        IAPShopPopup.switchRouteEvent += OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
-        RevivePopup.switchRouteEvent += OnRouteSwitched;
-        LevelLoader.switchRouteEvent += OnRouteSwitched;
-        PausePopup.switchRouteEvent += OnRouteSwitched;
-        UserLivesUI.switchRouteEvent += OnRouteSwitched;
-        LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -94,16 +85,7 @@ public class BasePopup : MonoBehaviour
         switchPopupRouteEvent -= OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
-        MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
-        SettingPopup.switchRouteEvent -= OnRouteSwitched;
-        IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
-        RevivePopup.switchRouteEvent -= OnRouteSwitched;
-        LevelLoader.switchRouteEvent -= OnRouteSwitched;
-        PausePopup.switchRouteEvent -= OnRouteSwitched;
-        UserLivesUI.switchRouteEvent -= OnRouteSwitched;
-        LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 
@@ -260,8 +242,6 @@ public class BasePopup : MonoBehaviour
         _isInTransition = true;
 
         AfterHide();
-
-        SoundManager.Instance.PlaySoundClose();
 
         enableSwipingScreenEvent?.Invoke(true);
 

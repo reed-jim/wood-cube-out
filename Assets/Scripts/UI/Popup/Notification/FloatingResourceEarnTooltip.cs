@@ -12,14 +12,12 @@ public class FloatingResourceEarnTooltip : SaferioTweenBehaviour
 
     protected override void MoreActionInAwake()
     {
-        RewardPiece.showSupriseCoinRewardEvent += Show;
-
         container.gameObject.SetActive(false);
     }
 
     protected override void MoreActionOnDestroy()
     {
-        RewardPiece.showSupriseCoinRewardEvent -= Show;
+        
     }
 
     public void Show(int amount)

@@ -1,29 +1,29 @@
-using TMPro;
-using UnityEngine;
+// using TMPro;
+// using UnityEngine;
 
-public class RemoteAddressablesLoaderUI : MonoBehaviour
-{
-    [SerializeField] private TMP_Text downloadProgressText;
+// public class RemoteAddressablesLoaderUI : MonoBehaviour
+// {
+//     [SerializeField] private TMP_Text downloadProgressText;
 
-    void Awake()
-    {
-        RemoteAddressablesLoader.updateDownloadProgressEvent += UpdateDownloadProgress;
+//     void Awake()
+//     {
+//         RemoteAddressablesLoader.updateDownloadProgressEvent += UpdateDownloadProgress;
 
-        downloadProgressText.gameObject.SetActive(false);
-    }
+//         downloadProgressText.gameObject.SetActive(false);
+//     }
 
-    void OnDestroy()
-    {
-        RemoteAddressablesLoader.updateDownloadProgressEvent -= UpdateDownloadProgress;
-    }
+//     void OnDestroy()
+//     {
+//         RemoteAddressablesLoader.updateDownloadProgressEvent -= UpdateDownloadProgress;
+//     }
 
-    private void UpdateDownloadProgress(string text)
-    {
-        if (!downloadProgressText.gameObject.activeInHierarchy)
-        {
-            downloadProgressText.gameObject.SetActive(true);
-        }
+//     private void UpdateDownloadProgress(string text)
+//     {
+//         if (!downloadProgressText.gameObject.activeInHierarchy)
+//         {
+//             downloadProgressText.gameObject.SetActive(true);
+//         }
 
-        downloadProgressText.text = text;
-    }
-}
+//         downloadProgressText.text = text;
+//     }
+// }

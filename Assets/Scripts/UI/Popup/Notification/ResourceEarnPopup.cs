@@ -30,11 +30,7 @@ public class ResourceEarnPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        SaferioIAPManager.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        DailyRewardItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        GoldPassMilestoneItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
         BasePopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
-        WeeklyChallengeUIItem.showResourcesEarnPopupEvent += ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent += ShowResourcesEarned;
 
         okButton.onClick.RemoveAllListeners();
@@ -46,11 +42,7 @@ public class ResourceEarnPopup : BasePopup
 
     protected override void UnregisterMoreEvent()
     {
-        SaferioIAPManager.showResourcesEarnPopupEvent -= ShowResourcesEarned;
-        DailyRewardItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
-        GoldPassMilestoneItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         BasePopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
-        WeeklyChallengeUIItem.showResourcesEarnPopupEvent -= ShowResourcesEarned;
         // IAPReviewPopup.showResourcesEarnPopupEvent -= ShowResourcesEarned;
     }
 
