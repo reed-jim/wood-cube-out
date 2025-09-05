@@ -17,21 +17,6 @@ public class RotateObject : MonoBehaviour
     private float _remainingTimeToAutoRotate;
     public Transform cloneToCalculateRotation;
 
-    private float rotationX;
-    private float rotationY;
-
-
-
-    public float followDelay = 0.5f;         // Delay in seconds
-    public float rotationSpeed = 5f;         // How smoothly A rotates to the target rotation
-
-    private Queue<Quaternion> rotationHistory = new Queue<Quaternion>();
-    private float timer = 0f;
-    private float fixedDelta;
-    private int _counter;
-    private Quaternion _currentTargetQuaternion;
-
-
     private float _smoothRotateX;
     private float _smoothRotateY;
 
@@ -65,52 +50,15 @@ public class RotateObject : MonoBehaviour
 
     private IEnumerator Rotating()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 80f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1 / 60f);
 
         while (true)
         {
-            // float smoothRotateX = Mathf.Lerp(0, _pitch, 0.3f * Time.deltaTime);
-            // float smoothRotateY = Mathf.Lerp(0, _yaw, 0.3f * Time.deltaTime);
-
-            // float smoothRotateX = _pitch * 0.003f;
-            // float smoothRotateY = _yaw * 0.003f;
-
             _smoothRotateX = Mathf.Lerp(_smoothRotateX, _pitch * 0.006f, 1 / 6f);
             _smoothRotateY = Mathf.Lerp(_smoothRotateY, _yaw * 0.006f, 1 / 6f);
 
             transform.RotateAround(Vector3.up, _smoothRotateY);
             transform.RotateAround(Vector3.right, _smoothRotateX);
-
-            // if (_isSwiping || _isAutoRotating)
-            // {
-            //     // if (!_isRotating)
-            //     // {
-            //     //     cloneToCalculateRotation.rotation = transform.rotation;
-            //     // }
-
-            //     cloneToCalculateRotation.RotateAround(Vector3.right, rotateSpeedMultiplier * _pitch);
-            //     cloneToCalculateRotation.RotateAround(Vector3.up, rotateSpeedMultiplier * _yaw);
-
-            //     _rotateLerpStep = 0;
-            //     _isRotating = true;
-            //     _isSwiping = false;
-            // }
-
-            // if (_isRotating)
-            // {
-            //     // transform.rotation = Quaternion.Lerp(transform.rotation, cloneToCalculateRotation.rotation, 1 / 6f);
-
-            //     _rotateLerpStep++;
-
-            //     if (_rotateLerpStep >= 6)
-            //     {
-            //         _rotateLerpStep = 0;
-            //         _isSwiping = false;
-            //         _isRotating = false;
-
-            //         cloneToCalculateRotation.rotation = transform.rotation;
-            //     }
-            // }
 
             if (!_isAutoRotating)
             {
