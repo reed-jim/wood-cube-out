@@ -37,10 +37,12 @@ public class DayEndPopup : BasePopup
         coinText.text = $"{0}";
         continueButton.transform.localScale = Vector3.zero;
 
-        continueButton.interactable = true;
+        continueButton.interactable = false;
         x5CoinButton.interactable = true;
 
         x5CoinButton.transform.localScale = Vector3.one;
+
+        coinText.text = $"{10}";
 
         SoundManager.Instance.PlaySoundWin();
 
@@ -52,7 +54,12 @@ public class DayEndPopup : BasePopup
 
             judgmentScore.fillAmount = GamePersistentVariable.judgmentScore;
 
-            CollectCoin(coinQuantity);
+            // CollectCoin(coinQuantity);
+
+            _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin).OnComplete(() =>
+            {
+                continueButton.interactable = true;
+            }));
 
             currentLevel.Value++;
             currentLevel.Save();
@@ -96,7 +103,7 @@ public class DayEndPopup : BasePopup
         );
     }
 
-    private async void Continue()
+    private void Continue()
     {
         if (_isAlreadyWatchRewardedAd)
         {
@@ -104,21 +111,27 @@ public class DayEndPopup : BasePopup
         }
         else
         {
+            CollectCoin(10);
+
+            x5CoinButton.interactable = false;
             continueButton.interactable = false;
 
             DoubleInterAdsConfig doubleInterAdsConfig = GamePersistentVariable.doubleInterAdsConfig;
 
-            if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+            _tweens.Add(Tween.Delay(2).OnComplete(() =>
             {
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
-                (
-                    OnInterstitialAdCompleted, isShowBreakAds: true
-                );
-            }
-            else
-            {
-                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
-            }
+                if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
+                {
+                    AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+                    (
+                        OnInterstitialAdCompleted, isShowBreakAds: true
+                    );
+                }
+                else
+                {
+                    AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                }
+            }));
         }
     }
 

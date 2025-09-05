@@ -72,7 +72,8 @@ public class GameEnum : MonoBehaviour
         SuspectResult,
         ShiftBreak,
         DayEndPopup,
-        CheckCamera
+        CheckCamera,
+        PoliceGameplay
     }
 
     public enum GameFaction

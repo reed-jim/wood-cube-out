@@ -16,6 +16,7 @@ public class BasePopup : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
+    [SerializeField] private bool isActivePermanently;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
     [SerializeField] protected bool isShowingInterAdOnInteract;
 
@@ -276,6 +277,11 @@ public class BasePopup : MonoBehaviour
 
     protected virtual void Hide()
     {
+        if (isActivePermanently)
+        {
+            return;
+        }
+
         Hide(onCompletedAction: null);
     }
 
