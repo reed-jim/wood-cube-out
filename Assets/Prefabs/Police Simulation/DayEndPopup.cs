@@ -9,6 +9,7 @@ public class DayEndPopup : BasePopup
 {
     [SerializeField] private Image judgmentScore;
     [SerializeField] private Image rewardProgress;
+    [SerializeField] private TMP_Text rewardProgressText;
 
     [SerializeField] private Button continueButton;
     [SerializeField] private Button x5CoinButton;
@@ -46,13 +47,39 @@ public class DayEndPopup : BasePopup
 
         SoundManager.Instance.PlaySoundWin();
 
+        judgmentScore.fillAmount = 0;
+        rewardProgress.fillAmount = 0;
+
         base.Show(onCompletedAction: () =>
         {
             _currentCollectedCoin = 0;
 
             int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
 
-            judgmentScore.fillAmount = GamePersistentVariable.judgmentScore;
+            Tween.Custom(0, GamePersistentVariable.judgmentScore, duration: 0.3f, onValueChange: newVal =>
+            {
+                judgmentScore.fillAmount = newVal;
+            });
+
+            float rewardProgressValue = DataUtility.Load("Reward Progress", 0);
+
+            rewardProgressValue += 0.1f;
+
+            rewardProgressText.text = $"Receive reward after {10 - rewardProgressValue * 10} days";
+
+            if (rewardProgressValue > 1)
+            {
+                // show reward
+
+                rewardProgressValue = 0;
+            }
+
+            DataUtility.Save("Reward Progress", rewardProgressValue);
+
+            Tween.Custom(0, rewardProgressValue, duration: 0.3f, onValueChange: newVal =>
+            {
+                rewardProgress.fillAmount = newVal;
+            });
 
             // CollectCoin(coinQuantity);
 
