@@ -14,6 +14,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SaferioToggle vibrationToggle;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
+    [SerializeField] private Button adPreferencesButton;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -50,6 +51,7 @@ public class SettingPopup : BasePopup
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
+        adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
@@ -170,5 +172,10 @@ public class SettingPopup : BasePopup
     private void OpenBackupPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Backup);
+    }
+
+    private void OpenUserConsentPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
     }
 }

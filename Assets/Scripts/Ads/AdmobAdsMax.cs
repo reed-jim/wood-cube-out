@@ -128,7 +128,7 @@ public class AdmobAdsMax : MonoBehaviour
             InitializeMRecAds();
         };
 
-        MaxSdk.SetHasUserConsent(UserData.IsTrackedPremission);
+        MaxSdk.SetHasUserConsent(DataUtility.Load("User Consent", true));
         // MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
         // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
