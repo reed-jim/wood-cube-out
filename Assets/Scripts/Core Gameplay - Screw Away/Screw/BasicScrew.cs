@@ -90,29 +90,11 @@ public class BasicScrew : BaseScrew
                    fakeScrew.IsRotating = false;
 
                    ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
-                   // fakeScrew.gameObject.SetActive(false);
 
                    GetComponent<MeshRenderer>().enabled = true;
 
                    _isInteractable = true;
                }));
-
-                // Vector3 hitPointFakeScrewSpace =
-                //     fakeScrew.transform.InverseTransformPoint(_obstacleHitPointWorld - transform.lossyScale.z * 1f * meshFilter.mesh.bounds.size.z * transform.forward);
-
-                // _tweens.Add(Tween.LocalPosition(fakeScrew.transform, 1.3f * hitPointFakeScrewSpace.z * (fakeScrew.transform.localRotation * Vector3.forward),
-                //     cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.5f)
-                // .OnComplete(() =>
-                // {
-                //     fakeScrew.IsRotating = false;
-
-                //     ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
-                //     // fakeScrew.gameObject.SetActive(false);
-
-                //     GetComponent<MeshRenderer>().enabled = true;
-
-                //     _isInteractable = true;
-                // }));
 
                 return;
             }

@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
+using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -204,14 +204,38 @@ public class BaseScrew : MonoBehaviour, IScrew
     }
     #endregion
 
+    #region SELECT SCREW
     public void Select()
     {
-        selectScrewEvent?.Invoke(screwId, Faction);
+        if (IsValidToLoose())
+        {
+            selectScrewEvent?.Invoke(screwId, Faction);
+        }
+        else
+        {
+            ShakeInvalidScrew();
+        }
     }
 
     public void AutoSelect()
     {
         autoSelectScrewEvent?.Invoke(screwId, Faction);
+    }
+
+    protected virtual bool IsValidToLoose()
+    {
+        return true;
+
+        // CountBlockingObjects();
+
+        // if (_numberBlockingObjects > 0)
+        // {
+        //     return false;
+        // }
+        // else
+        // {
+        //     return true;
+        // }
     }
 
     public virtual void Loose(int screwId, GameFaction faction, ScrewBoxSlot screwBoxSlot)
@@ -294,7 +318,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                 Color factionColor = FactionUtility.GetColorForFaction(Faction);
                 Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
-                
+
                 looseScrewFxMain.startColor = factionColor;
                 ringFxMain.startColor = factionColor;
                 ringFxMain.startSize = 1.2f * transform.lossyScale.x;
@@ -489,6 +513,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         // }
         // #endregion
     }
+    #endregion
 
     private async void AddScrewToList()
     {
@@ -496,20 +521,6 @@ public class BaseScrew : MonoBehaviour, IScrew
         {
             addScrewToListEvent?.Invoke(this);
         }));
-    }
-
-    public bool IsValidToLoose()
-    {
-        CountBlockingObjects();
-
-        if (_numberBlockingObjects > 0)
-        {
-            return false;
-        }
-        else
-        {
-            return true;
-        }
     }
 
     public virtual void ForceUnscrew()
@@ -586,4 +597,47 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
     }
+
+    #region Invalid to unscrew
+    private void ShakeInvalidScrew()
+    {
+        if (!_isInteractable)
+        {
+            return;
+        }
+        else
+        {
+            _isInteractable = false;
+        }
+
+        FakeScrew fakeScrew = ObjectPoolingEverything.GetFromPool<FakeScrew>(GameConstants.FAKE_SCREW);
+
+        fakeScrew.CloneFromScrew(this);
+
+        fakeScrew.transform.SetParent(transform);
+
+        GetComponent<MeshRenderer>().enabled = false;
+
+        fakeScrew.IsRotating = true;
+
+        SoundManager.Instance.PlaySoundLoosenScrewFail();
+
+        if (gameSetting.IsVibrate)
+        {
+            HapticFeedback.MediumFeedback();
+        }
+
+        _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            fakeScrew.IsRotating = false;
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+
+            GetComponent<MeshRenderer>().enabled = true;
+
+            _isInteractable = true;
+        }));
+    }
+    #endregion
 }
