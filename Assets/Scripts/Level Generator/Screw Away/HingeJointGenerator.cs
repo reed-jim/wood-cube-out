@@ -324,6 +324,14 @@ public class HingeJointGenerator : EditorWindow
         }
 
         GUILayout.Space(16);
+        GUILayout.Label("Special Levels", centeredStyle);
+
+        if (GUILayout.Button("Switch To Locked Color Screw Level"))
+        {
+            SwitchToLockedColorScrew();
+        }
+
+        GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
 
         if (GUILayout.Button("Add Required Components To Pieces"))
@@ -3053,7 +3061,7 @@ public class HingeJointGenerator : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
-        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[2];
+        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[3];
 
         // Remove old screws
         BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
@@ -3633,7 +3641,7 @@ public class HingeJointGenerator : EditorWindow
 
         Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
 
-        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[2];
+        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[3];
 
         Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 
@@ -3707,6 +3715,37 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
         }
+    }
+    #endregion
+
+    #region SWITCH SPECIAL LEVEL
+    private void SwitchToLockedColorScrew()
+    {
+        Transform level = Selection.activeTransform;
+
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+
+        List<BaseScrew> toRemoveList = new List<BaseScrew>();
+
+        toRemoveList.AddRange(screws);
+
+        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
+
+        for (int i = 0; i < screws.Length; i++)
+        {
+            Transform screw = PrefabUtility.InstantiatePrefab(screwPrefab, screws[i].transform.parent).GetComponent<Transform>();
+
+            screw.transform.position = screws[i].transform.position;
+            screw.transform.rotation = screws[i].transform.rotation;
+            screw.transform.localScale = screws[i].transform.localScale;
+        }
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+
+        EditorUtility.SetDirty(level);
     }
     #endregion
 }
