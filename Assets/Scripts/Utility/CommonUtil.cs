@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Reflection;
 using PrimeTween;
 using UnityEngine;
+using static GameEnum;
 
 public static class CommonUtil
 {
@@ -260,6 +261,11 @@ public static class CommonUtil
         probability = Mathf.Clamp(probability, 0f, 1f);
 
         return UnityEngine.Random.Range(0f, 1f) < probability;
+    }
+
+    public static GameFaction RandomizeFaction()
+    {
+        return GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
     }
     #endregion
 }

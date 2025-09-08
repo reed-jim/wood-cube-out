@@ -588,6 +588,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         return CountBlockingObjects(isIncludeHiddenScrew: false);
     }
 
+    #region EVENT
     protected void InvokeScrewLoosenedEvent()
     {
         screwLoosenedEvent?.Invoke();
@@ -597,7 +598,8 @@ public class BaseScrew : MonoBehaviour, IScrew
     {
         breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
     }
-
+    #endregion
+    
     #region Invalid to unscrew
     private void ShakeInvalidScrew()
     {

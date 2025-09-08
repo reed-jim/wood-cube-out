@@ -1,9 +1,17 @@
 using UnityEngine;
+using WoodCubeOut;
 
-public class LockedScrew : BaseScrew
+public class LockedScrew : BasicScrew
 {
     protected override bool IsValidToLoose()
     {
-        return base.IsValidToLoose();
+        if (LockScrewColorLevelManager.Instance.IsFactionLocked(Faction))
+        {
+            return false;
+        }
+        else
+        {
+            return base.IsValidToLoose();
+        }
     }
 }
