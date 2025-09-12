@@ -20,6 +20,7 @@ public class GoodsSortLevelTool : EditorWindow
 
     #region GOODS SORT
     private GameObject shelfPrefab;
+    private GameObject dishPrefab;
     private GameObject shelfContainer;
     private GameObject goodsContainer;
     private GameObject[] _allGoods;
@@ -53,6 +54,7 @@ public class GoodsSortLevelTool : EditorWindow
         isIncludeSpecialBlocks = EditorGUILayout.Toggle("Is Include Special Blocks", isIncludeSpecialBlocks);
 
         shelfPrefab = (GameObject)EditorGUILayout.ObjectField("Shelf Prefab", shelfPrefab, typeof(GameObject));
+        dishPrefab = (GameObject)EditorGUILayout.ObjectField("Dish Prefab", dishPrefab, typeof(GameObject));
         goodsContainer = (GameObject)EditorGUILayout.ObjectField("Goods Container", goodsContainer, typeof(GameObject));
 
         GUILayout.Space(16);
@@ -140,7 +142,7 @@ public class GoodsSortLevelTool : EditorWindow
                 }
 
                 position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
-                position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
+                position.y = 1.5f * ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
 
                 GameObject shelf = (GameObject)PrefabUtility.InstantiatePrefab(shelfPrefab, goodsContainer.transform);
 
@@ -209,6 +211,15 @@ public class GoodsSortLevelTool : EditorWindow
                     int currentFaction = 0;
                     int numSameFaction = 0;
 
+                    BaseDish dish = null;
+
+                    if (m > 0)
+                    {
+                        dish = PrefabUtility.InstantiatePrefab(dishPrefab, _generatedShelves[shelfIndex].transform).GetComponent<BaseDish>();
+
+                        dish.transform.localPosition = new Vector3(0, -2, m);
+                    }
+
                     for (int k = 0; k < 3; k++)
                     {
                         int randomFaction = poolFactions[Random.Range(0, poolFactions.Count)];
@@ -245,12 +256,17 @@ public class GoodsSortLevelTool : EditorWindow
 
                         BaseItem item = itemObject.GetComponent<BaseItem>();
 
-                        position.x = -1.1f * (1 - k);
-                        position.y = -0.7f;
+                        position.x = -0.9f * (1 - k);
+                        position.y = 0.2f;
                         position.z = -1 + 0.1f * randomLayer;
 
                         item.transform.localPosition = position;
-                        item.transform.localScale = 0.8f * Vector3.one;
+                        item.transform.localScale = Vector3.one;
+
+                        if (m > 0)
+                        {
+                            PutFoodOnDish(item.transform, dish.transform, k);
+                        }
 
                         poolFactions.Remove(randomFaction);
                         poolLayers.Remove(randomLayer);
@@ -258,10 +274,10 @@ public class GoodsSortLevelTool : EditorWindow
                         item.TYPE = _allGoods[randomFaction].name;
                         item.LAYER = randomLayer;
 
-                        if (randomLayer > 0)
-                        {
-                            item.GetComponent<SpriteRenderer>().color = new Color(0.1f, 0.1f, 0.1f, 1);
-                        }
+                        // if (randomLayer > 0)
+                        // {
+                        //     item.GetComponent<SpriteRenderer>().color = new Color(0.1f, 0.1f, 0.1f, 1);
+                        // }
 
                         _spawnedItems.Add(item);
                     }
@@ -311,6 +327,22 @@ public class GoodsSortLevelTool : EditorWindow
         Debug.Log("SAFERIO " + ratioMatchItems);
         Debug.Log("SAFERIO " + ratioEmptySlot);
         #endregion
+    }
+
+    private void PutFoodOnDish(Transform item, Transform dish, int foodIndexInDish)
+    {
+        item.SetParent(dish);
+
+        Vector3 position;
+
+        position.x = -0.9f * (1 - foodIndexInDish);
+        position.y = 0.2f;
+        position.z = -0.1f;
+
+        item.localPosition = position;
+        item.localScale = Vector3.one;
+        
+        dish.localScale = 0.5f * Vector3.one;
     }
 
     private void GenerateLayer(int layer, int numShelf)

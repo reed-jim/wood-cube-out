@@ -95,13 +95,13 @@ public class MenuScreen : MonoBehaviour
         openGoldPassPopupButton.onClick.AddListener(OpenGoldPassPopup);
         openEndlessSalePopupButton.onClick.AddListener(OpenEndlessSalePopup);
         openWeeklyChallengePopupButton.onClick.AddListener(OpenWeeklyChallengePopup);
-        openStarChestPopupButton.onClick.AddListener(OpenStarChestPopup);
+        // openStarChestPopupButton.onClick.AddListener(OpenStarChestPopup);
         openChestLevelPopupButton.onClick.AddListener(OpenChestLevelPopup);
         openCoinChallengePopupButton.onClick.AddListener(OpenCoinChallengePopup);
-        openStarTournamentPopupButton.onClick.AddListener(OpenStarTournamentPopup);
+        // openStarTournamentPopupButton.onClick.AddListener(OpenStarTournamentPopup);
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
-        openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
+        // openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
 
         #region SALE IAP PACKS
         openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);

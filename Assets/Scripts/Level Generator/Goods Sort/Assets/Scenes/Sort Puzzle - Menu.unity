@@ -276,7 +276,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Daily Offer
-  parameter: 
   FallbackText: New Text
 --- !u!114 &40822826
 MonoBehaviour:
@@ -1140,7 +1139,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Medal Tournament
-  parameter: 
   FallbackText: New Text
 --- !u!114 &260521886
 MonoBehaviour:
@@ -1456,7 +1454,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Unlock All Screw Boxes
-  parameter: 
   FallbackText: New Text
 --- !u!114 &313391621
 MonoBehaviour:
@@ -1683,7 +1680,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Coin Challenge
-  parameter: 
   FallbackText: New Text
 --- !u!114 &369722528
 MonoBehaviour:
@@ -3575,7 +3571,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Medal Tournament
-  parameter: 
   FallbackText: New Text
 --- !u!114 &744999942
 MonoBehaviour:
@@ -3826,7 +3821,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Level
-  parameter: level
   FallbackText: Level 1
 --- !u!1 &753918905
 GameObject:
@@ -4125,6 +4119,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Leaderboard Screen - Goods Sort
       objectReference: {fileID: 0}
+    - target: {fileID: 839226693648946329, guid: 8ad761e9b6e2157418949a47b5baa953, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7012652151622738283, guid: 8ad761e9b6e2157418949a47b5baa953, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -4325,18 +4323,22 @@ MonoBehaviour:
   openRemoveAdPopupButton: {fileID: 786987217}
   openAllScrewBoxesForeverButton: {fileID: 513852942}
   buttonsCanvasGroup: {fileID: 515026715}
+  buttonsCanvasGroupRT: {fileID: 515026714}
   openDailyRewardPopupButton: {fileID: 182404061}
   openGoldPassPopupButton: {fileID: 1790449658}
   openEndlessSalePopupButton: {fileID: 1054046504}
   openWeeklyChallengePopupButton: {fileID: 2040297771}
+  openStarChestPopupButton: {fileID: 0}
   openChestLevelPopupButton: {fileID: 753918907}
   openCoinChallengePopupButton: {fileID: 2105430914}
+  openStarTournamentPopupButton: {fileID: 0}
   openMedalTournamentPopupButton: {fileID: 1661830519}
   openSpaceRacePopupButton: {fileID: 41495383}
-  openIAPOfferPopupButton: {fileID: 2134099071}
+  openEditProfilePopupButton: {fileID: 0}
   openRemoveAdPopupButtonRT: {fileID: 786987216}
   luckyWheelButton: {fileID: 435159279}
   weeklyTaskButton: {fileID: 733359006}
+  openSaleIAPPackButtons: []
   localizedLevelText: {fileID: 746027522}
   topBarDivider: {fileID: 848493327}
   menuScreenAudioListener: {fileID: 1713637882}
@@ -4393,7 +4395,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Chest Level
-  parameter: 
   FallbackText: New Text
 --- !u!114 &804954065
 MonoBehaviour:
@@ -4775,7 +4776,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Daily Reward
-  parameter: 
   FallbackText: New Text
 --- !u!114 &877741894
 MonoBehaviour:
@@ -5033,7 +5033,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Unlock All Screw Boxes
-  parameter: 
   FallbackText: New Text
 --- !u!114 &905664562
 MonoBehaviour:
@@ -6264,7 +6263,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Gold Pass
-  parameter: 
   FallbackText: New Text
 --- !u!114 &1217147839
 MonoBehaviour:
@@ -6718,7 +6716,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: No Ads
-  parameter: 
   FallbackText: New Text
 --- !u!1 &1348871075
 GameObject:
@@ -7043,6 +7040,7 @@ MonoBehaviour:
   prefab: {fileID: 6655206068968023495, guid: 32c18610d458dfa40af83d745434d857, type: 3}
   container: {fileID: 1363410858}
   poolSize: 16
+  resourceSprites: []
 --- !u!1 &1377700445
 GameObject:
   m_ObjectHideFlags: 0
@@ -9407,6 +9405,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6282272966309245508, guid: 1ee0b854a6ff2ea479b793b0a6e84e4a, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 2.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 6282272966309245508, guid: 1ee0b854a6ff2ea479b793b0a6e84e4a, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 6.1666665
+      objectReference: {fileID: 0}
     - target: {fileID: 7012652151622738283, guid: 1ee0b854a6ff2ea479b793b0a6e84e4a, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -9740,7 +9746,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Weekly Challenge
-  parameter: 
   FallbackText: New Text
 --- !u!114 &2046826081
 MonoBehaviour:

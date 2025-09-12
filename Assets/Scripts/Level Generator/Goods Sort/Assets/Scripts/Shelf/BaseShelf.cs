@@ -5,6 +5,14 @@ using UnityEngine;
 
 public class BaseShelf : MonoBehaviour
 {
+    [SerializeField] private GameObject[] dishes;
+
+    public GameObject[] Dishes
+    {
+        get => dishes;
+        set => dishes = value;
+    }
+
     private List<BaseItem> _items;
 
     void Awake()
