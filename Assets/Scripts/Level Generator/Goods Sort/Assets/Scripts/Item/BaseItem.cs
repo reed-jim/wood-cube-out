@@ -60,7 +60,10 @@ public class BaseItem : MonoBehaviour
         _type = _spriteRenderer.sprite.name;
 
         GamePersistentVariable.numItemsLeft++;
+    }
 
+    void Start()
+    {
         GameplayUI.Instance.UpdateNumItems();
     }
 
@@ -103,6 +106,8 @@ public class BaseItem : MonoBehaviour
             {
                 continue;
             }
+
+            Debug.Log("SAFERIO " + hit.name);
 
             shelf = hit?.GetComponent<BaseShelf>();
 
@@ -184,7 +189,7 @@ public class BaseItem : MonoBehaviour
 
     private void GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
     {
-        float finalX = -1.1f;
+        float finalX = -0.9f;
         float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
         float nearestX = currentNearestX;
 
@@ -199,17 +204,17 @@ public class BaseItem : MonoBehaviour
             snapSlot = 0;
         }
 
-        currentNearestX = Mathf.Abs(1.1f - transform.localPosition.x);
+        currentNearestX = Mathf.Abs(0.9f - transform.localPosition.x);
 
         if (currentNearestX < nearestX)
         {
-            finalX = 1.1f;
+            finalX = 0.9f;
             snapSlot = 1;
         }
 
         float finalZ = -1 + 0.1f * LAYER;
 
-        snapPosition = new Vector3(finalX, -0.7f, finalZ);
+        snapPosition = new Vector3(finalX, 0.2f, finalZ);
     }
 
     private void SnapToShelf()

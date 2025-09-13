@@ -51,7 +51,7 @@ public class SettingPopup : BasePopup
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
-        adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
+        // adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)

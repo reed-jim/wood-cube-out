@@ -103,16 +103,16 @@ public class MenuScreen : MonoBehaviour
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         // openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
 
-        #region SALE IAP PACKS
-        openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
-        openSaleIAPPackButtons[1].onClick.AddListener(OpenStarterPackPopup);
-        openSaleIAPPackButtons[2].onClick.AddListener(OpenSaleItemPopup);
-        openSaleIAPPackButtons[3].onClick.AddListener(OpenSaleCoinPopup);
-        openSaleIAPPackButtons[4].onClick.AddListener(OpenWeekendSalePopup);
-        openSaleIAPPackButtons[5].onClick.AddListener(OpenMasterOfferPopup);
-        openSaleIAPPackButtons[6].onClick.AddListener(OpenMegaOfferPopup);
-        openSaleIAPPackButtons[7].onClick.AddListener(OpenGiantOfferPopup);
-        #endregion
+        // #region SALE IAP PACKS
+        // openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
+        // openSaleIAPPackButtons[1].onClick.AddListener(OpenStarterPackPopup);
+        // openSaleIAPPackButtons[2].onClick.AddListener(OpenSaleItemPopup);
+        // openSaleIAPPackButtons[3].onClick.AddListener(OpenSaleCoinPopup);
+        // openSaleIAPPackButtons[4].onClick.AddListener(OpenWeekendSalePopup);
+        // openSaleIAPPackButtons[5].onClick.AddListener(OpenMasterOfferPopup);
+        // openSaleIAPPackButtons[6].onClick.AddListener(OpenMegaOfferPopup);
+        // openSaleIAPPackButtons[7].onClick.AddListener(OpenGiantOfferPopup);
+        // #endregion
 
         luckyWheelButton.onClick.AddListener(OpenLuckyWheelScreen);
         weeklyTaskButton.onClick.AddListener(OpenWeeklyTaskScreen);
@@ -645,11 +645,11 @@ public class MenuScreen : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == GameConstants.GAMEPLAY_SCENE)
+        if (scene.name == "Sort Puzzle")
         {
             menuScreenAudioListener.enabled = false;
 
-            SceneManager.UnloadSceneAsync(GameConstants.MENU_SCENE);
+            SceneManager.UnloadSceneAsync("Sort Puzzle - Menu");
         }
     }
 }

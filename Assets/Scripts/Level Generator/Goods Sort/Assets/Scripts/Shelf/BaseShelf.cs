@@ -106,6 +106,10 @@ public class BaseShelf : MonoBehaviour
 
     private void BringUpAllItemsLayer()
     {
+        Vector3 position;
+
+        int index = 0;
+
         for (int i = 0; i < _items.Count; i++)
         {
             if (_items[i].LAYER > 0)
@@ -114,7 +118,17 @@ public class BaseShelf : MonoBehaviour
 
                 if (_items[i].LAYER == 0)
                 {
+                    position.x = -0.9f * (1 - index);
+                    position.y = 0.2f;
+                    position.z = -1 + 0.1f * _items[i].LAYER;
+
+                    _items[i].transform.SetParent(transform);
+
+                    Tween.LocalPosition(_items[i].transform, position, duration: 0.3f);
+                    Tween.Scale(_items[i].transform, 1, duration: 0.3f);
                     Tween.Color(_items[i].SpriteRenderer, Color.white, duration: 0.3f);
+
+                    index++;
                 }
             }
         }
