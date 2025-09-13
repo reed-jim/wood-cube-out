@@ -107,9 +107,12 @@ public class BaseItem : MonoBehaviour
                 continue;
             }
 
-            Debug.Log("SAFERIO " + hit.name);
+            BaseShelf hitShelf = hit.GetComponent<BaseShelf>();
 
-            shelf = hit?.GetComponent<BaseShelf>();
+            if (hitShelf != null)
+            {
+                shelf = hitShelf;
+            }
 
             if (_currentShelf == null || shelf != _currentShelf)
             {

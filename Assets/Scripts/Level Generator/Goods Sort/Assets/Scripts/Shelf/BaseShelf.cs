@@ -3,7 +3,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
-public class BaseShelf : MonoBehaviour
+public class BaseShelf : SaferioTweenBehaviour
 {
     [SerializeField] private GameObject[] dishes;
 
@@ -15,7 +15,7 @@ public class BaseShelf : MonoBehaviour
 
     private List<BaseItem> _items;
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         _items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(transform);
     }
@@ -56,19 +56,61 @@ public class BaseShelf : MonoBehaviour
 
         if (numMatchItem == 3)
         {
+            List<BaseItem> matchedItems = new List<BaseItem>();
+
             for (int i = 0; i < items.Length; i++)
             {
                 if (items[i].LAYER == 0)
                 {
-                    items[i].gameObject.SetActive(false);
+                    matchedItems.Add(items[i]);
+
+                    // items[i].gameObject.SetActive(false);
                 }
             }
+
+            AnimateMatchItems(matchedItems.ToArray());
 
             GamePersistentVariable.numItemsLeft -= 3;
 
             GameplayUI.Instance.UpdateNumItems();
 
-            BringUpAllItemsLayer();
+            // BringUpAllItemsLayer();
+        }
+    }
+
+    private void AnimateMatchItems(BaseItem[] items)
+    {
+        Vector3 initialScale = items[0].transform.localScale;
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            int index = i;
+
+            AddTween(Tween.Scale(items[index].transform, 1.2f * initialScale, duration: 0.3f).OnComplete(() =>
+            {
+                AddTween(Tween.LocalPositionX(items[index].transform, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    items[index].gameObject.SetActive(false);
+
+                    if (index == 1)
+                    {
+                        SpriteRenderer dish = ObjectPoolingEverything.GetFromPool<SpriteRenderer>(GameConstants.DISH);
+
+                        dish.gameObject.SetActive(true);
+                        dish.transform.SetParent(transform);
+                        dish.transform.position = items[index].transform.position.AddZ(-1);
+                        dish.color = Color.white;
+
+                        AddTween(Tween.Alpha(dish, 0, duration: 0.3f, startDelay: 0.7f)
+                        .OnComplete(() =>
+                        {
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.DISH, dish.gameObject);
+                        }));
+
+                        BringUpAllItemsLayer();
+                    }
+                }));
+            }));
         }
     }
 
@@ -124,9 +166,9 @@ public class BaseShelf : MonoBehaviour
 
                     _items[i].transform.SetParent(transform);
 
-                    Tween.LocalPosition(_items[i].transform, position, duration: 0.3f);
-                    Tween.Scale(_items[i].transform, 1, duration: 0.3f);
-                    Tween.Color(_items[i].SpriteRenderer, Color.white, duration: 0.3f);
+                    AddTween(Tween.LocalPosition(_items[i].transform, position, duration: 0.3f));
+                    AddTween(Tween.Scale(_items[i].transform, 1, duration: 0.3f));
+                    AddTween(Tween.Color(_items[i].SpriteRenderer, Color.white, duration: 0.3f));
 
                     index++;
                 }
