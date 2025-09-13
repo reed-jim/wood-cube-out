@@ -1,3 +1,4 @@
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -78,7 +79,10 @@ public class GameInput : MonoBehaviour
 
             _selectedItem = null;
 
-            ObjectPoolingEverything.ReturnToPool(GameConstants.itemTrail, _itemTrail.gameObject);
+            _itemTrail.ItemServiceLocator.itemVisual.FadeOut(() =>
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.itemTrail, _itemTrail.gameObject);
+            });
         }
     }
 

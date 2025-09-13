@@ -19,11 +19,12 @@ public class GoodsSortLevelTool : EditorWindow
     private bool isIncludeSpecialBlocks;
 
     #region GOODS SORT
+    private GameObject itemPrefab;
     private GameObject shelfPrefab;
-    private GameObject dishPrefab;
+    private GameObject platePrefab;
     private GameObject shelfContainer;
     private GameObject goodsContainer;
-    private GameObject[] _allGoods;
+    private ItemIconContainer itemIconContainer;
     #endregion
 
 
@@ -54,7 +55,7 @@ public class GoodsSortLevelTool : EditorWindow
         isIncludeSpecialBlocks = EditorGUILayout.Toggle("Is Include Special Blocks", isIncludeSpecialBlocks);
 
         shelfPrefab = (GameObject)EditorGUILayout.ObjectField("Shelf Prefab", shelfPrefab, typeof(GameObject));
-        dishPrefab = (GameObject)EditorGUILayout.ObjectField("Dish Prefab", dishPrefab, typeof(GameObject));
+        platePrefab = (GameObject)EditorGUILayout.ObjectField("Plate Prefab", platePrefab, typeof(GameObject));
         goodsContainer = (GameObject)EditorGUILayout.ObjectField("Goods Container", goodsContainer, typeof(GameObject));
 
         GUILayout.Space(16);
@@ -75,8 +76,10 @@ public class GoodsSortLevelTool : EditorWindow
     private void GenerateLevel()
     {
         // Load
-        _allGoods = LoadAllPrefabsInFolder("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods");
+        itemIconContainer = AssetDatabase.LoadAssetAtPath<ItemIconContainer>("Assets/Scripts/Level Generator/Goods Sort/Assets/Scriptable Objects/Item Icon Container.asset");
+        itemPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods/Base Item.prefab");
         shelfPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Shelf.prefab");
+        platePrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Plate.prefab");
         shelfContainer = Selection.activeTransform.GetChild(0).gameObject;
 
         // Remove all existing blocks
@@ -167,7 +170,7 @@ public class GoodsSortLevelTool : EditorWindow
 
         for (int i = 0; i < maxLayer * numShelf; i++)
         {
-            int faction = Random.Range(0, _allGoods.Length);
+            int faction = Random.Range(0, itemIconContainer.icons.Length);
 
             for (int j = 0; j < 3; j++)
             {
@@ -215,7 +218,7 @@ public class GoodsSortLevelTool : EditorWindow
 
                     if (m > 0)
                     {
-                        dish = PrefabUtility.InstantiatePrefab(dishPrefab, _generatedShelves[shelfIndex].transform).GetComponent<BaseDish>();
+                        dish = PrefabUtility.InstantiatePrefab(platePrefab, _generatedShelves[shelfIndex].transform).GetComponent<BaseDish>();
 
                         dish.transform.localPosition = new Vector3(0, -2, m);
                     }
@@ -252,7 +255,7 @@ public class GoodsSortLevelTool : EditorWindow
 
                         randomLayer = m;
 
-                        GameObject itemObject = (GameObject)PrefabUtility.InstantiatePrefab(_allGoods[randomFaction], _generatedShelves[shelfIndex].transform);
+                        GameObject itemObject = (GameObject)PrefabUtility.InstantiatePrefab(itemPrefab, _generatedShelves[shelfIndex].transform);
 
                         BaseItem item = itemObject.GetComponent<BaseItem>();
 
@@ -271,8 +274,10 @@ public class GoodsSortLevelTool : EditorWindow
                         poolFactions.Remove(randomFaction);
                         poolLayers.Remove(randomLayer);
 
-                        item.TYPE = _allGoods[randomFaction].name;
+                        item.TYPE = itemIconContainer.icons[randomFaction].name;
                         item.LAYER = randomLayer;
+
+                        item.ItemServiceLocator.itemVisual.SetFaction();
 
                         // if (randomLayer > 0)
                         // {
@@ -294,7 +299,7 @@ public class GoodsSortLevelTool : EditorWindow
 
         for (int i = 0; i < randomRemoveFactionNumber; i++)
         {
-            string toRemoveFaction = _allGoods[Random.Range(0, _allGoods.Length)].name;
+            string toRemoveFaction = itemIconContainer.icons[Random.Range(0, itemIconContainer.icons.Length)].name;
 
             int numItemsFound = 0;
 
@@ -341,111 +346,111 @@ public class GoodsSortLevelTool : EditorWindow
 
         item.localPosition = position;
         item.localScale = Vector3.one;
-        
+
         dish.localScale = 0.5f * Vector3.one;
     }
 
     private void GenerateLayer(int layer, int numShelf)
     {
-        Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
+        // Vector3 tileSize = shelfPrefab.GetComponent<SpriteRenderer>().bounds.size;
 
-        // Pool Items
-        List<int> remaingFactions = new List<int>();
+        // // Pool Items
+        // List<int> remaingFactions = new List<int>();
 
-        for (int i = 0; i < numShelf; i++)
-        {
-            int faction = Random.Range(0, _allGoods.Length);
+        // for (int i = 0; i < numShelf; i++)
+        // {
+        //     int faction = Random.Range(0, _allGoods.Length);
 
-            for (int j = 0; j < 3; j++)
-            {
-                remaingFactions.Add(faction);
-            }
-        }
+        //     for (int j = 0; j < 3; j++)
+        //     {
+        //         remaingFactions.Add(faction);
+        //     }
+        // }
 
-        // Difficulty
+        // // Difficulty
 
-        // Generate
-        List<BaseItem> _spawnedItems = new List<BaseItem>();
+        // // Generate
+        // List<BaseItem> _spawnedItems = new List<BaseItem>();
 
-        Vector3 position = new Vector3();
+        // Vector3 position = new Vector3();
 
-        for (int i = 0; i < numRow; i++)
-        {
-            for (int j = 0; j < numColumn; j++)
-            {
-                int shelfIndex = j + i * numColumn;
+        // for (int i = 0; i < numRow; i++)
+        // {
+        //     for (int j = 0; j < numColumn; j++)
+        //     {
+        //         int shelfIndex = j + i * numColumn;
 
-                if (!_generatedShelves.ContainsKey(shelfIndex))
-                {
-                    continue;
-                }
+        //         if (!_generatedShelves.ContainsKey(shelfIndex))
+        //         {
+        //             continue;
+        //         }
 
-                position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
-                position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
+        //         position.x = (-(numColumn - 1) / 2f + j) * (1 + distanceRatio) * tileSize.x;
+        //         position.y = ((numRow - 1) / 2f - i) * (1 + distanceRatio) * tileSize.y;
 
-                // generate product
-                for (int k = 0; k < 3; k++)
-                {
-                    int randomFaction = remaingFactions[Random.Range(0, remaingFactions.Count)];
+        //         // generate product
+        //         for (int k = 0; k < 3; k++)
+        //         {
+        //             int randomFaction = remaingFactions[Random.Range(0, remaingFactions.Count)];
 
-                    GameObject itemObject = (GameObject)PrefabUtility.InstantiatePrefab(_allGoods[randomFaction], _generatedShelves[shelfIndex].transform);
+        //             GameObject itemObject = (GameObject)PrefabUtility.InstantiatePrefab(_allGoods[randomFaction], _generatedShelves[shelfIndex].transform);
 
-                    BaseItem item = itemObject.GetComponent<BaseItem>();
+        //             BaseItem item = itemObject.GetComponent<BaseItem>();
 
-                    position.x = -0.35f * (1 - k);
-                    position.y = -0.55f;
-                    position.z = -1 + 0.1f * layer;
+        //             position.x = -0.35f * (1 - k);
+        //             position.y = -0.55f;
+        //             position.z = -1 + 0.1f * layer;
 
-                    item.transform.localPosition = position;
+        //             item.transform.localPosition = position;
 
-                    remaingFactions.Remove(randomFaction);
+        //             remaingFactions.Remove(randomFaction);
 
-                    item.TYPE = _allGoods[randomFaction].name;
-                    item.LAYER = layer;
+        //             item.TYPE = _allGoods[randomFaction].name;
+        //             item.LAYER = layer;
 
-                    if (layer > 0)
-                    {
-                        item.GetComponent<SpriteRenderer>().color = new Color(0.1f, 0.1f, 0.1f, 1);
-                    }
+        //             if (layer > 0)
+        //             {
+        //                 item.GetComponent<SpriteRenderer>().color = new Color(0.1f, 0.1f, 0.1f, 1);
+        //             }
 
-                    _spawnedItems.Add(item);
-                }
-            }
-        }
+        //             _spawnedItems.Add(item);
+        //         }
+        //     }
+        // }
 
-        // Randomly remove items
-        List<GameObject> toRemoveItems = new List<GameObject>();
+        // // Randomly remove items
+        // List<GameObject> toRemoveItems = new List<GameObject>();
 
-        int randomRemoveFactionNumber = (int)Random.Range(1, numShelf / 2f);
+        // int randomRemoveFactionNumber = (int)Random.Range(1, numShelf / 2f);
 
-        _spawnedItems.Shuffle();
+        // _spawnedItems.Shuffle();
 
-        for (int i = 0; i < randomRemoveFactionNumber; i++)
-        {
-            string toRemoveFaction = _allGoods[Random.Range(0, _allGoods.Length)].name;
+        // for (int i = 0; i < randomRemoveFactionNumber; i++)
+        // {
+        //     string toRemoveFaction = _allGoods[Random.Range(0, _allGoods.Length)].name;
 
-            int numItemsFound = 0;
+        //     int numItemsFound = 0;
 
-            for (int j = 0; j < _spawnedItems.Count; j++)
-            {
-                if (_spawnedItems[j].TYPE == toRemoveFaction)
-                {
-                    toRemoveItems.Add(_spawnedItems[j].gameObject);
+        //     for (int j = 0; j < _spawnedItems.Count; j++)
+        //     {
+        //         if (_spawnedItems[j].TYPE == toRemoveFaction)
+        //         {
+        //             toRemoveItems.Add(_spawnedItems[j].gameObject);
 
-                    numItemsFound++;
+        //             numItemsFound++;
 
-                    if (numItemsFound == 3)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
+        //             if (numItemsFound == 3)
+        //             {
+        //                 break;
+        //             }
+        //         }
+        //     }
+        // }
 
-        foreach (var item in toRemoveItems)
-        {
-            DestroyImmediate(item);
-        }
+        // foreach (var item in toRemoveItems)
+        // {
+        //     DestroyImmediate(item);
+        // }
     }
 
     #region DIFFICULTY
