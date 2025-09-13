@@ -6,6 +6,7 @@ public class GameInput : MonoBehaviour
     #region PRIVATE FIELD
     private Camera _mainCamera;
     private BaseItem _selectedItem;
+    private BaseItem _itemTrail;
     #endregion
 
     void Update()
@@ -43,9 +44,24 @@ public class GameInput : MonoBehaviour
                 if (item.LAYER == 0)
                 {
                     _selectedItem = item;
+
+                    LeaveItemTrail(_selectedItem);
                 }
             }
         }
+    }
+
+    private void LeaveItemTrail(BaseItem item)
+    {
+        _itemTrail = ObjectPoolingEverything.GetFromPool<BaseItem>(GameConstants.itemTrail);
+
+        _itemTrail.gameObject.SetActive(true);
+        _itemTrail.transform.SetParent(item.transform.parent);
+
+        _itemTrail.transform.position = item.transform.position;
+        _itemTrail.transform.localScale = item.transform.localScale;
+        _itemTrail.ItemServiceLocator.itemVisual.SetFaction(item.TYPE);
+        _itemTrail.ItemServiceLocator.itemVisual.SetAlpha(0.5f);
     }
 
     private void MoveItem()
@@ -61,6 +77,8 @@ public class GameInput : MonoBehaviour
             _selectedItem.Stop();
 
             _selectedItem = null;
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.itemTrail, _itemTrail.gameObject);
         }
     }
 

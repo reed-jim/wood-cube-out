@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BaseItem : MonoBehaviour
 {
+    [SerializeField] private ItemServiceLocator itemServiceLocator;
     private SpriteRenderer _spriteRenderer;
     private BoxCollider2D _boxCollider;
 
@@ -21,6 +22,11 @@ public class BaseItem : MonoBehaviour
 
 
     #region PROPERTY
+    public ItemServiceLocator ItemServiceLocator
+    {
+        get => itemServiceLocator;
+    }
+
     public SpriteRenderer SpriteRenderer
     {
         get => _spriteRenderer;
@@ -239,6 +245,6 @@ public class BaseItem : MonoBehaviour
     {
         Vector3 size = _spriteRenderer.bounds.size;
 
-        return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.75f * size.x;
+        return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.5f * size.x;
     }
 }
