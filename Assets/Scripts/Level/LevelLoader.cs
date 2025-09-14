@@ -201,6 +201,10 @@ public class LevelLoader : MonoBehaviour
 
                 _currentLevelContainer = level.transform;
 
+                BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(_currentLevelContainer).ToArray();
+
+                ItemManager.Instance.AssignItems(items);
+
                 if (isLoopLevel)
                 {
                     // RandomizeLevelModelColor(level);

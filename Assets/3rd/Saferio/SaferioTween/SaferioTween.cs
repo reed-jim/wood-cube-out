@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using PrimeTween;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -366,6 +367,22 @@ namespace Saferio.Util.SaferioTween
             target.localScale = end;
 
             onCompletedAction?.Invoke();
+        }
+
+        public static Sequence ScaleUpWithPunch(Transform target, float targetScale, Action onCompleteAction)
+        {
+            target.gameObject.SetActive(true);
+            target.localScale = targetScale * Vector3.one;
+
+            Sequence sequence = Sequence.Create()
+                .Group(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f))
+                .Group(Tween.Scale(target, targetScale, duration: 0.1f))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
         }
 
         #region SCALE - ASYNC

@@ -23,6 +23,7 @@ public static class GameConstants
     public static string EVENT_ITEM = "EVENT_ITEM";
     public static string DISH = "DISH";
     public static string itemTrail = "itemTrail";
+    public static string foodBox = "foodBox";
     #endregion
 
     #region COMMON TEXT

@@ -2,27 +2,20 @@ using System.Collections.Generic;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class GameplayUI : MonoBehaviour
+public class GameplayUI : Singleton<GameplayUI>
 {
-    public static GameplayUI Instance;
-
     [SerializeField] private TMP_Text numItemsLeftText;
+
+    [Header("Booster")]
+    [SerializeField] private Button moveFoodToBoxBoosterButton;
 
     private List<Tween> _tweens;
 
-    private void Awake()
+    protected override void MoreActionOnAwake()
     {
-        if (Instance != null && Instance != this)
-        {
-            gameObject.SetActive(false);
-
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-        }
+        moveFoodToBoxBoosterButton.onClick.AddListener(BoosterManager.Instance.UseFoodBoxBooster);
 
         _tweens = new List<Tween>();
     }
@@ -46,5 +39,12 @@ public class GameplayUI : MonoBehaviour
         {
             numItemsLeftText.text = $"{GamePersistentVariable.numItemsLeft + (int)newVal}";
         }));
+    }
+
+    public void UpdateItemCountAfterMatch()
+    {
+        GamePersistentVariable.numItemsLeft -= 3;
+
+        UpdateNumItems();
     }
 }

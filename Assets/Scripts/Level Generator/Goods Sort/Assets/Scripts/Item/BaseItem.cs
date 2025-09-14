@@ -247,4 +247,18 @@ public class BaseItem : MonoBehaviour
 
         return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.5f * size.x;
     }
+
+    #region BOOSTER
+    public void MoveToFoodBox(FoodBox foodBox)
+    {
+        transform.SetParent(foodBox.transform);
+
+        Tween.Position(transform, foodBox.transform.position, duration: 0.3f);
+        Tween.Scale(transform, 1, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
+    }
+    #endregion
 }
