@@ -188,6 +188,14 @@ public static class CommonUtil
                         time.Seconds);
     }
 
+    public static string ToMMSS(int totalSeconds)
+    {
+        int minutes = totalSeconds / 60;
+        int seconds = totalSeconds % 60;
+
+        return string.Format("{0:00}:{1:00}", minutes, seconds);
+    }
+
     public static DateTime TimestampToDateTime(long unixTimestampSeconds)
     {
         DateTime epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);

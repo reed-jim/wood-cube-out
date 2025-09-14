@@ -204,6 +204,7 @@ public class LevelLoader : MonoBehaviour
                 BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(_currentLevelContainer).ToArray();
 
                 ItemManager.Instance.AssignItems(items);
+                GameTimeManager.Instance.StartCountingTime();
 
                 if (isLoopLevel)
                 {

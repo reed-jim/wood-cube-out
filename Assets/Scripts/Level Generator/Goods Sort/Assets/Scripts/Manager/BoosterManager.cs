@@ -61,4 +61,9 @@ public class BoosterManager : Singleton<BoosterManager>
             });
         }
     }
+
+    public void UseFreezeTimeBooster()
+    {
+        GameTimeManager.Instance.AddMoreTime(10);
+    }
 }

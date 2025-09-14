@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class GameplayUI : Singleton<GameplayUI>
 {
     [SerializeField] private TMP_Text numItemsLeftText;
+    [SerializeField] private TMP_Text remainingTimeText;
 
     [Header("Booster")]
     [SerializeField] private Button moveFoodToBoxBoosterButton;
     [SerializeField] private Button shuffleBoosterButton;
+    [SerializeField] private Button freezeBoosterButton;
 
     private List<Tween> _tweens;
 
@@ -18,6 +20,7 @@ public class GameplayUI : Singleton<GameplayUI>
     {
         moveFoodToBoxBoosterButton.onClick.AddListener(BoosterManager.Instance.UseFoodBoxBooster);
         shuffleBoosterButton.onClick.AddListener(BoosterManager.Instance.UseShuffleBooster);
+        freezeBoosterButton.onClick.AddListener(BoosterManager.Instance.UseFreezeTimeBooster);
 
         _tweens = new List<Tween>();
     }
@@ -48,5 +51,15 @@ public class GameplayUI : Singleton<GameplayUI>
         GamePersistentVariable.numItemsLeft -= 3;
 
         UpdateNumItems();
+    }
+
+    public void UpdateRemainingTime(int remainingTime)
+    {
+        remainingTimeText.text = $"{CommonUtil.ToMMSS(remainingTime)}";
+    }
+
+    public void AnimateRemainingTimeText()
+    {
+        Tween.PunchScale(remainingTimeText.transform, strength: 0.1f * Vector3.one, duration: 0.3f);
     }
 }
