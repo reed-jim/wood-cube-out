@@ -92,6 +92,8 @@ public class BaseShelf : SaferioTweenBehaviour
                 {
                     items[index].gameObject.SetActive(false);
 
+                    items[index].SetIsCleared(true);
+
                     if (index == 1)
                     {
                         SpriteRenderer dish = ObjectPoolingEverything.GetFromPool<SpriteRenderer>(GameConstants.DISH);

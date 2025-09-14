@@ -375,10 +375,27 @@ namespace Saferio.Util.SaferioTween
             target.localScale = targetScale * Vector3.one;
 
             Sequence sequence = Sequence.Create()
-                .Group(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f))
-                .Group(Tween.Scale(target, targetScale, duration: 0.1f))
+                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f))
+                .Chain(Tween.Scale(target, targetScale, duration: 0.1f))
                 .OnComplete(() =>
                 {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+
+        public static Sequence ScaleDownWithPunch(Transform target, Action onCompleteAction = null)
+        {
+            float initialScale = target.localScale.x;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, 1.1f * initialScale, duration: 0.1f))
+                .Chain(Tween.Scale(target, 0, duration: 0.3f))
+                .OnComplete(() =>
+                {
+                    target.gameObject.SetActive(false);
+
                     onCompleteAction?.Invoke();
                 });
 

@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -248,16 +249,29 @@ public class BaseItem : MonoBehaviour
         return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.5f * size.x;
     }
 
+    #region PROPERTY
+    public void SetIsCleared(bool isCleared)
+    {
+        itemServiceLocator.itemProperty.IsClear = isCleared;
+    }
+    #endregion
+
     #region BOOSTER
-    public void MoveToFoodBox(FoodBox foodBox)
+    public void MoveToFoodBox(FoodBox foodBox, Action onCompleteAction)
     {
         transform.SetParent(foodBox.transform);
 
-        Tween.Position(transform, foodBox.transform.position, duration: 0.3f);
-        Tween.Scale(transform, 1, duration: 0.3f)
+        float duration = 0.6f;
+
+        Tween.Position(transform, foodBox.transform.position.AddZ(0.1f), duration: duration, ease: Ease.InOutSine);
+        Tween.Scale(transform, 0.7f, duration: duration)
         .OnComplete(() =>
         {
             gameObject.SetActive(false);
+
+            itemServiceLocator.itemProperty.IsClear = true;
+
+            onCompleteAction?.Invoke();
         });
     }
     #endregion

@@ -17,17 +17,23 @@ public class BoosterManager : Singleton<BoosterManager>
         BaseItem[] items = ItemManager.Instance.Items;
 
         BaseItem[] pickedItems = items
+            .Where(item => !item.ItemServiceLocator.itemProperty.IsClear)
             .GroupBy(i => i.TYPE)
             .Where(g => g.Count() >= 3)
             .Select(g => g.Take(3))
             .FirstOrDefault()
             .ToArray();
 
-        SaferioTween.ScaleUpWithPunch(foodBox.transform, targetScale: 1, onCompleteAction: () =>
+        SaferioTween.ScaleUpWithPunch(foodBox.transform, targetScale: 2, onCompleteAction: () =>
         {
             for (int i = 0; i < pickedItems.Length; i++)
             {
-                pickedItems[i].MoveToFoodBox(foodBox);
+                int index = i;
+
+                pickedItems[i].MoveToFoodBox(foodBox, onCompleteAction: () =>
+                {
+                    SaferioTween.ScaleDownWithPunch(foodBox.transform);
+                });
             }
 
             GameplayUI.Instance.UpdateItemCountAfterMatch();

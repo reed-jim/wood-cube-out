@@ -2,15 +2,19 @@ using UnityEngine;
 
 public class ItemProperty : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    private bool _isInTransition;
+
+    public bool IsInTransition
     {
-        
+        get => _isInTransition;
+        set => _isInTransition = value;
     }
 
-    // Update is called once per frame
-    void Update()
+    private bool _isCleared;
+
+    public bool IsClear
     {
-        
+        get => _isCleared;
+        set => _isCleared = value;
     }
 }
