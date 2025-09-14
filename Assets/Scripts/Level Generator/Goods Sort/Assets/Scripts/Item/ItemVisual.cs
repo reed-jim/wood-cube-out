@@ -17,6 +17,9 @@ public class ItemVisual : SaferioTweenBehaviour
 
     public void SetFaction(string faction)
     {
+        itemServiceLocator.item.TYPE = faction;
+        itemServiceLocator.itemProperty.Faction = faction;
+
         spriteRenderer.sprite = itemIconContainer.icons.First(item => item.name == faction);
     }
 

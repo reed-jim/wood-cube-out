@@ -2,6 +2,14 @@ using UnityEngine;
 
 public class ItemProperty : MonoBehaviour
 {
+    private string faction;
+
+    public string Faction
+    {
+        get => faction;
+        set => faction = value;
+    }
+
     private bool _isInTransition;
 
     public bool IsInTransition

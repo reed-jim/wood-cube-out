@@ -10,12 +10,14 @@ public class GameplayUI : Singleton<GameplayUI>
 
     [Header("Booster")]
     [SerializeField] private Button moveFoodToBoxBoosterButton;
+    [SerializeField] private Button shuffleBoosterButton;
 
     private List<Tween> _tweens;
 
     protected override void MoreActionOnAwake()
     {
         moveFoodToBoxBoosterButton.onClick.AddListener(BoosterManager.Instance.UseFoodBoxBooster);
+        shuffleBoosterButton.onClick.AddListener(BoosterManager.Instance.UseShuffleBooster);
 
         _tweens = new List<Tween>();
     }

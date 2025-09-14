@@ -1,4 +1,5 @@
 using System.Linq;
+using Dreamteck.Utilities;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -38,5 +39,26 @@ public class BoosterManager : Singleton<BoosterManager>
 
             GameplayUI.Instance.UpdateItemCountAfterMatch();
         });
+    }
+
+    public void UseShuffleBooster()
+    {
+        BaseItem[] items = ItemManager.Instance.Items;
+
+        string[] factions = items.Select(item => item.TYPE).ToArray();
+
+        factions.Shuffle();
+
+        for (int i = 0; i < items.Length; i++)
+        {
+            int index = i;
+
+            SaferioTween.ScaleDownWithPunch(items[index].transform, onCompleteAction: () =>
+            {
+                items[index].ItemServiceLocator.itemVisual.SetFaction(factions[index]);
+
+                SaferioTween.ScaleUpWithPunch(items[index].transform, 1);
+            });
+        }
     }
 }

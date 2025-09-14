@@ -369,14 +369,14 @@ namespace Saferio.Util.SaferioTween
             onCompletedAction?.Invoke();
         }
 
-        public static Sequence ScaleUpWithPunch(Transform target, float targetScale, Action onCompleteAction)
+        public static Sequence ScaleUpWithPunch(Transform target, float targetScale, Action onCompleteAction = null)
         {
             target.gameObject.SetActive(true);
             target.localScale = targetScale * Vector3.one;
 
             Sequence sequence = Sequence.Create()
-                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f))
-                .Chain(Tween.Scale(target, targetScale, duration: 0.1f))
+                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, targetScale, duration: 0.1f, ease: Ease.InOutSine))
                 .OnComplete(() =>
                 {
                     onCompleteAction?.Invoke();
@@ -390,8 +390,8 @@ namespace Saferio.Util.SaferioTween
             float initialScale = target.localScale.x;
 
             Sequence sequence = Sequence.Create()
-                .Chain(Tween.Scale(target, 1.1f * initialScale, duration: 0.1f))
-                .Chain(Tween.Scale(target, 0, duration: 0.3f))
+                .Chain(Tween.Scale(target, 1.1f * initialScale, duration: 0.1f, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, 0, duration: 0.3f, ease: Ease.InOutSine))
                 .OnComplete(() =>
                 {
                     target.gameObject.SetActive(false);
