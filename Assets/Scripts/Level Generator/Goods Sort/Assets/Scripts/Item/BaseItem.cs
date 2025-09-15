@@ -96,6 +96,8 @@ public class BaseItem : MonoBehaviour
 
     public void Stop()
     {
+        CheckMoveNextLayerItems();
+
         _isStopping = true;
 
         Vector3 lossyScale = transform.lossyScale;
@@ -128,33 +130,24 @@ public class BaseItem : MonoBehaviour
                 {
                     isFound = true;
                 }
-
-                // BaseItem otherItem = hit.GetComponent<BaseItem>();
-
-                // if (otherItem != null)
-                // {
-                //     if (otherItem.IsActive() && otherItem.LAYER == 0 && IsOverlapOtherItemTooMuch(otherItem))
-                //     {
-                //         isValid = false;
-
-                //         break;
-                //     }
-                // }
             }
         }
 
-        if (isFound && isValid)
+        Vector3 snapPosition = Vector3.zero;
+        int snapSlot;
+
+        if (isFound)
         {
             transform.parent.GetComponent<BaseShelf>().TryBringUpAllItemsLayer();
             transform.SetParent(shelf.transform);
 
             shelf.AddItem(this);
 
-            Vector3 snapPosition;
-            int snapSlot;
+            isValid = GetSnapInfo(out snapPosition, out snapSlot);
+        }
 
-            GetSnapInfo(out snapPosition, out snapSlot);
-
+        if (isValid)
+        {
             Tween.LocalPosition(transform, snapPosition, duration: 0.3f)
             .OnComplete(() =>
             {
@@ -189,18 +182,9 @@ public class BaseItem : MonoBehaviour
             _isStopping = false;
             _isMoving = false;
         }
-
-        // _delayAutoGoBackLastSnapPosition =
-        //     Tween.Delay(0.3f).OnComplete(() =>
-        //     {
-        // Tween.Position(transform, _lastSnapPosition, duration: 0.3f);
-
-        // _isStopping = false;
-        // _isMoving = false;
-        //     });
     }
 
-    private void GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
+    private bool GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
     {
         List<BaseItem> firstLayerItems = new List<BaseItem>();
 
@@ -249,9 +233,11 @@ public class BaseItem : MonoBehaviour
                     snapPosition = new Vector3(snapPositions[index], 0.2f, -1 + 0.1f * LAYER);
                     snapSlot = index;
 
-                    return;
+                    return true;
                 }
             }
+
+            return false;
         }
 
         float finalX = -0.9f;
@@ -280,6 +266,8 @@ public class BaseItem : MonoBehaviour
         float finalZ = -1 + 0.1f * LAYER;
 
         snapPosition = new Vector3(finalX, 0.2f, finalZ);
+
+        return true;
     }
 
     private void SnapToShelf()
@@ -292,6 +280,20 @@ public class BaseItem : MonoBehaviour
 
     }
 
+    private void CheckMoveNextLayerItems()
+    {
+        BaseShelf grill = GetComponentInParent<BaseShelf>();
+
+        if (grill != null)
+        {
+            if (grill.IsAllFirstLayerItemsMoved(this))
+            {
+                grill.BringUpAllItemsLayer();
+            }
+        }
+    }
+
+    #region UTIL
     public bool IsActive()
     {
         return gameObject.activeInHierarchy;
@@ -303,6 +305,7 @@ public class BaseItem : MonoBehaviour
 
         return Mathf.Abs(transform.position.x - other.transform.position.x) < 0.5f * size.x;
     }
+    #endregion
 
     #region PROPERTY
     public void SetIsCleared(bool isCleared)

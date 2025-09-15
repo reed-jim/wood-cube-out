@@ -140,6 +140,30 @@ public class BaseShelf : SaferioTweenBehaviour
         return numItem;
     }
 
+    public bool IsAllFirstLayerItemsMoved(BaseItem excludedItem)
+    {
+        bool isTrailFound = false;
+
+        for (int i = 0; i < transform.childCount; i++)
+        {
+            BaseItem item = transform.GetChild(i).GetComponent<BaseItem>();
+
+            if (item != null && item != excludedItem)
+            {
+                if (!isTrailFound)
+                {
+                    isTrailFound = true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void TryBringUpAllItemsLayer()
     {
         if (GetRemainingItemsOfLayer(0) == 1)
@@ -148,7 +172,7 @@ public class BaseShelf : SaferioTweenBehaviour
         }
     }
 
-    private void BringUpAllItemsLayer()
+    public void BringUpAllItemsLayer()
     {
         Vector3 position;
 
