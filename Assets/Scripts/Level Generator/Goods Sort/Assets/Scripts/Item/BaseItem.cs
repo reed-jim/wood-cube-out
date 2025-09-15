@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -128,17 +129,17 @@ public class BaseItem : MonoBehaviour
                     isFound = true;
                 }
 
-                BaseItem otherItem = hit.GetComponent<BaseItem>();
+                // BaseItem otherItem = hit.GetComponent<BaseItem>();
 
-                if (otherItem != null)
-                {
-                    if (otherItem.IsActive() && otherItem.LAYER == 0 && IsOverlapOtherItemTooMuch(otherItem))
-                    {
-                        isValid = false;
+                // if (otherItem != null)
+                // {
+                //     if (otherItem.IsActive() && otherItem.LAYER == 0 && IsOverlapOtherItemTooMuch(otherItem))
+                //     {
+                //         isValid = false;
 
-                        break;
-                    }
-                }
+                //         break;
+                //     }
+                // }
             }
         }
 
@@ -167,6 +168,8 @@ public class BaseItem : MonoBehaviour
                 })
                 .OnComplete(() =>
                 {
+                    transform.localPosition = snapPosition;
+
                     shelf.CheckMatchedItems();
 
                     _isSnapping = false;
@@ -199,6 +202,58 @@ public class BaseItem : MonoBehaviour
 
     private void GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
     {
+        List<BaseItem> firstLayerItems = new List<BaseItem>();
+
+        bool isOverlapOtherItemTooMuch = false;
+
+        for (int i = 0; i < transform.parent.childCount; i++)
+        {
+            BaseItem item = transform.parent.GetChild(i).GetComponent<BaseItem>();
+
+            if (item != this && item != null)
+            {
+                firstLayerItems.Add(item);
+
+                if (IsOverlapOtherItemTooMuch(item))
+                {
+                    isOverlapOtherItemTooMuch = true;
+                }
+            }
+        }
+
+        if (isOverlapOtherItemTooMuch)
+        {
+            float[] snapPositions = new float[3] { -0.9f, 0, 0.9f };
+
+            snapPosition = new Vector3();
+            snapSlot = 0;
+
+            for (int i = 0; i < snapPositions.Length; i++)
+            {
+                int index = i;
+
+                bool isValid = true;
+
+                for (int j = 0; j < firstLayerItems.Count; j++)
+                {
+                    if (Mathf.Approximately(firstLayerItems[j].transform.localPosition.x, snapPositions[index]))
+                    {
+                        isValid = false;
+
+                        break;
+                    }
+                }
+
+                if (isValid)
+                {
+                    snapPosition = new Vector3(snapPositions[index], 0.2f, -1 + 0.1f * LAYER);
+                    snapSlot = index;
+
+                    return;
+                }
+            }
+        }
+
         float finalX = -0.9f;
         float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
         float nearestX = currentNearestX;
