@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -14,6 +15,8 @@ public class BaseShelf : SaferioTweenBehaviour
     }
 
     private List<BaseItem> _items;
+
+    public static event Action<BaseItem[]> clearItemsEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -110,6 +113,8 @@ public class BaseShelf : SaferioTweenBehaviour
                         }));
 
                         BringUpAllItemsLayer();
+
+                        clearItemsEvent?.Invoke(items);
                     }
                 }));
             }));
@@ -201,4 +206,8 @@ public class BaseShelf : SaferioTweenBehaviour
             }
         }
     }
+
+    #region CALLBACK
+
+    #endregion
 }
