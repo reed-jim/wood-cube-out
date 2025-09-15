@@ -138,16 +138,16 @@ public class BaseItem : MonoBehaviour
 
         if (isFound)
         {
+            isValid = GetSnapInfo(shelf.transform, out snapPosition, out snapSlot);
+        }
+
+        if (isValid)
+        {
             transform.parent.GetComponent<BaseShelf>().TryBringUpAllItemsLayer();
             transform.SetParent(shelf.transform);
 
             shelf.AddItem(this);
 
-            isValid = GetSnapInfo(out snapPosition, out snapSlot);
-        }
-
-        if (isValid)
-        {
             Tween.LocalPosition(transform, snapPosition, duration: 0.3f)
             .OnComplete(() =>
             {
@@ -184,23 +184,26 @@ public class BaseItem : MonoBehaviour
         }
     }
 
-    private bool GetSnapInfo(out Vector3 snapPosition, out int snapSlot)
+    private bool GetSnapInfo(Transform targetGrill, out Vector3 snapPosition, out int snapSlot)
     {
         List<BaseItem> firstLayerItems = new List<BaseItem>();
 
         bool isOverlapOtherItemTooMuch = false;
 
-        for (int i = 0; i < transform.parent.childCount; i++)
+        for (int i = 0; i < targetGrill.childCount; i++)
         {
-            BaseItem item = transform.parent.GetChild(i).GetComponent<BaseItem>();
+            BaseItem item = targetGrill.GetChild(i).GetComponent<BaseItem>();
 
-            if (item != this && item != null)
+            if (item != null)
             {
-                firstLayerItems.Add(item);
-
-                if (IsOverlapOtherItemTooMuch(item))
+                if (item.gameObject.activeInHierarchy)
                 {
-                    isOverlapOtherItemTooMuch = true;
+                    firstLayerItems.Add(item);
+
+                    if (IsOverlapOtherItemTooMuch(item))
+                    {
+                        isOverlapOtherItemTooMuch = true;
+                    }
                 }
             }
         }
@@ -240,13 +243,15 @@ public class BaseItem : MonoBehaviour
             return false;
         }
 
+        Vector3 positionRelativeToTargetGrill = targetGrill.InverseTransformPoint(transform.position);
+
         float finalX = -0.9f;
-        float currentNearestX = Mathf.Abs(finalX - transform.localPosition.x);
+        float currentNearestX = Mathf.Abs(finalX - positionRelativeToTargetGrill.x);
         float nearestX = currentNearestX;
 
         snapSlot = -1;
 
-        currentNearestX = Mathf.Abs(0 - transform.localPosition.x);
+        currentNearestX = Mathf.Abs(0 - positionRelativeToTargetGrill.x);
 
         if (currentNearestX < nearestX)
         {
@@ -255,7 +260,7 @@ public class BaseItem : MonoBehaviour
             snapSlot = 0;
         }
 
-        currentNearestX = Mathf.Abs(0.9f - transform.localPosition.x);
+        currentNearestX = Mathf.Abs(0.9f - positionRelativeToTargetGrill.x);
 
         if (currentNearestX < nearestX)
         {
