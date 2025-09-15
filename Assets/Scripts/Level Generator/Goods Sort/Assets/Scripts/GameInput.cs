@@ -46,6 +46,8 @@ public class GameInput : MonoBehaviour
                 {
                     _selectedItem = item;
 
+                    _selectedItem.ItemServiceLocator.itemMaterialPropertyBlock.ShowOutline(true);
+
                     LeaveItemTrail(_selectedItem);
                 }
             }
@@ -76,6 +78,7 @@ public class GameInput : MonoBehaviour
         else
         {
             _selectedItem.Stop();
+            _selectedItem.ItemServiceLocator.itemMaterialPropertyBlock.ShowOutline(false);
 
             _selectedItem = null;
 

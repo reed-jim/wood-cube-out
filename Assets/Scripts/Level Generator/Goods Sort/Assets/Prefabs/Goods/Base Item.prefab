@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 433940311063355638}
   - component: {fileID: 153981023888994168}
   - component: {fileID: 6024013345843559379}
+  - component: {fileID: 6163872475842507833}
   - component: {fileID: 2736202342097437272}
   - component: {fileID: 6321981222202794798}
   m_Layer: 0
@@ -68,6 +69,7 @@ MonoBehaviour:
   item: {fileID: 6494454283384146784}
   itemProperty: {fileID: 153981023888994168}
   itemVisual: {fileID: 6024013345843559379}
+  itemMaterialPropertyBlock: {fileID: 6163872475842507833}
 --- !u!114 &153981023888994168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -95,6 +97,19 @@ MonoBehaviour:
   itemServiceLocator: {fileID: 433940311063355638}
   spriteRenderer: {fileID: 2736202342097437272}
   itemIconContainer: {fileID: 11400000, guid: ff9fea5870900b840bf15624925ed71a, type: 2}
+--- !u!114 &6163872475842507833
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5087409003505508144}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 472c2ba249baeb249a59c576a07c0ca4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectRenderer: {fileID: 2736202342097437272}
 --- !u!212 &2736202342097437272
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -118,7 +133,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 25aa4dcbffd212c4497a9a9adae20696, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
