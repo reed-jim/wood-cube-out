@@ -325,7 +325,7 @@ public class LevelLoader : MonoBehaviour
     {
         Vector2 center = new Vector2();
 
-        center.y = (0.45f * maxY + minY) / 2;
+        center.y = (0.4f * maxY + minY) / 2;
 
         level.transform.position = level.transform.position.ChangeY(-center.y);
     }

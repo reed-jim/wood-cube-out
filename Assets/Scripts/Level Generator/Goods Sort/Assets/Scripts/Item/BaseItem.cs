@@ -122,15 +122,19 @@ public class BaseItem : MonoBehaviour
             if (hitShelf != null)
             {
                 shelf = hitShelf;
+
+                isFound = true;
+
+                break;
             }
 
-            if (_currentShelf == null || shelf != _currentShelf)
-            {
-                if (shelf != null)
-                {
-                    isFound = true;
-                }
-            }
+            // if (_currentShelf == null || shelf != _currentShelf)
+            // {
+            //     if (shelf != null)
+            //     {
+            //         isFound = true;
+            //     }
+            // }
         }
 
         Vector3 snapPosition = Vector3.zero;
@@ -194,7 +198,7 @@ public class BaseItem : MonoBehaviour
         {
             BaseItem item = targetGrill.GetChild(i).GetComponent<BaseItem>();
 
-            if (item != null)
+            if (item != this && item != null)
             {
                 if (item.gameObject.activeInHierarchy)
                 {
@@ -207,6 +211,8 @@ public class BaseItem : MonoBehaviour
                 }
             }
         }
+
+        Debug.Log("SAFERIO isOverlapOtherItemTooMuch " + isOverlapOtherItemTooMuch);
 
         if (isOverlapOtherItemTooMuch)
         {
