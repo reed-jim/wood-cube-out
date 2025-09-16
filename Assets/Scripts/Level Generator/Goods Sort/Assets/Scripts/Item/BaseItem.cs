@@ -66,6 +66,7 @@ public class BaseItem : MonoBehaviour
         _boxCollider = GetComponent<BoxCollider2D>();
 
         _type = _spriteRenderer.sprite.name;
+        _currentShelf = transform.GetComponentInAncestors<BaseShelf>();
 
         GamePersistentVariable.numItemsLeft++;
     }
@@ -96,7 +97,7 @@ public class BaseItem : MonoBehaviour
 
     public void Stop()
     {
-        CheckMoveNextLayerItems();
+        // CheckMoveNextLayerItems();
 
         _isStopping = true;
 
@@ -147,7 +148,12 @@ public class BaseItem : MonoBehaviour
 
         if (isValid)
         {
-            transform.parent.GetComponent<BaseShelf>().TryBringUpAllItemsLayer();
+            if (shelf != _currentShelf)
+            {
+                CheckMoveNextLayerItems();
+                // transform.parent.GetComponent<BaseShelf>().TryBringUpAllItemsLayer();
+            }
+
             transform.SetParent(shelf.transform);
 
             shelf.AddItem(this);

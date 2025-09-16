@@ -103,6 +103,8 @@ public class BaseShelf : SaferioTweenBehaviour
                 {
                     items[index].gameObject.SetActive(false);
 
+                    LevelGarbageBin.Instance.MoveToGarbageBin(items[index].transform);
+
                     items[index].SetIsCleared(true);
 
                     if (index == 1)

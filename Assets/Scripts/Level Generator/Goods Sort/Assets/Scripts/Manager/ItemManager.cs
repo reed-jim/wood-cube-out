@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class ItemManager : Singleton<ItemManager>
@@ -6,7 +7,7 @@ public class ItemManager : Singleton<ItemManager>
 
     public BaseItem[] Items
     {
-        get => _items;
+        get => _items.Where(item => item.gameObject.activeInHierarchy).ToArray();
         set => _items = value;
     }
 

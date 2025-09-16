@@ -1,33 +1,25 @@
 using UnityEngine;
 
-public class LevelGarbageBin : MonoBehaviour
+public class LevelGarbageBin : Singleton<LevelGarbageBin>
 {
-    public static LevelGarbageBin Instance;
-
     public static Transform GarbageBin
     {
         get => Instance.transform;
     }
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
         LevelLoader.startLevelEvent += EmptyGarbageBin;
-
-        if (Instance != null && Instance != this)
-        {
-            Destroy(gameObject);
-        }
-        else
-        {
-            Instance = this;
-
-            DontDestroyOnLoad(gameObject);
-        }
     }
 
     private void OnDestroy()
     {
         LevelLoader.startLevelEvent -= EmptyGarbageBin;
+    }
+
+    public void MoveToGarbageBin(Transform target)
+    {
+        target.SetParent(transform);
     }
 
     private void EmptyGarbageBin()

@@ -27,7 +27,7 @@ public class GameTimeManager : Singleton<GameTimeManager>
 
         GameplayUI.Instance.UpdateRemainingTime(_remainingSecond);
 
-        while (_remainingSecond >= 0)
+        while (_remainingSecond > 0)
         {
             if (!_isFreezed)
             {

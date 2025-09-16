@@ -6,6 +6,22 @@ using UnityEngine;
 
 public static class TransformUtil
 {
+    public static T GetComponentInAncestors<T>(this Transform target) where T : Component
+    {
+        Transform current = target.parent;
+
+        while (current != null)
+        {
+            T component = current.GetComponent<T>();
+            if (component != null)
+                return component;
+
+            current = current.parent;
+        }
+
+        return null; // Not found
+    }
+
     public static void RotateRight(Transform target, List<Tween> tweens, float duration = 0.2f, Action onCompletedAction = null)
     {
         Vector3 currentEulerAngles = target.eulerAngles;

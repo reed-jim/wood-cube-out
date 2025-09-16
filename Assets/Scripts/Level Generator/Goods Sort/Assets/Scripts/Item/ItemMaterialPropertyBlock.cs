@@ -33,6 +33,15 @@ public class ItemMaterialPropertyBlock : MonoBehaviour
 
     private void SetOutlineThickness(float newOutlineThickness)
     {
+        if (newOutlineThickness == 0)
+        {
+            materialPropertyBlock.SetColor("_OutlineColor", new Color(0, 0, 0, 0));
+        }
+        else
+        {
+            materialPropertyBlock.SetColor("_OutlineColor", Color.white);
+        }
+        
         materialPropertyBlock.SetFloat("_OutlineThickness", newOutlineThickness);
 
         objectRenderer.SetPropertyBlock(materialPropertyBlock);

@@ -37,6 +37,10 @@ public class LockedGrill : BaseShelf
         Transform grillContainer = transform.parent;
 
         BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(grillContainer).ToArray();
+        BaseItem[] itemsOfThisGrill = TransformUtil.GetComponentsFromAllChildren<BaseItem>(transform).ToArray();
+
+        // exclude items of the grill itself
+        items = items.Where(item => !itemsOfThisGrill.Contains(item)).ToArray();
 
         string[] poolFactions = items.Select(item => item.TYPE).ToArray();
 

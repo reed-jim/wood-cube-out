@@ -208,6 +208,8 @@ public class LevelLoader : MonoBehaviour
 
                 BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(_currentLevelContainer).ToArray();
 
+                GamePersistentVariable.numItemsLeft = items.Length;
+
                 ItemManager.Instance.AssignItems(items);
                 GameTimeManager.Instance.StartCountingTime();
 
