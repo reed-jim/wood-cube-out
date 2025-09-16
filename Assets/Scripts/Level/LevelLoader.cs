@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -18,7 +19,7 @@ public class LevelLoader : MonoBehaviour
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
-    private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    private Camera _mainCamera;
     private int _maxLevel;
     private BasicObjectPart[] _pieces;
     private Transform _currentLevelContainer;
@@ -63,6 +64,8 @@ public class LevelLoader : MonoBehaviour
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
+
+        _mainCamera = Camera.main;
 
         currentLevel.Load();
 
@@ -201,6 +204,8 @@ public class LevelLoader : MonoBehaviour
 
                 _currentLevelContainer = level.transform;
 
+                FitCameraForLevel(_currentLevelContainer);
+
                 BaseItem[] items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(_currentLevelContainer).ToArray();
 
                 ItemManager.Instance.AssignItems(items);
@@ -278,6 +283,53 @@ public class LevelLoader : MonoBehaviour
     #endregion
 
     #region LEVEL SETUP
+    private void FitCameraForLevel(Transform level)
+    {
+        BaseShelf[] grills = TransformUtil.GetComponentsFromAllChildren<BaseShelf>(level).ToArray();
+
+        Vector2 grillSize = grills[0].Size;
+
+        Vector2 levelSize;
+
+        float minX = grills.Min(item => item.transform.position.x - 0.5f * grillSize.x);
+        float maxX = grills.Max(item => item.transform.position.x + 0.5f * grillSize.x);
+        float minY = grills.Min(item => item.transform.position.y - 0.5f * grillSize.y);
+        float maxY = grills.Max(item => item.transform.position.y + 0.5f * grillSize.y);
+
+        levelSize.x = maxX - minX;
+        levelSize.y = maxY - minY;
+
+        float expectedWorldWidth = levelSize.x / 0.95f;
+        float expectedWorldHeight = levelSize.y / 0.7f;
+
+        float orthographicSizeBasedOnWidth = expectedWorldWidth / (2f * Camera.main.aspect);
+        float orthographicSizeBasedOnHeight = expectedWorldHeight / 2f;
+
+        float finalOrthographicSize;
+
+        if (orthographicSizeBasedOnWidth > orthographicSizeBasedOnHeight)
+        {
+            finalOrthographicSize = orthographicSizeBasedOnWidth;
+        }
+        else
+        {
+            finalOrthographicSize = orthographicSizeBasedOnHeight;
+        }
+
+        _mainCamera.orthographicSize = finalOrthographicSize;
+
+        MoveLevelPivot(level, minY, maxY);
+    }
+
+    private void MoveLevelPivot(Transform level, float minY, float maxY)
+    {
+        Vector2 center = new Vector2();
+
+        center.y = (0.45f * maxY + minY) / 2;
+
+        level.transform.position = level.transform.position.ChangeY(-center.y);
+    }
+
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
     {
         float maxExpectedLevelSize = expectedLevelSize.x;

@@ -7,6 +7,7 @@ using UnityEngine;
 public class BaseShelf : SaferioTweenBehaviour
 {
     [SerializeField] private GameObject[] dishes;
+    [SerializeField] private SpriteRenderer grillSpriteRenderer;
 
     public GameObject[] Dishes
     {
@@ -16,11 +17,18 @@ public class BaseShelf : SaferioTweenBehaviour
 
     private List<BaseItem> _items;
 
+    public Vector2 Size;
+
     public static event Action<BaseItem[]> clearItemsEvent;
 
     protected override void MoreActionInAwake()
     {
         _items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(transform);
+
+        if (grillSpriteRenderer != null)
+        {
+            Size = grillSpriteRenderer.bounds.size;
+        }
     }
 
     public void AddItem(BaseItem item)
