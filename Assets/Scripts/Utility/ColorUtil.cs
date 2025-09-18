@@ -10,6 +10,11 @@ public static class ColorUtil
         return new Color(color.r, color.g, color.b, alpha);
     }
 
+    public static Color WithAlpha(float alpha)
+    {
+        return new Color(1, 1, 1, alpha);
+    }
+
     public static Color GetGradientColor(Color color1, Color color2, float percent)
     {
         return Color.Lerp(color1, color2, percent);

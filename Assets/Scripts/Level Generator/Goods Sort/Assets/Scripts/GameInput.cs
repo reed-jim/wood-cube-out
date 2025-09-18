@@ -42,7 +42,7 @@ public class GameInput : MonoBehaviour
 
             if (item != null)
             {
-                if (item.LAYER == 0)
+                if (item.LAYER == 0 && !item.IsLocked())
                 {
                     _selectedItem = item;
 

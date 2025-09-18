@@ -27,6 +27,9 @@ public class GoodsSortLevelTool : EditorWindow
     private ItemIconContainer itemIconContainer;
     #endregion
 
+    #region Special
+    private GameObject freezedItemPrefab;
+    #endregion
 
     private Dictionary<int, GameObject> _generatedShelves;
 
@@ -68,6 +71,11 @@ public class GoodsSortLevelTool : EditorWindow
         if (GUILayout.Button("Generate Level", buttonStyle))
         {
             GenerateLevel();
+        }
+
+        if (GUILayout.Button("RandomReplaceWithFreezedItem", buttonStyle))
+        {
+            RandomReplaceWithFreezedItem();
         }
 
         GUILayout.EndArea();
@@ -519,6 +527,46 @@ public class GoodsSortLevelTool : EditorWindow
         // }
 
         return (float)totalTakenSlots / totalSlots;
+    }
+    #endregion
+
+    #region SPECIAL
+    private void RandomReplaceWithFreezedItem()
+    {
+        freezedItemPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods/Freezed Item.prefab");
+
+        Transform level = Selection.activeTransform;
+
+        List<BaseItem> items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(level);
+
+        List<GameObject> toRemoveItems = new List<GameObject>();
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            int random = Random.Range(0, 10);
+
+            if (random > 0)
+            {
+                continue;
+            }
+
+            FreezedItem freezedItem = PrefabUtility.InstantiatePrefab(freezedItemPrefab, items[i].transform.parent).GetComponent<FreezedItem>();
+
+            freezedItem.TYPE = items[i].TYPE;
+            freezedItem.ItemServiceLocator.itemVisual.SetFaction();
+
+            freezedItem.transform.localPosition = items[i].transform.localPosition;
+            freezedItem.transform.localScale = items[i].transform.localScale;
+
+            toRemoveItems.Add(items[i].gameObject);
+        }
+
+        foreach (var item in toRemoveItems)
+        {
+            DestroyImmediate(item, allowDestroyingAssets: true);
+        }
+
+        EditorUtility.SetDirty(level);
     }
     #endregion
 

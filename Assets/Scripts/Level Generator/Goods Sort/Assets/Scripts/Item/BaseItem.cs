@@ -62,6 +62,8 @@ public class BaseItem : MonoBehaviour
 
     void Awake()
     {
+        BaseShelf.clearItemsEvent += OnTilesCleared;
+
         _spriteRenderer = GetComponent<SpriteRenderer>();
         _boxCollider = GetComponent<BoxCollider2D>();
 
@@ -69,6 +71,11 @@ public class BaseItem : MonoBehaviour
         _currentShelf = transform.GetComponentInAncestors<BaseShelf>();
 
         GamePersistentVariable.numItemsLeft++;
+    }
+
+    void OnDestroy()
+    {
+        BaseShelf.clearItemsEvent -= OnTilesCleared;
     }
 
     void Start()
@@ -329,6 +336,11 @@ public class BaseItem : MonoBehaviour
     {
         itemServiceLocator.itemProperty.IsClear = isCleared;
     }
+
+    public virtual bool IsLocked()
+    {
+        return false;
+    }
     #endregion
 
     #region BOOSTER
@@ -348,6 +360,13 @@ public class BaseItem : MonoBehaviour
 
             onCompleteAction?.Invoke();
         });
+    }
+    #endregion
+
+    #region CALLBACK
+    protected virtual void OnTilesCleared(BaseItem[] items)
+    {
+
     }
     #endregion
 }
