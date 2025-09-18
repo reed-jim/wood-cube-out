@@ -66,7 +66,8 @@ public class GameEnum : MonoBehaviour
         StarTournament,
         EditProfile,
         ChooseDifficulty,
-        UserConsent
+        UserConsent,
+        Shipper
     }
 
     public enum GameFaction

@@ -32,12 +32,12 @@ public class GameStateLose : BaseGameState
     {
         if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
         {
-            // loseLevelEvent?.Invoke();
-            showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            loseLevelEvent?.Invoke();
+            // showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
         }
         else
         {
-            showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+            // showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
         }
     }
 

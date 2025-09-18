@@ -145,6 +145,13 @@ public class BaseItem : SaferioTweenBehaviour
             // }
         }
 
+        if (!isFound)
+        {
+            MoveBack();
+
+            return;
+        }
+
         Vector3 snapPosition = Vector3.zero;
         int snapSlot;
 
@@ -193,6 +200,11 @@ public class BaseItem : SaferioTweenBehaviour
             _isMoving = false;
         }
         else
+        {
+            MoveBack();
+        }
+
+        void MoveBack()
         {
             Tween.Position(transform, _lastSnapPosition, duration: 0.3f);
 
