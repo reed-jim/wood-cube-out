@@ -4,7 +4,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
-public class BaseItem : MonoBehaviour
+public class BaseItem : SaferioTweenBehaviour
 {
     [SerializeField] private ItemServiceLocator itemServiceLocator;
     private SpriteRenderer _spriteRenderer;
@@ -60,7 +60,7 @@ public class BaseItem : MonoBehaviour
 
     private Tween _delayAutoGoBackLastSnapPosition;
 
-    void Awake()
+    protected override void MoreActionInAwake()
     {
         BaseShelf.clearItemsEvent += OnTilesCleared;
 
@@ -73,7 +73,7 @@ public class BaseItem : MonoBehaviour
         GamePersistentVariable.numItemsLeft++;
     }
 
-    void OnDestroy()
+    protected override void MoreActionOnDestroy()
     {
         BaseShelf.clearItemsEvent -= OnTilesCleared;
     }
@@ -302,6 +302,21 @@ public class BaseItem : MonoBehaviour
     public void Snap()
     {
 
+    }
+
+    public virtual void BringToFirstLayer(BaseShelf shelf, int index)
+    {
+        Vector3 position;
+
+        position.x = -0.9f * (1 - index);
+        position.y = 0.2f;
+        position.z = -1 + 0.1f * LAYER;
+
+        transform.SetParent(shelf.transform);
+
+        AddTween(Tween.LocalPosition(transform, position, duration: 0.3f));
+        AddTween(Tween.Scale(transform, 1, duration: 0.3f));
+        AddTween(Tween.Color(SpriteRenderer, Color.white, duration: 0.3f));
     }
 
     private void CheckMoveNextLayerItems()

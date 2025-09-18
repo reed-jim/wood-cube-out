@@ -78,6 +78,11 @@ public class GoodsSortLevelTool : EditorWindow
             RandomReplaceWithFreezedItem();
         }
 
+        if (GUILayout.Button("RandomReplaceWith Wrapped Item", buttonStyle))
+        {
+            RandomReplaceWithSpecialItem<WrappedItem>("Assets/Scripts/Level Generator/Goods Sort/Assets/Prefabs/Goods/Wrapped Item.prefab", minLayer: 1);
+        }
+
         GUILayout.EndArea();
     }
 
@@ -557,6 +562,50 @@ public class GoodsSortLevelTool : EditorWindow
 
             freezedItem.transform.localPosition = items[i].transform.localPosition;
             freezedItem.transform.localScale = items[i].transform.localScale;
+
+            toRemoveItems.Add(items[i].gameObject);
+        }
+
+        foreach (var item in toRemoveItems)
+        {
+            DestroyImmediate(item, allowDestroyingAssets: true);
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
+    private void RandomReplaceWithSpecialItem<T>(string assetPath, int minLayer = 0)
+    {
+        GameObject specialItemPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(assetPath);
+
+        Transform level = Selection.activeTransform;
+
+        List<BaseItem> items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(level);
+
+        List<GameObject> toRemoveItems = new List<GameObject>();
+
+        for (int i = 0; i < items.Count; i++)
+        {
+            if (items[i].LAYER < minLayer)
+            {
+                continue;
+            }
+
+            int random = Random.Range(0, 10);
+
+            if (random > 0)
+            {
+                continue;
+            }
+
+            BaseItem specialItem = PrefabUtility.InstantiatePrefab(specialItemPrefab, items[i].transform.parent).GetComponent<BaseItem>();
+
+            specialItem.LAYER = items[i].LAYER;
+            specialItem.TYPE = items[i].TYPE;
+            specialItem.ItemServiceLocator.itemVisual.SetFaction();
+
+            specialItem.transform.localPosition = items[i].transform.localPosition;
+            specialItem.transform.localScale = items[i].transform.localScale;
 
             toRemoveItems.Add(items[i].gameObject);
         }
