@@ -23,6 +23,17 @@ public class ItemVisual : SaferioTweenBehaviour
         spriteRenderer.sprite = itemIconContainer.icons.First(item => item.name == faction);
     }
 
+    public void RandomizeFaction()
+    {
+        int factionIndex = UnityEngine.Random.Range(0, itemIconContainer.icons.Length);
+        string faction = itemIconContainer.icons[factionIndex].name;
+
+        itemServiceLocator.item.TYPE = faction;
+        itemServiceLocator.itemProperty.Faction = faction;
+
+        spriteRenderer.sprite = itemIconContainer.icons.First(item => item.name == faction);
+    }
+
     public void SetAlpha(float alpha)
     {
         spriteRenderer.color = ColorUtil.WithAlpha(Color.white, alpha);

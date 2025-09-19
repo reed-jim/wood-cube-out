@@ -34,6 +34,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject dish;
     [SerializeField] private GameObject itemTrail;
     [SerializeField] private GameObject foodBox;
+    [SerializeField] private BaseItem baseItem;
+    [SerializeField] private BaseDish plate;
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
@@ -91,6 +93,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<SpriteRenderer>(GameConstants.DISH, dish, 3);
         RegisterPool<BaseItem>(GameConstants.itemTrail, itemTrail, 1);
         RegisterPool<FoodBox>(GameConstants.foodBox, foodBox, 1);
+        RegisterPool<BaseItem>(GameConstants.baseItem, baseItem.gameObject, 6 * 24);
+        RegisterPool<BaseDish>(GameConstants.plate, plate.gameObject, 6);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

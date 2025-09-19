@@ -356,6 +356,11 @@ public class BaseItem : SaferioTweenBehaviour
 
         return Mathf.Abs(transform.position.x - other.transform.position.x) < 1f * size.x;
     }
+
+    public void RandomizeFaction()
+    {
+        itemServiceLocator.itemVisual.RandomizeFaction();
+    }
     #endregion
 
     #region PROPERTY

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -21,6 +22,14 @@ public class BaseShelf : SaferioTweenBehaviour
 
     public static event Action<BaseItem[]> clearItemsEvent;
 
+    void OnValidate()
+    {
+        if (grillSpriteRenderer != null)
+        {
+            Size = grillSpriteRenderer.bounds.size;
+        }
+    }
+
     protected override void MoreActionInAwake()
     {
         _items = TransformUtil.GetComponentsFromAllChildren<BaseItem>(transform);
@@ -31,6 +40,7 @@ public class BaseShelf : SaferioTweenBehaviour
         }
     }
 
+    #region DISHES
     public void AddItem(BaseItem item)
     {
         _items.Add(item);
@@ -206,6 +216,100 @@ public class BaseShelf : SaferioTweenBehaviour
             }
         }
     }
+
+    public void RandomizeItems()
+    {
+        for (int i = 0; i < _items.Count; i++)
+        {
+            _items[i].RandomizeFaction();
+        }
+    }
+
+    public void FillItems()
+    {
+        Vector3 position;
+
+        _items = _items.Where(item => item.transform.IsChildOf(transform)).ToList();
+
+        for (int i = 0; i < _items.Count; i++)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.baseItem, _items[i].gameObject);
+        }
+
+        BaseDish[] plates = TransformUtil.GetComponentsFromAllChildren<BaseDish>(transform).ToArray();
+
+        for (int i = 0; i < plates.Length; i++)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.plate, plates[i].gameObject);
+        }
+
+        _items.Clear();
+
+        for (int i = 0; i < 3; i++)
+        {
+            int random = UnityEngine.Random.Range(0, 10);
+
+            if (random < 3)
+            {
+                continue;
+            }
+
+            position.x = -0.9f * (1 - i);
+            position.y = 0.2f;
+            position.z = -1 + 0.1f * 0;
+
+            BaseItem item = ObjectPoolingEverything.GetFromPool<BaseItem>(GameConstants.baseItem);
+
+            _items.Add(item);
+
+            item.transform.SetParent(transform);
+            item.transform.localPosition = position;
+            item.transform.localScale = Vector3.one;
+        }
+
+        BaseDish plate = ObjectPoolingEverything.GetFromPool<BaseDish>(GameConstants.plate);
+
+        plate.transform.SetParent(transform);
+        plate.transform.localPosition = new Vector3(0, -2, 0);
+
+        for (int i = 0; i < 3; i++)
+        {
+            int random = UnityEngine.Random.Range(0, 10);
+
+            if (random < 3)
+            {
+                continue;
+            }
+
+            int index = i;
+
+            BaseItem item = ObjectPoolingEverything.GetFromPool<BaseItem>(GameConstants.baseItem);
+
+            _items.Add(item);
+
+            PutFoodOnPlate(item.transform, plate.transform, index);
+        }
+
+        RandomizeItems();
+
+        void PutFoodOnPlate(Transform item, Transform plate, int foodIndexInDish)
+        {
+            item.SetParent(plate);
+
+            Vector3 position;
+
+            position.x = -0.9f * (1 - foodIndexInDish);
+            position.y = 0.2f;
+            position.z = -0.1f;
+
+            item.localPosition = position;
+            item.localScale = Vector3.one;
+
+            plate.localScale = 0.5f * Vector3.one;
+        }
+    }
+    #endregion
+
 
     #region CALLBACK
 
