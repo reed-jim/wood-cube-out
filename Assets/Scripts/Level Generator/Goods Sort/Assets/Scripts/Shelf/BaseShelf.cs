@@ -46,6 +46,11 @@ public class BaseShelf : SaferioTweenBehaviour
         _items.Add(item);
     }
 
+    public void RemoveItem(BaseItem item)
+    {
+        _items.Remove(item);
+    }
+
     public void CheckMatchedItems()
     {
         BaseItem[] items = TransformUtil.GetComponentsArrayFromAllChildren<BaseItem>(transform);
@@ -201,8 +206,11 @@ public class BaseShelf : SaferioTweenBehaviour
     {
         int index = 0;
 
+        Debug.Log("SAFERIO BringUpAllItemsLayer " + name + "/" + _items.Count);
+
         for (int i = 0; i < _items.Count; i++)
         {
+            Debug.Log("SAFERIO BringUpAllItemsLayer " + _items[i].LAYER);
             if (_items[i].LAYER > 0)
             {
                 _items[i].LAYER--;
@@ -261,6 +269,8 @@ public class BaseShelf : SaferioTweenBehaviour
             BaseItem item = ObjectPoolingEverything.GetFromPool<BaseItem>(GameConstants.baseItem);
 
             _items.Add(item);
+            item.CurrentShelf = this;
+            item.LAYER = 0;
 
             item.transform.SetParent(transform);
             item.transform.localPosition = position;
@@ -271,6 +281,7 @@ public class BaseShelf : SaferioTweenBehaviour
 
         plate.transform.SetParent(transform);
         plate.transform.localPosition = new Vector3(0, -2, 0);
+        plate.transform.localScale = 0.5f * Vector3.one;
 
         for (int i = 0; i < 3; i++)
         {
@@ -286,6 +297,8 @@ public class BaseShelf : SaferioTweenBehaviour
             BaseItem item = ObjectPoolingEverything.GetFromPool<BaseItem>(GameConstants.baseItem);
 
             _items.Add(item);
+            item.CurrentShelf = this;
+            item.LAYER = 1;
 
             PutFoodOnPlate(item.transform, plate.transform, index);
         }
@@ -304,8 +317,6 @@ public class BaseShelf : SaferioTweenBehaviour
 
             item.localPosition = position;
             item.localScale = Vector3.one;
-
-            plate.localScale = 0.5f * Vector3.one;
         }
     }
     #endregion

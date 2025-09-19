@@ -39,6 +39,12 @@ public class BaseItem : SaferioTweenBehaviour
         get => _boxCollider;
     }
 
+    public BaseShelf CurrentShelf
+    {
+        get => _currentShelf;
+        set => _currentShelf = value;
+    }
+
     public string TYPE
     {
         get => _type;
@@ -162,6 +168,9 @@ public class BaseItem : SaferioTweenBehaviour
 
         if (isValid)
         {
+            _currentShelf.RemoveItem(this);
+            shelf.AddItem(this);
+
             if (shelf != _currentShelf)
             {
                 CheckMoveNextLayerItems();
