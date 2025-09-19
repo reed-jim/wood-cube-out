@@ -135,11 +135,14 @@ public class BaseItem : SaferioTweenBehaviour
 
             if (hitShelf != null)
             {
-                shelf = hitShelf;
+                if (!hitShelf.isLocked)
+                {
+                    shelf = hitShelf;
 
-                isFound = true;
+                    isFound = true;
 
-                break;
+                    break;
+                }
             }
 
             // if (_currentShelf == null || shelf != _currentShelf)

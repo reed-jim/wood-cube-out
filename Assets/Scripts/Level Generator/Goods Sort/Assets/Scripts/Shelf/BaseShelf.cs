@@ -17,6 +17,7 @@ public class BaseShelf : SaferioTweenBehaviour
     }
 
     private List<BaseItem> _items;
+    public bool isLocked;
 
     public Vector2 Size;
 
