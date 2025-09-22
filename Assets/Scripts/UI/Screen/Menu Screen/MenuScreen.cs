@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using PrimeTween;
+using Unity.AI.Navigation.Editor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
@@ -220,6 +222,7 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
+        DebugLogger.LogSimple();
         if (_isGameStarted)
         {
             return;
@@ -239,11 +242,10 @@ public class MenuScreen : MonoBehaviour
         //     }
         // }
 
-        if (
-            GamePersistentVariable.livesConfig.isActive &&
-            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
-        )
+        if (GamePersistentVariable.livesConfig.isActive &&
+            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0)
         {
+            DebugLogger.LogSimple(message:"Place 1");
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
 
             GamePersistentVariable.isPendingStartLevel = true;
@@ -253,6 +255,7 @@ public class MenuScreen : MonoBehaviour
 
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
+            DebugLogger.LogSimple(message:"Place 2");
             GamePersistentVariable.isLoadingLevelInProgress = false;
 
             if (CommonUtil.IsLevelInProgress(currentLevel.Value))
@@ -266,6 +269,7 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
+            DebugLogger.LogSimple(message:"Place 3");
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
 
