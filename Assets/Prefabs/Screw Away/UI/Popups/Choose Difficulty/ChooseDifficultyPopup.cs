@@ -27,7 +27,7 @@ public class ChooseDifficultyPopup : BasePopup
     {
         GamePersistentVariable.isHardMode = true;
 
-        GameplayScreen.Instance.SwitchToHardMode();
+        GameplayScreen.Ins.SwitchToHardMode();
 
         Hide();
     }
