@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.GamePlay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,7 +12,6 @@ public class ReplayPopup : BasePopup
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
@@ -60,11 +60,10 @@ public class ReplayPopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Replay.ToString());
         }
-
         replayLevelEvent?.Invoke();
         changeLivesNumberEvent?.Invoke(-1);
     }

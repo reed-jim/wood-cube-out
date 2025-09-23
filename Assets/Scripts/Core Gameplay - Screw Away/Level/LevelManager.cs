@@ -12,7 +12,8 @@ namespace NamPhuThuy.GamePlay
     {
         #region Private Serializable Fields
         
-        
+        [SerializeField] private LevelDataContainer levelDataContainer;
+        public LevelDataContainer LevelDataContainer => levelDataContainer;
 
         #endregion
 

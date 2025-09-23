@@ -1199,6 +1199,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1225005797}
+  - {fileID: 437966540}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224622296
@@ -1773,8 +1774,8 @@ RectTransform:
   - {fileID: 477194870}
   m_Father: {fileID: 1411237950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.03794643}
+  m_AnchorMax: {x: 1, y: 0.95089287}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2128,6 +2129,39 @@ MonoBehaviour:
   maxSwipeDistance: 4
   timeToConfirmSelectObjectPart: 0.4
   _inputMode: 0
+  isSelectObjectPart: 0
+  isSelectingObjectPart: 0
+--- !u!1 &437966539
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 437966540}
+  m_Layer: 0
+  m_Name: Lock Screw Box
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &437966540
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 437966539}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 220901397}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &449516336
 GameObject:
   m_ObjectHideFlags: 0
@@ -2499,6 +2533,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 522993201}
+  - component: {fileID: 522993202}
   m_Layer: 0
   m_Name: LEVEL MANAGER
   m_TagString: Untagged
@@ -2524,6 +2559,19 @@ Transform:
   - {fileID: 509764747}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &522993202
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 522993200}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 965eb574e38c8154bbdaf9b4ddca75ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
 --- !u!1001 &583404121
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5710,6 +5758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17988a5334a4a1a4c8754a42cf5582c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _currentLockedFaction: 
   container: {fileID: 1967882278}
   lockedColorImages:
   - {fileID: 1711234524065645231}
@@ -7717,7 +7766,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screwBoxManager: {fileID: 1234861721}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
-  levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
   delayShowPopupWin: 1.8
   _currentLevelDifficultyConfiguration: {fileID: 0}
@@ -9314,11 +9362,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.28402779
+      value: 0.5152979
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3179054
+      value: 0.17857143
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x

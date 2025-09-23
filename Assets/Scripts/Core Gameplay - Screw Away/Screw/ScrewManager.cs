@@ -14,7 +14,6 @@ public class ScrewManager : MonoBehaviour
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
 
     [Header("CUSTOMIZE")]

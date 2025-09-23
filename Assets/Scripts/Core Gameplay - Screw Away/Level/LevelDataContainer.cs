@@ -18,21 +18,6 @@ public class LevelDataContainer : ScriptableObject
         get => levelsData;
     }
 
-    // public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
-    // {
-    //     int levelIndex = level - 1;
-
-    //     if (levelIndex < levelsData.Length)
-    //     {
-    //         if (levelsData[levelIndex].LevelDifficultyConfiguration != null)
-    //         {
-    //             return levelsData[levelIndex].LevelDifficultyConfiguration;
-    //         }
-    //     }
-
-    //     return fallbackLevelDifficultyConfiguration;
-    // }
-
     public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
     {
         int modulus = (level - 1) % 5;

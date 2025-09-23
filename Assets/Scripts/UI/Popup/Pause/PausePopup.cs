@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -15,7 +16,6 @@ public class PausePopup : BasePopup
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
@@ -62,11 +62,10 @@ public class PausePopup : BasePopup
             SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 
             // don't track loop level CostCenter
-            if (currentLevel.Value <= levelDataContainer.MaxLevel)
+            if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
             {
                 SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
             }
-
             Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
         }
     }
@@ -99,11 +98,10 @@ public class PausePopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Replay.ToString());
         }
-
         replayLevelEvent?.Invoke();
     }
 
