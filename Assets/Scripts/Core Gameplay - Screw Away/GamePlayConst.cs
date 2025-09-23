@@ -7,9 +7,12 @@ using UnityEditor;
 
 namespace NamPhuThuy.GamePlay
 {
-    public class GamePlayConst
+    public static class GamePlayConst
     {
-        public const string LOCKED_COLOR_SCREW_PREFAB_PATH = "Assets/Prefabs/Screw Away/Screw/Locked Color Screw";
+        public const string FAKE_SCREW_PREFAB_PATH = "Assets/Prefabs/Screw Away/Screw/Fake Screw.prefab";
+        public const string LOCKED_COLOR_SCREW_PREFAB_PATH = "Assets/Prefabs/Screw Away/Screw/Locked Color Screw.prefab";
+        public const string MULTI_PHASE_SCREW_PREFAB_PATH = "Assets/Prefabs/Screw Away/Screw/Multi Phase Screw.prefab";
+        
     }
 
 }

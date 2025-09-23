@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -3719,6 +3721,9 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region SWITCH SPECIAL LEVEL
+    /// <summary>
+    /// Replace all "screws" in the level with "locked color screws"
+    /// </summary>
     private void SwitchToLockedColorScrew()
     {
         Transform level = Selection.activeTransform;
@@ -3729,7 +3734,10 @@ public class HingeJointGenerator : EditorWindow
 
         toRemoveList.AddRange(screws);
 
-        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
+        // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
+        
+        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.LOCKED_COLOR_SCREW_PREFAB_PATH);
+        DebugLogger.LogSimple(message:$"{screwPrefab.name}");
 
         for (int i = 0; i < screws.Length; i++)
         {

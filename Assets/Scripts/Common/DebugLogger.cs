@@ -87,7 +87,7 @@ namespace NamPhuThuy
         {
             string className = Path.GetFileNameWithoutExtension(filePath);
 
-            Log($"{className}().{memberName}()::{line}: {message}", Color.black);
+            Log($"{className}().{memberName}()::{line}: {message}", Color.cyan);
             /*Can replace UnityEngine.Debug.Log with any logging API you want
 
             Usage is simple: just put a LogCaller(); at any line you want. The compiler will pass in the 3 parameters for you.*/

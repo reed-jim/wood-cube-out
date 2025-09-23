@@ -9,7 +9,7 @@ namespace WoodCubeOut
 {
     public class LockScrewColorLevelManager : Singleton<LockScrewColorLevelManager>
     {
-        private GameFaction[] _currentLockedFaction;
+        [SerializeField] private GameFaction[] _currentLockedFaction;
         public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
 
         private int _screwLeftToUnlock;
