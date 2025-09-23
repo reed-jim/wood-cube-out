@@ -19,113 +19,101 @@ public class BasicScrew : BaseScrew
 
     public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
     {
-        if (screwId == this.screwId)
+        if (screwId != this.screwId) return;
+        
+        if (!_isInteractable) return;
+        else
         {
-            if (!_isInteractable)
-            {
-                return;
-            }
-            else
-            {
-                _isInteractable = false;
-            }
+            _isInteractable = false;
+        }
 
-            if (_isDone)
-            {
-                return;
-            }
+        if (_isDone) return;
+        if (_isMoving) return;
 
-            if (_isMoving)
+        if (isCheckObstacles && !IsOutsideWithNoScrewBox)
+        {
+            if (!GamePersistentVariable.isAutoTestingLevel)
             {
-                return;
-            }
+                // avoid loose screw that is covering by other objects
+                bool isNotVisible = Physics.Raycast(
+                    transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
 
-            if (isCheckObstacles && !IsOutsideWithNoScrewBox)
-            {
-                if (!GamePersistentVariable.isAutoTestingLevel)
+                if (isNotVisible)
                 {
-                    // avoid loose screw that is covering by other objects
-                    bool isNotVisible = Physics.Raycast(
-                        transform.position + 0.5f * _renderer.bounds.size.z * transform.forward, _mainCamera.transform.position - transform.position, 5);
+                    _isInteractable = true;
 
-                    if (isNotVisible)
-                    {
-                        _isInteractable = true;
-
-                        return;
-                    }
-                    //
+                    return;
                 }
-
-                CountBlockingObjects();
-            }
-            else
-            {
-                _numberBlockingObjects = 0;
             }
 
-            // BLOCKED
-            if (_numberBlockingObjects > 0)
+            CountBlockingObjects();
+        }
+        else
+        {
+            _numberBlockingObjects = 0;
+        }
+
+        // BLOCKED
+        if (_numberBlockingObjects > 0)
+        {
+            FakeScrew fakeScrew = ObjectPoolingEverything.GetFromPool<FakeScrew>(GameConstants.FAKE_SCREW);
+
+            fakeScrew.CloneFromScrew(this);
+
+            fakeScrew.transform.SetParent(transform);
+
+            GetComponent<MeshRenderer>().enabled = false;
+
+            fakeScrew.IsRotating = true;
+
+            SoundManager.Instance.PlaySoundLoosenScrewFail();
+
+            if (gameSetting.IsVibrate)
             {
-                FakeScrew fakeScrew = ObjectPoolingEverything.GetFromPool<FakeScrew>(GameConstants.FAKE_SCREW);
-
-                fakeScrew.CloneFromScrew(this);
-
-                fakeScrew.transform.SetParent(transform);
-
-                GetComponent<MeshRenderer>().enabled = false;
-
-                fakeScrew.IsRotating = true;
-
-                SoundManager.Instance.PlaySoundLoosenScrewFail();
-
-                if (gameSetting.IsVibrate)
-                {
-                    HapticFeedback.MediumFeedback();
-                }
-
-                _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
-               .OnComplete(() =>
-               {
-                   fakeScrew.IsRotating = false;
-
-                   ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
-
-                   GetComponent<MeshRenderer>().enabled = true;
-
-                   _isInteractable = true;
-               }));
-
-                return;
+                HapticFeedback.MediumFeedback();
             }
 
-            if (joint != null)
+            _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
+           .OnComplete(() =>
+           {
+               fakeScrew.IsRotating = false;
+
+               ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+
+               GetComponent<MeshRenderer>().enabled = true;
+
+               _isInteractable = true;
+           }));
+
+            return;
+        }
+
+        if (joint != null)
+        {
+            joint.breakForce = 0;
+
+            Destroy(joint);
+
+            InvokeBreakJointEvent();
+        }
+
+        screwBoxSlot.Fill(this);
+
+        // confirm done screw soon
+        if (!screwBoxSlot.IsScrewPort)
+        {
+            _isDone = true;
+        }
+
+        UnscrewAnimationAsync(screwBoxSlot);
+
+        if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
+        {
+            SoundManager.Instance.PlaySoundLoosenScrew();
+
+            if (gameSetting.IsVibrate)
             {
-                joint.breakForce = 0;
-
-                Destroy(joint);
-
-                InvokeBreakJointEvent();
-            }
-
-            screwBoxSlot.Fill(this);
-
-            // confirm done screw soon
-            if (!screwBoxSlot.IsScrewPort)
-            {
-                _isDone = true;
-            }
-
-            UnscrewAnimationAsync(screwBoxSlot);
-
-            if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
-            {
-                SoundManager.Instance.PlaySoundLoosenScrew();
-
-                if (gameSetting.IsVibrate)
-                {
-                    HapticFeedback.MediumFeedback();
-                }
+                HapticFeedback.MediumFeedback();
             }
         }
     }

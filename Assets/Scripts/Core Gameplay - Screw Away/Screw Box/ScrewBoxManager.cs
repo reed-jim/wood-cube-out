@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -108,7 +109,25 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void ReturnScrewBoxesToPool()
     {
-        if (screwBoxs != null)
+        DebugLogger.LogSimple();
+        if (screwBoxs == null) return;
+        
+        for (int i = 0; i < screwBoxs.Length; i++)
+        {
+            if (screwBoxs[i] == null) continue;
+            for (int j = 0; j < screwBoxs[i].ScrewBoxSlots.Length; j++)
+            {
+                if (screwBoxs[i].ScrewBoxSlots[j].Screw == null) continue;
+                
+                screwBoxs[i].ScrewBoxSlots[j].IsFilled = false;
+                Destroy(screwBoxs[i].ScrewBoxSlots[j].Screw.gameObject);
+            }
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
+        }
+        
+        /*
+         if (screwBoxs != null)
         {
             for (int i = 0; i < screwBoxs.Length; i++)
             {
@@ -123,15 +142,16 @@ public class ScrewBoxManager : MonoBehaviour
                             Destroy(screwBoxs[i].ScrewBoxSlots[j].Screw.gameObject);
                         }
                     }
-
                     ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
                 }
             }
         }
+         */
     }
 
     private void ResetScrewBoxes()
     {
+        DebugLogger.LogSimple();
         ReturnScrewBoxesToPool();
 
         screwBoxs = new ScrewBox[maxScrewBox];
@@ -248,6 +268,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void OnScrewSelected(int screwId, GameFaction selectedFaction)
     {
+        DebugLogger.LogSimple();
         ScrewBoxSlot screwBoxSlot = CheckAvailableScrewBoxes(selectedFaction);
 
         if (screwBoxSlot != null)
@@ -331,6 +352,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     public ScrewBoxSlot CheckAvailableScrewBoxes(GameFaction selectedFaction, bool isIncludeScrewPorts)
     {
+        DebugLogger.LogSimple();
         foreach (var screwBox in screwBoxs)
         {
             if (screwBox == null)
@@ -695,6 +717,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void MoveSingleScrewFromHoleToScrewBox(BaseScrew screw)
     {
+        DebugLogger.LogSimple();
         if (!screw.ScrewBoxSlot.IsScrewPort)
         {
             return;

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 
@@ -214,6 +215,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     public void Select()
     {
+        DebugLogger.LogSimple();
         selectObjectPartEvent?.Invoke(gameObject.GetInstanceID());
 
         _isSelecting = true;
@@ -229,6 +231,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     private void Deselect()
     {
+        DebugLogger.LogSimple();
         if (_isSelecting)
         {
             deselectObjectPartEvent?.Invoke(gameObject.GetInstanceID());
@@ -341,6 +344,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     public async void Break(Vector3 touchPosition, RaycastHit hit)
     {
+        DebugLogger.LogSimple();
         BoosterHammer hammer = ObjectPoolingEverything.GetFromPool<BoosterHammer>(GameConstants.HAMMER);
 
         hammer.transform.rotation = Quaternion.identity;

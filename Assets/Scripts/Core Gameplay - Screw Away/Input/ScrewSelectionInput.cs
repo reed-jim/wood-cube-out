@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NamPhuThuy;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Serialization;
 using static GameEnum;
 
 public class ScrewSelectionInput : MonoBehaviour
@@ -11,6 +13,8 @@ public class ScrewSelectionInput : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private LayerMask layerMaskCheck;
     [SerializeField] private float maxSwipeDistance;
+    
+    [Tooltip("Time threshold for a long press to select an object part.")]
     [SerializeField] private float timeToConfirmSelectObjectPart;
 
     #region PRIVATE FIELD
@@ -18,8 +22,12 @@ public class ScrewSelectionInput : MonoBehaviour
     [SerializeField] private InputMode _inputMode;
     private InputMode _prevInputMode;
     private List<Vector3> twoTouchPoints;
-    private bool _isSelectObjectPart;
-    private bool _isSelectingObjectPart;
+    
+    [Tooltip("Has a part been selected this cycle?")]
+    [SerializeField] private bool isSelectObjectPart;
+    
+    [Tooltip("Is the selection process currently happening (e.g., during hold)?")]
+    [SerializeField] private bool isSelectingObjectPart;
     private float _timeHold;
     #endregion
 
@@ -28,6 +36,8 @@ public class ScrewSelectionInput : MonoBehaviour
     public static event Action selectScrewEvent;
     public static event Action breakObjectEvent;
     #endregion
+
+    #region MonoBehaviour Callbacks
 
     void Awake()
     {
@@ -68,27 +78,31 @@ public class ScrewSelectionInput : MonoBehaviour
 
             if (_inputMode == InputMode.Select)
             {
-                if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
+                if (_timeHold > timeToConfirmSelectObjectPart && !isSelectingObjectPart)
                 {
+                    DebugLogger.LogSimple(message:$"SelectObj in Select Mode");
                     SelectObjectPart();
 
-                    _isSelectingObjectPart = true;
+                    isSelectingObjectPart = true;
                 }
             }
             else if (_inputMode == InputMode.BreakObject)
             {
+                DebugLogger.LogSimple(message:$"SelectObj in BreakObject Mode");
                 SelectObjectPart();
             }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
+            DebugLogger.LogSimple();
             twoTouchPoints.Add(Input.mousePosition);
 
             if (twoTouchPoints.Count == 2)
             {
                 if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
                 {
+                    DebugLogger.LogSimple(message:$"About to select screw");
                     SelectScrew();
                 }
             }
@@ -98,19 +112,22 @@ public class ScrewSelectionInput : MonoBehaviour
             twoTouchPoints.Clear();
 
             _timeHold = 0;
-            _isSelectObjectPart = false;
-            _isSelectingObjectPart = false;
+            isSelectObjectPart = false;
+            isSelectingObjectPart = false;
         }
     }
 
+    #endregion
+
     private void SelectScrew()
     {
+        DebugLogger.LogSimple();
         if (_inputMode != InputMode.Select)
         {
             return;
         }
 
-        if (_isSelectObjectPart)
+        if (isSelectObjectPart)
         {
             return;
         }
@@ -152,10 +169,12 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private async void SelectObjectPart()
     {
-        _isSelectObjectPart = false;
+        DebugLogger.LogSimple();
+        isSelectObjectPart = false;
 
         if (_inputMode == InputMode.Disabled)
         {
+            DebugLogger.LogSimple(message:$"Disabled InputMode");
             return;
         }
 
@@ -171,10 +190,11 @@ public class ScrewSelectionInput : MonoBehaviour
         if (hit.collider != null)
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+            DebugLogger.LogSimple(message:$"{objectPart}");
 
             if (objectPart != null)
             {
-                _isSelectObjectPart = true;
+                isSelectObjectPart = true;
 
                 if (_inputMode == InputMode.BreakObject)
                 {
@@ -202,18 +222,21 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private void EnableBreakObjectMode()
     {
+        DebugLogger.LogSimple();
         _inputMode = InputMode.BreakObject;
         _prevInputMode = _inputMode;
     }
 
     private void DisableBreakObjectMode()
     {
+        DebugLogger.LogSimple();
         _inputMode = InputMode.Select;
         _prevInputMode = _inputMode;
     }
 
     private void EnableInput(bool isEnable)
     {
+        DebugLogger.LogSimple();
         if (isEnable)
         {
             _inputMode = _prevInputMode;
@@ -226,6 +249,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private bool IsClickedOnUI()
     {
+        bool res;
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
             position = Input.mousePosition
@@ -236,11 +260,14 @@ public class ScrewSelectionInput : MonoBehaviour
 
         if (raycastResults.Count > 0)
         {
-            return true;
+            res = true;
         }
         else
         {
-            return false;
+            res = false;
         }
+        
+        DebugLogger.LogSimple(message:$"{res}");
+        return res;
     }
 }

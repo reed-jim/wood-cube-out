@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
 using Firebase.RemoteConfig;
+using NamPhuThuy;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -116,6 +117,7 @@ public class ScrewBox : MonoBehaviour
 
     private async void OnScrewBoxCompleted(int instanceId)
     {
+        DebugLogger.LogSimple();
         if (instanceId == gameObject.GetInstanceID())
         {
             await Task.Delay((int)(delayMoveInDuration * 300));
