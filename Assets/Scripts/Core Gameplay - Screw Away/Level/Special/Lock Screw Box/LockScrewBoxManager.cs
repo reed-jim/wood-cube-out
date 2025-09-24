@@ -30,7 +30,7 @@ namespace NamPhuThuy.GamePlay
         {
             LevelLoader.startLevelEvent -= OnLevelLoaded;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
-        }
+        } 
 
         #endregion
 

@@ -1,13 +1,10 @@
 using System;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 [Serializable]
 public class LevelData
 {
-    [SerializeField] private LevelDifficultyConfiguration levelDifficultyConfiguration;
-
-    public LevelDifficultyConfiguration LevelDifficultyConfiguration
-    {
-        get => levelDifficultyConfiguration;
-    }
+    public GameObject levelPrefab;
+    public LevelMode levelMode;
 }

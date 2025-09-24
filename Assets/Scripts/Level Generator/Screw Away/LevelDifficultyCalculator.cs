@@ -460,7 +460,6 @@ public class LevelDifficultyCalculator : EditorWindow
             }
         }
 
-        levelDataContainer.SetLevelDifficultyConfiguration(level, generatedLevelPhases.ToArray());
     }
 
     #region SCREW

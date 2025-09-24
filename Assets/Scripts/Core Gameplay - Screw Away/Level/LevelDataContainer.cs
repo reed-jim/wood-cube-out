@@ -24,17 +24,4 @@ public class LevelDataContainer : ScriptableObject
 
         return templateLevelDifficultyConfiguration[modulus];
     }
-
-    public void SetLevelDifficultyConfiguration(int level, LevelPhase[] levelPhases)
-    {
-        int levelIndex = level - 1;
-
-        if (levelIndex < levelsData.Length)
-        {
-            if (levelsData[levelIndex].LevelDifficultyConfiguration != null)
-            {
-                levelsData[levelIndex].LevelDifficultyConfiguration.LevelPhases = levelPhases;
-            }
-        }
-    }
 }

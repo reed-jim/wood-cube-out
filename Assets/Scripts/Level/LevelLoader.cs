@@ -177,7 +177,7 @@ public class LevelLoader : MonoBehaviour
 
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
-        string levelPrefab = $"Level {nextLevel}";
+        string levelName = $"Level {nextLevel}";
 
         // A/B TEST LEVEL 4
         if (nextLevel == 4)
@@ -186,28 +186,13 @@ public class LevelLoader : MonoBehaviour
 
             if (level4Variant == 1)
             {
-                levelPrefab = $"Level {nextLevel} - Variant 1";
+                levelName = $"Level {nextLevel} - Variant 1";
             }
             else if (level4Variant == 2)
             {
-                levelPrefab = $"Level {nextLevel} - Variant 2";
+                levelName = $"Level {nextLevel} - Variant 2";
             }
         }
-
-        // // REMOTE LEVELS
-        // if (nextLevel > 10)
-        // {
-        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(true);
-
-        //         return;
-        //     }
-        //     else
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(false);
-        //     }
-        // }
 
         // Memory Management
         Resources.UnloadUnusedAssets();
@@ -218,7 +203,7 @@ public class LevelLoader : MonoBehaviour
         }
         //
 
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelName);
 
         _loadLevelHandle.Completed += (op) =>
         {
@@ -252,23 +237,6 @@ public class LevelLoader : MonoBehaviour
                     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
                 }
-
-                // // GENERATE CONVEX COLLIDERS
-                // for (int i = 0; i < pieces.Count; i++)
-                // {
-                //     BasicObjectPart piece = pieces[i];
-                //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
-                //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
-
-                //     if (!pieceCollider.convex)
-                //     {
-                //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
-
-                //         Destroy(pieceCollider);
-                //     }
-                // }
-
-
 
                 // AUTO CENTER LEVEL
                 _isNotAutoCenterLevel = false;
@@ -330,9 +298,6 @@ public class LevelLoader : MonoBehaviour
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
-                // 
-
-
 
                 _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
@@ -729,35 +694,14 @@ public class LevelLoader : MonoBehaviour
             float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
             float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
 
-            if (boundXMin < minX)
-            {
-                minX = boundXMin;
-            }
-
-            if (boundXMax > maxX)
-            {
-                maxX = boundXMax;
-            }
-
-            if (boundYMin < minY)
-            {
-                minY = boundYMin;
-            }
-
-            if (boundYMax > maxY)
-            {
-                maxY = boundYMax;
-            }
-
-            if (boundZMin < minZ)
-            {
-                minZ = boundZMin;
-            }
-
-            if (boundZMax > maxZ)
-            {
-                maxZ = boundZMax;
-            }
+            
+            minX = Mathf.Min(boundXMin, minX);
+            minY = Mathf.Min(boundYMin, minY);
+            minZ = Mathf.Min(boundZMin, minZ);
+            
+            maxX = Mathf.Max(boundXMax, maxX);
+            maxY = Mathf.Max(boundYMax, maxY);
+            maxZ = Mathf.Max(boundZMax, maxZ);
         }
 
         _pivotAdjust.transform.position = currentPosition;
@@ -874,6 +818,11 @@ public class LevelLoader : MonoBehaviour
                 _isSetLevelGradientBound = true;
             }
         }
+    }
+
+    private void ModifyLevelBasedOnMode()
+    {
+        
     }
     #endregion
 

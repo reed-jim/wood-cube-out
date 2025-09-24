@@ -4,9 +4,10 @@ namespace NamPhuThuy.GamePlay
     {
         NORMAL = 0,
         LOCK_SCREW_COLOR = 1, 
-        BOMB_OBJECT_PART = 2,
-        MULTIPLE_LAYERS = 3,
-        LOCK_SCREW_RUSTY = 4,
-        PROTECTED_OBJECT_PART = 5
+        LOCK_SCREW_BOX = 2,
+        BOMB_OBJECT_PART = 3,
+        MULTIPLE_LAYERS = 4,
+        LOCK_SCREW_RUSTY = 5,
+        PROTECTED_OBJECT_PART = 6
     }
 }
