@@ -12,6 +12,7 @@ namespace WoodCubeOut
         [SerializeField] private GameFaction[] _currentLockedFaction;
         public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
 
+        private int _requiredScrewToUnlock;
         private int _screwLeftToUnlock;
 
         [Header("UI")]
@@ -37,11 +38,12 @@ namespace WoodCubeOut
 
             _currentLockedFaction[0] = CommonUtil.RandomizeFaction();
 
-            _screwLeftToUnlock = Random.Range(5, 10);
+            _requiredScrewToUnlock = Random.Range(5, 10);
+            _screwLeftToUnlock = _requiredScrewToUnlock;
 
             lockedColorImages[0].color = FactionUtility.GetColorForFaction(_currentLockedFaction[0]);
 
-            conditionTexts[0].text = $"Unscrew {_screwLeftToUnlock} screws to unlock";
+            conditionTexts[0].text = $"{_screwLeftToUnlock}/{_requiredScrewToUnlock}";
         }
 
         public bool IsFactionLocked(GameFaction faction)
@@ -64,7 +66,7 @@ namespace WoodCubeOut
         {
             _screwLeftToUnlock--;
 
-            conditionTexts[0].text = $"Unscrew {_screwLeftToUnlock} screws to unlock";
+            conditionTexts[0].text = $"{_screwLeftToUnlock}/{_requiredScrewToUnlock}";
 
             if (_screwLeftToUnlock == 0)
             {

@@ -740,6 +740,11 @@ public static class LevelDifficultyCalculatorUltility
             {
                 BaseScrew screw = nextPiece.GetChild(i).GetComponent<BaseScrew>();
 
+                if (screw == null)
+                {
+                    continue;
+                }
+
                 List<Transform> newFoundPieces = GetScrewObstacles(screw.transform, true);
 
                 foreach (var item in newFoundPieces)
