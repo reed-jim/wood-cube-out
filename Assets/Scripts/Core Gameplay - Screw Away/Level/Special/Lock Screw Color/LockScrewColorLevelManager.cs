@@ -32,7 +32,7 @@ namespace WoodCubeOut
         protected override void MoreActionOnAwake()
         {
             LevelLoader.startLevelEvent += OnLevelLoaded;
-            GameStateLose.loseLevelEvent += OnLevelLosed;
+            GameStateLose.loseLevelEvent += OnLevelLost;
             ScrewManager.setScrewsEvent += OnScrewsSet;
             BaseScrew.screwLoosenedEvent += OnScrewLoosed;
 
@@ -46,14 +46,14 @@ namespace WoodCubeOut
         private void OnDestroy()
         {
             LevelLoader.startLevelEvent -= OnLevelLoaded;
-            GameStateLose.loseLevelEvent -= OnLevelLosed;
+            GameStateLose.loseLevelEvent -= OnLevelLost;
             ScrewManager.setScrewsEvent -= OnScrewsSet;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         }
         #endregion
 
         #region Lock
-        private IEnumerator DelayedLockNextScrew()
+        protected virtual IEnumerator DelayedLockNextScrew()
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
@@ -85,7 +85,7 @@ namespace WoodCubeOut
             {
                 SaferioTween.ScaleUpWithPunch(text.transform, 1, delay: 0.3f);
             }
-            
+
             SaferioTween.ScaleUpWithPunch(lockedGroup.transform, 1, delay: 0.3f);
 
             SaferioTween.ScaleDownWithPunch(tickIcon.transform);
@@ -154,7 +154,7 @@ namespace WoodCubeOut
             // LockSingleColor();
         }
 
-        private void OnLevelLosed()
+        private void OnLevelLost()
         {
             if (_delayedLockNextScrew != null)
             {
@@ -169,7 +169,7 @@ namespace WoodCubeOut
             StartCoroutine(DelayedLockNextScrew());
         }
 
-        private void OnScrewLoosed()
+        protected virtual void OnScrewLoosed()
         {
             _screwLeftToUnlock--;
 
