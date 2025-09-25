@@ -9,6 +9,44 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+
+    #region Component
+    public static TDerived ReplaceAndCopy<TBase, TDerived>(GameObject obj)
+        where TBase : Component
+        where TDerived : TBase
+    {
+        TBase original = obj.GetComponent<TBase>();
+        if (original == null)
+        {
+            Debug.LogError($"Missing component of type {typeof(TBase).Name} on {obj.name}");
+            return null;
+        }
+
+        // Cache field info for performance
+        var bindingFlags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance;
+        var fields = typeof(TBase).GetFields(bindingFlags);
+
+        // Save data
+        object[] values = new object[fields.Length];
+        for (int i = 0; i < fields.Length; i++)
+            values[i] = fields[i].GetValue(original);
+
+        // Remove original component
+        UnityEngine.Object.Destroy(original);
+
+        // Add new component
+        TDerived replacement = obj.AddComponent<TDerived>();
+
+        // Apply saved values
+        for (int i = 0; i < fields.Length; i++)
+        {
+            fields[i].SetValue(replacement, values[i]);
+        }
+
+        return replacement;
+    }
+    #endregion
+
     public static void StopTween(Tween tween)
     {
         if (tween.isAlive)
@@ -266,6 +304,11 @@ public static class CommonUtil
     public static GameFaction RandomizeFaction()
     {
         return GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
+    }
+
+    public static T GetRandomValueFromArray<T>(T[] array)
+    {
+        return array[UnityEngine.Random.Range(0, array.Length)];
     }
     #endregion
 }

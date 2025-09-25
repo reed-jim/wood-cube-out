@@ -33,11 +33,15 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
 
     private void UpdateUI(RustyScrewLevelActionUI action, object[] parameters)
     {
-        if (action == RustyScrewLevelActionUI.Showing)
+        if (action == RustyScrewLevelActionUI.Setup)
+        {
+            Setup();
+        }
+        else if (action == RustyScrewLevelActionUI.Showing)
         {
             ShowUI();
         }
-        if (action == RustyScrewLevelActionUI.MakeScrewRusty)
+        else if (action == RustyScrewLevelActionUI.MakeScrewRusty)
         {
             MakeScrewRusty();
         }
@@ -45,6 +49,17 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         {
             UpdateRustyLevel((int)parameters[0]);
         }
+        else if (action == RustyScrewLevelActionUI.UpdateTimeCount)
+        {
+            UpdateTimeCount((int)parameters[0]);
+        }
+    }
+
+    private void Setup()
+    {
+        container.gameObject.SetActive(false);
+        timeCountingText.gameObject.SetActive(false);
+        tickIcon.gameObject.SetActive(false);
     }
 
     private void ShowUI()
@@ -109,5 +124,10 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
                 rustyScrew.gameObject.SetActive(false);
             });
         }
+    }
+
+    private void UpdateTimeCount(int remaningTime)
+    {
+        timeCountingText.text = $"Lock in {remaningTime}s";
     }
 }

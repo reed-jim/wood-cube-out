@@ -11,18 +11,19 @@ using static GameEnum;
 
 public enum RustyScrewLevelActionUI
 {
+    Setup,
     Showing,
     MakeScrewRusty,
-    UpdateRustyLevel
+    UpdateRustyLevel,
+    UpdateTimeCount
 }
 
-public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManager>
+public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
     [SerializeField] private GameFaction[] _currentLockedFaction;
     public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
 
     private BaseScrew[] _screws;
-    private bool _isFirstTime;
     private int _requiredScrewToUnlock;
     private Coroutine _delayedLockNextScrew;
 
@@ -30,25 +31,13 @@ public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManage
 
     public static event Action showUI;
     public static event Action<RustyScrewLevelActionUI, object[]> updateUI;
-    public static event Action<int> updateTimeCount;
 
-    #region Life Cycle
     protected override void MoreActionOnAwake()
     {
-        GameStateLose.loseLevelEvent += OnLevelLost;
-        ScrewManager.setScrewsEvent += OnScrewsSet;
-        BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+        base.MoreActionOnAwake();
 
-        _isFirstTime = true;
+        updateUI?.Invoke(RustyScrewLevelActionUI.Setup, null);
     }
-
-    private void OnDestroy()
-    {
-        GameStateLose.loseLevelEvent -= OnLevelLost;
-        ScrewManager.setScrewsEvent -= OnScrewsSet;
-        BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
-    }
-    #endregion
 
     protected virtual IEnumerator DelayedLockNextScrew()
     {
@@ -73,7 +62,7 @@ public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManage
         {
             remaningTime--;
 
-            updateTimeCount?.Invoke(remaningTime);
+            updateUI?.Invoke(RustyScrewLevelActionUI.UpdateTimeCount, new object[] { remaningTime });
 
             yield return waitForSeconds;
         }
@@ -100,7 +89,7 @@ public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManage
         _requiredScrewToUnlock = 3;
     }
 
-    private void OnLevelLost()
+    protected override void OnLevelLost()
     {
         if (_delayedLockNextScrew != null)
         {
@@ -108,7 +97,7 @@ public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManage
         }
     }
 
-    private void OnScrewLoosed()
+    protected override void OnScrewLoosed()
     {
         _rustyClearingLevel--;
 
@@ -122,7 +111,7 @@ public class RustyScrewSpecialLevelManager : Singleton<LockScrewColorLevelManage
         updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[1] { _rustyClearingLevel });
     }
 
-    private void OnScrewsSet(BaseScrew[] screws)
+    protected override void OnScrewsSet(BaseScrew[] screws)
     {
         _screws = screws;
 
