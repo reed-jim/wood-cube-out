@@ -1,4 +1,5 @@
 using System.Linq;
+using NamPhuThuy;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -57,11 +58,13 @@ namespace WoodCubeOut
         #region EVENT
         private void OnLevelLoaded()
         {
+            DebugLogger.LogSimple();
             LockRandomColor();
         }
 
         private void OnScrewLoosed()
         {
+            DebugLogger.LogSimple();
             _screwLeftToUnlock--;
 
             conditionTexts[0].text = $"Unscrew {_screwLeftToUnlock} screws to unlock";

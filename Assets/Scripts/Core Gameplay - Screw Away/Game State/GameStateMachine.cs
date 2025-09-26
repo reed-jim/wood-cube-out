@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -51,6 +52,7 @@ public class GameStateMachine : MonoBehaviour
 
     public void ChangeState(BaseGameState newState)
     {
+        DebugLogger.LogSimple(message:$"newState: {newState.GameState}");
         if (!newState.CanTransitionTo())
         {
             return;
@@ -68,6 +70,7 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterPlayingState()
     {
+        DebugLogger.LogSimple();
         ChangeState(new GameStatePlaying());
 
         Tween.Delay(delayToEnableInputAfterRevived).OnComplete(() =>
@@ -78,11 +81,13 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterWinState()
     {
+        DebugLogger.LogSimple();
         ChangeState(new GameStateWin(this));
     }
 
     private void EnterLoseState()
     {
+        DebugLogger.LogSimple();
         enableInputEvent?.Invoke(false);
 
         ChangeState(new GameStateLose(this));
@@ -90,6 +95,7 @@ public class GameStateMachine : MonoBehaviour
 
     private void OnRevived(BoosterType boosterType)
     {
+        DebugLogger.LogSimple();
         EnterPlayingState();
     }
 }

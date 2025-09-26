@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -79,6 +80,7 @@ public class ScrewsDataManager : MonoBehaviour
     {
         if (!GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
+            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -91,6 +93,7 @@ public class ScrewsDataManager : MonoBehaviour
         // No data for current level
         if (levelProgressData.ScrewsData == null)
         {
+            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -105,6 +108,7 @@ public class ScrewsDataManager : MonoBehaviour
         {
             GamePersistentVariable.isFreshLevel = true;
 
+            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -112,6 +116,7 @@ public class ScrewsDataManager : MonoBehaviour
 
         if (currentLevel.Value == 1)
         {
+            DebugLogger.LogSimple(message:$"Trigger endTutorialLevel1Event");
             endTutorialLevel1Event?.Invoke();
         }
 
@@ -201,7 +206,10 @@ public class ScrewsDataManager : MonoBehaviour
         }));
 
         // UPDATE UI
+        DebugLogger.LogSimple(message:$"Trigger updateRemainingScrewEvent");
         updateRemainingScrewEvent?.Invoke(remainingScrew, totalScrew);
+        
+        DebugLogger.LogSimple(message:$"Trigger updateOutsideScrewNumberEvent");
         updateOutsideScrewNumberEvent?.Invoke();
     }
 
@@ -265,6 +273,7 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnAllLevelScrewsObservered(BaseScrew[] screws)
     {
+        DebugLogger.LogSimple();
         _screws = screws;
 
         System.Array.Sort(_screws, (go1, go2) => go2.GetInstanceID().CompareTo(go1.GetInstanceID()));
@@ -288,6 +297,7 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnLevelWon()
     {
+        DebugLogger.LogSimple();
         GamePersistentVariable.isPreventLoadLevelData = false;
         GamePersistentVariable.isFreshLevel = true;
 
@@ -297,6 +307,7 @@ public class ScrewsDataManager : MonoBehaviour
     #region UTIL
     private void SetFreshLevel(string levelSaveKey)
     {
+        DebugLogger.LogSimple();
         GamePersistentVariable.isPreventLoadLevelData = false;
         GamePersistentVariable.isFreshLevel = true;
 
@@ -314,6 +325,7 @@ public class ScrewsDataManager : MonoBehaviour
     #region DEBUG
     private void OnPrevLevel()
     {
+        DebugLogger.LogSimple();
         string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value - 1}";
 
         SetFreshLevel(key);
@@ -321,6 +333,7 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnNextLevel()
     {
+        DebugLogger.LogSimple();
         string key = $"{GameConstants.SCREWS_DATA}_{currentLevel.Value + 1}";
 
         SetFreshLevel(key);
@@ -328,6 +341,7 @@ public class ScrewsDataManager : MonoBehaviour
 
     private void OnDebugToLevel(int level)
     {
+        DebugLogger.LogSimple();
         string key = $"{GameConstants.SCREWS_DATA}_{level}";
 
         SetFreshLevel(key);

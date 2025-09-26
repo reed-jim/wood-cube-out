@@ -1,3 +1,4 @@
+using NamPhuThuy;
 using UnityEngine;
 
 public class AdjustScaleOnCameraZoomed : MonoBehaviour

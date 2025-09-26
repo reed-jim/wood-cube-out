@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 
@@ -48,6 +49,7 @@ public class GameplayCameraManager : MonoBehaviour
 
     private void ShakeAllCameras()
     {
+        DebugLogger.LogSimple();
         _tweens.Add(Tween.ShakeCamera(mainCamera, strengthFactor: 0.3f, duration: 0.3f));
     }
 }

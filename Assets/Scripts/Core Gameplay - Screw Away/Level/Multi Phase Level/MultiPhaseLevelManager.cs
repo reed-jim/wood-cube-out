@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using NamPhuThuy;
 using UnityEngine;
 
 public class MultiPhaseLevelManager : MonoBehaviour
@@ -43,6 +44,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void Reset()
     {
+        DebugLogger.LogSimple();
         _screws = new List<MultiPhaseScrew>();
 
         _currentPhase = 0;
@@ -52,6 +54,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void SetLevelScrewNumber(int screwNumber)
     {
+        DebugLogger.LogSimple();
         _totalScrew = screwNumber;
 
         if (screwNumber == 0)
@@ -65,6 +68,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void ManageScrew(MultiPhaseScrew screw)
     {
+        DebugLogger.LogSimple();
         _screws.Add(screw);
 
         _totalScrewObserved++;
@@ -87,6 +91,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void OnScrewLoosened()
     {
+        DebugLogger.LogSimple();
         if (_screws.Count == 0)
         {
             return;

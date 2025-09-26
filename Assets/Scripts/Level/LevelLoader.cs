@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
+using NamPhuThuy;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.VisualScripting;
@@ -106,6 +107,7 @@ public class LevelLoader : MonoBehaviour
     #region LEVEL
     private async void LoadLevel()
     {
+        DebugLogger.LogSimple();
         // // NO INTERNET
         // if (Application.internetReachability == NetworkReachability.NotReachable)
         // {
@@ -348,6 +350,7 @@ public class LevelLoader : MonoBehaviour
 
     private async void GoLevel(int level)
     {
+        DebugLogger.LogSimple();
         await Task.Delay(500);
 
         if (gameObject.transform.childCount > 0)
@@ -370,16 +373,19 @@ public class LevelLoader : MonoBehaviour
 
     private void NextLevel()
     {
+        DebugLogger.LogSimple();
         GoLevel(currentLevel.Value + 1);
     }
 
     private void PrevLevel()
     {
+        DebugLogger.LogSimple();
         GoLevel(currentLevel.Value - 1);
     }
 
     private void Replay()
     {
+        DebugLogger.LogSimple();
         GamePersistentVariable.isPreventLoadLevelData = true;
 
         GoLevel(currentLevel.Value);
@@ -616,6 +622,7 @@ public class LevelLoader : MonoBehaviour
     #region AUTO CENTER LEVEL
     private async void OnPieceCompleted(int pieceInstanceId)
     {
+        DebugLogger.LogSimple();
         // if (_isNotAutoCenterLevel)
         // {
         //     return;
@@ -989,6 +996,7 @@ public class LevelLoader : MonoBehaviour
 
     private void OnHardModeSuggestionClosed()
     {
+        DebugLogger.LogSimple();
         ShowSuggestion(_nextLevel, _isLoopLevel);
     }
     #endregion

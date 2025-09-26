@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -110,6 +111,7 @@ public class PinchGesture : MonoBehaviour
 
     private void OnLevelStarted()
     {
+        DebugLogger.LogSimple();
         _isDisabled = false;
 
         zoomSlider.value = 0f;
@@ -145,6 +147,7 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
+        DebugLogger.LogSimple();
         maxZoom = orthographicSize;
         minZoom = 0.5f * orthographicSize;
 
@@ -156,6 +159,7 @@ public class PinchGesture : MonoBehaviour
 
     private void EnablePinching(bool isEnable)
     {
+        DebugLogger.LogSimple();
         _isDisabled = !isEnable;
     }
 }

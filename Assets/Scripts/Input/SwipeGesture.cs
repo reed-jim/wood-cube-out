@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -72,6 +73,7 @@ public class SwipeGesture : MonoBehaviour
                     return;
                 }
 
+                DebugLogger.LogSimple(message:$"Trigger swipeGestureEvent");
                 swipeGestureEvent?.Invoke(_moveDirection);
 
                 _lastPosition = mousePosition;
@@ -83,6 +85,7 @@ public class SwipeGesture : MonoBehaviour
         {
             if (_isSwipingLastFrame)
             {
+                DebugLogger.LogSimple(message:$"Trigger stopSwipeGestureEvent");
                 stopSwipeGestureEvent?.Invoke();
 
                 _isSwipingLastFrame = false;
@@ -94,6 +97,7 @@ public class SwipeGesture : MonoBehaviour
 
     private void EnableSwiping(bool isEnable)
     {
+        DebugLogger.LogSimple();
         _isDisabled = !isEnable;
     }
 
