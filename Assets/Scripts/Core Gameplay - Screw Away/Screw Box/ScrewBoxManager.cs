@@ -48,6 +48,7 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
+    // public static event Action<ScrewBox[]> s
     #endregion
 
     #region LIFE CYCLE
@@ -488,6 +489,8 @@ public class ScrewBoxManager : MonoBehaviour
                 break;
             }
         }
+        
+        
 
         if (!isFound)
         {
@@ -502,9 +505,6 @@ public class ScrewBoxManager : MonoBehaviour
 
         screwBox.transform.localPosition = destination.ChangeX(getInDirection == Direction.Right ? -10 : 10);
 
-        // destination.x = (-(maxScrewBox - 1) / 2f + index) * _screwBoxDistance;
-        // destination.z = -0.001f * index;
-
         screwBox.IsInTransition = true;
 
         _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.4f).OnComplete(() =>
@@ -516,25 +516,6 @@ public class ScrewBoxManager : MonoBehaviour
             screwBoxSpawnedEvent?.Invoke(screwBox);
         }));
 
-        // if (_isSpawnScrewBoxFirstTimeInLevel)
-        // {
-        //     screwBox.transform.localPosition = destination;
-
-        //     MoveFromScrewPortToScrewBox(screwBox);
-        // }
-        // else
-        // {
-        //     screwBox.IsInTransition = true;
-
-        //     _tweens.Add(Tween.LocalPosition(screwBox.transform, destination, duration: 0.5f).OnComplete(() =>
-        //     {
-        //         screwBox.IsInTransition = false;
-
-        //         MoveFromScrewPortToScrewBox(screwBox);
-
-        //         screwBoxSpawnedEvent?.Invoke(screwBox);
-        //     }));
-        // }
 
         void ResetScrewBoxSlot()
         {

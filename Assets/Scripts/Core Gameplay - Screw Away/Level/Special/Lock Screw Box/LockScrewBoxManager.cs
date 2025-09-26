@@ -12,6 +12,8 @@ namespace NamPhuThuy.GamePlay
     {
         #region Private Serializable Fields
 
+        [SerializeField] private List<ScrewBoxLocked> screwBoxes;
+
         #endregion
 
         #region Private Fields
@@ -22,10 +24,29 @@ namespace NamPhuThuy.GamePlay
 
         #region MonoBehaviour Callbacks
 
+        protected override void Awake()
+        {
+            base.Awake();
+            ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
+        }
+        
+        private void OnDestroy()
+        {
+            ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
+        }
 
         #endregion
 
         #region Private Methods
+        
+        private void OnScrewBoxSpawned(ScrewBox screwbox)
+        {
+            
+            if (screwbox is ScrewBoxLocked)
+            {
+                screwBoxes.Add((ScrewBoxLocked)screwbox);
+            }
+        }
 
         private void LockBoxes()
         {
@@ -45,38 +66,27 @@ namespace NamPhuThuy.GamePlay
 
         #region Override Methods
 
-        protected override void OnScrewLoosed()
+        public override bool IsFactionLocked(GameEnum.GameFaction faction)
+        {
+            return base.IsFactionLocked(faction);
+        }
+
+        protected override void OnScrewLoosed(BaseScrew screw)
         {
             DebugLogger.LogSimple();
-            
-            // CHeck task progress
-            // Update UI 
-            /*_screwLeftToUnlock--;
 
-            conditionTexts[0].text = $"{_screwLeftToUnlock}/{_requiredScrewToUnlock}";
-
-            if (_screwLeftToUnlock == 0)
+            foreach (var screwBox in screwBoxes)
             {
-                foreach (var text in conditionTexts)
-                {
-                    SaferioTween.ScaleDownWithPunch(text.transform);
-                }
-
-                SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
-
-                SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
-                SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
-
-                _currentLockedFaction = null;
-
-                if (_createNewTaskCo != null) StopCoroutine(_createNewTaskCo);
-                _createNewTaskCo = StartCoroutine(IECreateNewTask());
-            }*/
+                screwBox.OnScrewLoosed(screw);
+            }
         }
 
         #endregion
 
         #region Public Methods
+
+        
+        
         #endregion
 
         #region Event Methods

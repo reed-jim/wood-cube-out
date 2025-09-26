@@ -9313,11 +9313,37 @@ PrefabInstance:
       propertyPath: 'lockedColorImages.Array.data[0]'
       value: 
       objectReference: {fileID: 1711234524065645231}
+    - target: {fileID: 7843851281662342516, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+      propertyPath: m_Name
+      value: Lock Screw Box Manager
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7843851281662342516, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1851090306377199231}
   m_SourcePrefab: {fileID: 100100000, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+--- !u!1 &1851090306377199230 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7843851281662342516, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+  m_PrefabInstance: {fileID: 1851090306377199229}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1851090306377199231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1851090306377199230}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b3e2eeea320b946a65dca08fd01b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelMode: 0
+  screwBoxes: []
 --- !u!1001 &2183372076032801967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9356,11 +9382,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5152979
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.17857143
+      value: 0.95089287
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -9368,7 +9394,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.03794643
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_SizeDelta.x

@@ -1,16 +1,20 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
+using TMPro;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace NamPhuThuy
+namespace NamPhuThuy.GamePlay
 {
     
-    public class LockScrewBoxUI : MonoBehaviour
+    public class LockScrewBoxUI : /*BaseSpecialLevelUI#1# MonoBehaviour
     {
         #region Private Serializable Fields
+        
+        [SerializeField] private TextMeshProUGUI progressText;
 
         #endregion
 
@@ -19,23 +23,58 @@ namespace NamPhuThuy
         #endregion
 
         #region MonoBehaviour Callbacks
-
-        void Start()
-        {
-            
-        }
-
-        void Update()
-        {
-            
-        }
+        
+        
 
         #endregion
 
         #region Private Methods
+
+        private void UpdateUIProgress(SpecialLevelTaskRecord record)
+        {
+            int total = 0;
+            int remaining = 0;
+            foreach (var componentAmount in record.requiredComponents)
+            {
+                if (GameComponentType.Screw != componentAmount.componentType) continue;
+                
+                total += componentAmount.amount;
+                remaining += componentAmount.remainingAmount;
+            }
+
+            progressText.text = $"{remaining}/{total}";
+        }
+        
         #endregion
 
         #region Public Methods
+        #endregion
+
+        #region Override Methods
+
+        /*protected override void UpdateUI(SpecialLevelUIState state, object[] parameters)
+        {
+            base.UpdateUI(state, parameters);
+
+            switch (state)
+            {
+                case SpecialLevelUIState.Setup:
+                    Setup((LevelMode)parameters[0]);
+                    break;
+                case SpecialLevelUIState.Showing:
+                    ShowUI();
+                    break;
+                case SpecialLevelUIState.ReActive:
+                    ReActive();
+                    break;
+                case SpecialLevelUIState.UpdateProgress:
+                    break;
+                case SpecialLevelUIState.UpdateTimeCount:
+                    UpdateTimeCount((int)parameters[0]);
+                    break;
+            }
+        }#1#
+
         #endregion
 
         #region Editor Methods
@@ -83,4 +122,4 @@ namespace NamPhuThuy
         }
     }
     #endif
-}
+}*/

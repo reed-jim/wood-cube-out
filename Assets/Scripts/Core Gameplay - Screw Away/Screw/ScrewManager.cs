@@ -400,7 +400,7 @@ public class ScrewManager : MonoBehaviour
         return difficultyLevelByFactions;
     }
 
-    private void OnScrewLoosed()
+    private void OnScrewLoosed(BaseScrew screw)
     {
         DebugLogger.LogSimple();
         CheckWin();

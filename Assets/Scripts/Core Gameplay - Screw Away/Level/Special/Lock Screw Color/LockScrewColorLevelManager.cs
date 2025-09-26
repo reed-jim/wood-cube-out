@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Linq;
-using NamPhuThuy;
-using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -9,7 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
-namespace WoodCubeOut
+namespace NamPhuThuy.GamePlay
 {
     public class LockScrewColorLevelManager : BaseSpecialLevelManager
     {

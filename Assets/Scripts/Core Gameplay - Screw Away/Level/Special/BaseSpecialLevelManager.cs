@@ -109,7 +109,7 @@ namespace NamPhuThuy.GamePlay
 
         }
 
-        protected virtual void OnScrewLoosed()
+        protected virtual void OnScrewLoosed(BaseScrew screw)
         {
             if (_specialLevelTaskRecord == null)
             {

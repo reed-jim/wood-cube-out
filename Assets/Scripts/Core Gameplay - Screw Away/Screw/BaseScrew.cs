@@ -38,10 +38,8 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected Renderer _renderer;
     protected int _numberBlockingObjects;
     protected Vector3 _initialScale;
-    protected float _initialRotateSpeed;
     protected bool _isMoving;
     protected bool _isRotating;
-    protected bool _isRotatingToCorrectAngleOnScrewBox;
     protected Vector3 _localRotationOnScrewSlot;
     protected bool _isInteractable = true;
     protected bool _isDone;
@@ -150,7 +148,8 @@ public class BaseScrew : MonoBehaviour, IScrew
     public static event Action<BaseScrew> screwMovedCompletedEvent;
     public static event Action<int> breakJointEvent;
     public static event Action<int> screwStartLoosenedEvent;
-    public static event Action screwLoosenedEvent;
+    // public static event Action screwLoosenedEvent;
+    public static event Action<BaseScrew> screwLoosenedEvent;
     public static event Action updateOutsideScrewNumberEvent;
     public static event Action updateEventItem;
     #endregion
@@ -168,7 +167,6 @@ public class BaseScrew : MonoBehaviour, IScrew
         _renderer = GetComponent<Renderer>();
 
         _initialScale = transform.localScale;
-        _initialRotateSpeed = rotateSpeed;
 
         _mainCamera = Camera.main;
 
@@ -535,7 +533,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     #region EVENT
     protected void InvokeScrewLoosenedEvent()
     {
-        screwLoosenedEvent?.Invoke();
+        screwLoosenedEvent?.Invoke(this);
     }
 
     public void InvokeBreakJointEvent()

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,7 +11,9 @@ namespace NamPhuThuy.GamePlay
     
     public class ScrewBoxLocked : ScrewBox
     {
-        #region Private Serializable Fields
+        #region Private Serializable
+
+        [SerializeField] private SpecialLevelTaskRecord record;
 
         #endregion
 
@@ -18,10 +21,26 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
+        public static event Action<SpecialLevelTaskRecord> updateScrewUIEvent;
+
         #region Private Methods
         #endregion
 
         #region Public Methods
+
+        public void OnScrewLoosed(BaseScrew screw)
+        {
+            foreach (var componentAmount in record.requiredComponents)
+            {
+                if (GameComponentType.Screw != componentAmount.componentType) continue;
+                if (screw.Faction != componentAmount.faction) continue;
+                
+                componentAmount.remainingAmount--;
+            }
+            
+            updateScrewUIEvent?.Invoke(record);
+        }
+        
         #endregion
 
         #region Override Methods

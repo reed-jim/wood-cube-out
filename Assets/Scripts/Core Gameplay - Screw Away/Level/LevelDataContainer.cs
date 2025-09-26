@@ -51,6 +51,7 @@ public class LevelDataContainer : ScriptableObject
         if (hasChanges)
         {
             UnityEditor.EditorUtility.SetDirty(this);
+            
         }
 #endif
     }

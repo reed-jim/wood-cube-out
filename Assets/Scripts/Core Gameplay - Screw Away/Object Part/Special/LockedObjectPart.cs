@@ -41,7 +41,7 @@ public class LockedObjectPart : BasicObjectPart
         requiredValueText.text = $"{requiredValueToUnlock}";
     }
 
-    private void OnScrewLoosed()
+    private void OnScrewLoosed(BaseScrew screw)
     {
         requiredValueToUnlock--;
 

@@ -89,7 +89,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
         }
     }
 
-    private void OnScrewLoosened()
+    private void OnScrewLoosened(BaseScrew screw)
     {
         DebugLogger.LogSimple();
         if (_screws.Count == 0)
