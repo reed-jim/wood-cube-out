@@ -61,5 +61,6 @@ namespace NamPhuThuy.GamePlay
         ReActive = 3,
         UpdateProgress = 4,
         UpdateTimeCount = 5,
+        
     }
 }

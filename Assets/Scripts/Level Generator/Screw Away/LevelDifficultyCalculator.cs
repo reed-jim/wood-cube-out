@@ -202,9 +202,6 @@ public class LevelDifficultyCalculator : EditorWindow
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(prefabPath);
 
-        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(level);
-
-
 
         // Number Screw difficulty
         BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(levelPrefab.transform).ToArray();

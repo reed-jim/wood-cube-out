@@ -22,9 +22,6 @@ public class LevelDiffucultyCalculatorObject : MonoBehaviour
         const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 200f;
         const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 200f;
 
-        _currentLevelDifficultyConfiguration = LevelManager.Ins.LevelDataContainer.GetLevelDifficultyConfiguration(levelNumber);
-
-
 
         // Number Screw difficulty
         BasicScrew[] screws = GetComponentsFromAllChildren<BasicScrew>(level.transform).ToArray();
