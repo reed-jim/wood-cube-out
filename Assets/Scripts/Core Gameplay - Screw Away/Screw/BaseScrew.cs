@@ -39,6 +39,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     protected int _numberBlockingObjects;
     protected Vector3 _initialScale;
     protected bool _isMoving;
+    
     protected bool _isRotating;
     protected Vector3 _localRotationOnScrewSlot;
     protected bool _isInteractable = true;

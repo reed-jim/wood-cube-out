@@ -8,10 +8,6 @@ public class ScrewData
     [SerializeField] private int _screwId;
     [SerializeField] private GameFaction _faction;
 
-    // [SerializeField] private bool _isDone;
-    // [SerializeField] private bool _isInScrewPort;
-    // [SerializeField] private bool _isDestroyed;
-
     private const int IsMovingBit = 1 << 0;
     private const int IsDoneBit = 1 << 1;
     private const int IsOutsideBit = 1 << 2;
@@ -31,24 +27,6 @@ public class ScrewData
     }
 
     public int stateFlags;
-
-    // public bool IsDone
-    // {
-    //     get => _isDone;
-    //     set => _isDone = value;
-    // }
-
-    // public bool IsInScrewPort
-    // {
-    //     get => _isInScrewPort;
-    //     set => _isInScrewPort = value;
-    // }
-
-    // public bool IsDestroyed
-    // {
-    //     get => _isDestroyed;
-    //     set => _isDestroyed = value;
-    // }
 
     public void SetState(bool isDone, bool isMoving, bool inOutside, bool isInScrewPort, bool isActive)
     {
