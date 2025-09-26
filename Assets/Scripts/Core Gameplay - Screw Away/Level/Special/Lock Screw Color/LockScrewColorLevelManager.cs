@@ -9,13 +9,12 @@ using static GameEnum;
 
 namespace WoodCubeOut
 {
-    public class LockScrewColorLevelManager : Singleton<LockScrewColorLevelManager>
+    public class LockScrewColorLevelManager : BaseSpecialLevelManager
     {
         [SerializeField] private GameFaction[] _currentLockedFaction;
         public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
 
         private BaseScrew[] _screws;
-        private bool _isFirstTime;
         private int _requiredScrewToUnlock;
         private int _screwLeftToUnlock;
         private Coroutine _delayedLockNextScrew;
@@ -29,7 +28,7 @@ namespace WoodCubeOut
         [SerializeField] private Image tickIcon;
 
         #region Life Cycle
-        protected override void MoreActionOnAwake()
+        protected override void Awake()
         {
             LevelLoader.startLevelEvent += OnLevelLoaded;
             GameStateLose.loseLevelEvent += OnLevelLost;
@@ -154,7 +153,7 @@ namespace WoodCubeOut
             // LockSingleColor();
         }
 
-        private void OnLevelLost()
+        protected override void OnLevelLost()
         {
             if (_delayedLockNextScrew != null)
             {
@@ -162,14 +161,14 @@ namespace WoodCubeOut
             }
         }
 
-        private void OnScrewsSet(BaseScrew[] screws)
+        protected override void OnScrewsSet(BaseScrew[] screws)
         {
             _screws = screws;
 
             StartCoroutine(DelayedLockNextScrew());
         }
 
-        protected virtual void OnScrewLoosed()
+        protected override void OnScrewLoosed()
         {
             _screwLeftToUnlock--;
 

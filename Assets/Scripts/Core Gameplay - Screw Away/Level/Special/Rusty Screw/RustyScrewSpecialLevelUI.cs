@@ -105,7 +105,7 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
             tempRustyScrew.sprite = rustyScrew.sprite;
 
             rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
-            rustyScrew.sprite = rustyProgressSprites[rustyClearingLevel];
+            rustyScrew.sprite = rustyProgressSprites[rustyClearingLevel - 1];
 
             Tween.Alpha(rustyScrew, 1, duration: 0.3f);
             Tween.Alpha(tempRustyScrew, 0, duration: 0.3f)

@@ -1,11 +1,12 @@
 using UnityEngine;
+using static GameEnum;
 
-public class BaseSpecialLevelManager : Singleton<BaseSpecialLevelManager>
+public class BaseSpecialLevelManager : MonoBehaviour
 {
     protected bool _isFirstTime;
 
     #region Life Cycle
-    protected override void MoreActionOnAwake()
+    protected virtual void Awake()
     {
         GameStateLose.loseLevelEvent += OnLevelLost;
         ScrewManager.setScrewsEvent += OnScrewsSet;
@@ -25,6 +26,11 @@ public class BaseSpecialLevelManager : Singleton<BaseSpecialLevelManager>
     public virtual void Run()
     {
 
+    }
+
+    public bool IsFactionLocked(GameFaction faction)
+    {
+        return false;
     }
 
     protected virtual void OnLevelLost()

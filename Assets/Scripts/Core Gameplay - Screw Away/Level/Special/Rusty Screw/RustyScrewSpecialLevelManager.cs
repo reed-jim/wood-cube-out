@@ -24,7 +24,6 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
 
     private BaseScrew[] _screws;
-    private int _requiredScrewToUnlock;
     private Coroutine _delayedLockNextScrew;
 
     private int _rustyClearingLevel;
@@ -32,9 +31,9 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     public static event Action showUI;
     public static event Action<RustyScrewLevelActionUI, object[]> updateUI;
 
-    protected override void MoreActionOnAwake()
+    protected override void Awake()
     {
-        base.MoreActionOnAwake();
+        base.Awake();
 
         updateUI?.Invoke(RustyScrewLevelActionUI.Setup, null);
     }
@@ -86,7 +85,7 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
         _currentLockedFaction[0] = targetScrew.Faction;
 
-        _requiredScrewToUnlock = 3;
+        _rustyClearingLevel = 3;
     }
 
     protected override void OnLevelLost()
