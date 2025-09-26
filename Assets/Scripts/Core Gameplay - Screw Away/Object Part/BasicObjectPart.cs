@@ -93,9 +93,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             attachedScrews[i] = transform.GetChild(i).GetComponent<BaseScrew>();
         }
 
-
-
-
         partRigidbody.isKinematic = true;
 
         if (!meshCollider.convex)
@@ -152,6 +149,8 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         _boundSize = GetComponent<MeshRenderer>().bounds.size;
 
         AutoAssignPhysicsMaterial();
+
+        MoreLogicOnAwake();
     }
 
     void OnDestroy()
@@ -162,6 +161,18 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         CommonUtil.StopAllTweens(_tweens);
         CommonUtil.StopAllSequences(_sequences);
+
+        MoreLogicOnDestroy();
+    }
+
+    protected virtual void MoreLogicOnAwake()
+    {
+
+    }
+
+    protected virtual void MoreLogicOnDestroy()
+    {
+
     }
     #endregion
 

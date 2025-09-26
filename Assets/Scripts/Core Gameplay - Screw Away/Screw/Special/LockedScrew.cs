@@ -5,7 +5,7 @@ public class LockedScrew : BasicScrew
 {
     protected override bool IsValidToLoose()
     {
-        if (LockScrewColorLevelManager.Ins.IsFactionLocked(Faction))
+        if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
         {
             return false;
         }

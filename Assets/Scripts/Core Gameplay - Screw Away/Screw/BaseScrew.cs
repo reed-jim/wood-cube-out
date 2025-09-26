@@ -392,10 +392,22 @@ public class BaseScrew : MonoBehaviour, IScrew
                 // Avoid screw left under screw holes area
                 transform.localPosition = transform.localPosition.ChangeZ(preFinalLocalPosition.z);
 
+                Vector3 currentScale = transform.localScale;
+
                 _tweens.Add(
                     Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot),
                     duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine));
-                _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine));
+                _tweens.Add(Tween.Custom(0, 1, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine, onValueChange: newVal =>
+                {
+                    if (newVal < 0.5f)
+                    {
+                        transform.localScale = currentScale + (newVal / 0.5f) * (1.3f * scaleOnScrewBox * Vector3.one - currentScale);
+                    }
+                    else
+                    {
+                        transform.localScale = (1.3f - (2 * (newVal - 0.5f) * 0.3f)) * scaleOnScrewBox * Vector3.one;
+                    }
+                }));
                 _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
                 .OnComplete(() =>
                 {
@@ -419,7 +431,7 @@ public class BaseScrew : MonoBehaviour, IScrew
                             transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
                             duration: durationTightenScrewPort / 2, ease: Ease.Linear
                         ));
- 
+
                         _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.InOutSine)
                             .OnComplete(() =>
                             {
@@ -435,7 +447,6 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                                 InvokeScrewLoosenedEvent();
                                 screwMovedCompletedEvent?.Invoke(this);
-
                                 onCompleteAction?.Invoke();
 
                                 GamePersistentVariable.isSoundTightenScrewPlaying = false;
@@ -532,7 +543,7 @@ public class BaseScrew : MonoBehaviour, IScrew
         breakJointEvent?.Invoke(joint.gameObject.GetInstanceID());
     }
     #endregion
-    
+
     #region Invalid to unscrew
     private void ShakeInvalidScrew()
     {
