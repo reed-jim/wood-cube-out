@@ -62,4 +62,30 @@ namespace NamPhuThuy.GamePlay
         UpdateProgress = 4,
         UpdateTimeCount = 5,
     }
+    #endregion
+
+    public virtual void Run()
+    {
+
+    }
+
+    public virtual bool IsFactionLocked(GameFaction faction)
+    {
+        return false;
+    }
+
+    protected virtual void OnLevelLost()
+    {
+
+    }
+
+    protected virtual void OnScrewLoosed()
+    {
+
+    }
+
+    protected virtual void OnScrewsSet(BaseScrew[] screws)
+    {
+
+    }
 }

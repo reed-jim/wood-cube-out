@@ -87,6 +87,18 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         _currentLockedFaction[0] = targetScrew.Faction;
 
         _rustyClearingLevel = 3;
+
+        updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[2] { _rustyClearingLevel, _currentLockedFaction[0] });
+    }
+
+    public override bool IsFactionLocked(GameFaction faction)
+    {
+        if (_currentLockedFaction == null)
+        {
+            return false;
+        }
+
+        return faction == _currentLockedFaction[0];
     }
 
     protected override void OnLevelLost()
@@ -99,16 +111,19 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
     protected override void OnScrewLoosed()
     {
-        _rustyClearingLevel--;
-
-        if (_rustyClearingLevel == 0)
+        if (_rustyClearingLevel > 0)
         {
-            _currentLockedFaction = null;
+            _rustyClearingLevel--;
 
-            _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
+            updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[2] { _rustyClearingLevel, _currentLockedFaction[0] });
+
+            if (_rustyClearingLevel == 0)
+            {
+                _currentLockedFaction = null;
+
+                _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
+            }
         }
-
-        updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[1] { _rustyClearingLevel });
     }
 
     protected override void OnScrewsSet(BaseScrew[] screws)
