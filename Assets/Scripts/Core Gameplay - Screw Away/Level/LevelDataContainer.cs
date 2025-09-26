@@ -7,8 +7,7 @@ public class LevelDataContainer : ScriptableObject
 {
     [SerializeField] private int maxLevel;
     [SerializeField] private LevelData[] levelsData;
-    [SerializeField] private LevelDifficultyConfiguration[] templateLevelDifficultyConfiguration;
-    [SerializeField] private LevelDifficultyConfiguration fallbackLevelDifficultyConfiguration;
+   
 
     public int MaxLevel
     {
@@ -18,13 +17,6 @@ public class LevelDataContainer : ScriptableObject
     public LevelData[] LevelsData
     {
         get => levelsData;
-    }
-
-    public LevelDifficultyConfiguration GetLevelDifficultyConfiguration(int level)
-    {
-        int modulus = (level - 1) % 5;
-
-        return templateLevelDifficultyConfiguration[modulus];
     }
 
     private void OnValidate()
@@ -38,7 +30,7 @@ public class LevelDataContainer : ScriptableObject
         {
             if (levelsData[i] != null)
             {
-                int expectedLevelId = i + 1; // Level IDs start from 1
+                int expectedLevelId = i; // Level IDs start from 1
             
                 if (levelsData[i].levelId != expectedLevelId)
                 {
