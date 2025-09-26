@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7260824165440150773}
   - component: {fileID: 4169666396488037308}
+  - component: {fileID: 3699900283622211894}
   - component: {fileID: 1423098518172789881}
   m_Layer: 5
   m_Name: Lock Screw Color
@@ -17,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7260824165440150773
 RectTransform:
   m_ObjectHideFlags: 0
@@ -49,6 +50,27 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 120384973050101311}
   m_CullTransparentMesh: 1
+--- !u!114 &3699900283622211894
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 120384973050101311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d52164f0ae1b9a141b7a41e855544809, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 7260824165440150773}
+  lockedGroup: {fileID: 1089497280852328375}
+  conditionTexts:
+  - {fileID: 2306830468552976119}
+  timeCountingText: {fileID: 2343439766603728039}
+  tickIcon: {fileID: 6887052583892756069}
+  levelMode: 1
+  lockedColorImages:
+  - {fileID: 819970553406691210}
 --- !u!114 &1423098518172789881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -428,8 +450,8 @@ GameObject:
   m_Component:
   - component: {fileID: 161609166251460602}
   - component: {fileID: 6769809122976733077}
-  - component: {fileID: 8593531000741360047}
   - component: {fileID: 7873842521134577292}
+  - component: {fileID: 8593531000741360047}
   m_Layer: 5
   m_Name: Rusty Screw UI
   m_TagString: Untagged
@@ -468,6 +490,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3570168507749934337}
   m_CullTransparentMesh: 1
+--- !u!114 &7873842521134577292
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3570168507749934337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9803f64df19ca349abb87e3ed524cc9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  container: {fileID: 161609166251460602}
+  lockedGroup: {fileID: 5099458211998152084}
+  conditionTexts:
+  - {fileID: 901100615131040311}
+  timeCountingText: {fileID: 8526933054482541537}
+  tickIcon: {fileID: 5622905124586096046}
+  levelMode: 5
+  rustyScrew: {fileID: 3666149867447864445}
+  tempRustyScrew: {fileID: 2787676108730510107}
+  rustyProgressSprites:
+  - {fileID: 21300000, guid: 46b82ff781d402242a735fc713a83953, type: 3}
+  - {fileID: 21300000, guid: 5f7a12b216fd647499ad409e8eee1f4b, type: 2}
+  - {fileID: 21300000, guid: d0965134ce5aee042845f9419b1aef47, type: 2}
+  tempScrewFaction: {fileID: 6504340153459809436}
 --- !u!114 &8593531000741360047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -498,31 +546,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7873842521134577292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3570168507749934337}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e9803f64df19ca349abb87e3ed524cc9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  container: {fileID: 161609166251460602}
-  lockedGroup: {fileID: 5099458211998152084}
-  conditionTexts:
-  - {fileID: 901100615131040311}
-  timeCountingText: {fileID: 8526933054482541537}
-  tickIcon: {fileID: 5622905124586096046}
-  tempScrewFaction: {fileID: 6504340153459809436}
-  rustyScrew: {fileID: 3666149867447864445}
-  tempRustyScrew: {fileID: 2787676108730510107}
-  rustyProgressSprites:
-  - {fileID: 21300000, guid: 46b82ff781d402242a735fc713a83953, type: 3}
-  - {fileID: 21300000, guid: 5f7a12b216fd647499ad409e8eee1f4b, type: 2}
-  - {fileID: 21300000, guid: d0965134ce5aee042845f9419b1aef47, type: 2}
 --- !u!1 &4305338486767310516
 GameObject:
   m_ObjectHideFlags: 0

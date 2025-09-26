@@ -16,7 +16,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7056606536814408292
 Transform:
   m_ObjectHideFlags: 0
@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93ab0e7bb935f254888401d200921b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentLockedFaction: 
+  levelMode: 5
 --- !u!1 &2633269052806759652
 GameObject:
   m_ObjectHideFlags: 0
@@ -112,7 +112,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1770564061959583793
 Transform:
   m_ObjectHideFlags: 0
@@ -140,15 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17988a5334a4a1a4c8754a42cf5582c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _currentLockedFaction: 
-  container: {fileID: 0}
-  lockedGroup: {fileID: 0}
-  lockedColorImages:
-  - {fileID: 0}
-  conditionTexts:
-  - {fileID: 0}
-  timeCountingText: {fileID: 0}
-  tickIcon: {fileID: 0}
+  levelMode: 1
 --- !u!1 &7843851281662342516
 GameObject:
   m_ObjectHideFlags: 0
@@ -164,7 +156,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8556133335382238428
 Transform:
   m_ObjectHideFlags: 0

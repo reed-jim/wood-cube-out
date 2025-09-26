@@ -6,39 +6,19 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
-public class RustyScrewSpecialLevelUI : MonoBehaviour
+public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 {
     [Header("UI")]
-    [SerializeField] private RectTransform container;
-    [SerializeField] private CanvasGroup lockedGroup;
-    [SerializeField] private TMP_Text[] conditionTexts;
-    [SerializeField] private TMP_Text timeCountingText;
-    [SerializeField] private Image tickIcon;
-    [SerializeField] private Image tempScrewFaction;
-
     [SerializeField] private Image rustyScrew;
     [SerializeField] private Image tempRustyScrew;
     [SerializeField] private Sprite[] rustyProgressSprites;
+    [SerializeField] private Image tempScrewFaction;
 
-    void Awake()
-    {
-        RustyScrewSpecialLevelManager.updateUI += UpdateUI;
-
-        container.gameObject.SetActive(false);
-        timeCountingText.gameObject.SetActive(false);
-        tickIcon.gameObject.SetActive(false);
-    }
-
-    void OnDestroy()
-    {
-        RustyScrewSpecialLevelManager.updateUI -= UpdateUI;
-    }
-
-    private void UpdateUI(SpecialLevelUIState action, object[] parameters)
+    protected override void UpdateUI(SpecialLevelUIState action, object[] parameters)
     {
         if (action == SpecialLevelUIState.Setup)
         {
-            Setup();
+            Setup((LevelMode)parameters[0]);
         }
         else if (action == SpecialLevelUIState.Showing)
         {
@@ -46,7 +26,7 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         }
         else if (action == SpecialLevelUIState.ReActive)
         {
-            MakeScrewRusty();
+            ReActive();
         }
         else if (action == SpecialLevelUIState.UpdateProgress)
         {
@@ -56,31 +36,6 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         {
             UpdateTimeCount((int)parameters[0]);
         }
-    }
-
-    private void Setup()
-    {
-        container.gameObject.SetActive(false);
-        timeCountingText.gameObject.SetActive(false);
-        tickIcon.gameObject.SetActive(false);
-    }
-
-    private void ShowUI()
-    {
-        SaferioTween.ScaleUpWithPunch(container, 1);
-    }
-
-    private void MakeScrewRusty()
-    {
-        foreach (var text in conditionTexts)
-        {
-            SaferioTween.ScaleUpWithPunch(text.transform, 1, delay: 0.3f);
-        }
-
-        SaferioTween.ScaleUpWithPunch(lockedGroup.transform, 1, delay: 0.3f);
-
-        SaferioTween.ScaleDownWithPunch(tickIcon.transform);
-        SaferioTween.ScaleDownWithPunch(timeCountingText.transform);
     }
 
     private void UpdateRustyLevel(SpecialLevelTaskRecord record)
@@ -149,10 +104,5 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
                 rustyScrew.gameObject.SetActive(false);
             });
         }
-    }
-
-    private void UpdateTimeCount(int remaningTime)
-    {
-        timeCountingText.text = $"Lock in {remaningTime}s";
     }
 }

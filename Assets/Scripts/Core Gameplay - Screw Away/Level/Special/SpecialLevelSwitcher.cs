@@ -25,7 +25,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
 
         if (currentLevelIndex.Value == 5)
         {
-            _currentSpecialLevelManager = specialLevelManagers[1];
+            _currentSpecialLevelManager = specialLevelManagers[0];
         }
         else if (currentLevelIndex.Value == 6)
         {
