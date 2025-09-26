@@ -2,12 +2,12 @@ namespace NamPhuThuy.GamePlay
 {
     public enum LevelMode
     {
-        NORMAL = 0,
-        LOCK_SCREW_COLOR = 1, 
-        LOCK_SCREW_BOX = 2,
-        BOMB_OBJECT_PART = 3,
-        MULTIPLE_LAYERS = 4,
-        LOCK_SCREW_RUSTY = 5,
-        PROTECTED_OBJECT_PART = 6
+        Normal = 0,
+        LockScrewColor = 1, 
+        LockScrewBox = 2,
+        BombObjectPart = 3,
+        MultipleLayers = 4,
+        LockScrewRusty = 5,
+        ProtectedObjectPart = 6
     }
 }

@@ -1,50 +1,65 @@
 using UnityEngine;
 using static GameEnum;
 
-public class BaseSpecialLevelManager : MonoBehaviour
+namespace NamPhuThuy.GamePlay
 {
-    protected bool _isFirstTime;
-
-    #region Life Cycle
-    protected virtual void Awake()
+    public class BaseSpecialLevelManager : MonoBehaviour
     {
-        GameStateLose.loseLevelEvent += OnLevelLost;
-        ScrewManager.setScrewsEvent += OnScrewsSet;
-        BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+        protected bool _isFirstTime;
 
-        _isFirstTime = true;
+        #region Life Cycle
+
+        protected virtual void Awake()
+        {
+            GameStateLose.loseLevelEvent += OnLevelLost;
+            ScrewManager.setScrewsEvent += OnScrewsSet;
+            BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+
+            _isFirstTime = true;
+        }
+
+        private void OnDestroy()
+        {
+            GameStateLose.loseLevelEvent -= OnLevelLost;
+            ScrewManager.setScrewsEvent -= OnScrewsSet;
+            BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
+        }
+
+        #endregion
+
+        public virtual void Run()
+        {
+
+        }
+
+        public bool IsFactionLocked(GameFaction faction)
+        {
+            return false;
+        }
+
+        protected virtual void OnLevelLost()
+        {
+
+        }
+
+        protected virtual void OnScrewLoosed()
+        {
+
+        }
+
+        protected virtual void OnScrewsSet(BaseScrew[] screws)
+        {
+
+        }
     }
 
-    private void OnDestroy()
+    public enum SpecialLevelUIState
     {
-        GameStateLose.loseLevelEvent -= OnLevelLost;
-        ScrewManager.setScrewsEvent -= OnScrewsSet;
-        BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
-    }
-    #endregion
-
-    public virtual void Run()
-    {
-
-    }
-
-    public bool IsFactionLocked(GameFaction faction)
-    {
-        return false;
-    }
-
-    protected virtual void OnLevelLost()
-    {
-
-    }
-
-    protected virtual void OnScrewLoosed()
-    {
-
-    }
-
-    protected virtual void OnScrewsSet(BaseScrew[] screws)
-    {
-
+        None = 0,
+        Setup = 1,
+        Showing = 2,
+        ReActive = 3,
+        UpdateProgress = 4,
+        UpdateTimeCount = 5,
     }
 }

@@ -8,7 +8,7 @@ using UnityEditor;
 namespace NamPhuThuy.GamePlay
 {
     
-    public class LockScrewBoxManager : Singleton<LockScrewBoxManager>
+    public class LockScrewBoxManager : BaseSpecialLevelManager
     {
         #region Private Serializable Fields
 
@@ -16,21 +16,12 @@ namespace NamPhuThuy.GamePlay
 
         #region Private Fields
 
+        private Coroutine _createNewTaskCo;
+
         #endregion
 
         #region MonoBehaviour Callbacks
 
-        protected override void MoreActionOnAwake()
-        {
-            LevelLoader.startLevelEvent += OnLevelLoaded;
-            BaseScrew.screwLoosenedEvent += OnScrewLoosed;
-        }
-
-        private void OnDestroy()
-        {
-            LevelLoader.startLevelEvent -= OnLevelLoaded;
-            BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
-        } 
 
         #endregion
 
@@ -41,6 +32,48 @@ namespace NamPhuThuy.GamePlay
             
         }
         
+        private void LockBox(int id)
+        {
+            
+        }
+
+        private IEnumerator IECreateNewTask()
+        {
+            yield return null;
+        }
+        #endregion
+
+        #region Override Methods
+
+        protected override void OnScrewLoosed()
+        {
+            DebugLogger.LogSimple();
+            
+            // CHeck task progress
+            // Update UI 
+            /*_screwLeftToUnlock--;
+
+            conditionTexts[0].text = $"{_screwLeftToUnlock}/{_requiredScrewToUnlock}";
+
+            if (_screwLeftToUnlock == 0)
+            {
+                foreach (var text in conditionTexts)
+                {
+                    SaferioTween.ScaleDownWithPunch(text.transform);
+                }
+
+                SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+
+                SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
+                SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
+
+                _currentLockedFaction = null;
+
+                if (_createNewTaskCo != null) StopCoroutine(_createNewTaskCo);
+                _createNewTaskCo = StartCoroutine(IECreateNewTask());
+            }*/
+        }
+
         #endregion
 
         #region Public Methods
@@ -52,11 +85,8 @@ namespace NamPhuThuy.GamePlay
         {
             LockBoxes();
         }
+
         
-        private void OnScrewLoosed()
-        {
-            throw new System.NotImplementedException();
-        }
 
         #endregion
 

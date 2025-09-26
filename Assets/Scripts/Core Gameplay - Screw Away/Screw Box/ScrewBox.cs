@@ -233,7 +233,7 @@ public class ScrewBox : MonoBehaviour
         }
     }
 
-    public void Lock()
+    public virtual void Lock()
     {
         DebugLogger.LogSimple();
         
@@ -242,7 +242,7 @@ public class ScrewBox : MonoBehaviour
         isLocked = true;
     }
 
-    public void Unlock()
+    public virtual void Unlock()
     {
         screwBoxSpriteRenderer.enabled = true;
 

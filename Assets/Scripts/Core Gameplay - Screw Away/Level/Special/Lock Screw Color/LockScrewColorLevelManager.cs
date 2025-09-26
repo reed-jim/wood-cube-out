@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Linq;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
