@@ -1,3 +1,4 @@
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public class ObjectPoolingEverythingInitializer : MonoBehaviour
@@ -31,6 +32,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject boxCompletedFxPrefab;
     [SerializeField] private GameObject supriseRewardFxPrefab;
     [SerializeField] private GameObject eventItem;
+    [SerializeField] private GameObject lockedScrewBox;
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
@@ -85,6 +87,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX, boxCompletedFxPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.SUPRISE_REWARD_FX, supriseRewardFxPrefab, 1);
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
+        RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

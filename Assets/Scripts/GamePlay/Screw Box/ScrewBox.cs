@@ -81,9 +81,10 @@ public class ScrewBox : MonoBehaviour
 
         _sequences = new List<Sequence>();
 
-        boxLid.gameObject.SetActive(false);
-
-        gameSetting.LoadAsync();
+        if (boxLid != null)
+        {
+            boxLid.gameObject.SetActive(false);
+        }
     }
 
     private void OnDestroy()
@@ -236,7 +237,7 @@ public class ScrewBox : MonoBehaviour
     public virtual void Lock()
     {
         DebugLogger.LogSimple();
-        
+
         screwBoxSpriteRenderer.enabled = false;
         screwBoxServiceLocator.screwBoxUI.Lock();
         isLocked = true;

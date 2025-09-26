@@ -1,18 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace NamPhuThuy.GamePlay
 {
-    
+
     public class LockScrewBoxManager : BaseSpecialLevelManager
     {
         #region Private Serializable Fields
 
-        [SerializeField] private List<ScrewBoxLocked> screwBoxes;
+        [SerializeField] private List<ScrewBox> screwBoxes;
 
         #endregion
 
@@ -22,14 +24,17 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
+        public static event Action<ScrewBox> requestLockedScrewBox;
+
         #region MonoBehaviour Callbacks
 
         protected override void Awake()
         {
             base.Awake();
+
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
         }
-        
+
         private void OnDestroy()
         {
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
@@ -38,24 +43,26 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Private Methods
-        
+
         private void OnScrewBoxSpawned(ScrewBox screwbox)
         {
-            
-            if (screwbox is ScrewBoxLocked)
+            screwBoxes.Add(screwbox);
+
+            if (screwBoxes.Count == 2)
             {
-                screwBoxes.Add((ScrewBoxLocked)screwbox);
+                LockBoxes(screwbox);
             }
         }
 
-        private void LockBoxes()
+        private void LockBoxes(ScrewBox refScrewBox)
         {
-            
+            requestLockedScrewBox?.Invoke(refScrewBox);
+            // ScrewBoxLocked screwBoxLocked = CommonUtil.ReplaceAndCopy<ScrewBox, ScrewBoxLocked>(screwBoxes[1].gameObject);
         }
-        
+
         private void LockBox(int id)
         {
-            
+
         }
 
         private IEnumerator IECreateNewTask()
@@ -77,7 +84,7 @@ namespace NamPhuThuy.GamePlay
 
             foreach (var screwBox in screwBoxes)
             {
-                screwBox.OnScrewLoosed(screw);
+                // screwBox.OnScrewLoosed(screw);
             }
         }
 
@@ -85,18 +92,16 @@ namespace NamPhuThuy.GamePlay
 
         #region Public Methods
 
-        
-        
+
+
         #endregion
 
         #region Event Methods
 
         private void OnLevelLoaded()
         {
-            LockBoxes();
-        }
 
-        
+        }
 
         #endregion
 
@@ -104,25 +109,25 @@ namespace NamPhuThuy.GamePlay
 
         public void ResetValues()
         {
-            
+
         }
 
         #endregion
     }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     [CustomEditor(typeof(LockScrewBoxManager))]
     [CanEditMultipleObjects]
     public class LockScrewBoxManagerEditor : Editor
     {
         private LockScrewBoxManager script;
         private Texture2D frogIcon;
-        
+
         private void OnEnable()
         {
             frogIcon = Resources.Load<Texture2D>("frog"); // no extension needed
         }
-        
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -144,5 +149,5 @@ namespace NamPhuThuy.GamePlay
             GUILayout.EndHorizontal();
         }
     }
-    #endif
+#endif
 }

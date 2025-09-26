@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -80,6 +81,7 @@ public class ScrewBoxManager : MonoBehaviour
         BasicObjectPart.loosenScrewOnObjectBrokenEvent += LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
+        LockScrewBoxManager.requestLockedScrewBox += SpawnLockedScrewBox;
 
         _tweens = new List<Tween>();
     }
@@ -101,6 +103,7 @@ public class ScrewBoxManager : MonoBehaviour
         BasicObjectPart.loosenScrewOnObjectBrokenEvent -= LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
         BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
+        LockScrewBoxManager.requestLockedScrewBox -= SpawnLockedScrewBox;
 
         CommonUtil.StopAllTweens(_tweens);
 
@@ -112,21 +115,21 @@ public class ScrewBoxManager : MonoBehaviour
     {
         DebugLogger.LogSimple();
         if (screwBoxs == null) return;
-        
+
         for (int i = 0; i < screwBoxs.Length; i++)
         {
             if (screwBoxs[i] == null) continue;
             for (int j = 0; j < screwBoxs[i].ScrewBoxSlots.Length; j++)
             {
                 if (screwBoxs[i].ScrewBoxSlots[j].Screw == null) continue;
-                
+
                 screwBoxs[i].ScrewBoxSlots[j].IsFilled = false;
                 Destroy(screwBoxs[i].ScrewBoxSlots[j].Screw.gameObject);
             }
 
             ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
         }
-        
+
         /*
          if (screwBoxs != null)
         {
@@ -489,8 +492,8 @@ public class ScrewBoxManager : MonoBehaviour
                 break;
             }
         }
-        
-        
+
+
 
         if (!isFound)
         {
@@ -634,6 +637,26 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
         }
+    }
+    #endregion
+
+    #region SPECIAL LEVEL
+    private void SpawnLockedScrewBox(ScrewBox refScrewBox)
+    {
+        ScrewBoxLocked lockedScrewBox = ObjectPoolingEverything.GetFromPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED);
+
+        refScrewBox.gameObject.SetActive(false);
+        lockedScrewBox.gameObject.SetActive(true);
+
+        lockedScrewBox.transform.SetParent(refScrewBox.transform.parent);
+
+        lockedScrewBox.transform.position = refScrewBox.transform.position;
+
+        int index = screwBoxs
+            .Select((value, idx) => new { value, idx })
+            .First(item => item.value == refScrewBox).idx;
+
+        screwBoxs[index] = lockedScrewBox;
     }
     #endregion
 

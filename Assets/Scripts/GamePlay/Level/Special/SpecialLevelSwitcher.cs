@@ -23,14 +23,16 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
             specialLevelManagers[i].gameObject.SetActive(false);
         }
 
-        if (currentLevelIndex.Value == 5)
-        {
-            _currentSpecialLevelManager = specialLevelManagers[0];
-        }
-        else if (currentLevelIndex.Value == 6)
-        {
-            _currentSpecialLevelManager = specialLevelManagers[1];
-        }
+        // if (currentLevelIndex.Value == 5)
+        // {
+        //     _currentSpecialLevelManager = specialLevelManagers[0];
+        // }
+        // else if (currentLevelIndex.Value == 6)
+        // {
+        //     _currentSpecialLevelManager = specialLevelManagers[1];
+        // }
+
+        _currentSpecialLevelManager = specialLevelManagers[1];
 
         if (_currentSpecialLevelManager != null)
         {
