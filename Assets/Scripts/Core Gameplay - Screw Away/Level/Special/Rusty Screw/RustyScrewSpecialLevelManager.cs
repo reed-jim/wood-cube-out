@@ -10,33 +10,20 @@ using UnityEngine.UI;
 using WoodCubeOut;
 using static GameEnum;
 
-public enum RustyScrewLevelActionUI
-{
-    Setup,
-    Showing,
-    MakeScrewRusty,
-    UpdateRustyLevel,
-    UpdateTimeCount
-}
-
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
-    [SerializeField] private GameFaction[] _currentLockedFaction;
-    public GameFaction[] CurrentLockedFaction => _currentLockedFaction;
-
     private BaseScrew[] _screws;
     private Coroutine _delayedLockNextScrew;
 
-    private int _rustyClearingLevel;
+    private SpecialLevelTaskRecord _specialLevelTaskRecord;
 
-    public static event Action showUI;
-    public static event Action<RustyScrewLevelActionUI, object[]> updateUI;
+    public static event Action<SpecialLevelUIState, object[]> updateUI;
 
     protected override void Awake()
     {
         base.Awake();
 
-        updateUI?.Invoke(RustyScrewLevelActionUI.Setup, null);
+        updateUI?.Invoke(SpecialLevelUIState.Setup, null);
     }
 
     protected virtual IEnumerator DelayedLockNextScrew()
@@ -49,7 +36,7 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         {
             yield return new WaitForSeconds(3);
 
-            updateUI?.Invoke(RustyScrewLevelActionUI.Showing, null);
+            updateUI?.Invoke(SpecialLevelUIState.Showing, null);
 
             LockSingleColor();
 
@@ -62,20 +49,18 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         {
             remaningTime--;
 
-            updateUI?.Invoke(RustyScrewLevelActionUI.UpdateTimeCount, new object[] { remaningTime });
+            updateUI?.Invoke(SpecialLevelUIState.UpdateTimeCount, new object[] { remaningTime });
 
             yield return waitForSeconds;
         }
 
-        updateUI?.Invoke(RustyScrewLevelActionUI.MakeScrewRusty, null);
+        updateUI?.Invoke(SpecialLevelUIState.ReActive, null);
 
         LockSingleColor();
     }
 
     private void LockSingleColor()
     {
-        _currentLockedFaction = new GameFaction[1];
-
         BaseScrew[] validScrews = _screws.Where(item => !item.IsDone && !item.IsInScrewPort).ToArray();
         BaseScrew targetScrew = CommonUtil.GetRandomValueFromArray(validScrews);
 
@@ -84,21 +69,22 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
             return;
         }
 
-        _currentLockedFaction[0] = targetScrew.Faction;
+        _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
 
-        _rustyClearingLevel = 3;
+        _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
 
-        updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[2] { _rustyClearingLevel, _currentLockedFaction[0] });
+        updateUI?.Invoke(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
     }
 
     public override bool IsFactionLocked(GameFaction faction)
     {
-        if (_currentLockedFaction == null)
+        if (_specialLevelTaskRecord == null)
         {
             return false;
         }
 
-        return faction == _currentLockedFaction[0];
+        return _specialLevelTaskRecord.requiredComponents
+                    .Any(item => item.componentType == GameComponentType.Screw && item.faction == faction);
     }
 
     protected override void OnLevelLost()
@@ -111,15 +97,23 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
     protected override void OnScrewLoosed()
     {
-        if (_rustyClearingLevel > 0)
+        if (_specialLevelTaskRecord == null)
         {
-            _rustyClearingLevel--;
+            return;
+        }
 
-            updateUI?.Invoke(RustyScrewLevelActionUI.UpdateRustyLevel, new object[2] { _rustyClearingLevel, _currentLockedFaction[0] });
+        if (_specialLevelTaskRecord.taskType == SpecialLevelTaskType.ScrewComplete)
+        {
+            SpecialLevelTaskComponentAmount item =
+                _specialLevelTaskRecord.requiredComponents.First(item => item.componentType == GameComponentType.Screw);
 
-            if (_rustyClearingLevel == 0)
+            item.remainingAmount--;
+
+            updateUI?.Invoke(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
+
+            if (_specialLevelTaskRecord.IsTaskCompleted())
             {
-                _currentLockedFaction = null;
+                _specialLevelTaskRecord = null;
 
                 _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
             }

@@ -52,14 +52,4 @@ namespace NamPhuThuy.GamePlay
 
         }
     }
-
-    public enum SpecialLevelUIState
-    {
-        None = 0,
-        Setup = 1,
-        Showing = 2,
-        ReActive = 3,
-        UpdateProgress = 4,
-        UpdateTimeCount = 5,
-    }
 }

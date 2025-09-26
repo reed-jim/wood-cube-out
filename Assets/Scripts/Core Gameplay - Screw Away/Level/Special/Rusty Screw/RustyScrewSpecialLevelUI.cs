@@ -1,3 +1,4 @@
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -33,25 +34,25 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         RustyScrewSpecialLevelManager.updateUI -= UpdateUI;
     }
 
-    private void UpdateUI(RustyScrewLevelActionUI action, object[] parameters)
+    private void UpdateUI(SpecialLevelUIState action, object[] parameters)
     {
-        if (action == RustyScrewLevelActionUI.Setup)
+        if (action == SpecialLevelUIState.Setup)
         {
             Setup();
         }
-        else if (action == RustyScrewLevelActionUI.Showing)
+        else if (action == SpecialLevelUIState.Showing)
         {
             ShowUI();
         }
-        else if (action == RustyScrewLevelActionUI.MakeScrewRusty)
+        else if (action == SpecialLevelUIState.ReActive)
         {
             MakeScrewRusty();
         }
-        else if (action == RustyScrewLevelActionUI.UpdateRustyLevel)
+        else if (action == SpecialLevelUIState.UpdateProgress)
         {
-            UpdateRustyLevel((int)parameters[0], (GameFaction)parameters[1]);
+            UpdateRustyLevel((SpecialLevelTaskRecord)parameters[0]);
         }
-        else if (action == RustyScrewLevelActionUI.UpdateTimeCount)
+        else if (action == SpecialLevelUIState.UpdateTimeCount)
         {
             UpdateTimeCount((int)parameters[0]);
         }
@@ -82,11 +83,22 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         SaferioTween.ScaleDownWithPunch(timeCountingText.transform);
     }
 
-    private void UpdateRustyLevel(int rustyClearingLevel, GameFaction faction)
+    private void UpdateRustyLevel(SpecialLevelTaskRecord record)
     {
-        conditionTexts[0].text = $"{rustyClearingLevel}/{3}";
+        int totalRemainingAmount = 0;
+        int totalAmount = 0;
 
-        tempScrewFaction.color = FactionUtility.GetColorForFaction(faction);
+        for (int i = 0; i < record.requiredComponents.Count; i++)
+        {
+            SpecialLevelTaskComponentAmount item = record.requiredComponents[i];
+
+            conditionTexts[i].text = $"{item.remainingAmount}/{item.amount}";
+
+            totalRemainingAmount += item.remainingAmount;
+            totalAmount += item.amount;
+        }
+
+        tempScrewFaction.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
 
         if (!rustyScrew.gameObject.activeInHierarchy)
         {
@@ -99,14 +111,14 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         }
 
         // Rusty
-        if (rustyClearingLevel > 0)
+        if (totalRemainingAmount > 0)
         {
             tempRustyScrew.gameObject.SetActive(true);
 
             tempRustyScrew.sprite = rustyScrew.sprite;
 
             rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
-            rustyScrew.sprite = rustyProgressSprites[rustyClearingLevel - 1];
+            rustyScrew.sprite = rustyProgressSprites[totalRemainingAmount - 1];
 
             Tween.Alpha(rustyScrew, 1, duration: 0.3f);
             Tween.Alpha(tempRustyScrew, 0, duration: 0.3f)
