@@ -3,6 +3,7 @@ using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class RustyScrewSpecialLevelUI : MonoBehaviour
 {
@@ -12,6 +13,7 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
     [SerializeField] private TMP_Text[] conditionTexts;
     [SerializeField] private TMP_Text timeCountingText;
     [SerializeField] private Image tickIcon;
+    [SerializeField] private Image tempScrewFaction;
 
     [SerializeField] private Image rustyScrew;
     [SerializeField] private Image tempRustyScrew;
@@ -47,7 +49,7 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         }
         else if (action == RustyScrewLevelActionUI.UpdateRustyLevel)
         {
-            UpdateRustyLevel((int)parameters[0]);
+            UpdateRustyLevel((int)parameters[0], (GameFaction)parameters[1]);
         }
         else if (action == RustyScrewLevelActionUI.UpdateTimeCount)
         {
@@ -80,25 +82,24 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         SaferioTween.ScaleDownWithPunch(timeCountingText.transform);
     }
 
-    private void UpdateRustyLevel(int rustyClearingLevel)
+    private void UpdateRustyLevel(int rustyClearingLevel, GameFaction faction)
     {
         conditionTexts[0].text = $"{rustyClearingLevel}/{3}";
 
-        if (rustyClearingLevel == 0)
+        tempScrewFaction.color = FactionUtility.GetColorForFaction(faction);
+
+        if (!rustyScrew.gameObject.activeInHierarchy)
         {
-            foreach (var text in conditionTexts)
-            {
-                SaferioTween.ScaleDownWithPunch(text.transform);
-            }
+            rustyScrew.gameObject.SetActive(true);
+            tempRustyScrew.gameObject.SetActive(false);
 
-            SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+            rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
 
-            SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
-            SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
+            Tween.Alpha(rustyScrew, 1, duration: 0.3f);
         }
 
         // Rusty
-        if (rustyClearingLevel < rustyProgressSprites.Length)
+        if (rustyClearingLevel > 0)
         {
             tempRustyScrew.gameObject.SetActive(true);
 
@@ -116,6 +117,18 @@ public class RustyScrewSpecialLevelUI : MonoBehaviour
         }
         else
         {
+            foreach (var text in conditionTexts)
+            {
+                SaferioTween.ScaleDownWithPunch(text.transform);
+            }
+
+            SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+
+            SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
+            SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
+
+
+
             tempRustyScrew.gameObject.SetActive(false);
 
             Tween.Alpha(rustyScrew, 0, duration: 0.3f)

@@ -28,7 +28,7 @@ public class BaseSpecialLevelManager : MonoBehaviour
 
     }
 
-    public bool IsFactionLocked(GameFaction faction)
+    public virtual bool IsFactionLocked(GameFaction faction)
     {
         return false;
     }
