@@ -1,6 +1,12 @@
 using UnityEngine;
 using static GameEnum;
 
+public enum ScrewCondition
+{
+    Normal,
+    Rusty
+}
+
 public class ScrewMaterialPropertyBlock : MonoBehaviour
 {
     [SerializeField] private MeshRenderer meshRenderer;
@@ -12,6 +18,8 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
     [SerializeField] private string secondaryColorReference;
     [SerializeField] private string outlineWidthReference;
     [SerializeField] private float secondaryColorMultiplier;
+
+    [SerializeField] private Texture[] screwConditionTextures;
 
     #region PRIVATE FIELD
     [SerializeField] private Renderer _renderer;
@@ -47,11 +55,11 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
 
     public void SetColor(Color color)
     {
-        meshRenderer.material = materials[Random.Range(0, materials.Length)];
+        // meshRenderer.material = materials[Random.Range(0, materials.Length)];
 
-        return;
+        // return;
 
-        Init();
+        // Init();
 
         _propertyBlock.SetColor(colorReference, color);
         _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
@@ -63,6 +71,35 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
     public void SetOutlineWidth(float value)
     {
         _propertyBlock.SetFloat(outlineWidthReference, value);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    public void SetScrewVisual()
+    {
+
+    }
+
+    public void SetScrewCondition(ScrewCondition condition)
+    {
+        _propertyBlock.SetTexture("_MainTexture", screwConditionTextures[(int)condition]);
+
+        if (condition == ScrewCondition.Normal)
+        {
+            SetFloat("_ColorThreshold", 0.4f);
+        }
+        else if (condition == ScrewCondition.Rusty)
+        {
+            SetFloat("_ColorThreshold", 0);
+            SetColor(Color.white);
+        }
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    public void SetFloat(string name, float value)
+    {
+        _propertyBlock.SetFloat(name, value);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }

@@ -32,11 +32,6 @@ public class BaseSpecialLevelUI : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnEnable()
-    {
-        Debug.Log("SAFERIO LevelMode " + name + "/" + levelMode + "/" + this.levelMode);
-    }
-
     void OnDestroy()
     {
         BaseSpecialLevelManager.updateUI -= UpdateUI;

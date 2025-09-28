@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class LockedScrew : BasicScrew
 {
+    [SerializeField] private Texture rustyScrewTexture;
+
     protected override bool IsValidToLoose()
     {
         if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))

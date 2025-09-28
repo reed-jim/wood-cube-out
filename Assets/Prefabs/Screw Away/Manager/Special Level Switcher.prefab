@@ -94,8 +94,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   specialLevelManagers:
   - {fileID: 7131112291935146004}
+  - {fileID: 2064533733574369393}
   - {fileID: 2145302381934619659}
-  currentLevelIndex: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
 --- !u!1 &6355393710786346455
 GameObject:
@@ -151,8 +152,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8556133335382238428}
+  - component: {fileID: 2064533733574369393}
   m_Layer: 0
-  m_Name: Lock Screw Box
+  m_Name: Lock Screw Box Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -173,3 +175,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 6962531599927443505}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2064533733574369393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7843851281662342516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18b3e2eeea320b946a65dca08fd01b62, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levelMode: 0
+  screwBoxes: []

@@ -11,6 +11,8 @@ using static GameEnum;
 
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
+    public static event Action switchToRustyScrewsEvent;
+
     public override bool IsFactionLocked(GameFaction faction)
     {
         if (_specialLevelTaskRecord == null)
@@ -28,5 +30,12 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         {
             StopCoroutine(_delayedLockNextScrew);
         }
+    }
+
+    protected override void OnScrewsSet(BaseScrew[] screws)
+    {
+        base.OnScrewsSet(screws);
+
+        switchToRustyScrewsEvent?.Invoke();
     }
 }
