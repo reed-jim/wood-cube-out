@@ -56,6 +56,11 @@ namespace NamPhuThuy.GamePlay
 
         public void OnScrewLoosed(BaseScrew screw)
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             foreach (var componentAmount in record.requiredComponents)
             {
                 if (GameComponentType.Screw != componentAmount.componentType) continue;

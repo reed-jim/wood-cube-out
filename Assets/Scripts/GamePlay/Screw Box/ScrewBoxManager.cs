@@ -493,8 +493,6 @@ public class ScrewBoxManager : MonoBehaviour
             }
         }
 
-
-
         if (!isFound)
         {
             return;

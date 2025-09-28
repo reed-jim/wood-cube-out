@@ -977,7 +977,6 @@ GameObject:
   m_Component:
   - component: {fileID: 7271548223742898726}
   - component: {fileID: 430648356508768347}
-  - component: {fileID: 2009797219367672448}
   - component: {fileID: 2012672908965376577}
   - component: {fileID: 7057010371225313644}
   - component: {fileID: 7583259832403995967}
@@ -1039,32 +1038,6 @@ MonoBehaviour:
   record:
     taskType: 0
     requiredComponents: []
---- !u!114 &2009797219367672448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4363298669875526981}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 977d983bec5d7d848bcd047926d91145, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screwBoxSlots:
-  - {fileID: 6938204250329909056}
-  - {fileID: 6937586274093949475}
-  - {fileID: 6280078674185583469}
-  boxLid: {fileID: 2922332451361325574}
-  screwBoxSpriteRenderer: {fileID: 8200636108910568844}
-  screwBoxServiceLocator: {fileID: 2012672908965376577}
-  isLocked: 0
-  delayMoveInDuration: 0.4
-  closeBoxLidDuration: 0.2
-  scaleDownDuration: 0.3
-  delayMoveOutDuration: 0.05
-  moveOutDuration: 0.45
-  gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
 --- !u!114 &2012672908965376577
 MonoBehaviour:
   m_ObjectHideFlags: 0

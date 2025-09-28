@@ -66,12 +66,13 @@ namespace NamPhuThuy.GamePlay
 
             screwBox.IsInTransition = true;
 
+            unlockByAdsButton.gameObject.SetActive(false);
+
             Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
             {
                 Tween.PositionY(lockContainer, lockContainer.position.y + 10, duration: 0.3f).OnComplete(() =>
                 {
                     lockContainer.gameObject.SetActive(false);
-                    unlockByAdsButton.gameObject.SetActive(false);
 
                     screwBox.IsInTransition = false;
 
