@@ -7,22 +7,13 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 {
     [SerializeField] private Image[] lockedColorImages;
 
-    // void Awake()
-    // {
-    //     RustyScrewSpecialLevelManager.updateUI += UpdateUI;
-
-    //     container.gameObject.SetActive(false);
-    //     timeCountingText.gameObject.SetActive(false);
-    //     tickIcon.gameObject.SetActive(false);
-    // }
-
-    // void OnDestroy()
-    // {
-    //     RustyScrewSpecialLevelManager.updateUI -= UpdateUI;
-    // }
-
-    protected override void UpdateUI(SpecialLevelUIState action, object[] parameters)
+    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
     {
+        if (levelMode != this.levelMode)
+        {
+            return;
+        }
+
         if (action == SpecialLevelUIState.Setup)
         {
             Setup((LevelMode)parameters[0]);

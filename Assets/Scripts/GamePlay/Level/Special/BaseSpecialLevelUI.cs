@@ -23,7 +23,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
     [SerializeField] protected TMP_Text timeCountingText;
     [SerializeField] protected Image tickIcon;
 
-    [SerializeField] private LevelMode levelMode;
+    [SerializeField] protected LevelMode levelMode;
 
     void Awake()
     {
@@ -72,7 +72,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
         SaferioTween.ScaleDownWithPunch(timeCountingText.transform);
     }
 
-    protected virtual void UpdateUI(SpecialLevelUIState state, object[] parameters)
+    protected virtual void UpdateUI(LevelMode levelMode, SpecialLevelUIState state, object[] parameters)
     {
 
     }

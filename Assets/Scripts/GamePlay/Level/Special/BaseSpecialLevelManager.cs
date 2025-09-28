@@ -8,7 +8,7 @@ namespace NamPhuThuy.GamePlay
 {
     public class BaseSpecialLevelManager : MonoBehaviour
     {
-        [SerializeField] private LevelMode levelMode;
+        [SerializeField] public LevelMode levelMode;
 
         protected BaseScrew[] _screws;
         protected Coroutine _delayedLockNextScrew;
@@ -16,7 +16,7 @@ namespace NamPhuThuy.GamePlay
         protected SpecialLevelTaskRecord _specialLevelTaskRecord;
         protected bool _isFirstTime;
 
-        public static event Action<SpecialLevelUIState, object[]> updateUI;
+        public static event Action<LevelMode, SpecialLevelUIState, object[]> updateUI;
 
         #region Life Cycle
 
@@ -136,6 +136,8 @@ namespace NamPhuThuy.GamePlay
 
         protected virtual void OnScrewsSet(BaseScrew[] screws)
         {
+            Debug.Log("SAFERIO SwitchSpecialLevel " + name + "/" + gameObject.activeInHierarchy);
+
             if (!gameObject.activeInHierarchy)
             {
                 return;
@@ -150,7 +152,7 @@ namespace NamPhuThuy.GamePlay
         {
             if (gameObject.activeInHierarchy)
             {
-                updateUI?.Invoke(state, parameters);
+                updateUI?.Invoke(levelMode, state, parameters);
             }
         }
     }

@@ -14,8 +14,13 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     [SerializeField] private Sprite[] rustyProgressSprites;
     [SerializeField] private Image tempScrewFaction;
 
-    protected override void UpdateUI(SpecialLevelUIState action, object[] parameters)
+    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
     {
+        if (levelMode != this.levelMode)
+        {
+            return;
+        }
+
         if (action == SpecialLevelUIState.Setup)
         {
             Setup((LevelMode)parameters[0]);

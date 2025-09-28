@@ -8,6 +8,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     public BaseSpecialLevelManager CurrentSpecialLevelManager => _currentSpecialLevelManager;
 
     [SerializeField] private IntVariable currentLevelIndex;
+    [SerializeField] private LevelDataContainer levelDataContainer;
 
     protected override void MoreActionOnAwake()
     {
@@ -23,22 +24,20 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
             specialLevelManagers[i].gameObject.SetActive(false);
         }
 
-        // if (currentLevelIndex.Value == 5)
-        // {
-        //     _currentSpecialLevelManager = specialLevelManagers[0];
-        // }
-        // else if (currentLevelIndex.Value == 6)
-        // {
-        //     _currentSpecialLevelManager = specialLevelManagers[1];
-        // }
+        Debug.Log("SAFERIO SwitchSpecialLevel");
 
-        _currentSpecialLevelManager = specialLevelManagers[1];
-
-        if (_currentSpecialLevelManager != null)
+        foreach (var manager in specialLevelManagers)
         {
-            _currentSpecialLevelManager.gameObject.SetActive(true);
+            if (manager.levelMode == levelDataContainer.LevelsData[currentLevelIndex.Value].levelMode)
+            {
+                manager.gameObject.SetActive(true);
 
-            _currentSpecialLevelManager.Run();
+                manager.Run();
+
+                _currentSpecialLevelManager = manager;
+
+                break;
+            }
         }
     }
 }
