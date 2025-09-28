@@ -13,12 +13,12 @@ public class ScrewBox : MonoBehaviour
 {
     [SerializeField] private ScrewBoxSlot[] screwBoxSlots;
     [SerializeField] private Transform boxLid;
-    [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
+    [SerializeField] protected SpriteRenderer screwBoxSpriteRenderer;
 
-    [SerializeField] private ScrewBoxServiceLocator screwBoxServiceLocator;
+    [SerializeField] protected ScrewBoxServiceLocator screwBoxServiceLocator;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private bool isLocked;
+    [SerializeField] protected bool isLocked;
     [SerializeField] private float delayMoveInDuration;
     [SerializeField] private float closeBoxLidDuration;
     [SerializeField] private float scaleDownDuration;
@@ -73,7 +73,7 @@ public class ScrewBox : MonoBehaviour
         get => screwBoxServiceLocator;
     }
 
-    private void Awake()
+    protected virtual void Awake()
     {
         ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent += OnScrewBoxCompleted;
@@ -87,7 +87,7 @@ public class ScrewBox : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    protected virtual void OnDestroy()
     {
         ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent -= OnScrewBoxCompleted;

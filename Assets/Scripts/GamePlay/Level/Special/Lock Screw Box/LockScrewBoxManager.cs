@@ -24,7 +24,7 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
-        public static event Action<ScrewBox> requestLockedScrewBox;
+        public static event Action<ScrewBox, SpecialLevelTaskRecord> requestLockedScrewBox;
 
         #region MonoBehaviour Callbacks
 
@@ -56,7 +56,9 @@ namespace NamPhuThuy.GamePlay
 
         private void LockBoxes(ScrewBox refScrewBox)
         {
-            requestLockedScrewBox?.Invoke(refScrewBox);
+            SpecialLevelTaskRecord record = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
+
+            requestLockedScrewBox?.Invoke(refScrewBox, record);
             // ScrewBoxLocked screwBoxLocked = CommonUtil.ReplaceAndCopy<ScrewBox, ScrewBoxLocked>(screwBoxes[1].gameObject);
         }
 

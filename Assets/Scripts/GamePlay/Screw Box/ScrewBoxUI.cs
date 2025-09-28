@@ -11,7 +11,7 @@ public class ScrewBoxUI : MonoBehaviour
     [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
     [SerializeField] private RectTransform unlockByAdsButtonRT;
     [SerializeField] private RectTransform unlockBoxTextRT;
-    [SerializeField] private Button unlockByAdsButton;
+    [SerializeField] protected Button unlockByAdsButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxCameraObserver screwBoxCameraObserver;
@@ -88,7 +88,7 @@ public class ScrewBoxUI : MonoBehaviour
         unlockByAdsButton.gameObject.SetActive(true);
     }
 
-    public void Unlock()
+    public virtual void Unlock()
     {
         ScrewBox screwBox = GetComponent<ScrewBox>();
 

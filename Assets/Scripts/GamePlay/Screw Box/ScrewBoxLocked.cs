@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace NamPhuThuy.GamePlay
 {
-    
+
     public class ScrewBoxLocked : ScrewBox
     {
         #region Private Serializable
@@ -17,16 +17,42 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
-        #region Private Fields
+        protected override void Awake()
+        {
+            base.Awake();
 
+            BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+
+            _screwBoxLockUI = (ScrewBoxLockUI)screwBoxServiceLocator.screwBoxUI;
+        }
+
+        protected override void OnDestroy()
+        {
+            base.OnDestroy();
+
+            BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
+        }
+
+        #region Private Fields
+        private ScrewBoxLockUI _screwBoxLockUI;
         #endregion
 
-        public static event Action<SpecialLevelTaskRecord> updateScrewUIEvent;
 
         #region Private Methods
         #endregion
 
         #region Public Methods
+
+        public void Setup(SpecialLevelTaskRecord record)
+        {
+            _screwBoxLockUI = (ScrewBoxLockUI)screwBoxServiceLocator.screwBoxUI;
+
+            Lock();
+
+            this.record = record;
+
+            _screwBoxLockUI.UpdateUI(this.record);
+        }
 
         public void OnScrewLoosed(BaseScrew screw)
         {
@@ -34,25 +60,34 @@ namespace NamPhuThuy.GamePlay
             {
                 if (GameComponentType.Screw != componentAmount.componentType) continue;
                 if (screw.Faction != componentAmount.faction) continue;
-                
+
                 componentAmount.remainingAmount--;
+
+                if (componentAmount.remainingAmount <= 0)
+                {
+                    Unlock();
+                }
             }
-            
-            updateScrewUIEvent?.Invoke(record);
+
+            _screwBoxLockUI.UpdateUI(record);
         }
-        
+
         #endregion
 
         #region Override Methods
 
         public override void Lock()
         {
-            // base.Lock();
+            screwBoxSpriteRenderer.enabled = false;
+            _screwBoxLockUI.Lock();
+            isLocked = true;
         }
 
         public override void Unlock()
         {
-            // base.Unlock();
+            base.Unlock();
+
+            _screwBoxLockUI.Unlock();
         }
 
         #endregion
@@ -61,25 +96,25 @@ namespace NamPhuThuy.GamePlay
 
         public void ResetValues()
         {
-            
+
         }
 
         #endregion
     }
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     [CustomEditor(typeof(ScrewBoxLocked))]
     [CanEditMultipleObjects]
     public class ScrewBoxLockedEditor : Editor
     {
         private ScrewBoxLocked script;
         private Texture2D frogIcon;
-        
+
         private void OnEnable()
         {
             frogIcon = Resources.Load<Texture2D>("frog"); // no extension needed
         }
-        
+
         public override void OnInspectorGUI()
         {
             DrawDefaultInspector();
@@ -101,5 +136,5 @@ namespace NamPhuThuy.GamePlay
             GUILayout.EndHorizontal();
         }
     }
-    #endif
+#endif
 }

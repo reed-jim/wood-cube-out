@@ -641,12 +641,14 @@ public class ScrewBoxManager : MonoBehaviour
     #endregion
 
     #region SPECIAL LEVEL
-    private void SpawnLockedScrewBox(ScrewBox refScrewBox)
+    private void SpawnLockedScrewBox(ScrewBox refScrewBox, SpecialLevelTaskRecord record)
     {
         ScrewBoxLocked lockedScrewBox = ObjectPoolingEverything.GetFromPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED);
 
         refScrewBox.gameObject.SetActive(false);
         lockedScrewBox.gameObject.SetActive(true);
+
+        lockedScrewBox.Setup(record);
 
         lockedScrewBox.transform.SetParent(refScrewBox.transform.parent);
 
