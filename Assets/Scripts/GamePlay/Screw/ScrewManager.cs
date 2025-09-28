@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEditor;
 using UnityEngine;
@@ -55,6 +56,7 @@ public class ScrewManager : MonoBehaviour
     public static event Action<bool> enableBoosterEvent;
     public static event Action levelSetupCompletedEvent;
     public static event Action updateOutsideScrewNumberEvent;
+    public static event Action<BaseScrew[]> switchScrewsToSpecialTypeCompleteEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -77,6 +79,7 @@ public class ScrewManager : MonoBehaviour
         ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
+        LockScrewColorLevelManager.switchToLockedScrewsEvent += SwitchToLockedScrews;
 
         _tweens = new List<Tween>();
 
@@ -100,6 +103,7 @@ public class ScrewManager : MonoBehaviour
         ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
+        LockScrewColorLevelManager.switchToLockedScrewsEvent -= SwitchToLockedScrews;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -513,13 +517,13 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            DebugLogger.LogSimple(message:$"Trigger spawnScrewBoxEvent");
+            DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
             spawnScrewBoxEvent?.Invoke(faction);
         }
 
         _totalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
 
-        DebugLogger.LogSimple(message:$"Trigger spawnAdsScrewBoxesEvent");
+        DebugLogger.LogSimple(message: $"Trigger spawnAdsScrewBoxesEvent");
         spawnAdsScrewBoxesEvent?.Invoke();
     }
 
@@ -527,8 +531,8 @@ public class ScrewManager : MonoBehaviour
     {
         DebugLogger.LogSimple();
         await Task.Delay(2000);
-        DebugLogger.LogSimple(message:$"Continue after 2 secs");
-        
+        DebugLogger.LogSimple(message: $"Continue after 2 secs");
+
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
         int numberScrewBoxToSpawn = 0;
@@ -545,7 +549,7 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            DebugLogger.LogSimple(message:$"Trigger spawnScrewBoxEvent");
+            DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
             spawnScrewBoxEvent?.Invoke(faction);
         }
     }
@@ -565,7 +569,7 @@ public class ScrewManager : MonoBehaviour
             return;
         }
 
-        DebugLogger.LogSimple(message:$"Trigger spawnScrewBoxEvent");
+        DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
         spawnScrewBoxEvent?.Invoke(faction);
 
         _totalScrewBoxesSpawned++;
@@ -858,6 +862,23 @@ public class ScrewManager : MonoBehaviour
     {
         DebugLogger.LogSimple();
         obstaclesOfPieces.Remove(instanceId);
+    }
+    #endregion
+
+    #region SPECIAL LEVEL
+    private void SwitchScrewsToSpecialType<T>() where T : BaseScrew
+    {
+        for (int i = 0; i < _screws.Count; i++)
+        {
+            _screws[i] = CommonUtil.ReplaceAndCopy<BaseScrew, T>(_screws[i].gameObject);
+        }
+
+        switchScrewsToSpecialTypeCompleteEvent?.Invoke(_screws.ToArray());
+    }
+
+    private void SwitchToLockedScrews()
+    {
+        SwitchScrewsToSpecialType<LockedScrew>();
     }
     #endregion
 }

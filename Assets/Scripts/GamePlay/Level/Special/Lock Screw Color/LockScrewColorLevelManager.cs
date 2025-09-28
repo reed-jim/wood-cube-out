@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Linq;
 using PrimeTween;
@@ -11,6 +12,7 @@ namespace NamPhuThuy.GamePlay
 {
     public class LockScrewColorLevelManager : BaseSpecialLevelManager
     {
+        public static event Action switchToLockedScrewsEvent;
 
         #region Life Cycle
 
@@ -29,17 +31,12 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        // protected override void OnScrewsSet(BaseScrew[] screws)
-        // {
-        //     if (!gameObject.activeInHierarchy)
-        //     {
-        //         return;
-        //     }
+        protected override void OnScrewsSet(BaseScrew[] screws)
+        {
+            base.OnScrewsSet(screws);
 
-        //     _screws = screws;
-
-        //     _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
-        // }
+            switchToLockedScrewsEvent?.Invoke();
+        }
         #endregion
     }
 }

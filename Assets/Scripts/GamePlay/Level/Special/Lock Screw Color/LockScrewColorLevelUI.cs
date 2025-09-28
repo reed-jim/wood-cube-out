@@ -1,4 +1,5 @@
 using NamPhuThuy.GamePlay;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,7 +29,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         }
         else if (action == SpecialLevelUIState.UpdateProgress)
         {
-            UpdateUI((SpecialLevelTaskRecord)parameters[0]);
+            UpdateProgress((SpecialLevelTaskRecord)parameters[0]);
         }
         else if (action == SpecialLevelUIState.UpdateTimeCount)
         {
@@ -36,7 +37,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         }
     }
 
-    private void UpdateUI(SpecialLevelTaskRecord record)
+    private void UpdateProgress(SpecialLevelTaskRecord record)
     {
         int totalRemainingAmount = 0;
         int totalAmount = 0;
@@ -57,6 +58,19 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
             lockedColorImages[i].color = FactionUtility.GetColorForFaction(record.requiredComponents[i].faction);
             conditionTexts[i].text = $"{item.remainingAmount}/{item.amount}";
+        }
+
+        if (totalRemainingAmount <= 0)
+        {
+            foreach (var text in conditionTexts)
+            {
+                SaferioTween.ScaleDownWithPunch(text.transform);
+            }
+
+            SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+
+            SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
+            SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
         }
     }
 }

@@ -24,6 +24,7 @@ namespace NamPhuThuy.GamePlay
         {
             GameStateLose.loseLevelEvent += OnLevelLost;
             ScrewManager.setScrewsEvent += OnScrewsSet;
+            ScrewManager.switchScrewsToSpecialTypeCompleteEvent += OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent += OnScrewLoosed;
 
             _isFirstTime = true;
@@ -33,6 +34,7 @@ namespace NamPhuThuy.GamePlay
         {
             GameStateLose.loseLevelEvent -= OnLevelLost;
             ScrewManager.setScrewsEvent -= OnScrewsSet;
+            ScrewManager.switchScrewsToSpecialTypeCompleteEvent -= OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         }
 
@@ -136,8 +138,18 @@ namespace NamPhuThuy.GamePlay
 
         protected virtual void OnScrewsSet(BaseScrew[] screws)
         {
-            Debug.Log("SAFERIO SwitchSpecialLevel " + name + "/" + gameObject.activeInHierarchy);
+            // if (!gameObject.activeInHierarchy)
+            // {
+            //     return;
+            // }
 
+            // _screws = screws;
+
+            // StartCoroutine(DelayedLockNextScrew());
+        }
+
+        protected virtual void OnSwitchScrewsToSpecialTypeCompleted(BaseScrew[] screws)
+        {
             if (!gameObject.activeInHierarchy)
             {
                 return;
