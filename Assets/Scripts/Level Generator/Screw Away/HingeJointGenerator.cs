@@ -152,6 +152,10 @@ public class HingeJointGenerator : EditorWindow
             RevertOriginalModelColor();
         }
 
+        if (GUILayout.Button("GenerateChain"))
+        {
+            GenerateChain();
+        }
         // if (GUILayout.Button("Fine Tune Level"))
         // {
         //     FineTuneLevel();
@@ -2999,6 +3003,85 @@ public class HingeJointGenerator : EditorWindow
 
         return absoluteOne;
     }
+
+    private void GenerateChain()
+    {
+        string prefabPath = "Assets/Prefabs/Screw Away/Special Level/Chain Container.prefab";
+
+        GameObject chainContainerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+
+        Transform piece = Selection.activeTransform;
+
+        GameObject chainContainer = (GameObject)PrefabUtility.InstantiatePrefab(chainContainerPrefab, piece);
+
+        Vector3 center = FindCenterOfLargestFace(piece.gameObject);
+
+        chainContainer.transform.position = center;
+    }
+
+    private Vector3 FindCenterOfLargestFace(GameObject obj)
+    {
+        MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+        if (meshFilter == null)
+        {
+            Debug.LogError("Object does not have a MeshFilter component.");
+            return Vector3.zero;
+        }
+
+        Mesh mesh = meshFilter.sharedMesh;
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+
+        // Variables to track the largest face
+        float maxFaceArea = 0f;
+        Vector3 largestFaceCenter = Vector3.zero;
+
+        // Iterate through all faces of the mesh
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            // Get the vertices of the triangle
+            Vector3 v1 = vertices[triangles[i]];
+            Vector3 v2 = vertices[triangles[i + 1]];
+            Vector3 v3 = vertices[triangles[i + 2]];
+
+            // Calculate the lengths of the edges (hypotenuse candidates)
+            float edge1Length = (v2 - v1).magnitude;
+            float edge2Length = (v3 - v2).magnitude;
+            float edge3Length = (v1 - v3).magnitude;
+
+            // Identify the longest edge (hypotenuse)
+            float maxEdgeLength = Mathf.Max(edge1Length, edge2Length, edge3Length);
+            Vector3 midpoint = Vector3.zero;
+
+            if (maxEdgeLength == edge1Length)
+            {
+                midpoint = (v1 + v2) / 2f;
+            }
+            else if (maxEdgeLength == edge2Length)
+            {
+                midpoint = (v2 + v3) / 2f;
+            }
+            else
+            {
+                midpoint = (v1 + v3) / 2f;
+            }
+
+            // Calculate the area of the triangle (using cross product)
+            float area = Vector3.Cross(v2 - v1, v3 - v1).magnitude / 2f;
+
+            // Update largest face if this one is bigger
+            if (area > maxFaceArea)
+            {
+                maxFaceArea = area;
+                largestFaceCenter = midpoint; // Center of the hypotenuse
+            }
+        }
+
+        // Adjust the center for object space (to take into account the object's position, rotation, and scale)
+        largestFaceCenter = obj.transform.TransformPoint(largestFaceCenter);
+
+        return largestFaceCenter;
+    }
     #endregion
 
     #region GENERATE SCREW
@@ -3735,9 +3818,9 @@ public class HingeJointGenerator : EditorWindow
         toRemoveList.AddRange(screws);
 
         // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
-        
+
         screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.LOCKED_COLOR_SCREW_PREFAB_PATH);
-        DebugLogger.LogSimple(message:$"{screwPrefab.name}");
+        DebugLogger.LogSimple(message: $"{screwPrefab.name}");
 
         for (int i = 0; i < screws.Length; i++)
         {
