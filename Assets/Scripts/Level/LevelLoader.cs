@@ -61,6 +61,9 @@ public class LevelLoader : MonoBehaviour
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
+        
+        
+        
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;

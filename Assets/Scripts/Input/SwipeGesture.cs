@@ -97,7 +97,7 @@ public class SwipeGesture : MonoBehaviour
 
     private void EnableSwiping(bool isEnable)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _isDisabled = !isEnable;
     }
 

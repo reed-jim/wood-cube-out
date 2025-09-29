@@ -111,7 +111,7 @@ public class PinchGesture : MonoBehaviour
 
     private void OnLevelStarted()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _isDisabled = false;
 
         zoomSlider.value = 0f;
@@ -147,7 +147,7 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         maxZoom = orthographicSize;
         minZoom = 0.5f * orthographicSize;
 
@@ -159,7 +159,7 @@ public class PinchGesture : MonoBehaviour
 
     private void EnablePinching(bool isEnable)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _isDisabled = !isEnable;
     }
 }

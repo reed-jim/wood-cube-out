@@ -60,6 +60,13 @@ namespace NamPhuThuy.GamePlay
             progressText.text = $"{remaining}/{total}";
         }
 
+        public override void Lock()
+        {
+            base.Lock();
+            DebugLogger.LogSimple();
+            lockContainer.gameObject.SetActive(true);
+        }
+
         public override void Unlock()
         {
             ScrewBox screwBox = GetComponent<ScrewBox>();
