@@ -14,10 +14,11 @@ namespace NamPhuThuy.GamePlay
     {
         #region Private Serializable Fields
 
-        [SerializeField] private List<ScrewBox> screwBoxes;
+        [SerializeField] private List<ScrewBoxLocked> lockedScrewBoxes;
         [SerializeField] private int lockedBoxIndex = 1;
-        
-        
+        [SerializeField] private int screwBoxCount = 0;
+
+        [SerializeField] private SpecialLevelTaskRecord currentRecord;
         #endregion
 
         #region Private Fields
@@ -36,13 +37,16 @@ namespace NamPhuThuy.GamePlay
             
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
+            ScrewBoxManager.screwBoxLockSpawnedEvent += OnScewBoxLockSpawned;
             ReplayPopup.replayLevelEvent += OnReplayLevel;
+            
         }
 
         private void OnDestroy()
         {
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
+            ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;
             ReplayPopup.replayLevelEvent -= OnReplayLevel;
         }
 
@@ -56,9 +60,9 @@ namespace NamPhuThuy.GamePlay
 
         private void LockBoxes(ScrewBox refScrewBox)
         {
-            SpecialLevelTaskRecord record = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
+            currentRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
 
-            requestLockedScrewBox?.Invoke(refScrewBox, record);
+            requestLockedScrewBox?.Invoke(refScrewBox, currentRecord);
             // ScrewBoxLocked screwBoxLocked = CommonUtil.ReplaceAndCopy<ScrewBox, ScrewBoxLocked>(screwBoxes[1].gameObject);
         }
 
@@ -83,11 +87,6 @@ namespace NamPhuThuy.GamePlay
         protected override void OnScrewLoosed(BaseScrew screw)
         {
             DebugLogger.LogSimple();
-
-            foreach (var screwBox in screwBoxes)
-            {
-                // screwBox.OnScrewLoosed(screw);
-            }
         }
 
         #endregion
@@ -108,18 +107,31 @@ namespace NamPhuThuy.GamePlay
         private void OnReplayLevel()
         {
             DebugLogger.LogSimple();
-            LockBoxes(screwBoxes[lockedBoxIndex]);
+            // LockBoxes(screwBoxes[lockedBoxIndex]);
+            
+            foreach (ScrewBoxLocked screwBox in lockedScrewBoxes)
+            {
+                DebugLogger.LogSimple(message:$"Return to pool {screwBox.gameObject.name}");
+                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX_LOCKED, screwBox.gameObject);
+            }
+            lockedScrewBoxes.Clear();
+
+            screwBoxCount = 0;
+        }
+        
+        private void OnScewBoxLockSpawned(ScrewBoxLocked screwBoxLocked)
+        {
+            lockedScrewBoxes.Add(screwBoxLocked);
         }
 
         private void OnScrewBoxSpawned(ScrewBox screwbox)
         {
-            screwBoxes.Add(screwbox);
-
-            if (screwBoxes.Count == 2)
+            if (screwBoxCount == lockedBoxIndex)
             {
                 LockBoxes(screwbox);
-                
             }
+
+            screwBoxCount++;
         }
         #endregion
 

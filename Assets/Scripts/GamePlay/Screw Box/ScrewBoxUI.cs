@@ -25,7 +25,7 @@ public class ScrewBoxUI : MonoBehaviour
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
     #endregion
 
-    private void Awake()
+    protected virtual void Awake()
     {
         ScrewBoxCameraManager.setCameraEvent += OnCameraSet;
 

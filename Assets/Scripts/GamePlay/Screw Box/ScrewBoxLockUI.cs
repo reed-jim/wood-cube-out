@@ -20,6 +20,8 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private RectTransform lockContainer;
         [SerializeField] private Image tempFactionColor;
         [SerializeField] private TextMeshProUGUI progressText;
+
+        [SerializeField] private Vector3 initialPosition;
         #endregion
 
         #region Private Fields
@@ -27,6 +29,14 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region MonoBehaviour Callbacks
+        
+        
+        protected override void Awake()
+        {
+            base.Awake();
+            DebugLogger.LogSimple();
+            initialPosition = lockContainer.localPosition; // 
+        }
 
         #endregion
 
@@ -65,6 +75,7 @@ namespace NamPhuThuy.GamePlay
             base.Lock();
             DebugLogger.LogSimple();
             lockContainer.gameObject.SetActive(true);
+            Tween.LocalPositionY(lockContainer, initialPosition.y, duration: 0.3f);
         }
 
         public override void Unlock()
@@ -74,7 +85,7 @@ namespace NamPhuThuy.GamePlay
             screwBox.IsInTransition = true;
 
             unlockByAdsButton.gameObject.SetActive(false);
-
+            
             Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
             {
                 Tween.PositionY(lockContainer, lockContainer.position.y + 10, duration: 0.3f).OnComplete(() =>

@@ -46,6 +46,7 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingVisibilityEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingObstaclesEvent;
     public static event Action<ScrewBox> screwBoxSpawnedEvent;
+    public static event Action<ScrewBoxLocked> screwBoxLockSpawnedEvent;
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
@@ -636,6 +637,7 @@ public class ScrewBoxManager : MonoBehaviour
             .First(item => item.value == refScrewBox).idx;
 
         screwBoxs[index] = lockedScrewBox;
+        screwBoxLockSpawnedEvent?.Invoke(lockedScrewBox);
     }
     #endregion
 

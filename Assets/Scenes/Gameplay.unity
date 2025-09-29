@@ -1741,8 +1741,8 @@ RectTransform:
   - {fileID: 477194870}
   m_Father: {fileID: 1411237950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.03794643}
+  m_AnchorMax: {x: 1, y: 0.95089287}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -6583,6 +6583,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1851090306377199230}
   - {fileID: 1649438915}
   - {fileID: 1234861722}
   - {fileID: 1799837578}
@@ -9189,7 +9190,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 0}
+    m_TransformParent: {fileID: 1438289005}
     m_Modifications:
     - target: {fileID: 2633269052806759652, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
       propertyPath: m_Name
@@ -9213,15 +9214,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -9240,6 +9241,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+--- !u!4 &1851090306377199230 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+  m_PrefabInstance: {fileID: 1851090306377199229}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2183372076032801967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10321,4 +10327,3 @@ SceneRoots:
   - {fileID: 1689949966}
   - {fileID: 522993201}
   - {fileID: 231223261}
-  - {fileID: 1851090306377199229}

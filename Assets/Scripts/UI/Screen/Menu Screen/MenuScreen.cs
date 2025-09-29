@@ -138,8 +138,6 @@ public class MenuScreen : MonoBehaviour
         canvasSize.Load();
 
         // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
-
-        // PreventSpammingStartButton();
     }
 
     void OnEnable()
@@ -198,20 +196,6 @@ public class MenuScreen : MonoBehaviour
         _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
         {
             startGameButton.interactable = true;
-
-            // startGameButton.gameObject.SetActive(true);
-
-            // startGameButton.transform.localScale = Vector3.one;
-
-            // _tweens.Add(Tween.Scale(startGameButton.transform, 1.1f, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     _tweens.Add(Tween.Scale(startGameButton.transform, 1f, duration: 0.1f)
-            //     .OnComplete(() =>
-            //     {
-            //         startGameButton.interactable = true;
-            //     }));
-            // }));
         }));
     }
 
