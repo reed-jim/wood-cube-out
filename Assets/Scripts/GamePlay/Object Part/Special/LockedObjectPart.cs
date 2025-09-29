@@ -5,6 +5,10 @@ using UnityEngine;
 
 public class LockedObjectPart : BasicObjectPart
 {
+    [Header("Chain")]
+    [SerializeField] private GameObject[] chains;
+
+    [Header("UI")]
     [SerializeField] private RectTransform uiContainer;
     [SerializeField] private int requiredValueToUnlock;
 
