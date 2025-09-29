@@ -15,7 +15,9 @@ namespace NamPhuThuy.GamePlay
         #region Private Serializable Fields
 
         [SerializeField] private List<ScrewBox> screwBoxes;
-
+        [SerializeField] private int lockedBoxIndex = 1;
+        
+        
         #endregion
 
         #region Private Fields
@@ -31,28 +33,26 @@ namespace NamPhuThuy.GamePlay
         protected override void Awake()
         {
             base.Awake();
-
+            
+            DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
+            ReplayPopup.replayLevelEvent += OnReplayLevel;
         }
 
         private void OnDestroy()
         {
+            DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
+            ReplayPopup.replayLevelEvent -= OnReplayLevel;
         }
+
+        
 
         #endregion
 
         #region Private Methods
 
-        private void OnScrewBoxSpawned(ScrewBox screwbox)
-        {
-            screwBoxes.Add(screwbox);
-
-            if (screwBoxes.Count == 2)
-            {
-                LockBoxes(screwbox);
-            }
-        }
+       
 
         private void LockBoxes(ScrewBox refScrewBox)
         {
@@ -104,7 +104,23 @@ namespace NamPhuThuy.GamePlay
         {
 
         }
+        
+        private void OnReplayLevel()
+        {
+            DebugLogger.LogSimple();
+            LockBoxes(screwBoxes[lockedBoxIndex]);
+        }
 
+        private void OnScrewBoxSpawned(ScrewBox screwbox)
+        {
+            screwBoxes.Add(screwbox);
+
+            if (screwBoxes.Count == 2)
+            {
+                LockBoxes(screwbox);
+                
+            }
+        }
         #endregion
 
         #region Editor Methods

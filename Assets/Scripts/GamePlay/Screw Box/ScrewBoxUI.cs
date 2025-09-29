@@ -43,37 +43,17 @@ public class ScrewBoxUI : MonoBehaviour
 
     private async void SetupUI()
     {
-        // await Task.Delay(500);
-
-        // float orthoSize = _screwBoxCamera.orthographicSize;
-
-        // float screenHeightWorld = orthoSize * 2;
-        // float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
-
-        // float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
-
-        // UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * canvasSize.Value.x);
+        
     }
 
     private void OnCameraSet(Camera camera)
     {
-        // _screwBoxCamera = camera;
-
-        // float orthoSize = _screwBoxCamera.orthographicSize;
-
-        // float screenHeightWorld = orthoSize * 2;
-        // float screenWidthWorld = screenHeightWorld * _screwBoxCamera.aspect;
-
-        // float ratio = screwBoxSpriteRenderer.bounds.size.x / screenWidthWorld;
-
-        // UIUtil.SetSizeKeepRatioY(unlockByAdsButtonRT, ratio * GamePersistentVariable.canvasSize.x);
-        // UIUtil.SetSize(unlockBoxTextRT, 0.7f * unlockByAdsButtonRT.sizeDelta);
+        
     }
 
     public void SetUnlockByAdsButtonPosition()
     {
         unlockByAdsButtonRT.localPosition = Vector3.zero.ChangeZ(-4);
-        // unlockByAdsButtonRT.localPosition = _screwBoxCamera.WorldToScreenPoint(transform.position) - 0.5f * (Vector3)GamePersistentVariable.canvasSize;
     }
 
     private void ClickButtonUnlockByAds()

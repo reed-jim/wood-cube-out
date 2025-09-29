@@ -151,7 +151,7 @@ public class ScrewManager : MonoBehaviour
 
     private void AddScrew(BaseScrew screw)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_screws == null)
         {
             _screws = new List<BaseScrew>();
@@ -178,21 +178,6 @@ public class ScrewManager : MonoBehaviour
             _tweens.Add(Tween.Delay(0.1f).OnComplete(() =>
             {
                 obstaclesOfPieces = GamePersistentVariable.pieceDependencies;
-
-                // foreach (var item in obstaclesOfPieces)
-                // {
-                //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value.Count);
-
-                //     // for (int i = 0; i < item.Value.Count; i++)
-                //     // {
-                //     //     Debug.Log("SAFERIO DEPEND " + item.Key + " / " + item.Value[i].name);
-                //     // }
-                // }
-
-                // if (GamePersistentVariable.isFreshLevel)
-                // {
-                //     SpawnFirstScrewBoxes();
-                // }
             }));
         }
     }
@@ -256,15 +241,8 @@ public class ScrewManager : MonoBehaviour
         // Find the number of obstacles for each screw in each faction.
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i] == null)
-            {
-                continue;
-            }
-
-            if (_screws[i].IsDone || _screws[i].IsLocked)
-            {
-                continue;
-            }
+            if (_screws[i] == null) { continue; }
+            if (_screws[i].IsDone || _screws[i].IsLocked) { continue; }
 
             if (i > 0 && i % 16 == 0)
             {

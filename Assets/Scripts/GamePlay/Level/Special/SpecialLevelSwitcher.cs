@@ -1,3 +1,4 @@
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 
@@ -26,9 +27,13 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
 
         foreach (var manager in specialLevelManagers)
         {
+            
+            
             if (manager.levelMode == levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode)
             {
+                DebugLogger.LogSimple(message:$"Check {manager.levelMode} with {levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode}");
                 manager.gameObject.SetActive(true);
+                
 
                 manager.Run();
 

@@ -119,119 +119,101 @@ public class ScrewBox : MonoBehaviour
     private async void OnScrewBoxCompleted(int instanceId)
     {
         DebugLogger.LogSimple();
-        if (instanceId == gameObject.GetInstanceID())
-        {
-            await Task.Delay((int)(delayMoveInDuration * 300));
+        if (instanceId != gameObject.GetInstanceID()) return;
+        
+        await Task.Delay((int)(delayMoveInDuration * 300));
 
-            SoundManager.Instance.PlaySoundScrewBoxDone();
+        SoundManager.Instance.PlaySoundScrewBoxDone();
 
-            float initialPositionY = transform.localPosition.y;
-            float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
+        float initialPositionY = transform.localPosition.y;
+        float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
 
-            boxLid.gameObject.SetActive(true);
+        boxLid.gameObject.SetActive(true);
 
-            boxLid.localPosition = boxLid.localPosition.ChangeY(9);
+        boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
-            // float hidePositionY = transform.position.y + 8;
+        float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
 
-            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-            // {
-            //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
-            // }
+        _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
+            .OnComplete(() =>
+            {
+                shakeCameraEvent?.Invoke();
 
-            float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
-
-            _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
-                .OnComplete(() =>
+                if (GamePersistentVariable.IsVibrate)
                 {
-                    shakeCameraEvent?.Invoke();
+                    HapticFeedback.HeavyFeedback();
+                }
 
-                    if (GamePersistentVariable.IsVibrate)
+                // FX
+                if (_isPlayBoxCompleteFx)
+                {
+                    try
                     {
-                        HapticFeedback.HeavyFeedback();
-                    }
-
-                    // FX
-                    if (_isPlayBoxCompleteFx)
-                    {
-                        try
+                        ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+                        
+                        if (rippleFx != null)
                         {
-                            ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+                            Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
 
-                            if (rippleFx != null)
+                            ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                            rippleFxMain.startColor = factionColor;
+
+                            for (int i = 0; i < rippleFx.transform.childCount; i++)
                             {
-                                Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+                                ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
 
-                                ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+                                ParticleSystem.MainModule childFxMain = childFx.main;
 
-                                rippleFxMain.startColor = factionColor;
-
-                                for (int i = 0; i < rippleFx.transform.childCount; i++)
-                                {
-                                    ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
-
-                                    ParticleSystem.MainModule childFxMain = childFx.main;
-
-                                    childFxMain.startColor = factionColor;
-                                }
-
-                                rippleFx.gameObject.SetActive(true);
-                                rippleFx.transform.position = transform.position.ChangeZ(-9);
-
-                                // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-                                // {
-                                //     rippleFx.transform.localScale = 0.25f * Vector3.one;
-                                // }
-                                // else
-                                // {
-                                //     rippleFx.transform.localScale = 0.5f * Vector3.one;
-                                // }
-
-                                float initialScale = 0.5f;
-                                float BEST_ORTHOGRAPHIC_SIZE = 20;
-
-                                rippleFx.transform.localScale =
-                                    initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
-
-                                rippleFx.Play();
+                                childFxMain.startColor = factionColor;
                             }
-                        }
-                        catch (System.Exception e)
-                        {
 
-                        }
+                            rippleFx.gameObject.SetActive(true);
+                            rippleFx.transform.position = transform.position.ChangeZ(-9);
 
-                        playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                            float initialScale = 0.5f;
+                            float BEST_ORTHOGRAPHIC_SIZE = 20;
+
+                            rippleFx.transform.localScale = initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
+
+                            rippleFx.Play();
+                        }
                     }
+                    catch (System.Exception e)
+                    {
+
+                    }
+
+                    playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                }
+            })
+            .Chain
+            (
+                Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
+                {
+                    transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
+                    transform.localPosition =
+                        transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
+                }
+                ).OnComplete(() =>
+                {
+                    Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
+                    .OnComplete(() =>
+                    {
+                        screwBoxCompletedEvent?.Invoke(this);
+                        spawnNewScrewBoxEvent?.Invoke();
+
+                        transform.position = transform.position.ChangeY(initialPositionY);
+                        transform.localScale = _initialScale;
+
+                        boxLid.gameObject.SetActive(false);
+
+                        ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+                    });
                 })
-                .Chain
-                (
-                    Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
-                    {
-                        transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
-                        transform.localPosition =
-                            transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
-                    }
-                    ).OnComplete(() =>
-                    {
-                        Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
-                        Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
-                        .OnComplete(() =>
-                        {
-                            screwBoxCompletedEvent?.Invoke(this);
-                            spawnNewScrewBoxEvent?.Invoke();
-
-                            transform.position = transform.position.ChangeY(initialPositionY);
-                            transform.localScale = _initialScale;
-
-                            boxLid.gameObject.SetActive(false);
-
-                            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
-                        });
-                    })
-                )
-            );
-        }
+            )
+        );
     }
 
     public virtual void Lock()

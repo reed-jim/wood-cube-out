@@ -203,7 +203,6 @@ public class LevelLoader : MonoBehaviour
         {
             Addressables.Release(_loadLevelHandle);
         }
-        //
 
         _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelName);
 
@@ -234,9 +233,7 @@ public class LevelLoader : MonoBehaviour
 
                 if (level.GetComponent<LevelTransformManualModifier>() == null)
                 {
-                    // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
                     level.transform.position = Vector3.zero;
-                    // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
                     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
                 }
 
@@ -512,9 +509,6 @@ public class LevelLoader : MonoBehaviour
 
         float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
-        // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
-        //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
         int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
         int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
 
@@ -601,19 +595,6 @@ public class LevelLoader : MonoBehaviour
 
             remainingFactionForBlockedScrews.Remove(nextFaction);
         }
-
-        // RAMDOMIZE
-        // for (int i = 0; i < shuffledScrews.Count; i++)
-        // {
-        //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
-
-        //     shuffledScrews[i].ScrewId = i;
-        //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
-
-        //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-        //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
-        // }
 
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }

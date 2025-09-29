@@ -73,7 +73,7 @@ public class SwipeGesture : MonoBehaviour
                     return;
                 }
 
-                DebugLogger.LogSimple(message:$"Trigger swipeGestureEvent");
+                // DebugLogger.LogSimple(message:$"Trigger swipeGestureEvent");
                 swipeGestureEvent?.Invoke(_moveDirection);
 
                 _lastPosition = mousePosition;

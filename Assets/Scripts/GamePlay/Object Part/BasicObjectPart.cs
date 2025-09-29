@@ -225,7 +225,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     private void Deselect()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_isSelecting)
         {
             deselectObjectPartEvent?.Invoke(gameObject.GetInstanceID());

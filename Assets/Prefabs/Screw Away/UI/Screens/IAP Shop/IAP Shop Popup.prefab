@@ -55,9 +55,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 7627461505840534769}
   closeButton: {fileID: 7733255507953352378}
+  detectClickOutsideButton: {fileID: 0}
   route: 21
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
+  isShowingInterAdOnInteract: 0
+  switchRouteChannel: {fileID: 11400000, guid: f47f37dc821ed0e4393a071b77f716ed, type: 2}
   scrollRect: {fileID: 3141807624805954785}
   popupCanvasGroup: {fileID: 1356353355550576234}
   scrollContent: {fileID: 4083705754466361092}
@@ -563,7 +566,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Shop
-  parameter: 
   FallbackText: Shop
 --- !u!1 &6571604487938618597
 GameObject:
@@ -1314,11 +1316,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_text
-      value: Weekly Pack
+      value: Starter Pack
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontAsset
@@ -1702,11 +1704,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_text
-      value: VIP Pack
+      value: Starter Pack
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontAsset
@@ -2247,11 +2249,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_text
-      value: Daily Pack
+      value: Starter Pack
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontAsset
@@ -3029,7 +3031,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSizeBase
@@ -3179,11 +3181,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_text
-      value: Remove Ads Pack
+      value: Starter Pack
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontColor.b
@@ -3440,11 +3442,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_text
-      value: Monthly Pack
+      value: Starter Pack
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontSize
-      value: 46.6
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 300384342500485065, guid: bbede263f8219f34282929eb3ca64b8e, type: 3}
       propertyPath: m_fontAsset

@@ -1,4 +1,6 @@
 using System;
+using NamPhuThuy;
+using NamPhuThuy.Events;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -24,6 +26,8 @@ public class PausePopup : BasePopup
     public static event Action replayLevelEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
+    
+    // [SerializeField] private SwitchRouteChannelSO switchRouteChannel;
     protected override void MoreActionInAwake()
     {
         turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
@@ -51,7 +55,8 @@ public class PausePopup : BasePopup
     {
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
+            // switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
+            switchRouteChannel.Invoke(ScreenRoute.ReturnHome, nameof(PausePopup));
         }
         else
         {
@@ -72,12 +77,16 @@ public class PausePopup : BasePopup
 
     private void Replay()
     {
+        DebugLogger.LogSimple();
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Replay);
+            DebugLogger.LogSimple(message:$"first");
+            // switchRouteEvent?.Invoke(ScreenRoute.Replay);
+            switchRouteChannel.Invoke(ScreenRoute.Replay, nameof(PausePopup));
         }
         else
         {
+            DebugLogger.LogSimple(message:$"second");
             bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
 
             if (isShowInterReplayLevel)
@@ -95,6 +104,7 @@ public class PausePopup : BasePopup
 
     private void ActualReplay()
     {
+        DebugLogger.LogSimple();
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         // don't track loop level CostCenter
@@ -143,7 +153,8 @@ public class PausePopup : BasePopup
     #region Review IAP
     private void OpenReviewIAPPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
+        // switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
+        switchRouteChannel.Invoke(ScreenRoute.IAPReview, nameof(PausePopup));
     }
     #endregion
 }

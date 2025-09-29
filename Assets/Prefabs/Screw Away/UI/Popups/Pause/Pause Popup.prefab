@@ -56,6 +56,8 @@ MonoBehaviour:
   route: 14
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 1
+  isShowingInterAdOnInteract: 0
+  switchRouteChannel: {fileID: 11400000, guid: f47f37dc821ed0e4393a071b77f716ed, type: 2}
   returnHomeButton: {fileID: 4963858149824930681}
   replayLevelButton: {fileID: 567183625658185888}
   openReviewIAPPopupButton: {fileID: 0}
@@ -64,7 +66,6 @@ MonoBehaviour:
   vibrationToggle: {fileID: 7781295515723933237}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
-  levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
 --- !u!114 &7801986214487111203
@@ -552,7 +553,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Sound
-  parameter: 
   FallbackText: Sound
 --- !u!1 &2659012635564699624
 GameObject:
@@ -1108,7 +1108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Home
-  parameter: 
   FallbackText: Home
 --- !u!1 &4186293305982946705
 GameObject:
@@ -1260,7 +1259,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Restart
-  parameter: 
   FallbackText: Restart
 --- !u!1 &4311701838729125405
 GameObject:
@@ -1750,7 +1748,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Pause
-  parameter: 
   FallbackText: Pause
 --- !u!1 &6619340600097848691
 GameObject:
@@ -2015,7 +2012,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Music
-  parameter: 
   FallbackText: Music
 --- !u!1 &8781584973072411327
 GameObject:
@@ -2282,7 +2278,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Vibration
-  parameter: 
   FallbackText: Sound
 --- !u!1001 &569487759636778682
 PrefabInstance:
