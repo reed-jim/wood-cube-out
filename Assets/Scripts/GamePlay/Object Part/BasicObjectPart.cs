@@ -120,11 +120,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 hingeJoints[i].breakForce = 0;
             }
 
-            // foreach (var item in toRemoveJoints)
-            // {
-            //     Destroy(item);
-            // }
-
             minJointToDisableKinematic = 0;
 
             meshCollider.enabled = false;
@@ -143,13 +138,9 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
             }
         }
 
-        // BETTER FEELING
-        // HideBeforeLevel();
-
         _boundSize = GetComponent<MeshRenderer>().bounds.size;
 
         AutoAssignPhysicsMaterial();
-
         MoreLogicOnAwake();
     }
 
@@ -202,13 +193,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 })
             );
         }));
-
-        // _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f, startDelay: 0.6f)
-        //     .OnComplete(() =>
-        //     {
-        //         _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
-        //     })
-        // );
     }
 
     private void AutoAssignPhysicsMaterial()
@@ -217,7 +201,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         physicsMaterial.staticFriction = 0;
         physicsMaterial.dynamicFriction = 0;
-        // physicsMaterial.bounciness = 0.2f;
         physicsMaterial.frictionCombine = PhysicsMaterialCombine.Minimum;
 
         meshCollider.material = physicsMaterial;
@@ -263,15 +246,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     {
         if (instanceId == gameObject.GetInstanceID())
         {
-            // if (_totalJoint == 1)
-            // {
-            //     partRigidbody.isKinematic = true;
-
-            //     _tweens.Add(Tween.ShakeScale(transform, 0.15f * transform.localScale, duration: 0.3f));
-            // }
-
-            // await Task.Delay(400);
-
             _totalJoint--;
 
             if (partRigidbody == null)
@@ -293,33 +267,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                     }
 
                     partRigidbody.isKinematic = false;
-
-                    // HingeJoint[] hingeJoints = GetComponents<HingeJoint>();
-
-                    // for (int i = 0; i < hingeJoints.Length; i++)
-                    // {
-                    //     if (hingeJoints[i].breakForce > 0)
-                    //     {
-                    //         _lastScrew = hingeJoints[i].connectedBody.transform;
-
-                    //         _lastScrew.SetParent(transform.parent);
-
-                    //         _level = transform.parent;
-
-                    //         _initialPosition = _level.InverseTransformPoint(transform.position);
-
-                    //         _lastDistance = Vector3.Distance(transform.position, _lastScrew.position);
-
-
-
-                    //         _initialLocalPosition = transform.localPosition;
-                    //         _initialEulerAngles = transform.localEulerAngles;
-
-                    //         break;
-                    //     }
-                    // }
-
-                    // StartCoroutine(CheckHingeJointMoving());
                 }
             }
 
@@ -347,8 +294,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
                 }
 
                 HandleRewardPiece();
-
-                // dissolveObjectPartEvent?.Invoke(gameObject.GetInstanceID());
             }
         }
     }
@@ -459,8 +404,6 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
         direction.z = direction.z > 0 ? 1 : -1;
 
         partRigidbody.AddForce(TransformUtil.ComponentWiseMultiply(forceBoost * throwForceMultiplier, direction), ForceMode.Impulse);
-
-        // transform.SetParent(LevelGarbageBin.GarbageBin);
     }
 
     private void DetachFromParent()

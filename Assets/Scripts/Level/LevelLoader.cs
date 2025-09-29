@@ -350,7 +350,7 @@ public class LevelLoader : MonoBehaviour
 
     private async void GoLevel(int level)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         await Task.Delay(500);
 
         if (gameObject.transform.childCount > 0)
