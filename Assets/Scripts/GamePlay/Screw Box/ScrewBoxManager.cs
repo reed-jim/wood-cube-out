@@ -129,28 +129,6 @@ public class ScrewBoxManager : MonoBehaviour
 
             ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
         }
-
-        /*
-         if (screwBoxs != null)
-        {
-            for (int i = 0; i < screwBoxs.Length; i++)
-            {
-                if (screwBoxs[i] != null)
-                {
-                    for (int j = 0; j < screwBoxs[i].ScrewBoxSlots.Length; j++)
-                    {
-                        if (screwBoxs[i].ScrewBoxSlots[j].Screw != null)
-                        {
-                            screwBoxs[i].ScrewBoxSlots[j].IsFilled = false;
-
-                            Destroy(screwBoxs[i].ScrewBoxSlots[j].Screw.gameObject);
-                        }
-                    }
-                    ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, screwBoxs[i].gameObject, screwBoxs[i].transform.parent);
-                }
-            }
-        }
-         */
     }
 
     private void ResetScrewBoxes()

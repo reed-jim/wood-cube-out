@@ -61,7 +61,7 @@ public class ScrewBoxUI : MonoBehaviour
         showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
     }
 
-    public void Lock()
+    public virtual void Lock()
     {
         unlockByAdsButtonRT.localScale = Vector3.one;
 

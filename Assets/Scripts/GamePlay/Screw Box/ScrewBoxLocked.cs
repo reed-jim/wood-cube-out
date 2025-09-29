@@ -83,6 +83,7 @@ namespace NamPhuThuy.GamePlay
 
         public override void Lock()
         {
+            DebugLogger.LogSimple();
             screwBoxSpriteRenderer.enabled = false;
             _screwBoxLockUI.Lock();
             isLocked = true;
