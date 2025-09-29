@@ -11,10 +11,8 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
-    protected override void MoreActionOnAwake()
+    void Start()
     {
-        base.MoreActionOnAwake();
-
         SwitchSpecialLevel();
     }
 

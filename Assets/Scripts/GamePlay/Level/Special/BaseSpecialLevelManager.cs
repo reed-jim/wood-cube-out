@@ -42,7 +42,6 @@ namespace NamPhuThuy.GamePlay
 
         public virtual void Run()
         {
-            Debug.Log("SAFERIO run" + name + "/" + levelMode);
             UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
         }
 
