@@ -60,14 +60,6 @@ namespace NamPhuThuy.GamePlay
             _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
 
             UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
-
-            // Update screw shader
-            BaseScrew[] lockedScrew = validScrews.Where(item => item.Faction == targetScrew.Faction).ToArray();
-
-            foreach (var item in lockedScrew)
-            {
-                item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
-            }
         }
 
         protected virtual IEnumerator DelayedLockNextScrew()

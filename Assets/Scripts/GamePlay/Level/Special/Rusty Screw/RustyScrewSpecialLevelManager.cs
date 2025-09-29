@@ -24,6 +24,31 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
                     .Any(item => item.componentType == GameComponentType.Screw && item.faction == faction);
     }
 
+    protected override void LockSingleColor()
+    {
+        BaseScrew[] validScrews = _screws.Where(item => !item.IsDone && !item.IsInScrewPort).ToArray();
+        BaseScrew targetScrew = CommonUtil.GetRandomValueFromArray(validScrews);
+
+        if (targetScrew == null)
+        {
+            return;
+        }
+
+        _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
+
+        _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
+
+        UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
+
+        // Update screw shader
+        BaseScrew[] lockedScrew = validScrews.Where(item => item.Faction == targetScrew.Faction).ToArray();
+
+        foreach (var item in lockedScrew)
+        {
+            item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
+        }
+    }
+
     protected override void OnLevelLost()
     {
         if (_delayedLockNextScrew != null)
