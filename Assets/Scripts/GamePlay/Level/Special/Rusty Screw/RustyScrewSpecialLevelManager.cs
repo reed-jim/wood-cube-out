@@ -11,6 +11,8 @@ using static GameEnum;
 
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
+    private BaseScrew[] _rustyScrew;
+
     public static event Action switchToRustyScrewsEvent;
 
     public override bool IsFactionLocked(GameFaction faction)
@@ -41,9 +43,9 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
 
         // Update screw shader
-        BaseScrew[] lockedScrew = validScrews.Where(item => item.Faction == targetScrew.Faction).ToArray();
+        _rustyScrew = validScrews.Where(item => item.Faction == targetScrew.Faction).ToArray();
 
-        foreach (var item in lockedScrew)
+        foreach (var item in _rustyScrew)
         {
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
         }
@@ -62,5 +64,15 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         base.OnScrewsSet(screws);
 
         switchToRustyScrewsEvent?.Invoke();
+    }
+
+    protected override void HandleTaskCompleted()
+    {
+        base.HandleTaskCompleted();
+
+        foreach (var item in _rustyScrew)
+        {
+            item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Normal);
+        }
     }
 }

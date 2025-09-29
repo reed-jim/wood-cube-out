@@ -106,6 +106,7 @@ namespace NamPhuThuy.GamePlay
                         .Any(item => item.componentType == GameComponentType.Screw && item.faction == faction);
         }
 
+        #region CALLBACK
         protected virtual void OnLevelLost()
         {
 
@@ -129,9 +130,7 @@ namespace NamPhuThuy.GamePlay
 
                 if (_specialLevelTaskRecord.IsTaskCompleted())
                 {
-                    _specialLevelTaskRecord = null;
-
-                    _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
+                    HandleTaskCompleted();
                 }
             }
         }
@@ -159,6 +158,14 @@ namespace NamPhuThuy.GamePlay
 
             StartCoroutine(DelayedLockNextScrew());
         }
+
+        protected virtual void HandleTaskCompleted()
+        {
+            _specialLevelTaskRecord = null;
+
+            _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
+        }
+        #endregion
 
         protected void UpdateUI(SpecialLevelUIState state, object[] parameters = null)
         {
