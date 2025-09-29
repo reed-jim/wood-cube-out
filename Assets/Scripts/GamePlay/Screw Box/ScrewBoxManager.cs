@@ -259,7 +259,7 @@ public class ScrewBoxManager : MonoBehaviour
                     continue;
                 }
 
-                if (screwBoxs[i].IsLocked)
+                if (screwBoxs[i].IsValidToUnlock())
                 {
                     screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
 
@@ -346,7 +346,7 @@ public class ScrewBoxManager : MonoBehaviour
                 continue;
             }
 
-            if (screwBoxs[i].IsLocked)
+            if (screwBoxs[i].IsValidToUnlock())
             {
                 screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
 
@@ -623,7 +623,7 @@ public class ScrewBoxManager : MonoBehaviour
                 continue;
             }
 
-            if (screwBoxs[i].IsLocked)
+            if (screwBoxs[i].IsValidToUnlock())
             {
                 screwBoxs[i].ScrewBoxServiceLocator.screwBoxUI.Unlock();
 

@@ -287,4 +287,11 @@ public class ScrewBox : MonoBehaviour
     {
         screwBoxUnlockedEvent?.Invoke(this);
     }
+
+    #region CHECKING
+    public virtual bool IsValidToUnlock()
+    {
+        return isLocked;
+    }
+    #endregion
 }

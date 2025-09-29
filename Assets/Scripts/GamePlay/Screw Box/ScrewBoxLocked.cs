@@ -8,7 +8,6 @@ using UnityEditor;
 
 namespace NamPhuThuy.GamePlay
 {
-
     public class ScrewBoxLocked : ScrewBox
     {
         #region Private Serializable
@@ -35,6 +34,7 @@ namespace NamPhuThuy.GamePlay
 
         #region Private Fields
         private ScrewBoxLockUI _screwBoxLockUI;
+        private bool _isDoneTaskToUnlock;
         #endregion
 
 
@@ -86,13 +86,21 @@ namespace NamPhuThuy.GamePlay
             screwBoxSpriteRenderer.enabled = false;
             _screwBoxLockUI.Lock();
             isLocked = true;
+            _isDoneTaskToUnlock = false;
         }
 
         public override void Unlock()
         {
             base.Unlock();
 
+            _isDoneTaskToUnlock = true;
+
             _screwBoxLockUI.Unlock();
+        }
+
+        public override bool IsValidToUnlock()
+        {
+            return isLocked && _isDoneTaskToUnlock;
         }
 
         #endregion
