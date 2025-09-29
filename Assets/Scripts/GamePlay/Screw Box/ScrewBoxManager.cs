@@ -651,6 +651,7 @@ public class ScrewBoxManager : MonoBehaviour
         lockedScrewBox.transform.SetParent(refScrewBox.transform.parent);
 
         lockedScrewBox.transform.position = refScrewBox.transform.position;
+        lockedScrewBox.transform.localScale = refScrewBox.transform.localScale;
 
         int index = screwBoxs
             .Select((value, idx) => new { value, idx })
