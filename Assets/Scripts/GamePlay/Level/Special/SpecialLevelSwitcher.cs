@@ -11,7 +11,26 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
+    protected override void Awake()
+    {
+        base.Awake();
+
+        LevelLoader.startLevelEvent += OnLevelStarted;
+    }
+
+    void OnDestroy()
+    {
+        LevelLoader.startLevelEvent -= OnLevelStarted;
+    }
+
     void Start()
+    {
+        DisableAll();
+
+        // SwitchSpecialLevel();
+    }
+
+    private void OnLevelStarted()
     {
         SwitchSpecialLevel();
     }
@@ -20,18 +39,15 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     {
         for (int i = 0; i < specialLevelManagers.Length; i++)
         {
-            specialLevelManagers[i].gameObject.SetActive(false);
+            specialLevelManagers[i].Disable();
         }
 
         foreach (var manager in specialLevelManagers)
         {
-            
-            
             if (manager.levelMode == levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode)
             {
-                DebugLogger.LogSimple(message:$"Check {manager.levelMode} with {levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode}");
+                DebugLogger.LogSimple(message: $"Check {manager.levelMode} with {levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode}");
                 manager.gameObject.SetActive(true);
-                
 
                 manager.Run();
 
@@ -39,6 +55,14 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
 
                 break;
             }
+        }
+    }
+
+    private void DisableAll()
+    {
+        for (int i = 0; i < specialLevelManagers.Length; i++)
+        {
+            specialLevelManagers[i].gameObject.SetActive(false);
         }
     }
 }

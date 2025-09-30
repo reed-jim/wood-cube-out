@@ -15,6 +15,7 @@ namespace NamPhuThuy.GamePlay
 
         protected SpecialLevelTaskRecord _specialLevelTaskRecord;
         protected bool _isFirstTime;
+        protected bool _isDoneCompletely;
 
         public static event Action<LevelMode, SpecialLevelUIState, object[]> updateUI;
 
@@ -38,16 +39,47 @@ namespace NamPhuThuy.GamePlay
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
         }
 
+        protected virtual void Reset()
+        {
+            _isDoneCompletely = false;
+        }
+
         #endregion
 
         public virtual void Run()
         {
             UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
+
+            Reset();
+        }
+
+        public virtual void Disable()
+        {
+            UpdateUI(SpecialLevelUIState.Hide);
+
+            gameObject.SetActive(false);
         }
 
         protected virtual void LockSingleColor()
         {
             BaseScrew[] validScrews = _screws.Where(item => !item.IsDone && !item.IsInScrewPort).ToArray();
+
+            if (_isDoneCompletely)
+            {
+                return;
+            }
+            else
+            {
+                if (validScrews.Length < 24)
+                {
+                    UpdateUI(SpecialLevelUIState.Hide);
+
+                    _isDoneCompletely = true;
+
+                    return;
+                }
+            }
+
             BaseScrew targetScrew = CommonUtil.GetRandomValueFromArray(validScrews);
 
             if (targetScrew == null)
@@ -58,6 +90,7 @@ namespace NamPhuThuy.GamePlay
             _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
 
             _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
+            _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, 9);
 
             UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
         }
@@ -114,6 +147,11 @@ namespace NamPhuThuy.GamePlay
 
         protected virtual void OnScrewLoosed(BaseScrew screw)
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             if (_specialLevelTaskRecord == null)
             {
                 return;

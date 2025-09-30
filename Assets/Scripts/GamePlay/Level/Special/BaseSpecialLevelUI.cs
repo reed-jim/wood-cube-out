@@ -12,6 +12,7 @@ public enum SpecialLevelUIState
     ReActive = 3,
     UpdateProgress = 4,
     UpdateTimeCount = 5,
+    Hide
 }
 
 public class BaseSpecialLevelUI : MonoBehaviour
@@ -52,6 +53,11 @@ public class BaseSpecialLevelUI : MonoBehaviour
     protected virtual void ShowUI()
     {
         SaferioTween.ScaleUpWithPunch(container, 1);
+    }
+
+    protected virtual void HideUI()
+    {
+        SaferioTween.ScaleDownWithPunch(container);
     }
 
     protected virtual void ReActive()

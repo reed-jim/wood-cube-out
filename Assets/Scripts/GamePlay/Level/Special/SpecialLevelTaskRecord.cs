@@ -76,6 +76,15 @@ namespace NamPhuThuy.GamePlay
     public class SpecialLevelTaskComponentAmount : GameComponentAmount
     {
         public int remainingAmount;
+
+        public int Amount
+        {
+            set
+            {
+                amount = value;
+                remainingAmount = amount;
+            }
+        }
     }
 
     [Serializable]

@@ -458,7 +458,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     }
     #endregion
 
-    private async void AddScrewToList()
+    protected virtual void AddScrewToList()
     {
         _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
         {

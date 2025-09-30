@@ -35,6 +35,10 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         {
             UpdateTimeCount((int)parameters[0]);
         }
+        else if (action == SpecialLevelUIState.Hide)
+        {
+            HideUI();
+        }
     }
 
     private void UpdateProgress(SpecialLevelTaskRecord record)
