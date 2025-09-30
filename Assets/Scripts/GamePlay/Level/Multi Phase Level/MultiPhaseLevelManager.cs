@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class MultiPhaseLevelManager : BaseSpecialLevelManager
 {
-    private List<MultiPhaseScrew> _screws;
+    private List<MultiPhaseScrew> _multiPhaseScrews;
     private int _currentPhase;
     private int _totalScrew;
     private int _totalScrewObserved;
@@ -32,7 +32,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
         MultiPhaseScrew.manageScrewEvent += ManageScrew;
         BaseScrew.screwLoosenedEvent += OnScrewLoosened;
 
-        _screws = new List<MultiPhaseScrew>();
+        _multiPhaseScrews = new List<MultiPhaseScrew>();
     }
 
     protected override void OnDestroy()
@@ -51,7 +51,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
     private void Reset()
     {
         DebugLogger.LogSimple();
-        _screws = new List<MultiPhaseScrew>();
+        _multiPhaseScrews = new List<MultiPhaseScrew>();
 
         _currentPhase = 0;
         _totalScrew = 0;
@@ -75,7 +75,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
     private void ManageScrew(MultiPhaseScrew screw)
     {
         DebugLogger.LogSimple();
-        _screws.Add(screw);
+        _multiPhaseScrews.Add(screw);
 
         _totalScrewObserved++;
 
@@ -87,7 +87,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
 
     private void UpdateUI()
     {
-        if (_screws.Count > 0)
+        if (_multiPhaseScrews.Count > 0)
         {
             Dictionary<int, int> numberScrewByPhase = GetNumberScrewByPhase();
 
@@ -98,7 +98,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
     private void OnScrewLoosened(BaseScrew screw)
     {
         DebugLogger.LogSimple();
-        if (_screws.Count == 0)
+        if (_multiPhaseScrews.Count == 0)
         {
             return;
         }
@@ -150,11 +150,11 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
     {
         Dictionary<int, int> numberScrewByPhase = new Dictionary<int, int>();
 
-        for (int i = 0; i < _screws.Count; i++)
+        for (int i = 0; i < _multiPhaseScrews.Count; i++)
         {
-            int phase = _screws[i].Phase;
+            int phase = _multiPhaseScrews[i].Phase;
 
-            if (!_screws[i].IsDone)
+            if (!_multiPhaseScrews[i].IsDone)
             {
                 if (numberScrewByPhase.ContainsKey(phase))
                 {

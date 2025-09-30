@@ -42,15 +42,13 @@ namespace NamPhuThuy.GamePlay
             
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;
             ReplayPopup.replayLevelEvent -= OnReplayLevel;
         }
-
-        
 
         #endregion
 

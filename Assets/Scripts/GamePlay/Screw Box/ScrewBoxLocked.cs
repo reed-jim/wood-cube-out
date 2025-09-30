@@ -61,6 +61,11 @@ namespace NamPhuThuy.GamePlay
                 return;
             }
 
+            if (_isDoneTaskToUnlock)
+            {
+                return;
+            }
+
             foreach (var componentAmount in record.requiredComponents)
             {
                 if (GameComponentType.Screw != componentAmount.componentType) continue;
