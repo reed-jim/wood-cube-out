@@ -43,6 +43,10 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         {
             UpdateTimeCount((int)parameters[0]);
         }
+        else if (action == SpecialLevelUIState.Hide)
+        {
+            HideUI();
+        }
     }
 
     private void UpdateRustyLevel(SpecialLevelTaskRecord record)

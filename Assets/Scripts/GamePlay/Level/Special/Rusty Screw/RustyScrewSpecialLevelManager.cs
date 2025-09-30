@@ -29,6 +29,23 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     protected override void LockSingleColor()
     {
         BaseScrew[] validScrews = _screws.Where(item => !item.IsDone && !item.IsInScrewPort).ToArray();
+
+        if (_isDoneCompletely)
+        {
+            return;
+        }
+        else
+        {
+            if (validScrews.Length < 24)
+            {
+                UpdateUI(SpecialLevelUIState.Hide);
+
+                _isDoneCompletely = true;
+
+                return;
+            }
+        }
+
         BaseScrew targetScrew = CommonUtil.GetRandomValueFromArray(validScrews);
 
         if (targetScrew == null)
@@ -39,6 +56,7 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
 
         _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
+        _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, 9);
 
         UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
 

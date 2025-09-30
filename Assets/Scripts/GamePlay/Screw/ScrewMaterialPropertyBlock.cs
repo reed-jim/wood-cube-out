@@ -1,3 +1,4 @@
+using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -9,6 +10,7 @@ public enum ScrewCondition
 
 public class ScrewMaterialPropertyBlock : MonoBehaviour
 {
+    [SerializeField] private ScrewServiceLocator screwServiceLocator;
     [SerializeField] private MeshRenderer meshRenderer;
 
     [SerializeField] private Material[] materials;
@@ -42,6 +44,8 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         {
             _propertyBlock = new MaterialPropertyBlock();
         }
+
+        screwServiceLocator = GetComponent<ScrewServiceLocator>();
     }
 
     public void SetColor(GameFaction faction)
@@ -87,12 +91,15 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         if (condition == ScrewCondition.Normal)
         {
             SetFloat("_ColorThreshold", 0.4f);
+            SetColor(FactionUtility.GetColorForFaction(screwServiceLocator.screw.Faction));
         }
         else if (condition == ScrewCondition.Rusty)
         {
             SetFloat("_ColorThreshold", 0);
             SetColor(Color.white);
         }
+
+        TempRustyFx();
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
@@ -102,5 +109,39 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
         _propertyBlock.SetFloat(name, value);
 
         _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    private void TempRustyFx()
+    {
+        ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+        ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+        var looseScrewFxMain = looseScrewFx.main;
+        var ringFxMain = ringFx.main;
+
+        Color brown = new Color(0.6f, 0.3f, 0.1f);
+
+        Color brighterFactionColor = ColorUtil.GetNearWhiteColor(brown);
+
+        looseScrewFxMain.startColor = brown;
+        ringFxMain.startColor = brown;
+        ringFxMain.startSize = 1.2f * transform.lossyScale.x;
+
+        looseScrewFx.gameObject.SetActive(true);
+        looseScrewFx.transform.rotation = transform.rotation;
+        looseScrewFx.transform.position = transform.position;
+
+        ringFx.transform.position = transform.position;
+
+        looseScrewFx.Play();
+
+        ringFx.transform.SetParent(transform.parent);
+
+        Tween.Delay(1).OnComplete(() =>
+        {
+            ringFx.transform.SetParent(looseScrewFx.transform);
+            ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
+            ringFx.transform.localRotation = Quaternion.identity;
+        });
     }
 }
