@@ -209,7 +209,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
     public void Select()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         selectObjectPartEvent?.Invoke(gameObject.GetInstanceID());
 
         _isSelecting = true;

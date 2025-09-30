@@ -208,7 +208,7 @@ public class BaseScrew : MonoBehaviour, IScrew
     #region SELECT SCREW
     public void Select()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (IsValidToLoose())
         {
             selectScrewEvent?.Invoke(screwId, Faction);

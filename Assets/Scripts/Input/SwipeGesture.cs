@@ -85,7 +85,7 @@ public class SwipeGesture : MonoBehaviour
         {
             if (_isSwipingLastFrame)
             {
-                DebugLogger.LogSimple(message:$"Trigger stopSwipeGestureEvent");
+                // DebugLogger.LogSimple(message:$"Trigger stopSwipeGestureEvent");
                 stopSwipeGestureEvent?.Invoke();
 
                 _isSwipingLastFrame = false;

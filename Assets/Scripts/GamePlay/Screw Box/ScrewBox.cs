@@ -73,6 +73,8 @@ public class ScrewBox : MonoBehaviour
         get => screwBoxServiceLocator;
     }
 
+    #region MonoBehaviour Callbacks
+
     protected virtual void Awake()
     {
         ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
@@ -95,6 +97,9 @@ public class ScrewBox : MonoBehaviour
 
         CommonUtil.StopAllSequences(_sequences);
     }
+    #endregion
+
+   
 
     private void OnScrewBoxCameraSet(Camera screwBoxCamera)
     {
@@ -235,9 +240,7 @@ public class ScrewBox : MonoBehaviour
             if (screwBoxSlots[i].IsFilled)
             {
                 screwBoxSlots[i].IsFilled = false;
-
                 Destroy(screwBoxSlots[i].Screw.gameObject);
-
                 screwBoxSlots[i].Screw = null;
             }
         }

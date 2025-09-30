@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using NamPhuThuy;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using UnityEngine;
@@ -98,6 +99,7 @@ public static class DataUtility
             catch (Exception e)
             {
                 attempt++;
+                DebugLogger.LogSimple(message:$"{e}");
             }
         }
     }

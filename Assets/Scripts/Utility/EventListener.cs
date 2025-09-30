@@ -239,7 +239,7 @@ namespace NamPhuThuy
         
         public void DebugEmpty()
         {
-            DebugLogger.LogWithFrame("", Color.yellow);
+            DebugLogger.LogWithFrame("--------------------------------", Color.yellow);
         }
 
         #endregion

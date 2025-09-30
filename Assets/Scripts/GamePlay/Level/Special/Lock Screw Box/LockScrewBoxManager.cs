@@ -44,7 +44,7 @@ namespace NamPhuThuy.GamePlay
 
         protected override void OnDestroy()
         {
-            DebugLogger.LogSimple();
+            // DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;
             ReplayPopup.replayLevelEvent -= OnReplayLevel;
@@ -114,6 +114,7 @@ namespace NamPhuThuy.GamePlay
             }
             lockedScrewBoxes.Clear();
 
+            DebugLogger.LogSimple(message:$"Reset screwBoxCount");
             screwBoxCount = 0;
         }
         
