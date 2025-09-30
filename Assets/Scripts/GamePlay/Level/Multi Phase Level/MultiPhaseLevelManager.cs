@@ -44,7 +44,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void Reset()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _screws = new List<MultiPhaseScrew>();
 
         _currentPhase = 0;
@@ -54,7 +54,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
 
     private void SetLevelScrewNumber(int screwNumber)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _totalScrew = screwNumber;
 
         if (screwNumber == 0)

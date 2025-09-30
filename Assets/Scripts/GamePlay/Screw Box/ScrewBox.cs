@@ -118,7 +118,7 @@ public class ScrewBox : MonoBehaviour
 
     private async void OnScrewBoxCompleted(int instanceId)
     {
-        DebugLogger.LogSimple();
+        DebugLogger.LogSimple(message:$"instanceId: {instanceId}");
         if (instanceId != gameObject.GetInstanceID()) return;
         
         await Task.Delay((int)(delayMoveInDuration * 300));

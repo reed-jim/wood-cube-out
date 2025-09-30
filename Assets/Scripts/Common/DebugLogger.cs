@@ -78,6 +78,12 @@ namespace NamPhuThuy
             return;
         }
         
+        public static void LogWithFrame(string content, Color color = default, bool setBold = false)
+        {
+            string frameInfo = $"[Frame {Time.frameCount}] ";
+            Debug.Log(ColorizedText($"{frameInfo} - {content}", color, setBold));
+        }
+        
         public static void LogSimple(
             [CallerLineNumber] int line = 0
             , [CallerMemberName] string memberName = ""

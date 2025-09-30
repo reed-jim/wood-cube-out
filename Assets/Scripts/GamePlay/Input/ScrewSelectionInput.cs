@@ -80,7 +80,7 @@ public class ScrewSelectionInput : MonoBehaviour
             {
                 if (_timeHold > timeToConfirmSelectObjectPart && !isSelectingObjectPart)
                 {
-                    DebugLogger.LogSimple(message:$"SelectObj in Select Mode");
+                    // DebugLogger.LogSimple(message:$"SelectObj in Select Mode");
                     SelectObjectPart();
 
                     isSelectingObjectPart = true;
@@ -88,21 +88,21 @@ public class ScrewSelectionInput : MonoBehaviour
             }
             else if (_inputMode == InputMode.BreakObject)
             {
-                DebugLogger.LogSimple(message:$"SelectObj in BreakObject Mode");
+                // DebugLogger.LogSimple(message:$"SelectObj in BreakObject Mode");
                 SelectObjectPart();
             }
         }
 
         if (Input.GetMouseButtonUp(0))
         {
-            DebugLogger.LogSimple();
+            // DebugLogger.LogSimple();
             twoTouchPoints.Add(Input.mousePosition);
 
             if (twoTouchPoints.Count == 2)
             {
                 if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
                 {
-                    DebugLogger.LogSimple(message:$"About to select screw");
+                    // DebugLogger.LogSimple(message:$"About to select screw");
                     SelectScrew();
                 }
             }
@@ -121,7 +121,7 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private void SelectScrew()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_inputMode != InputMode.Select)
         {
             return;
@@ -169,12 +169,12 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private async void SelectObjectPart()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         isSelectObjectPart = false;
 
         if (_inputMode == InputMode.Disabled)
         {
-            DebugLogger.LogSimple(message:$"Disabled InputMode");
+            // DebugLogger.LogSimple(message:$"Disabled InputMode");
             return;
         }
 
@@ -190,7 +190,7 @@ public class ScrewSelectionInput : MonoBehaviour
         if (hit.collider != null)
         {
             IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-            DebugLogger.LogSimple(message:$"{objectPart}");
+            // DebugLogger.LogSimple(message:$"{objectPart}");
 
             if (objectPart != null)
             {
@@ -222,21 +222,21 @@ public class ScrewSelectionInput : MonoBehaviour
 
     private void EnableBreakObjectMode()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _inputMode = InputMode.BreakObject;
         _prevInputMode = _inputMode;
     }
 
     private void DisableBreakObjectMode()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _inputMode = InputMode.Select;
         _prevInputMode = _inputMode;
     }
 
     private void EnableInput(bool isEnable)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (isEnable)
         {
             _inputMode = _prevInputMode;
@@ -267,7 +267,7 @@ public class ScrewSelectionInput : MonoBehaviour
             res = false;
         }
         
-        DebugLogger.LogSimple(message:$"{res}");
+        // DebugLogger.LogSimple(message:$"{res}");
         return res;
     }
 }

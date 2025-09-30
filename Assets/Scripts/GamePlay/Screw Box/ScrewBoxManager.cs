@@ -302,6 +302,9 @@ public class ScrewBoxManager : MonoBehaviour
         for (int i = 0; i < screwBoxs.Length; i++)
         {
             if (screwBoxs[i] == null)
+                
+                
+                
             {
                 continue;
             }
@@ -645,6 +648,7 @@ public class ScrewBoxManager : MonoBehaviour
     {
         // avoid too fast action
         enableBoosterEvent?.Invoke(false);
+        DebugLogger.LogSimple();
 
         bool isFound = false;
 
@@ -661,39 +665,39 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 continue;
             }
+            
+            if (!screwPorts[i].IsFilled) continue;
+            if (screw.Faction != screwBox.Faction) continue;
 
-            if (screwPorts[i].IsFilled && screw.Faction == screwBox.Faction)
+            for (int k = 0; k < screwBox.ScrewBoxSlots.Length; k++)
             {
-                for (int k = 0; k < screwBox.ScrewBoxSlots.Length; k++)
+                if (!screwBox.ScrewBoxSlots[k].IsFilled)
                 {
-                    if (!screwBox.ScrewBoxSlots[k].IsFilled)
-                    {
-                        int screwPortIndex = i;
-                        int screwBoxSlotIndex = k;
+                    int screwPortIndex = i;
+                    int screwBoxSlotIndex = k;
 
-                        screwBox.ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
+                    screwBox.ScrewBoxSlots[screwBoxSlotIndex].Fill(screwPorts[screwPortIndex].Screw);
 
-                        screwPorts[screwPortIndex].IsFilled = false;
+                    screwPorts[screwPortIndex].IsFilled = false;
 
-                        screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
-                        (
-                            screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
-                            onCompleteAction: () =>
-                            {
-                                // screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
-
-                                enableBoosterEvent?.Invoke(true);
-                            },
-                            isSwitchCamera: false
-                        );
-
-                        if (!isFound)
+                    screwPorts[screwPortIndex].Screw.UnscrewAnimationAsync
+                    (
+                        screwBoxSlot: screwBox.ScrewBoxSlots[screwBoxSlotIndex],
+                        onCompleteAction: () =>
                         {
-                            isFound = true;
-                        }
+                            // screwBox.ScrewBoxSlots[screwBoxSlotIndex].CompleteFill();
 
-                        break;
+                            enableBoosterEvent?.Invoke(true);
+                        },
+                        isSwitchCamera: false
+                    );
+
+                    if (!isFound)
+                    {
+                        isFound = true;
                     }
+
+                    break;
                 }
             }
         }
@@ -709,15 +713,8 @@ public class ScrewBoxManager : MonoBehaviour
     private void MoveSingleScrewFromHoleToScrewBox(BaseScrew screw)
     {
         DebugLogger.LogSimple();
-        if (!screw.ScrewBoxSlot.IsScrewPort)
-        {
-            return;
-        }
-
-        if (screw.IsDone || screw.IsMoving)
-        {
-            return;
-        }
+        if (!screw.ScrewBoxSlot.IsScrewPort) { return; }
+        if (screw.IsDone || screw.IsMoving) { return; }
 
         bool isFound = false;
 
@@ -725,15 +722,8 @@ public class ScrewBoxManager : MonoBehaviour
         {
             ScrewBox screwBox = screwBoxs[i];
 
-            if (screwBox == null)
-            {
-                continue;
-            }
-
-            if (screwBox.Faction != screw.Faction || screwBox.IsLocked || screwBox.IsInTransition)
-            {
-                continue;
-            }
+            if (screwBox == null) { continue; }
+            if (screwBox.Faction != screw.Faction || screwBox.IsLocked || screwBox.IsInTransition) { continue; }
 
             for (int k = 0; k < screwBox.ScrewBoxSlots.Length; k++)
             {
