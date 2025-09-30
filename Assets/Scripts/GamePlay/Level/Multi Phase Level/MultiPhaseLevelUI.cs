@@ -4,11 +4,9 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MultiPhaseLevelUI : MonoBehaviour
+public class MultiPhaseLevelUI : BaseSpecialLevelUI
 {
-    [SerializeField] private RectTransform container;
     [SerializeField] private Image progressBarFill;
-    // [SerializeField] private Slider progressBar;
 
     [SerializeField] private RectTransform milestonePrefab;
 
@@ -35,6 +33,8 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
     private void OnLevelStarted()
     {
+        container.gameObject.SetActive(false);
+        
         progressBarFill.fillAmount = 0;
     }
 

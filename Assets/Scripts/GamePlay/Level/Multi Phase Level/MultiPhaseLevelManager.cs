@@ -2,9 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
-public class MultiPhaseLevelManager : MonoBehaviour
+public class MultiPhaseLevelManager : BaseSpecialLevelManager
 {
     private List<MultiPhaseScrew> _screws;
     private int _currentPhase;
@@ -24,7 +25,7 @@ public class MultiPhaseLevelManager : MonoBehaviour
     public static event Action<float> zoomCameraEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
 
-    private void Awake()
+    protected override void Awake()
     {
         LevelLoader.startLevelEvent += Reset;
         LevelLoader.setMultiPhaseLevelScrewNumberEvent += SetLevelScrewNumber;
@@ -34,12 +35,17 @@ public class MultiPhaseLevelManager : MonoBehaviour
         _screws = new List<MultiPhaseScrew>();
     }
 
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
         LevelLoader.startLevelEvent -= Reset;
         LevelLoader.setMultiPhaseLevelScrewNumberEvent -= SetLevelScrewNumber;
         MultiPhaseScrew.manageScrewEvent -= ManageScrew;
         BaseScrew.screwLoosenedEvent -= OnScrewLoosened;
+    }
+
+    public override void Run()
+    {
+        UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
     }
 
     private void Reset()

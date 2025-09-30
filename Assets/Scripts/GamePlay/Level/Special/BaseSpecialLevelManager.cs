@@ -30,7 +30,7 @@ namespace NamPhuThuy.GamePlay
             _isFirstTime = true;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             GameStateLose.loseLevelEvent -= OnLevelLost;
             ScrewManager.setScrewsEvent -= OnScrewsSet;
