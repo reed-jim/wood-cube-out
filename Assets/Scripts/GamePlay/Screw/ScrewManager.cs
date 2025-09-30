@@ -113,7 +113,7 @@ public class ScrewManager : MonoBehaviour
 
     private void OnLevelStart()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _screws = new List<BaseScrew>();
 
         _totalScrewObserved = 0;
@@ -142,7 +142,7 @@ public class ScrewManager : MonoBehaviour
     #region SCREW
     private void SetLevelScrewNumber(int screwNumber)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _totalScrew = screwNumber;
         _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
 
@@ -151,7 +151,7 @@ public class ScrewManager : MonoBehaviour
 
     private void AddScrew(BaseScrew screw)
     {
-        // DebugLogger.LogSimple();
+        // // DebugLogger.LogSimple();
         if (_screws == null)
         {
             _screws = new List<BaseScrew>();
@@ -386,7 +386,7 @@ public class ScrewManager : MonoBehaviour
 
     private void OnScrewLoosed(BaseScrew screw)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         CheckWin();
     }
 
@@ -432,7 +432,7 @@ public class ScrewManager : MonoBehaviour
     #region AUTO TESTING
     private void StartAutoTesting()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_autoTestingCoroutine != null)
         {
             StopCoroutine(_autoTestingCoroutine);
@@ -445,7 +445,7 @@ public class ScrewManager : MonoBehaviour
 
     private IEnumerator AutoTesting()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.05f);
 
         while (true)
@@ -489,7 +489,7 @@ public class ScrewManager : MonoBehaviour
     #region MANAGE SCREW BOX
     public async void SpawnFirstScrewBoxes()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
         // Spawn 2 default screw boxes
@@ -497,21 +497,21 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
+            // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
             spawnScrewBoxEvent?.Invoke(faction);
         }
 
         _totalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
 
-        DebugLogger.LogSimple(message: $"Trigger spawnAdsScrewBoxesEvent");
+        // DebugLogger.LogSimple(message: $"Trigger spawnAdsScrewBoxesEvent");
         spawnAdsScrewBoxesEvent?.Invoke();
     }
 
     private async void SpawnFirstScrewBoxesNewPhase(int phase)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         await Task.Delay(2000);
-        DebugLogger.LogSimple(message: $"Continue after 2 secs");
+        // DebugLogger.LogSimple(message: $"Continue after 2 secs");
 
         GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
@@ -529,14 +529,14 @@ public class ScrewManager : MonoBehaviour
         {
             GameFaction faction = sortedFactionByBlockedObject[i];
 
-            DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
+            // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
             spawnScrewBoxEvent?.Invoke(faction);
         }
     }
 
     private async void SpawnNewScrewBox()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_totalScrewBoxesSpawned >= _totalScrewBoxes)
         {
             return;
@@ -549,24 +549,21 @@ public class ScrewManager : MonoBehaviour
             return;
         }
 
-        DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
+        // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
         spawnScrewBoxEvent?.Invoke(faction);
 
         _totalScrewBoxesSpawned++;
-        // _remainingSpawnScrewBoxCommands--;
-
-        // _isHandlingSpawningScrewBox = false;
     }
 
     private void OnScrewBoxUnlocked(ScrewBox screwBox)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _totalScrewBoxesSpawned++;
     }
 
     private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         AssignFactionForNewScrewBox(screwBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
     }
 
@@ -752,7 +749,7 @@ public class ScrewManager : MonoBehaviour
     #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     private void OnScrewBoxSpawned(ScrewBox screwBox)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _remainingHandleOutsideScrewCommands++;
     }
 
@@ -840,7 +837,7 @@ public class ScrewManager : MonoBehaviour
     #region Very Important: PIECE - BLOCK PIECES Dictionary
     private void OnPieceCompleted(int instanceId)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         obstaclesOfPieces.Remove(instanceId);
     }
     #endregion

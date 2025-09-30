@@ -60,7 +60,7 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
 
     private void SetLevelScrewNumber(int screwNumber)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _totalScrew = screwNumber;
 
         if (screwNumber == 0)
