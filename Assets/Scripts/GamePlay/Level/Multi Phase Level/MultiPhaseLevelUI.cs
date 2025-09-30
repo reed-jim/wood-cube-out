@@ -7,7 +7,8 @@ using UnityEngine.UI;
 public class MultiPhaseLevelUI : MonoBehaviour
 {
     [SerializeField] private RectTransform container;
-    [SerializeField] private Slider progressBar;
+    [SerializeField] private Image progressBarFill;
+    // [SerializeField] private Slider progressBar;
 
     [SerializeField] private RectTransform milestonePrefab;
 
@@ -34,7 +35,7 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
     private void OnLevelStarted()
     {
-        progressBar.value = 0;
+        progressBarFill.fillAmount = 0;
     }
 
     private void UpdateMultiPhaseLevelUI(Dictionary<int, int> numberScrewByPhase, float progress)
@@ -69,9 +70,9 @@ public class MultiPhaseLevelUI : MonoBehaviour
 
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Custom(progressBar.value, progress, duration: 0.3f, onValueChange: newVal =>
+        _tweens.Add(Tween.Custom(progressBarFill.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
         {
-            progressBar.value = newVal;
+            progressBarFill.fillAmount = newVal;
         }));
     }
 
