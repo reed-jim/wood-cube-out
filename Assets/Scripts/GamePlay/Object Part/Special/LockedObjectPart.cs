@@ -6,6 +6,7 @@ using UnityEngine;
 public class LockedObjectPart : BasicObjectPart
 {
     [Header("Chain")]
+    [SerializeField] private GameObject chainContainer;
     [SerializeField] private GameObject[] chains;
 
     [Header("UI")]
@@ -80,6 +81,15 @@ public class LockedObjectPart : BasicObjectPart
                     _screws[index].IsInteractable = true;
                 });
             }
+
+            // Chains
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+
+            fx.transform.position = chainContainer.transform.position;
+
+            fx.Play();
+
+            SaferioTween.ScaleDownWithPunch(chainContainer.transform);
         }
     }
 }
