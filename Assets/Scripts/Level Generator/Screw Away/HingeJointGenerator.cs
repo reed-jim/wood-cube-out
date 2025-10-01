@@ -329,17 +329,6 @@ public class HingeJointGenerator : EditorWindow
             ExtractFullLevel();
         }
 
-        GUILayout.Space(16);
-        GUILayout.Label("Special Levels", centeredStyle);
-
-        if (GUILayout.Button("Switch To Locked Color Screw Level"))
-        {
-            SwitchToLockedColorScrew();
-        }
-
-        GUILayout.Space(16);
-        GUILayout.Label("Util", centeredStyle);
-
         if (GUILayout.Button("Add Required Components To Pieces"))
         {
             AddRequiredComponentsToPieces();
@@ -3800,43 +3789,6 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
         }
-    }
-    #endregion
-
-    #region SWITCH SPECIAL LEVEL
-    /// <summary>
-    /// Replace all "screws" in the level with "locked color screws"
-    /// </summary>
-    private void SwitchToLockedColorScrew()
-    {
-        Transform level = Selection.activeTransform;
-
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
-
-        List<BaseScrew> toRemoveList = new List<BaseScrew>();
-
-        toRemoveList.AddRange(screws);
-
-        // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
-
-        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.LOCKED_COLOR_SCREW_PREFAB_PATH);
-        DebugLogger.LogSimple(message: $"{screwPrefab.name}");
-
-        for (int i = 0; i < screws.Length; i++)
-        {
-            Transform screw = PrefabUtility.InstantiatePrefab(screwPrefab, screws[i].transform.parent).GetComponent<Transform>();
-
-            screw.transform.position = screws[i].transform.position;
-            screw.transform.rotation = screws[i].transform.rotation;
-            screw.transform.localScale = screws[i].transform.localScale;
-        }
-
-        foreach (var item in toRemoveList)
-        {
-            DestroyImmediate(item.gameObject, true);
-        }
-
-        EditorUtility.SetDirty(level);
     }
     #endregion
 }
