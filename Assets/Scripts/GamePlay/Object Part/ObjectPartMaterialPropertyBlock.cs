@@ -2,6 +2,12 @@ using System.Collections.Generic;
 using PrimeTween;
 using UnityEngine;
 
+public enum PieceCondition
+{
+    Normal,
+    Locked
+}
+
 public class ObjectPartMaterialPropertyBlock : MonoBehaviour
 {
     [Header("CUSTOMIZE")]
@@ -13,6 +19,7 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
     private MaterialPropertyBlock _propertyBlock;
     private Tween _currentAlphaTransition;
     private bool _isDissolving;
+    private Color _previousColor;
     #endregion
 
     private void Awake()
@@ -58,6 +65,27 @@ public class ObjectPartMaterialPropertyBlock : MonoBehaviour
         _propertyBlock.SetFloat(alphaValueReference, alpha);
 
         _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    public void SetCondition(PieceCondition condition)
+    {
+        if (condition == PieceCondition.Normal)
+        {
+            Tween.Custom(_renderer.material.GetColor("_Color"), _previousColor, duration: 0.3f, onValueChange: newVal =>
+            {
+                _propertyBlock.SetColor("_Color", _previousColor);
+
+                _renderer.SetPropertyBlock(_propertyBlock);
+            });
+        }
+        else if (condition == PieceCondition.Locked)
+        {
+            _previousColor = _renderer.material.GetColor("_Color");
+
+            _propertyBlock.SetColor("_Color", 0.5f * Color.white);
+
+            _renderer.SetPropertyBlock(_propertyBlock);
+        }
     }
 
     public void OnObjectPartSelected(int instanceId)
