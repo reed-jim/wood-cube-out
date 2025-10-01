@@ -86,12 +86,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         throwForceMultiplier = new Vector3(1200f, 800f, 1200f);
 
-        attachedScrews = new BaseScrew[transform.childCount];
-
-        for (int i = 0; i < attachedScrews.Length; i++)
-        {
-            attachedScrews[i] = transform.GetChild(i).GetComponent<BaseScrew>();
-        }
+        attachedScrews = TransformUtil.GetComponentArrayFromAllChildren<BaseScrew>(transform);
 
         partRigidbody.isKinematic = true;
 
