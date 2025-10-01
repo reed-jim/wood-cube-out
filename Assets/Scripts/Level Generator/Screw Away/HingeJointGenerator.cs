@@ -465,27 +465,6 @@ public class HingeJointGenerator : EditorWindow
         }
     }
 
-    private void GenerateHingeJointAllLevels()
-    {
-        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
-
-        int level = 1;
-
-        for (int i = 0; i < levels.Length; i++)
-        {
-            RotateObject rotateObject = levels[i].GetComponent<RotateObject>();
-
-            if (rotateObject == null)
-            {
-                continue;
-            }
-
-            GenerateHingeJointAll(levels[i].transform, $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab");
-
-            level++;
-        }
-    }
-
     private void GenerateHingeJointAll(Transform level, string path = null)
     {
         BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();

@@ -338,11 +338,12 @@ namespace NamPhuThuy.GamePlay
                     ringFx.transform.SetParent(transform.parent);
 
                     _tweens.Add(Tween.Delay(1).OnComplete(() =>
-                    {
+                    {   
                         ringFx.transform.SetParent(looseScrewFx.transform);
                         ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
                         ringFx.transform.localRotation = Quaternion.identity;
                     }));
+                    // DebugLogger.LogBreak("");
                 }
                 catch (System.Exception)
                 {
