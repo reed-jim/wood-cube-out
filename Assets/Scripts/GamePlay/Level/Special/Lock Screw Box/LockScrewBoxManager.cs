@@ -38,18 +38,16 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent += OnScewBoxLockSpawned;
-            ReplayPopup.replayLevelEvent += OnReplayLevel;
 
         }
 
         protected override void OnDestroy()
         {
             base.OnDestroy();
-            
+
             // DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;
-            ReplayPopup.replayLevelEvent -= OnReplayLevel;
         }
 
         #endregion
@@ -89,6 +87,20 @@ namespace NamPhuThuy.GamePlay
         protected override void OnScrewLoosed(BaseScrew screw)
         {
             DebugLogger.LogSimple();
+        }
+
+        protected override void Reset()
+        {
+            base.Reset();
+
+            foreach (ScrewBoxLocked screwBox in lockedScrewBoxes)
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX_LOCKED, screwBox.gameObject);
+            }
+
+            lockedScrewBoxes.Clear();
+
+            screwBoxCount = 0;
         }
 
         #endregion

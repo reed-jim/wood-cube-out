@@ -28,6 +28,7 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent += OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent += OnScrewLoosed;
             ScrewManager.winLevelEvent += Disable;
+            DebugPopup.winLevelEvent += Disable;
 
             _isFirstTime = true;
         }
@@ -39,6 +40,7 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent -= OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
             ScrewManager.winLevelEvent -= Disable;
+            DebugPopup.winLevelEvent -= Disable;
         }
 
         protected virtual void Reset()
