@@ -6,7 +6,8 @@ namespace NamPhuThuy.GamePlay
 {
     public class BasicScrew : BaseScrew
     {
-        [Header("BASIC SCREW - CUSTOMIZE")] [SerializeField]
+        [Header("BASIC SCREW - CUSTOMIZE")]
+        [SerializeField]
         private LayerMask checkObstacleLayer;
 
         #region PRIVATE FIELD
@@ -62,11 +63,7 @@ namespace NamPhuThuy.GamePlay
             // BLOCKED
             if (_numberBlockingObjects > 0)
             {
-                FakeScrew fakeScrew = ObjectPoolingEverything.GetFromPool<FakeScrew>(GameConstants.FAKE_SCREW);
-
-                fakeScrew.CloneFromScrew(this);
-
-                fakeScrew.transform.SetParent(transform);
+                FakeScrew fakeScrew = SpawnFakeScrew();
 
                 GetComponent<MeshRenderer>().enabled = false;
 
@@ -80,16 +77,16 @@ namespace NamPhuThuy.GamePlay
                 }
 
                 _tweens.Add(Tween.ShakeScale(fakeScrew.transform, strength: 0.3f * Vector3.one, duration: 0.3f)
-                    .OnComplete(() =>
-                    {
-                        fakeScrew.IsRotating = false;
+                .OnComplete(() =>
+                {
+                    fakeScrew.IsRotating = false;
 
-                        ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
+                    ObjectPoolingEverything.ReturnToPool(GameConstants.FAKE_SCREW, fakeScrew.gameObject);
 
-                        GetComponent<MeshRenderer>().enabled = true;
+                    GetComponent<MeshRenderer>().enabled = true;
 
-                        _isInteractable = true;
-                    }));
+                    _isInteractable = true;
+                }));
 
                 return;
             }
