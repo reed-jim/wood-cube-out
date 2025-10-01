@@ -8,7 +8,6 @@ public class LockedObjectPart : BasicObjectPart
 {
     [Header("Chain")]
     [SerializeField] private GameObject chainContainer;
-    [SerializeField] private GameObject[] chains;
 
     [Header("UI")]
     [SerializeField] private RectTransform uiContainer;

@@ -62,9 +62,9 @@ public class LevelLoader : MonoBehaviour
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
-        
-        
-        
+
+
+
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
@@ -697,11 +697,11 @@ public class LevelLoader : MonoBehaviour
             float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
             float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
 
-            
+
             minX = Mathf.Min(boundXMin, minX);
             minY = Mathf.Min(boundYMin, minY);
             minZ = Mathf.Min(boundZMin, minZ);
-            
+
             maxX = Mathf.Max(boundXMax, maxX);
             maxY = Mathf.Max(boundYMax, maxY);
             maxZ = Mathf.Max(boundZMax, maxZ);
@@ -772,6 +772,20 @@ public class LevelLoader : MonoBehaviour
             targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
         }
 
+        try
+        {
+            ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
+
+            if (manualLevelZoomMultiplier != null)
+            {
+                targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
+
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
         GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
@@ -825,7 +839,7 @@ public class LevelLoader : MonoBehaviour
 
     private void ModifyLevelBasedOnMode()
     {
-        
+
     }
     #endregion
 
