@@ -401,6 +401,23 @@ namespace Saferio.Util.SaferioTween
             return sequence;
         }
 
+        public static Sequence ShowWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
+        {
+            target.gameObject.SetActive(true);
+
+            target.transform.localScale = Vector3.zero;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f, startDelay: delay, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, targetScale, duration: 0.1f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+
         #region SCALE - ASYNC
         public static async void ScaleAsync
         (

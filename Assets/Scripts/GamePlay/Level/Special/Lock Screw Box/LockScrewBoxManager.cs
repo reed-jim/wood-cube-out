@@ -44,6 +44,8 @@ namespace NamPhuThuy.GamePlay
 
         protected override void OnDestroy()
         {
+            base.OnDestroy();
+            
             // DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;

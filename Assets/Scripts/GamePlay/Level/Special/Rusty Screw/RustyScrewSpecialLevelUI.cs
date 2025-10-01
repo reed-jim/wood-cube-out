@@ -102,8 +102,8 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
             SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
 
-            SaferioTween.ScaleUpWithPunch(tickIcon.transform, 1, delay: 0.3f);
-            SaferioTween.ScaleUpWithPunch(timeCountingText.transform, 1, delay: 0.3f);
+            SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
+            SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
 
 
 

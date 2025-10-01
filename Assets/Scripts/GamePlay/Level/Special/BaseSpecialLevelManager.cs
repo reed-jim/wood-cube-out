@@ -27,6 +27,7 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.setScrewsEvent += OnScrewsSet;
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent += OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+            ScrewManager.winLevelEvent += Disable;
 
             _isFirstTime = true;
         }
@@ -37,10 +38,12 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.setScrewsEvent -= OnScrewsSet;
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent -= OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
+            ScrewManager.winLevelEvent -= Disable;
         }
 
         protected virtual void Reset()
         {
+            _isFirstTime = true;
             _isDoneCompletely = false;
         }
 
@@ -55,9 +58,12 @@ namespace NamPhuThuy.GamePlay
 
         public virtual void Disable()
         {
-            UpdateUI(SpecialLevelUIState.Hide);
+            if (gameObject.activeInHierarchy)
+            {
+                UpdateUI(SpecialLevelUIState.Hide);
 
-            gameObject.SetActive(false);
+                gameObject.SetActive(false);
+            }
         }
 
         protected virtual void LockSingleColor()
@@ -70,7 +76,7 @@ namespace NamPhuThuy.GamePlay
             }
             else
             {
-                if (validScrews.Length < 24)
+                if (validScrews.Length < 0.3f * _screws.Length)
                 {
                     UpdateUI(SpecialLevelUIState.Hide);
 
@@ -200,6 +206,17 @@ namespace NamPhuThuy.GamePlay
         protected virtual void HandleTaskCompleted()
         {
             _specialLevelTaskRecord = null;
+
+            BaseScrew[] validScrews = _screws.Where(item => !item.IsDone && !item.IsInScrewPort).ToArray();
+
+            if (validScrews.Length < 0.3f * _screws.Length)
+            {
+                UpdateUI(SpecialLevelUIState.Hide);
+
+                _isDoneCompletely = true;
+
+                return;
+            }
 
             _delayedLockNextScrew = StartCoroutine(DelayedLockNextScrew());
         }
