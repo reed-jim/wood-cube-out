@@ -25,8 +25,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
             return;
         }
 
-        Debug.Log("SAFERIO " + name + "/" + action);
-
         if (action == SpecialLevelUIState.Setup)
         {
             Setup((LevelMode)parameters[0]);

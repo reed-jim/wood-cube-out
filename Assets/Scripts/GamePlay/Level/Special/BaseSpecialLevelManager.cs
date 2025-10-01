@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GameEnum;
 
@@ -161,6 +162,11 @@ namespace NamPhuThuy.GamePlay
             }
 
             if (_specialLevelTaskRecord == null)
+            {
+                return;
+            }
+
+            if (screw.IsInScrewPort)
             {
                 return;
             }

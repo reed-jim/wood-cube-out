@@ -38,7 +38,8 @@ public class LockedObjectPart : BasicObjectPart
 
         foreach (var screw in _screws)
         {
-            screw.gameObject.SetActive(false);
+            screw.GetComponent<MeshRenderer>().enabled = false;
+            // screw.gameObject.SetActive(false);
         }
 
         requiredValueToUnlock = Random.Range(5, 10);
@@ -71,15 +72,17 @@ public class LockedObjectPart : BasicObjectPart
 
                 initialScale = _screws[i].transform.localScale.x;
 
-                _screws[i].gameObject.SetActive(true);
-                _screws[i].transform.localScale = Vector3.zero;
+                _screws[i].GetComponent<MeshRenderer>().enabled = true;
 
-                _screws[i].IsInteractable = false;
+                // _screws[i].gameObject.SetActive(true);
+                // _screws[i].transform.localScale = Vector3.zero;
 
-                SaferioTween.ScaleUpWithPunch(_screws[i].transform, initialScale, onCompleteAction: () =>
-                {
-                    _screws[index].IsInteractable = true;
-                });
+                // _screws[i].IsInteractable = false;
+
+                // SaferioTween.ScaleUpWithPunch(_screws[i].transform, initialScale, onCompleteAction: () =>
+                // {
+                //     _screws[index].IsInteractable = true;
+                // });
             }
 
             // Chains
