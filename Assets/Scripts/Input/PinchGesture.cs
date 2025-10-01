@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;

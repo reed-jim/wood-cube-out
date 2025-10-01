@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using NamPhuThuy;
+using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 
@@ -13,6 +14,8 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
+    
+    #region MonoBehaviour Callbacks
     protected override void Awake()
     {
         base.Awake();
@@ -29,6 +32,8 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     {
         DisableAll();
     }
+    #endregion
+    
 
     private void OnLevelStarted()
     {

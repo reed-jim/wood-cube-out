@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using NamPhuThuy;
+using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -13,7 +14,9 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 
-public class LevelLoader : MonoBehaviour
+namespace NamPhuThuy.GamePlay
+{
+    public class LevelLoader : MonoBehaviour
 {
     [Header("Clone to calculate level rotation")]
     [SerializeField] private Transform cloneToCalculateRotation;
@@ -1117,4 +1120,6 @@ public class LevelLoader : MonoBehaviour
         }
     }
     #endregion
+}
+
 }

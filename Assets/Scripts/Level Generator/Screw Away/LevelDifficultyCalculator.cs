@@ -1,6 +1,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
 using Unity.Mathematics;
 using UnityEngine;

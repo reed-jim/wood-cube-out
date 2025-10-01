@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Data;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;

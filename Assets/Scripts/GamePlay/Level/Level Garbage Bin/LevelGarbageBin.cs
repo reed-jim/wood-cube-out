@@ -1,40 +1,45 @@
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
-public class LevelGarbageBin : MonoBehaviour
+namespace NamPhuThuy.GamePlay
 {
-    public static LevelGarbageBin Instance;
-
-    public static Transform GarbageBin
+    public class LevelGarbageBin : MonoBehaviour
     {
-        get => Instance.transform;
-    }
+        public static LevelGarbageBin Instance;
 
-    void Awake()
-    {
-        LevelLoader.startLevelEvent += EmptyGarbageBin;
-
-        if (Instance != null && Instance != this)
+        public static Transform GarbageBin
         {
-            Destroy(gameObject);
+            get => Instance.transform;
         }
-        else
+
+        void Awake()
         {
-            Instance = this;
+            LevelLoader.startLevelEvent += EmptyGarbageBin;
 
-            DontDestroyOnLoad(gameObject);
+            if (Instance != null && Instance != this)
+            {
+                Destroy(gameObject);
+            }
+            else
+            {
+                Instance = this;
+
+                DontDestroyOnLoad(gameObject);
+            }
         }
-    }
 
-    private void OnDestroy()
-    {
-        LevelLoader.startLevelEvent -= EmptyGarbageBin;
-    }
-
-    private void EmptyGarbageBin()
-    {
-        foreach (Transform child in transform)
+        private void OnDestroy()
         {
-            Destroy(child.gameObject);
+            LevelLoader.startLevelEvent -= EmptyGarbageBin;
+        }
+
+        private void EmptyGarbageBin()
+        {
+            foreach (Transform child in transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
+
 }
