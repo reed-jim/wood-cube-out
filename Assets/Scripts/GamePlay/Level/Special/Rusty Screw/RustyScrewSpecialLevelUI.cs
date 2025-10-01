@@ -9,10 +9,14 @@ using static GameEnum;
 public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 {
     [Header("UI")]
+    // [SerializeField] private Image rustyScrew;
+    // [SerializeField] private Image tempRustyScrew;
+    [SerializeField] private RectTransform normalScrew;
     [SerializeField] private Image rustyScrew;
-    [SerializeField] private Image tempRustyScrew;
     [SerializeField] private Sprite[] rustyProgressSprites;
     [SerializeField] private Image tempScrewFaction;
+
+    private Tween _rustyProgressTween;
 
     protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
     {
@@ -68,30 +72,43 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
         if (!rustyScrew.gameObject.activeInHierarchy)
         {
-            rustyScrew.gameObject.SetActive(true);
-            tempRustyScrew.gameObject.SetActive(false);
+            rustyScrew.fillAmount = 1;
+            // rustyScrew.gameObject.SetActive(true);
+            // tempRustyScrew.gameObject.SetActive(false);
 
-            rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
+            // rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
 
-            Tween.Alpha(rustyScrew, 1, duration: 0.3f);
+            // Tween.Alpha(rustyScrew, 1, duration: 0.3f);
         }
 
         // Rusty
         if (totalRemainingAmount > 0)
         {
-            tempRustyScrew.gameObject.SetActive(true);
+            float progress = (float)totalRemainingAmount / totalAmount;
 
-            tempRustyScrew.sprite = rustyScrew.sprite;
-
-            rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
-            rustyScrew.sprite = rustyProgressSprites[totalRemainingAmount - 1];
-
-            Tween.Alpha(rustyScrew, 1, duration: 0.3f);
-            Tween.Alpha(tempRustyScrew, 0, duration: 0.3f)
-            .OnComplete(() =>
+            if (_rustyProgressTween.isAlive)
             {
-                tempRustyScrew.gameObject.SetActive(false);
+                _rustyProgressTween.Stop();
+            }
+
+            _rustyProgressTween = Tween.Custom(rustyScrew.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
+            {
+                rustyScrew.fillAmount = newVal;
             });
+
+            // tempRustyScrew.gameObject.SetActive(true);
+
+            // tempRustyScrew.sprite = rustyScrew.sprite;
+
+            // rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
+            // rustyScrew.sprite = rustyProgressSprites[(int)(((float)totalRemainingAmount / totalAmount) * 2)];
+
+            // Tween.Alpha(rustyScrew, 1, duration: 0.3f);
+            // Tween.Alpha(tempRustyScrew, 0, duration: 0.3f)
+            // .OnComplete(() =>
+            // {
+            //     tempRustyScrew.gameObject.SetActive(false);
+            // });
         }
         else
         {
@@ -107,13 +124,13 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
 
 
-            tempRustyScrew.gameObject.SetActive(false);
+            // tempRustyScrew.gameObject.SetActive(false);
 
-            Tween.Alpha(rustyScrew, 0, duration: 0.3f)
-            .OnComplete(() =>
-            {
-                rustyScrew.gameObject.SetActive(false);
-            });
+            // Tween.Alpha(rustyScrew, 0, duration: 0.3f)
+            // .OnComplete(() =>
+            // {
+            //     rustyScrew.gameObject.SetActive(false);
+            // });
         }
     }
 }

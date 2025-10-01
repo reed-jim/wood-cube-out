@@ -33,6 +33,11 @@ namespace NamPhuThuy.GamePlay
 
         protected override void OnScrewsSet(BaseScrew[] screws)
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                return;
+            }
+
             base.OnScrewsSet(screws);
 
             switchToLockedScrewsEvent?.Invoke();

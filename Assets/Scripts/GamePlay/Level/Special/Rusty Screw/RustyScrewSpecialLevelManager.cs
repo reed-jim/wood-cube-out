@@ -36,7 +36,7 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         }
         else
         {
-            if (validScrews.Length < 24)
+            if (validScrews.Length < 0.3f * _screws.Length)
             {
                 UpdateUI(SpecialLevelUIState.Hide);
 
