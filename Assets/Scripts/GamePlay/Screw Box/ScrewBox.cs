@@ -268,7 +268,7 @@ public class ScrewBox : MonoBehaviour
         screwBoxServiceLocator.screwBoxUI.HideUnlockBoxButton();
     }
 
-    public void InvokeScrewBoxUnlockedEvent()
+    public virtual void InvokeScrewBoxUnlockedEvent()
     {
         screwBoxUnlockedEvent?.Invoke(this);
     }

@@ -16,6 +16,8 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
+        public static event Action<ScrewBox> lockedScrewBoxTaskDoneEvent;
+
         protected override void Awake()
         {
             base.Awake();
@@ -107,6 +109,11 @@ namespace NamPhuThuy.GamePlay
         public override bool IsValidToUnlock()
         {
             return isLocked && _isDoneTaskToUnlock;
+        }
+
+        public override void InvokeScrewBoxUnlockedEvent()
+        {
+            lockedScrewBoxTaskDoneEvent?.Invoke(this);
         }
 
         #endregion

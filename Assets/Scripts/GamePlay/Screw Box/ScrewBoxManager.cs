@@ -76,6 +76,7 @@ public class ScrewBoxManager : MonoBehaviour
         ScrewManager.spawnAdsScrewBoxesEvent += SpawnAdsScrewBoxes;
         ScrewBox.screwBoxCompletedEvent += OnScrewBoxCompleted;
         ScrewBox.screwBoxUnlockedEvent += OnScrewBoxUnlocked;
+        ScrewBoxLocked.lockedScrewBoxTaskDoneEvent += OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent += AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent += ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent += ShakeAllScrewPorts;
@@ -98,6 +99,7 @@ public class ScrewBoxManager : MonoBehaviour
         ScrewManager.spawnAdsScrewBoxesEvent -= SpawnAdsScrewBoxes;
         ScrewBox.screwBoxCompletedEvent -= OnScrewBoxCompleted;
         ScrewBox.screwBoxUnlockedEvent -= OnScrewBoxUnlocked;
+        ScrewBoxLocked.lockedScrewBoxTaskDoneEvent -= OnScrewBoxUnlocked;
         BoosterUI.addMoreScrewPortEvent -= AddMoreScrewPort;
         BoosterUI.clearAllScrewPortsEvent -= ClearAllScrewPorts;
         BoosterUI.shakeScrewPortsEvent -= ShakeAllScrewPorts;
