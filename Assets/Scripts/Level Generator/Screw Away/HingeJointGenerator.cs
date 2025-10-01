@@ -92,18 +92,6 @@ public class HingeJointGenerator : EditorWindow
         maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
         matchName = EditorGUILayout.TextField("Match Name", matchName);
 
-        // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
-        // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
-
-        // ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
-
-        // expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
-
-        // if (GUILayout.Button("Generate"))
-        // {
-        //     Generate(prefabPath);
-        // }
-
         GUIStyle centeredStyle = new GUIStyle(EditorStyles.boldLabel)
         {
             alignment = TextAnchor.MiddleCenter,
@@ -200,81 +188,6 @@ public class HingeJointGenerator : EditorWindow
             RemoveAllMeshColliders();
         }
 
-        // if (GUILayout.Button("Generate Hinge Joint All Levels"))
-        // {
-        //     GenerateHingeJointAllLevels();
-        // }
-
-        // if (GUILayout.Button("Check HingeJoint Number"))
-        // {
-        //     CheckHingeJointNumber(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Reset Local Rotation"))
-        // {
-        //     ResetLocalRotation(target.transform);
-        // }
-
-        // if (GUILayout.Button("Flip Horizontally"))
-        // {
-        //     FlipHorizontally(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Flip Vertically"))
-        // {
-        //     FlipVertically(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Move"))
-        // {
-        //     Move(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Auto Assign Screw Faction"))
-        // {
-        //     // AutoAssignScrewFaction(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Spawn Screw"))
-        // {
-        //     SpawnScrew(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Assign Material"))
-        // {
-        //     AssignMaterial(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Center Level Pivot"))
-        // {
-        //     CenterLevelPivot(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Remove All Grandchildren Of"))
-        // {
-        //     RemoveAllGrandchildrenOf();
-        // }
-
-        // if (GUILayout.Button("Get Screw Number By Phase"))
-        // {
-        //     GetScrewNumberByPhase(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Move All Screws"))
-        // {
-        //     MoveAllScrews(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Scale All Screws"))
-        // {
-        //     ScaleAllScrews(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Snap Surface"))
-        // {
-        //     SnapSurface();
-        // }
-
         GUILayout.Space(16);
         GUILayout.Label("Delete", centeredStyle);
 
@@ -301,23 +214,8 @@ public class HingeJointGenerator : EditorWindow
             SnapSurfaceScrewForAllPieceSequentially();
         }
 
-        // if (GUILayout.Button("Snap Rotation Surface"))
-        // {
-        //     SnapRotationSurface();
-        // }
-
-        // if (GUILayout.Button("Magic Snap"))
-        // {
-        //     MagicSnap();
-        // }
-
         GUILayout.Space(16);
         GUILayout.Label("Extract other games' level", centeredStyle);
-
-        // if (GUILayout.Button("ChangeMesh"))
-        // {
-        //     ChangeMesh();
-        // }
 
         if (GUILayout.Button("Extract Pieces"))
         {
@@ -328,17 +226,6 @@ public class HingeJointGenerator : EditorWindow
         {
             ExtractFullLevel();
         }
-
-        GUILayout.Space(16);
-        GUILayout.Label("Special Levels", centeredStyle);
-
-        if (GUILayout.Button("Switch To Locked Color Screw Level"))
-        {
-            SwitchToLockedColorScrew();
-        }
-
-        GUILayout.Space(16);
-        GUILayout.Label("Util", centeredStyle);
 
         if (GUILayout.Button("Add Required Components To Pieces"))
         {
@@ -394,11 +281,6 @@ public class HingeJointGenerator : EditorWindow
         {
             FoldAllInPrefabMode();
         }
-
-        // if (GUILayout.Button("Overlap"))
-        // {
-        //     IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
-        // }
 
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
@@ -3800,43 +3682,6 @@ public class HingeJointGenerator : EditorWindow
                 }
             }
         }
-    }
-    #endregion
-
-    #region SWITCH SPECIAL LEVEL
-    /// <summary>
-    /// Replace all "screws" in the level with "locked color screws"
-    /// </summary>
-    private void SwitchToLockedColorScrew()
-    {
-        Transform level = Selection.activeTransform;
-
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
-
-        List<BaseScrew> toRemoveList = new List<BaseScrew>();
-
-        toRemoveList.AddRange(screws);
-
-        // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[1];
-
-        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.LOCKED_COLOR_SCREW_PREFAB_PATH);
-        DebugLogger.LogSimple(message: $"{screwPrefab.name}");
-
-        for (int i = 0; i < screws.Length; i++)
-        {
-            Transform screw = PrefabUtility.InstantiatePrefab(screwPrefab, screws[i].transform.parent).GetComponent<Transform>();
-
-            screw.transform.position = screws[i].transform.position;
-            screw.transform.rotation = screws[i].transform.rotation;
-            screw.transform.localScale = screws[i].transform.localScale;
-        }
-
-        foreach (var item in toRemoveList)
-        {
-            DestroyImmediate(item.gameObject, true);
-        }
-
-        EditorUtility.SetDirty(level);
     }
     #endregion
 }
