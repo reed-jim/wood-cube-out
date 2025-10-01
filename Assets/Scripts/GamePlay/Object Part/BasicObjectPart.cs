@@ -21,7 +21,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     [SerializeField] private int minJointToDisableKinematic = 1;
 
     #region COMPONENT
-    private ObjectPartMaterialPropertyBlock _pieceMaterialPropertyBlock;
+    protected ObjectPartMaterialPropertyBlock _pieceMaterialPropertyBlock;
     #endregion
 
     #region PRIVATE FIELD
