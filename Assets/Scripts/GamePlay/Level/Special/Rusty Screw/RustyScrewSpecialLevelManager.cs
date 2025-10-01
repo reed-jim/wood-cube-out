@@ -79,6 +79,11 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
     protected override void OnScrewsSet(BaseScrew[] screws)
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         base.OnScrewsSet(screws);
 
         switchToRustyScrewsEvent?.Invoke();

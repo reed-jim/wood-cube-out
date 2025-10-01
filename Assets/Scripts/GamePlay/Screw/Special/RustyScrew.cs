@@ -4,10 +4,18 @@ namespace NamPhuThuy.GamePlay
 {
     public class RustyScrew : BasicScrew
     {
-        [SerializeField] private Texture rustyScrewTexture;
+        protected override void AddScrewToList()
+        {
+
+        }
 
         protected override bool IsValidToLoose()
         {
+            if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager == null)
+            {
+                return true;
+            }
+
             if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
             {
                 return false;
@@ -17,6 +25,14 @@ namespace NamPhuThuy.GamePlay
                 return base.IsValidToLoose();
             }
         }
-    }
 
+        protected override FakeScrew SpawnFakeScrew()
+        {
+            FakeScrew fakeScrew = base.SpawnFakeScrew();
+
+            fakeScrew.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
+
+            return fakeScrew;
+        }
+    }
 }

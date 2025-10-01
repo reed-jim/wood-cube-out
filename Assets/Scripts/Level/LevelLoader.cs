@@ -51,6 +51,7 @@ namespace NamPhuThuy.GamePlay
 
     #region EVENT
     public static event Action startLevelEvent;
+    public static event Action endCurrentLevelEvent;
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
@@ -365,6 +366,8 @@ namespace NamPhuThuy.GamePlay
 
     private async void GoLevel(int level)
     {
+        endCurrentLevelEvent?.Invoke();
+        
         // DebugLogger.LogSimple();
         await Task.Delay(500);
 

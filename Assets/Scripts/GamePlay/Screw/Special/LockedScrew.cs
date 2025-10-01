@@ -4,8 +4,6 @@ namespace NamPhuThuy.GamePlay
 {
     public class LockedScrew : BasicScrew
     {
-        [SerializeField] private Texture rustyScrewTexture;
-
         protected override void AddScrewToList()
         {
 
@@ -13,7 +11,6 @@ namespace NamPhuThuy.GamePlay
 
         protected override bool IsValidToLoose()
         {
-            bool res;
             if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager == null)
             {
                 return true;
@@ -29,5 +26,4 @@ namespace NamPhuThuy.GamePlay
             }
         }
     }
-
 }

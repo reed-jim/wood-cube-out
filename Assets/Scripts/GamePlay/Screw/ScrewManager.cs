@@ -80,7 +80,7 @@ public class ScrewManager : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
         LockScrewColorLevelManager.switchToLockedScrewsEvent += SwitchToLockedScrews;
-        RustyScrewSpecialLevelManager.switchToRustyScrewsEvent += SwitchToLockedScrews;
+        RustyScrewSpecialLevelManager.switchToRustyScrewsEvent += SwitchToRustyScrews;
 
         _tweens = new List<Tween>();
 
@@ -105,7 +105,7 @@ public class ScrewManager : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
         LockScrewColorLevelManager.switchToLockedScrewsEvent -= SwitchToLockedScrews;
-        RustyScrewSpecialLevelManager.switchToRustyScrewsEvent -= SwitchToLockedScrews;
+        RustyScrewSpecialLevelManager.switchToRustyScrewsEvent -= SwitchToRustyScrews;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -856,6 +856,11 @@ public class ScrewManager : MonoBehaviour
     private void SwitchToLockedScrews()
     {
         SwitchScrewsToSpecialType<LockedScrew>();
+    }
+
+    private void SwitchToRustyScrews()
+    {
+        SwitchScrewsToSpecialType<RustyScrew>();
     }
     #endregion
 }

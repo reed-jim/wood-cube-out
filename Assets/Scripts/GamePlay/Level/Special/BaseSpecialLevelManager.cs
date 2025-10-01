@@ -28,7 +28,7 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent += OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent += OnScrewLoosed;
             ScrewManager.winLevelEvent += Disable;
-            DebugPopup.winLevelEvent += Disable;
+            LevelLoader.endCurrentLevelEvent += Disable;
 
             _isFirstTime = true;
         }
@@ -40,7 +40,7 @@ namespace NamPhuThuy.GamePlay
             ScrewManager.switchScrewsToSpecialTypeCompleteEvent -= OnSwitchScrewsToSpecialTypeCompleted;
             BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
             ScrewManager.winLevelEvent -= Disable;
-            DebugPopup.winLevelEvent -= Disable;
+            LevelLoader.endCurrentLevelEvent -= Disable;
         }
 
         protected virtual void Reset()
@@ -107,7 +107,7 @@ namespace NamPhuThuy.GamePlay
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
-            int remaningTime = 10;
+            int remaningTime = 25;
 
             if (_isFirstTime)
             {

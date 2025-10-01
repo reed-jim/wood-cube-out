@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Lean.Localization;
 using NamPhuThuy;
 using PrimeTween;
-using Unity.AI.Navigation.Editor;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.SceneManagement;
