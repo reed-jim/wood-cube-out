@@ -42,6 +42,8 @@ public class LockedObjectPart : BasicObjectPart
             // screw.gameObject.SetActive(false);
         }
 
+        _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Locked);
+
         requiredValueToUnlock = Random.Range(5, 10);
 
         requiredValueText.text = $"{requiredValueToUnlock}";
@@ -84,6 +86,8 @@ public class LockedObjectPart : BasicObjectPart
                 //     _screws[index].IsInteractable = true;
                 // });
             }
+
+            _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Normal);
 
             // Chains
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
