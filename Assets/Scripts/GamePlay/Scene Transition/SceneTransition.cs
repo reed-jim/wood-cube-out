@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
@@ -48,6 +49,7 @@ public class SceneTransition : MonoBehaviour
 
 
     private void Awake()
+    
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;

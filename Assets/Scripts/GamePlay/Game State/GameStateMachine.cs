@@ -4,7 +4,9 @@ using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
-public class GameStateMachine : MonoBehaviour
+namespace NamPhuThuy.GamePlay
+{
+    public class GameStateMachine : MonoBehaviour
 {
     private BaseGameState currentState;
 
@@ -98,4 +100,5 @@ public class GameStateMachine : MonoBehaviour
         DebugLogger.LogSimple();
         EnterPlayingState();
     }
+}
 }

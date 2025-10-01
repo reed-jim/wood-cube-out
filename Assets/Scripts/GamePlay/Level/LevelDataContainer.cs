@@ -1,66 +1,75 @@
 using System;
+using System.IO;
+using System.Linq;
 using NamPhuThuy.GamePlay;
+using UnityEditor;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "WoodCube/LevelDataContainer")]
-public class LevelDataContainer : ScriptableObject
+namespace NamPhuThuy.Data
 {
-    [SerializeField] private int maxLevel;
-    [SerializeField] private LevelData[] levelsData;
-   
-
-    public int MaxLevel
+    [CreateAssetMenu(menuName = "WoodCube/LevelDataContainer")]
+    public class LevelDataContainer : ScriptableObject
     {
-        get => maxLevel;
-    }
+        [SerializeField] private int maxLevel;
+        [SerializeField] private LevelData[] levelsData;
 
-    public LevelData[] LevelsData
-    {
-        get => levelsData;
-    }
-
-    private void OnValidate()
-    {
-        if (levelsData == null || levelsData.Length == 0)
-            return;
-
-        bool hasChanges = false;
-
-        for (int i = 0; i < levelsData.Length; i++)
+        public int MaxLevel
         {
-            if (levelsData[i] != null)
+            get => maxLevel;
+        }
+
+        public LevelData[] LevelsData
+        {
+            get => levelsData;
+        }
+
+        private void OnValidate()
+        {
+            if (levelsData == null || levelsData.Length == 0)
+                return;
+
+            bool hasChanges = false;
+
+            for (int i = 0; i < levelsData.Length; i++)
             {
-                int expectedLevelId = i; // Level IDs start from 1
-            
-                if (levelsData[i].levelId != expectedLevelId)
+                if (levelsData[i] != null)
                 {
-                    levelsData[i].levelId = expectedLevelId;
-                    hasChanges = true;
+                    int expectedLevelId = i; // Level IDs start from 1
+
+                    if (levelsData[i].levelId != expectedLevelId)
+                    {
+                        levelsData[i].levelId = expectedLevelId;
+                        hasChanges = true;
+                    }
                 }
             }
-        }
 
-        // Update maxLevel to match array length
-        /*if (maxLevel != levelsData.Length)
-        {
-            maxLevel = levelsData.Length;
-            hasChanges = true;
-        }*/
+            // Update maxLevel to match array length
+            if (maxLevel != levelsData.Length)
+            {
+                maxLevel = levelsData.Length;
+                hasChanges = true;
+            }
 
 #if UNITY_EDITOR
-        if (hasChanges)
-        {
-            UnityEditor.EditorUtility.SetDirty(this);
-            
-        }
-#endif
-    }
-}
+            if (hasChanges)
+            {
+                EditorUtility.SetDirty(this);
 
-[Serializable]
-public class LevelData
-{
-    public int levelId;
-    public GameObject levelPrefab;
-    public LevelMode levelMode;
+            }
+#endif
+        }
+    }
+    
+    
+    
+
+    [Serializable]
+    public class LevelData
+    {
+        public int levelId;
+        public GameObject levelPrefab;
+        public LevelMode levelMode;
+    }
+
 }
