@@ -1,18 +1,22 @@
 using UnityEngine;
 
-public class RustyScrew : BasicScrew
+namespace NamPhuThuy.GamePlay
 {
-    [SerializeField] private Texture rustyScrewTexture;
-
-    protected override bool IsValidToLoose()
+    public class RustyScrew : BasicScrew
     {
-        if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
+        [SerializeField] private Texture rustyScrewTexture;
+
+        protected override bool IsValidToLoose()
         {
-            return false;
-        }
-        else
-        {
-            return base.IsValidToLoose();
+            if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
+            {
+                return false;
+            }
+            else
+            {
+                return base.IsValidToLoose();
+            }
         }
     }
+
 }

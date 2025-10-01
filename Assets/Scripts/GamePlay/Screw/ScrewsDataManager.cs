@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
