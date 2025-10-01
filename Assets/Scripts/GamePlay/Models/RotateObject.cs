@@ -20,6 +20,8 @@ public class RotateObject : MonoBehaviour
     private float _smoothRotateX;
     private float _smoothRotateY;
 
+    #region MonoBehaviour Callbacks
+
     void Awake()
     {
         ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
@@ -36,12 +38,16 @@ public class RotateObject : MonoBehaviour
 
         StartCoroutine(Rotating());
     }
-
+    
     void OnDestroy()
     {
         ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
         SwipeGesture.swipeGestureEvent -= Rotate;
     }
+
+    #endregion
+
+    
 
     public void AssignDummyClone(Transform clone)
     {

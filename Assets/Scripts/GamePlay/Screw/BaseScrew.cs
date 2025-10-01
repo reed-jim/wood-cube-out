@@ -8,7 +8,9 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using static GameEnum;
 
-public class BaseScrew : MonoBehaviour, IScrew
+namespace NamPhuThuy.GamePlay
+{
+    public class BaseScrew : MonoBehaviour, IScrew
 {
     [SerializeField] protected int screwId;
 
@@ -586,4 +588,5 @@ public class BaseScrew : MonoBehaviour, IScrew
         }));
     }
     #endregion
+}
 }

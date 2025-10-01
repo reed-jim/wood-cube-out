@@ -1,28 +1,33 @@
 using UnityEngine;
 
-public class LockedScrew : BasicScrew
+namespace NamPhuThuy.GamePlay
 {
-    [SerializeField] private Texture rustyScrewTexture;
-
-    protected override void AddScrewToList()
+    public class LockedScrew : BasicScrew
     {
+        [SerializeField] private Texture rustyScrewTexture;
 
+        protected override void AddScrewToList()
+        {
+
+        }
+
+        protected override bool IsValidToLoose()
+        {
+            bool res;
+            if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager == null)
+            {
+                return true;
+            }
+
+            if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
+            {
+                return false;
+            }
+            else
+            {
+                return base.IsValidToLoose();
+            }
+        }
     }
 
-    protected override bool IsValidToLoose()
-    {
-        if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager == null)
-        {
-            return true;
-        }
-
-        if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
-        {
-            return false;
-        }
-        else
-        {
-            return base.IsValidToLoose();
-        }
-    }
 }
