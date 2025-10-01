@@ -1,4 +1,6 @@
 using System;
+using System.IO;
+using System.Linq;
 using NamPhuThuy.GamePlay;
 using UnityEditor;
 using UnityEngine;
@@ -6,7 +8,6 @@ using UnityEngine;
 namespace NamPhuThuy.Data
 {
     [CreateAssetMenu(menuName = "WoodCube/LevelDataContainer")]
-
     public class LevelDataContainer : ScriptableObject
     {
         [SerializeField] private int maxLevel;
@@ -44,11 +45,11 @@ namespace NamPhuThuy.Data
             }
 
             // Update maxLevel to match array length
-            /*if (maxLevel != levelsData.Length)
-        {
-            maxLevel = levelsData.Length;
-            hasChanges = true;
-        }*/
+            if (maxLevel != levelsData.Length)
+            {
+                maxLevel = levelsData.Length;
+                hasChanges = true;
+            }
 
 #if UNITY_EDITOR
             if (hasChanges)
@@ -59,6 +60,9 @@ namespace NamPhuThuy.Data
 #endif
         }
     }
+    
+    
+    
 
     [Serializable]
     public class LevelData
