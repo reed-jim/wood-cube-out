@@ -41,6 +41,13 @@ public class ScrewBoxManager : MonoBehaviour
     private bool _isCheckingLose;
     #endregion
 
+    #region PUBLIC FIELDS
+
+    public static int TotalScrewBoxes;
+    public static int TotalScrewBoxesSpawned;
+
+    #endregion
+
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingVisibilityEvent;

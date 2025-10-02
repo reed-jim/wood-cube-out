@@ -591,7 +591,6 @@ public static class LevelDifficultyCalculatorUltility
 
         int PREDICTED_MAX_LEVEL = 175;
 
-        // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
 
         // REMOTE CONFIG
@@ -615,21 +614,6 @@ public static class LevelDifficultyCalculatorUltility
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 
-        // // DEBUG
-        // for (int i = 1; i <= 125; i++)
-        // {
-        //     float test =
-        //     DIFFICULTY_MULTIPLIER *
-        //         (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(i, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)i / PREDICTED_MAX_LEVEL));
-
-        //     test *= (0.4f / 1f);
-
-        //     Debug.Log($"SAFERIO LEVEL {i} - Hard Percent: {test * 100}%");
-        // }
-
-        // // RANDOMIZE
-        // maxPhaseIndex = UnityEngine.Random.Range(GameConstants.SCREW_FACTION.Length / 2, GameConstants.SCREW_FACTION.Length - 1);
-
         for (int i = maxPhaseIndex; i >= 0; i--)
         {
             int phaseIndex = i;
@@ -650,7 +634,6 @@ public static class LevelDifficultyCalculatorUltility
         }
 
         LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
-        // LevelDifficultyConfiguration levelDifficultyConfiguration = ScriptableObject.CreateInstance<LevelDifficultyConfiguration>();
 
         levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
         levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;

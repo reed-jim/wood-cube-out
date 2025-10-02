@@ -137,7 +137,7 @@ public static class GameConstants
     #endregion
 
     #region SCREW AWAY
-    public static int NUMBER_SLOT_PER_SCREW_BOX = 3;
+    public const int NUMBER_SLOT_PER_SCREW_BOX = 3;
     public static int DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 2;
     public static int DEFAULT_NUMBER_SCREW_PORT = 5;
     public static GameFaction[] SCREW_FACTION = new GameFaction[8]
