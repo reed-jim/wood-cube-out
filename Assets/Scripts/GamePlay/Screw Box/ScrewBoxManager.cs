@@ -564,7 +564,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void SpawnAdsScrewBoxes()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         for (int i = 0; i < screwBoxs.Length; i++)
         {
             if (screwBoxs[i] != null)
@@ -779,13 +779,17 @@ public class ScrewBoxManager : MonoBehaviour
         }
     }
 
-    public Dictionary<GameFaction, int> GetScrewPortAvailableByFaction()
+    /// <summary>
+    /// Count available screw slot in screw-boxes by faction
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<GameFaction, int> GetScrewSlotsAvailableByFaction()
     {
-        Dictionary<GameFaction, int> screwPortAvailableByFaction = new Dictionary<GameFaction, int>();
+        Dictionary<GameFaction, int> screwSlotAvailableByFaction = new Dictionary<GameFaction, int>();
 
-        for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+        foreach (var faction in GameConstants.SCREW_FACTION)
         {
-            screwPortAvailableByFaction.Add(GameConstants.SCREW_FACTION[i], 0);
+            screwSlotAvailableByFaction.Add(faction, 0);
         }
 
         for (int i = 0; i < screwBoxs.Length; i++)
@@ -803,12 +807,12 @@ public class ScrewBoxManager : MonoBehaviour
 
                 if (!screwBoxSlot.IsFilled || screwBoxs[i].IsInTransition)
                 {
-                    screwPortAvailableByFaction[faction]++;
+                    screwSlotAvailableByFaction[faction]++;
                 }
             }
         }
 
-        return screwPortAvailableByFaction;
+        return screwSlotAvailableByFaction;
     }
 
     #region BOOSTER

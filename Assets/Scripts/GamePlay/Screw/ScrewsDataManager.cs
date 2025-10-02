@@ -81,7 +81,7 @@ public class ScrewsDataManager : MonoBehaviour
     {
         if (!GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
-            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
+            // DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -94,7 +94,7 @@ public class ScrewsDataManager : MonoBehaviour
         // No data for current level
         if (levelProgressData.ScrewsData == null)
         {
-            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
+            // DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -109,7 +109,7 @@ public class ScrewsDataManager : MonoBehaviour
         {
             GamePersistentVariable.isFreshLevel = true;
 
-            DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
+            // DebugLogger.LogSimple(message:$"Trigger spawnFreshLevelScrewBoxesEvent");
             spawnFreshLevelScrewBoxesEvent?.Invoke();
 
             return;
@@ -117,7 +117,7 @@ public class ScrewsDataManager : MonoBehaviour
 
         if (currentLevel.Value == 1)
         {
-            DebugLogger.LogSimple(message:$"Trigger endTutorialLevel1Event");
+            // DebugLogger.LogSimple(message:$"Trigger endTutorialLevel1Event");
             endTutorialLevel1Event?.Invoke();
         }
 
@@ -207,10 +207,10 @@ public class ScrewsDataManager : MonoBehaviour
         }));
 
         // UPDATE UI
-        DebugLogger.LogSimple(message:$"Trigger updateRemainingScrewEvent");
+        // DebugLogger.LogSimple(message:$"Trigger updateRemainingScrewEvent");
         updateRemainingScrewEvent?.Invoke(remainingScrew, totalScrew);
         
-        DebugLogger.LogSimple(message:$"Trigger updateOutsideScrewNumberEvent");
+        // DebugLogger.LogSimple(message:$"Trigger updateOutsideScrewNumberEvent");
         updateOutsideScrewNumberEvent?.Invoke();
     }
 

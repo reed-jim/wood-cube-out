@@ -8,6 +8,7 @@ using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 using static GameEnum;
 
 public class ScrewManager : MonoBehaviour
@@ -28,7 +29,7 @@ public class ScrewManager : MonoBehaviour
     private int _totalScrew;
     private Coroutine _handlingOutsideScrewCoroutine;
     private Coroutine _autoTestingCoroutine;
-    [SerializeField] private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
+    [SerializeField] private LevelDifficultyConfiguration currentLevelDifficultyConfig;
     #endregion
 
     #region QUEUE SPAWN SCREW BOXES
@@ -37,9 +38,6 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region QUEUE OUTSIDE SCREWS
-    private int _totalScrewBoxes;
-    private int _totalScrewBoxesSpawned;
-    private int _remainingHandleOutsideScrewCommands;
     private bool _isHandlingOutsideScrews;
     #endregion
 
@@ -60,6 +58,7 @@ public class ScrewManager : MonoBehaviour
     #endregion
 
     #region LIFE CYCLE
+    
 
     #region Very important - PIECE DEPENDENCY DIAGRAM
     Dictionary<int, List<Transform>> obstaclesOfPieces = new Dictionary<int, List<Transform>>();
@@ -118,14 +117,14 @@ public class ScrewManager : MonoBehaviour
 
         _totalScrewObserved = 0;
 
-        _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-        _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier =
+        currentLevelDifficultyConfig = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+        currentLevelDifficultyConfig.ScrewPortFactionDifficultyModifier =
             RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
-
-        _totalScrewBoxesSpawned = 0;
+        
+        ScrewBoxManager.TotalScrewBoxesSpawned = 0;
+        
         _remainingSpawnScrewBoxCommands = 0;
         _isHandlingSpawningScrewBox = false;
-        _remainingHandleOutsideScrewCommands = 0;
         _isHandlingOutsideScrews = false;
 
         GamePersistentVariable.numScrewBoxUnlocked = 0;
@@ -144,14 +143,14 @@ public class ScrewManager : MonoBehaviour
     {
         // DebugLogger.LogSimple();
         _totalScrew = screwNumber;
-        _totalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
+        ScrewBoxManager.TotalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
 
         updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
     }
 
     private void AddScrew(BaseScrew screw)
     {
-        // // DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_screws == null)
         {
             _screws = new List<BaseScrew>();
@@ -205,20 +204,6 @@ public class ScrewManager : MonoBehaviour
 
             remainingScrewByFaction[_screws[i].Faction]++;
         }
-
-        // // CHECK SCREW PORTS
-        // for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
-        // {
-        //     ScrewBoxSlot screwBoxSlot = screwBoxManager.ScrewPorts[i];
-
-        //     if (screwBoxSlot.IsFilled)
-        //     {
-        //         remainingScrewByFaction[screwBoxSlot.Screw.Faction]++;
-        //     }
-        // }
-
-        // int remainingScrew = remainingScrewByFaction.Sum(item => item.Value);
-
         return remainingScrewByFaction;
     }
 
@@ -227,14 +212,12 @@ public class ScrewManager : MonoBehaviour
         // RULE: The more difficulty point, the less chance to spawn for a faction
 
         Dictionary<GameFaction, int> difficultyLevelByFactions = new Dictionary<GameFaction, int>();
-        Dictionary<GameFaction, int> totalNotBlockedScrewByFaction = new Dictionary<GameFaction, int>();
 
         Dictionary<GameFaction, List<int>> numObstacleEachScrewEachFaction = new Dictionary<GameFaction, List<int>>();
 
         for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
         {
             difficultyLevelByFactions.Add(GameConstants.SCREW_FACTION[i], 0);
-
             numObstacleEachScrewEachFaction.Add(GameConstants.SCREW_FACTION[i], new List<int>());
         }
 
@@ -251,8 +234,6 @@ public class ScrewManager : MonoBehaviour
 
             GameFaction faction = _screws[i].Faction;
 
-            // int numberBlockObject = _screws[i].NumberBlockingObjects;
-
             // Find closest obstacle
             Transform obstaclePiece = null;
 
@@ -266,36 +247,25 @@ public class ScrewManager : MonoBehaviour
 
             Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
 
-            if (hits != null)
+            for (int j = 0; j < hits.Length; j++)
             {
-                for (int j = 0; j < hits.Length; j++)
+                if (hits[j] == null) { continue; }
+
+                if (hits[j].transform.GetInstanceID() == _screws[i].transform.parent.GetInstanceID())
+                { continue; }
+
+                IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
+
+                if (objectPart == null) { continue; }
+                
+                int instanceId = hits[j].transform.GetInstanceID();
+                if (obstaclesOfPieces.ContainsKey(instanceId))
                 {
-                    if (hits[j] == null)
-                    {
-                        continue;
-                    }
+                    obstaclePiece = hits[j].transform;
 
-                    if (hits[j].transform.GetInstanceID() == _screws[i].transform.parent.GetInstanceID())
-                    {
-                        continue;
-                    }
-
-                    IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
-
-                    if (objectPart != null)
-                    {
-                        int instanceId = hits[j].transform.GetInstanceID();
-
-                        if (obstaclesOfPieces.ContainsKey(instanceId))
-                        {
-                            obstaclePiece = hits[j].transform;
-
-                            break;
-                        }
-                    }
+                    break;
                 }
             }
-            //
 
             if (obstaclePiece != null)
             {
@@ -369,17 +339,6 @@ public class ScrewManager : MonoBehaviour
                 difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 9999;
             }
         }
-
-        // // Modify chance of factions of screw port
-        // for (int i = 0; i < screwBoxManager.ScrewPorts.Count; i++)
-        // {
-        //     if (screwBoxManager.ScrewPorts[i].IsFilled)
-        //     {
-        //         // override old value
-        //         difficultyLevelByFactions[screwBoxManager.ScrewPorts[i].Screw.Faction] =
-        //             _currentLevelDifficultyConfiguration.ScrewPortFactionDifficultyModifier;
-        //     }
-        // }
 
         return difficultyLevelByFactions;
     }
@@ -501,7 +460,7 @@ public class ScrewManager : MonoBehaviour
             spawnScrewBoxEvent?.Invoke(faction);
         }
 
-        _totalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
+        ScrewBoxManager.TotalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
 
         // DebugLogger.LogSimple(message: $"Trigger spawnAdsScrewBoxesEvent");
         spawnAdsScrewBoxesEvent?.Invoke();
@@ -536,8 +495,8 @@ public class ScrewManager : MonoBehaviour
 
     private async void SpawnNewScrewBox()
     {
-        // DebugLogger.LogSimple();
-        if (_totalScrewBoxesSpawned >= _totalScrewBoxes)
+        // DebugLogger.LogSimple(); 
+        if (ScrewBoxManager.TotalScrewBoxesSpawned >= ScrewBoxManager.TotalScrewBoxes)
         {
             return;
         }
@@ -552,19 +511,19 @@ public class ScrewManager : MonoBehaviour
         // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
         spawnScrewBoxEvent?.Invoke(faction);
 
-        _totalScrewBoxesSpawned++;
+        ScrewBoxManager.TotalScrewBoxesSpawned++;
     }
 
     private void OnScrewBoxUnlocked(ScrewBox screwBox)
     {
         // DebugLogger.LogSimple();
-        _totalScrewBoxesSpawned++;
+        ScrewBoxManager.TotalScrewBoxesSpawned++;
     }
 
     private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
     {
         // DebugLogger.LogSimple();
-        AssignFactionForNewScrewBox(screwBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
+        AssignFactionForNewScrewBox(screwBox, currentLevelDifficultyConfig.AdsScrewBoxDifficultyLevelModifier);
     }
 
     private async Task AssignFactionForNewScrewBox(ScrewBox screwBox, int difficultyLevelModifier)
@@ -593,7 +552,7 @@ public class ScrewManager : MonoBehaviour
             }
         }
 
-        Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
+        Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewSlotsAvailableByFaction();
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
         Dictionary<GameFaction, int> difficultyLevelByFaction = await GetDifficultyLevelByFaction();
 
@@ -604,97 +563,75 @@ public class ScrewManager : MonoBehaviour
         return factionSortedByDifficulty;
     }
 
+   
+    #endregion
+
+    #region Difficulty Calculate
+
     private async Task<GameFaction> GetFactionForNewScrewBox(int difficultyLevelModifier = 0)
     {
-        float progress;
-        int doneScrew = 0;
-
-        for (int i = 0; i < _screws.Count; i++)
-        {
-            if (_screws[i].IsDone)
-            {
-                doneScrew++;
-            }
-            // else
-            // {
-            //     _screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
-            // }
-        }
-
-        progress = (float)doneScrew / _totalScrew;
+        GameFaction nextFaction = GameFaction.None;
+        float progress = CalculateCurrentProgress();
+        // int baseDifficultyLevel = GetCurrentDifficultyPhase(progress);
 
         int difficultyLevel = 0;
+        difficultyLevel = GetCurrentDifficultyPhase(progress);
+        
+        DebugLogger.LogSimple(message:$"base diff: {difficultyLevel}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        
+        difficultyLevel = ApplyDifficultyModifiers(difficultyLevel, difficultyLevelModifier);
+        DebugLogger.LogSimple(message:$"ajusted diff: {difficultyLevel}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
-        for (int i = 0; i < _currentLevelDifficultyConfiguration.LevelPhases.Length; i++)
+        Dictionary<GameFaction, int> screwSlotAvailableByFaction = screwBoxManager.GetScrewSlotsAvailableByFaction();
+        
+        DebugLogger.LogSimple(message:$"screwSlotAvailableByFaction:");
+        foreach (var kvp in screwSlotAvailableByFaction)
         {
-            LevelPhase levelPhase = _currentLevelDifficultyConfiguration.LevelPhases[i];
-
-            if (progress <= levelPhase.EndProgress)
-            {
-                difficultyLevel = levelPhase.PhaseIndex;
-
-                break;
-            }
+            DebugLogger.Log($"{kvp.Key}: {kvp.Value} available slots", Color.cyan);
         }
-
-        difficultyLevel += difficultyLevelModifier;
-        difficultyLevel = Mathf.Max(difficultyLevel, 0);
-
-        // DIFFICULTY REDUCED AFTER REWARDED ADS
-        if (_isReducedDifficultyAfterRewardedAds)
-        {
-            if (GamePersistentVariable.numScrewBoxUnlocked >= 1)
-            {
-                difficultyLevel = 0;
-            }
-        }
-
-        // FREE LEVELS
-        int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
-
-        if (currentLevel.Value <= minFreeLevel)
-        {
-            difficultyLevel = 0;
-        }
-
-        // HARD MODE
-        if (GamePersistentVariable.isHardMode)
-        {
-            difficultyLevel = _currentLevelDifficultyConfiguration.LevelPhases.Length - 1;
-        }
-
-        Dictionary<GameFaction, int> screwPortAvailableByFaction = screwBoxManager.GetScrewPortAvailableByFaction();
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
+        DebugLogger.LogSimple(message:$"remainingScrewByFaction:");
+        foreach (var kvp in remainingScrewByFaction)
+        {
+            DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
+        }
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
+        DebugLogger.LogSimple(message:$"totalBlockObjectsByFaction:");
+        foreach (var kvp in totalBlockObjectsByFaction)
+        {
+            DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
+        }
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
+        DebugLogger.LogSimple(message:$"shuffledDifficultyLevelByFaction:");
+        foreach (var kvp in shuffledDifficultyLevelByFaction)
+        {
+            DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
+        }
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
-
-        GameFaction nextFaction = GameFaction.None;
-
+        DebugLogger.LogSimple(message:$"factionSortedByDifficulty:");
+        foreach (var kvp in factionSortedByDifficulty)
+        {
+            DebugLogger.Log($"{kvp} ", Color.cyan);
+        }
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        
         bool isFound = false;
-
-        // // DEBUG
-        // Debug.Log("SAFERIO ---------------------------------------");
-
-        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        // {
-        //     GameFaction faction = factionSortedByDifficulty[i];
-
-        //     string debugString = $"SAFERIO {faction} Remaining: {remainingScrewByFaction[faction]}";
-
-        //     debugString += $" Available: {screwPortAvailableByFaction[faction]}";
-        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
-
-        //     Debug.Log(debugString);
-        // }
 
         for (int i = difficultyLevel; i >= 0; i--)
         {
             GameFaction faction = factionSortedByDifficulty[i];
 
-            if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) >= 3)
+            if ((remainingScrewByFaction[faction] - screwSlotAvailableByFaction[faction]) >= 3)
             {
                 nextFaction = faction;
 
@@ -703,6 +640,9 @@ public class ScrewManager : MonoBehaviour
                 break;
             }
         }
+        
+        DebugLogger.LogSimple(message:$"isFound: {isFound} - nextFaction: {nextFaction}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         if (!isFound)
         {
@@ -710,16 +650,18 @@ public class ScrewManager : MonoBehaviour
             {
                 GameFaction faction = factionSortedByDifficulty[i];
 
-                if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) >= 3)
+                if ((remainingScrewByFaction[faction] - screwSlotAvailableByFaction[faction]) >= 3)
                 {
                     nextFaction = faction;
 
                     isFound = true;
-
                     break;
                 }
             }
         }
+        
+        DebugLogger.LogSimple(message:$"isFound: {isFound} - nextFaction: {nextFaction}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         if (!isFound)
         {
@@ -727,7 +669,7 @@ public class ScrewManager : MonoBehaviour
             {
                 GameFaction faction = factionSortedByDifficulty[i];
 
-                if ((remainingScrewByFaction[faction] - screwPortAvailableByFaction[faction]) < 3)
+                if ((remainingScrewByFaction[faction] - screwSlotAvailableByFaction[faction]) < 3)
                 {
                     continue;
                 }
@@ -736,21 +678,64 @@ public class ScrewManager : MonoBehaviour
                     nextFaction = faction;
 
                     isFound = true;
-
                     break;
                 }
             }
         }
+        
+        DebugLogger.LogSimple(message:$"isFound: {isFound} - nextFaction: {nextFaction}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         return nextFaction;
     }
-    #endregion
+     
+    private float CalculateCurrentProgress()
+    {
+        int doneScrew = _screws.Count(s => s.IsDone);
+        return (float)doneScrew / _totalScrew;
+    }
+    
+    private int GetCurrentDifficultyPhase(float progress)
+    {
+        if (currentLevelDifficultyConfig == null) return 0;
+        if (currentLevelDifficultyConfig.LevelPhases == null) return 0;
+        
+        
+        for (int i = 0; i < currentLevelDifficultyConfig.LevelPhases.Length; i++)
+        {
+            if (progress <= currentLevelDifficultyConfig.LevelPhases[i].EndProgress)
+                return currentLevelDifficultyConfig.LevelPhases[i].PhaseIndex;
+        }
+        return currentLevelDifficultyConfig.LevelPhases.Last().PhaseIndex;
+    }
+    
+    private int ApplyDifficultyModifiers(int baseDifficultyLevel, int modifier)
+    {
+        int adjustedLevel = baseDifficultyLevel + modifier;
+        adjustedLevel = Mathf.Max(adjustedLevel, 0);
 
+        // DIFFICULTY REDUCED AFTER REWARDED ADS
+        if (_isReducedDifficultyAfterRewardedAds && GamePersistentVariable.numScrewBoxUnlocked >= 1)
+            adjustedLevel = 0;
+
+        // FREE LEVELS
+        int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
+        if (currentLevel.Value <= minFreeLevel)
+            adjustedLevel = 0;
+
+        // HARD MODE
+        if (GamePersistentVariable.isHardMode)
+            adjustedLevel = currentLevelDifficultyConfig.LevelPhases.Length - 1;
+
+        return adjustedLevel;
+    }
+
+    #endregion
+    
     #region HANDLE SCREWS THAT ARE OUTSIDE WITH NO SCREW BOX
     private void OnScrewBoxSpawned(ScrewBox screwBox)
     {
         // DebugLogger.LogSimple();
-        _remainingHandleOutsideScrewCommands++;
     }
 
     private IEnumerator HandlingOutsideScrews()

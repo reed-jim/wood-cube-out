@@ -223,7 +223,7 @@ public class ScrewBox : MonoBehaviour
 
     public virtual void Lock()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
 
         screwBoxSpriteRenderer.enabled = false;
         screwBoxServiceLocator.screwBoxUI.Lock();
