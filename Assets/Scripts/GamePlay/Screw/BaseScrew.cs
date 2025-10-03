@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using CandyCoded.HapticFeedback;
 using NamPhuThuy;
+using NamPhuThuy.VFX;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -550,6 +551,9 @@ namespace NamPhuThuy.GamePlay
         private void ShakeInvalidScrew()
         {
             DebugLogger.LogSimple();
+            VFXManager.Ins.PlayAt(VFXType.POPUP_TEXT, 
+                message:VFXPopupTextMessage.CANT_CLICK,
+                initialParent: VFXManager.Ins.transform);
             if (!_isInteractable)
             {
                 return;

@@ -18,6 +18,7 @@ namespace NamPhuThuy.GamePlay
 
             if (SpecialLevelSwitcher.Ins.CurrentSpecialLevelManager.IsFactionLocked(Faction))
             {
+                DebugLogger.LogSimple(message:$"Return false");
                 return false;
             }
             else
