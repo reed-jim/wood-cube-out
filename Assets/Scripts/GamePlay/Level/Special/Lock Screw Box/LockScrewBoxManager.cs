@@ -28,6 +28,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         public static event Action<ScrewBox, SpecialLevelTaskRecord> requestLockedScrewBox;
+        public static event Action<LockScrewBoxManager> lockScrewBoxManagerInitEvent;
 
         #region MonoBehaviour Callbacks
 
@@ -38,7 +39,14 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent += OnScewBoxLockSpawned;
-
+            
+            
+            StartCoroutine(IETriggerInitEvent());
+            IEnumerator IETriggerInitEvent()
+            {
+                yield return new WaitForSeconds(0.2f);
+                lockScrewBoxManagerInitEvent?.Invoke(this);
+            }
         }
 
         protected override void OnDestroy()

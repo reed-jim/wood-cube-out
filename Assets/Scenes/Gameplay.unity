@@ -1563,8 +1563,8 @@ RectTransform:
   - {fileID: 477194870}
   m_Father: {fileID: 1411237950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.03794643}
+  m_AnchorMax: {x: 1, y: 0.95089287}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8610,6 +8610,28 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
   m_PrefabInstance: {fileID: 1851090306377199229}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1851090306377199231 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2145302381934619659, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+  m_PrefabInstance: {fileID: 1851090306377199229}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93ab0e7bb935f254888401d200921b7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1851090306377199232 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7131112291935146004, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
+  m_PrefabInstance: {fileID: 1851090306377199229}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 17988a5334a4a1a4c8754a42cf5582c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2183372076032801967
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9320,6 +9342,14 @@ PrefabInstance:
       propertyPath: screwBoxManager
       value: 
       objectReference: {fileID: 1234861721}
+    - target: {fileID: 4949786465380883905, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
+      propertyPath: lockScrewColorLevelManager
+      value: 
+      objectReference: {fileID: 1851090306377199232}
+    - target: {fileID: 4949786465380883905, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
+      propertyPath: rustyScrewSpecialLevelManager
+      value: 
+      objectReference: {fileID: 1851090306377199231}
     - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -39,12 +39,14 @@ namespace NamPhuThuy
             LevelLoaderSubscribe();
             LoadLevelErrorSceneSubscribe();
             LockScrewBoxManagerSubscribe();
+            LockScrewColorLevelManagerSubscribe();
             MultiPhaseScrewSubscribe();
             // RemoteAddressablesLoaderSubscribe();
             // RemoteConfigControllerSubscribe();
             ReplayPopupSubscribe();
             ReplenishLifeManagerSubscribe();
             RevivePopupSubscribe();
+            RustyScrewSpecialLevelManagerSubscribe();
             // SalePackIAPManagerSubscribe();
             ScrewBoxSubscribe();
             ScrewBoxCameraManagerSubscribe();
@@ -55,9 +57,20 @@ namespace NamPhuThuy
             // SwipingScreenSubscribe();
             // TopBarSubscribe();
             // UserLivesUISubscribe();
+            
+            
         }
 
-       
+        private void LockScrewColorLevelManagerSubscribe()
+        {
+            LockScrewColorLevelManager.lockScrewColorManagerInitEvent += (manager) => DebugLogger.LogWithFrame($"LockScrewColorLevelManager.lockScrewColorManagerInitEvent: {manager}", Color.yellow);
+        }
+
+        private void RustyScrewSpecialLevelManagerSubscribe()
+        {
+            RustyScrewSpecialLevelManager.rustyScrewManagerInitEvent += (manager) => DebugLogger.LogWithFrame($"RustyScrewSpecialLevelManager.rustyScrewManagerInitEvent: {manager}", Color.yellow);
+        }
+
         #endregion
 
         #region Public Methods
@@ -136,6 +149,7 @@ namespace NamPhuThuy
         public static void LockScrewBoxManagerSubscribe()
         {
             LockScrewBoxManager.requestLockedScrewBox += (screwBox, record) => DebugLogger.LogWithFrame($"Locked Screw Box requested: {screwBox}, Record: {record}", Color.yellow);
+            LockScrewBoxManager.lockScrewBoxManagerInitEvent += (manager) => DebugLogger.LogWithFrame($"LockScrewBoxManager.lockScrewBoxManagerInitEvent: {manager}", Color.yellow);
         }
         public static void MultiPhaseScrewSubscribe()
         {

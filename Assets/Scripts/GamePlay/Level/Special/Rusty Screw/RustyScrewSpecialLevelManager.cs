@@ -1,19 +1,45 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using NamPhuThuy.GamePlay;
-using PrimeTween;
-using Saferio.Util.SaferioTween;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using static GameEnum;
 
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
     private BaseScrew[] _rustyScrew;
+    
+    /// <summary>
+    /// Current faction that is locked by rusty screws, O(n) based on number of requiredComponents
+    /// </summary>
+    public GameFaction LockedScrewFaction => _specialLevelTaskRecord?.requiredComponents?
+        .Where(component => component.componentType == GameComponentType.Screw)
+        .FirstOrDefault()?.faction ?? GameFaction.None;
 
     public static event Action switchToRustyScrewsEvent;
+    public static event Action <RustyScrewSpecialLevelManager> rustyScrewManagerInitEvent;
+
+    #region MonoBehaviour Callbacks
+
+    protected override void Awake()
+    {
+        base.Awake();
+
+        StartCoroutine(IETriggerInitEvent());
+        IEnumerator IETriggerInitEvent()
+        {
+            yield return new WaitForSeconds(0.2f);
+            rustyScrewManagerInitEvent?.Invoke(this);
+        }
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+    }
+
+    #endregion
 
     public override bool IsFactionLocked(GameFaction faction)
     {

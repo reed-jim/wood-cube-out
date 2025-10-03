@@ -21,6 +21,13 @@ public class ScrewManager : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float delayShowPopupWin;
+    [SerializeField] private LevelDifficultyConfiguration currentLevelDifficultyConfig;
+
+    [Header("Managers")] 
+    [SerializeField] private LockScrewColorLevelManager _lockScrewColorLevelManager;
+    [SerializeField] private RustyScrewSpecialLevelManager _rustyScrewSpecialLevelManager;
+    [SerializeField] private LockScrewBoxManager _lockScrewBoxManager;
+    
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
@@ -29,7 +36,7 @@ public class ScrewManager : MonoBehaviour
     private int _totalScrew;
     private Coroutine _handlingOutsideScrewCoroutine;
     private Coroutine _autoTestingCoroutine;
-    [SerializeField] private LevelDifficultyConfiguration currentLevelDifficultyConfig;
+   
     #endregion
 
     #region QUEUE SPAWN SCREW BOXES
@@ -79,7 +86,12 @@ public class ScrewManager : MonoBehaviour
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
         LockScrewColorLevelManager.switchToLockedScrewsEvent += SwitchToLockedScrews;
+        LockScrewColorLevelManager.lockScrewColorManagerInitEvent += OnLockScrewColorManagerInit;
+        
         RustyScrewSpecialLevelManager.switchToRustyScrewsEvent += SwitchToRustyScrews;
+        RustyScrewSpecialLevelManager.rustyScrewManagerInitEvent += OnRustyScrewManagerInit;
+
+        LockScrewBoxManager.lockScrewBoxManagerInitEvent += OnLockScrewBoxInit;
 
         _tweens = new List<Tween>();
 
@@ -88,6 +100,9 @@ public class ScrewManager : MonoBehaviour
 
         _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
     }
+
+    
+
 
     void OnDestroy()
     {
@@ -192,15 +207,8 @@ public class ScrewManager : MonoBehaviour
 
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i].IsLocked)
-            {
-                continue;
-            }
-
-            if (_screws[i].IsDone)
-            {
-                continue;
-            }
+            if (_screws[i].IsLocked) { continue; }
+            if (_screws[i].IsDone) { continue; }
 
             remainingScrewByFaction[_screws[i].Faction]++;
         }
@@ -211,8 +219,10 @@ public class ScrewManager : MonoBehaviour
     {
         // RULE: The more difficulty point, the less chance to spawn for a faction
 
+        /*Dictionary<GameFaction, int> difficultyLevelByFactions = InitializeFactionDictionaries();
+        Dictionary<GameFaction, List<int>> numObstacleEachScrewEachFaction = InitializeObstacleTrackingDictionaries();*/
+        
         Dictionary<GameFaction, int> difficultyLevelByFactions = new Dictionary<GameFaction, int>();
-
         Dictionary<GameFaction, List<int>> numObstacleEachScrewEachFaction = new Dictionary<GameFaction, List<int>>();
 
         for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
@@ -224,13 +234,26 @@ public class ScrewManager : MonoBehaviour
         // Find the number of obstacles for each screw in each faction.
         for (int i = 0; i < _screws.Count; i++)
         {
-            if (_screws[i] == null) { continue; }
-            if (_screws[i].IsDone || _screws[i].IsLocked) { continue; }
-
             if (i > 0 && i % 16 == 0)
             {
                 await Task.Delay(20);
             }
+            
+            if (_screws[i] == null) { continue; }
+            if (_screws[i].IsDone || _screws[i].IsLocked) { continue; }
+            
+            /*// ------------
+            
+            var screw = _screws[i];
+            var obstacleCount = CalculateScrewObstacleCount(screw);
+
+            // Record obstacle data
+            numObstacleEachScrewEachFaction[screw.Faction].Add(obstacleCount);
+
+            // Add tutorial difficulty modifier
+            difficultyLevelByFactions[screw.Faction] += screw.ScrewDifficultyModifier;
+            
+            // ------------*/
 
             GameFaction faction = _screws[i].Faction;
 
@@ -239,8 +262,8 @@ public class ScrewManager : MonoBehaviour
 
             float screwRadius = _screws[i].transform.lossyScale.x * 0.45f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.x;
 
-            Vector3 pointOne =
-                _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
+            Vector3 pointOne = _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
+            
             Vector3 pointTwo = pointOne + 10f * _screws[i].transform.forward;
 
             Collider[] hits = new Collider[16];
@@ -303,7 +326,24 @@ public class ScrewManager : MonoBehaviour
             if (numObstacleEachScrewEachFaction[faction].Count < 3)
             {
                 difficultyLevelByFactions[faction] += 99999;
+                continue;
+            }
 
+            if (_rustyScrewSpecialLevelManager != null && _rustyScrewSpecialLevelManager.IsFactionLocked(faction))
+            {
+                difficultyLevelByFactions[faction] += 99999;
+                continue;
+            }
+           
+            if (_lockScrewColorLevelManager != null &&  _lockScrewColorLevelManager.IsFactionLocked(faction))
+            {
+                difficultyLevelByFactions[faction] += 99999;
+                continue;
+            }
+
+            if (_lockScrewBoxManager != null && _lockScrewBoxManager.IsFactionLocked(faction))
+            {
+                difficultyLevelByFactions[faction] -= 999;
                 continue;
             }
 
@@ -317,10 +357,8 @@ public class ScrewManager : MonoBehaviour
         // DECREASE Chance of factions that are already available in screw boxes
         for (int i = 0; i < screwBoxManager.ScrewBoxs.Length; i++)
         {
-            if (screwBoxManager.ScrewBoxs[i] == null || screwBoxManager.ScrewBoxs[i].IsLocked)
-            {
-                continue;
-            }
+            if (screwBoxManager.ScrewBoxs[i] == null) { continue; }
+            if (screwBoxManager.ScrewBoxs[i].IsLocked) { continue; }
 
             // avoid get factions that are already available in screw boxes when difficulty is max
             if (levelPhase != null)
@@ -338,9 +376,42 @@ public class ScrewManager : MonoBehaviour
             {
                 difficultyLevelByFactions[screwBoxManager.ScrewBoxs[i].Faction] += 9999;
             }
+            
+            
         }
 
         return difficultyLevelByFactions;
+        
+        Dictionary<GameFaction, int> InitializeFactionDictionaries()
+        {
+            var difficultyLevelByFactions = new Dictionary<GameFaction, int>();
+
+            for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+            {
+                difficultyLevelByFactions.Add(GameConstants.SCREW_FACTION[i], 0);
+            }
+
+            return difficultyLevelByFactions;
+        }
+        
+        Dictionary<GameFaction, List<int>> InitializeObstacleTrackingDictionaries()
+        {
+            var numObstacleEachScrewEachFaction = new Dictionary<GameFaction, List<int>>();
+
+            for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
+            {
+                numObstacleEachScrewEachFaction.Add(GameConstants.SCREW_FACTION[i], new List<int>());
+            }
+
+            return numObstacleEachScrewEachFaction;
+        }
+    }
+    
+    private struct ScrewDetectionParameters
+    {
+        public Vector3 PointOne;
+        public Vector3 PointTwo;
+        public float Radius;
     }
 
     private void OnScrewLoosed(BaseScrew screw)
@@ -847,5 +918,27 @@ public class ScrewManager : MonoBehaviour
     {
         SwitchScrewsToSpecialType<RustyScrew>();
     }
+    #endregion
+
+    #region Event Listeners
+
+    private void OnRustyScrewManagerInit(RustyScrewSpecialLevelManager obj)
+    {
+        DebugLogger.LogSimple(message:$"{obj}");
+        _rustyScrewSpecialLevelManager = obj;
+    }
+
+    private void OnLockScrewColorManagerInit(LockScrewColorLevelManager obj)
+    {
+        DebugLogger.LogSimple(message:$"{obj}");
+        _lockScrewColorLevelManager = obj;
+    }
+    
+    private void OnLockScrewBoxInit(LockScrewBoxManager obj)
+    {
+        DebugLogger.LogSimple(message:$"{obj}");
+        _lockScrewBoxManager = obj;
+    }
+
     #endregion
 }
