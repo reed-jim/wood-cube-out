@@ -65,7 +65,14 @@ namespace NamPhuThuy.GamePlay
         }
 
         #endregion
-
+            
+        public int GetTotalRequiredAmount(GameComponentType componentType)
+        {
+            return requiredComponents
+                .Where(item => item.componentType == componentType)
+                .Sum(item => item.amount);
+        }
+        
         public bool IsTaskCompleted()
         {
             return requiredComponents.All(item => item.remainingAmount <= 0);

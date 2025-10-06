@@ -18,11 +18,16 @@ namespace NamPhuThuy.GamePlay
     public class ScrewBoxLockUI : ScrewBoxUI
     {
         #region Private Serializable Fields
+        [Header("Components")]
         [SerializeField] private RectTransform lockContainer;
         [SerializeField] private Image tempFactionColor;
         [SerializeField] private TextMeshProUGUI progressText;
 
         [SerializeField] private Vector3 initialPosition;
+
+
+        [Header("Stats")] 
+        [SerializeField] private int prevRemaining;
         #endregion
 
         #region Private Fields
@@ -42,9 +47,32 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Private Methods
+
+        private void SetTargetColor(SpecialLevelTaskRecord record)
+        {
+            try
+            {
+                tempFactionColor.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
+            }
+            catch (System.Exception)
+            {
+
+            }
+        }
+        
         #endregion
 
         #region Public Methods
+
+        public void SetupUI(SpecialLevelTaskRecord record)
+        {
+            DebugLogger.LogSimple();
+            int total = record.GetTotalRequiredAmount(GameComponentType.Screw);
+            progressText.text = $"{total}/{total}";
+            prevRemaining = total;
+            
+            SetTargetColor(record);
+        }
 
         public void UpdateUI(SpecialLevelTaskRecord record)
         {
@@ -61,22 +89,25 @@ namespace NamPhuThuy.GamePlay
                 remaining += componentAmount.remainingAmount;
             }
 
-            try
-            {
-                tempFactionColor.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
-            }
-            catch (System.Exception)
-            {
-
-            }
+            SetTargetColor(record);
             DebugLogger.LogSimple(message:$"2");
 
-            progressText.text = $"{remaining}/{total}"; 
-            VFXManager.Ins.PlayAt(
-                type: VFXType.STAT_CHANGE_TEXT, 
-                pos: progressText.transform.position,
-                amount: -1,
-                initialParent: progressText.transform);
+            progressText.text = $"{remaining}/{total}";
+
+            // Play VFX if needed 
+            if (remaining < prevRemaining)
+            {
+                VFXManager.Ins.PlayAt(
+                    type: VFXType.STAT_CHANGE_TEXT,
+                    pos: progressText.transform.position,
+                    amount: remaining - prevRemaining,
+                    initialParent: progressText.transform,
+                    offset: new Vector2(-0.5f, 0f),
+                    color: Color.green);
+
+                prevRemaining = remaining;
+            }
+            
         }
 
         public override void Lock()

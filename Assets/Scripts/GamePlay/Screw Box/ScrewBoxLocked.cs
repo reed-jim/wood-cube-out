@@ -53,7 +53,8 @@ namespace NamPhuThuy.GamePlay
 
             this.record = record;
 
-            _screwBoxLockUI.UpdateUI(this.record);
+            // _screwBoxLockUI.UpdateUI(this.record);
+            _screwBoxLockUI.SetupUI(this.record);
         }
 
         public void OnScrewLoosed(BaseScrew screw)

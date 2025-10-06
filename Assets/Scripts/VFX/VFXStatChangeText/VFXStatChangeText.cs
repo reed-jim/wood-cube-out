@@ -11,48 +11,78 @@ using UnityEngine;
 using UnityEditor;
 #endif
 
-namespace NamPhuThuy
+namespace NamPhuThuy.VFX
 {
     public class VFXStatChangeText : VFXBase
     {
         #region Private Serializable Fields
         
+        [Header("Components")]
         [SerializeField] private TextMeshProUGUI text;
         [SerializeField] private TextMeshProUGUI targetText;
-        [SerializeField] private float moveY = 50f;
-        [SerializeField] private float duration = 1f;
         
-        [SerializeField] Vector3 startPos;
+        [Header("Stats")]
+        [SerializeField] private float moveY = 1f;
+        [SerializeField] private float duration = 1f;
+        [SerializeField] private float textSizeMul = 1.3f;
 
-        #endregion
-
-        #region Private Fields
-
-        private float _value;
+        [SerializeField] private float value;
+        [SerializeField] private Vector2 offSet;
         private Transform _initialParent;
 
         #endregion
 
         #region MonoBehaviour Callbacks
 
-        void Start()
+        void Awake()
         {
             _initialParent = transform.parent;
-
-        }
-
-        void Update()
-        {
             
-        }
-
-        private void Reset()
-        {
         }
 
         #endregion
 
         #region Private Methods
+
+        /// <summary>
+        /// Set value and color for the text
+        /// </summary>
+        private void SetTextColor()
+        {
+            
+            if (value >= 0)
+            {
+                text.text = $"+{value}";
+                text.color = Color.green;
+            }
+            else
+            {
+                text.text = $"{value}";
+                text.color = Color.red;
+            }
+
+            if (args.color != default)
+            {
+                text.color = args.color;
+            }
+        }
+
+        private void SetValues()
+        {
+            value = args.amount;
+            targetText = args.initialParent.GetComponent<TextMeshProUGUI>();
+        }
+
+        private Vector3 GetRandomPos(float range)
+        {
+            Vector3 res = new Vector3(
+                UnityEngine.Random.Range(-range, range),
+                UnityEngine.Random.Range(-range, range),
+                0f
+            );
+
+            return res;
+        }
         #endregion
 
         #region Public Methods
@@ -70,41 +100,48 @@ namespace NamPhuThuy
         protected override void OnPlay()
         {
             DebugLogger.LogSimple();
-            _value = args.amount;
-            targetText = args.initialParent.GetComponent<TextMeshProUGUI>();
-            //copy properties from targetText to text
-            text.CopyProperties(targetText);
-            // text.transform.SetParent((args.initialParent));
-            text.transform.position = args.initialParent.position;
-            text.autoSizeTextContainer = false;
-            
-            gameObject.SetActive(true);
-            startPos = transform.localPosition;
-            
+            SetValues();
 
-            if (_value >= 0)
-            {
-                text.text = $"{_value}";
-                text.color = Color.green;
-            }
-            else
-            {
-                text.text = $"{-_value}";
-                text.color = Color.red;
-            }
             
-            
+            var targetRect = targetText.GetComponent<RectTransform>();
+            var vfxRect = GetComponent<RectTransform>();
+
+            transform.SetParent(targetText.transform.parent, worldPositionStays: true);
+
+            // Match size, anchor, and pivot
+            vfxRect.sizeDelta = targetRect.sizeDelta;
+            vfxRect.anchorMin = targetRect.anchorMin;
+            vfxRect.anchorMax = targetRect.anchorMax;
+            vfxRect.pivot = targetRect.pivot;
+
+            Vector3 moreOffset = GetRandomPos(0.4f);
+            // Set world position to match target text
+            transform.position = targetText.transform.position + args.offset + moreOffset;
+
+            text.CopyProperties(targetText);
+            text.fontSize *= textSizeMul;
+            text.enableAutoSizing = false;
+
+            SetTextColor();
+
+            // Show and animate
             text.DOFade(1f, 0f); // Ensure visible
+            gameObject.SetActive(true);
+
+            // Animate upwards in world space and fade out
+            Vector3 moveTarget = transform.position + (Vector3.up * moveY);
             Sequence seq = DOTween.Sequence();
-            seq.Append(transform.DOLocalMoveY(startPos.y + moveY, duration));
+            seq.Append(transform.DOMove(moveTarget, duration));
             seq.Join(text.DOFade(0f, duration));
             seq.OnComplete(() =>
             {
-                transform.localPosition = startPos; // Reset position
+                // Reset and hide
                 gameObject.SetActive(false);
-                transform.SetParent(_initialParent);
+                transform.SetParent(_initialParent, true);
             });
         }
+
+
     }
 
     #if UNITY_EDITOR
