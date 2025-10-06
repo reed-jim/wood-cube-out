@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.VFX;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -47,6 +48,8 @@ namespace NamPhuThuy.GamePlay
 
         public void UpdateUI(SpecialLevelTaskRecord record)
         {
+            
+            DebugLogger.LogSimple();
             int total = 0;
             int remaining = 0;
 
@@ -66,8 +69,14 @@ namespace NamPhuThuy.GamePlay
             {
 
             }
+            DebugLogger.LogSimple(message:$"2");
 
-            progressText.text = $"{remaining}/{total}";
+            progressText.text = $"{remaining}/{total}"; 
+            VFXManager.Ins.PlayAt(
+                type: VFXType.STAT_CHANGE_TEXT, 
+                pos: progressText.transform.position,
+                amount: -1,
+                initialParent: progressText.transform);
         }
 
         public override void Lock()

@@ -58,6 +58,7 @@ namespace NamPhuThuy.GamePlay
 
         public void OnScrewLoosed(BaseScrew screw)
         {
+            DebugLogger.LogSimple();
             if (!gameObject.activeInHierarchy)
             {
                 return;
