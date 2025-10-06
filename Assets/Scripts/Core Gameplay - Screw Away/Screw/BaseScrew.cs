@@ -379,10 +379,22 @@ public class BaseScrew : MonoBehaviour, IScrew
                 // Avoid screw left under screw holes area
                 transform.localPosition = transform.localPosition.ChangeZ(preFinalLocalPosition.z);
 
+                Vector3 currentScale = transform.localScale;
+
                 _tweens.Add(
                     Tween.LocalRotation(transform, Quaternion.Euler(_localRotationOnScrewSlot),
                     duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine));
-                _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine));
+                _tweens.Add(Tween.Custom(0, 1, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.Linear, onValueChange: newVal =>
+                {
+                    if (newVal < 0.5f)
+                    {
+                        transform.localScale = currentScale + (newVal / 0.5f) * (1.3f * scaleOnScrewBox * Vector3.one - currentScale);
+                    }
+                    else
+                    {
+                        transform.localScale = (1.3f - (2 * (newVal - 0.5f) * 0.3f)) * scaleOnScrewBox * Vector3.one;
+                    }
+                }));
                 _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
                 .OnComplete(() =>
                 {
