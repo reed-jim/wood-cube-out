@@ -177,6 +177,17 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.screwHoleLeftToLose = GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 0);
         #endregion
 
+        #region DIFFICULTY
+        LongTermUserDifficultyConfig longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
+
+        GetJsonConfig(FirebaseConfig.longTermUserDifficultyMultiplier, out longTermUserDifficultyConfig);
+
+        if (longTermUserDifficultyConfig != null)
+        {
+            GamePersistentVariable.longTermUserDifficultyConfig = longTermUserDifficultyConfig;
+        }
+        #endregion
+
         #region DOUBLE INTER
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
