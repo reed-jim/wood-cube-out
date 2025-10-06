@@ -170,6 +170,13 @@ public static class SaferioTracking
 #endif
     }
 
+    #region USER PROPERTY
+    public static void TrackNumLevelPassed(int numLevelPassed)
+    {
+        FirebaseAnalytics.SetUserProperty("num_level_passed", $"{numLevelPassed}");
+    }
+    #endregion
+
     #region COMPENSATE
     public static void TrackClaimCompensateReward(string code, string deviceId)
     {

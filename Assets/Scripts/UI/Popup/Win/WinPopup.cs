@@ -143,7 +143,7 @@ public class WinPopup : BasePopup
 
         DataUtility.Save("num_level_play_in_day", DataUtility.Load("num_level_play_in_day", 0) + 1);
 
-        GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
+        // GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
@@ -312,6 +312,8 @@ public class WinPopup : BasePopup
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: true, EndLevelReason.Win.ToString());
         }
+
+        SaferioTracking.TrackNumLevelPassed(currentLevel.Value);
     }
 
     #region GOLD PASS

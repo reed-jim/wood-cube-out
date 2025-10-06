@@ -55,6 +55,15 @@ public class CoinChallengeConfig
     }
 }
 
+#region DIFFICULTY
+public class LongTermUserDifficultyConfig
+{
+    public bool isEnable;
+    public int minLevel;
+    public float difficultyMultiplier;
+}
+#endregion
+
 #region LIVES SYSTEM
 [System.Serializable]
 public class LivesConfig
