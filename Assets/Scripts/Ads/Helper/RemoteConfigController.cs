@@ -79,6 +79,8 @@ public class RemoteConfigController : MonoBehaviour
 
                 FetchAsync();
 
+                SetupAdvancedDataTrackingCostCenter();
+
                 GamePersistentVariable.isFirebaseAvailable = true;
             }
             else
@@ -244,6 +246,15 @@ public class RemoteConfigController : MonoBehaviour
             GamePersistentVariable.doubleInterAdsConfig.isEnable = false;
             GamePersistentVariable.isShowBanner = false;
         }
+    }
+    #endregion
+
+    #region COST CENTER
+    private void SetupAdvancedDataTrackingCostCenter()
+    {
+        string attributionId = AppsFlyerSDK.AppsFlyer.getAppsFlyerId();
+
+        Firebase.Analytics.FirebaseAnalytics.SetUserProperty("attribution_id", attributionId);
     }
     #endregion
 }

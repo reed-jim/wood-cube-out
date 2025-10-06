@@ -101,7 +101,7 @@ public class AdmobAdsMax : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        Init();
+        StartCoroutine(Init());
 
         countdownAds = int.MaxValue;
     }
@@ -111,9 +111,38 @@ public class AdmobAdsMax : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneSwitched;
     }
 
-    public void Init()
+    public IEnumerator Init()
     {
         //countdownAds = 0;
+
+        // CostCenter setup
+        System.Threading.Tasks.Task<string> task = Firebase.Analytics.FirebaseAnalytics.GetAnalyticsInstanceIdAsync();
+
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+        int totalSecondWaiting = 0;
+
+        while (!task.IsCompleted && totalSecondWaiting < 20)
+        {
+            totalSecondWaiting++;
+
+            yield return waitForSeconds;
+        }
+
+        if (task.IsCompleted)
+        {
+            try
+            {
+                string firebaseAppInstanceId = task.Result;
+
+                MaxSdk.SetUserId(firebaseAppInstanceId);
+            }
+            catch (System.Exception)
+            {
+
+            }
+        }
+        //
 
         #region Applovin Ads
         MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
