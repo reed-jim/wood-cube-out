@@ -1,4 +1,6 @@
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -7,6 +9,23 @@ using UnityEngine.UI;
 public class LockScrewColorLevelUI : BaseSpecialLevelUI
 {
     [SerializeField] private Image[] lockedColorImages;
+
+    [Header("Stats")]
+    [SerializeField] private int prevRemaining = -1;
+
+    #region Override Methods
+
+    protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
+    {
+        base.Setup(levelMode, record);
+    }
+
+    protected override void ReActive()
+    {
+        base.ReActive();
+        DebugLogger.LogSimple();
+        prevRemaining = -1;
+    }
 
     protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
     {
@@ -40,6 +59,8 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
             HideUI();
         }
     }
+
+    #endregion
 
     private void UpdateProgress(SpecialLevelTaskRecord record)
     {
@@ -76,5 +97,26 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
             SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
             SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
         }
+        
+        if (prevRemaining < 0)
+        {
+            prevRemaining = totalRemainingAmount;
+            return;
+        }
+        
+        if (totalRemainingAmount < prevRemaining)
+        {
+            VFXManager.Ins.PlayAt(
+                type: VFXType.STAT_CHANGE_TEXT,
+                pos: conditionTexts[0].transform.position,
+                amount: totalRemainingAmount - prevRemaining,
+                initialParent: conditionTexts[0].transform,
+                offset: new Vector2(-40f, 25f),
+                distance: 20f,
+                color: Color.green);
+        }
+        
+
+        prevRemaining = totalRemainingAmount;
     }
 }

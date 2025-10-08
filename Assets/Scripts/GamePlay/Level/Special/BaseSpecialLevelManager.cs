@@ -79,12 +79,9 @@ namespace NamPhuThuy.GamePlay
             }
             else
             {
-                if (validScrews.Length < 0.3f * _screws.Length)
+                if (validScrews.Length < 0.35f * _screws.Length)
                 {
-                    UpdateUI(SpecialLevelUIState.Hide);
-
-                    _isDoneCompletely = true;
-
+                    HideSpecialTask();
                     return;
                 }
             }
@@ -103,6 +100,12 @@ namespace NamPhuThuy.GamePlay
             _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, 9);
 
             UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
+
+            void HideSpecialTask()
+            {
+                UpdateUI(SpecialLevelUIState.Hide);
+                _isDoneCompletely = true;
+            }
         }
 
         protected virtual IEnumerator DelayedLockNextScrew()

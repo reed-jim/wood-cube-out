@@ -29,7 +29,14 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         base.Setup(levelMode);
         DebugLogger.LogSimple(message:$"mode: {levelMode.ToString()}, record: {record}");
     }
-    
+
+    protected override void ReActive()
+    {
+        base.ReActive();
+        DebugLogger.LogSimple(message:$"");
+        prevRemaining = -1;
+    }
+
     protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
     {
         if (levelMode != this.levelMode)
