@@ -294,7 +294,7 @@ public class BaseScrew : MonoBehaviour, IScrew
 
                 Color factionColor = FactionUtility.GetColorForFaction(Faction);
                 Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
-                
+
                 looseScrewFxMain.startColor = factionColor;
                 ringFxMain.startColor = factionColor;
                 ringFxMain.startSize = 1.2f * transform.lossyScale.x;
@@ -395,7 +395,17 @@ public class BaseScrew : MonoBehaviour, IScrew
                         transform.localScale = (1.3f - (2 * (newVal - 0.5f) * 0.3f)) * scaleOnScrewBox * Vector3.one;
                     }
                 }));
-                _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
+
+                Vector3 startPosition = transform.localPosition;
+                Vector3 endPosition = preFinalLocalPosition;
+                float distance = Vector3.Distance(startPosition, endPosition);
+                float arcHeight = 3f * distance;
+
+                _tweens.Add(Tween.Custom(0, 1, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine, onValueChange: newVal =>
+                {
+                    transform.localPosition = WoodCubeOut.MathUtil.EvaluateArcPosition(startPosition, endPosition, -arcHeight, newVal);
+                })
+                // _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
                 .OnComplete(() =>
                 {
                     transform.localPosition = transform.localPosition.ChangeZ(-1.6f);
@@ -414,56 +424,10 @@ public class BaseScrew : MonoBehaviour, IScrew
                             GamePersistentVariable.isSoundTightenScrewPlaying = true;
                         }
 
-                        // _tweens.Add(Tween.Delay(0.9f * durationTightenScrewPort)
-                        // .OnComplete(() =>
-                        // {
-                        //     _isRotating = false;
-                        //     rotateSpeed = _initialRotateSpeed;
-                        //     _isRotatingToCorrectAngleOnScrewBox = true;
-                        // }));
-
-                        // transform.eulerAngles = _localRotationOnScrewSlot - new Vector3(0, 0, 120);
-                        // _tweens.Add(Tween.LocalRotation(
-                        //     transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180),
-                        //     duration: durationTightenScrewPort / 2, ease: Ease.Default
-                        // )
-                        // .OnComplete(() =>
-                        // {
-                        //     _tweens.Add(Tween.LocalRotation(
-                        //         transform, _localRotationOnScrewSlot - new Vector3(0, 0, 360),
-                        //         duration: durationTightenScrewPort / 2, ease: Ease.Default
-                        //     ));
-                        // })
-                        // );
-
                         _tweens.Add(Tween.LocalRotation(
                             transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
                             duration: durationTightenScrewPort / 2, ease: Ease.Linear
                         ));
-
-                        // Tween.Custom(-60, 0, duration: durationTightenScrewPort,
-                        //     onValueChange: newVal =>
-                        //     {
-                        //         transform.localEulerAngles =
-                        //             new Vector3(_localRotationOnScrewSlot.x + newVal / 4f, _localRotationOnScrewSlot.y, Mathf.Abs(60 + newVal) * 6);
-                        //     }
-                        // );
-
-                        // _tweens.Add(Tween.LocalRotation(
-                        //     transform, _localRotationOnScrewSlot + new Vector3(0, 0, 180),
-                        //     duration: durationTightenScrewPort / 1, ease: Ease.Linear,
-
-
-                        // )
-                        // // .OnComplete(() =>
-                        // // {
-                        // //     _tweens.Add(Tween.LocalRotation(
-                        // //         transform, _localRotationOnScrewSlot,
-                        // //         duration: durationTightenScrewPort / 2, ease: Ease.Linear
-                        // //     ));
-                        // // })
-                        // );
-                        // _tweens.Add(Tween.Scale(transform, scaleOnScrewBox, duration: durationTightenScrewPort, ease: Ease.Default));
                         _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.InOutSine)
                             .OnComplete(() =>
                             {
