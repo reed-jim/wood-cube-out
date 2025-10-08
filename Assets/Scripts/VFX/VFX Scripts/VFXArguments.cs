@@ -16,6 +16,7 @@ namespace NamPhuThuy.VFX
         public Quaternion worldRot;   // spawn rotation (optional)
         public bool isLooping;
         public float duration;
+        public float distance;
         public Color color;
         
         

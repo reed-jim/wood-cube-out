@@ -103,6 +103,7 @@ namespace NamPhuThuy.GamePlay
                     amount: remaining - prevRemaining,
                     initialParent: progressText.transform,
                     offset: new Vector2(-0.5f, 0f),
+                    distance: 1f,
                     color: Color.green);
 
                 prevRemaining = remaining;

@@ -22,13 +22,19 @@ namespace NamPhuThuy.VFX
         [SerializeField] private TextMeshProUGUI targetText;
         
         [Header("Stats")]
-        [SerializeField] private float moveY = 1f;
+        
         [SerializeField] private float duration = 1f;
         [SerializeField] private float textSizeMul = 1.3f;
 
         [SerializeField] private float value;
         [SerializeField] private Vector2 offSet;
         private Transform _initialParent;
+
+        #endregion
+
+        #region Private Fields
+
+        [SerializeField] private float moveY = 1f;
 
         #endregion
 
@@ -71,6 +77,7 @@ namespace NamPhuThuy.VFX
         {
             value = args.amount;
             targetText = args.initialParent.GetComponent<TextMeshProUGUI>();
+            moveY = args.distance > 0 ? args.distance : moveY;
         }
 
         private Vector3 GetRandomPos(float range)

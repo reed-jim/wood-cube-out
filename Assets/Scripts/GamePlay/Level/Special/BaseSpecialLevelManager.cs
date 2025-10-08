@@ -54,7 +54,7 @@ namespace NamPhuThuy.GamePlay
 
         public virtual void Run()
         {
-            UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
+            UpdateUI(SpecialLevelUIState.Setup, new object[2] { levelMode, _specialLevelTaskRecord });
 
             Reset();
         }
@@ -97,6 +97,7 @@ namespace NamPhuThuy.GamePlay
             }
 
             _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
+            DebugLogger.LogSimple(message:$"generated new record {_specialLevelTaskRecord}");
 
             _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
             _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, 9);

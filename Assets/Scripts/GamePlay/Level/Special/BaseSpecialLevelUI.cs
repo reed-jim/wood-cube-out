@@ -38,7 +38,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
         BaseSpecialLevelManager.updateUI -= UpdateUI;
     }
 
-    protected virtual void Setup(LevelMode levelMode)
+    protected virtual void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
     {
         if (levelMode == this.levelMode)
         {

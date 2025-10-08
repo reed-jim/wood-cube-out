@@ -143,6 +143,7 @@ namespace NamPhuThuy.VFX
             Vector3 offset = default,
             Quaternion rot = default,
             float duration = 0,
+            float distance = 0,
             bool isLooping = false, 
             Color color = default,
             System.Action onArrive = null, 
@@ -158,6 +159,7 @@ namespace NamPhuThuy.VFX
                 worldRot = rot,
                 isLooping = isLooping,
                 duration = duration,
+                distance = distance,
                 color = color,
                 onArrive = onArrive,
                 onComplete = onComplete
