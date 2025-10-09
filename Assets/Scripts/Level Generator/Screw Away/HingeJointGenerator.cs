@@ -351,6 +351,11 @@ public class HingeJointGenerator : EditorWindow
             CheckMissingComponents();
         }
 
+        if (GUILayout.Button("Remove Missing Components"))
+        {
+            RemoveMissingScripts();
+        }
+
         if (GUILayout.Button("Check HingeJoint Number All Levels"))
         {
             CheckHingeJointNumberAllLevels();
@@ -3706,6 +3711,33 @@ public class HingeJointGenerator : EditorWindow
                     screw.transform.position -= screw.forward * 0.15f;
                 }
             }
+        }
+    }
+
+    private static void RemoveMissingScripts()
+    {
+        GameObject selection = Selection.activeGameObject;
+
+        Transform[] selectedGameObjects = TransformUtil.GetComponentsFromAllChildren<Transform>(selection.transform).ToArray();
+
+        int totalCount = 0;
+        foreach (Transform go in selectedGameObjects)
+        {
+            int count = GameObjectUtility.RemoveMonoBehavioursWithMissingScript(go.gameObject);
+            if (count > 0)
+            {
+                Debug.Log($"Removed {count} missing scripts from GameObject: {go.name}", go);
+            }
+            totalCount += count;
+        }
+
+        if (totalCount == 0)
+        {
+            Debug.Log("No missing scripts found in the selected GameObjects.");
+        }
+        else
+        {
+            Debug.Log($"Total missing scripts removed: {totalCount}");
         }
     }
     #endregion

@@ -21,6 +21,7 @@ public static class GameConstants
     public static string LOOSE_SCREW_FX = "LOOSE_SCREW_FX";
     public static string BOX_COMPLETED_FX = "BOX_COMPLETED_FX";
     public static string EVENT_ITEM = "EVENT_ITEM";
+    public static string yard2D = "yard2D";
     #endregion
 
     #region COMMON TEXT

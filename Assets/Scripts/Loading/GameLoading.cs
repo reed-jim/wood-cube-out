@@ -65,13 +65,13 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
+            Addressables.LoadSceneAsync("Yarn", LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
         else
         {
-            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+            _menuSceneHandle = Addressables.LoadSceneAsync("Yarn", LoadSceneMode.Additive);
         }
 
         // StartCoroutine(LoadFromGitHub());
