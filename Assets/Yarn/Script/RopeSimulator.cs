@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 public class RopeSimulator : MonoBehaviour
 {
@@ -19,51 +20,119 @@ public class RopeSimulator : MonoBehaviour
     int step;
     [SerializeField] private int maxStep;
     [SerializeField] private Vector2 velocity;
+    [SerializeField] private Vector2 velocityMultuplier;
+    [SerializeField] private float dissolveDelta;
+    [SerializeField] private float frequency;
+    [SerializeField] private float amplitude;
+    [SerializeField] private float waveSpeed;
+
+    [Header("Model")]
+    [SerializeField] private Renderer model;
+    Vector3 modelSize;
+    Vector3 modelCenter;
+    private MaterialPropertyBlock materialPropertyBlock;
+    private float dissolveHeight = 1;
+
+    [Header("Yarn Spool")]
+    [SerializeField] private Renderer yarnSpool;
+    private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
+
+    [Header("UI")]
+    [SerializeField] private Button resetButton;
+
+    void Awake()
+    {
+        resetButton.onClick.AddListener(Reset);
+    }
 
     void Start()
     {
         InitializeRope();
+
+        modelSize = model.bounds.size;
+
+        Debug.Log("SAFERIO " + modelSize + "/" + modelCenter);
+
+        velocity.x = velocityMultuplier.x * modelSize.x;
+
+        RopeSegment lastNode = segments[segmentCount - 1];
+
+        lastNode.posNow = model.transform.position - 0.35f * new Vector3(0, modelSize.y);
+        lastNode.posOld = lastNode.posNow;
+
+        InitPiece();
+
+        Reset();
+    }
+
+    private void Reset()
+    {
+        step = 0;
+        dissolveHeight = 1;
+    }
+
+    private void InitPiece()
+    {
+        materialPropertyBlock = new MaterialPropertyBlock();
+        yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
+
+        model.SetPropertyBlock(materialPropertyBlock);
+    }
+
+    private void UpdatePiece()
+    {
+        dissolveHeight -= dissolveDelta;
+
+        materialPropertyBlock.SetFloat("_DissolveHeight", dissolveHeight);
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 1 - dissolveHeight);
+
+        model.SetPropertyBlock(materialPropertyBlock);
+        yarnSpool.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
 
     void Update()
     {
-        SimulateRope();
+        // SimulateRope();
 
         RopeSegment lastNode = segments[segmentCount - 1];
-
 
         if (step < maxStep)
         {
             if (step % 2 == 0)
             {
-                if (lastNode.posNow.x < 2)
+                if (lastNode.posNow.x < 0.3f * modelSize.x)
                 {
                     lastNode.posNow += new Vector2(velocity.x, 0);
                 }
                 else
                 {
-                    lastNode.posNow += new Vector2(0, velocity.y);
+                    // lastNode.posNow += new Vector2(0, velocity.y);
 
                     step++;
                 }
             }
             else
             {
-                if (lastNode.posNow.x > -2)
+                if (lastNode.posNow.x > -0.3f * modelSize.x)
                 {
                     lastNode.posNow -= new Vector2(velocity.x, 0);
                 }
                 else
                 {
-                    lastNode.posNow += new Vector2(0, velocity.y);
+                    // lastNode.posNow += new Vector2(0, velocity.y);
 
                     step++;
                 }
             }
         }
 
+        segments[segmentCount - 1] = lastNode;
 
-        ApplyConstraints();
+        UpdatePiece();
+
+        UpdateRope();
         UpdateLineRenderer();
     }
 
@@ -93,6 +162,35 @@ public class RopeSimulator : MonoBehaviour
             seg.posNow += gravity;
             segments[i] = seg;
         }
+    }
+
+    private void UpdateRope()
+    {
+        Vector3[] positions = new Vector3[segmentCount];
+
+        Vector3 start = segments[0].posNow;
+        Vector3 end = segments[segmentCount - 1].posNow;
+
+        Vector3 direction = end - start;
+        float length = direction.magnitude;
+        Vector3 right = direction.normalized;
+
+        // Create a perpendicular vector for sine offset (upward by default)
+        Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
+
+        for (int i = 0; i < segmentCount; i++)
+        {
+            float t = i / (float)(segmentCount - 1); // 0 to 1
+            float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * amplitude;
+
+            Vector3 pointOnLine = start + right * (length * t);
+            positions[i] = pointOnLine + up * sine;
+
+            segments[i].posNow = positions[i];
+        }
+
+        segments[0].posNow = start;
+        segments[segmentCount - 1].posNow = end;
     }
 
     void ApplyConstraints()
