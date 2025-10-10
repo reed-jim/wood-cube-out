@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 
@@ -60,3 +61,4 @@ public class ChainGenerator : EditorWindow
         Debug.Log($"Generated chain with {chainLength} links.");
     }
 }
+#endif

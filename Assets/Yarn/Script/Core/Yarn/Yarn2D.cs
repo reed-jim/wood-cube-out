@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using UnityEngine;
@@ -23,6 +24,11 @@ public class Yarn2D : MonoBehaviour
     [SerializeField] private float amplitude;
     [SerializeField] private float waveSpeed;
 
+    #region Pull Rope
+    private int pullRopeStep;
+    [SerializeField] private int maxPullRopeStep;
+    #endregion
+
     [Header("Model")]
     // [SerializeField] private Renderer model;
     Renderer model;
@@ -38,6 +44,7 @@ public class Yarn2D : MonoBehaviour
     {
         step = 0;
         dissolveHeight = 1;
+        pullRopeStep = 0;
     }
 
     public void Init(Vector3 startPoint, Renderer model)
@@ -94,10 +101,12 @@ public class Yarn2D : MonoBehaviour
     {
         // SimulateRope();
 
-        RopeSegment lastNode = segments[segmentCount - 1];
-
-        if (step < maxStep)
+        if (dissolveHeight >= 0)
         {
+            RopeSegment lastNode = segments[segmentCount - 1];
+
+            lastNode.posNow.y = (-0.5f + dissolveHeight) * modelSize.y;
+
             if (step % 2 == 0)
             {
                 if (lastNode.posNow.x < 0.3f * modelSize.x)
@@ -124,31 +133,30 @@ public class Yarn2D : MonoBehaviour
                     step++;
                 }
             }
+
+            segments[segmentCount - 1] = lastNode;
+
+            UpdatePiece();
+            UpdateRope();
         }
-        else
+
+        if (dissolveHeight < 0)
         {
-            if (step < maxStep + 30)
+            for (int i = 1; i < segments.Count; i++)
             {
-                for (int i = 1; i < segments.Count; i++)
+                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, 1f / maxPullRopeStep);
+
+                if (i == segments.Count - 1)
                 {
-                    segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, 1 / 30f);
+                    if (Vector3.Distance(segments[i].posNow, segments[0].posNow) < 0.05f)
+                    {
+                        model.gameObject.SetActive(false);
+                        gameObject.SetActive(false);
+                    }
                 }
-
-                step++;
-            }
-            else
-            {
-
-                model.gameObject.SetActive(false);
-                gameObject.SetActive(false);
             }
         }
 
-        segments[segmentCount - 1] = lastNode;
-
-        UpdatePiece();
-
-        UpdateRope();
         UpdateLineRenderer();
     }
 
