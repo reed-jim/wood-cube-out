@@ -61,7 +61,7 @@ public class Yarn2D : MonoBehaviour
 
         RopeSegment lastNode = segments[segmentCount - 1];
 
-        lastNode.posNow = model.transform.position - 0.35f * new Vector3(0, modelSize.y);
+        lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
         lastNode.posOld = lastNode.posNow;
 
         materialPropertyBlock = new MaterialPropertyBlock();
@@ -70,6 +70,13 @@ public class Yarn2D : MonoBehaviour
         // yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
 
         model.SetPropertyBlock(materialPropertyBlock);
+
+
+
+        transform.SetParent(selectedModel.transform);
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+        transform.localRotation = Quaternion.identity;
     }
 
     private void UpdatePiece()
@@ -93,7 +100,7 @@ public class Yarn2D : MonoBehaviour
         {
             if (step % 2 == 0)
             {
-                if (lastNode.posNow.x < model.transform.position.x + 0.3f * modelSize.x)
+                if (lastNode.posNow.x < 0.3f * modelSize.x)
                 {
                     lastNode.posNow += new Vector2(velocity.x, 0);
                 }
@@ -106,7 +113,7 @@ public class Yarn2D : MonoBehaviour
             }
             else
             {
-                if (lastNode.posNow.x > model.transform.position.x - 0.3f * modelSize.x)
+                if (lastNode.posNow.x > -0.3f * modelSize.x)
                 {
                     lastNode.posNow -= new Vector2(velocity.x, 0);
                 }
@@ -120,19 +127,21 @@ public class Yarn2D : MonoBehaviour
         }
         else
         {
-            gameObject.SetActive(false);
+            if (step < maxStep + 30)
+            {
+                for (int i = 1; i < segments.Count; i++)
+                {
+                    segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, 1 / 30f);
+                }
 
-            // if (step < maxStep + 20)
-            // {
-            //     for (int i = 1; i < segments.Count; i++)
-            //     {
-            //         segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, 1 / 20f);
-            //     }
-            // }
-            // else
-            // {
-            //     gameObject.SetActive(false);
-            // }
+                step++;
+            }
+            else
+            {
+
+                model.gameObject.SetActive(false);
+                gameObject.SetActive(false);
+            }
         }
 
         segments[segmentCount - 1] = lastNode;
@@ -190,7 +199,7 @@ public class Yarn2D : MonoBehaviour
         lineRenderer.positionCount = segmentCount;
         for (int i = 0; i < segmentCount; i++)
         {
-            lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(-9));
+            lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(0.1f));
         }
     }
 
