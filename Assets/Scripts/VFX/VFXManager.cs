@@ -183,6 +183,8 @@ namespace NamPhuThuy.VFX
         }
     }
     
+#if UNITY_EDITOR
+
     [CustomEditor(typeof(VFXManager))]
     public class VFXManagerEditor : Editor
     {
@@ -299,6 +301,7 @@ namespace NamPhuThuy.VFX
             }
         }
     }
+#endif
 }
 
 /*
