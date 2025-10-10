@@ -81,6 +81,8 @@ namespace NamPhuThuy.VFX
             {
                 // Dark background - use bright/light colors
                 secondColor = GetRandomBrightColor();
+                
+                
             }
             else if (luminance > 0.6f)
             {
@@ -117,6 +119,28 @@ namespace NamPhuThuy.VFX
         }
 
         #region Generators
+        
+        public static KeyValuePair<Color, Color> GetRandomPastelContrastColorPair()
+        {
+            // Generate a random pastel color as the base
+            Color pastelColor = GetRandomPastelColor();
+            Color contrastColor;
+
+            float luminance = CalculateLuminance(pastelColor);
+
+            if (luminance > 0.6f)
+            {
+                // Light pastel background - use dark text
+                contrastColor = GetRandomDarkColor();
+            }
+            else
+            {
+                // Darker pastel background - use bright text  
+                contrastColor = GetRandomBrightColor();
+            }
+
+            return new KeyValuePair<Color, Color>(pastelColor, contrastColor);
+        }
 
         private static Color GetRandomBrightColor()
         {

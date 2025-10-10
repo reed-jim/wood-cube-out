@@ -126,11 +126,23 @@ namespace NamPhuThuy.VFX
 
         private void SetRandomColor()
         {
-            var colorPairs = ColorHelper.RandomContrastColorPair();
+            var colorPairs = ColorHelper.GetRandomPastelContrastColorPair();
             DebugLogger.Log($"VFXPopupText.SetRandomColor: BG {colorPairs.Key}, Text {colorPairs.Value}");
             
-            backImage.color = colorPairs.Key;
-            messageText.color = colorPairs.Value;
+            Color bgColor = colorPairs.Key;
+            Color textColor = colorPairs.Value;
+            
+            float bgLuminance = ColorHelper.CalculateLuminance(bgColor);
+            float textLuminance = ColorHelper.CalculateLuminance(textColor);
+            
+            if (bgLuminance > textLuminance)
+            {
+                // Swap colors so text gets the lighter one
+                (bgColor, textColor) = (textColor, bgColor);
+            }
+            
+            backImage.color = bgColor;
+            messageText.color = textColor;
         }
 
         #endregion
