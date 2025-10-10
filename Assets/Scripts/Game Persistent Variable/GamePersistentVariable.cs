@@ -100,6 +100,7 @@ public static class GamePersistentVariable
     public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
+    public static bool isUMPPersonalizedAdsConsent;
     #endregion
 
     #region LIVES SYSTEM

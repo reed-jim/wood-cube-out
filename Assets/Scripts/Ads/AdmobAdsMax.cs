@@ -8,6 +8,7 @@ using GoogleMobileAds.Common;
 using Firebase.Analytics;
 using UnityEngine.SceneManagement;
 using AppsFlyerSDK;
+using GoogleMobileAds.Ump.Api;
 
 public class AdmobAdsMax : MonoBehaviour
 {
@@ -157,7 +158,16 @@ public class AdmobAdsMax : MonoBehaviour
             InitializeMRecAds();
         };
 
-        MaxSdk.SetHasUserConsent(DataUtility.Load("User Consent", true));
+        SetupUserConsentUMP();
+
+        bool isConsent = GamePersistentVariable.isUMPPersonalizedAdsConsent;
+
+        if (DataUtility.Load("Is User Customized Consent", false))
+        {
+            isConsent = DataUtility.Load("User Consent", true);
+        }
+
+        MaxSdk.SetHasUserConsent(isConsent);
         // MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
         // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
@@ -176,22 +186,54 @@ public class AdmobAdsMax : MonoBehaviour
             TestDeviceIds = testDeviceIds
         });
 
-        MobileAds.Initialize((initStatus) =>
+        if (ConsentInformation.CanRequestAds())
         {
-            AppOpenAdManager.Instance.LoadAd(() =>
+            MobileAds.Initialize((initStatus) =>
             {
-                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+                AppOpenAdManager.Instance.LoadAd(() =>
+                {
+                    //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
+                });
+
+                InitBannerAdmob();
+                LoadInterstitialAdmob();
+
+                AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+                isAdmobInitDone = true;
+                //nativeAdsManager.Instance.OnInitAdmobDone();
+                //LoadRewardedInterstitialAd();
             });
-
-            InitBannerAdmob();
-            LoadInterstitialAdmob();
-
-            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-            isAdmobInitDone = true;
-            //nativeAdsManager.Instance.OnInitAdmobDone();
-            //LoadRewardedInterstitialAd();
-        });
+        }
         //#endif
+    }
+
+    private void SetupUserConsentUMP()
+    {
+        GoogleMobileAds.Ump.Api.ConsentStatus status = ConsentInformation.ConsentStatus;
+
+        switch (status)
+        {
+            case GoogleMobileAds.Ump.Api.ConsentStatus.Obtained:
+                // User gave consent
+                GamePersistentVariable.isUMPPersonalizedAdsConsent = true;
+                break;
+
+            case GoogleMobileAds.Ump.Api.ConsentStatus.NotRequired:
+                // Not required (e.g., not in GDPR region)
+                GamePersistentVariable.isUMPPersonalizedAdsConsent = true;
+                break;
+
+            case GoogleMobileAds.Ump.Api.ConsentStatus.Required:
+                // Consent required but not yet obtained
+                GamePersistentVariable.isUMPPersonalizedAdsConsent = false;
+                break;
+
+            case GoogleMobileAds.Ump.Api.ConsentStatus.Unknown:
+            default:
+                // Unknown status, assume no consent
+                GamePersistentVariable.isUMPPersonalizedAdsConsent = false;
+                break;
+        }
     }
 
     //public IEnumerator ShowAppOpenAds()

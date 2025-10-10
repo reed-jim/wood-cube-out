@@ -12,6 +12,12 @@ public class SaferioSceneOpener : EditorWindow
         EditorSceneManager.OpenScene("Assets/Samples/iOS 14 Advertising Support/1.0.0/01 Context Screen/Context Screen Sample.unity");
     }
 
+    [MenuItem("Tools/Open Scene/Ads Consent Android")]
+    public static void OpenAdsConsentScene()
+    {
+        EditorSceneManager.OpenScene("Assets/Scenes/User Consent - Android.unity");
+    }
+
     [MenuItem("Tools/Open Scene/Bootstrap")]
     public static void OpenBootstrapScene()
     {

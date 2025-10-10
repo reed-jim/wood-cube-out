@@ -18,9 +18,14 @@ public class UMPManager : MonoBehaviour
         };
 
         // Create a ConsentRequestParameters object.
+        // ConsentRequestParameters request = new ConsentRequestParameters
+        // {
+        //     ConsentDebugSettings = debugSettings,
+        // };
+
         ConsentRequestParameters request = new ConsentRequestParameters
         {
-            ConsentDebugSettings = debugSettings,
+            TagForUnderAgeOfConsent = false
         };
 
         // Check the current consent information status.
@@ -45,7 +50,7 @@ public class UMPManager : MonoBehaviour
             {
                 // Consent gathering failed.
                 HandleConsentComplete();
-                
+
                 return;
             }
 
