@@ -10,7 +10,7 @@ public class BasePiece : MonoBehaviour
     [SerializeField] protected int pieceId;
 
     #region COMPONENT
-    [SerializeField] protected PieceServiceLocator pieceServiceLocator;
+    protected PieceServiceLocator pieceServiceLocator;
     [SerializeField] protected MeshFilter meshFilter;
     [SerializeField] protected HingeJoint joint;
     #endregion
@@ -25,9 +25,6 @@ public class BasePiece : MonoBehaviour
     [SerializeField] private float durationDelay = 0.1f;
     [SerializeField] private float durationMoveToPiecePort = 0.3f;
     [SerializeField] private float durationTightenPiecePort = 0.3f;
-
-    [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] protected GameSetting gameSetting;
 
     #region PRIVATE FIELD
     protected List<Tween> _tweens = new List<Tween>();
@@ -155,9 +152,10 @@ public class BasePiece : MonoBehaviour
 
         RegisterMoreEvent();
 
-        AddScrewToList();
-
+        pieceServiceLocator = GetComponent<PieceServiceLocator>();
         _renderer = GetComponent<Renderer>();
+
+        AddScrewToList();
 
         _initialScale = transform.localScale;
         _initialRotateSpeed = rotateSpeed;
@@ -218,7 +216,12 @@ public class BasePiece : MonoBehaviour
 
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
+        if (pieceId == gameObject.GetInstanceID())
+        {
+            Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
+            yarn2D.Init(spoolBoxSlot.transform.position, _renderer);
+        }
     }
 
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
@@ -228,8 +231,10 @@ public class BasePiece : MonoBehaviour
 
     public void PullYarn()
     {
-        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+        selectPieceEvent?.Invoke(gameObject.GetInstanceID(), Faction);
 
-        yarn2D.Init(new Vector3(0, 6), _renderer);
+        // Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+        // yarn2D.Init(new Vector3(0, 6), _renderer);
     }
 }

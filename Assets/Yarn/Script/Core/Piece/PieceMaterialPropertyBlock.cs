@@ -3,8 +3,6 @@ using static GameEnum;
 
 public class PieceMaterialPropertyBlock : MonoBehaviour
 {
-    [SerializeField] private MeshRenderer meshRenderer;
-
     [SerializeField] private Material[] materials;
 
     [Header("CUSTOMIZE")]
@@ -20,10 +18,10 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
     private void Awake()
     {
-        Init();
+        _renderer = GetComponent<Renderer>();
     }
 
-    private void Init()
+    private void TryAssignComponent()
     {
         if (_renderer == null)
         {
@@ -38,8 +36,8 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
     public void SetColor(GameFaction faction)
     {
-        Init();
-        
+        TryAssignComponent();
+
         Color color = FactionUtility.GetColorForFaction(faction);
 
         _propertyBlock.SetColor(colorReference, color);
@@ -56,17 +54,17 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
     public void SetColor(Color color)
     {
-        meshRenderer.material = materials[Random.Range(0, materials.Length)];
+        // meshRenderer.material = materials[Random.Range(0, materials.Length)];
 
-        return;
+        // return;
 
-        Init();
+        // Init();
 
-        _propertyBlock.SetColor(colorReference, color);
-        _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
+        // _propertyBlock.SetColor(colorReference, color);
+        // _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
 
-        _renderer.SetPropertyBlock(_propertyBlock);
-        // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
+        // _renderer.SetPropertyBlock(_propertyBlock);
+        // // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
     }
 
     public void SetOutlineWidth(float value)

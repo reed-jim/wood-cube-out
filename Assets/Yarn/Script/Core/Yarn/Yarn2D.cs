@@ -40,6 +40,8 @@ public class Yarn2D : MonoBehaviour
     // [SerializeField] private Renderer yarnSpool;
     // private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
 
+    private Vector3 _firstNodePosition;
+
     private void Reset()
     {
         step = 0;
@@ -54,6 +56,8 @@ public class Yarn2D : MonoBehaviour
         InitPiece(model);
 
         Reset();
+
+        _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
 
         gameObject.SetActive(true);
     }
@@ -83,7 +87,7 @@ public class Yarn2D : MonoBehaviour
         transform.SetParent(selectedModel.transform);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
-        transform.localRotation = Quaternion.identity;
+        transform.rotation = Quaternion.identity;
     }
 
     private void UpdatePiece()
@@ -103,8 +107,10 @@ public class Yarn2D : MonoBehaviour
 
         if (dissolveHeight >= 0)
         {
+            RopeSegment firstNode = segments[0];
             RopeSegment lastNode = segments[segmentCount - 1];
 
+            firstNode.posNow = _firstNodePosition;
             lastNode.posNow.y = (-0.5f + dissolveHeight) * modelSize.y;
 
             if (step % 2 == 0)
@@ -177,7 +183,7 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        Vector3 start = segments[0].posNow;
+        Vector3 start = _firstNodePosition;
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
@@ -187,7 +193,7 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
-        for (int i = 0; i < segmentCount; i++)
+        for (int i = 1; i < segmentCount; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
             float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * amplitude;
@@ -198,16 +204,26 @@ public class Yarn2D : MonoBehaviour
             segments[i].posNow = positions[i];
         }
 
-        segments[0].posNow = start;
+        segments[0].posNow = _firstNodePosition;
         segments[segmentCount - 1].posNow = end;
     }
 
     void UpdateLineRenderer()
     {
+        transform.rotation = Quaternion.identity;
+
         lineRenderer.positionCount = segmentCount;
+
         for (int i = 0; i < segmentCount; i++)
         {
-            lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(0.1f));
+            if (i == 0)
+            {
+                lineRenderer.SetPosition(i, _firstNodePosition);
+            }
+            else
+            {
+                lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodePosition.z));
+            }
         }
     }
 

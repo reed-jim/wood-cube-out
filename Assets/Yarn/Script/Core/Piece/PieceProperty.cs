@@ -16,10 +16,13 @@ public class PieceProperty : MonoBehaviour
     void Awake()
     {
         pieceServiceLocator = GetComponent<PieceServiceLocator>();
-        
+    }
+
+    void Start()
+    {
         faction = (GameFaction)Random.Range(0, 8);
 
-        pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
+        SetColorByFaction();
     }
 
     public void SetColorByFaction()

@@ -174,8 +174,6 @@ public class YarnLevelLoader : MonoBehaviour
         GamePersistentVariable.levelPrefab = nextLevel;
 
         setLevelNumberEvent?.Invoke();
-
-        return;
         
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
@@ -220,7 +218,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
         //
 
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>("Level Test");
 
         _loadLevelHandle.Completed += (op) =>
         {
@@ -230,153 +228,153 @@ public class YarnLevelLoader : MonoBehaviour
 
                 _currentLevelContainer = level.transform;
 
-                #region ASSIGN CLONE TO CALC ROTATION
-                try
-                {
-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                }
-                catch (System.Exception e) { }
-                #endregion
-
-                // FIND DEPENDENCY
-                // delay for pieces scaling before level
-                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
-
-                _pieces = pieces.ToArray();
-
-                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                //
-
-                if (level.GetComponent<LevelTransformManualModifier>() == null)
-                {
-                    // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
-                    level.transform.position = Vector3.zero;
-                    // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                }
-
-                // // GENERATE CONVEX COLLIDERS
-                // for (int i = 0; i < pieces.Count; i++)
+                // #region ASSIGN CLONE TO CALC ROTATION
+                // try
                 // {
-                //     BasicObjectPart piece = pieces[i];
-                //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
-                //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
+                //     level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
+                // }
+                // catch (System.Exception e) { }
+                // #endregion
 
-                //     if (!pieceCollider.convex)
+                // // FIND DEPENDENCY
+                // // delay for pieces scaling before level
+                // List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+
+                // _pieces = pieces.ToArray();
+
+                // Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
+                // //
+
+                // if (level.GetComponent<LevelTransformManualModifier>() == null)
+                // {
+                //     // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
+                //     level.transform.position = Vector3.zero;
+                //     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
+                //     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+                // }
+
+                // // // GENERATE CONVEX COLLIDERS
+                // // for (int i = 0; i < pieces.Count; i++)
+                // // {
+                // //     BasicObjectPart piece = pieces[i];
+                // //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
+                // //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
+
+                // //     if (!pieceCollider.convex)
+                // //     {
+                // //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
+
+                // //         Destroy(pieceCollider);
+                // //     }
+                // // }
+
+
+
+                // // AUTO CENTER LEVEL
+                // _isNotAutoCenterLevel = false;
+
+                // foreach (BasicObjectPart obj in pieces)
+                // {
+                //     MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+
+                //     if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
                 //     {
-                //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
+                //         _isNotAutoCenterLevel = true;
 
-                //         Destroy(pieceCollider);
+                //         break;
                 //     }
                 // }
 
+                // _isNotAutoCenterLevel = false;
 
+                // level.transform.position = Vector3.zero;
 
-                // AUTO CENTER LEVEL
-                _isNotAutoCenterLevel = false;
+                // if (!_isNotAutoCenterLevel)
+                // {
+                //     for (int i = 0; i < level.transform.childCount; i++)
+                //     {
+                //         Transform pivotAdjust = level.transform.GetChild(i);
 
-                foreach (BasicObjectPart obj in pieces)
-                {
-                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+                //         if (pivotAdjust.name.Contains("Pivot Adjust"))
+                //         {
+                //             _pivotAdjust = pivotAdjust;
 
-                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
-                    {
-                        _isNotAutoCenterLevel = true;
+                //             _pivotAdjust.transform.position = Vector3.zero;
+                //         }
+                //     }
 
-                        break;
-                    }
-                }
+                //     foreach (BasicObjectPart piece in pieces)
+                //     {
+                //         if (_pivotAdjust == null)
+                //         {
+                //             _pivotAdjust = new GameObject().transform;
+                //             _pivotAdjust.name = "Pivot Adjust";
+                //             _pivotAdjust.SetParent(_currentLevelContainer);
 
-                _isNotAutoCenterLevel = false;
+                //             _pivotAdjust.transform.localPosition = Vector3.zero;
+                //             _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                //             _pivotAdjust.transform.localScale = Vector3.one;
+                //         }
 
-                level.transform.position = Vector3.zero;
+                //         if (!piece.transform.IsChildOf(_pivotAdjust))
+                //         {
+                //             piece.transform.SetParent(_pivotAdjust);
+                //         }
+                //     }
 
-                if (!_isNotAutoCenterLevel)
-                {
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform pivotAdjust = level.transform.GetChild(i);
+                //     GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
 
-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
-                        {
-                            _pivotAdjust = pivotAdjust;
+                //     _isSetLevelGradientBound = false;
 
-                            _pivotAdjust.transform.position = Vector3.zero;
-                        }
-                    }
+                //     Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
 
-                    foreach (BasicObjectPart piece in pieces)
-                    {
-                        if (_pivotAdjust == null)
-                        {
-                            _pivotAdjust = new GameObject().transform;
-                            _pivotAdjust.name = "Pivot Adjust";
-                            _pivotAdjust.SetParent(_currentLevelContainer);
-
-                            _pivotAdjust.transform.localPosition = Vector3.zero;
-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                            _pivotAdjust.transform.localScale = Vector3.one;
-                        }
-
-                        if (!piece.transform.IsChildOf(_pivotAdjust))
-                        {
-                            piece.transform.SetParent(_pivotAdjust);
-                        }
-                    }
-
-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
-
-                    _isSetLevelGradientBound = false;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
-
-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                }
-                // 
+                //     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+                // }
+                // // 
 
 
 
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+                // _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
 
-                // ASSIGN SCREW FACTIONS
-                if (currentLevel.Value == 1)
-                {
-                    AutoAssignScrewFactionLevelManualGroup(level);
-                }
-                else
-                {
-                    AutoAssignScrewFaction(level);
-                }
+                // // ASSIGN SCREW FACTIONS
+                // if (currentLevel.Value == 1)
+                // {
+                //     AutoAssignScrewFactionLevelManualGroup(level);
+                // }
+                // else
+                // {
+                //     AutoAssignScrewFaction(level);
+                // }
 
-                AutoAssignScrewFactionMultiPhaseLevel(level);
+                // AutoAssignScrewFactionMultiPhaseLevel(level);
 
-                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
+                // texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
-                if (isLoopLevel)
-                {
-                    RandomizeLevelModelColor(level);
-                }
-                else
-                {
-                    SaferioTracking.TrackLevelStart(currentLevel.Value);
-                }
+                // if (isLoopLevel)
+                // {
+                //     RandomizeLevelModelColor(level);
+                // }
+                // else
+                // {
+                //     SaferioTracking.TrackLevelStart(currentLevel.Value);
+                // }
 
-                _nextLevel = nextLevel;
-                _isLoopLevel = isLoopLevel;
+                // _nextLevel = nextLevel;
+                // _isLoopLevel = isLoopLevel;
 
-                _tweens.Add(Tween.Delay(3).OnComplete(() =>
-                {
-                    ShowSuggestion(nextLevel, isLoopLevel);
-                }));
-                // SuggestHardMode();
+                // _tweens.Add(Tween.Delay(3).OnComplete(() =>
+                // {
+                //     ShowSuggestion(nextLevel, isLoopLevel);
+                // }));
+                // // SuggestHardMode();
 
-                #region EVENT ITEMS
-                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
+                // #region EVENT ITEMS
+                // GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
 
-                CoinChallengeGameplayUI.Instance.SetNumber();
-                #endregion
+                // CoinChallengeGameplayUI.Instance.SetNumber();
+                // #endregion
 
-                GamePersistentVariable.isLevelLost = false;
+                // GamePersistentVariable.isLevelLost = false;
             }
         };
 
