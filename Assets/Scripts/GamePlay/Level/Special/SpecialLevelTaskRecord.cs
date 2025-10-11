@@ -61,6 +61,7 @@ namespace NamPhuThuy.GamePlay
                     break;
             }
 
+            SoundManager.Instance.PlaySoundGenerateTask();
             return record;
         }
 

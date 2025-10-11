@@ -19,6 +19,7 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
     public static event Action switchToRustyScrewsEvent;
     public static event Action <RustyScrewSpecialLevelManager> rustyScrewManagerInitEvent;
+    public static event Action rustyBreakALayer;
 
     #region MonoBehaviour Callbacks
 
@@ -40,6 +41,8 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     }
 
     #endregion
+
+    #region Override Methods
 
     public override bool IsFactionLocked(GameFaction faction)
     {
@@ -124,4 +127,20 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Normal);
         }
     }
+
+    protected override void OnScrewLoosed(BaseScrew screw)
+    {
+        base.OnScrewLoosed(screw);
+        if (_specialLevelTaskRecord.taskType == SpecialLevelTaskType.ScrewComplete)
+        {
+            if (_specialLevelTaskRecord.IsTaskCompleted())
+            {
+                SoundManager.Instance.PlaySoundRustyBreak();
+            }
+        }
+    }
+
+    #endregion
+
+    
 }

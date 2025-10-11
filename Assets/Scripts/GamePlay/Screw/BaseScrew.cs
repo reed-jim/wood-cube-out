@@ -313,43 +313,7 @@ namespace NamPhuThuy.GamePlay
             // LOOSE FX
             if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
             {
-                try
-                {
-                    ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
-                    ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
-
-                    var looseScrewFxMain = looseScrewFx.main;
-                    var ringFxMain = ringFx.main;
-
-                    Color factionColor = FactionUtility.GetColorForFaction(Faction);
-                    Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
-
-                    looseScrewFxMain.startColor = factionColor;
-                    ringFxMain.startColor = factionColor;
-                    ringFxMain.startSize = 1.2f * transform.lossyScale.x;
-
-                    looseScrewFx.gameObject.SetActive(true);
-                    looseScrewFx.transform.rotation = transform.rotation;
-                    looseScrewFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
-
-                    ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
-
-                    looseScrewFx.Play();
-
-                    ringFx.transform.SetParent(transform.parent);
-
-                    _tweens.Add(Tween.Delay(1).OnComplete(() =>
-                    {   
-                        ringFx.transform.SetParent(looseScrewFx.transform);
-                        ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
-                        ringFx.transform.localRotation = Quaternion.identity;
-                    }));
-                    // DebugLogger.LogBreak("");
-                }
-                catch (System.Exception)
-                {
-                    DebugLogger.LogError($"BaseScrew.UnscrewAnimationAsync(): Cannot play loosefx");
-                }
+                PlayLooseFX();
             }
             //
 
@@ -460,6 +424,48 @@ namespace NamPhuThuy.GamePlay
                 }));
             }));
         }
+
+        public void PlayLooseFX()
+        {
+            try
+            {
+                ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+                ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+                var looseScrewFxMain = looseScrewFx.main;
+                var ringFxMain = ringFx.main;
+
+                Color factionColor = FactionUtility.GetColorForFaction(Faction);
+                Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
+
+                looseScrewFxMain.startColor = factionColor;
+                ringFxMain.startColor = factionColor;
+                ringFxMain.startSize = 1.2f * transform.lossyScale.x;
+
+                looseScrewFx.gameObject.SetActive(true);
+                looseScrewFx.transform.rotation = transform.rotation;
+                looseScrewFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
+
+                ringFx.transform.position = GamePersistentVariable.lastScrewSelectedSurfaceHit.point + 0.03f * GamePersistentVariable.lastScrewSelectedSurfaceHit.normal;
+
+                looseScrewFx.Play();
+
+                ringFx.transform.SetParent(transform.parent);
+
+                _tweens.Add(Tween.Delay(1).OnComplete(() =>
+                {   
+                    ringFx.transform.SetParent(looseScrewFx.transform);
+                    ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
+                    ringFx.transform.localRotation = Quaternion.identity;
+                }));
+                // DebugLogger.LogBreak("");
+            }
+            catch (System.Exception)
+            {
+                DebugLogger.LogError($"BaseScrew.UnscrewAnimationAsync(): Cannot play loosefx");
+            }
+        }
+
         #endregion
 
         protected virtual void AddScrewToList()

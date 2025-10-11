@@ -198,6 +198,54 @@ public class SoundManager : MonoBehaviour
 
         breakObjectSound.Play();
     }
+    
+    public void PlaySoundGenerateTask()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.GENERATE_TASK_SOUND);
+
+        sound.Play();
+    }
+    
+    public void PlaySoundCompleteTask()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.COMPlETE_TASK_SOUND);
+
+        sound.Play();
+    }
+    
+    public void PlaySoundChainBreak()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.CHAIN_BREAK_SOUND);
+
+        sound.Play();
+    }
+    
+    public void PlaySoundRustyBreak()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.RUSTY_BREAK_SOUND);
+
+        sound.Play();
+    }
 
     public void PlaySoundCountingTime()
     {

@@ -19,6 +19,7 @@ namespace NamPhuThuy.GamePlay
         protected bool _isDoneCompletely;
 
         public static event Action<LevelMode, SpecialLevelUIState, object[]> updateUI;
+        
 
         #region Life Cycle
 
@@ -181,11 +182,13 @@ namespace NamPhuThuy.GamePlay
                     _specialLevelTaskRecord.requiredComponents.First(item => item.componentType == GameComponentType.Screw);
 
                 item.remainingAmount--;
+                SoundManager.Instance.PlaySoundGenerateTask();
 
                 UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
 
                 if (_specialLevelTaskRecord.IsTaskCompleted())
                 {
+                    SoundManager.Instance.PlaySoundCompleteTask();
                     HandleTaskCompleted();
                 }
             }

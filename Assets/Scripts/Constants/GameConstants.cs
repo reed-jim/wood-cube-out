@@ -72,6 +72,10 @@ public static class GameConstants
     public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
     public static string OPEN_CHEST_SOUND = "Open Chest Sound";
     public static string REWARD_ITEM_SOUND = "Reward Item Sound";
+    public static string CHAIN_BREAK_SOUND = "Chain Break Sound";
+    public static string COMPlETE_TASK_SOUND = "Complete Task Sound";
+    public static string GENERATE_TASK_SOUND = "Generate Task Sound";
+    public static string RUSTY_BREAK_SOUND = "Rusty Break Sound";
     #endregion
 
     #region ANIMATION

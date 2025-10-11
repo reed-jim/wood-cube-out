@@ -1,9 +1,34 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NamPhuThuy.GamePlay
 {
     public class RustyScrew : BasicScrew
     {
+        #region MonoBehaviour Callbacks
+
+        protected override void Awake()
+        {
+            base.Awake();
+            RustyScrewSpecialLevelManager.rustyBreakALayer += OnRustyLayerBreak;
+        }
+        
+        protected void OnDestroy()
+        {
+            RustyScrewSpecialLevelManager.rustyBreakALayer -= OnRustyLayerBreak;
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void OnRustyLayerBreak()
+        {
+            PlayLooseFX();
+        }
+
+        #endregion
+        
         protected override void AddScrewToList()
         {
 
