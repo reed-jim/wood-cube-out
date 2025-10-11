@@ -10,6 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4731229895900301}
   - component: {fileID: 4024973236793257141}
+  - component: {fileID: 4354109713934751717}
+  - component: {fileID: 5025074862366035799}
+  - component: {fileID: 2224081932293782952}
   - component: {fileID: 33196669393330684}
   - component: {fileID: 23218414536957683}
   - component: {fileID: 64891860242474731}
@@ -47,6 +50,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &4354109713934751717
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036165171877219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5025074862366035799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036165171877219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2224081932293782952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1036165171877219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33196669393330684
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -135,6 +201,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4262454344884584}
   - component: {fileID: 4838408507206102547}
+  - component: {fileID: 6967371338560529539}
+  - component: {fileID: 7322494216628115778}
+  - component: {fileID: 7949272217512605868}
   - component: {fileID: 33837886340604682}
   - component: {fileID: 23922452869095558}
   - component: {fileID: 64365700428294402}
@@ -172,6 +241,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6967371338560529539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038262146752041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7322494216628115778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038262146752041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7949272217512605868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038262146752041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33837886340604682
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -542,6 +674,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4121988279855957}
   - component: {fileID: 6102866910552718266}
+  - component: {fileID: 6936612580565999504}
+  - component: {fileID: 4855135019411103915}
+  - component: {fileID: 2356054611528732021}
   - component: {fileID: 33402034241242687}
   - component: {fileID: 23456468333183542}
   - component: {fileID: 64936269863041229}
@@ -579,6 +714,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6936612580565999504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106757770915120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4855135019411103915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106757770915120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2356054611528732021
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1106757770915120}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33402034241242687
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -667,6 +865,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4493040618180628}
   - component: {fileID: 4767383033691214908}
+  - component: {fileID: 6348514247390843337}
+  - component: {fileID: 6051604579019165162}
+  - component: {fileID: 1938411293516232741}
   - component: {fileID: 33986599230929672}
   - component: {fileID: 23224540246523585}
   - component: {fileID: 64850523294130277}
@@ -704,6 +905,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6348514247390843337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134298883898786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6051604579019165162
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134298883898786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1938411293516232741
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1134298883898786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33986599230929672
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -932,6 +1196,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4647498248953091}
   - component: {fileID: 4118853913186046211}
+  - component: {fileID: 6805114868617464863}
+  - component: {fileID: 4994520480337213566}
+  - component: {fileID: 3635638974883482656}
   - component: {fileID: 33684265306479056}
   - component: {fileID: 23668539479679160}
   - component: {fileID: 64710786690661230}
@@ -970,6 +1237,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6805114868617464863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191497256773820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4994520480337213566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191497256773820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &3635638974883482656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191497256773820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33684265306479056
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1058,6 +1388,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4169078789791228}
   - component: {fileID: 3237482973873046131}
+  - component: {fileID: 1378683568282077819}
+  - component: {fileID: 6988532954151670677}
+  - component: {fileID: 5683713881630381457}
   - component: {fileID: 33665033581318198}
   - component: {fileID: 23890739061030011}
   - component: {fileID: 64568940799712273}
@@ -1097,6 +1430,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1378683568282077819
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191859227124452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6988532954151670677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191859227124452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5683713881630381457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191859227124452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33665033581318198
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1185,6 +1581,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4720331235601272}
   - component: {fileID: 1809019496162857363}
+  - component: {fileID: 3691702897624106641}
+  - component: {fileID: 4023887848416139204}
+  - component: {fileID: 1654811385048371108}
   - component: {fileID: 33012833941291005}
   - component: {fileID: 23580838778805574}
   - component: {fileID: 64403760134273250}
@@ -1222,6 +1621,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &3691702897624106641
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201877236686989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4023887848416139204
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201877236686989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1654811385048371108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1201877236686989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33012833941291005
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1310,6 +1772,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4117825341167083}
   - component: {fileID: 1238093558391860705}
+  - component: {fileID: 7372400345328323720}
+  - component: {fileID: 7591726244815639796}
+  - component: {fileID: 2811952211658655595}
   - component: {fileID: 33595175197868059}
   - component: {fileID: 23923793793347227}
   - component: {fileID: 64813833527397764}
@@ -1347,6 +1812,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &7372400345328323720
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203095969338308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7591726244815639796
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203095969338308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2811952211658655595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1203095969338308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33595175197868059
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1435,6 +1963,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4282104517811798}
   - component: {fileID: 5880664890904541638}
+  - component: {fileID: 5922218713657129454}
+  - component: {fileID: 2917119800290351406}
+  - component: {fileID: 5224688538673764018}
   - component: {fileID: 33725267464212487}
   - component: {fileID: 23361677467116360}
   - component: {fileID: 64241406324410552}
@@ -1472,6 +2003,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5922218713657129454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210604786769292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &2917119800290351406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210604786769292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5224688538673764018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210604786769292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33725267464212487
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1700,6 +2294,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4601459409754826}
   - component: {fileID: 3367674350415150469}
+  - component: {fileID: 5086976433414714004}
+  - component: {fileID: 2187668300861629457}
+  - component: {fileID: 4072232609398423697}
   - component: {fileID: 33517895339594968}
   - component: {fileID: 23877317717074447}
   - component: {fileID: 64064664233055707}
@@ -1737,6 +2334,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5086976433414714004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232193749047600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &2187668300861629457
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232193749047600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &4072232609398423697
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1232193749047600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33517895339594968
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1825,6 +2485,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4471450646807841}
   - component: {fileID: 1742651378706844653}
+  - component: {fileID: 5483670741948754856}
+  - component: {fileID: 7084255356402797034}
+  - component: {fileID: 7298083737920826946}
   - component: {fileID: 33817287242769365}
   - component: {fileID: 23840236579439327}
   - component: {fileID: 64603966288373981}
@@ -1864,6 +2527,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5483670741948754856
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236684467734342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7084255356402797034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236684467734342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7298083737920826946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1236684467734342}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33817287242769365
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1952,6 +2678,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4425316969538247}
   - component: {fileID: 1614402206002720395}
+  - component: {fileID: 8592021357333416874}
+  - component: {fileID: 3402258705637255060}
+  - component: {fileID: 1344195448471572668}
   - component: {fileID: 33797449640187603}
   - component: {fileID: 23815908984607500}
   - component: {fileID: 64737774386795365}
@@ -1989,6 +2718,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &8592021357333416874
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241825330957219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &3402258705637255060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241825330957219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1344195448471572668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1241825330957219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33797449640187603
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2077,6 +2869,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4541594896085685}
   - component: {fileID: 8312970875352447635}
+  - component: {fileID: 2799793177639806952}
+  - component: {fileID: 7043748438902120428}
+  - component: {fileID: 6996536839140178552}
   - component: {fileID: 33739824731636645}
   - component: {fileID: 23463705616189233}
   - component: {fileID: 64204586628329872}
@@ -2114,6 +2909,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &2799793177639806952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248962337067867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7043748438902120428
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248962337067867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &6996536839140178552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1248962337067867}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33739824731636645
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2202,6 +3060,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4662570626135084}
   - component: {fileID: 8199224178437089563}
+  - component: {fileID: 4102468464112662294}
+  - component: {fileID: 8096392230863489111}
+  - component: {fileID: 7522384434759009628}
   - component: {fileID: 33202036448264626}
   - component: {fileID: 23911258332629708}
   - component: {fileID: 64273767451253266}
@@ -2239,6 +3100,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &4102468464112662294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260266168015629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &8096392230863489111
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260266168015629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7522384434759009628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1260266168015629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33202036448264626
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2327,6 +3251,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4672568568623832}
   - component: {fileID: 4260172602654540484}
+  - component: {fileID: 1979466474582032474}
+  - component: {fileID: 9080242329230448081}
+  - component: {fileID: 5272349673530885486}
   - component: {fileID: 33463599365183567}
   - component: {fileID: 23432871283682581}
   - component: {fileID: 64406023093019582}
@@ -2365,6 +3292,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1979466474582032474
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276181671021536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &9080242329230448081
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276181671021536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5272349673530885486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1276181671021536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33463599365183567
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2453,6 +3443,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4587122717924996}
   - component: {fileID: 4478895397212231914}
+  - component: {fileID: 926935459378506344}
+  - component: {fileID: 9008022252854277206}
+  - component: {fileID: 848049320032675499}
   - component: {fileID: 33390125610520193}
   - component: {fileID: 23994179039635342}
   - component: {fileID: 64166139237159839}
@@ -2490,6 +3483,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &926935459378506344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334966505902908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &9008022252854277206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334966505902908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &848049320032675499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1334966505902908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33390125610520193
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2578,6 +3634,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4292168464046967}
   - component: {fileID: 3610023008802283181}
+  - component: {fileID: 6612621883405323864}
+  - component: {fileID: 6160532590517617426}
+  - component: {fileID: 2226839729073853926}
   - component: {fileID: 33642612764037424}
   - component: {fileID: 23219135886497228}
   - component: {fileID: 64788187651384905}
@@ -2615,6 +3674,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6612621883405323864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371338447076305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6160532590517617426
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371338447076305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2226839729073853926
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371338447076305}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33642612764037424
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2703,6 +3825,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4520745780484141}
   - component: {fileID: 2189416928768867166}
+  - component: {fileID: 1875352273021417235}
+  - component: {fileID: 4300916098582531029}
+  - component: {fileID: 8777140644310891223}
   - component: {fileID: 33243877701105920}
   - component: {fileID: 23376507699289912}
   - component: {fileID: 64219086335574909}
@@ -2740,6 +3865,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1875352273021417235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378823752083647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4300916098582531029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378823752083647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &8777140644310891223
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1378823752083647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33243877701105920
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2828,6 +4016,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4444368090548026}
   - component: {fileID: 5332754269426275484}
+  - component: {fileID: 5704154099467895676}
+  - component: {fileID: 4933609063231283009}
+  - component: {fileID: 5131091910137748694}
   - component: {fileID: 33775530815215767}
   - component: {fileID: 23376306254982639}
   - component: {fileID: 64429457307016747}
@@ -2865,6 +4056,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5704154099467895676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393148370555124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4933609063231283009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393148370555124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5131091910137748694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1393148370555124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33775530815215767
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2953,6 +4207,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4295472364918239}
   - component: {fileID: 810237567282952183}
+  - component: {fileID: 5448934750424484152}
+  - component: {fileID: 4745067934600106380}
+  - component: {fileID: 4958946758803426027}
   - component: {fileID: 33122201249392760}
   - component: {fileID: 23110339037369612}
   - component: {fileID: 64858569291424888}
@@ -2990,6 +4247,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5448934750424484152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410065951046887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4745067934600106380
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410065951046887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &4958946758803426027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1410065951046887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33122201249392760
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3219,6 +4539,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4834563308124387}
   - component: {fileID: 6087384086146302391}
+  - component: {fileID: 6128328853276927155}
+  - component: {fileID: 6345407620347787770}
+  - component: {fileID: 1401123293352671969}
   - component: {fileID: 33092665561266414}
   - component: {fileID: 23744919344732447}
   - component: {fileID: 64719624264122409}
@@ -3256,6 +4579,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6128328853276927155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439546726935632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6345407620347787770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439546726935632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1401123293352671969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1439546726935632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33092665561266414
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3484,6 +4870,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4768078470941683}
   - component: {fileID: 8403172224373582655}
+  - component: {fileID: 1564724418882041761}
+  - component: {fileID: 7615873090233362674}
+  - component: {fileID: 9218349237078263010}
   - component: {fileID: 33645286180009339}
   - component: {fileID: 23723223306873352}
   - component: {fileID: 64863338440865518}
@@ -3521,6 +4910,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1564724418882041761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487367045810696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7615873090233362674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487367045810696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &9218349237078263010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1487367045810696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33645286180009339
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3691,6 +5143,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4910933585263725}
   - component: {fileID: 196282644646529176}
+  - component: {fileID: 9151202740777202108}
+  - component: {fileID: 7655477007601351088}
+  - component: {fileID: 6016004820951450018}
   - component: {fileID: 33397298225713551}
   - component: {fileID: 23028848994291476}
   - component: {fileID: 64676661205217362}
@@ -3728,6 +5183,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &9151202740777202108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512817727733285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7655477007601351088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512817727733285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &6016004820951450018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512817727733285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33397298225713551
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3816,6 +5334,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4501901798467948}
   - component: {fileID: 6959153028023083898}
+  - component: {fileID: 1177779227855498836}
+  - component: {fileID: 5719115113769854566}
+  - component: {fileID: 2743574719656884088}
   - component: {fileID: 33378958167411820}
   - component: {fileID: 23510661982250382}
   - component: {fileID: 64641271067862570}
@@ -3853,6 +5374,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1177779227855498836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520583124841215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5719115113769854566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520583124841215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2743574719656884088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1520583124841215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33378958167411820
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3941,6 +5525,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4006834237181354}
   - component: {fileID: 7966833100615670209}
+  - component: {fileID: 7907108765634133071}
+  - component: {fileID: 6002962750008317384}
+  - component: {fileID: 256433401201857834}
   - component: {fileID: 33784653514003233}
   - component: {fileID: 23228480026139602}
   - component: {fileID: 64884055679716993}
@@ -3978,6 +5565,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &7907108765634133071
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522675385896509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6002962750008317384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522675385896509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &256433401201857834
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1522675385896509}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33784653514003233
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4066,6 +5716,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4677935435007173}
   - component: {fileID: 5621605343285600651}
+  - component: {fileID: 6669787848176111822}
+  - component: {fileID: 4539783589410650156}
+  - component: {fileID: 6746276208573210828}
   - component: {fileID: 33307688792602997}
   - component: {fileID: 23174532733992212}
   - component: {fileID: 64630149722186353}
@@ -4103,6 +5756,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6669787848176111822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524097668576773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4539783589410650156
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524097668576773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &6746276208573210828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1524097668576773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33307688792602997
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4191,6 +5907,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4574365487823161}
   - component: {fileID: 3230048428502244783}
+  - component: {fileID: 2807711188523294172}
+  - component: {fileID: 6534974146386561512}
+  - component: {fileID: 2427489955077770451}
   - component: {fileID: 33797591411316074}
   - component: {fileID: 23946661635829184}
   - component: {fileID: 64413343590997620}
@@ -4228,6 +5947,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &2807711188523294172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558282374544224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6534974146386561512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558282374544224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2427489955077770451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1558282374544224}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33797591411316074
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4316,6 +6098,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4708863769860529}
   - component: {fileID: 4413745700380331793}
+  - component: {fileID: 6505531782278945025}
+  - component: {fileID: 5117061832507979538}
+  - component: {fileID: 7297286004767164195}
   - component: {fileID: 33081567294709203}
   - component: {fileID: 23901213635919706}
   - component: {fileID: 64587108156741968}
@@ -4353,6 +6138,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6505531782278945025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598858417491912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5117061832507979538
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598858417491912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7297286004767164195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1598858417491912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33081567294709203
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4441,6 +6289,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4321541457137132}
   - component: {fileID: 3122239662044356089}
+  - component: {fileID: 4926165020029236801}
+  - component: {fileID: 6024380260908225458}
+  - component: {fileID: 2487946066707549336}
   - component: {fileID: 33579832598622755}
   - component: {fileID: 23425983331825905}
   - component: {fileID: 64746132456422390}
@@ -4478,6 +6329,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &4926165020029236801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601042489035110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6024380260908225458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601042489035110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2487946066707549336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1601042489035110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33579832598622755
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4614,6 +6528,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4151282622401238}
   - component: {fileID: 5193513812193479376}
+  - component: {fileID: 6110800033410364818}
+  - component: {fileID: 7403183947453588488}
+  - component: {fileID: 2767213372970696634}
   - component: {fileID: 33057778819690828}
   - component: {fileID: 23996210413216288}
   - component: {fileID: 64119520843109076}
@@ -4651,6 +6568,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6110800033410364818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635925675957908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7403183947453588488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635925675957908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2767213372970696634
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1635925675957908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33057778819690828
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4739,6 +6719,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4802144794193186}
   - component: {fileID: 3086229243959732958}
+  - component: {fileID: 8312902256095050470}
+  - component: {fileID: 793678990053223685}
+  - component: {fileID: 3036139534940426002}
   - component: {fileID: 33112217068891407}
   - component: {fileID: 23112981735465415}
   - component: {fileID: 64435644950889259}
@@ -4777,6 +6760,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &8312902256095050470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640429122514526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &793678990053223685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640429122514526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &3036139534940426002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1640429122514526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33112217068891407
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5005,6 +7051,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4056434811089044}
   - component: {fileID: 2149796160055003075}
+  - component: {fileID: 5666051348182001962}
+  - component: {fileID: 5801794524853974342}
+  - component: {fileID: 7953498148630795219}
   - component: {fileID: 33130550344112911}
   - component: {fileID: 23802364602643385}
   - component: {fileID: 64098643369916765}
@@ -5042,6 +7091,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5666051348182001962
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660245541200890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5801794524853974342
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660245541200890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7953498148630795219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1660245541200890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33130550344112911
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5270,6 +7382,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4610002521573036}
   - component: {fileID: 2350055372410368179}
+  - component: {fileID: 5838618348367481031}
+  - component: {fileID: 7609660066040048115}
+  - component: {fileID: 1216941888456409818}
   - component: {fileID: 33806612588811078}
   - component: {fileID: 23568031915134871}
   - component: {fileID: 64601965430005509}
@@ -5307,6 +7422,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5838618348367481031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706705716891016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &7609660066040048115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706705716891016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1216941888456409818
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706705716891016}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33806612588811078
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5395,6 +7573,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4570120999076093}
   - component: {fileID: 945410894228215860}
+  - component: {fileID: 653030287749820698}
+  - component: {fileID: 267167499670669934}
+  - component: {fileID: 8966278636030091585}
   - component: {fileID: 33054725608868646}
   - component: {fileID: 23128369410148040}
   - component: {fileID: 64690602252655776}
@@ -5432,6 +7613,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &653030287749820698
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735930863987536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &267167499670669934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735930863987536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &8966278636030091585
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1735930863987536}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33054725608868646
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5520,6 +7764,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4507433105977047}
   - component: {fileID: 4175613680933280771}
+  - component: {fileID: 7708129533044802830}
+  - component: {fileID: 659333198321502278}
+  - component: {fileID: 5767980480976884504}
   - component: {fileID: 33174927838013310}
   - component: {fileID: 23353932644859883}
   - component: {fileID: 64890248392244969}
@@ -5559,6 +7806,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &7708129533044802830
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751278687011341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &659333198321502278
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751278687011341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5767980480976884504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1751278687011341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33174927838013310
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5787,6 +8097,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4395466822890777}
   - component: {fileID: 3683571585755938885}
+  - component: {fileID: 6021068880059234320}
+  - component: {fileID: 6777390703128389661}
+  - component: {fileID: 5485888200655849478}
   - component: {fileID: 33189490857421800}
   - component: {fileID: 23817702877223150}
   - component: {fileID: 64571470754175133}
@@ -5824,6 +8137,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6021068880059234320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769998907536231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6777390703128389661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769998907536231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5485888200655849478
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1769998907536231}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33189490857421800
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5912,6 +8288,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4040504543011961}
   - component: {fileID: 3721481129897915162}
+  - component: {fileID: 2741743094851507927}
+  - component: {fileID: 2687411113480108434}
+  - component: {fileID: 8865784021413749364}
   - component: {fileID: 33723742145193041}
   - component: {fileID: 23835871209972214}
   - component: {fileID: 64608765407689508}
@@ -5949,6 +8328,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &2741743094851507927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803636433194478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &2687411113480108434
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803636433194478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &8865784021413749364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1803636433194478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33723742145193041
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6037,6 +8479,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4924920650405570}
   - component: {fileID: 7608715915277792849}
+  - component: {fileID: 3265757429555370607}
+  - component: {fileID: 5097542371529844791}
+  - component: {fileID: 5720621383681842124}
   - component: {fileID: 33696474219188181}
   - component: {fileID: 23726854287883039}
   - component: {fileID: 64181414985195632}
@@ -6074,6 +8519,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &3265757429555370607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809630774748806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5097542371529844791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809630774748806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5720621383681842124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809630774748806}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33696474219188181
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6162,6 +8670,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4951066868593880}
   - component: {fileID: 8899292865718602994}
+  - component: {fileID: 4838049470493161954}
+  - component: {fileID: 209399376502315891}
+  - component: {fileID: 4193060121313822155}
   - component: {fileID: 33871322066397840}
   - component: {fileID: 23042124349949746}
   - component: {fileID: 64020784007354965}
@@ -6199,6 +8710,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &4838049470493161954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810584301171132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &209399376502315891
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810584301171132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &4193060121313822155
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810584301171132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33871322066397840
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6287,6 +8861,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4066990980641071}
   - component: {fileID: 4267834457717244824}
+  - component: {fileID: 6530912714420118557}
+  - component: {fileID: 6271980191946737789}
+  - component: {fileID: 5661996004652006872}
   - component: {fileID: 33195125899523569}
   - component: {fileID: 23897342393819433}
   - component: {fileID: 64345968819805183}
@@ -6324,6 +8901,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6530912714420118557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812808495133866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6271980191946737789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812808495133866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5661996004652006872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1812808495133866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33195125899523569
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6412,6 +9052,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4168501953203694}
   - component: {fileID: 1120615739783296504}
+  - component: {fileID: 2212659888335704015}
+  - component: {fileID: 5955731063259401169}
+  - component: {fileID: 7733064221695711121}
   - component: {fileID: 33001117860577085}
   - component: {fileID: 23025664954525607}
   - component: {fileID: 64572828556288649}
@@ -6449,6 +9092,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &2212659888335704015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846390912987077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5955731063259401169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846390912987077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7733064221695711121
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1846390912987077}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33001117860577085
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6537,6 +9243,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4009785406055624}
   - component: {fileID: 7541415214607681120}
+  - component: {fileID: 1199502790008930337}
+  - component: {fileID: 4104721427712575914}
+  - component: {fileID: 6690767043778727157}
   - component: {fileID: 33521057319027933}
   - component: {fileID: 23794776053202580}
   - component: {fileID: 64097372390521876}
@@ -6574,6 +9283,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &1199502790008930337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850195480878018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &4104721427712575914
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850195480878018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &6690767043778727157
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1850195480878018}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33521057319027933
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6662,6 +9434,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4918376996744834}
   - component: {fileID: 5503589559323822989}
+  - component: {fileID: 6862976003816865990}
+  - component: {fileID: 5487810776818204997}
+  - component: {fileID: 7470991806543074414}
   - component: {fileID: 33945450466615240}
   - component: {fileID: 23272829653101747}
   - component: {fileID: 64666772295284659}
@@ -6699,6 +9474,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6862976003816865990
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908640125404589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5487810776818204997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908640125404589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7470991806543074414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1908640125404589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33945450466615240
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6787,6 +9625,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4254012887237528}
   - component: {fileID: 4733946235643125963}
+  - component: {fileID: 3474670509134918074}
+  - component: {fileID: 108665773101846592}
+  - component: {fileID: 2777076175729472761}
   - component: {fileID: 33536083406334877}
   - component: {fileID: 23980872205533825}
   - component: {fileID: 64844130452409864}
@@ -6824,6 +9665,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &3474670509134918074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943357456716698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &108665773101846592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943357456716698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2777076175729472761
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943357456716698}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33536083406334877
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6912,6 +9816,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4434311296464303}
   - component: {fileID: 2839819550172165783}
+  - component: {fileID: 5318368613329370405}
+  - component: {fileID: 5579293570498210959}
+  - component: {fileID: 7541280208118507206}
   - component: {fileID: 33146319955487463}
   - component: {fileID: 23886218247775841}
   - component: {fileID: 64051278678440652}
@@ -6949,6 +9856,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &5318368613329370405
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950782865144159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &5579293570498210959
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950782865144159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7541280208118507206
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950782865144159}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33146319955487463
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7037,6 +10007,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4734593551498887}
   - component: {fileID: 2977952869148894594}
+  - component: {fileID: 3696131338439837214}
+  - component: {fileID: 121408490444226214}
+  - component: {fileID: 2337135860305096102}
   - component: {fileID: 33478250902207907}
   - component: {fileID: 23670837792998553}
   - component: {fileID: 64876816125332297}
@@ -7074,6 +10047,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &3696131338439837214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951688079333306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &121408490444226214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951688079333306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &2337135860305096102
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1951688079333306}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33478250902207907
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7162,6 +10198,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4798840303769275}
   - component: {fileID: 6770324741323982677}
+  - component: {fileID: 6492777726194272931}
+  - component: {fileID: 1481438032630797446}
+  - component: {fileID: 6576645891299260688}
   - component: {fileID: 33402369817978137}
   - component: {fileID: 23350322212612350}
   - component: {fileID: 64831624172313929}
@@ -7199,6 +10238,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6492777726194272931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968625476533868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &1481438032630797446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968625476533868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &6576645891299260688
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1968625476533868}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33402369817978137
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7287,6 +10389,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4166498795341566}
   - component: {fileID: 241102633699080660}
+  - component: {fileID: 3067314207155918906}
+  - component: {fileID: 2525834341358653211}
+  - component: {fileID: 1205142409376002915}
   - component: {fileID: 33499384029404495}
   - component: {fileID: 23021866376805634}
   - component: {fileID: 64886611369360231}
@@ -7324,6 +10429,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &3067314207155918906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982468848025957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &2525834341358653211
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982468848025957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &1205142409376002915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1982468848025957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33499384029404495
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7412,6 +10580,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4387596951544260}
   - component: {fileID: 3191392103180544236}
+  - component: {fileID: 6254341792778119186}
+  - component: {fileID: 8155716717668480653}
+  - component: {fileID: 7241230774216658042}
   - component: {fileID: 33715264515715210}
   - component: {fileID: 23561384949923832}
   - component: {fileID: 64511834936698977}
@@ -7449,6 +10620,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &6254341792778119186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985383119144501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &8155716717668480653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985383119144501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7241230774216658042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985383119144501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33715264515715210
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7537,6 +10771,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4741626346165028}
   - component: {fileID: 8457342430887734572}
+  - component: {fileID: 2975821582046297960}
+  - component: {fileID: 6186557335892318089}
+  - component: {fileID: 5884826408498146014}
   - component: {fileID: 33823514140157054}
   - component: {fileID: 23731521823894753}
   - component: {fileID: 64388497252457766}
@@ -7574,6 +10811,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &2975821582046297960
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986549175850214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &6186557335892318089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986549175850214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &5884826408498146014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1986549175850214}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33823514140157054
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7662,6 +10962,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4191403470708619}
   - component: {fileID: 2001907808826787958}
+  - component: {fileID: 8339323970724716415}
+  - component: {fileID: 3256430466145489964}
+  - component: {fileID: 7805876627643427601}
   - component: {fileID: 33067559877866664}
   - component: {fileID: 23131155302082329}
   - component: {fileID: 64465681074130425}
@@ -7699,6 +11002,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c149477e1e5bb478791e8fb865d4a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
+  pieceId: 0
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  meshFilter: {fileID: 0}
+  joint: {fileID: 0}
+  scaleOnPieceBox: 0
+  pieceDifficultyModifier: 0
+  rotateSpeed: 0.3
+  durationMoveOut: 0.3
+  durationDelay: 0.1
+  durationMoveToPiecePort: 0.3
+  durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
+--- !u!114 &8339323970724716415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994645263295678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
+  piece: {fileID: 4024973236793257141}
+  pieceProperty: {fileID: 5025074862366035799}
+  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
+  screwOutline: {fileID: 0}
+  pieceMeshRenderer: {fileID: 23218414536957683}
+--- !u!114 &3256430466145489964
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994645263295678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
+  pieceServiceLocator: {fileID: 4354109713934751717}
+  faction: 0
+--- !u!114 &7805876627643427601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1994645263295678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
+  meshRenderer: {fileID: 23218414536957683}
+  materials:
+  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  colorReference: _Color
+  secondaryColorReference: 
+  outlineWidthReference: 
+  secondaryColorMultiplier: 0
+  _renderer: {fileID: 23218414536957683}
 --- !u!33 &33067559877866664
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -33,6 +33,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject eventItem;
     [SerializeField] private GameObject taskItemUIPrefab;
 
+
+    [SerializeField] private GameObject spoolBox;
+
     #region YARN
     [SerializeField] private Yarn2D yarn2D;
     #endregion
@@ -90,6 +93,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
 
         RegisterPool<Yarn2D>(GameConstants.yard2D, yarn2D.gameObject, 5);
+        RegisterPool<SpoolBox>(GameConstants.spoolBox, spoolBox, screwBoxContainer, 5);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

@@ -35,6 +35,10 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     #endregion
 
+    #region YARN
+    public static int numSpoolBoxUnlocked;
+    #endregion
+
     #region LEVEL DIFFICULTY
     public static float userBasedLevelDifficulty;
     public static bool isHardMode;

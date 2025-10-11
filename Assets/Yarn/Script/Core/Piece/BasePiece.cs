@@ -1,12 +1,229 @@
+using System;
+using System.Collections.Generic;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
+using static GameEnum;
 
 public class BasePiece : MonoBehaviour
 {
-    private Renderer _renderer;
+    [SerializeField] protected int pieceId;
 
-    void Awake()
+    #region COMPONENT
+    [SerializeField] protected PieceServiceLocator pieceServiceLocator;
+    [SerializeField] protected MeshFilter meshFilter;
+    [SerializeField] protected HingeJoint joint;
+    #endregion
+
+    [Header("CUSTOMIZE")]
+    [SerializeField] protected float scaleOnPieceBox;
+    [SerializeField] private int pieceDifficultyModifier;
+    [SerializeField] protected float rotateSpeed = 0.3f;
+
+    [Header("CUSTOMIZE - UNSCREW ANIMATION")]
+    [SerializeField] private float durationMoveOut = 0.3f;
+    [SerializeField] private float durationDelay = 0.1f;
+    [SerializeField] private float durationMoveToPiecePort = 0.3f;
+    [SerializeField] private float durationTightenPiecePort = 0.3f;
+
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] protected GameSetting gameSetting;
+
+    #region PRIVATE FIELD
+    protected List<Tween> _tweens = new List<Tween>();
+    protected Camera _mainCamera;
+    protected Renderer _renderer;
+    protected int _numberBlockingObjects;
+    protected Vector3 _initialScale;
+    protected float _initialRotateSpeed;
+    protected bool _isMoving;
+    protected bool _isRotating;
+    protected bool _isRotatingToCorrectAngleOnPieceBox;
+    protected Vector3 _localRotationOnPieceSlot;
+    protected bool _isInteractable = true;
+    protected bool _isDone;
+    protected bool _isOutsideWithNoSpoolBox;
+    protected bool _isLocked;
+    protected bool _isInPiecePort;
+    protected SpoolBoxSlot _spoolBoxSlot;
+    // protected PieceData _pieceData;
+    #endregion
+
+    #region PROPERTY
+    public int PieceId
     {
+        get => pieceId;
+        set => pieceId = value;
+    }
+
+    public HingeJoint Joint
+    {
+        set => joint = value;
+    }
+
+    public MeshFilter MeshFilter
+    {
+        get => meshFilter;
+    }
+
+    public SpoolBoxSlot SpoolBoxSlot
+    {
+        get => _spoolBoxSlot;
+    }
+
+    public PieceServiceLocator PieceServiceLocator
+    {
+        get => pieceServiceLocator;
+    }
+
+    public GameFaction Faction
+    {
+        get => pieceServiceLocator.pieceProperty.Faction;
+        set => pieceServiceLocator.pieceProperty.Faction = value;
+    }
+
+    public int NumberBlockingObjects
+    {
+        get => _numberBlockingObjects;
+    }
+
+    public bool IsMoving
+    {
+        get => _isMoving;
+        set => _isMoving = value;
+    }
+
+    public bool IsRotating
+    {
+        get => _isRotating;
+        set => _isRotating = value;
+    }
+
+    public bool IsDone
+    {
+        get => _isDone;
+        set => _isDone = value;
+    }
+
+    public bool IsInteractable
+    {
+        get => _isInteractable;
+        set => _isInteractable = value;
+    }
+
+    public bool IsOutsideWithNoSpoolBox
+    {
+        get => _isOutsideWithNoSpoolBox;
+        set => _isOutsideWithNoSpoolBox = value;
+    }
+
+    public bool IsLocked
+    {
+        get => _isLocked;
+        set => _isLocked = value;
+    }
+
+    public bool IsInPiecePort
+    {
+        get => _isInPiecePort;
+        set => _isInPiecePort = value;
+    }
+
+    public int PieceDifficultyModifier
+    {
+        get => pieceDifficultyModifier;
+    }
+    #endregion
+
+    #region EVENT
+    public static event Action<int, GameFaction> selectPieceEvent;
+    public static event Action<int, GameFaction> autoSelectPieceEvent;
+    public static event Action<BasePiece> addPieceToListEvent;
+    public static event Action<BasePiece> pieceMovedCompletedEvent;
+    public static event Action<int> breakJointEvent;
+    public static event Action<int> pieceStartLoosenedEvent;
+    public static event Action pieceLoosenedEvent;
+    public static event Action updateOutsidePieceNumberEvent;
+    public static event Action updateEventItem;
+    #endregion
+
+    #region LIFE CYCLE
+    protected virtual void Awake()
+    {
+        SpoolManager.loosePieceEvent += Loose;
+        SpoolManager.loosePieceWithoutCheckingObstaclesEvent += LooseWithoutCheckingObstacles;
+
+        RegisterMoreEvent();
+
+        AddScrewToList();
+
         _renderer = GetComponent<Renderer>();
+
+        _initialScale = transform.localScale;
+        _initialRotateSpeed = rotateSpeed;
+
+        _mainCamera = Camera.main;
+
+        MoreLogicInAwake();
+    }
+
+    void Start()
+    {
+        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
+    }
+
+    void OnDestroy()
+    {
+        SpoolManager.loosePieceEvent -= Loose;
+        SpoolManager.loosePieceWithoutCheckingObstaclesEvent -= LooseWithoutCheckingObstacles;
+
+        UnregisterMoreEvent();
+
+        CommonUtil.StopAllTweens(_tweens);
+    }
+
+    protected virtual void MoreLogicInAwake()
+    {
+
+    }
+
+    protected virtual void RegisterMoreEvent()
+    {
+
+    }
+
+    protected virtual void UnregisterMoreEvent()
+    {
+
+    }
+    #endregion
+
+    private async void AddScrewToList()
+    {
+        _tweens.Add(Tween.Delay(0.2f).OnComplete(() =>
+        {
+            addPieceToListEvent?.Invoke(this);
+        }));
+    }
+
+    public void Select()
+    {
+        selectPieceEvent?.Invoke(pieceId, Faction);
+    }
+
+    public virtual int CountBlockingObjects(bool isIncludeHiddenPiece)
+    {
+        return 0;
+    }
+
+    public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
+    {
+
+    }
+
+    public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
+    {
+        // Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
     }
 
     public void PullYarn()

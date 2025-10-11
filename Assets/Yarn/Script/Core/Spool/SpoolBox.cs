@@ -1,0 +1,287 @@
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using CandyCoded.HapticFeedback;
+using Firebase.RemoteConfig;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
+using UnityEngine;
+using static GameEnum;
+
+public class SpoolBox : MonoBehaviour
+{
+    [SerializeField] private SpoolBoxSlot[] spoolBoxSlots;
+    [SerializeField] private Transform boxLid;
+    [SerializeField] private SpriteRenderer spoolBoxSpriteRenderer;
+
+    [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
+
+    [Header("CUSTOMIZE")]
+    [SerializeField] private bool isLocked;
+    [SerializeField] private float delayMoveInDuration;
+    [SerializeField] private float closeBoxLidDuration;
+    [SerializeField] private float scaleDownDuration;
+    [SerializeField] private float delayMoveOutDuration;
+    [SerializeField] private float moveOutDuration;
+
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] protected GameSetting gameSetting;
+
+    #region EVENT
+    public static event Action<SpoolBox> spoolBoxCompletedEvent;
+    public static event Action spawnNewSpoolBoxEvent;
+    public static event Action<SpoolBox> setFactionForSpoolBoxEvent;
+    public static event Action<SpoolBox> spoolBoxUnlockedEvent;
+    public static event Action shakeCameraEvent;
+    public static event Action<Color> playFullscreenEffectEvent;
+    #endregion
+
+    #region PRIVATE FIELD
+    private List<Sequence> _sequences;
+    private Vector3 _initialScale;
+    private Vector3 _initialSize;
+    private bool _isInTransition;
+    private bool _isPlayBoxCompleteFx;
+    #endregion
+
+    public GameFaction Faction
+    {
+        get => spoolBoxServiceLocator.spoolBoxProperty.Faction;
+        set => spoolBoxServiceLocator.spoolBoxProperty.Faction = value;
+    }
+
+    public SpoolBoxSlot[] SpoolBoxSlots
+    {
+        get => spoolBoxSlots;
+    }
+
+    public bool IsLocked
+    {
+        get => isLocked;
+        set => isLocked = value;
+    }
+
+    public bool IsInTransition
+    {
+        get => _isInTransition;
+        set => _isInTransition = value;
+    }
+
+    public SpoolBoxServiceLocator SpoolBoxServiceLocator
+    {
+        get => spoolBoxServiceLocator;
+    }
+
+    private void Awake()
+    {
+        ScrewBoxCameraManager.setCameraEvent += OnSpoolBoxCameraSet;
+        SpoolBoxSlot.spoolBoxCompleteEvent += OnSpoolBoxCompleted;
+        SpoolBoxUI.unlockSpoolBox += Unlock;
+
+        _sequences = new List<Sequence>();
+
+        boxLid.gameObject.SetActive(false);
+
+        gameSetting.LoadAsync();
+    }
+
+    private void OnDestroy()
+    {
+        ScrewBoxCameraManager.setCameraEvent -= OnSpoolBoxCameraSet;
+        SpoolBoxSlot.spoolBoxCompleteEvent -= OnSpoolBoxCompleted;
+        SpoolBoxUI.unlockSpoolBox -= Unlock;
+
+        CommonUtil.StopAllSequences(_sequences);
+    }
+
+    private void OnSpoolBoxCameraSet(Camera spoolBoxCamera)
+    {
+        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(spoolBoxCamera);
+
+        float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / spoolBoxSpriteRenderer.bounds.size.x;
+        float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / spoolBoxSpriteRenderer.bounds.size.y;
+
+        scaleWithWidth *= 1.05f;
+        scaleWithHeight *= 1.05f;
+
+        float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
+
+        transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
+
+        _initialScale = transform.localScale;
+        _initialSize = spoolBoxSpriteRenderer.bounds.size;
+
+        _isPlayBoxCompleteFx = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_PLAY_BOX_COMPLETE_FX, true);
+    }
+
+    private async void OnSpoolBoxCompleted(int instanceId)
+    {
+        if (instanceId == gameObject.GetInstanceID())
+        {
+            await Task.Delay((int)(delayMoveInDuration * 300));
+
+            SoundManager.Instance.PlaySoundScrewBoxDone();
+
+            float initialPositionY = transform.localPosition.y;
+            float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
+
+            boxLid.gameObject.SetActive(true);
+
+            boxLid.localPosition = boxLid.localPosition.ChangeY(9);
+
+            // float hidePositionY = transform.position.y + 8;
+
+            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+            // {
+            //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+            // }
+
+            float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+
+            _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
+                .OnComplete(() =>
+                {
+                    shakeCameraEvent?.Invoke();
+
+                    if (GamePersistentVariable.IsVibrate)
+                    {
+                        HapticFeedback.HeavyFeedback();
+                    }
+
+                    // FX
+                    if (_isPlayBoxCompleteFx)
+                    {
+                        try
+                        {
+                            ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+
+                            if (rippleFx != null)
+                            {
+                                Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+
+                                ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                                rippleFxMain.startColor = factionColor;
+
+                                for (int i = 0; i < rippleFx.transform.childCount; i++)
+                                {
+                                    ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+
+                                    ParticleSystem.MainModule childFxMain = childFx.main;
+
+                                    childFxMain.startColor = factionColor;
+                                }
+
+                                rippleFx.gameObject.SetActive(true);
+                                rippleFx.transform.position = transform.position.ChangeZ(-9);
+
+                                // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+                                // {
+                                //     rippleFx.transform.localScale = 0.25f * Vector3.one;
+                                // }
+                                // else
+                                // {
+                                //     rippleFx.transform.localScale = 0.5f * Vector3.one;
+                                // }
+
+                                float initialScale = 0.5f;
+                                float BEST_ORTHOGRAPHIC_SIZE = 20;
+
+                                rippleFx.transform.localScale =
+                                    initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
+
+                                rippleFx.Play();
+                            }
+                        }
+                        catch (System.Exception e)
+                        {
+
+                        }
+
+                        playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                    }
+                })
+                .Chain
+                (
+                    Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
+                    {
+                        transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
+                        transform.localPosition =
+                            transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
+                    }
+                    ).OnComplete(() =>
+                    {
+                        Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+                        Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
+                        .OnComplete(() =>
+                        {
+                            spoolBoxCompletedEvent?.Invoke(this);
+                            spawnNewSpoolBoxEvent?.Invoke();
+
+                            transform.position = transform.position.ChangeY(initialPositionY);
+                            transform.localScale = _initialScale;
+
+                            boxLid.gameObject.SetActive(false);
+
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+                        });
+                    })
+                )
+            );
+        }
+    }
+
+    public void Lock()
+    {
+        spoolBoxSpriteRenderer.enabled = false;
+
+        spoolBoxServiceLocator.spoolBoxUI.Lock();
+
+        isLocked = true;
+    }
+
+    public void Unlock()
+    {
+        spoolBoxSpriteRenderer.enabled = true;
+
+        // CLEAR SCREWS
+        for (int i = 0; i < spoolBoxSlots.Length; i++)
+        {
+            if (spoolBoxSlots[i].IsFilled)
+            {
+                spoolBoxSlots[i].IsFilled = false;
+
+                Destroy(spoolBoxSlots[i].Piece.gameObject);
+
+                spoolBoxSlots[i].Piece = null;
+            }
+        }
+
+        isLocked = false;
+
+        GamePersistentVariable.numSpoolBoxUnlocked++;
+
+        setFactionForSpoolBoxEvent?.Invoke(this);
+        // spoolBoxUnlockedEvent?.Invoke(this);
+    }
+
+    private void Unlock(int instanceId)
+    {
+        if (instanceId == gameObject.GetInstanceID())
+        {
+            Unlock();
+        }
+    }
+
+    public void ResetVisually()
+    {
+        spoolBoxSpriteRenderer.enabled = true;
+
+        spoolBoxServiceLocator.spoolBoxUI.HideUnlockBoxButton();
+    }
+
+    public void InvokeSpoolBoxUnlockedEvent()
+    {
+        spoolBoxUnlockedEvent?.Invoke(this);
+    }
+}
