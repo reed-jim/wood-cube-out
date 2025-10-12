@@ -14,7 +14,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private LevelDataContainer levelDataContainer;
 
-    
+
     #region MonoBehaviour Callbacks
     protected override void Awake()
     {
@@ -33,7 +33,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
         DisableAll();
     }
     #endregion
-    
+
 
     private void OnLevelStarted()
     {
@@ -42,9 +42,11 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
 
     private void SwitchSpecialLevel()
     {
-        for (int i = 0; i < specialLevelManagers.Length; i++)
+        DisableAll();
+
+        if (!GamePersistentVariable.specialLevelConfig.isEnable)
         {
-            specialLevelManagers[i].Disable();
+            return;
         }
 
         foreach (var manager in specialLevelManagers)
@@ -70,7 +72,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
     {
         for (int i = 0; i < specialLevelManagers.Length; i++)
         {
-            specialLevelManagers[i].gameObject.SetActive(false);
+            specialLevelManagers[i].Disable();
         }
     }
 }

@@ -41,6 +41,10 @@ public static class GamePersistentVariable
     public static LongTermUserDifficultyConfig longTermUserDifficultyConfig;
     #endregion
 
+    #region SPECIAL LEVEL
+    public static SpecialLevelConfig specialLevelConfig;
+    #endregion
+
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
