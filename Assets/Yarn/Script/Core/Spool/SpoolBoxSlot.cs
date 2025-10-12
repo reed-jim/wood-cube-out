@@ -4,16 +4,24 @@ using static GameEnum;
 
 public class SpoolBoxSlot : MonoBehaviour
 {
+    [SerializeField] private Renderer spoolRenderer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isAlternative;
 
     private BasePiece _piece;
+    private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
     private bool _isFilled;
 
     public BasePiece Piece
     {
         get => _piece;
         set => _piece = value;
+    }
+
+    public Renderer SpoolRenderer
+    {
+        get => spoolRenderer;
     }
 
     public bool IsFilled
@@ -31,6 +39,15 @@ public class SpoolBoxSlot : MonoBehaviour
     #region EVENT
     public static event Action<int> spoolBoxCompleteEvent;
     #endregion
+
+    void Awake()
+    {
+        yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
+
+        spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+    }
 
     public void Fill(BasePiece piece)
     {

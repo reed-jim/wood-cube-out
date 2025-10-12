@@ -30,7 +30,7 @@ public class YarnLevelLoader : MonoBehaviour
     private List<Tween> _autoCenterLevelTweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
     private int _maxLevel;
-    private BasicObjectPart[] _pieces;
+    private BasePiece[] _pieces;
     private Transform _currentLevelContainer;
     private Transform _pivotAdjust;
     private bool _isNotAutoCenterLevel;
@@ -174,7 +174,7 @@ public class YarnLevelLoader : MonoBehaviour
         GamePersistentVariable.levelPrefab = nextLevel;
 
         setLevelNumberEvent?.Invoke();
-        
+
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
         string levelPrefab = $"Level {nextLevel}";
@@ -236,11 +236,13 @@ public class YarnLevelLoader : MonoBehaviour
                 // catch (System.Exception e) { }
                 // #endregion
 
-                // // FIND DEPENDENCY
-                // // delay for pieces scaling before level
-                // List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+                // FIND DEPENDENCY
+                // delay for pieces scaling before level
+                List<BasePiece> pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform);
 
-                // _pieces = pieces.ToArray();
+                _pieces = pieces.ToArray();
+
+                setLevelScrewNumberEvent?.Invoke(_pieces.Length);
 
                 // Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
                 // //
@@ -289,48 +291,48 @@ public class YarnLevelLoader : MonoBehaviour
 
                 // level.transform.position = Vector3.zero;
 
-                // if (!_isNotAutoCenterLevel)
-                // {
-                //     for (int i = 0; i < level.transform.childCount; i++)
-                //     {
-                //         Transform pivotAdjust = level.transform.GetChild(i);
+                if (!_isNotAutoCenterLevel)
+                {
+                    for (int i = 0; i < level.transform.childCount; i++)
+                    {
+                        Transform pivotAdjust = level.transform.GetChild(i);
 
-                //         if (pivotAdjust.name.Contains("Pivot Adjust"))
-                //         {
-                //             _pivotAdjust = pivotAdjust;
+                        if (pivotAdjust.name.Contains("Pivot Adjust"))
+                        {
+                            _pivotAdjust = pivotAdjust;
 
-                //             _pivotAdjust.transform.position = Vector3.zero;
-                //         }
-                //     }
+                            _pivotAdjust.transform.position = Vector3.zero;
+                        }
+                    }
 
-                //     foreach (BasicObjectPart piece in pieces)
-                //     {
-                //         if (_pivotAdjust == null)
-                //         {
-                //             _pivotAdjust = new GameObject().transform;
-                //             _pivotAdjust.name = "Pivot Adjust";
-                //             _pivotAdjust.SetParent(_currentLevelContainer);
+                    foreach (BasePiece piece in pieces)
+                    {
+                        if (_pivotAdjust == null)
+                        {
+                            _pivotAdjust = new GameObject().transform;
+                            _pivotAdjust.name = "Pivot Adjust";
+                            _pivotAdjust.SetParent(_currentLevelContainer);
 
-                //             _pivotAdjust.transform.localPosition = Vector3.zero;
-                //             _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                //             _pivotAdjust.transform.localScale = Vector3.one;
-                //         }
+                            _pivotAdjust.transform.localPosition = Vector3.zero;
+                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                            _pivotAdjust.transform.localScale = Vector3.one;
+                        }
 
-                //         if (!piece.transform.IsChildOf(_pivotAdjust))
-                //         {
-                //             piece.transform.SetParent(_pivotAdjust);
-                //         }
-                //     }
+                        if (!piece.transform.IsChildOf(_pivotAdjust))
+                        {
+                            piece.transform.SetParent(_pivotAdjust);
+                        }
+                    }
 
-                //     GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
+                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
 
-                //     _isSetLevelGradientBound = false;
+                    _isSetLevelGradientBound = false;
 
-                //     Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
 
-                //     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                // }
-                // // 
+                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+                }
+                // 
 
 
 
@@ -683,7 +685,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
     }
 
-    Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
+    Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasePiece[] objects, Vector3 offset)
     {
         if (objects.Length == 0)
         {
@@ -710,7 +712,7 @@ public class YarnLevelLoader : MonoBehaviour
 
         float pieceLossyScale = objects[0].transform.lossyScale.x;
 
-        foreach (BasicObjectPart obj in objects)
+        foreach (BasePiece obj in objects)
         {
             if (!obj.transform.IsChildOf(_pivotAdjust))
             {
@@ -722,12 +724,12 @@ public class YarnLevelLoader : MonoBehaviour
 
             Vector3 objectPosition = obj.transform.position + meshFilter.mesh.bounds.center * pieceLossyScale;
 
-            float boundXMin = objectPosition.x - 0.5f * obj.BoundSize.x;
-            float boundXMax = objectPosition.x + 0.5f * obj.BoundSize.x;
-            float boundYMin = objectPosition.y - 0.5f * obj.BoundSize.y;
-            float boundYMax = objectPosition.y + 0.5f * obj.BoundSize.y;
-            float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
-            float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
+            float boundXMin = objectPosition.x - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.x;
+            float boundXMax = objectPosition.x + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.x;
+            float boundYMin = objectPosition.y - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.y;
+            float boundYMax = objectPosition.y + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.y;
+            float boundZMin = objectPosition.z - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.z;
+            float boundZMax = objectPosition.z + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.z;
 
             if (boundXMin < minX)
             {
@@ -852,28 +854,28 @@ public class YarnLevelLoader : MonoBehaviour
 
     private void SetLevelGradientMinMaxIn(Vector3 levelCenter, float minWorldY, float maxWorldY)
     {
-        float halfDistance = (maxWorldY - minWorldY) / 2;
-        float shaderMinY = levelCenter.y - halfDistance;
-        float shaderMaxY = levelCenter.y + halfDistance;
+        // float halfDistance = (maxWorldY - minWorldY) / 2;
+        // float shaderMinY = levelCenter.y - halfDistance;
+        // float shaderMaxY = levelCenter.y + halfDistance;
 
-        shaderMinY = Mathf.Min(shaderMinY, 0);
-        shaderMaxY = Mathf.Max(shaderMaxY, 1);
+        // shaderMinY = Mathf.Min(shaderMinY, 0);
+        // shaderMaxY = Mathf.Max(shaderMaxY, 1);
 
-        if (!_isSetLevelGradientBound)
-        {
-            if (_pieces != null)
-            {
-                for (int i = 0; i < _pieces.Length; i++)
-                {
-                    if (_pieces[i] != null)
-                    {
-                        _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
-                    }
-                }
+        // if (!_isSetLevelGradientBound)
+        // {
+        //     if (_pieces != null)
+        //     {
+        //         for (int i = 0; i < _pieces.Length; i++)
+        //         {
+        //             if (_pieces[i] != null)
+        //             {
+        //                 _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
+        //             }
+        //         }
 
-                _isSetLevelGradientBound = true;
-            }
-        }
+        //         _isSetLevelGradientBound = true;
+        //     }
+        // }
     }
     #endregion
 

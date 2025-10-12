@@ -331,7 +331,6 @@ public class SpoolManager : MonoBehaviour
 
     public SpoolBoxSlot CheckAvailableSpoolBoxes(GameFaction selectedFaction, bool isIncludePiecePorts)
     {
-        Debug.Log("SAFERIO 0 " + selectedFaction);
         foreach (var spoolBox in spoolBoxs)
         {
             if (spoolBox == null)

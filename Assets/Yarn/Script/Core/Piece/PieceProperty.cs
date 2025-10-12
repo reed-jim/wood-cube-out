@@ -7,15 +7,24 @@ public class PieceProperty : MonoBehaviour
 
     [SerializeField] private GameFaction faction;
 
+    private Vector3 _boundSize;
+
     public GameFaction Faction
     {
         get => faction;
         set => faction = value;
     }
 
+    public Vector3 BoundSize
+    {
+        get => _boundSize;
+    }
+
     void Awake()
     {
         pieceServiceLocator = GetComponent<PieceServiceLocator>();
+
+        _boundSize = pieceServiceLocator.pieceMeshRenderer.bounds.size;
     }
 
     void Start()

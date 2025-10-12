@@ -220,7 +220,12 @@ public class BasePiece : MonoBehaviour
         {
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-            yarn2D.Init(spoolBoxSlot.transform.position, _renderer);
+            yarn2D.Rewind(spoolBoxSlot.transform.position, _renderer, spoolBoxSlot.SpoolRenderer, onCompleteAction: () =>
+            {
+                spoolBoxSlot.CompleteFill();
+            });
+
+            spoolBoxSlot.Fill(this);
         }
     }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -24,11 +25,6 @@ public class Yarn2D : MonoBehaviour
     [SerializeField] private float amplitude;
     [SerializeField] private float waveSpeed;
 
-    #region Pull Rope
-    private int pullRopeStep;
-    [SerializeField] private int maxPullRopeStep;
-    #endregion
-
     [Header("Model")]
     // [SerializeField] private Renderer model;
     Renderer model;
@@ -36,30 +32,45 @@ public class Yarn2D : MonoBehaviour
     private MaterialPropertyBlock materialPropertyBlock;
     private float dissolveHeight = 1;
 
-    // [Header("Yarn Spool")]
-    // [SerializeField] private Renderer yarnSpool;
-    // private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
+    [Header("Yarn Spool")]
+    [SerializeField] private Renderer yarnSpool;
+    private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
 
+    #region PRIVATE
     private Vector3 _firstNodePosition;
+    private float lerpDelta;
+    #endregion
+
+    private Action onRewindYarnCompleted;
+
+    void Awake()
+    {
+        materialPropertyBlock = new MaterialPropertyBlock();
+        yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+    }
 
     private void Reset()
     {
         step = 0;
         dissolveHeight = 1;
-        pullRopeStep = 0;
+        lerpDelta = 0.1f;
     }
 
-    public void Init(Vector3 startPoint, Renderer model)
+    public void Rewind(Vector3 startPoint, Renderer model, Renderer spool, Action onCompleteAction = null)
     {
         InitializeRope(startPoint);
 
         InitPiece(model);
+
+        InitSpool(spool);
 
         Reset();
 
         _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
 
         gameObject.SetActive(true);
+
+        onRewindYarnCompleted = onCompleteAction;
     }
 
     private void InitPiece(Renderer selectedModel)
@@ -75,19 +86,15 @@ public class Yarn2D : MonoBehaviour
         lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
         lastNode.posOld = lastNode.posNow;
 
-        materialPropertyBlock = new MaterialPropertyBlock();
-        // yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
-
-        // yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
-
-        model.SetPropertyBlock(materialPropertyBlock);
-
-
-
         transform.SetParent(selectedModel.transform);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
+    }
+
+    private void InitSpool(Renderer spool)
+    {
+        yarnSpool = spool;
     }
 
     private void UpdatePiece()
@@ -95,10 +102,10 @@ public class Yarn2D : MonoBehaviour
         dissolveHeight -= dissolveDelta;
 
         materialPropertyBlock.SetFloat("_DissolveHeight", dissolveHeight);
-        // yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 1 - dissolveHeight);
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 1 - dissolveHeight);
 
         model.SetPropertyBlock(materialPropertyBlock);
-        // yarnSpool.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+        yarnSpool.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
 
     void Update()
@@ -150,7 +157,7 @@ public class Yarn2D : MonoBehaviour
         {
             for (int i = 1; i < segments.Count; i++)
             {
-                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, 1f / maxPullRopeStep);
+                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
 
                 if (i == segments.Count - 1)
                 {
@@ -158,12 +165,17 @@ public class Yarn2D : MonoBehaviour
                     {
                         model.gameObject.SetActive(false);
                         gameObject.SetActive(false);
+
+                        onRewindYarnCompleted?.Invoke();
                     }
                 }
             }
         }
 
         UpdateLineRenderer();
+
+        lerpDelta *= 1.01f;
+        lerpDelta = Mathf.Min(lerpDelta, 1);
     }
 
     void InitializeRope(Vector3 startPoint)
