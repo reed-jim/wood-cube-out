@@ -140,6 +140,12 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         }
     }
 
+    protected override void OnCompleteTaskStep()
+    {
+        base.OnCompleteTaskStep();
+        rustyBreakALayer?.Invoke();
+    }
+
     #endregion
 
     

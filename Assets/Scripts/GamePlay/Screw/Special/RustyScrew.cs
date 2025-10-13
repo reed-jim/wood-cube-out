@@ -24,7 +24,7 @@ namespace NamPhuThuy.GamePlay
 
         private void OnRustyLayerBreak()
         {
-            PlayLooseFX();
+            // PlayLooseFX();
         }
 
         #endregion

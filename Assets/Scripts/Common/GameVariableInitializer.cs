@@ -59,7 +59,7 @@ public class GameVariableInitializer : MonoBehaviour
 
         GamePersistentVariable.longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
 
-        GamePersistentVariable.specialLevelConfig = new SpecialLevelConfig();
+        GamePersistentVariable.specialLevelConfig = new SpecialLevelConfig(){isEnable =  true};
     }
 
     private void Start()

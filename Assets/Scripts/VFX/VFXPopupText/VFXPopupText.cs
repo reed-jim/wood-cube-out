@@ -83,7 +83,7 @@ namespace NamPhuThuy.VFX
             KillTweens();
 
             SetContent(args.message, args.onBegin);
-            SetRandomColor();
+            // SetRandomColor();
             gameObject.SetActive(true);
 
             // Reset state

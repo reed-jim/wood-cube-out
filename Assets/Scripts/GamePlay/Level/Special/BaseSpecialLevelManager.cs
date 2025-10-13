@@ -182,6 +182,7 @@ namespace NamPhuThuy.GamePlay
                     _specialLevelTaskRecord.requiredComponents.First(item => item.componentType == GameComponentType.Screw);
 
                 item.remainingAmount--;
+                OnCompleteTaskStep();
                 SoundManager.Instance.PlaySoundGenerateTask();
 
                 UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
@@ -192,6 +193,11 @@ namespace NamPhuThuy.GamePlay
                     HandleTaskCompleted();
                 }
             }
+        }
+
+        protected virtual void OnCompleteTaskStep()
+        {
+            
         }
 
         protected virtual void OnScrewsSet(BaseScrew[] screws)
