@@ -1,4 +1,5 @@
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -53,6 +54,15 @@ public class LockedObjectPart : BasicObjectPart
     {
         requiredValueToUnlock--;
 
+        VFXManager.Ins.PlayAt(
+            type: VFXType.STAT_CHANGE_TEXT,
+            pos: requiredValueText.transform.position,
+            amount: 1,
+            initialParent: requiredValueText.transform,
+            offset: new Vector2(-40f, 25f),
+            distance: 20f,
+            color: Color.green);
+        
         requiredValueText.text = $"{requiredValueToUnlock}";
 
         if (requiredValueToUnlock == 0)

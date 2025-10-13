@@ -98,7 +98,7 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple(message:$"generated new record {_specialLevelTaskRecord}");
 
             _specialLevelTaskRecord.requiredComponents[0].faction = targetScrew.Faction;
-            _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, 9);
+            _specialLevelTaskRecord.requiredComponents[0].Amount = UnityEngine.Random.Range(3, Mathf.Min(validScrews.Length - 3, 9));
 
             UpdateUI(SpecialLevelUIState.UpdateProgress, new object[1] { _specialLevelTaskRecord });
 
