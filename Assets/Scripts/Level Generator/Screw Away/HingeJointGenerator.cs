@@ -1152,14 +1152,21 @@ public class HingeJointGenerator : EditorWindow
             expectedScale = 1;
         }
 
+        float currentScale;
+        float ratio;
+
         for (int i = 0; i < screws.Length; i++)
         {
+            currentScale = screws[i].transform.localScale.x;
+
             screws[i].transform.localScale = TransformUtil.ComponentWiseDivine(expectedScale * screws[i].transform.localScale, screws[i].transform.lossyScale);
+
+            ratio = screws[i].transform.localScale.x / currentScale;
+
+            screws[i].transform.position -= 0.5f * (ratio - 1) * screws[i].transform.forward;
         }
 
         EditorUtility.SetDirty(level);
-
-        // PrefabUtility.SaveAsPrefabAsset(level, path);
     }
     #endregion
 
