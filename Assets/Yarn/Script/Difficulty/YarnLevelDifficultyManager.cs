@@ -2,13 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using static GameEnum;
 
-public static class YarnLevelDifficultyManager
+public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 {
-    public static void GenerateAddionalFaction(BasePiece[] pieces)
+    public void GenerateAddionalFaction(BasePiece[] pieces)
     {
         int totalPiece = pieces.Length;
 
-        int numAdditionalFactionPerPiece = Random.Range(0, 2);
+        int numAdditionalFactionPerPiece = Random.Range(1, 3);
+        numAdditionalFactionPerPiece = 1;
 
         int totalAdditionalFaction = numAdditionalFactionPerPiece * totalPiece;
 
@@ -37,7 +38,16 @@ public static class YarnLevelDifficultyManager
 
             for (int j = 0; j < numAdditionalFactionPerPiece; j++)
             {
+                BasePiece generatedPiece = Instantiate(pieces[i].gameObject, pieces[i].transform).GetComponent<BasePiece>();
+
+                generatedPiece.gameObject.name = $"Generated Piece {i} {j}";
+
                 GameFaction faction = poolFaction[Random.Range(0, poolFaction.Count)];
+
+                generatedPiece.Faction = faction;
+                generatedPiece.transform.localPosition = Vector3.zero;
+                generatedPiece.transform.localRotation = Quaternion.identity;
+                generatedPiece.transform.localScale *= 1 - (j + 1) * 0.1f;
 
                 poolFaction.Remove(faction);
 

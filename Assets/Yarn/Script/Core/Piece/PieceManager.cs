@@ -220,6 +220,8 @@ public class PieceManager : MonoBehaviour
             numObstacleEachPieceEachFaction.Add(GameConstants.SCREW_FACTION[i], new List<int>());
         }
 
+        return difficultyLevelByFactions;
+
         // Find the number of obstacles for each piece in each faction.
         for (int i = 0; i < _pieces.Count; i++)
         {

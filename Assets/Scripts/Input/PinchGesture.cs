@@ -40,7 +40,7 @@ public class PinchGesture : MonoBehaviour
         _tweens = new List<Tween>();
 
         minZoom = 0.85f * cameraToZoom.orthographicSize;
-        maxZoom = 1.15f * cameraToZoom.orthographicSize;
+        maxZoom = 1.3f * cameraToZoom.orthographicSize;
     }
 
     void OnDestroy()
