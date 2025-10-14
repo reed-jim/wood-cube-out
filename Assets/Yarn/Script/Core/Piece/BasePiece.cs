@@ -222,6 +222,28 @@ public class BasePiece : MonoBehaviour
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, _renderer, spoolBoxSlot.SpoolRenderer, onCompleteAction: () =>
             {
+                BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
+
+                if (innerPieces.Length > 1)
+                {
+                    BasePiece firstInnerPiece = innerPieces[1];
+
+                    for (int i = 2; i < innerPieces.Length; i++)
+                    {
+                        innerPieces[i].transform.SetParent(firstInnerPiece.transform);
+                    }
+
+                    Tween.Scale(firstInnerPiece.transform, 1.1f, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
+                    });
+
+                    firstInnerPiece.transform.SetParent(transform.parent);
+                }
+
+                gameObject.SetActive(false);
+
                 spoolBoxSlot.CompleteFill();
             });
 

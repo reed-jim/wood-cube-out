@@ -163,7 +163,6 @@ public class Yarn2D : MonoBehaviour
                 {
                     if (Vector3.Distance(segments[i].posNow, segments[0].posNow) < 0.05f)
                     {
-                        model.gameObject.SetActive(false);
                         gameObject.SetActive(false);
 
                         onRewindYarnCompleted?.Invoke();
