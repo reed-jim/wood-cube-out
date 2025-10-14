@@ -229,6 +229,9 @@ public class HingeJointGenerator : EditorWindow
             ExtractFullLevel();
         }
 
+        GUILayout.Space(16);
+        GUILayout.Label("Utils", centeredStyle);
+
         if (GUILayout.Button("Add Required Components To Pieces"))
         {
             AddRequiredComponentsToPieces();
@@ -2983,7 +2986,7 @@ public class HingeJointGenerator : EditorWindow
 
         // Calculate CENTER POINT
         /*Vector3 centerPoint = pieces.Aggregate(Vector3.zero, (sum, piece) => sum + piece.transform.position) / pieces.Length;*/
-        
+
         Vector3 centerPoint = Vector3.zero;
 
         foreach (var objectPart in pieces)
@@ -3005,6 +3008,7 @@ public class HingeJointGenerator : EditorWindow
 
             piece.transform.rotation = Quaternion.identity;
 
+            MeshFilter meshFilter = piece.GetComponent<MeshFilter>();
             Vector3 pieceSize = piece.GetComponent<MeshCollider>().bounds.size;
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
             Vector3 pieceBoundCenter = piece.GetComponent<MeshFilter>().sharedMesh.bounds.center;
@@ -3028,121 +3032,125 @@ public class HingeJointGenerator : EditorWindow
             Dictionary<Vector3, bool> isTilesEmpty = new Dictionary<Vector3, bool>();
 
             for (int i = 0; i < maxScrewX; i++)
-            for (int j = 0; j < maxScrewY; j++)
-            for (int k = 0; k < maxScrewZ; k++)
-                isTilesEmpty.Add(new Vector3(i, j, k), true);
-            
+                for (int j = 0; j < maxScrewY; j++)
+                    for (int k = 0; k < maxScrewZ; k++)
+                        isTilesEmpty.Add(new Vector3(i, j, k), true);
+
             int numScrewSpawned = 0;
 
             for (int i = 0; i < maxScrewX; i++)
-            for (int j = 0; j < maxScrewY; j++)
-            for (int k = 0; k < maxScrewZ; k++)
-            {
-                if (numScrewSpawned >= maxScrew) { break; }
-                if (!IsValidTile(i, j, k, isTilesEmpty)) { continue; }
-
-                BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
-
-                screw.name = $"Screw 3D {numScrewSpawned}";
-
-                numScrewSpawned++;
-
-                List<FaceDirection> poolDirection = new List<FaceDirection>();
-
-                float areaFront = pieceSize.x * pieceSize.y;
-                float areaTop = pieceSize.x * pieceSize.z;
-                float areaSide = pieceSize.y * pieceSize.z;
-
-                if (areaFront >= areaTop && areaFront >= areaSide)
-                {
-                    poolDirection.Add(FaceDirection.Front);
-                }
-
-                if (areaTop >= areaFront && areaTop >= areaSide)
-                {
-                    poolDirection.Add(FaceDirection.Top);
-                }
-
-                if (areaSide >= areaFront && areaSide >= areaTop)
-                {
-                    poolDirection.Add(FaceDirection.Side);
-                }
-
-                FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
-
-                screw.transform.position = piece.transform.position +
-                    new Vector3
-                    (
-                        (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
-                        (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
-                        (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
-                    );
-
-                int direction = 1/* = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1*/;
-
-                Debug.Log("SAFERIO " + piece.name + "/" + faceDirection);
-
-                if (faceDirection == FaceDirection.Front)
-                {
-                    direction = piece.transform.position.z > centerPoint.z ? 1 : -1;
-
-                    screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + 2 * direction * pieceSize.z);
-
-                    screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
-
-                    if (direction == 1)
+                for (int j = 0; j < maxScrewY; j++)
+                    for (int k = 0; k < maxScrewZ; k++)
                     {
-                        screw.transform.eulerAngles += new Vector3(180, 0, 0);
+                        if (numScrewSpawned >= maxScrew) { break; }
+                        if (!IsValidTile(i, j, k, isTilesEmpty)) { continue; }
+
+                        BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+                        screw.name = $"Screw 3D {numScrewSpawned}";
+
+                        numScrewSpawned++;
+
+                        List<FaceDirection> poolDirection = new List<FaceDirection>();
+
+                        float areaFront = pieceSize.x * pieceSize.y;
+                        float areaTop = pieceSize.x * pieceSize.z;
+                        float areaSide = pieceSize.y * pieceSize.z;
+
+                        if (areaFront >= areaTop && areaFront >= areaSide)
+                        {
+                            poolDirection.Add(FaceDirection.Front);
+                        }
+
+                        if (areaTop >= areaFront && areaTop >= areaSide)
+                        {
+                            poolDirection.Add(FaceDirection.Top);
+                        }
+
+                        if (areaSide >= areaFront && areaSide >= areaTop)
+                        {
+                            poolDirection.Add(FaceDirection.Side);
+                        }
+
+                        FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
+
+                        Vector3 localModelCenter = meshFilter.sharedMesh.bounds.center;
+                        Vector3 worldModelCenter = meshFilter.transform.TransformPoint(localModelCenter);
+
+                        screw.transform.position = worldModelCenter +
+                            new Vector3
+                            (
+                                (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
+                                (-(maxScrewY - 1) / 2f + j) * 0.7f * pieceSize.y / maxScrewY,
+                                (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
+                            );
+
+                        int direction = 1/* = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1*/;
+
+                        Debug.Log("SAFERIO " + piece.name + "/" + faceDirection);
+
+                        if (faceDirection == FaceDirection.Front)
+                        {
+                            direction = piece.transform.position.z > centerPoint.z ? 1 : -1;
+
+                            screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + 2 * direction * pieceSize.z);
+
+                            screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
+
+                            if (direction == 1)
+                            {
+                                screw.transform.eulerAngles += new Vector3(180, 0, 0);
+                            }
+
+                            for (int m = 0; m < maxScrewZ; m++)
+                            {
+                                isTilesEmpty[new Vector3(i, j, m)] = false;
+                            }
+                        }
+                        else if (faceDirection == FaceDirection.Top)
+                        {
+                            direction = piece.transform.position.y > centerPoint.y ? 1 : -1;
+
+                            direction = 1;
+
+                            screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
+
+                            screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
+
+                            for (int m = 0; m < maxScrewY; m++)
+                            {
+                                isTilesEmpty[new Vector3(i, m, k)] = false;
+                            }
+                        }
+                        else
+                        {
+                            direction = piece.transform.position.x > centerPoint.x ? 1 : -1;
+
+                            screw.transform.position = piece.transform.position + piece.transform.right * pieceSize.x;
+                            screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
+
+                            if (direction == 1)
+                            {
+                                screw.transform.eulerAngles += new Vector3(180, 0, 0);
+                            }
+
+                            for (int m = 0; m < maxScrewX; m++)
+                            {
+                                isTilesEmpty[new Vector3(m, j, k)] = false;
+                            }
+
+                            if (direction == -1)
+                            {
+                                Debug.Log($"<color=#Ff8E9E> {piece.name} / {screw.name}</color>");
+                            }
+                        }
+
+                        // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
+                        // screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
+
+                        screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                     }
 
-                    for (int m = 0; m < maxScrewZ; m++)
-                    {
-                        isTilesEmpty[new Vector3(i, j, m)] = false;
-                    }
-                }
-                else if (faceDirection == FaceDirection.Top)
-                {
-                    direction = piece.transform.position.y > centerPoint.y ? 1 : -1;
-
-                    direction = 1;
-
-                    screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
-
-                    screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
-
-                    for (int m = 0; m < maxScrewY; m++)
-                    {
-                        isTilesEmpty[new Vector3(i, m, k)] = false;
-                    }
-                }
-                else
-                {
-                    direction = piece.transform.position.x > centerPoint.x ? 1 : -1;
-
-                    screw.transform.position = piece.transform.position + piece.transform.right * pieceSize.x;
-                    screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
-
-                    if (direction == 1)
-                    {
-                        screw.transform.eulerAngles += new Vector3(180, 0, 0);
-                    }
-
-                    for (int m = 0; m < maxScrewX; m++)
-                    {
-                        isTilesEmpty[new Vector3(m, j, k)] = false;
-                    }
-
-                    if (direction == -1)
-                    {
-                        Debug.Log($"<color=#Ff8E9E> {piece.name} / {screw.name}</color>");
-                    }
-                }
-
-                // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
-                screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
-                screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
-            }
-            
 
             piece.transform.rotation = cachedPieceRotation;
         }
