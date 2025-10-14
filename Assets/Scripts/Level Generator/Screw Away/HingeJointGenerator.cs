@@ -2975,7 +2975,6 @@ public class HingeJointGenerator : EditorWindow
 
     private void GenerateScrews()
     {
-        
         Transform level = Selection.activeTransform;
         // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[3];
         screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.NORMAL_SCREW_PREFAB_PATH);
