@@ -185,6 +185,7 @@ namespace NamPhuThuy.GamePlay
 
         setLevelNumberEvent?.Invoke();
 
+        nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
         string levelName = $"Level {nextLevel}";
