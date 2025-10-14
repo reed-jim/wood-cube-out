@@ -6,19 +6,28 @@ public class PieceProperty : MonoBehaviour
     [SerializeField] private PieceServiceLocator pieceServiceLocator;
 
     [SerializeField] private GameFaction faction;
+    private GameFaction[] poolFactions;
 
     private Vector3 _boundSize;
 
+    #region PROPERTY
     public GameFaction Faction
     {
         get => faction;
         set => faction = value;
     }
 
+    public GameFaction[] PoolFactions
+    {
+        get => poolFactions;
+        set => poolFactions = value;
+    }
+
     public Vector3 BoundSize
     {
         get => _boundSize;
     }
+    #endregion
 
     void Awake()
     {

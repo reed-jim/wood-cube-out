@@ -240,6 +240,8 @@ public class YarnLevelLoader : MonoBehaviour
                 // delay for pieces scaling before level
                 List<BasePiece> pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform);
 
+                YarnLevelDifficultyManager.GenerateAddionalFaction(_pieces);
+
                 _pieces = pieces.ToArray();
 
                 setLevelScrewNumberEvent?.Invoke(_pieces.Length);
