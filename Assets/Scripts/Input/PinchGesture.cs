@@ -29,8 +29,8 @@ public class PinchGesture : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
-        LevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
+        YarnLevelLoader.startLevelEvent += OnLevelStarted;
+        YarnLevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
@@ -45,8 +45,8 @@ public class PinchGesture : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
-        LevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
+        YarnLevelLoader.startLevelEvent -= OnLevelStarted;
+        YarnLevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
