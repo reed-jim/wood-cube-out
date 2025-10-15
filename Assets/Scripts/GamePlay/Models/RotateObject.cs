@@ -46,9 +46,7 @@ public class RotateObject : MonoBehaviour
     }
 
     #endregion
-
     
-
     public void AssignDummyClone(Transform clone)
     {
         cloneToCalculateRotation = clone;

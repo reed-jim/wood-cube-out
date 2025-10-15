@@ -54,7 +54,7 @@ namespace NamPhuThuy.GamePlay
 
     public void ChangeState(BaseGameState newState)
     {
-        DebugLogger.LogSimple(message:$"newState: {newState.GameState}");
+        // DebugLogger.LogSimple(message:$"newState: {newState.GameState}");
         if (!newState.CanTransitionTo())
         {
             return;

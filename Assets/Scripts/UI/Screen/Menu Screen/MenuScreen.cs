@@ -205,7 +205,7 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         if (_isGameStarted)
         {
             return;
@@ -252,7 +252,7 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
-            DebugLogger.LogSimple(message:"Place 3");
+            // DebugLogger.LogSimple(message:"Place 3");
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
 

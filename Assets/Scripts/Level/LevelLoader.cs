@@ -146,7 +146,8 @@ namespace NamPhuThuy.GamePlay
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
 
-                isLoopLevel = true;
+                // isLoopLevel = true;
+                SetIsLoopLevel(true);
             }
         }
         else
@@ -160,7 +161,8 @@ namespace NamPhuThuy.GamePlay
                 nextLevel = currentLevel.Value - UserData.NumLevelLoop;
             }
 
-            isLoopLevel = true;
+            // isLoopLevel = true;
+            SetIsLoopLevel(true);
         }
 
         // // NOT LOOP
@@ -337,6 +339,7 @@ namespace NamPhuThuy.GamePlay
 
             texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
+           
             if (isLoopLevel)
             {
                 RandomizeLevelModelColor(level);
@@ -362,6 +365,12 @@ namespace NamPhuThuy.GamePlay
             #endregion
 
             GamePersistentVariable.isLevelLost = false;
+        }
+
+        void SetIsLoopLevel(bool isLoop)
+        {
+            isLoopLevel = isLoop;
+            DebugLogger.LogSimple(message:$"isLoop: {isLoopLevel}", color:Color.red);
         }
     }
 
@@ -1041,6 +1050,7 @@ namespace NamPhuThuy.GamePlay
 
     private void RandomizeLevelModelColor(GameObject level)
     {
+        DebugLogger.LogSimple();
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
         Renderer[] objectPartRenderers = new Renderer[objectParts.Length];
 

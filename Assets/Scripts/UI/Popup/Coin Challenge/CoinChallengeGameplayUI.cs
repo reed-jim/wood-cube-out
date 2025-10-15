@@ -93,7 +93,7 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
     private void OnLevelLoaded()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         _data = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
         currentLevel.Load();

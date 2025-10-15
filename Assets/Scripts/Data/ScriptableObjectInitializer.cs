@@ -26,7 +26,7 @@ public class ScriptableObjectInitializer : MonoBehaviour
 
     private async void LoadGameSetting()
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         await gameSetting.LoadAsync();
 
         gameSettingLoadedEvent?.Invoke();

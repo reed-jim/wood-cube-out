@@ -207,7 +207,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void OnScrewBoxCameraSet(Camera screwBoxCamera)
     {
-        DebugLogger.LogSimple();
+        // DebugLogger.LogSimple();
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
 
         if (0.19f * worldSize.x < 0.11f * worldSize.y)

@@ -231,6 +231,11 @@ public class HingeJointGenerator : EditorWindow
 
         GUILayout.Space(16);
         GUILayout.Label("Utils", centeredStyle);
+        
+        if (GUILayout.Button("Remove Children's Components"))
+        {
+            RemoveComponentsForAllChildren();
+        }
 
         if (GUILayout.Button("Add Required Components To Pieces"))
         {
@@ -1327,6 +1332,31 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region UTIL
+
+    private void RemoveComponentsForAllChildren()
+    {
+        Transform level = Selection.activeTransform;
+        
+        if (level == null) return;
+
+        foreach (Transform child in level)
+        {
+            Component[] components = child.GetComponents<Component>();
+            foreach (var comp in components)
+            {
+                /*if (!(comp is Transform))
+                {
+                    DestroyImmediate(comp);
+                }*/
+                if (comp is BasicObjectPart)
+                    DestroyImmediate(comp);
+                if (comp is ObjectPartMaterialPropertyBlock)
+                    DestroyImmediate(comp);
+            }
+        }
+        EditorUtility.SetDirty(level);
+    }
+    
     private void AddRequiredComponentsToPieces()
     {
         Transform level = Selection.activeTransform;
@@ -1341,9 +1371,24 @@ public class HingeJointGenerator : EditorWindow
             Transform piece = level.GetChild(i);
 
             // Pieces
-            piece.AddComponent<BasicObjectPart>();
+            if (piece.GetComponent<BasicObjectPart>() == null)
+            {
+                piece.AddComponent<BasicObjectPart>();
+            }
+            
+            if (piece.GetComponent<ObjectPartMaterialPropertyBlock>() == null)
+            {
+                piece.AddComponent<ObjectPartMaterialPropertyBlock>();
+            }
+            
+            if (piece.GetComponent<Rigidbody>() == null)
+            {
+                piece.AddComponent<Rigidbody>();
+            }
+            
+            /*piece.AddComponent<BasicObjectPart>();
             piece.AddComponent<ObjectPartMaterialPropertyBlock>();
-            piece.AddComponent<Rigidbody>();
+            piece.AddComponent<Rigidbody>();*/
 
             if (piece.GetComponent<MeshCollider>() == null)
             {
