@@ -30,8 +30,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     protected override void MoreActionOnAwake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
-        LevelLoader.setLevelNumberEvent += SetLevelText;
+        YarnLevelLoader.startLevelEvent += OnLevelStarted;
+        YarnLevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
@@ -51,8 +51,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
-        LevelLoader.setLevelNumberEvent -= SetLevelText;
+        YarnLevelLoader.startLevelEvent -= OnLevelStarted;
+        YarnLevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }

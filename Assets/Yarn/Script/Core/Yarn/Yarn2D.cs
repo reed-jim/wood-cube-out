@@ -38,6 +38,7 @@ public class Yarn2D : MonoBehaviour
     #region PRIVATE
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
     private Vector3 _firstNodePosition;
+    private Vector3 _firstNodeLocalPosition;
     private float lerpDelta;
     #endregion
 
@@ -69,11 +70,14 @@ public class Yarn2D : MonoBehaviour
 
         Reset();
 
-        _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
+        _firstNodePosition = startPoint;
+        // _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
 
         gameObject.SetActive(true);
 
         onRewindYarnCompleted = onCompleteAction;
+
+        PlayRewindAnimation();
     }
 
     private void InitPiece(BasePiece selectedPiece)
@@ -102,22 +106,66 @@ public class Yarn2D : MonoBehaviour
 
     private void UpdatePiece()
     {
-        dissolveHeight -= dissolveDelta;
+        // dissolveHeight -= dissolveDelta;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
         spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
     }
 
+    private void PlayRewindAnimation()
+    {
+        Tween.Custom(1, 0, duration: 0.6f, onValueChange: newVal =>
+        {
+            dissolveHeight = newVal;
+
+            UpdateYarnState(newVal);
+        });
+    }
+
     void Update()
     {
+        if (dissolveHeight <= 0)
+        {
+            bool isComplete = true;
+
+            for (int i = 1; i < segments.Count; i++)
+            {
+                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
+
+                if (Vector3.Distance(segments[i].posNow, segments[0].posNow) > 0.05f)
+                {
+                    isComplete = false;
+                }
+            }
+
+            if (isComplete)
+            {
+                gameObject.SetActive(false);
+
+                onRewindYarnCompleted?.Invoke();
+            }
+            else
+            {
+                UpdateLineRenderer();
+            }
+
+            lerpDelta *= 1.01f;
+            lerpDelta = Mathf.Min(lerpDelta, 1);
+        }
+    }
+
+    private void UpdateYarnState(float dissolveHeight)
+    {
         // SimulateRope();
+
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
 
         if (dissolveHeight >= 0)
         {
             RopeSegment firstNode = segments[0];
             RopeSegment lastNode = segments[segmentCount - 1];
 
-            firstNode.posNow = _firstNodePosition;
+            firstNode.posNow = _firstNodeLocalPosition;
             lastNode.posNow.y = (-0.5f + dissolveHeight) * modelSize.y;
 
             if (step % 2 == 0)
@@ -153,28 +201,28 @@ public class Yarn2D : MonoBehaviour
             UpdateRope();
         }
 
-        if (dissolveHeight < 0)
-        {
-            for (int i = 1; i < segments.Count; i++)
-            {
-                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
+        // if (dissolveHeight < 0)
+        // {
+        //     for (int i = 1; i < segments.Count; i++)
+        //     {
+        //         segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
 
-                if (i == segments.Count - 1)
-                {
-                    if (Vector3.Distance(segments[i].posNow, segments[0].posNow) < 0.05f)
-                    {
-                        gameObject.SetActive(false);
+        //         if (i == segments.Count - 1)
+        //         {
+        //             if (Vector3.Distance(segments[i].posNow, segments[0].posNow) < 0.05f)
+        //             {
+        //                 gameObject.SetActive(false);
 
-                        onRewindYarnCompleted?.Invoke();
-                    }
-                }
-            }
-        }
+        //                 onRewindYarnCompleted?.Invoke();
+        //             }
+        //         }
+        //     }
+        // }
 
         UpdateLineRenderer();
 
-        lerpDelta *= 1.01f;
-        lerpDelta = Mathf.Min(lerpDelta, 1);
+        // lerpDelta *= 1.01f;
+        // lerpDelta = Mathf.Min(lerpDelta, 1);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)
@@ -197,7 +245,9 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        Vector3 start = _firstNodePosition;
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
+
+        Vector3 start = _firstNodeLocalPosition;
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
@@ -218,7 +268,7 @@ public class Yarn2D : MonoBehaviour
             segments[i].posNow = positions[i];
         }
 
-        segments[0].posNow = _firstNodePosition;
+        segments[0].posNow = _firstNodeLocalPosition;
         segments[segmentCount - 1].posNow = end;
     }
 
@@ -228,15 +278,17 @@ public class Yarn2D : MonoBehaviour
 
         lineRenderer.positionCount = segmentCount;
 
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
+
         for (int i = 0; i < segmentCount; i++)
         {
             if (i == 0)
             {
-                lineRenderer.SetPosition(i, _firstNodePosition);
+                lineRenderer.SetPosition(i, _firstNodeLocalPosition);
             }
             else
             {
-                lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodePosition.z));
+                lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodeLocalPosition.z));
             }
         }
     }

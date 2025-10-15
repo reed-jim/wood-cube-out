@@ -47,7 +47,7 @@ public class SpoolBoxSlot : MonoBehaviour
         yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
 
         yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
-        yarnSpoolMaterialPropertyBlock.SetColor("_Color", Color.white.WithAlpha(0));
+        yarnSpoolMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(Color.white, 0));
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
