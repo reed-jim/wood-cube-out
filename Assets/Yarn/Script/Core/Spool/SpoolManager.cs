@@ -72,9 +72,9 @@ public class SpoolManager : MonoBehaviour
         PieceManager.spawnAdsSpoolBoxesEvent += SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent += OnSpoolBoxCompleted;
         SpoolBox.spoolBoxUnlockedEvent += OnSpoolBoxUnlocked;
-        // BoosterUI.addMorePiecePortEvent += AddMorePiecePort;
-        // BoosterUI.clearAllPiecePortsEvent += ClearAllPiecePorts;
-        // BoosterUI.shakePiecePortsEvent += ShakeAllPiecePorts;
+        BoosterUI.addMoreScrewPortEvent += AddMorePiecePort;
+        BoosterUI.clearAllScrewPortsEvent += ClearAllPiecePorts;
+        BoosterUI.shakeScrewPortsEvent += ShakeAllPiecePorts;
         // BasePiece.loosenPieceOnObjectBrokenEvent += LoosenPieceOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
         BuyBoosterPopup.unlockSpoolBoxEvent += OnRewardedAdUnlockSpoolBoxCompleted;
@@ -93,9 +93,9 @@ public class SpoolManager : MonoBehaviour
         PieceManager.spawnAdsSpoolBoxesEvent -= SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent -= OnSpoolBoxCompleted;
         SpoolBox.spoolBoxUnlockedEvent -= OnSpoolBoxUnlocked;
-        // BoosterUI.addMorePiecePortEvent -= AddMorePiecePort;
-        // BoosterUI.clearAllPiecePortsEvent -= ClearAllPiecePorts;
-        // BoosterUI.shakePiecePortsEvent -= ShakeAllPiecePorts;
+        BoosterUI.addMoreScrewPortEvent -= AddMorePiecePort;
+        BoosterUI.clearAllScrewPortsEvent -= ClearAllPiecePorts;
+        BoosterUI.shakeScrewPortsEvent -= ShakeAllPiecePorts;
         // BasePiece.loosenPieceOnObjectBrokenEvent -= LoosenPieceOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
         BuyBoosterPopup.unlockSpoolBoxEvent -= OnRewardedAdUnlockSpoolBoxCompleted;
@@ -631,7 +631,6 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveFromPiecePortToSpoolBox(SpoolBox spoolBox)
     {
-        Debug.Log("SAFERIO MoveFromPiecePortToSpoolBox " + spoolBox);
         // avoid too fast action
         enableBoosterEvent?.Invoke(false);
 
@@ -664,11 +663,9 @@ public class SpoolManager : MonoBehaviour
 
                         piecePorts[piecePortIndex].IsFilled = false;
 
-                        piecePorts[piecePortIndex].Piece.transform.SetParent(piecePorts[i].transform);
-                        piece.transform.localPosition = Vector3.zero;
-                        piece.transform.localRotation = Quaternion.identity;
+                        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                        piecePorts[piecePortIndex].Piece.Loose(piecePorts[piecePortIndex].Piece.gameObject.GetInstanceID(), piece.Faction, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
+                        yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
 
                         piecePorts[i].SmoothSetDissolveHeight(1, 0);
 
@@ -729,11 +726,9 @@ public class SpoolManager : MonoBehaviour
 
                     piece.SpoolBoxSlot.IsFilled = false;
 
-                    piece.transform.SetParent(piece.SpoolBoxSlot.transform);
-                    piece.transform.localPosition = Vector3.zero;
-                    piece.transform.localRotation = Quaternion.identity;
+                    Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                    piece.Loose(piece.gameObject.GetInstanceID(), piece.Faction, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
+                    yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
 
                     piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
 
@@ -806,7 +801,7 @@ public class SpoolManager : MonoBehaviour
 
     public void AddMorePiecePort()
     {
-        SpoolBoxSlot addedSpoolBoxSlot = ObjectPoolingEverything.GetFromPool<SpoolBoxSlot>(GameConstants.SCREW_PORT_SLOT);
+        SpoolBoxSlot addedSpoolBoxSlot = ObjectPoolingEverything.GetFromPool<SpoolBoxSlot>(GameConstants.spoolBoxSlot);
 
         piecePorts.Add(addedSpoolBoxSlot);
 

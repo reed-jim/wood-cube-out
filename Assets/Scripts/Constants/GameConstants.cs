@@ -22,6 +22,7 @@ public static class GameConstants
     public static string BOX_COMPLETED_FX = "BOX_COMPLETED_FX";
     public static string EVENT_ITEM = "EVENT_ITEM";
     public static string yard2D = "yard2D";
+    public static string spoolBoxSlot = "spoolBoxSlot";
     #endregion
 
     #region COMMON TEXT

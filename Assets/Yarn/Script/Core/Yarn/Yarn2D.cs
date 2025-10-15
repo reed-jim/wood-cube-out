@@ -80,6 +80,28 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
+    public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
+    {
+        InitializeRope(endSpool.transform.position, faction);
+
+        InitStartSpool(startSpool);
+
+        // InitSpool(spool);
+        spoolBoxSlot = endSpool;
+        spoolBoxSlot.SetColor(FactionUtility.GetColorForFaction(faction));
+
+        Reset();
+
+        _firstNodePosition = endSpool.transform.position;
+        // _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
+
+        gameObject.SetActive(true);
+
+        onRewindYarnCompleted = onCompleteAction;
+
+        PlayRewindAnimation();
+    }
+
     private void InitPiece(BasePiece selectedPiece)
     {
         piece = selectedPiece;
@@ -99,15 +121,25 @@ public class Yarn2D : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
-    // private void InitSpool(Renderer spool)
-    // {
-    //     yarnSpool = spool;
-    // }
+    private void InitStartSpool(SpoolBoxSlot startSpool)
+    {
+        modelSize = Vector3.zero;
+
+        velocity.x = velocityMultuplier.x * modelSize.x;
+
+        RopeSegment lastNode = segments[segmentCount - 1];
+
+        lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
+        lastNode.posOld = lastNode.posNow;
+
+        transform.SetParent(startSpool.transform);
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+        transform.rotation = Quaternion.identity;
+    }
 
     private void UpdatePiece()
     {
-        // dissolveHeight -= dissolveDelta;
-
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
         spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
     }
