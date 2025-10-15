@@ -246,9 +246,16 @@ public class BasePiece : MonoBehaviour
                 gameObject.SetActive(false);
 
                 spoolBoxSlot.CompleteFill();
+
+                InvokePieceLoosenedEvent();
             });
 
             spoolBoxSlot.Fill(this);
+
+            if (!spoolBoxSlot.IsAlternative)
+            {
+                _isDone = true;
+            }
         }
     }
 
@@ -264,6 +271,11 @@ public class BasePiece : MonoBehaviour
         // Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
         // yarn2D.Init(new Vector3(0, 6), _renderer);
+    }
+
+    private void InvokePieceLoosenedEvent()
+    {
+        pieceLoosenedEvent?.Invoke();
     }
 
     #region Lock, unable to rewind

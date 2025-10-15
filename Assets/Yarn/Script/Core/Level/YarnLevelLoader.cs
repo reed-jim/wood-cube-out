@@ -238,11 +238,11 @@ public class YarnLevelLoader : MonoBehaviour
 
                 // FIND DEPENDENCY
                 // delay for pieces scaling before level
-                List<BasePiece> pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform);
+                _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
-                _pieces = pieces.ToArray();
-                
                 YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(_pieces);
+
+                _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
                 setLevelScrewNumberEvent?.Invoke(_pieces.Length);
 
@@ -307,7 +307,7 @@ public class YarnLevelLoader : MonoBehaviour
                         }
                     }
 
-                    foreach (BasePiece piece in pieces)
+                    foreach (BasePiece piece in _pieces)
                     {
                         if (_pivotAdjust == null)
                         {
@@ -330,7 +330,7 @@ public class YarnLevelLoader : MonoBehaviour
 
                     _isSetLevelGradientBound = false;
 
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }

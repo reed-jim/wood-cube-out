@@ -42,7 +42,7 @@ public class BuyBoosterPopup : BasePopup
     private Vector3 _adsButtonPosition;
 
     public static event Action<BoosterType> useBoosterEvent;
-    public static event Action unlockScrewBoxEvent;
+    public static event Action unlockSpoolBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<int> updateBoosterQuantityEvent;
@@ -57,7 +57,7 @@ public class BuyBoosterPopup : BasePopup
     {
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
-        ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        SpoolBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
@@ -69,7 +69,7 @@ public class BuyBoosterPopup : BasePopup
     {
         BoosterUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
-        ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        SpoolBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
@@ -131,7 +131,7 @@ public class BuyBoosterPopup : BasePopup
 
                 Hide(onCompletedAction: () =>
                 {
-                    unlockScrewBoxEvent?.Invoke();
+                    unlockSpoolBoxEvent?.Invoke();
                 });
 
                 return;
@@ -216,7 +216,7 @@ public class BuyBoosterPopup : BasePopup
     {
         Hide(onCompletedAction: () =>
         {
-            unlockScrewBoxEvent?.Invoke();
+            unlockSpoolBoxEvent?.Invoke();
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "UnlockScrewBox");
 

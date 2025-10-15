@@ -77,7 +77,7 @@ public class ScrewBoxManager : MonoBehaviour
         BoosterUI.shakeScrewPortsEvent += ShakeAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent += LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
-        BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
+        // BuyBoosterPopup.unlockScrewBoxEvent += OnRewardedAdUnlockScrewBoxCompleted;
 
         _tweens = new List<Tween>();
     }
@@ -98,7 +98,7 @@ public class ScrewBoxManager : MonoBehaviour
         BoosterUI.shakeScrewPortsEvent -= ShakeAllScrewPorts;
         BasicObjectPart.loosenScrewOnObjectBrokenEvent -= LoosenScrewOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
-        BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
+        // BuyBoosterPopup.unlockScrewBoxEvent -= OnRewardedAdUnlockScrewBoxCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
 

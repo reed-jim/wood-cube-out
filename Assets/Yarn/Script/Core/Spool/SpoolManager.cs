@@ -77,7 +77,7 @@ public class SpoolManager : MonoBehaviour
         // BoosterUI.shakePiecePortsEvent += ShakeAllPiecePorts;
         // BasePiece.loosenPieceOnObjectBrokenEvent += LoosenPieceOnObjectBroken;
         RevivePopup.reviveEvent += OnRevived;
-        // BuyBoosterPopup.unlockSpoolBoxEvent += OnRewardedAdUnlockSpoolBoxCompleted;
+        BuyBoosterPopup.unlockSpoolBoxEvent += OnRewardedAdUnlockSpoolBoxCompleted;
 
         _tweens = new List<Tween>();
     }
@@ -98,7 +98,7 @@ public class SpoolManager : MonoBehaviour
         // BoosterUI.shakePiecePortsEvent -= ShakeAllPiecePorts;
         // BasePiece.loosenPieceOnObjectBrokenEvent -= LoosenPieceOnObjectBroken;
         RevivePopup.reviveEvent -= OnRevived;
-        // BuyBoosterPopup.unlockSpoolBoxEvent -= OnRewardedAdUnlockSpoolBoxCompleted;
+        BuyBoosterPopup.unlockSpoolBoxEvent -= OnRewardedAdUnlockSpoolBoxCompleted;
 
         CommonUtil.StopAllTweens(_tweens);
 

@@ -8,6 +8,7 @@ using static GameEnum;
 
 public class SpoolBoxUI : MonoBehaviour
 {
+    [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
     [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
     [SerializeField] private RectTransform unlockByAdsButtonRT;
     [SerializeField] private RectTransform unlockBoxTextRT;
@@ -70,9 +71,9 @@ public class SpoolBoxUI : MonoBehaviour
 
     public void Unlock()
     {
-        ScrewBox screwBox = GetComponent<ScrewBox>();
+        SpoolBox spoolBox = spoolBoxServiceLocator.spoolBox;
 
-        screwBox.IsInTransition = true;
+        spoolBox.IsInTransition = true;
 
         Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
         {
@@ -80,9 +81,9 @@ public class SpoolBoxUI : MonoBehaviour
             {
                 unlockByAdsButton.gameObject.SetActive(false);
 
-                screwBox.IsInTransition = false;
+                spoolBox.IsInTransition = false;
 
-                screwBox.InvokeScrewBoxUnlockedEvent();
+                spoolBox.InvokeSpoolBoxUnlockedEvent();
             });
         });
 

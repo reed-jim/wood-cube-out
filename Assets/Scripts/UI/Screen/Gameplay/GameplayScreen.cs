@@ -32,7 +32,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         YarnLevelLoader.startLevelEvent += OnLevelStarted;
         YarnLevelLoader.setLevelNumberEvent += SetLevelText;
-        ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
+        PieceManager.updateRemainingPieceEvent += UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
@@ -53,7 +53,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         YarnLevelLoader.startLevelEvent -= OnLevelStarted;
         YarnLevelLoader.setLevelNumberEvent -= SetLevelText;
-        ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        PieceManager.updateRemainingPieceEvent -= UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
