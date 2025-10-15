@@ -1344,14 +1344,14 @@ public class HingeJointGenerator : EditorWindow
             Component[] components = child.GetComponents<Component>();
             foreach (var comp in components)
             {
-                /*if (!(comp is Transform))
+                if (!(comp is Transform))
                 {
                     DestroyImmediate(comp);
-                }*/
-                if (comp is BasicObjectPart)
+                }
+                /*if (comp is BasicObjectPart)
                     DestroyImmediate(comp);
                 if (comp is ObjectPartMaterialPropertyBlock)
-                    DestroyImmediate(comp);
+                    DestroyImmediate(comp);*/
             }
         }
         EditorUtility.SetDirty(level);
