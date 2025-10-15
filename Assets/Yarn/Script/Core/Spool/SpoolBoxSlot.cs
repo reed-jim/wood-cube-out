@@ -63,4 +63,11 @@ public class SpoolBoxSlot : MonoBehaviour
             spoolBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());
         }
     }
+
+    public void SetDissolveHeight(float value)
+    {
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", value);
+
+        spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+    }
 }

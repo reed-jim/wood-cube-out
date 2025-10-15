@@ -277,6 +277,11 @@ public class SpoolBox : MonoBehaviour
     {
         spoolBoxSpriteRenderer.enabled = true;
 
+        for (int i = 0; i < spoolBoxSlots.Length; i++)
+        {
+            spoolBoxSlots[i].SetDissolveHeight(0);
+        }
+
         spoolBoxServiceLocator.spoolBoxUI.HideUnlockBoxButton();
     }
 
