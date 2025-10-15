@@ -631,130 +631,123 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveFromPiecePortToSpoolBox(SpoolBox spoolBox)
     {
-        // // avoid too fast action
-        // enableBoosterEvent?.Invoke(false);
+        Debug.Log("SAFERIO MoveFromPiecePortToSpoolBox " + spoolBox);
+        // avoid too fast action
+        enableBoosterEvent?.Invoke(false);
 
-        // bool isFound = false;
+        bool isFound = false;
 
-        // for (int i = 0; i < piecePorts.Count; i++)
-        // {
-        //     BasePiece piece = piecePorts[i].Piece;
+        for (int i = 0; i < piecePorts.Count; i++)
+        {
+            BasePiece piece = piecePorts[i].Piece;
 
-        //     if (piece == null)
-        //     {
-        //         continue;
-        //     }
+            if (piece == null)
+            {
+                continue;
+            }
 
-        //     if (piece.IsDone || piece.IsMoving)
-        //     {
-        //         continue;
-        //     }
+            if (piece.IsDone || piece.IsMoving)
+            {
+                continue;
+            }
 
-        //     if (piecePorts[i].IsFilled && piece.Faction == spoolBox.Faction)
-        //     {
-        //         for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
-        //         {
-        //             if (!spoolBox.SpoolBoxSlots[k].IsFilled)
-        //             {
-        //                 int piecePortIndex = i;
-        //                 int spoolBoxSlotIndex = k;
+            if (piecePorts[i].IsFilled && piece.Faction == spoolBox.Faction)
+            {
+                for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
+                {
+                    if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                    {
+                        int piecePortIndex = i;
+                        int spoolBoxSlotIndex = k;
 
-        //                 spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
+                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
 
-        //                 piecePorts[piecePortIndex].IsFilled = false;
+                        piecePorts[piecePortIndex].IsFilled = false;
 
-        //                 piecePorts[piecePortIndex].Piece.UnpieceAnimationAsync
-        //                 (
-        //                     spoolBoxSlot: spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-        //                     onCompleteAction: () =>
-        //                     {
-        //                         // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+                        piecePorts[piecePortIndex].Piece.transform.SetParent(piecePorts[i].transform);
+                        piece.transform.localPosition = Vector3.zero;
+                        piece.transform.localRotation = Quaternion.identity;
 
-        //                         enableBoosterEvent?.Invoke(true);
-        //                     },
-        //                     isSwitchCamera: false
-        //                 );
+                        piecePorts[piecePortIndex].Piece.Loose(piecePorts[piecePortIndex].Piece.gameObject.GetInstanceID(), piece.Faction, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
 
-        //                 if (!isFound)
-        //                 {
-        //                     isFound = true;
-        //                 }
+                        piecePorts[i].SmoothSetDissolveHeight(1, 0);
 
-        //                 break;
-        //             }
-        //         }
-        //     }
-        // }
+                        if (!isFound)
+                        {
+                            isFound = true;
+                        }
 
-        // spoolBoxesObserver.NumPieceInPiecePorts = GetNumPiecesInPiecePorts();
+                        break;
+                    }
+                }
+            }
+        }
 
-        // if (!isFound)
-        // {
-        //     enableBoosterEvent?.Invoke(true);
-        // }
+        spoolBoxesObserver.NumScrewInScrewPorts = GetNumPiecesInPiecePorts();
+
+        if (!isFound)
+        {
+            enableBoosterEvent?.Invoke(true);
+        }
     }
 
     private void MoveSinglePieceFromHoleToSpoolBox(BasePiece piece)
     {
-        // if (!piece.SpoolBoxSlot.IsAlternative)
-        // {
-        //     return;
-        // }
+        if (!piece.SpoolBoxSlot.IsAlternative)
+        {
+            return;
+        }
 
-        // if (piece.IsDone || piece.IsMoving)
-        // {
-        //     return;
-        // }
+        if (piece.IsDone || piece.IsMoving)
+        {
+            return;
+        }
 
-        // bool isFound = false;
+        bool isFound = false;
 
-        // for (int i = 0; i < spoolBoxs.Length; i++)
-        // {
-        //     SpoolBox spoolBox = spoolBoxs[i];
+        for (int i = 0; i < spoolBoxs.Length; i++)
+        {
+            SpoolBox spoolBox = spoolBoxs[i];
 
-        //     if (spoolBox == null)
-        //     {
-        //         continue;
-        //     }
+            if (spoolBox == null)
+            {
+                continue;
+            }
 
-        //     if (spoolBox.Faction != piece.Faction || spoolBox.IsLocked || spoolBox.IsInTransition)
-        //     {
-        //         continue;
-        //     }
+            if (spoolBox.Faction != piece.Faction || spoolBox.IsLocked || spoolBox.IsInTransition)
+            {
+                continue;
+            }
 
-        //     for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
-        //     {
-        //         if (!spoolBox.SpoolBoxSlots[k].IsFilled)
-        //         {
-        //             int spoolBoxSlotIndex = k;
+            for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
+            {
+                if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                {
+                    int spoolBoxSlotIndex = k;
 
-        //             spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
+                    spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
 
-        //             piece.SpoolBoxSlot.IsFilled = false;
+                    piece.SpoolBoxSlot.IsFilled = false;
 
-        //             piece.UnpieceAnimationAsync
-        //             (
-        //                 spoolBoxSlot: spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-        //                 onCompleteAction: () =>
-        //                 {
-        //                     // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+                    piece.transform.SetParent(piece.SpoolBoxSlot.transform);
+                    piece.transform.localPosition = Vector3.zero;
+                    piece.transform.localRotation = Quaternion.identity;
 
-        //                     enableBoosterEvent?.Invoke(true);
-        //                 },
-        //                 isSwitchCamera: false
-        //             );
+                    piece.Loose(piece.gameObject.GetInstanceID(), piece.Faction, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
 
-        //             isFound = true;
+                    piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
 
-        //             break;
-        //         }
-        //     }
+                    isFound = true;
 
-        //     if (isFound)
-        //     {
-        //         break;
-        //     }
-        // }
+                    break;
+                }
+            }
+
+            if (isFound)
+            {
+                break;
+            }
+        }
     }
 
     public Dictionary<GameFaction, int> GetPiecePortAvailableByFaction()

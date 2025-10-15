@@ -217,6 +217,11 @@ public class BasePiece : MonoBehaviour
     {
         if (pieceId == gameObject.GetInstanceID())
         {
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
+
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
@@ -243,6 +248,7 @@ public class BasePiece : MonoBehaviour
                     firstInnerPiece.Unlock();
                 }
 
+                pieceServiceLocator.pieceMeshRenderer.enabled = false;
                 gameObject.SetActive(false);
 
                 spoolBoxSlot.CompleteFill();

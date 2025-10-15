@@ -414,7 +414,6 @@ public class PieceManager : MonoBehaviour
 
     private async void CheckWin()
     {
-        Debug.Log("SAFERIO CheckWin");
         Dictionary<GameFaction, int> remainingPieceByFaction = new Dictionary<GameFaction, int>();
 
         for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
