@@ -1,4 +1,6 @@
 using System;
+using PrimeTween;
+using Unity.VisualScripting;
 using UnityEngine;
 using static GameEnum;
 
@@ -45,6 +47,7 @@ public class SpoolBoxSlot : MonoBehaviour
         yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
 
         yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
+        yarnSpoolMaterialPropertyBlock.SetColor("_Color", Color.white.WithAlpha(0));
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
@@ -64,10 +67,27 @@ public class SpoolBoxSlot : MonoBehaviour
         }
     }
 
+    public void SetColor(Color color)
+    {
+        yarnSpoolMaterialPropertyBlock.SetColor("_Color", color);
+
+        spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+    }
+
     public void SetDissolveHeight(float value)
     {
         yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", value);
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+    }
+
+    public void SmoothSetDissolveHeight(float from, float to)
+    {
+        Tween.Custom(from, to, duration: 0.3f, onValueChange: newVal =>
+        {
+            yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", newVal);
+
+            spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+        });
     }
 }

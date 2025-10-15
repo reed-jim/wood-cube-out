@@ -67,6 +67,13 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         // // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
     }
 
+    public void SetDissolveHeight(float value)
+    {
+        _propertyBlock.SetFloat("_DissolveHeight", value);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
     public void SetOutlineWidth(float value)
     {
         _propertyBlock.SetFloat(outlineWidthReference, value);

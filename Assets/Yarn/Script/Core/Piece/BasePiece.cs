@@ -219,7 +219,7 @@ public class BasePiece : MonoBehaviour
         {
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-            yarn2D.Rewind(spoolBoxSlot.transform.position, _renderer, spoolBoxSlot.SpoolRenderer, onCompleteAction: () =>
+            yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
             {
                 BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
 

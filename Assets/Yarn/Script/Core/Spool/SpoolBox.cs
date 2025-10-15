@@ -228,6 +228,11 @@ public class SpoolBox : MonoBehaviour
                     })
                 )
             );
+
+            foreach (var spoolBoxSlot in spoolBoxSlots)
+            {
+                spoolBoxSlot.SmoothSetDissolveHeight(1, 0);
+            }
         }
     }
 

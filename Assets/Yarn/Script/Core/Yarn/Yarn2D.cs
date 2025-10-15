@@ -4,6 +4,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using UnityEngine;
+using static GameEnum;
 
 public class Yarn2D : MonoBehaviour
 {
@@ -13,7 +14,6 @@ public class Yarn2D : MonoBehaviour
 
     [Header("Rendering")]
     public LineRenderer lineRenderer;
-
     private List<RopeSegment> segments;
 
     int step;
@@ -26,17 +26,17 @@ public class Yarn2D : MonoBehaviour
     [SerializeField] private float waveSpeed;
 
     [Header("Model")]
-    // [SerializeField] private Renderer model;
-    Renderer model;
+    BasePiece piece;
     Vector3 modelSize;
     private MaterialPropertyBlock materialPropertyBlock;
     private float dissolveHeight = 1;
 
     [Header("Yarn Spool")]
-    [SerializeField] private Renderer yarnSpool;
-    private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
+    [SerializeField] private SpoolBoxSlot spoolBoxSlot;
+    // private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
 
     #region PRIVATE
+    private MaterialPropertyBlock yarnMaterialPropertyBlock;
     private Vector3 _firstNodePosition;
     private float lerpDelta;
     #endregion
@@ -45,8 +45,9 @@ public class Yarn2D : MonoBehaviour
 
     void Awake()
     {
+        yarnMaterialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock = new MaterialPropertyBlock();
-        yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+        // yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
     private void Reset()
@@ -56,13 +57,15 @@ public class Yarn2D : MonoBehaviour
         lerpDelta = 0.1f;
     }
 
-    public void Rewind(Vector3 startPoint, Renderer model, Renderer spool, Action onCompleteAction = null)
+    public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onCompleteAction = null)
     {
-        InitializeRope(startPoint);
+        InitializeRope(startPoint, faction);
 
-        InitPiece(model);
+        InitPiece(piece);
 
-        InitSpool(spool);
+        // InitSpool(spool);
+        spoolBoxSlot = spool;
+        spoolBoxSlot.SetColor(FactionUtility.GetColorForFaction(faction));
 
         Reset();
 
@@ -73,11 +76,11 @@ public class Yarn2D : MonoBehaviour
         onRewindYarnCompleted = onCompleteAction;
     }
 
-    private void InitPiece(Renderer selectedModel)
+    private void InitPiece(BasePiece selectedPiece)
     {
-        model = selectedModel;
+        piece = selectedPiece;
 
-        modelSize = model.bounds.size;
+        modelSize = piece.PieceServiceLocator.pieceProperty.BoundSize;
 
         velocity.x = velocityMultuplier.x * modelSize.x;
 
@@ -86,26 +89,23 @@ public class Yarn2D : MonoBehaviour
         lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
         lastNode.posOld = lastNode.posNow;
 
-        transform.SetParent(selectedModel.transform);
+        transform.SetParent(piece.transform);
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
         transform.rotation = Quaternion.identity;
     }
 
-    private void InitSpool(Renderer spool)
-    {
-        yarnSpool = spool;
-    }
+    // private void InitSpool(Renderer spool)
+    // {
+    //     yarnSpool = spool;
+    // }
 
     private void UpdatePiece()
     {
         dissolveHeight -= dissolveDelta;
 
-        materialPropertyBlock.SetFloat("_DissolveHeight", dissolveHeight);
-        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 1 - dissolveHeight);
-
-        model.SetPropertyBlock(materialPropertyBlock);
-        yarnSpool.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
+        spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
     }
 
     void Update()
@@ -177,7 +177,7 @@ public class Yarn2D : MonoBehaviour
         lerpDelta = Mathf.Min(lerpDelta, 1);
     }
 
-    void InitializeRope(Vector3 startPoint)
+    void InitializeRope(Vector3 startPoint, GameFaction faction)
     {
         segments = new List<RopeSegment>();
 
@@ -188,6 +188,9 @@ public class Yarn2D : MonoBehaviour
             segments.Add(new RopeSegment(ropeStartPoint));
             ropeStartPoint.y -= segmentLength;
         }
+
+        yarnMaterialPropertyBlock.SetColor("_BaseColor", FactionUtility.GetColorForFaction(faction));
+        lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
     }
 
     private void UpdateRope()
