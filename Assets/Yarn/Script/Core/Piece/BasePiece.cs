@@ -40,7 +40,6 @@ public class BasePiece : MonoBehaviour
     protected bool _isInteractable = true;
     protected bool _isDone;
     protected bool _isOutsideWithNoSpoolBox;
-    protected bool _isLocked;
     protected bool _isInPiecePort;
     protected SpoolBoxSlot _spoolBoxSlot;
     // protected PieceData _pieceData;
@@ -116,8 +115,8 @@ public class BasePiece : MonoBehaviour
 
     public bool IsLocked
     {
-        get => _isLocked;
-        set => _isLocked = value;
+        get => PieceServiceLocator.pieceProperty.IsLocked;
+        set => PieceServiceLocator.pieceProperty.IsLocked = value;
     }
 
     public bool IsInPiecePort
@@ -240,6 +239,8 @@ public class BasePiece : MonoBehaviour
                     });
 
                     firstInnerPiece.transform.SetParent(transform.parent);
+
+                    firstInnerPiece.Unlock();
                 }
 
                 gameObject.SetActive(false);
@@ -264,4 +265,20 @@ public class BasePiece : MonoBehaviour
 
         // yarn2D.Init(new Vector3(0, 6), _renderer);
     }
+
+    #region Lock, unable to rewind
+    public void Lock()
+    {
+        pieceServiceLocator.pieceCollider.enabled = false;
+
+        IsLocked = true;
+    }
+
+    public void Unlock()
+    {
+        pieceServiceLocator.pieceCollider.enabled = true;
+
+        IsLocked = false;
+    }
+    #endregion
 }

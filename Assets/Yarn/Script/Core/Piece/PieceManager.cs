@@ -220,8 +220,6 @@ public class PieceManager : MonoBehaviour
             numObstacleEachPieceEachFaction.Add(GameConstants.SCREW_FACTION[i], new List<int>());
         }
 
-        return difficultyLevelByFactions;
-
         // Find the number of obstacles for each piece in each faction.
         for (int i = 0; i < _pieces.Count; i++)
         {
@@ -230,7 +228,12 @@ public class PieceManager : MonoBehaviour
                 continue;
             }
 
-            if (_pieces[i].IsDone || _pieces[i].IsLocked)
+            // if (_pieces[i].IsDone || _pieces[i].IsLocked)
+            // {
+            //     continue;
+            // }
+
+            if (_pieces[i].IsDone)
             {
                 continue;
             }
@@ -242,77 +245,106 @@ public class PieceManager : MonoBehaviour
 
             GameFaction faction = _pieces[i].Faction;
 
-            // int numberBlockObject = _pieces[i].NumberBlockingObjects;
 
-            // Find closest obstacle
-            Transform obstaclePiece = null;
 
-            float pieceRadius = _pieces[i].transform.lossyScale.x * 0.45f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.x;
+            int numCoveredPieces = 0;
 
-            Vector3 pointOne =
-                _pieces[i].transform.position + _pieces[i].transform.lossyScale.z * 1f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.z * _pieces[i].transform.forward;
-            Vector3 pointTwo = pointOne + 10f * _pieces[i].transform.forward;
+            BasePiece parentPiece = _pieces[i].transform.parent.GetComponent<BasePiece>();
 
-            Collider[] hits = new Collider[16];
-
-            Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, pieceRadius, hits, LayerMask.GetMask("Default"));
-
-            if (hits != null)
+            if (parentPiece == null)
             {
-                for (int j = 0; j < hits.Length; j++)
-                {
-                    if (hits[j] == null)
-                    {
-                        continue;
-                    }
-
-                    if (hits[j].transform.GetInstanceID() == _pieces[i].transform.parent.GetInstanceID())
-                    {
-                        continue;
-                    }
-
-                    IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
-
-                    if (objectPart != null)
-                    {
-                        int instanceId = hits[j].transform.GetInstanceID();
-
-                        if (obstaclesOfPieces.ContainsKey(instanceId))
-                        {
-                            obstaclePiece = hits[j].transform;
-
-                            break;
-                        }
-                    }
-                }
-            }
-            //
-
-            if (obstaclePiece != null)
-            {
-                int numPieceLeftToReachCurrentPiece = obstaclePiece.childCount;
-
-                if (obstaclesOfPieces.ContainsKey(obstaclePiece.GetInstanceID()))
-                {
-                    foreach (var obstacle in obstaclesOfPieces[obstaclePiece.GetInstanceID()])
-                    {
-                        numPieceLeftToReachCurrentPiece += obstacle.childCount;
-                    }
-
-                    numObstacleEachPieceEachFaction[faction].Add(numPieceLeftToReachCurrentPiece);
-                }
-                else
-                {
-                    numObstacleEachPieceEachFaction[faction].Add(0);
-                }
+                numCoveredPieces = 0;
             }
             else
             {
-                numObstacleEachPieceEachFaction[faction].Add(0);
+                BasePiece[] insidePieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(parentPiece.transform).ToArray();
+
+                for (int j = 0; j < insidePieces.Length; j++)
+                {
+                    if (insidePieces[j] == _pieces[i])
+                    {
+                        numCoveredPieces = j;
+
+                        break;
+                    }
+                }
             }
 
-            // FOR Tutorial
-            difficultyLevelByFactions[faction] += _pieces[i].PieceDifficultyModifier;
+            numObstacleEachPieceEachFaction[faction].Add(numCoveredPieces);
+
+            continue;
+
+
+
+            // // Find closest obstacle
+            // Transform obstaclePiece = null;
+
+            // float pieceRadius = _pieces[i].transform.lossyScale.x * 0.45f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.x;
+
+            // Vector3 pointOne =
+            //     _pieces[i].transform.position + _pieces[i].transform.lossyScale.z * 1f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.z * _pieces[i].transform.forward;
+            // Vector3 pointTwo = pointOne + 10f * _pieces[i].transform.forward;
+
+            // Collider[] hits = new Collider[16];
+
+            // Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, pieceRadius, hits, LayerMask.GetMask("Default"));
+
+            // if (hits != null)
+            // {
+            //     for (int j = 0; j < hits.Length; j++)
+            //     {
+            //         if (hits[j] == null)
+            //         {
+            //             continue;
+            //         }
+
+            //         if (hits[j].transform.GetInstanceID() == _pieces[i].transform.parent.GetInstanceID())
+            //         {
+            //             continue;
+            //         }
+
+            //         IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
+
+            //         if (objectPart != null)
+            //         {
+            //             int instanceId = hits[j].transform.GetInstanceID();
+
+            //             if (obstaclesOfPieces.ContainsKey(instanceId))
+            //             {
+            //                 obstaclePiece = hits[j].transform;
+
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
+            // //
+
+            // if (obstaclePiece != null)
+            // {
+            //     int numPieceLeftToReachCurrentPiece = obstaclePiece.childCount;
+
+            //     if (obstaclesOfPieces.ContainsKey(obstaclePiece.GetInstanceID()))
+            //     {
+            //         foreach (var obstacle in obstaclesOfPieces[obstaclePiece.GetInstanceID()])
+            //         {
+            //             numPieceLeftToReachCurrentPiece += obstacle.childCount;
+            //         }
+
+            //         numObstacleEachPieceEachFaction[faction].Add(numPieceLeftToReachCurrentPiece);
+            //     }
+            //     else
+            //     {
+            //         numObstacleEachPieceEachFaction[faction].Add(0);
+            //     }
+            // }
+            // else
+            // {
+            //     numObstacleEachPieceEachFaction[faction].Add(0);
+            // }
+
+            // // FOR Tutorial
+            // difficultyLevelByFactions[faction] += _pieces[i].PieceDifficultyModifier;
         }
 
         List<GameFaction> factions = new List<GameFaction>(numObstacleEachPieceEachFaction.Keys);

@@ -52,6 +52,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 poolFaction.Remove(faction);
 
                 pieceProperty.PoolFactions[j] = faction;
+
+                generatedPiece.Lock();
             }
         }
     }

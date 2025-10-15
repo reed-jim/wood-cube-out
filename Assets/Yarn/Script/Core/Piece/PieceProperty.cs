@@ -8,6 +8,7 @@ public class PieceProperty : MonoBehaviour
     [SerializeField] private GameFaction faction;
     private GameFaction[] poolFactions;
 
+    private bool _isLocked;
     private Vector3 _boundSize;
 
     #region PROPERTY
@@ -21,6 +22,12 @@ public class PieceProperty : MonoBehaviour
     {
         get => poolFactions;
         set => poolFactions = value;
+    }
+
+    public bool IsLocked
+    {
+        get => _isLocked;
+        set => _isLocked = value;
     }
 
     public Vector3 BoundSize
