@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public enum CloudStorageRequest
@@ -43,6 +44,7 @@ public static class GamePersistentVariable
 
     #region SPECIAL LEVEL
     public static SpecialLevelConfig specialLevelConfig;
+    public static LevelMode currentTutLevelMode;
     #endregion
 
     #region LEVEL IN PROGRESS

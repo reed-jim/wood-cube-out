@@ -18,6 +18,7 @@ namespace NamPhuThuy
     public static class DebugLogger
     {
         public static bool enableLog = true;
+        private static readonly Color defaultColor = Color.white;
 
         #region Log Error
 
@@ -94,11 +95,11 @@ namespace NamPhuThuy
         
         #region Log 
 
-        public static void Log(string content, Color color, bool setBold = false)
+        public static void Log(string content, Color color, bool setBold = false, Object context = null)
         {
             if (!enableLog)
                 return;
-            Debug.Log(ColorizedText(content, color, setBold));
+            Debug.Log(ColorizedText(content, color, setBold), context: context);
             return;
         }
         
@@ -136,14 +137,14 @@ namespace NamPhuThuy
         public static void LogSimple(
             [CallerLineNumber] int line = 0
             , [CallerMemberName] string memberName = ""
-            , [CallerFilePath] string filePath = "", string message = "", Color color = default
+            , [CallerFilePath] string filePath = "", string message = "", Color color = default, Object context = null
             /*, [CallerArgumentExpression("message")] string expression = ""*/
         )
         {
             string className = Path.GetFileNameWithoutExtension(filePath);
 
             Color currentColor = color == default ? Color.cyan : color;
-            Log($"{className}().{memberName}()::{line}: {message}", currentColor);
+            Log($"{className}().{memberName}()::{line}: {message}", currentColor, context: context);
             /*Can replace UnityEngine.Debug.Log with any logging API you want
 
             Usage is simple: just put a LogCaller(); at any line you want. The compiler will pass in the 3 parameters for you.*/
