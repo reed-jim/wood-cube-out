@@ -17,4 +17,17 @@ public class PieceServiceLocator : MonoBehaviour
         pieceMeshRenderer = GetComponent<MeshRenderer>();
         pieceCollider = GetComponent<Collider>();
     }
+
+    public void AssignComponents()
+    {
+        piece = GetComponent<BasePiece>();
+        pieceProperty = GetComponent<PieceProperty>();
+        pieceMaterialPropertyBlock = GetComponent<PieceMaterialPropertyBlock>();
+        pieceMeshRenderer = GetComponent<MeshRenderer>();
+        pieceCollider = GetComponent<Collider>();
+
+        pieceProperty.pieceServiceLocator = this;
+
+        pieceMaterialPropertyBlock.Renderer = GetComponent<Renderer>();
+    }
 }

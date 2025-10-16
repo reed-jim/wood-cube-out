@@ -324,6 +324,19 @@ public class HingeJointGenerator : EditorWindow
         }
 
         GUILayout.Space(16);
+        GUILayout.Label("Yarn", centeredStyle);
+
+        if (GUILayout.Button("AssignComponentsForPieces"))
+        {
+            AssignComponentsForPieces();
+        }
+
+        if (GUILayout.Button("CheckFactionsYarnLevel"))
+        {
+            CheckFactionsYarnLevel();
+        }
+
+        GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
 
         if (GUILayout.Button("Add Required Components To Pieces"))
@@ -3739,6 +3752,52 @@ public class HingeJointGenerator : EditorWindow
         {
             Debug.Log($"Total missing scripts removed: {totalCount}");
         }
+    }
+    #endregion
+
+    #region YARN
+    private void AssignComponentsForPieces()
+    {
+        Transform level = Selection.activeTransform;
+
+        BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            pieces[i].GetComponent<PieceServiceLocator>().AssignComponents();
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
+    private void CheckFactionsYarnLevel()
+    {
+        Transform level = Selection.activeTransform;
+
+        BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
+
+        Dictionary<GameFaction, int> numPiecesByFaction = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            GameFaction faction = pieces[i].GetComponent<PieceProperty>().Faction;
+
+            if (numPiecesByFaction.ContainsKey(faction))
+            {
+                numPiecesByFaction[faction]++;
+            }
+            else
+            {
+                numPiecesByFaction.Add(faction, 1);
+            }
+        }
+
+        foreach (var item in numPiecesByFaction)
+        {
+            Debug.Log($"SAFERIO {item.Key}: {item.Value}");
+        }
+
+        EditorUtility.SetDirty(level);
     }
     #endregion
 }

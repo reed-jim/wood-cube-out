@@ -51,7 +51,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -61,7 +60,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &4354109713934751717
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,8 +75,8 @@ MonoBehaviour:
   piece: {fileID: 4024973236793257141}
   pieceProperty: {fileID: 5025074862366035799}
   pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
   pieceMeshRenderer: {fileID: 23218414536957683}
+  pieceCollider: {fileID: 64891860242474731}
 --- !u!114 &5025074862366035799
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
   pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  faction: 1
 --- !u!114 &2224081932293782952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -105,9 +103,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
@@ -146,7 +150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -242,7 +246,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -252,7 +255,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6967371338560529539
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -265,11 +267,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4838408507206102547}
+  pieceProperty: {fileID: 7322494216628115778}
+  pieceMaterialPropertyBlock: {fileID: 7949272217512605868}
+  pieceMeshRenderer: {fileID: 23922452869095558}
+  pieceCollider: {fileID: 64365700428294402}
 --- !u!114 &7322494216628115778
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -282,8 +284,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6967371338560529539}
+  faction: 4
 --- !u!114 &7949272217512605868
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -296,14 +298,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23922452869095558}
 --- !u!33 &33837886340604682
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -337,7 +345,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -715,7 +723,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -725,7 +732,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6936612580565999504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -738,11 +744,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 6102866910552718266}
+  pieceProperty: {fileID: 4855135019411103915}
+  pieceMaterialPropertyBlock: {fileID: 2356054611528732021}
+  pieceMeshRenderer: {fileID: 23456468333183542}
+  pieceCollider: {fileID: 64936269863041229}
 --- !u!114 &4855135019411103915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -755,8 +761,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6936612580565999504}
+  faction: 2
 --- !u!114 &2356054611528732021
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -769,14 +775,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23456468333183542}
 --- !u!33 &33402034241242687
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -810,7 +822,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -906,7 +918,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -916,7 +927,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6348514247390843337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -929,11 +939,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4767383033691214908}
+  pieceProperty: {fileID: 6051604579019165162}
+  pieceMaterialPropertyBlock: {fileID: 1938411293516232741}
+  pieceMeshRenderer: {fileID: 23224540246523585}
+  pieceCollider: {fileID: 64850523294130277}
 --- !u!114 &6051604579019165162
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -946,8 +956,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6348514247390843337}
+  faction: 1
 --- !u!114 &1938411293516232741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -960,14 +970,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23224540246523585}
 --- !u!33 &33986599230929672
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1001,7 +1017,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1238,7 +1254,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -1248,7 +1263,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6805114868617464863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1261,11 +1275,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4118853913186046211}
+  pieceProperty: {fileID: 4994520480337213566}
+  pieceMaterialPropertyBlock: {fileID: 3635638974883482656}
+  pieceMeshRenderer: {fileID: 23668539479679160}
+  pieceCollider: {fileID: 64710786690661230}
 --- !u!114 &4994520480337213566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1278,8 +1292,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6805114868617464863}
+  faction: 6
 --- !u!114 &3635638974883482656
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1292,14 +1306,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23668539479679160}
 --- !u!33 &33684265306479056
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1333,7 +1353,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1431,7 +1451,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -1441,7 +1460,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1378683568282077819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1454,11 +1472,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3237482973873046131}
+  pieceProperty: {fileID: 6988532954151670677}
+  pieceMaterialPropertyBlock: {fileID: 5683713881630381457}
+  pieceMeshRenderer: {fileID: 23890739061030011}
+  pieceCollider: {fileID: 64568940799712273}
 --- !u!114 &6988532954151670677
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1471,8 +1489,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 1378683568282077819}
+  faction: 6
 --- !u!114 &5683713881630381457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1485,14 +1503,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23890739061030011}
 --- !u!33 &33665033581318198
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1526,7 +1550,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1622,7 +1646,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -1632,7 +1655,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &3691702897624106641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1645,11 +1667,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 1809019496162857363}
+  pieceProperty: {fileID: 4023887848416139204}
+  pieceMaterialPropertyBlock: {fileID: 1654811385048371108}
+  pieceMeshRenderer: {fileID: 23580838778805574}
+  pieceCollider: {fileID: 64403760134273250}
 --- !u!114 &4023887848416139204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1662,8 +1684,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 3691702897624106641}
+  faction: 5
 --- !u!114 &1654811385048371108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1676,14 +1698,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23580838778805574}
 --- !u!33 &33012833941291005
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1717,7 +1745,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1813,7 +1841,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -1823,7 +1850,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &7372400345328323720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1836,11 +1862,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 1238093558391860705}
+  pieceProperty: {fileID: 7591726244815639796}
+  pieceMaterialPropertyBlock: {fileID: 2811952211658655595}
+  pieceMeshRenderer: {fileID: 23923793793347227}
+  pieceCollider: {fileID: 64813833527397764}
 --- !u!114 &7591726244815639796
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1853,8 +1879,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 7372400345328323720}
+  faction: 4
 --- !u!114 &2811952211658655595
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1867,14 +1893,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23923793793347227}
 --- !u!33 &33595175197868059
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1908,7 +1940,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2004,7 +2036,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -2014,7 +2045,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5922218713657129454
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2027,11 +2057,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 5880664890904541638}
+  pieceProperty: {fileID: 2917119800290351406}
+  pieceMaterialPropertyBlock: {fileID: 5224688538673764018}
+  pieceMeshRenderer: {fileID: 23361677467116360}
+  pieceCollider: {fileID: 64241406324410552}
 --- !u!114 &2917119800290351406
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2044,8 +2074,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5922218713657129454}
+  faction: 5
 --- !u!114 &5224688538673764018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2058,14 +2088,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23361677467116360}
 --- !u!33 &33725267464212487
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2099,7 +2135,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2335,7 +2371,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -2345,7 +2380,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5086976433414714004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2358,11 +2392,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3367674350415150469}
+  pieceProperty: {fileID: 2187668300861629457}
+  pieceMaterialPropertyBlock: {fileID: 4072232609398423697}
+  pieceMeshRenderer: {fileID: 23877317717074447}
+  pieceCollider: {fileID: 64064664233055707}
 --- !u!114 &2187668300861629457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2375,8 +2409,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5086976433414714004}
+  faction: 2
 --- !u!114 &4072232609398423697
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2389,14 +2423,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23877317717074447}
 --- !u!33 &33517895339594968
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2430,7 +2470,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2528,7 +2568,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -2538,7 +2577,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5483670741948754856
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2551,11 +2589,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 1742651378706844653}
+  pieceProperty: {fileID: 7084255356402797034}
+  pieceMaterialPropertyBlock: {fileID: 7298083737920826946}
+  pieceMeshRenderer: {fileID: 23840236579439327}
+  pieceCollider: {fileID: 64603966288373981}
 --- !u!114 &7084255356402797034
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2568,8 +2606,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5483670741948754856}
+  faction: 1
 --- !u!114 &7298083737920826946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2582,14 +2620,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23840236579439327}
 --- !u!33 &33817287242769365
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2623,7 +2667,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2719,7 +2763,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -2729,7 +2772,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &8592021357333416874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2742,11 +2784,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 1614402206002720395}
+  pieceProperty: {fileID: 3402258705637255060}
+  pieceMaterialPropertyBlock: {fileID: 1344195448471572668}
+  pieceMeshRenderer: {fileID: 23815908984607500}
+  pieceCollider: {fileID: 64737774386795365}
 --- !u!114 &3402258705637255060
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2759,8 +2801,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 8592021357333416874}
+  faction: 5
 --- !u!114 &1344195448471572668
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2773,14 +2815,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23815908984607500}
 --- !u!33 &33797449640187603
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2814,7 +2862,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2910,7 +2958,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -2920,7 +2967,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &2799793177639806952
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2933,11 +2979,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 8312970875352447635}
+  pieceProperty: {fileID: 7043748438902120428}
+  pieceMaterialPropertyBlock: {fileID: 6996536839140178552}
+  pieceMeshRenderer: {fileID: 23463705616189233}
+  pieceCollider: {fileID: 64204586628329872}
 --- !u!114 &7043748438902120428
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2950,8 +2996,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 2799793177639806952}
+  faction: 2
 --- !u!114 &6996536839140178552
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2964,14 +3010,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23463705616189233}
 --- !u!33 &33739824731636645
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3005,7 +3057,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3101,7 +3153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -3111,7 +3162,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &4102468464112662294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3124,11 +3174,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 8199224178437089563}
+  pieceProperty: {fileID: 8096392230863489111}
+  pieceMaterialPropertyBlock: {fileID: 7522384434759009628}
+  pieceMeshRenderer: {fileID: 23911258332629708}
+  pieceCollider: {fileID: 64273767451253266}
 --- !u!114 &8096392230863489111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3141,7 +3191,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 4102468464112662294}
   faction: 0
 --- !u!114 &7522384434759009628
 MonoBehaviour:
@@ -3155,14 +3205,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23911258332629708}
 --- !u!33 &33202036448264626
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3196,7 +3252,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3293,7 +3349,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -3303,7 +3358,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1979466474582032474
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3316,11 +3370,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4260172602654540484}
+  pieceProperty: {fileID: 9080242329230448081}
+  pieceMaterialPropertyBlock: {fileID: 5272349673530885486}
+  pieceMeshRenderer: {fileID: 23432871283682581}
+  pieceCollider: {fileID: 64406023093019582}
 --- !u!114 &9080242329230448081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3333,8 +3387,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 1979466474582032474}
+  faction: 4
 --- !u!114 &5272349673530885486
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3347,14 +3401,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23432871283682581}
 --- !u!33 &33463599365183567
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3388,7 +3448,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3484,7 +3544,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -3494,7 +3553,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &926935459378506344
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3507,11 +3565,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4478895397212231914}
+  pieceProperty: {fileID: 9008022252854277206}
+  pieceMaterialPropertyBlock: {fileID: 848049320032675499}
+  pieceMeshRenderer: {fileID: 23994179039635342}
+  pieceCollider: {fileID: 64166139237159839}
 --- !u!114 &9008022252854277206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3524,8 +3582,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 926935459378506344}
+  faction: 6
 --- !u!114 &848049320032675499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3538,14 +3596,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23994179039635342}
 --- !u!33 &33390125610520193
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3579,7 +3643,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3675,7 +3739,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -3685,7 +3748,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6612621883405323864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3698,11 +3760,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3610023008802283181}
+  pieceProperty: {fileID: 6160532590517617426}
+  pieceMaterialPropertyBlock: {fileID: 2226839729073853926}
+  pieceMeshRenderer: {fileID: 23219135886497228}
+  pieceCollider: {fileID: 64788187651384905}
 --- !u!114 &6160532590517617426
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3715,8 +3777,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6612621883405323864}
+  faction: 4
 --- !u!114 &2226839729073853926
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3729,14 +3791,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23219135886497228}
 --- !u!33 &33642612764037424
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3770,7 +3838,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3866,7 +3934,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -3876,7 +3943,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1875352273021417235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3889,11 +3955,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2189416928768867166}
+  pieceProperty: {fileID: 4300916098582531029}
+  pieceMaterialPropertyBlock: {fileID: 8777140644310891223}
+  pieceMeshRenderer: {fileID: 23376507699289912}
+  pieceCollider: {fileID: 64219086335574909}
 --- !u!114 &4300916098582531029
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3906,8 +3972,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 1875352273021417235}
+  faction: 4
 --- !u!114 &8777140644310891223
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3920,14 +3986,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23376507699289912}
 --- !u!33 &33243877701105920
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3961,7 +4033,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4057,7 +4129,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -4067,7 +4138,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5704154099467895676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4080,11 +4150,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 5332754269426275484}
+  pieceProperty: {fileID: 4933609063231283009}
+  pieceMaterialPropertyBlock: {fileID: 5131091910137748694}
+  pieceMeshRenderer: {fileID: 23376306254982639}
+  pieceCollider: {fileID: 64429457307016747}
 --- !u!114 &4933609063231283009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4097,8 +4167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5704154099467895676}
+  faction: 1
 --- !u!114 &5131091910137748694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4111,14 +4181,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23376306254982639}
 --- !u!33 &33775530815215767
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4152,7 +4228,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4248,7 +4324,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -4258,7 +4333,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5448934750424484152
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4271,11 +4345,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 810237567282952183}
+  pieceProperty: {fileID: 4745067934600106380}
+  pieceMaterialPropertyBlock: {fileID: 4958946758803426027}
+  pieceMeshRenderer: {fileID: 23110339037369612}
+  pieceCollider: {fileID: 64858569291424888}
 --- !u!114 &4745067934600106380
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4288,8 +4362,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5448934750424484152}
+  faction: 5
 --- !u!114 &4958946758803426027
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4302,14 +4376,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23110339037369612}
 --- !u!33 &33122201249392760
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4343,7 +4423,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4580,7 +4660,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -4590,7 +4669,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6128328853276927155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4603,11 +4681,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 6087384086146302391}
+  pieceProperty: {fileID: 6345407620347787770}
+  pieceMaterialPropertyBlock: {fileID: 1401123293352671969}
+  pieceMeshRenderer: {fileID: 23744919344732447}
+  pieceCollider: {fileID: 64719624264122409}
 --- !u!114 &6345407620347787770
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4620,7 +4698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 6128328853276927155}
   faction: 0
 --- !u!114 &1401123293352671969
 MonoBehaviour:
@@ -4634,14 +4712,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23744919344732447}
 --- !u!33 &33092665561266414
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4675,7 +4759,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4911,7 +4995,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -4921,7 +5004,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1564724418882041761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4934,11 +5016,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 8403172224373582655}
+  pieceProperty: {fileID: 7615873090233362674}
+  pieceMaterialPropertyBlock: {fileID: 9218349237078263010}
+  pieceMeshRenderer: {fileID: 23723223306873352}
+  pieceCollider: {fileID: 64863338440865518}
 --- !u!114 &7615873090233362674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4951,7 +5033,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 1564724418882041761}
   faction: 0
 --- !u!114 &9218349237078263010
 MonoBehaviour:
@@ -4965,14 +5047,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23723223306873352}
 --- !u!33 &33645286180009339
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5006,7 +5094,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5184,7 +5272,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -5194,7 +5281,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &9151202740777202108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5207,11 +5293,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 196282644646529176}
+  pieceProperty: {fileID: 7655477007601351088}
+  pieceMaterialPropertyBlock: {fileID: 6016004820951450018}
+  pieceMeshRenderer: {fileID: 23028848994291476}
+  pieceCollider: {fileID: 64676661205217362}
 --- !u!114 &7655477007601351088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5224,8 +5310,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 9151202740777202108}
+  faction: 3
 --- !u!114 &6016004820951450018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5238,14 +5324,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23028848994291476}
 --- !u!33 &33397298225713551
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5279,7 +5371,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5375,7 +5467,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -5385,7 +5476,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1177779227855498836
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5398,11 +5488,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 6959153028023083898}
+  pieceProperty: {fileID: 5719115113769854566}
+  pieceMaterialPropertyBlock: {fileID: 2743574719656884088}
+  pieceMeshRenderer: {fileID: 23510661982250382}
+  pieceCollider: {fileID: 64641271067862570}
 --- !u!114 &5719115113769854566
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5415,8 +5505,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 1177779227855498836}
+  faction: 3
 --- !u!114 &2743574719656884088
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5429,14 +5519,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23510661982250382}
 --- !u!33 &33378958167411820
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5470,7 +5566,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5566,7 +5662,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -5576,7 +5671,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &7907108765634133071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5589,11 +5683,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 7966833100615670209}
+  pieceProperty: {fileID: 6002962750008317384}
+  pieceMaterialPropertyBlock: {fileID: 256433401201857834}
+  pieceMeshRenderer: {fileID: 23228480026139602}
+  pieceCollider: {fileID: 64884055679716993}
 --- !u!114 &6002962750008317384
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5606,8 +5700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 7907108765634133071}
+  faction: 5
 --- !u!114 &256433401201857834
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5620,14 +5714,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23228480026139602}
 --- !u!33 &33784653514003233
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5661,7 +5761,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5757,7 +5857,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -5767,7 +5866,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6669787848176111822
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5780,11 +5878,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 5621605343285600651}
+  pieceProperty: {fileID: 4539783589410650156}
+  pieceMaterialPropertyBlock: {fileID: 6746276208573210828}
+  pieceMeshRenderer: {fileID: 23174532733992212}
+  pieceCollider: {fileID: 64630149722186353}
 --- !u!114 &4539783589410650156
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5797,8 +5895,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6669787848176111822}
+  faction: 2
 --- !u!114 &6746276208573210828
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5811,14 +5909,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23174532733992212}
 --- !u!33 &33307688792602997
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -5852,7 +5956,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5948,7 +6052,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -5958,7 +6061,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &2807711188523294172
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5971,11 +6073,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3230048428502244783}
+  pieceProperty: {fileID: 6534974146386561512}
+  pieceMaterialPropertyBlock: {fileID: 2427489955077770451}
+  pieceMeshRenderer: {fileID: 23946661635829184}
+  pieceCollider: {fileID: 64413343590997620}
 --- !u!114 &6534974146386561512
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5988,8 +6090,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 2807711188523294172}
+  faction: 6
 --- !u!114 &2427489955077770451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6002,14 +6104,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23946661635829184}
 --- !u!33 &33797591411316074
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6043,7 +6151,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6139,7 +6247,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -6149,7 +6256,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6505531782278945025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6162,11 +6268,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4413745700380331793}
+  pieceProperty: {fileID: 5117061832507979538}
+  pieceMaterialPropertyBlock: {fileID: 7297286004767164195}
+  pieceMeshRenderer: {fileID: 23901213635919706}
+  pieceCollider: {fileID: 64587108156741968}
 --- !u!114 &5117061832507979538
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6179,8 +6285,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6505531782278945025}
+  faction: 5
 --- !u!114 &7297286004767164195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6193,14 +6299,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23901213635919706}
 --- !u!33 &33081567294709203
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6234,7 +6346,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6330,7 +6442,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -6340,7 +6451,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &4926165020029236801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6353,11 +6463,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3122239662044356089}
+  pieceProperty: {fileID: 6024380260908225458}
+  pieceMaterialPropertyBlock: {fileID: 2487946066707549336}
+  pieceMeshRenderer: {fileID: 23425983331825905}
+  pieceCollider: {fileID: 64746132456422390}
 --- !u!114 &6024380260908225458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6370,8 +6480,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 4926165020029236801}
+  faction: 5
 --- !u!114 &2487946066707549336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6384,14 +6494,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23425983331825905}
 --- !u!33 &33579832598622755
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6425,7 +6541,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6569,7 +6685,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -6579,7 +6694,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6110800033410364818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6592,11 +6706,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 5193513812193479376}
+  pieceProperty: {fileID: 7403183947453588488}
+  pieceMaterialPropertyBlock: {fileID: 2767213372970696634}
+  pieceMeshRenderer: {fileID: 23996210413216288}
+  pieceCollider: {fileID: 64119520843109076}
 --- !u!114 &7403183947453588488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6609,8 +6723,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6110800033410364818}
+  faction: 5
 --- !u!114 &2767213372970696634
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6623,14 +6737,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23996210413216288}
 --- !u!33 &33057778819690828
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6664,7 +6784,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6761,7 +6881,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -6771,7 +6890,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &8312902256095050470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6784,11 +6902,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3086229243959732958}
+  pieceProperty: {fileID: 793678990053223685}
+  pieceMaterialPropertyBlock: {fileID: 3036139534940426002}
+  pieceMeshRenderer: {fileID: 23112981735465415}
+  pieceCollider: {fileID: 64435644950889259}
 --- !u!114 &793678990053223685
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6801,8 +6919,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 8312902256095050470}
+  faction: 2
 --- !u!114 &3036139534940426002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6815,14 +6933,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23112981735465415}
 --- !u!33 &33112217068891407
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6856,7 +6980,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7092,7 +7216,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -7102,7 +7225,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5666051348182001962
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7115,11 +7237,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2149796160055003075}
+  pieceProperty: {fileID: 5801794524853974342}
+  pieceMaterialPropertyBlock: {fileID: 7953498148630795219}
+  pieceMeshRenderer: {fileID: 23802364602643385}
+  pieceCollider: {fileID: 64098643369916765}
 --- !u!114 &5801794524853974342
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7132,8 +7254,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5666051348182001962}
+  faction: 1
 --- !u!114 &7953498148630795219
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7146,14 +7268,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23802364602643385}
 --- !u!33 &33130550344112911
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7187,7 +7315,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7423,7 +7551,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -7433,7 +7560,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5838618348367481031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7446,11 +7572,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2350055372410368179}
+  pieceProperty: {fileID: 7609660066040048115}
+  pieceMaterialPropertyBlock: {fileID: 1216941888456409818}
+  pieceMeshRenderer: {fileID: 23568031915134871}
+  pieceCollider: {fileID: 64601965430005509}
 --- !u!114 &7609660066040048115
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7463,8 +7589,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 5838618348367481031}
+  faction: 1
 --- !u!114 &1216941888456409818
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7477,14 +7603,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23568031915134871}
 --- !u!33 &33806612588811078
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7518,7 +7650,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7614,7 +7746,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -7624,7 +7755,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &653030287749820698
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7637,11 +7767,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 945410894228215860}
+  pieceProperty: {fileID: 267167499670669934}
+  pieceMaterialPropertyBlock: {fileID: 8966278636030091585}
+  pieceMeshRenderer: {fileID: 23128369410148040}
+  pieceCollider: {fileID: 64690602252655776}
 --- !u!114 &267167499670669934
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7654,8 +7784,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 653030287749820698}
+  faction: 2
 --- !u!114 &8966278636030091585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7668,14 +7798,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23128369410148040}
 --- !u!33 &33054725608868646
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7709,7 +7845,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7807,7 +7943,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -7817,7 +7952,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &7708129533044802830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7830,11 +7964,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4175613680933280771}
+  pieceProperty: {fileID: 659333198321502278}
+  pieceMaterialPropertyBlock: {fileID: 5767980480976884504}
+  pieceMeshRenderer: {fileID: 23353932644859883}
+  pieceCollider: {fileID: 64890248392244969}
 --- !u!114 &659333198321502278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7847,8 +7981,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 7708129533044802830}
+  faction: 6
 --- !u!114 &5767980480976884504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7861,14 +7995,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23353932644859883}
 --- !u!33 &33174927838013310
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7902,7 +8042,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8138,7 +8278,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -8148,7 +8287,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6021068880059234320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8161,11 +8299,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3683571585755938885}
+  pieceProperty: {fileID: 6777390703128389661}
+  pieceMaterialPropertyBlock: {fileID: 5485888200655849478}
+  pieceMeshRenderer: {fileID: 23817702877223150}
+  pieceCollider: {fileID: 64571470754175133}
 --- !u!114 &6777390703128389661
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8178,8 +8316,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6021068880059234320}
+  faction: 5
 --- !u!114 &5485888200655849478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8192,14 +8330,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23817702877223150}
 --- !u!33 &33189490857421800
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8233,7 +8377,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8329,7 +8473,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -8339,7 +8482,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &2741743094851507927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8352,11 +8494,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3721481129897915162}
+  pieceProperty: {fileID: 2687411113480108434}
+  pieceMaterialPropertyBlock: {fileID: 8865784021413749364}
+  pieceMeshRenderer: {fileID: 23835871209972214}
+  pieceCollider: {fileID: 64608765407689508}
 --- !u!114 &2687411113480108434
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8369,8 +8511,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 2741743094851507927}
+  faction: 6
 --- !u!114 &8865784021413749364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8383,14 +8525,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23835871209972214}
 --- !u!33 &33723742145193041
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8424,7 +8572,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8520,7 +8668,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -8530,7 +8677,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &3265757429555370607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8543,11 +8689,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 7608715915277792849}
+  pieceProperty: {fileID: 5097542371529844791}
+  pieceMaterialPropertyBlock: {fileID: 5720621383681842124}
+  pieceMeshRenderer: {fileID: 23726854287883039}
+  pieceCollider: {fileID: 64181414985195632}
 --- !u!114 &5097542371529844791
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8560,7 +8706,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 3265757429555370607}
   faction: 0
 --- !u!114 &5720621383681842124
 MonoBehaviour:
@@ -8574,14 +8720,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23726854287883039}
 --- !u!33 &33696474219188181
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8615,7 +8767,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8711,7 +8863,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -8721,7 +8872,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &4838049470493161954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8734,11 +8884,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 8899292865718602994}
+  pieceProperty: {fileID: 209399376502315891}
+  pieceMaterialPropertyBlock: {fileID: 4193060121313822155}
+  pieceMeshRenderer: {fileID: 23042124349949746}
+  pieceCollider: {fileID: 64020784007354965}
 --- !u!114 &209399376502315891
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8751,8 +8901,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 4838049470493161954}
+  faction: 2
 --- !u!114 &4193060121313822155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8765,14 +8915,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23042124349949746}
 --- !u!33 &33871322066397840
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8806,7 +8962,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8902,7 +9058,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -8912,7 +9067,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6530912714420118557
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8925,11 +9079,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4267834457717244824}
+  pieceProperty: {fileID: 6271980191946737789}
+  pieceMaterialPropertyBlock: {fileID: 5661996004652006872}
+  pieceMeshRenderer: {fileID: 23897342393819433}
+  pieceCollider: {fileID: 64345968819805183}
 --- !u!114 &6271980191946737789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8942,8 +9096,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6530912714420118557}
+  faction: 5
 --- !u!114 &5661996004652006872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8956,14 +9110,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23897342393819433}
 --- !u!33 &33195125899523569
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8997,7 +9157,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9093,7 +9253,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -9103,7 +9262,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &2212659888335704015
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9116,11 +9274,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 1120615739783296504}
+  pieceProperty: {fileID: 5955731063259401169}
+  pieceMaterialPropertyBlock: {fileID: 7733064221695711121}
+  pieceMeshRenderer: {fileID: 23025664954525607}
+  pieceCollider: {fileID: 64572828556288649}
 --- !u!114 &5955731063259401169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9133,8 +9291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 2212659888335704015}
+  faction: 5
 --- !u!114 &7733064221695711121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9147,14 +9305,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23025664954525607}
 --- !u!33 &33001117860577085
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9188,7 +9352,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9284,7 +9448,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -9294,7 +9457,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &1199502790008930337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9307,11 +9469,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 7541415214607681120}
+  pieceProperty: {fileID: 4104721427712575914}
+  pieceMaterialPropertyBlock: {fileID: 6690767043778727157}
+  pieceMeshRenderer: {fileID: 23794776053202580}
+  pieceCollider: {fileID: 64097372390521876}
 --- !u!114 &4104721427712575914
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9324,8 +9486,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 1199502790008930337}
+  faction: 3
 --- !u!114 &6690767043778727157
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9338,14 +9500,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23794776053202580}
 --- !u!33 &33521057319027933
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9379,7 +9547,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9475,7 +9643,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -9485,7 +9652,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6862976003816865990
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9498,11 +9664,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 5503589559323822989}
+  pieceProperty: {fileID: 5487810776818204997}
+  pieceMaterialPropertyBlock: {fileID: 7470991806543074414}
+  pieceMeshRenderer: {fileID: 23272829653101747}
+  pieceCollider: {fileID: 64666772295284659}
 --- !u!114 &5487810776818204997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9515,8 +9681,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6862976003816865990}
+  faction: 3
 --- !u!114 &7470991806543074414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9529,14 +9695,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23272829653101747}
 --- !u!33 &33945450466615240
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9570,7 +9742,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9666,7 +9838,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -9676,7 +9847,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &3474670509134918074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9689,11 +9859,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 4733946235643125963}
+  pieceProperty: {fileID: 108665773101846592}
+  pieceMaterialPropertyBlock: {fileID: 2777076175729472761}
+  pieceMeshRenderer: {fileID: 23980872205533825}
+  pieceCollider: {fileID: 64844130452409864}
 --- !u!114 &108665773101846592
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9706,8 +9876,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 3474670509134918074}
+  faction: 3
 --- !u!114 &2777076175729472761
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9720,14 +9890,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23980872205533825}
 --- !u!33 &33536083406334877
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9761,7 +9937,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9857,7 +10033,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -9867,7 +10042,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &5318368613329370405
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9880,11 +10054,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2839819550172165783}
+  pieceProperty: {fileID: 5579293570498210959}
+  pieceMaterialPropertyBlock: {fileID: 7541280208118507206}
+  pieceMeshRenderer: {fileID: 23886218247775841}
+  pieceCollider: {fileID: 64051278678440652}
 --- !u!114 &5579293570498210959
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9897,7 +10071,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 5318368613329370405}
   faction: 0
 --- !u!114 &7541280208118507206
 MonoBehaviour:
@@ -9911,14 +10085,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23886218247775841}
 --- !u!33 &33146319955487463
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9952,7 +10132,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10048,7 +10228,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -10058,7 +10237,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &3696131338439837214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10071,11 +10249,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2977952869148894594}
+  pieceProperty: {fileID: 121408490444226214}
+  pieceMaterialPropertyBlock: {fileID: 2337135860305096102}
+  pieceMeshRenderer: {fileID: 23670837792998553}
+  pieceCollider: {fileID: 64876816125332297}
 --- !u!114 &121408490444226214
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10088,8 +10266,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 3696131338439837214}
+  faction: 3
 --- !u!114 &2337135860305096102
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10102,14 +10280,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23670837792998553}
 --- !u!33 &33478250902207907
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10143,7 +10327,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10239,7 +10423,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -10249,7 +10432,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6492777726194272931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10262,11 +10444,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 6770324741323982677}
+  pieceProperty: {fileID: 1481438032630797446}
+  pieceMaterialPropertyBlock: {fileID: 6576645891299260688}
+  pieceMeshRenderer: {fileID: 23350322212612350}
+  pieceCollider: {fileID: 64831624172313929}
 --- !u!114 &1481438032630797446
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10279,8 +10461,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6492777726194272931}
+  faction: 5
 --- !u!114 &6576645891299260688
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10293,14 +10475,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23350322212612350}
 --- !u!33 &33402369817978137
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10334,7 +10522,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10430,7 +10618,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -10440,7 +10627,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &3067314207155918906
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10453,11 +10639,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 241102633699080660}
+  pieceProperty: {fileID: 2525834341358653211}
+  pieceMaterialPropertyBlock: {fileID: 1205142409376002915}
+  pieceMeshRenderer: {fileID: 23021866376805634}
+  pieceCollider: {fileID: 64886611369360231}
 --- !u!114 &2525834341358653211
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10470,8 +10656,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 3067314207155918906}
+  faction: 4
 --- !u!114 &1205142409376002915
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10484,14 +10670,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23021866376805634}
 --- !u!33 &33499384029404495
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10525,7 +10717,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10621,7 +10813,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -10631,7 +10822,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &6254341792778119186
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10644,11 +10834,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 3191392103180544236}
+  pieceProperty: {fileID: 8155716717668480653}
+  pieceMaterialPropertyBlock: {fileID: 7241230774216658042}
+  pieceMeshRenderer: {fileID: 23561384949923832}
+  pieceCollider: {fileID: 64511834936698977}
 --- !u!114 &8155716717668480653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10661,8 +10851,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 6254341792778119186}
+  faction: 2
 --- !u!114 &7241230774216658042
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10675,14 +10865,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23561384949923832}
 --- !u!33 &33715264515715210
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10716,7 +10912,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10812,7 +11008,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -10822,7 +11017,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &2975821582046297960
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10835,11 +11029,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 8457342430887734572}
+  pieceProperty: {fileID: 6186557335892318089}
+  pieceMaterialPropertyBlock: {fileID: 5884826408498146014}
+  pieceMeshRenderer: {fileID: 23731521823894753}
+  pieceCollider: {fileID: 64388497252457766}
 --- !u!114 &6186557335892318089
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10852,7 +11046,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
+  pieceServiceLocator: {fileID: 2975821582046297960}
   faction: 0
 --- !u!114 &5884826408498146014
 MonoBehaviour:
@@ -10866,14 +11060,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23731521823894753}
 --- !u!33 &33823514140157054
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10907,7 +11107,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -11003,7 +11203,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BasePiece
   pieceId: 0
-  pieceServiceLocator: {fileID: 4354109713934751717}
   meshFilter: {fileID: 0}
   joint: {fileID: 0}
   scaleOnPieceBox: 0
@@ -11013,7 +11212,6 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
-  gameSetting: {fileID: 0}
 --- !u!114 &8339323970724716415
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11026,11 +11224,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 345344a74c8a78f4f9216686c4aecdd7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceServiceLocator
-  piece: {fileID: 4024973236793257141}
-  pieceProperty: {fileID: 5025074862366035799}
-  pieceMaterialPropertyBlock: {fileID: 2224081932293782952}
-  screwOutline: {fileID: 0}
-  pieceMeshRenderer: {fileID: 23218414536957683}
+  piece: {fileID: 2001907808826787958}
+  pieceProperty: {fileID: 3256430466145489964}
+  pieceMaterialPropertyBlock: {fileID: 7805876627643427601}
+  pieceMeshRenderer: {fileID: 23131155302082329}
+  pieceCollider: {fileID: 64465681074130425}
 --- !u!114 &3256430466145489964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11043,8 +11241,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c05437546478ff49a8de31ade23c9ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceProperty
-  pieceServiceLocator: {fileID: 4354109713934751717}
-  faction: 0
+  pieceServiceLocator: {fileID: 8339323970724716415}
+  faction: 2
 --- !u!114 &7805876627643427601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11057,14 +11255,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80c2634cba6e7f845948851a07f1e372, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PieceMaterialPropertyBlock
-  meshRenderer: {fileID: 23218414536957683}
   materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: f3f5edf9148c5b74491948f1179ae38c, type: 2}
+  - {fileID: 2100000, guid: 5df13f96e4585c44d86359661ddd6ebd, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
+  - {fileID: 2100000, guid: f890700a807292940b6d099b9d1cad9f, type: 2}
+  - {fileID: 2100000, guid: 085ca1b53d066764f9523a2943d25916, type: 2}
+  - {fileID: 2100000, guid: bead82ff8191ddc498c720fab3592809, type: 2}
+  - {fileID: 2100000, guid: 4775ed2beebf3bf4bab950fd0a435105, type: 2}
+  - {fileID: 2100000, guid: a42763ea8affdfe439a8d284c7ad8f1c, type: 2}
   colorReference: _Color
   secondaryColorReference: 
   outlineWidthReference: 
   secondaryColorMultiplier: 0
-  _renderer: {fileID: 23218414536957683}
+  _renderer: {fileID: 23131155302082329}
 --- !u!33 &33067559877866664
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11098,7 +11302,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: beccd0b0a8f70f64da73e47f92a485f7, type: 2}
+  - {fileID: 2100000, guid: cce82a3df90d095499a8e04a133ad024, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

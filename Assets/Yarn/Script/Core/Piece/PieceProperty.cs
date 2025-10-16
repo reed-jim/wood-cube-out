@@ -3,7 +3,7 @@ using static GameEnum;
 
 public class PieceProperty : MonoBehaviour
 {
-    [SerializeField] private PieceServiceLocator pieceServiceLocator;
+    [SerializeField] public PieceServiceLocator pieceServiceLocator;
 
     [SerializeField] private GameFaction faction;
     private GameFaction[] poolFactions;
@@ -43,11 +43,16 @@ public class PieceProperty : MonoBehaviour
         _boundSize = pieceServiceLocator.pieceMeshRenderer.bounds.size;
     }
 
-    void Start()
-    {
-        faction = (GameFaction)Random.Range(0, 8);
+    // void Start()
+    // {
+    //     faction = (GameFaction)Random.Range(0, 8);
 
-        SetColorByFaction();
+    //     SetColorByFaction();
+    // }
+
+    void OnValidate()
+    {
+        pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
     }
 
     public void SetColorByFaction()

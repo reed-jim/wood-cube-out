@@ -18,6 +18,11 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     private Tween _currentAlphaTransition;
     #endregion
 
+    public Renderer Renderer
+    {
+        set => _renderer = value;
+    }
+
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
@@ -53,16 +58,16 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     {
         TryAssignComponent();
 
-        Color color = FactionUtility.GetColorForFaction(faction);
+        // Color color = FactionUtility.GetColorForFaction(faction);
 
-        _propertyBlock.SetColor(colorReference, color);
-        _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
+        // _propertyBlock.SetColor(colorReference, color);
+        // _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
 
-        _renderer.SetPropertyBlock(_propertyBlock);
+        // _renderer.SetPropertyBlock(_propertyBlock);
 
-        // meshRenderer.material = materials[(int)faction];
+        _renderer.material = materials[(int)faction];
 
-        // meshRenderer.material.SetColor("_SecondaryColor", meshRenderer.material.GetColor("_Color") * 0.3f);
+        // _renderer.material.SetColor("_SecondaryColor", _renderer.material.GetColor("_Color") * 0.3f);
 
         return;
     }

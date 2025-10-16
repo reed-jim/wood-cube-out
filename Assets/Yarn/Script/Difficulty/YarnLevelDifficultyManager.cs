@@ -22,7 +22,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         {
             if (index % 3 == 0)
             {
-                currentFaction = GetRandomEnumValue<GameFaction>();
+                // currentFaction = GetRandomEnumValue<GameFaction>();
+                currentFaction = (GameFaction)Random.Range(0, 8);
             }
 
             poolFaction.Add(currentFaction);
@@ -48,6 +49,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 generatedPiece.transform.localPosition = Vector3.zero;
                 generatedPiece.transform.localRotation = Quaternion.identity;
                 generatedPiece.transform.localScale *= 1 - (j + 1) * 0.1f;
+
+                generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
 
                 poolFaction.Remove(faction);
 
