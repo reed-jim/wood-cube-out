@@ -1,3 +1,4 @@
+using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
@@ -14,6 +15,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     #region PRIVATE FIELD
     [SerializeField] private Renderer _renderer;
     private MaterialPropertyBlock _propertyBlock;
+    private Tween _currentAlphaTransition;
     #endregion
 
     private void Awake()
@@ -80,4 +82,34 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
+
+    #region HOLD
+    public void HoldPiece()
+    {
+        _currentAlphaTransition.Complete();
+
+        _propertyBlock.SetInt("_ZWrite", 0);
+
+        _currentAlphaTransition = Tween.Custom(1, 0.3f, duration: 0.3f, onValueChange: newVal =>
+        {
+            _propertyBlock.SetFloat("_ObjectAlpha", newVal);
+
+            _renderer.SetPropertyBlock(_propertyBlock);
+        });
+    }
+
+    public void ReleasePiece()
+    {
+        _currentAlphaTransition.Complete();
+
+        _propertyBlock.SetInt("_ZWrite", 1);
+
+        _currentAlphaTransition = Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
+        {
+            _propertyBlock.SetFloat("_ObjectAlpha", newVal);
+
+            _renderer.SetPropertyBlock(_propertyBlock);
+        });
+    }
+    #endregion
 }

@@ -151,40 +151,65 @@ public class Yarn2D : MonoBehaviour
             dissolveHeight = newVal;
 
             UpdateYarnState(newVal);
+        })
+        .OnComplete(() =>
+        {
+            for (int i = 1; i < segments.Count; i++)
+            {
+                int index = i;
+                Tween.Custom(segments[index].posNow, segments[0].posNow, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+                {
+                    segments[index].posNow = newVal;
+
+                    if (index == segments.Count - 1)
+                    {
+                        UpdateLineRenderer();
+                    }
+                })
+                .OnComplete(() =>
+                {
+                    if (index == segments.Count - 1)
+                    {
+                        gameObject.SetActive(false);
+
+                        onRewindYarnCompleted?.Invoke();
+                    }
+                });
+            }
         });
     }
 
-    void Update()
-    {
-        if (dissolveHeight <= 0)
-        {
-            bool isComplete = true;
+    // void Update()
+    // {
+    //     if (dissolveHeight <= 0)
+    //     {
+    //         bool isComplete = true;
 
-            for (int i = 1; i < segments.Count; i++)
-            {
-                segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
+    //         for (int i = 1; i < segments.Count; i++)
+    //         {
+    //             segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
 
-                if (Vector3.Distance(segments[i].posNow, segments[0].posNow) > 0.05f)
-                {
-                    isComplete = false;
-                }
-            }
+    //             if (Vector3.Distance(segments[i].posNow, segments[0].posNow) > 0.05f)
+    //             {
+    //                 isComplete = false;
+    //             }
+    //         }
 
-            if (isComplete)
-            {
-                gameObject.SetActive(false);
+    //         if (isComplete)
+    //         {
+    //             gameObject.SetActive(false);
 
-                onRewindYarnCompleted?.Invoke();
-            }
-            else
-            {
-                UpdateLineRenderer();
-            }
+    //             onRewindYarnCompleted?.Invoke();
+    //         }
+    //         else
+    //         {
+    //             UpdateLineRenderer();
+    //         }
 
-            lerpDelta *= 1.01f;
-            lerpDelta = Mathf.Min(lerpDelta, 1);
-        }
-    }
+    //         lerpDelta *= 1.01f;
+    //         lerpDelta = Mathf.Min(lerpDelta, 1);
+    //     }
+    // }
 
     private void UpdateYarnState(float dissolveHeight)
     {

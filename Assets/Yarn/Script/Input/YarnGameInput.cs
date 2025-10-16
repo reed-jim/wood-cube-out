@@ -5,10 +5,13 @@ using UnityEngine;
 public class YarnGameInput : MonoBehaviour
 {
     [SerializeField] private float maxSwipeDistance;
+    [SerializeField] private float timeToConfirmSelectObjectPart;
 
     private Camera _mainCamera;
     private List<Vector3> twoTouchPoints;
+    private BasePiece _selectingPiece;
     private float _timeHold;
+    private bool _isHoldingPiece;
 
     #region EVENT
     public static event Action mouseUpEvent;
@@ -40,6 +43,11 @@ public class YarnGameInput : MonoBehaviour
         {
             _timeHold += Time.deltaTime;
 
+            if (_timeHold > timeToConfirmSelectObjectPart && !_isHoldingPiece)
+            {
+                HoldPiece();
+            }
+
             // if (_inputMode == InputMode.Select)
             // {
             //     if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
@@ -59,11 +67,18 @@ public class YarnGameInput : MonoBehaviour
         {
             twoTouchPoints.Add(Input.mousePosition);
 
-            if (twoTouchPoints.Count == 2)
+            if (_isHoldingPiece)
             {
-                if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
+                _selectingPiece.PieceServiceLocator.pieceMaterialPropertyBlock.ReleasePiece();
+            }
+            else
+            {
+                if (twoTouchPoints.Count == 2)
                 {
-                    SelectPiece();
+                    if (Vector3.Distance(twoTouchPoints[0], twoTouchPoints[1]) < maxSwipeDistance)
+                    {
+                        SelectPiece();
+                    }
                 }
             }
 
@@ -73,7 +88,7 @@ public class YarnGameInput : MonoBehaviour
 
             _timeHold = 0;
             // _isSelectObjectPart = false;
-            // _isSelectingObjectPart = false;
+            _isHoldingPiece = false;
         }
     }
 
@@ -92,6 +107,26 @@ public class YarnGameInput : MonoBehaviour
                 piece.PullYarn();
 
                 return;
+            }
+        }
+    }
+
+    private void HoldPiece()
+    {
+        Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
+
+        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMask: LayerMask.GetMask("Default"));
+
+        if (hit.collider != null)
+        {
+            BasePiece piece = hit.collider.GetComponent<BasePiece>();
+
+            if (piece != null)
+            {
+                piece.PieceServiceLocator.pieceMaterialPropertyBlock.HoldPiece();
+
+                _selectingPiece = piece;
+                _isHoldingPiece = true;
             }
         }
     }
