@@ -365,8 +365,6 @@ namespace NamPhuThuy.GamePlay
             #endregion
 
             GamePersistentVariable.isLevelLost = false;
-            
-            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
         }
 
         void SetIsLoopLevel(bool isLoop)
@@ -866,12 +864,16 @@ namespace NamPhuThuy.GamePlay
     private LevelMode _tutorialMode = LevelMode.Normal;
     private void ShowSuggestion(int nextLevel, bool isLoopLevel)
     {
+        DebugLogger.LogSimple(message:$"nextLevel: {nextLevel}, isLoopLevel: {isLoopLevel}", context:this);
         int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
-        LevelMode currentLevelMode = levelDataContainer.LevelsData[nextLevel].levelMode;
-        if (levelDataContainer.LevelsData[nextLevel].isHasTutorial)
+        int currentLevel = nextLevel - 1;
+        
+        LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
+        if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
         {
+            DebugLogger.LogSimple(message:$"special", context:this);
             GamePersistentVariable.currentTutLevelMode = currentLevelMode;
-            DelayShowTutorialSuggestion(currentLevelMode);
+            DelayShowTutorialSuggestion();
             return;
         }
         
@@ -1021,13 +1023,14 @@ namespace NamPhuThuy.GamePlay
         }));
     }
 
-    private void DelayShowTutorialSuggestion(LevelMode levelMode)
+    private void DelayShowTutorialSuggestion()
     {
+        DebugLogger.LogSimple(context:this);
         CommonUtil.StopAllTweens(_tweens);
         
         _tweens.Add(Tween.Delay(1).OnComplete(() =>
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
+            switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
         }));
     }
     #endregion

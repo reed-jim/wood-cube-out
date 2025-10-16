@@ -44,6 +44,7 @@ namespace NamPhuThuy.UI
             base.Show(onCompletedAction);
             DebugLogger.LogSimple(context:this);
             
+            
         }
 
         protected override void Hide(Action onCompletedAction = null)
