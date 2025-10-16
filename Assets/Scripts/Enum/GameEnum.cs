@@ -5,7 +5,7 @@ public class GameEnum : MonoBehaviour
 {
     public enum ScreenRoute
     {
-        Waiting,
+        Waiting = 0,
         Lobby,
         LobbyRoom,
         Screen1,

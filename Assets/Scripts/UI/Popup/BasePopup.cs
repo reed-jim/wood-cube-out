@@ -62,7 +62,6 @@ public class BasePopup : MonoBehaviour
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         
-        
         /*SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;

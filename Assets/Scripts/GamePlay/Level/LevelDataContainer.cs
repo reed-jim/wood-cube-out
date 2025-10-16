@@ -29,11 +29,9 @@ namespace NamPhuThuy.Data
                 return;
 
             bool hasChanges = false;
-
+            var tutorialSeen = new System.Collections.Generic.Dictionary<LevelMode, int>();
+            
             for (int i = 0; i < levelsData.Length; i++)
-                
-                
-                
             {
                 if (levelsData[i] != null)
                 {
@@ -43,6 +41,26 @@ namespace NamPhuThuy.Data
                     {
                         levelsData[i].levelId = expectedLevelId;
                         hasChanges = true;
+                    }
+                }
+                
+                if (levelsData[i].isHasTutorial)
+                {
+                    var mode = levelsData[i].levelMode;
+                    if (tutorialSeen.ContainsKey(mode))
+                    {
+                        // Disable duplicate tutorial flags (keep the first one)
+                        levelsData[i].isHasTutorial = false;
+                        hasChanges = true;
+#if UNITY_EDITOR
+                        DebugLogger.LogWarning($"Multiple tutorials {mode}, duplicated on level {tutorialSeen[mode]} ");
+#else
+                    DebugLogger.LogWarning($"Multiple tutorials {mode}, Disable tutorial on level index {i} ");
+#endif
+                    }
+                    else
+                    {
+                        tutorialSeen[mode] = i;
                     }
                 }
             }
@@ -71,6 +89,7 @@ namespace NamPhuThuy.Data
     public class LevelData
     {
         public int levelId;
+        public bool isHasTutorial;
         public GameObject levelPrefab;
         public LevelMode levelMode;
     }
