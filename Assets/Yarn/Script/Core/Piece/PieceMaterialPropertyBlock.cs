@@ -21,6 +21,19 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     private void Awake()
     {
         _renderer = GetComponent<Renderer>();
+        _propertyBlock = new MaterialPropertyBlock();
+
+        MeshFilter meshFilter = GetComponent<MeshFilter>();
+
+        Bounds bounds = meshFilter.sharedMesh.bounds;
+
+        float minY = bounds.center.y - bounds.extents.y;
+        float maxY = bounds.center.y + bounds.extents.y;
+
+        _propertyBlock.SetFloat("_WorldMinY", minY);
+        _propertyBlock.SetFloat("_WorldMaxY", maxY);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
     }
 
     private void TryAssignComponent()

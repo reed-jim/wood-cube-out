@@ -7,6 +7,7 @@ using static GameEnum;
 public class SpoolBoxSlot : MonoBehaviour
 {
     [SerializeField] private Renderer spoolRenderer;
+    [SerializeField] private MeshFilter spoolMeshFilter;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isAlternative;
@@ -46,8 +47,14 @@ public class SpoolBoxSlot : MonoBehaviour
     {
         yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
 
+        Bounds bounds = spoolMeshFilter.sharedMesh.bounds;
+
+        float minY = bounds.center.y - bounds.extents.y;
+        float maxY = bounds.center.y + bounds.extents.y;
+
+        yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMinY", minY);
+        yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMaxY", maxY);
         yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
-        yarnSpoolMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(Color.white, 0));
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
