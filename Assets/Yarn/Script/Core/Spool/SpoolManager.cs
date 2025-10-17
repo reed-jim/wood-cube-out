@@ -668,8 +668,12 @@ public class SpoolManager : MonoBehaviour
                             onCompleteAction: () =>
                             {
                                 spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+
+                                piece.InvokePieceLoosenedEvent();
                             }
                         );
+
+                        piece.IsDone = true;
 
                         piecePorts[i].SmoothSetDissolveHeight(1, 0);
 
@@ -736,8 +740,12 @@ public class SpoolManager : MonoBehaviour
                         onCompleteAction: () =>
                         {
                             spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+
+                            piece.InvokePieceLoosenedEvent();
                         }
                     );
+
+                    piece.IsDone = true;
 
                     piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
 

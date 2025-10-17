@@ -292,7 +292,7 @@ public class BasePiece : MonoBehaviour
         // yarn2D.Init(new Vector3(0, 6), _renderer);
     }
 
-    private void InvokePieceLoosenedEvent()
+    public void InvokePieceLoosenedEvent()
     {
         pieceLoosenedEvent?.Invoke();
     }
