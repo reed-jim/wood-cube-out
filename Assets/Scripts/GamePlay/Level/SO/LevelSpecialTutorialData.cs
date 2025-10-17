@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
+using UnityEngine.Video;
 
 namespace NamPhuThuy.Data
 {
@@ -62,7 +63,12 @@ namespace NamPhuThuy.Data
                 {
                     if (!seenTutorialModes.Add(r.levelMode))
                     {
-                        Debug.LogWarning($"Duplicate tutorial for LevelMode {r.levelMode} in `LevelSpecialTutorialData` (index {i}).", this);
+                        DebugLogger.LogSimple(message:$"Duplicate LevelMode {r.levelMode}(index {i}).", context: this);
+                    }
+                    
+                    if (records[i].videoClip == null)
+                    {
+                        DebugLogger.LogSimple(message:$"(index {i}) has no video clip", context: this);
                     }
                 }
             }
@@ -84,6 +90,7 @@ namespace NamPhuThuy.Data
             EnsureDict();
             record = null;
             return _dictByMode != null && _dictByMode.TryGetValue(mode, out record);
+            
         }
 
         public bool Contains(LevelMode mode)
@@ -117,5 +124,13 @@ namespace NamPhuThuy.Data
         }
 
         #endregion
+    }
+    
+    [Serializable]
+    public class LevelSpecialTutorialRecord
+    {
+        public LevelMode levelMode = LevelMode.Normal;
+        public VideoClip videoClip;
+        public string description;
     }
 }
