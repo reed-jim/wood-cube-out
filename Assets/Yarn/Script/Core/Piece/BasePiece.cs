@@ -247,6 +247,19 @@ public class BasePiece : MonoBehaviour
 
                     firstInnerPiece.Unlock();
                 }
+                else
+                {
+                    for (int i = 0; i < transform.childCount; i++)
+                    {
+                        Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
+
+                        if (rigidbody != null)
+                        {
+                            rigidbody.isKinematic = false;
+                            transform.GetChild(i).SetParent(transform.parent);
+                        }
+                    }
+                }
 
                 pieceServiceLocator.pieceMeshRenderer.enabled = false;
                 gameObject.SetActive(false);

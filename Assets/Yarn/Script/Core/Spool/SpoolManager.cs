@@ -354,7 +354,6 @@ public class SpoolManager : MonoBehaviour
                 }
             }
         }
-        Debug.Log("SAFERIO 1 " + selectedFaction);
 
         SpoolBoxSlot emptyPiecePort = null;
         int numPiecePortsEmpty = 0;
@@ -665,7 +664,12 @@ public class SpoolManager : MonoBehaviour
 
                         Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                        yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
+                        yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                            onCompleteAction: () =>
+                            {
+                                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+                            }
+                        );
 
                         piecePorts[i].SmoothSetDissolveHeight(1, 0);
 
@@ -728,7 +732,12 @@ public class SpoolManager : MonoBehaviour
 
                     Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                    yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex]);
+                    yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                        onCompleteAction: () =>
+                        {
+                            spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+                        }
+                    );
 
                     piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
 

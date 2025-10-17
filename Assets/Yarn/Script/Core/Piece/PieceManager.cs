@@ -77,6 +77,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
+        DebugPopup.changeDifficultyEvent += ChangeDifficulty;
 
         _tweens = new List<Tween>();
 
@@ -102,6 +103,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
+        DebugPopup.changeDifficultyEvent -= ChangeDifficulty;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -188,10 +190,10 @@ public class PieceManager : MonoBehaviour
 
         for (int i = 0; i < _pieces.Count; i++)
         {
-            if (_pieces[i].IsLocked)
-            {
-                continue;
-            }
+            // if (_pieces[i].IsLocked)
+            // {
+            //     continue;
+            // }
 
             if (_pieces[i].IsDone)
             {
@@ -662,13 +664,13 @@ public class PieceManager : MonoBehaviour
             }
         }
 
-        // FREE LEVELS
-        int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
+        // // FREE LEVELS
+        // int minFreeLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_FREE_LEVEL, 20);
 
-        if (currentLevel.Value <= minFreeLevel)
-        {
-            difficultyLevel = 0;
-        }
+        // if (currentLevel.Value <= minFreeLevel)
+        // {
+        //     difficultyLevel = 0;
+        // }
 
         // HARD MODE
         if (GamePersistentVariable.isHardMode)
@@ -689,7 +691,7 @@ public class PieceManager : MonoBehaviour
         bool isFound = false;
 
         // // DEBUG
-        // Debug.Log("SAFERIO ---------------------------------------");
+        // Debug.Log("SAFERIO --------------------------------------- " + difficultyLevel);
 
         // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
         // {
@@ -850,6 +852,15 @@ public class PieceManager : MonoBehaviour
     private void OnPieceCompleted(int instanceId)
     {
         obstaclesOfPieces.Remove(instanceId);
+    }
+    #endregion
+
+    #region Test Difficulty 
+    private void ChangeDifficulty(float difficulty)
+    {
+        GamePersistentVariable.testDifficultyMultiplier = difficulty;
+
+        _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
     }
     #endregion
 }

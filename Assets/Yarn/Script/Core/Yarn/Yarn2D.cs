@@ -140,7 +140,11 @@ public class Yarn2D : MonoBehaviour
 
     private void UpdatePiece()
     {
-        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
+        if (piece != null)
+        {
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
+        }
+        
         spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
     }
 
