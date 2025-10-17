@@ -652,49 +652,49 @@ public class ScrewManager : MonoBehaviour
         DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
         
         difficultyLevel = ApplyDifficultyModifiers(difficultyLevel, difficultyLevelModifier);
-        DebugLogger.LogSimple(message:$"ajusted diff: {difficultyLevel}");
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        /*DebugLogger.LogSimple(message:$"ajusted diff: {difficultyLevel}");
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
 
         Dictionary<GameFaction, int> screwSlotAvailableByFaction = screwBoxManager.GetScrewSlotsAvailableByFaction();
         
-        DebugLogger.LogSimple(message:$"screwSlotAvailableByFaction:");
+        /*DebugLogger.LogSimple(message:$"screwSlotAvailableByFaction:");
         foreach (var kvp in screwSlotAvailableByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value} available slots", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
         
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
-        DebugLogger.LogSimple(message:$"remainingScrewByFaction:");
+        /*DebugLogger.LogSimple(message:$"remainingScrewByFaction:");
         foreach (var kvp in remainingScrewByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
         
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
-        DebugLogger.LogSimple(message:$"totalBlockObjectsByFaction:");
+        /*DebugLogger.LogSimple(message:$"totalBlockObjectsByFaction:");
         foreach (var kvp in totalBlockObjectsByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
-        DebugLogger.LogSimple(message:$"shuffledDifficultyLevelByFaction:");
+        /*DebugLogger.LogSimple(message:$"shuffledDifficultyLevelByFaction:");
         foreach (var kvp in shuffledDifficultyLevelByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
-        DebugLogger.LogSimple(message:$"factionSortedByDifficulty:");
+        /*DebugLogger.LogSimple(message:$"factionSortedByDifficulty:");
         foreach (var kvp in factionSortedByDifficulty)
         {
             DebugLogger.Log($"{kvp} ", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
         
         bool isFound = false;
 
