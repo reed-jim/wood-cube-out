@@ -17,7 +17,8 @@ namespace NamPhuThuy.UI
         [SerializeField] private LeanLocalizedTextMeshProUGUI descriptionLocalized;
         [SerializeField] private Button okButton;
 
-        [Header("Data")] [SerializeField] private LevelSpecialTutorialData levelSpecialTutorialData;
+        [Header("Data")] 
+        [SerializeField] private LevelSpecialTutorialData levelSpecialTutorialData;
 
         protected override void RegisterMoreEvent()
         {
@@ -43,39 +44,31 @@ namespace NamPhuThuy.UI
 
             videoPlayer.Stop();
         }
-
-
-
+        
         #region Private Methods
 
         private void SwitchBasedOnLevelMode()
         {
             LevelMode currentMode = GamePersistentVariable.currentTutLevelMode;
+            DebugLogger.LogSimple(message:$"mode: {currentMode}", context:this);
             
             if (levelSpecialTutorialData != null && levelSpecialTutorialData.TryGet(currentMode, out var record))
             {
-                if (record.hasTutorial)
+                // Set video clip
+                if (record.videoClip != null)
                 {
-                    // Set video clip
-                    if (record.videoClip != null)
-                    {
-                        videoPlayer.clip = record.videoClip;
-                    }
-
-                    // Set localized description
-                    if (!string.IsNullOrEmpty(record.descriptionKey))
-                    {
-                        descriptionLocalized.TranslationName = record.descriptionKey;
-                    }
+                    videoPlayer.clip = record.videoClip;
                 }
-                else
+
+                // Set localized description
+                if (!string.IsNullOrEmpty(record.description))
                 {
-                    Debug.LogWarning($"Tutorial record found for {currentMode} but hasTutorial is false.", this);
+                    descriptionLocalized.TranslationName = record.description;
                 }
             }
             else
             {
-                Debug.LogWarning($"No tutorial data found for LevelMode: {currentMode}.", this);
+                DebugLogger.LogSimple(message:$"No tutorial data found for LevelMode: {currentMode}.", context: this);
             }
         }
 

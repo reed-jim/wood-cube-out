@@ -924,19 +924,19 @@ public class ScrewManager : MonoBehaviour
 
     private void OnRustyScrewManagerInit(RustyScrewSpecialLevelManager obj)
     {
-        DebugLogger.LogSimple(message:$"{obj}");
+        // DebugLogger.LogSimple(message:$"{obj}");
         _rustyScrewSpecialLevelManager = obj;
     }
 
     private void OnLockScrewColorManagerInit(LockScrewColorLevelManager obj)
     {
-        DebugLogger.LogSimple(message:$"{obj}");
+        // DebugLogger.LogSimple(message:$"{obj}");
         _lockScrewColorLevelManager = obj;
     }
     
     private void OnLockScrewBoxInit(LockScrewBoxManager obj)
     {
-        DebugLogger.LogSimple(message:$"{obj}");
+        // DebugLogger.LogSimple(message:$"{obj}");
         _lockScrewBoxManager = obj;
     }
 
