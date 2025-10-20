@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using static GameEnum;
 
@@ -33,9 +34,13 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         for (int i = 0; i < totalPiece; i++)
         {
+            GameFaction avoidFaction = pieces[i].Faction;
+
             PieceProperty pieceProperty = pieces[i].PieceServiceLocator.pieceProperty;
 
             pieceProperty.PoolFactions = new GameFaction[numAdditionalFactionPerPiece];
+
+            Debug.Log($"SAFERIO {i} {avoidFaction}");
 
             for (int j = 0; j < numAdditionalFactionPerPiece; j++)
             {
@@ -43,7 +48,9 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
                 generatedPiece.gameObject.name = $"Generated Piece {i} {j}";
 
-                GameFaction faction = poolFaction[Random.Range(0, poolFaction.Count)];
+                GameFaction faction = poolFaction.First(item => item != avoidFaction);
+
+                avoidFaction = faction;
 
                 generatedPiece.Faction = faction;
                 generatedPiece.transform.localPosition = Vector3.zero;
@@ -57,6 +64,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 pieceProperty.PoolFactions[j] = faction;
 
                 generatedPiece.Lock();
+
+                Debug.Log($"SAFERIO {i} {j} {faction}");
             }
         }
     }
