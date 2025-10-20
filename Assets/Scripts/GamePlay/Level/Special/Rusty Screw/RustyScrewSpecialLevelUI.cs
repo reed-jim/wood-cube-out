@@ -1,8 +1,10 @@
 using NamPhuThuy;
+using NamPhuThuy.Common;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,28 +13,46 @@ using static GameEnum;
 public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 {
     [Header("UI")]
-    // [SerializeField] private Image rustyScrew;
-    // [SerializeField] private Image tempRustyScrew;
     [SerializeField] private RectTransform normalScrew;
-    [SerializeField] private Image rustyScrew;
+
+    [SerializeField] private Image normalImage;
+    [SerializeField] private Image rustyImage;
     [SerializeField] private Sprite[] rustyProgressSprites;
-    [SerializeField] private Image tempScrewFaction;
 
     [Header("Stats")]
     [SerializeField] private int prevRemaining = -1;
     private Tween _rustyProgressTween;
 
+    [Header("Anim")] 
+    [SerializeField] private SkeletonAnimation rustyLayerSpine;
+    private SkeletonAnimation RustyLayerSpine
+    {
+        get
+        {
+            if (rustyLayerSpine == null)
+                rustyLayerSpine = GetComponentInChildren<SkeletonAnimation>();
+            return rustyLayerSpine;
+        }
+    }
+    private string[] _rustyActionAnimNames = { "action4", "action3", "action2", "action" };
+    private string _rustyIdleAnimName = "idle"; 
+    
+    // Temp way
+    [SerializeField] private GameObject[] rustyLayers; 
+    
     #region Override Methods
 
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record)
     {
         base.Setup(levelMode);
+        ReActiveRustyLayer();
         DebugLogger.LogSimple(message:$"mode: {levelMode.ToString()}, record: {record}");
     }
 
     protected override void ReActive()
     {
         base.ReActive();
+        ReActiveRustyLayer();
         DebugLogger.LogSimple(message:$"");
         prevRemaining = -1;
     }
@@ -71,6 +91,28 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     }
 
     #endregion
+
+    #region Private Methods
+
+    private void ReActiveRustyLayer()
+    {
+        DebugLogger.LogSimple(message:$"");
+        foreach (GameObject layer in rustyLayers)
+        {
+            layer.gameObject.SetActive(true);
+        }
+    }
+
+    private void ClearRustyParts(int partNum)
+    {
+        DebugLogger.LogSimple(message:$"partNum: {partNum}");
+        for (int i = 1; i <= partNum; i++)
+        {
+             rustyLayers[i - 1].gameObject.SetActive(false);
+        }
+    }
+
+    #endregion
     
 
     private void UpdateRustyLevel(SpecialLevelTaskRecord record)
@@ -89,17 +131,11 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
             totalAmount += item.amount;
         }
 
-        tempScrewFaction.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
+        normalImage.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
 
-        if (!rustyScrew.gameObject.activeInHierarchy)
+        if (!rustyImage.gameObject.activeInHierarchy)
         {
-            rustyScrew.fillAmount = 1;
-            // rustyScrew.gameObject.SetActive(true);
-            // tempRustyScrew.gameObject.SetActive(false);
-
-            // rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
-
-            // Tween.Alpha(rustyScrew, 1, duration: 0.3f);
+            rustyImage.fillAmount = 1;
         }
 
         // Rusty
@@ -111,14 +147,23 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
             {
                 _rustyProgressTween.Stop();
             }
+            
+            // LockSkeAnim.AnimationState.SetAnimation(0, _lockActionAnimNames[setToUnlock], false);
+            // RustyLayerSpine.AnimationState.SetAnimation(0, _rustyActionAnimNames[(int)progress], false);
+            
+            
+            ClearRustyParts((int)MathHelper.Map(1f - progress, 0f, 1f, 0f, 4f));
 
-            _rustyProgressTween = Tween.Custom(rustyScrew.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
+
+            _rustyProgressTween = Tween.Custom(rustyImage.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
             {
-                rustyScrew.fillAmount = newVal;
+                rustyImage.fillAmount = newVal;
             });
         }
         else
         {
+            ClearRustyParts(4);
+            
             foreach (var text in conditionTexts)
             {
                 SaferioTween.ScaleDownWithPunch(text.transform);
@@ -128,16 +173,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
             SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
             SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
-
-
-
-            // tempRustyScrew.gameObject.SetActive(false);
-
-            // Tween.Alpha(rustyScrew, 0, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     rustyScrew.gameObject.SetActive(false);
-            // });
         }
 
         if (prevRemaining < 0)
