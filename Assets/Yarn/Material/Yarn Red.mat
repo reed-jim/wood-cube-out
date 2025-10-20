@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Yarn Red
-  m_Shader: {fileID: -6465566751694194690, guid: e89d28c191704894e99d7607d74deb05, type: 3}
+  m_Shader: {fileID: 4800000, guid: 59ef73fa76058884db686b492cd77c8f, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,6 +24,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _BaseMap:
+        m_Texture: {fileID: 2800000, guid: 62348ce1537f71f4390adb23697ca7e8, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DissolveMap:
         m_Texture: {fileID: 2800000, guid: bb078d5256c4aef4a810725839241faa, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -55,7 +59,9 @@ Material:
     - _DissolveHeight: 1
     - _DissolveStrength: 0.24
     - _GradientColorTwoMultiplier: 0
+    - _MaxY: 1
     - _Metallic: 0
+    - _MinY: 0
     - _NoiseStrength: 0
     - _NormalMapRotation: 0
     - _NormalStrength: 0
@@ -66,13 +72,18 @@ Material:
     - _WorldMaxY: 5
     - _WorldMinY: -5
     - _XRMotionVectorsPass: 1
+    - _ZTest: 4
+    - _ZWrite: 1
     m_Colors:
+    - _BaseColor: {r: 0.9607843, g: 0.24313726, b: 0.18039216, a: 1}
     - _Color: {r: 0.9607843, g: 0.24313726, b: 0.18039216, a: 1}
     - _DissolveEdgeColor: {r: 4, g: 0.9012944, b: 0, a: 1}
     - _MainTextureOffset: {r: 0, g: 0, b: 0, a: 0}
     - _MainTextureTiling: {r: 1, g: 1, b: 0, a: 0}
     - _NormalMapOffset: {r: 0, g: 0, b: 0, a: 0}
     - _NormalMapTiling: {r: 4, g: 4, b: 0, a: 0}
+    - _Offset: {r: 0, g: 0, b: 0, a: 0}
+    - _Tiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &5432524523536435302
