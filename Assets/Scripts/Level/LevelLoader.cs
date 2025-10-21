@@ -192,21 +192,6 @@ namespace NamPhuThuy.GamePlay
 
         string levelName = $"Level {nextLevel}";
 
-        // A/B TEST LEVEL 4
-        if (nextLevel == 4)
-        {
-            int level4Variant = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_4_VARIANT, 0);
-
-            if (level4Variant == 1)
-            {
-                levelName = $"Level {nextLevel} - Variant 1";
-            }
-            else if (level4Variant == 2)
-            {
-                levelName = $"Level {nextLevel} - Variant 2";
-            }
-        }
-
         // Memory Management
         Resources.UnloadUnusedAssets();
 

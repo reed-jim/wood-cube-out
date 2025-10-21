@@ -31,7 +31,7 @@ namespace NamPhuThuy.GamePlay
         
         protected override void AddScrewToList()
         {
-
+            
         }
 
         protected override bool IsValidToLoose()

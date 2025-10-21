@@ -22,8 +22,7 @@ namespace NamPhuThuy.GamePlay
             Loose(screwId, faction, screwBoxSlot, isCheckObstacles: true);
         }
 
-        public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot,
-            bool isCheckObstacles)
+        public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
         {
             if (screwId != this.screwId) return;
 

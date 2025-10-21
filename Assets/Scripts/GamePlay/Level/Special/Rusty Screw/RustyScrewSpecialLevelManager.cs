@@ -2,13 +2,27 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 using static GameEnum;
 
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
+    [Header("Resources")]
+    [Tooltip("Mesh: oc_low")]
+    [SerializeField] private Mesh normalScrewMesh;
+    
+    [Tooltip("screw_rusty_broken")]
+    [SerializeField] private Mesh rustyScrewMesh;
+
     private BaseScrew[] _rustyScrew;
+    
+    private struct OriginalPlacement
+    {
+        public Transform t;
+        public Vector3 localPos;
+    }
     
     /// <summary>
     /// Current faction that is locked by rusty screws, O(n) based on number of requiredComponents
@@ -95,6 +109,11 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         foreach (var item in _rustyScrew)
         {
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
+            
+            if (rustyScrewMesh != null)
+            {
+               ChangeMeshToRustyScrew(item);
+            }
         }
     }
 
@@ -126,6 +145,8 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         {
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Normal);
         }
+
+        ReapplyNormalMesh();
     }
 
     protected override void OnScrewLoosed(BaseScrew screw)
@@ -144,6 +165,44 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     {
         base.OnCompleteTaskStep();
         rustyBreakALayer?.Invoke();
+    }
+
+    #endregion
+
+    #region ScrewManipulation
+    
+    void ChangeMeshToRustyScrew(BaseScrew screw)
+    {
+        DebugLogger.LogSimple(message:$"change mesh");
+        if (screw == null || rustyScrewMesh == null) return;
+
+
+        var mf = screw.GetComponent<MeshFilter>();
+        if (mf != null)
+        {
+            mf.sharedMesh = rustyScrewMesh;
+        }
+
+    }
+
+    public void ReapplyNormalMesh()
+    {
+        DebugLogger.LogSimple(message:$"revert mesh");
+        if (normalScrewMesh == null) return;
+
+        foreach (var screw in _rustyScrew)
+        {
+            if (screw == null) continue;
+            
+            // Restore mesh on whichever renderer exists
+            var mf = screw.GetComponentInChildren<MeshFilter>(true);
+            if (mf != null) mf.sharedMesh = normalScrewMesh;
+            else
+            {
+                var smr = screw.GetComponentInChildren<SkinnedMeshRenderer>(true);
+                if (smr != null) smr.sharedMesh = normalScrewMesh;
+            }
+        }
     }
 
     #endregion
