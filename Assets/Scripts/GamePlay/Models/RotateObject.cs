@@ -15,10 +15,17 @@ public class RotateObject : MonoBehaviour
     private int _rotateLerpStep;
     private bool _isAutoRotating;
     private float _remainingTimeToAutoRotate;
+    
     public Transform cloneToCalculateRotation;
 
     private float _smoothRotateX;
     private float _smoothRotateY;
+    
+    [Header(("Flags"))]
+    [SerializeField] private bool enableKeyboardRotation = false;
+    
+    [Header("Stats")]
+    [SerializeField] private float keyboardRotateSpeed = 120f; 
 
     #region MonoBehaviour Callbacks
 
@@ -39,10 +46,61 @@ public class RotateObject : MonoBehaviour
         StartCoroutine(Rotating());
     }
     
+    void Update()
+    {
+        if (enableKeyboardRotation)
+            HandleKeyboardRotation();
+    }
+
+    
     void OnDestroy()
     {
         ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
         SwipeGesture.swipeGestureEvent -= Rotate;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void HandleKeyboardRotation()
+    {
+        float h = 0f;
+        float v = 0f;
+
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            h = -1f;
+            DisableAutoRotating();
+        }
+
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            h = 1f;
+            DisableAutoRotating();
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow))
+        {
+            v = 1f;
+            DisableAutoRotating();
+        }
+
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            v = -1f;
+            DisableAutoRotating();
+        }
+
+        if (h == 0f && v == 0f) return;
+
+        float delta = keyboardRotateSpeed * Time.deltaTime;
+
+        // Horizontal arrows rotate around world Y (yaw)
+        transform.Rotate(Vector3.up, h * delta, Space.World);
+
+        // Vertical arrows rotate around local X (pitch)
+        transform.Rotate(Vector3.right, v * delta, Space.World);
     }
 
     #endregion
