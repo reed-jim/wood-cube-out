@@ -6,6 +6,9 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 {
     [SerializeField] private Material[] materials;
 
+    [SerializeField] private Material noDepthWriteMaterial;
+    private Material _previousMaterial;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
     [SerializeField] private string secondaryColorReference;
@@ -13,6 +16,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     [SerializeField] private float secondaryColorMultiplier;
 
     #region PRIVATE FIELD
+    private PieceServiceLocator _pieceServiceLocator;
     [SerializeField] private Renderer _renderer;
     private MaterialPropertyBlock _propertyBlock;
     private Tween _currentAlphaTransition;
@@ -25,6 +29,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
     private void Awake()
     {
+        _pieceServiceLocator = GetComponent<PieceServiceLocator>();
         _renderer = GetComponent<Renderer>();
         _propertyBlock = new MaterialPropertyBlock();
 
@@ -101,14 +106,49 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
+    public void SetZTest(UnityEngine.Rendering.CompareFunction compareFunction)
+    {
+        // _propertyBlock.SetFloat("_ZTest", (int)compareFunction);
+
+        // _renderer.SetPropertyBlock(_propertyBlock);
+
+        // _renderer.material.SetFloat("_ZTest", (int)compareFunction);
+    }
+
+    public void SetZWrite(int isOn)
+    {
+        // _propertyBlock.SetFloat("_ZTest", (int)compareFunction);
+
+        // _renderer.SetPropertyBlock(_propertyBlock);
+
+        _renderer.material.SetInt("_ZWrite", isOn);
+    }
+
     #region HOLD
     public void HoldPiece()
     {
         _currentAlphaTransition.Complete();
 
-        _propertyBlock.SetInt("_ZWrite", 0);
+        // _propertyBlock.SetFloat("_ZWrite", 0);
 
-        _currentAlphaTransition = Tween.Custom(1, 0.3f, duration: 0.3f, onValueChange: newVal =>
+        // SetZWrite(0);
+
+        _previousMaterial = _renderer.material;
+        _renderer.material = noDepthWriteMaterial;
+
+        BasePiece[] childPieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(transform);
+
+        foreach (var item in childPieces)
+        {
+            if (item == _pieceServiceLocator.piece)
+            {
+                continue;
+            }
+
+            item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.Less);
+        }
+
+        _currentAlphaTransition = Tween.Custom(1, 0.4f, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 
@@ -120,9 +160,25 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     {
         _currentAlphaTransition.Complete();
 
-        _propertyBlock.SetInt("_ZWrite", 1);
+        // _propertyBlock.SetFloat("_ZWrite", 1);
 
-        _currentAlphaTransition = Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
+        // SetZWrite(1);
+
+        _renderer.material = _previousMaterial;
+
+        BasePiece[] childPieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(transform);
+
+        foreach (var item in childPieces)
+        {
+            if (item == _pieceServiceLocator.piece)
+            {
+                continue;
+            }
+
+            item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.LessEqual);
+        }
+
+        _currentAlphaTransition = Tween.Custom(0.4f, 1, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 

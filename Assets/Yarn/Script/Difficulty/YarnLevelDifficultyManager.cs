@@ -48,7 +48,16 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
                 generatedPiece.gameObject.name = $"Generated Piece {i} {j}";
 
-                GameFaction faction = poolFaction.First(item => item != avoidFaction);
+                GameFaction faction = GameFaction.Red;
+
+                if (poolFaction.Any(item => item != avoidFaction))
+                {
+                    faction = poolFaction.First(item => item != avoidFaction);
+                }
+                else
+                {
+                    faction = (GameFaction)Random.Range(0, 8);
+                }
 
                 avoidFaction = faction;
 

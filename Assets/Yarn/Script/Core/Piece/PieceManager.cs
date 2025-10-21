@@ -77,7 +77,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
-        DebugPopup.changeDifficultyEvent += ChangeDifficulty;
+        // DebugPopup.changeDifficultyEvent += ChangeDifficulty;
 
         _tweens = new List<Tween>();
 
@@ -103,7 +103,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
-        DebugPopup.changeDifficultyEvent -= ChangeDifficulty;
+        // DebugPopup.changeDifficultyEvent -= ChangeDifficulty;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -858,7 +858,7 @@ public class PieceManager : MonoBehaviour
     #region Test Difficulty 
     private void ChangeDifficulty(float difficulty)
     {
-        GamePersistentVariable.testDifficultyMultiplier = difficulty;
+        // GamePersistentVariable.testDifficultyMultiplier = difficulty;
 
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
     }
