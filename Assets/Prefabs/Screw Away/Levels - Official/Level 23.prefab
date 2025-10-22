@@ -4705,6 +4705,8 @@ MonoBehaviour:
   rotateSpeedMultiplier: 0.3
   isDisableAutoRotatingAtStart: 0
   cloneToCalculateRotation: {fileID: 0}
+  enableKeyboardRotation: 0
+  keyboardRotateSpeed: 120
 --- !u!114 &3402891332059734108
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4717,6 +4719,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c129a88c452b8714798c6d6342d15619, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isApply: 0
+  offset: {x: 0, y: 0, z: 0}
 --- !u!1 &6187980573790647807
 GameObject:
   m_ObjectHideFlags: 0
@@ -5163,7 +5167,7 @@ MonoBehaviour:
     merge: 1
     maxConvexHull: -1
     seed: 0
-  _colliderData: {fileID: 11400000, guid: 86890ede264facf418ef043251772a5e, type: 2}
+  _colliderData: {fileID: 0}
   _colliders:
   - {fileID: 2629209952752212520}
   - {fileID: 3691091064791690666}

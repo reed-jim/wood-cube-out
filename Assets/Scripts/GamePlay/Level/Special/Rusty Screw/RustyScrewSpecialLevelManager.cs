@@ -18,11 +18,8 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 
     private BaseScrew[] _rustyScrew;
     
-    private struct OriginalPlacement
-    {
-        public Transform t;
-        public Vector3 localPos;
-    }
+    [Header("Flags")]
+    [SerializeField] private bool useCustomRustyScrewMesh = true;
     
     /// <summary>
     /// Current faction that is locked by rusty screws, O(n) based on number of requiredComponents
@@ -173,34 +170,48 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     
     void ChangeMeshToRustyScrew(BaseScrew screw)
     {
-        DebugLogger.LogSimple(message:$"change mesh");
+        
         if (screw == null || rustyScrewMesh == null) return;
+        if (!useCustomRustyScrewMesh) return;
 
 
-        var mf = screw.GetComponent<MeshFilter>();
-        if (mf != null)
+        try
         {
-            mf.sharedMesh = rustyScrewMesh;
+            var mf = screw.GetComponent<MeshFilter>();
+            if (mf != null)
+            {
+                DebugLogger.LogSimple(message:$"change to rusty mesh");
+                mf.sharedMesh = rustyScrewMesh;
+            }
+        }
+        catch (Exception e)
+        {
+            DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red);
         }
 
     }
 
     public void ReapplyNormalMesh()
     {
-        DebugLogger.LogSimple(message:$"revert mesh");
+        
         if (normalScrewMesh == null) return;
+        if (!useCustomRustyScrewMesh) return;
 
         foreach (var screw in _rustyScrew)
         {
-            if (screw == null) continue;
-            
-            // Restore mesh on whichever renderer exists
-            var mf = screw.GetComponentInChildren<MeshFilter>(true);
-            if (mf != null) mf.sharedMesh = normalScrewMesh;
-            else
+            try
             {
-                var smr = screw.GetComponentInChildren<SkinnedMeshRenderer>(true);
-                if (smr != null) smr.sharedMesh = normalScrewMesh;
+                if (screw == null) continue;
+
+                DebugLogger.LogSimple(message:$"revert mesh");
+                
+                // Restore mesh on whichever renderer exists
+                var mf = screw.GetComponentInChildren<MeshFilter>(true);
+                if (mf != null) mf.sharedMesh = normalScrewMesh;
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red);
             }
         }
     }
