@@ -1,3 +1,4 @@
+using System.Collections;
 using NamPhuThuy;
 using NamPhuThuy.Common;
 using NamPhuThuy.GamePlay;
@@ -5,10 +6,8 @@ using NamPhuThuy.VFX;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static GameEnum;
 
 public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 {
@@ -16,7 +15,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     [SerializeField] private RectTransform normalScrew;
 
     [SerializeField] private Image normalImage;
-    [SerializeField] private Image rustyImage;
     [SerializeField] private Sprite[] rustyProgressSprites;
 
     [Header("Stats")]
@@ -24,21 +22,35 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     private Tween _rustyProgressTween;
 
     [Header("Anim")] 
-    [SerializeField] private SkeletonAnimation rustyLayerSpine;
-    private SkeletonAnimation RustyLayerSpine
+    [SerializeField] private SkeletonGraphic rustyLayerSkeGraphics;
+    private SkeletonGraphic RustyLayerSkeGraphics
     {
         get
         {
-            if (rustyLayerSpine == null)
-                rustyLayerSpine = GetComponentInChildren<SkeletonAnimation>();
-            return rustyLayerSpine;
+            if (rustyLayerSkeGraphics == null)
+                rustyLayerSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return rustyLayerSkeGraphics;
         }
     }
-    private string[] _rustyActionAnimNames = { "action4", "action3", "action2", "action" };
-    private string _rustyIdleAnimName = "idle"; 
+    private string[] _rustyActionAnimNames = { "action4", "action3", "action2", "action1" };
+    private string _rustyIdleAnimName = "begin";
+    private string _rustyReActiveAnimName = "re-action";
+
+    [SerializeField] private SkeletonGraphic chainSkeGraphics;
+    private SkeletonGraphic ChainSkeGraphics
+    {
+        get
+        {
+            if (chainSkeGraphics == null)
+                chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return chainSkeGraphics;
+        }
+    }
     
-    // Temp way
-    [SerializeField] private GameObject[] rustyLayers; 
+    private string _chainIdleAnim = "begin";
+    private string _chainActionAnim = "action";
+    private string _chainReActiveAnim = "re-action";
+    
     
     #region Override Methods
 
@@ -46,6 +58,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     {
         base.Setup(levelMode);
         ReActiveRustyLayer();
+        ReActiveChain();
         DebugLogger.LogSimple(message:$"mode: {levelMode.ToString()}, record: {record}");
     }
 
@@ -53,6 +66,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     {
         base.ReActive();
         ReActiveRustyLayer();
+        ReActiveChain();
         DebugLogger.LogSimple(message:$"");
         prevRemaining = -1;
     }
@@ -97,23 +111,81 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     private void ReActiveRustyLayer()
     {
         DebugLogger.LogSimple(message:$"");
-        foreach (GameObject layer in rustyLayers)
-        {
-            layer.gameObject.SetActive(true);
-        }
+        
+        var ske = RustyLayerSkeGraphics;
+        if (ske == null) return;
+
+        var state = ske.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+
+        state.SetAnimation(0, _rustyReActiveAnimName, false);
+        state.AddAnimation(0, _rustyIdleAnimName, true, 0f);
     }
 
     private void ClearRustyParts(int partNum)
     {
         DebugLogger.LogSimple(message:$"partNum: {partNum}");
-        for (int i = 1; i <= partNum; i++)
+        
+        var ske = RustyLayerSkeGraphics;
+        if (ske == null) return;
+
+        var state = ske.AnimationState;
+        if (state == null) return;
+
+        // Clamp to available action steps (e.g., 0..4)
+        int steps = _rustyActionAnimNames?.Length ?? 0;
+        int cleared = Mathf.Clamp(partNum, 0, steps);
+
+        DebugLogger.LogSimple(message: $"rusty cleared parts: {cleared}/{steps}");
+        state.ClearTrack(0);
+
+        if (cleared <= 0 || steps == 0)
         {
-             rustyLayers[i - 1].gameObject.SetActive(false);
+            state.SetAnimation(0, _rustyIdleAnimName, true);
+            return;
         }
+
+        // Map: 1 -> "action1", 4 -> "action4" (array is ["action4","action3","action2","action1"])
+        string actionName = _rustyActionAnimNames[steps - cleared];
+
+        var entry = state.SetAnimation(0, actionName, false);
+    }
+    
+    private void ReActiveChain()
+    {
+        if (ChainSkeGraphics == null) return;
+
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+    }
+
+    private IEnumerator BreakChainAnim()
+    {
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) yield break;
+
+        state.ClearTracks();
+
+        bool isAnimating = true;
+        state.SetAnimation(0, _chainActionAnim, false);
+
+        yield return null;
     }
 
     #endregion
-    
 
     private void UpdateRustyLevel(SpecialLevelTaskRecord record)
     {
@@ -133,11 +205,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
         normalImage.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
 
-        if (!rustyImage.gameObject.activeInHierarchy)
-        {
-            rustyImage.fillAmount = 1;
-        }
-
         // Rusty
         if (totalRemainingAmount > 0)
         {
@@ -148,31 +215,12 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 _rustyProgressTween.Stop();
             }
             
-            // LockSkeAnim.AnimationState.SetAnimation(0, _lockActionAnimNames[setToUnlock], false);
-            // RustyLayerSpine.AnimationState.SetAnimation(0, _rustyActionAnimNames[(int)progress], false);
-            
-            
             ClearRustyParts((int)MathHelper.Map(1f - progress, 0f, 1f, 0f, 4f));
-
-
-            _rustyProgressTween = Tween.Custom(rustyImage.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
-            {
-                rustyImage.fillAmount = newVal;
-            });
         }
         else
         {
             ClearRustyParts(4);
-            
-            foreach (var text in conditionTexts)
-            {
-                SaferioTween.ScaleDownWithPunch(text.transform);
-            }
-
-            SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
-
-            SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
-            SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
+            StartCoroutine(DeadActiveMechanic());
         }
 
         if (prevRemaining < 0)
@@ -192,8 +240,21 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 distance: 20f,
                 color: Color.green);
         }
-        
 
         prevRemaining = totalRemainingAmount;
+    }
+
+    private IEnumerator DeadActiveMechanic()
+    {
+        yield return StartCoroutine(BreakChainAnim());
+        
+        foreach (var text in conditionTexts)
+        {
+            SaferioTween.ScaleDownWithPunch(text.transform);
+        }
+
+        SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+
+        SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
     }
 }

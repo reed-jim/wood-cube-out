@@ -1,7 +1,9 @@
+using System.Collections;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +15,23 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     [Header("Stats")]
     [SerializeField] private int prevRemaining = -1;
 
+    [Header("SpineAnim")]
+    [SerializeField] private SkeletonGraphic chainSkeGraphics;
+    private SkeletonGraphic ChainSkeGraphics
+    {
+        get
+        {
+            if (chainSkeGraphics == null)
+                chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return chainSkeGraphics;
+        }
+    }
+    
+    private string _chainIdleAnim = "begin";
+    private string _chainActionAnim = "action";
+    private string _chainReActiveAnim = "re-action";
+
+    
     #region Override Methods
 
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
@@ -94,7 +113,6 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
             SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
 
-            SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
             SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
         }
         
@@ -119,4 +137,41 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
         prevRemaining = totalRemainingAmount;
     }
+
+    #region SpineAnim Methods
+
+   
+    private void ReActiveChain()
+    {
+        if (ChainSkeGraphics == null) return;
+
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+    }
+    
+    private IEnumerator BreakChainAnim()
+    {
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) yield break;
+
+        state.ClearTracks();
+
+        bool isAnimating = true;
+        state.SetAnimation(0, _chainActionAnim, false);
+
+        yield return null;
+    }
+
+    #endregion
 }
