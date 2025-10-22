@@ -37,11 +37,13 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
     {
         base.Setup(levelMode, record);
+        ReActiveChain();
     }
 
     protected override void ReActive()
     {
         base.ReActive();
+        ReActiveChain();
         DebugLogger.LogSimple();
         prevRemaining = -1;
     }
@@ -83,6 +85,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
     private void UpdateProgress(SpecialLevelTaskRecord record)
     {
+        DebugLogger.LogSimple();
         int totalRemainingAmount = 0;
         int totalAmount = 0;
 
@@ -106,6 +109,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
         if (totalRemainingAmount <= 0)
         {
+            StartCoroutine(BreakChainAnim());
             foreach (var text in conditionTexts)
             {
                 SaferioTween.ScaleDownWithPunch(text.transform);
