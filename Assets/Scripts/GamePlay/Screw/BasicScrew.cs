@@ -25,15 +25,11 @@ namespace NamPhuThuy.GamePlay
         public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
         {
             if (screwId != this.screwId) return;
-
             if (!_isInteractable) return;
-            else
-            {
-                _isInteractable = false;
-            }
-
             if (_isDone) return;
             if (_isMoving) return;
+            
+            _isInteractable = false;
 
             if (isCheckObstacles && !IsOutsideWithNoScrewBox)
             {
@@ -63,7 +59,6 @@ namespace NamPhuThuy.GamePlay
             if (_numberBlockingObjects > 0)
             {
                 FakeScrew fakeScrew = SpawnFakeScrew();
-
                 GetComponent<MeshRenderer>().enabled = false;
 
                 fakeScrew.IsRotating = true;

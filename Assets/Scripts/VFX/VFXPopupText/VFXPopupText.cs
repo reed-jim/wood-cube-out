@@ -213,14 +213,7 @@ namespace NamPhuThuy.VFX
         // GUI HUD
         public const string CANT_CLICK = "Can't click";
 
-        // GALLERY
-        public const string OUT_OF_PICTURES = "Out of pictures";
-        public const string NOTHING_TO_SHOW = "Nothing to show";
-
-        public const string NO_PICTURE = "No picture";
-        public const string ALREADY_CLICKED_PLAY = "Already clicked play";
-        public const string PLEASE_RATE_FIRST = "Please rate first";
-        public const string YOURE_TAPPING_TOO_FAST = "You're tapping too fast";
+        public const string NO_MORE_CHALLENGES = "No more challenges";
 
         public static readonly string[] TileClearedMessages = {
             "Amazing",

@@ -1,4 +1,5 @@
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -72,7 +73,13 @@ public class BaseSpecialLevelUI : MonoBehaviour
 
     protected virtual void UpdateUI(LevelMode levelMode, SpecialLevelUIState state, object[] parameters)
     {
-
+        switch (state)
+        {
+            case SpecialLevelUIState.Hide:
+                
+                
+                break;
+        }
     }
 
     protected virtual void UpdateTimeCount(int remaningTime)

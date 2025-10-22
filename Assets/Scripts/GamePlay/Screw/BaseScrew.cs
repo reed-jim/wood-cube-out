@@ -307,9 +307,6 @@ namespace NamPhuThuy.GamePlay
 
             Vector3 screwSize = TransformUtil.ComponentWiseMultiply(transform.lossyScale, meshFilter.mesh.bounds.size);
 
-            // // FOR ROTATING
-            // await Task.Delay(100);
-
             // LOOSE FX
             if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
             {
@@ -378,28 +375,36 @@ namespace NamPhuThuy.GamePlay
                     _tweens.Add(Tween.LocalPosition(transform, preFinalLocalPosition, duration: durationMultiplier * durationMoveToScrewPort, ease: Ease.InOutSine)
                     .OnComplete(() =>
                     {
-                        transform.localPosition = transform.localPosition.ChangeZ(-1.6f);
-                        // transform.localPosition = new Vector3(0, 0.4f, -1.6f);
-
-                        _tweens.Add(Tween.Delay(duration: 0)
-                        .OnComplete(() =>
                         {
-                            // _isRotating = false;
-                            // rotateSpeed *= 2;
-
-                            if (!GamePersistentVariable.isSoundTightenScrewPlaying && !_isInScrewPort && !_isOutsideWithNoScrewBox)
+                            transform.localPosition = transform.localPosition.ChangeZ(-1.6f);
+                            
+                            bool canPlayTightenSound = !GamePersistentVariable.isSoundTightenScrewPlaying
+                                                       && !_isInScrewPort
+                                                       && !_isOutsideWithNoScrewBox;
+                            
+                            if (canPlayTightenSound)
                             {
                                 SoundManager.Instance.PlaySoundTightenScrew();
-
                                 GamePersistentVariable.isSoundTightenScrewPlaying = true;
                             }
 
+                            Vector3 targetRotation = _localRotationOnScrewSlot - new Vector3(0f, 0f, 180f);
+                            float tightenHalfDuration = durationTightenScrewPort / 2f;
+                            
                             _tweens.Add(Tween.LocalRotation(
-                                transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
-                                duration: durationTightenScrewPort / 2, ease: Ease.Linear
+                                transform, 
+                                targetRotation, 
+                                cycles: 2, 
+                                cycleMode: CycleMode.Incremental,
+                                duration: tightenHalfDuration, 
+                                ease: Ease.Linear
                             ));
 
-                            _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.InOutSine)
+                            _tweens.Add(Tween.LocalPosition(
+                                    transform, 
+                                    finalLocalPosition, 
+                                    duration: durationTightenScrewPort, 
+                                    ease: Ease.InOutSine)
                                 .OnComplete(() =>
                                 {
                                     screwBoxSlot.CompleteFill();

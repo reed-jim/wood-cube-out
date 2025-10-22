@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using UnityEngine;
 using static GameEnum;
 
@@ -79,9 +80,12 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
             if (validScrews.Length < 0.3f * _screws.Length)
             {
                 UpdateUI(SpecialLevelUIState.Hide);
+                VFXManager.Ins.PlayAt(VFXType.POPUP_TEXT, 
+                    message:VFXPopupTextMessage.NO_MORE_CHALLENGES,
+                    initialParent: VFXManager.Ins.transform);
 
                 _isDoneCompletely = true;
-
+                
                 return;
             }
         }

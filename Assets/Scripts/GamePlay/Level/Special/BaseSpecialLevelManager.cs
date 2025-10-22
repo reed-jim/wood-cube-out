@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using NamPhuThuy.VFX;
 using Unity.VisualScripting;
 using UnityEngine;
 using static GameEnum;
@@ -105,6 +106,9 @@ namespace NamPhuThuy.GamePlay
             void HideSpecialTask()
             {
                 UpdateUI(SpecialLevelUIState.Hide);
+                VFXManager.Ins.PlayAt(VFXType.POPUP_TEXT, 
+                    message:VFXPopupTextMessage.NO_MORE_CHALLENGES,
+                    initialParent: VFXManager.Ins.transform);
                 _isDoneCompletely = true;
             }
         }

@@ -48,34 +48,35 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         prevRemaining = -1;
     }
 
-    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
+    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState state, object[] parameters)
     {
+        base.UpdateUI(levelMode, state, parameters);
         if (levelMode != this.levelMode)
         {
             return;
         }
 
-        if (action == SpecialLevelUIState.Setup)
+        if (state == SpecialLevelUIState.Setup)
         {
             Setup((LevelMode)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.Showing)
+        else if (state == SpecialLevelUIState.Showing)
         {
             ShowUI();
         }
-        else if (action == SpecialLevelUIState.ReActive)
+        else if (state == SpecialLevelUIState.ReActive)
         {
             ReActive();
         }
-        else if (action == SpecialLevelUIState.UpdateProgress)
+        else if (state == SpecialLevelUIState.UpdateProgress)
         {
             UpdateProgress((SpecialLevelTaskRecord)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.UpdateTimeCount)
+        else if (state == SpecialLevelUIState.UpdateTimeCount)
         {
             UpdateTimeCount((int)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.Hide)
+        else if (state == SpecialLevelUIState.Hide)
         {
             HideUI();
         }
