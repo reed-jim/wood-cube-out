@@ -144,13 +144,13 @@ public class Yarn2D : MonoBehaviour
         {
             piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
         }
-        
+
         spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
     }
 
     private void PlayRewindAnimation()
     {
-        Tween.Custom(1, 0, duration: 0.6f, onValueChange: newVal =>
+        Tween.Custom(1, 0, duration: 1f, onValueChange: newVal =>
         {
             dissolveHeight = newVal;
 
@@ -227,34 +227,36 @@ public class Yarn2D : MonoBehaviour
             RopeSegment lastNode = segments[segmentCount - 1];
 
             firstNode.posNow = _firstNodeLocalPosition;
-            lastNode.posNow.y = (-0.5f + dissolveHeight) * modelSize.y;
+            //lastNode.posNow.y = 0.8f * (-0.5f + dissolveHeight) * modelSize.y;
 
-            if (step % 2 == 0)
-            {
-                if (lastNode.posNow.x < 0.3f * modelSize.x)
-                {
-                    lastNode.posNow += new Vector2(velocity.x, 0);
-                }
-                else
-                {
-                    // lastNode.posNow += new Vector2(0, velocity.y);
+            // if (step % 2 == 0)
+            // {
+            //     if (lastNode.posNow.x < xMultiplier * 0.5f * modelSize.x)
+            //     {
+            //         lastNode.posNow += new Vector3(velocity.x, 0, velocity.x);
+            //     }
+            //     else
+            //     {
+            //         // lastNode.posNow += new Vector2(0, velocity.y);
 
-                    step++;
-                }
-            }
-            else
-            {
-                if (lastNode.posNow.x > -0.3f * modelSize.x)
-                {
-                    lastNode.posNow -= new Vector2(velocity.x, 0);
-                }
-                else
-                {
-                    // lastNode.posNow += new Vector2(0, velocity.y);
+            //         step++;
+            //     }
+            // }
+            // else
+            // {
+            //     if (lastNode.posNow.x > -xMultiplier * 0.5f * modelSize.x)
+            //     {
+            //         lastNode.posNow -= new Vector3(velocity.x, 0, velocity.x);
+            //     }
+            //     else
+            //     {
+            //         // lastNode.posNow += new Vector2(0, velocity.y);
 
-                    step++;
-                }
-            }
+            //         step++;
+            //     }
+            // }
+
+            lastNode.posNow = GetSpiralPosition(dissolveHeight, 0.5f * modelSize.y, 4, 0.3f * modelSize.x);
 
             segments[segmentCount - 1] = lastNode;
 
@@ -284,6 +286,44 @@ public class Yarn2D : MonoBehaviour
 
         // lerpDelta *= 1.01f;
         // lerpDelta = Mathf.Min(lerpDelta, 1);
+    }
+
+    public Vector3 GetSpiralPositionFromY(
+        Vector3 currentPosition,
+        float radius,
+        float rotationSpeed,
+        float startHeight,
+        float endHeight
+    )
+    {
+        // Normalize Y to a 0–1 range
+        float t = Mathf.InverseLerp(startHeight, endHeight, currentPosition.y);
+
+        // Convert t to angle in radians using rotationSpeed
+        float angleDegrees = t * rotationSpeed;
+        float angleRadians = angleDegrees * Mathf.Deg2Rad;
+
+        // Calculate spiral X and Z
+        float x = Mathf.Cos(angleRadians) * radius;
+        float z = Mathf.Sin(angleRadians) * radius;
+
+        return new Vector3(0, currentPosition.y, 0);
+    }
+
+    Vector3 GetSpiralPosition(float yRatio, float spiralHeight, float turns, float radius)
+    {
+        float y = (yRatio - 0.5f) * spiralHeight;
+
+        // Total angle based on number of turns (in radians)
+        float angle = yRatio * turns * 2 * Mathf.PI;
+
+        float x = Mathf.Cos(angle) * radius;
+        float z = Mathf.Sin(angle) * radius;
+
+        // Position relative to parent
+        Vector3 localPos = new Vector3(x, y, z);
+
+        return localPos;
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)
@@ -356,7 +396,7 @@ public class Yarn2D : MonoBehaviour
 
     private class RopeSegment
     {
-        public Vector2 posNow;
+        public Vector3 posNow;
         public Vector2 posOld;
 
         public RopeSegment(Vector2 pos)
