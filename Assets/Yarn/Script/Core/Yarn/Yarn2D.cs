@@ -258,7 +258,7 @@ public class Yarn2D : MonoBehaviour
             //     }
             // }
 
-            lastNode.posNow = GetSpiralPosition(dissolveHeight, 0.5f * modelSize.y, 4, 0.3f * modelSize.x);
+            lastNode.posNow = GetSpiralPosition(dissolveHeight, 0.5f * modelSize.y, 4, 0.4f * modelSize.x);
 
             segments[segmentCount - 1] = lastNode;
 
@@ -288,28 +288,6 @@ public class Yarn2D : MonoBehaviour
 
         // lerpDelta *= 1.01f;
         // lerpDelta = Mathf.Min(lerpDelta, 1);
-    }
-
-    public Vector3 GetSpiralPositionFromY(
-        Vector3 currentPosition,
-        float radius,
-        float rotationSpeed,
-        float startHeight,
-        float endHeight
-    )
-    {
-        // Normalize Y to a 0–1 range
-        float t = Mathf.InverseLerp(startHeight, endHeight, currentPosition.y);
-
-        // Convert t to angle in radians using rotationSpeed
-        float angleDegrees = t * rotationSpeed;
-        float angleRadians = angleDegrees * Mathf.Deg2Rad;
-
-        // Calculate spiral X and Z
-        float x = Mathf.Cos(angleRadians) * radius;
-        float z = Mathf.Sin(angleRadians) * radius;
-
-        return new Vector3(0, currentPosition.y, 0);
     }
 
     Vector3 GetSpiralPosition(float yRatio, float spiralHeight, float turns, float radius)
@@ -348,7 +326,7 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-1f);
 
         Vector3 start = _firstNodeLocalPosition;
         Vector3 end = segments[segmentCount - 1].posNow;
@@ -360,12 +338,15 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
-        for (int i = 1; i < segmentCount; i++)
+        for (int i = 1; i < segmentCount - 1; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
             float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * amplitude;
 
             Vector3 pointOnLine = start + right * (length * t);
+
+            // pointOnLine.z = end.z + i * 0.02f;
+
             positions[i] = pointOnLine + up * sine;
 
             segments[i].posNow = positions[i];
@@ -389,9 +370,13 @@ public class Yarn2D : MonoBehaviour
             {
                 lineRenderer.SetPosition(i, _firstNodeLocalPosition);
             }
+            // else if (i < segmentCount - 1)
+            // {
+            //     lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodeLocalPosition.z));
+            // }
             else
             {
-                lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodeLocalPosition.z));
+                lineRenderer.SetPosition(i, (Vector3)segments[i].posNow);
             }
         }
     }

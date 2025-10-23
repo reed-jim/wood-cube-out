@@ -3,6 +3,8 @@ using static GameEnum;
 
 public class SpoolBoxMaterialPropertyBlock : MonoBehaviour
 {
+    [SerializeField] private Renderer spoolBoxLidRenderer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
 
@@ -38,6 +40,7 @@ public class SpoolBoxMaterialPropertyBlock : MonoBehaviour
         _propertyBlock.SetColor(colorReference, pieceMaterialContainer.GetColor(faction));
 
         _renderer.SetPropertyBlock(_propertyBlock);
+        spoolBoxLidRenderer.SetPropertyBlock(_propertyBlock);
     }
 
     // public void SetColor(Color color)
