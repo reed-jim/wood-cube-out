@@ -3,6 +3,7 @@ using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Video;
@@ -15,6 +16,7 @@ namespace NamPhuThuy.UI
         private VideoPlayer videoPlayer;
 
         [SerializeField] private LeanLocalizedTextMeshProUGUI descriptionLocalized;
+        [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button okButton;
 
         [Header("Data")] 
@@ -68,6 +70,11 @@ namespace NamPhuThuy.UI
                 if (!string.IsNullOrEmpty(record.description))
                 {
                     descriptionLocalized.TranslationName = record.description;
+                }
+                
+                if (record.description != null)
+                {
+                    descriptionText.text = record.description;
                 }
             }
             else

@@ -1,3 +1,4 @@
+using System;
 using CandyCoded.HapticFeedback;
 using PrimeTween;
 using UnityEngine;
@@ -36,9 +37,17 @@ namespace NamPhuThuy.GamePlay
                 if (!GamePersistentVariable.isAutoTestingLevel)
                 {
                     // avoid loose screw that is covering by other objects
-                    bool isNotVisible = Physics.Raycast(
-                        transform.position + 0.5f * _renderer.bounds.size.z * transform.forward,
-                        _mainCamera.transform.position - transform.position, 5);
+                    bool isNotVisible = true;
+                    try
+                    {
+                        isNotVisible = Physics.Raycast(
+                            transform.position + 0.5f * _renderer.bounds.size.z * transform.forward,
+                            _mainCamera.transform.position - transform.position, 5);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugLogger.LogSimple(message:$"Error: {e}", context:this);
+                    }
 
                     if (isNotVisible)
                     {

@@ -181,32 +181,7 @@ namespace NamPhuThuy.Data
         private void DrawLevelDistributionGUI(LevelDataContainer container)
         {
             serializedObject.Update();
-
-            // Draw default inspector for other fields
-            DrawPropertiesExcluding(serializedObject, "randomizeRangeStart", "randomizeRangeEnd", "randomizeOptions");
-
-            EditorGUILayout.Space();
-            EditorGUILayout.LabelField("LevelMode Randomizer (Editor only)", EditorStyles.boldLabel);
-
-            EditorGUILayout.PropertyField(randomizeRangeStartProp);
-            EditorGUILayout.PropertyField(randomizeRangeEndProp);
-
-            // clamp inputs to valid indexes if possible
-            int maxIndex = Mathf.Max(0, (levelsDataProp.arraySize - 1));
-            if (levelsDataProp.arraySize == 0)
-            {
-                EditorGUILayout.HelpBox("No levels in LevelsData array.", MessageType.Info);
-            }
-            else
-            {
-                randomizeRangeStartProp.intValue = Mathf.Clamp(randomizeRangeStartProp.intValue, 0, maxIndex);
-                randomizeRangeEndProp.intValue = Mathf.Clamp(randomizeRangeEndProp.intValue, 0, maxIndex);
-            }
-
-            EditorGUILayout.PropertyField(randomizeOptionsProp, true);
-
-            EditorGUILayout.Space();
-
+            
             using (new EditorGUI.DisabledScope(randomizeOptionsProp.arraySize == 0 || levelsDataProp.arraySize == 0))
             {
                 if (GUILayout.Button("Randomize LevelModes In Range"))

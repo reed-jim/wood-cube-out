@@ -30,6 +30,9 @@ namespace NamPhuThuy.GamePlay
     [Header("Textured Material Level")]
     [SerializeField] private Material texturedMaterial;
 
+    [Header("Stats")] 
+    [SerializeField] private float tutorialDelay = 0.2f;
+
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
@@ -180,6 +183,8 @@ namespace NamPhuThuy.GamePlay
         //     return;
         // }
         // // NOT LOOP
+
+        nextLevel = LevelIdModified(nextLevel);
 
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
@@ -359,6 +364,8 @@ namespace NamPhuThuy.GamePlay
         }
     }
 
+    
+
     private async void GoLevel(int level)
     {
         endCurrentLevelEvent?.Invoke();
@@ -403,6 +410,38 @@ namespace NamPhuThuy.GamePlay
 
         GoLevel(currentLevel.Value);
     }
+    #endregion
+
+    #region SPECIAL LEVELS
+
+    private int LevelIdModified(int nextLevel)
+    {
+        int res = nextLevel;
+
+        if (!GamePersistentVariable.specialLevelConfig.isEnable) return res;
+        if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+        
+        LevelMode mode = levelDataContainer.LevelsData[nextLevel - 1].levelMode;
+        if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
+        {
+            var normalIds = new List<int>();
+            for (int i = 10; i < levelDataContainer.LevelsData.Length; i++)
+            {
+                if (levelDataContainer.LevelsData[i].levelMode == LevelMode.Normal)
+                {
+                    normalIds.Add(i + 1);
+                }
+            }
+
+            if (normalIds.Count > 0)
+            {
+                res = normalIds[UnityEngine.Random.Range(0, normalIds.Count)];
+            }
+        }
+
+        return res;
+    }
+
     #endregion
 
     #region ASSIGN SCREW FACTION
@@ -1013,7 +1052,7 @@ namespace NamPhuThuy.GamePlay
         DebugLogger.LogSimple(context:this);
         CommonUtil.StopAllTweens(_tweens);
         
-        _tweens.Add(Tween.Delay(1).OnComplete(() =>
+        _tweens.Add(Tween.Delay(.3f).OnComplete(() =>
         {
             switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
         }));
