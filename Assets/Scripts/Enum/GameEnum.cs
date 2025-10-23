@@ -71,15 +71,20 @@ public class GameEnum : MonoBehaviour
 
     public enum GameFaction
     {
-        Red,
         Blue,
-        Green,
-        Purple,
-        Orange,
-        Yellow,
+        Brown,
         Cyan,
+        DarkBrown,
+        Green,
+        LightBrown,
+        LightCyan,
+        LightGreen,
+        LightRed,
+        Orange,
+        Purple,
+        Red,
         White,
-        All,
+        Yellow,
         None
     }
 

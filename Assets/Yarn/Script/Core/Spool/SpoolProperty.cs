@@ -30,13 +30,10 @@ public class SpoolBoxProperty : MonoBehaviour
     {
         this.faction = faction;
 
-        boxSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxSprite;
-        boxLidSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxLidSprite;
+        // boxSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxSprite;
+        // boxLidSpriteRenderer.sprite = screwBoxFactionsData[(int)faction].BoxLidSprite;
 
-        // screwBoxImage.sprite = screwBoxFactionsData[(int)faction].BoxSprite;
-        // screwBoxLidImage.sprite = screwBoxFactionsData[(int)faction].BoxLidSprite;
-
-        // screwBoxServiceLocator.screwBoxMaterialPropertyBlock.SetColor(FactionUtility.GetColorForFaction(faction));
+        spoolBoxServiceLocator.spoolBoxMaterialPropertyBlock.SetColor(faction);
     }
 }
 

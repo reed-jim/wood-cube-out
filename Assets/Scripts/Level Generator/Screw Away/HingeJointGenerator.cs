@@ -3760,12 +3760,22 @@ public class HingeJointGenerator : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
-        BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
-
-        for (int i = 0; i < pieces.Length; i++)
+        for (int i = 0; i < level.childCount; i++)
         {
-            pieces[i].GetComponent<PieceServiceLocator>().AssignComponents();
+            Transform piece = level.GetChild(i);
+
+            piece.AddComponent<BasePiece>();
+            piece.AddComponent<PieceProperty>();
+            piece.AddComponent<PieceMaterialPropertyBlock>();
+            piece.AddComponent<PieceServiceLocator>().AssignComponents();
         }
+
+        // BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
+
+        // for (int i = 0; i < pieces.Length; i++)
+        // {
+        //     pieces[i].GetComponent<PieceServiceLocator>().AssignComponents();
+        // }
 
         EditorUtility.SetDirty(level);
     }

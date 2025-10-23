@@ -145,9 +145,7 @@ public static class GameConstants
     public static int NUMBER_SLOT_PER_SCREW_BOX = 3;
     public static int DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 2;
     public static int DEFAULT_NUMBER_SCREW_PORT = 5;
-    public static GameFaction[] SCREW_FACTION = new GameFaction[8]
-        {   GameFaction.Red, GameFaction.Green, GameFaction.Orange, GameFaction.Purple,
-            GameFaction.Blue, GameFaction.Yellow, GameFaction.Cyan,GameFaction.White };
+    public static GameFaction[] SCREW_FACTION = (GameFaction[])System.Enum.GetValues(typeof(GameFaction));
     #endregion
 
     #region BOOSTER

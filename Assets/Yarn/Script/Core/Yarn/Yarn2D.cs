@@ -33,7 +33,9 @@ public class Yarn2D : MonoBehaviour
 
     [Header("Yarn Spool")]
     [SerializeField] private SpoolBoxSlot spoolBoxSlot;
-    // private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
+
+    [Header("SO")]
+    [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
 
     #region PRIVATE
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
@@ -66,7 +68,7 @@ public class Yarn2D : MonoBehaviour
 
         // InitSpool(spool);
         spoolBoxSlot = spool;
-        spoolBoxSlot.SetColor(FactionUtility.GetColorForFaction(faction));
+        spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
         Reset();
 
@@ -88,7 +90,7 @@ public class Yarn2D : MonoBehaviour
 
         // InitSpool(spool);
         spoolBoxSlot = endSpool;
-        spoolBoxSlot.SetColor(FactionUtility.GetColorForFaction(faction));
+        spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
         Reset();
 
@@ -338,7 +340,7 @@ public class Yarn2D : MonoBehaviour
             ropeStartPoint.y -= segmentLength;
         }
 
-        yarnMaterialPropertyBlock.SetColor("_BaseColor", FactionUtility.GetColorForFaction(faction));
+        yarnMaterialPropertyBlock.SetColor("_BaseColor", pieceMaterialContainer.GetColor(faction));
         lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
     }
 

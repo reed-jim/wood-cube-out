@@ -4,10 +4,12 @@ using static GameEnum;
 
 public class PieceMaterialPropertyBlock : MonoBehaviour
 {
-    [SerializeField] private Material[] materials;
+    // [SerializeField] private Material[] materials;
 
     [SerializeField] private Material noDepthWriteMaterial;
     private Material _previousMaterial;
+
+    [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
@@ -70,7 +72,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         // _renderer.SetPropertyBlock(_propertyBlock);
 
-        _renderer.material = materials[(int)faction];
+        _renderer.material = pieceMaterialContainer.materials[(int)faction];
 
         // _renderer.material.SetColor("_SecondaryColor", _renderer.material.GetColor("_Color") * 0.3f);
 

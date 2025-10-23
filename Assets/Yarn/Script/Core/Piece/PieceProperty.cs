@@ -52,7 +52,14 @@ public class PieceProperty : MonoBehaviour
 
     void OnValidate()
     {
-        pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
+        try
+        {
+            pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
+        }
+        catch (System.Exception)
+        {
+
+        }
     }
 
     public void SetColorByFaction()

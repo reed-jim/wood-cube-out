@@ -1,9 +1,12 @@
 using UnityEngine;
+using static GameEnum;
 
 public class SpoolBoxMaterialPropertyBlock : MonoBehaviour
 {
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
+
+    [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
 
     #region PRIVATE FIELD
     [SerializeField] private Renderer _renderer;
@@ -28,12 +31,21 @@ public class SpoolBoxMaterialPropertyBlock : MonoBehaviour
         }
     }
 
-    public void SetColor(Color color)
+    public void SetColor(GameFaction faction)
     {
         Init();
 
-        _propertyBlock.SetColor(colorReference, color);
+        _propertyBlock.SetColor(colorReference, pieceMaterialContainer.GetColor(faction));
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
+
+    // public void SetColor(Color color)
+    // {
+    //     Init();
+
+    //     _propertyBlock.SetColor(colorReference, color);
+
+    //     _renderer.SetPropertyBlock(_propertyBlock);
+    // }
 }
