@@ -9,6 +9,7 @@ public class PieceProperty : MonoBehaviour
     private GameFaction[] poolFactions;
 
     private bool _isLocked;
+    private bool _isRewinding;
     private Vector3 _boundSize;
 
     #region PROPERTY
@@ -28,6 +29,12 @@ public class PieceProperty : MonoBehaviour
     {
         get => _isLocked;
         set => _isLocked = value;
+    }
+
+    public bool IsRewinding
+    {
+        get => _isRewinding;
+        set => _isRewinding = value;
     }
 
     public Vector3 BoundSize

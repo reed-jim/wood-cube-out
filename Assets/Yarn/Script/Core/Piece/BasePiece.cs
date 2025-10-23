@@ -222,6 +222,15 @@ public class BasePiece : MonoBehaviour
                 gameObject.SetActive(true);
             }
 
+            if (pieceServiceLocator.pieceProperty.IsRewinding)
+            {
+                return;
+            }
+            else
+            {
+                pieceServiceLocator.pieceProperty.IsRewinding = true;
+            }
+
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>

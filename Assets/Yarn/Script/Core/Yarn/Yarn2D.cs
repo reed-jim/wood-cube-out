@@ -6,6 +6,13 @@ using Unity.Mathematics;
 using UnityEngine;
 using static GameEnum;
 
+public enum DissolveAxis
+{
+    X,
+    Y,
+    Z
+}
+
 public class Yarn2D : MonoBehaviour
 {
     [Header("Rope Settings")]
@@ -30,6 +37,7 @@ public class Yarn2D : MonoBehaviour
     Vector3 modelSize;
     private MaterialPropertyBlock materialPropertyBlock;
     private float dissolveHeight = 1;
+    private DissolveAxis _dissolveAxis;
 
     [Header("Yarn Spool")]
     [SerializeField] private SpoolBoxSlot spoolBoxSlot;
@@ -110,6 +118,10 @@ public class Yarn2D : MonoBehaviour
 
         modelSize = piece.PieceServiceLocator.pieceProperty.BoundSize;
 
+        _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
+
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
+
         velocity.x = velocityMultuplier.x * modelSize.x;
 
         RopeSegment lastNode = segments[segmentCount - 1];
@@ -144,7 +156,7 @@ public class Yarn2D : MonoBehaviour
     {
         if (piece != null)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight, _dissolveAxis);
         }
 
         spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
@@ -152,7 +164,7 @@ public class Yarn2D : MonoBehaviour
 
     private void PlayRewindAnimation()
     {
-        Tween.Custom(1, 0, duration: 1f, onValueChange: newVal =>
+        Tween.Custom(1, 0, duration: 1f, ease: Ease.Linear, onValueChange: newVal =>
         {
             dissolveHeight = newVal;
 
@@ -185,42 +197,8 @@ public class Yarn2D : MonoBehaviour
         });
     }
 
-    // void Update()
-    // {
-    //     if (dissolveHeight <= 0)
-    //     {
-    //         bool isComplete = true;
-
-    //         for (int i = 1; i < segments.Count; i++)
-    //         {
-    //             segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
-
-    //             if (Vector3.Distance(segments[i].posNow, segments[0].posNow) > 0.05f)
-    //             {
-    //                 isComplete = false;
-    //             }
-    //         }
-
-    //         if (isComplete)
-    //         {
-    //             gameObject.SetActive(false);
-
-    //             onRewindYarnCompleted?.Invoke();
-    //         }
-    //         else
-    //         {
-    //             UpdateLineRenderer();
-    //         }
-
-    //         lerpDelta *= 1.01f;
-    //         lerpDelta = Mathf.Min(lerpDelta, 1);
-    //     }
-    // }
-
     private void UpdateYarnState(float dissolveHeight)
     {
-        // SimulateRope();
-
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
 
         if (dissolveHeight >= 0)
@@ -229,36 +207,15 @@ public class Yarn2D : MonoBehaviour
             RopeSegment lastNode = segments[segmentCount - 1];
 
             firstNode.posNow = _firstNodeLocalPosition;
-            //lastNode.posNow.y = 0.8f * (-0.5f + dissolveHeight) * modelSize.y;
 
-            // if (step % 2 == 0)
-            // {
-            //     if (lastNode.posNow.x < xMultiplier * 0.5f * modelSize.x)
-            //     {
-            //         lastNode.posNow += new Vector3(velocity.x, 0, velocity.x);
-            //     }
-            //     else
-            //     {
-            //         // lastNode.posNow += new Vector2(0, velocity.y);
-
-            //         step++;
-            //     }
-            // }
-            // else
-            // {
-            //     if (lastNode.posNow.x > -xMultiplier * 0.5f * modelSize.x)
-            //     {
-            //         lastNode.posNow -= new Vector3(velocity.x, 0, velocity.x);
-            //     }
-            //     else
-            //     {
-            //         // lastNode.posNow += new Vector2(0, velocity.y);
-
-            //         step++;
-            //     }
-            // }
-
-            lastNode.posNow = GetSpiralPosition(dissolveHeight, 0.5f * modelSize.y, 4, 0.4f * modelSize.x);
+            if (_dissolveAxis == DissolveAxis.X)
+            {
+                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, 0.5f * modelSize.x, 4, 0.4f * modelSize.y);
+            }
+            else
+            {
+                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.y, 4, 0.4f * modelSize.x);
+            }
 
             segments[segmentCount - 1] = lastNode;
 
@@ -266,31 +223,10 @@ public class Yarn2D : MonoBehaviour
             UpdateRope();
         }
 
-        // if (dissolveHeight < 0)
-        // {
-        //     for (int i = 1; i < segments.Count; i++)
-        //     {
-        //         segments[i].posNow = Vector3.Lerp(segments[i].posNow, segments[0].posNow, lerpDelta);
-
-        //         if (i == segments.Count - 1)
-        //         {
-        //             if (Vector3.Distance(segments[i].posNow, segments[0].posNow) < 0.05f)
-        //             {
-        //                 gameObject.SetActive(false);
-
-        //                 onRewindYarnCompleted?.Invoke();
-        //             }
-        //         }
-        //     }
-        // }
-
         UpdateLineRenderer();
-
-        // lerpDelta *= 1.01f;
-        // lerpDelta = Mathf.Min(lerpDelta, 1);
     }
 
-    Vector3 GetSpiralPosition(float yRatio, float spiralHeight, float turns, float radius)
+    Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
     {
         float y = (yRatio - 0.5f) * spiralHeight;
 
@@ -298,6 +234,22 @@ public class Yarn2D : MonoBehaviour
         float angle = yRatio * turns * 2 * Mathf.PI;
 
         float x = Mathf.Cos(angle) * radius;
+        float z = Mathf.Sin(angle) * radius;
+
+        // Position relative to parent
+        Vector3 localPos = new Vector3(x, y, z);
+
+        return localPos;
+    }
+
+    Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
+    {
+        float x = (xRatio - 0.5f) * spiralHeight;
+
+        // Total angle based on number of turns (in radians)
+        float angle = xRatio * turns * 2 * Mathf.PI;
+
+        float y = Mathf.Cos(angle) * radius;
         float z = Mathf.Sin(angle) * radius;
 
         // Position relative to parent
@@ -345,8 +297,6 @@ public class Yarn2D : MonoBehaviour
 
             Vector3 pointOnLine = start + right * (length * t);
 
-            // pointOnLine.z = end.z + i * 0.02f;
-
             positions[i] = pointOnLine + up * sine;
 
             segments[i].posNow = positions[i];
@@ -364,19 +314,17 @@ public class Yarn2D : MonoBehaviour
 
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
 
+        Vector3 lastNodePosition = segments[segmentCount - 1].posNow;
+
         for (int i = 0; i < segmentCount; i++)
         {
             if (i == 0)
             {
                 lineRenderer.SetPosition(i, _firstNodeLocalPosition);
             }
-            // else if (i < segmentCount - 1)
-            // {
-            //     lineRenderer.SetPosition(i, ((Vector3)segments[i].posNow).ChangeZ(_firstNodeLocalPosition.z));
-            // }
             else
             {
-                lineRenderer.SetPosition(i, (Vector3)segments[i].posNow);
+                lineRenderer.SetPosition(i, (Vector3)segments[i].posNow.ChangeZ(lastNodePosition.z - 5));
             }
         }
     }

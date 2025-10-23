@@ -54,7 +54,7 @@ public class SpoolBoxSlot : MonoBehaviour
 
         yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMinY", minY);
         yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMaxY", maxY);
-        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", 0);
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", 0);
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
@@ -83,7 +83,7 @@ public class SpoolBoxSlot : MonoBehaviour
 
     public void SetDissolveHeight(float value)
     {
-        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", value);
+        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", value);
 
         spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
@@ -92,7 +92,7 @@ public class SpoolBoxSlot : MonoBehaviour
     {
         Tween.Custom(from, to, duration: 0.3f, onValueChange: newVal =>
         {
-            yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveHeight", newVal);
+            yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", newVal);
 
             spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         });

@@ -39,9 +39,13 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         Bounds bounds = meshFilter.sharedMesh.bounds;
 
+        float minX = bounds.center.x - bounds.extents.x;
+        float maxX = bounds.center.x + bounds.extents.x;
         float minY = bounds.center.y - bounds.extents.y;
         float maxY = bounds.center.y + bounds.extents.y;
 
+        _propertyBlock.SetFloat("_WorldMinX", minX);
+        _propertyBlock.SetFloat("_WorldMaxX", maxX);
         _propertyBlock.SetFloat("_WorldMinY", minY);
         _propertyBlock.SetFloat("_WorldMaxY", maxY);
 
@@ -94,9 +98,24 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         // // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
     }
 
-    public void SetDissolveHeight(float value)
+    public void ResetDissolveRatio()
     {
-        _propertyBlock.SetFloat("_DissolveHeight", value);
+        _propertyBlock.SetFloat("_DissolveRatioX", 1);
+        _propertyBlock.SetFloat("_DissolveRatioY", 1);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
+    public void SetDissolveHeight(float value, DissolveAxis dissolveAxis)
+    {
+        if (dissolveAxis == DissolveAxis.X)
+        {
+            _propertyBlock.SetFloat("_DissolveRatioX", value);
+        }
+        else
+        {
+            _propertyBlock.SetFloat("_DissolveRatioY", value);
+        }
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
