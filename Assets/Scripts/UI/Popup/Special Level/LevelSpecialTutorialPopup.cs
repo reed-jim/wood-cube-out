@@ -19,6 +19,9 @@ namespace NamPhuThuy.UI
 
         [Header("Data")] 
         [SerializeField] private LevelSpecialTutorialData levelSpecialTutorialData;
+        
+        [Header("Flags")] 
+        [SerializeField] private LevelMode currentMode;
 
         protected override void RegisterMoreEvent()
         {
@@ -32,7 +35,8 @@ namespace NamPhuThuy.UI
             DebugLogger.LogSimple(context: this);
             base.Show(onCompletedAction: () =>
             {
-                SwitchBasedOnLevelMode();
+                currentMode = GamePersistentVariable.currentTutLevelMode;
+                SwitchVideoBasedOnLevelMode();
                 videoPlayer.Play();
             });
         }
@@ -47,9 +51,9 @@ namespace NamPhuThuy.UI
         
         #region Private Methods
 
-        private void SwitchBasedOnLevelMode()
+        private void SwitchVideoBasedOnLevelMode()
         {
-            LevelMode currentMode = GamePersistentVariable.currentTutLevelMode;
+            
             DebugLogger.LogSimple(message:$"mode: {currentMode}", context:this);
             
             if (levelSpecialTutorialData != null && levelSpecialTutorialData.TryGet(currentMode, out var record))

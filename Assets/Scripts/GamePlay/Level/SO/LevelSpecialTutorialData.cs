@@ -130,7 +130,10 @@ namespace NamPhuThuy.Data
     public class LevelSpecialTutorialRecord
     {
         public LevelMode levelMode = LevelMode.Normal;
+        public string modeName;
         public VideoClip videoClip;
+        
+        [TextArea(3, 10)]
         public string description;
     }
 }
