@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class YarnGameInput : MonoBehaviour
 {
@@ -94,6 +95,11 @@ public class YarnGameInput : MonoBehaviour
 
     private void SelectPiece()
     {
+        if (IsClickedOnUI())
+        {
+            return;
+        }
+
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
         Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMask: LayerMask.GetMask("Default"));
@@ -128,6 +134,26 @@ public class YarnGameInput : MonoBehaviour
                 _selectingPiece = piece;
                 _isHoldingPiece = true;
             }
+        }
+    }
+
+    private bool IsClickedOnUI()
+    {
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+        if (raycastResults.Count > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

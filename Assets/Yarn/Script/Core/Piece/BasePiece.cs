@@ -284,6 +284,10 @@ public class BasePiece : MonoBehaviour
             {
                 _isDone = true;
             }
+            else
+            {
+                _isInPiecePort = true;
+            }
         }
     }
 

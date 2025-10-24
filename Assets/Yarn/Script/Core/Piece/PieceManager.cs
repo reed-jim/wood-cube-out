@@ -55,6 +55,7 @@ public class PieceManager : MonoBehaviour
     public static event Action<bool> enableBoosterEvent;
     public static event Action levelSetupCompletedEvent;
     public static event Action updateOutsidePieceNumberEvent;
+    public static event Action<int, GameFaction> magicPickPieceEvent;
     #endregion
 
     #region LIFE CYCLE
@@ -77,6 +78,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
+        BoosterUI.magicPickPieceEvent += MagicPick;
         // DebugPopup.changeDifficultyEvent += ChangeDifficulty;
 
         _tweens = new List<Tween>();
@@ -103,6 +105,7 @@ public class PieceManager : MonoBehaviour
         SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
         BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
         DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
+        BoosterUI.magicPickPieceEvent -= MagicPick;
         // DebugPopup.changeDifficultyEvent -= ChangeDifficulty;
 
         CommonUtil.StopAllTweens(_tweens);
@@ -861,6 +864,15 @@ public class PieceManager : MonoBehaviour
         // GamePersistentVariable.testDifficultyMultiplier = difficulty;
 
         _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+    }
+    #endregion
+
+    #region MAGIC PICK
+    private void MagicPick()
+    {
+        BasePiece selectedPiece = _pieces.First(item => !item.IsDone && !item.IsInPiecePort);
+
+        magicPickPieceEvent?.Invoke(selectedPiece.gameObject.GetInstanceID(), selectedPiece.Faction);
     }
     #endregion
 }

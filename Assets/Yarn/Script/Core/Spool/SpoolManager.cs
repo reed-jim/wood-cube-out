@@ -67,8 +67,9 @@ public class SpoolManager : MonoBehaviour
         BasePiece.selectPieceEvent += OnPieceSelected;
         BasePiece.autoSelectPieceEvent += OnPieceAutoSelected;
         BasePiece.pieceMovedCompletedEvent += MoveSinglePieceFromHoleToSpoolBox;
-        PieceManager.spawnSpoolBoxEvent += SpawnSpoolBox;
         ScrewBoxCameraManager.setCameraEvent += OnSpoolBoxCameraSet;
+        PieceManager.magicPickPieceEvent += OnPieceSelected;
+        PieceManager.spawnSpoolBoxEvent += SpawnSpoolBox;
         PieceManager.spawnAdsSpoolBoxesEvent += SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent += OnSpoolBoxCompleted;
         SpoolBox.spoolBoxUnlockedEvent += OnSpoolBoxUnlocked;
@@ -89,6 +90,7 @@ public class SpoolManager : MonoBehaviour
         BasePiece.autoSelectPieceEvent -= OnPieceAutoSelected;
         BasePiece.pieceMovedCompletedEvent -= MoveSinglePieceFromHoleToSpoolBox;
         ScrewBoxCameraManager.setCameraEvent -= OnSpoolBoxCameraSet;
+        PieceManager.magicPickPieceEvent -= OnPieceSelected;
         PieceManager.spawnSpoolBoxEvent -= SpawnSpoolBox;
         PieceManager.spawnAdsSpoolBoxesEvent -= SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent -= OnSpoolBoxCompleted;

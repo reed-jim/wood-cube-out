@@ -24,6 +24,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AmbientOcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _DissolveMap:
         m_Texture: {fileID: 2800000, guid: bb078d5256c4aef4a810725839241faa, type: 3}
         m_Scale: {x: 1, y: 1}
@@ -34,6 +38,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
         m_Texture: {fileID: 2800000, guid: eb4c6a08812440349bb118771429e47b, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmoothnessMap:
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -53,6 +61,8 @@ Material:
     - _ColorStrength: 1
     - _DissolveEdgeWidth: 0.5
     - _DissolveHeight: 1
+    - _DissolveRatioX: 1
+    - _DissolveRatioY: 1
     - _DissolveStrength: 0.24
     - _GradientColorTwoMultiplier: 0
     - _Metallic: 0
@@ -63,7 +73,9 @@ Material:
     - _PositionMultiplier: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _WorldMaxX: 5
     - _WorldMaxY: 5
+    - _WorldMinX: -5
     - _WorldMinY: -5
     - _XRMotionVectorsPass: 1
     m_Colors:

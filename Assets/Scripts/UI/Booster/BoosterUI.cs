@@ -32,6 +32,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private float waitTimeBetweenClicks;
 
     public static event Action addMoreScrewPortEvent;
+    public static event Action magicPickPieceEvent;
     public static event Action enableBreakObjectModeEvent;
     public static event Action disableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
@@ -141,7 +142,7 @@ public class BoosterUI : MonoBehaviour
         }
         else if (boosterType == BoosterType.BreakObject)
         {
-            EnableBreakObjectMode();
+            MagicPick();
         }
         else if (boosterType == BoosterType.ClearScrewPorts)
         {
@@ -198,6 +199,34 @@ public class BoosterUI : MonoBehaviour
     {
         _isEnable = isEnable;
         _isPreventShowWarningPopup = true;
+    }
+
+    private void MagicPick()
+    {
+        if (!IsBoosterAvailable(boosterIndex: 1))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        ConsumeBooster(boosterIndex: 1);
+
+        magicPickPieceEvent?.Invoke();
+
+        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
     }
 
     private void EnableBreakObjectMode()
