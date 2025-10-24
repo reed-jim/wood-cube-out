@@ -31,6 +31,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
 
+    #region MonoBehaviour Callbacks
+
     protected override void MoreActionOnAwake()
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
@@ -38,7 +40,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
+        LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
+
         pauseButton.onClick.AddListener(Pause);
+        helpButton.onClick.AddListener(OnClickHelp);
+        
         skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
@@ -60,10 +66,30 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
+    #region Private Methods
+
+    private void ToggleHelpButton(bool isActive)
+    {
+        helpButton.gameObject.SetActive(isActive);
+    }
+
+    #endregion
+
+    #endregion
+
+    #region Button Events
+    
     private async void Pause()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
     }
+    
+    private void OnClickHelp()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
+    }
+    
+    #endregion
 
     private void OpenDebugPopupButton()
     {

@@ -64,6 +64,8 @@ namespace NamPhuThuy.GamePlay
     public static event Action<bool> enableSwipingEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
     public static event Action<bool> showLoadLevelErrorEvent;
+
+    public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
     #endregion
 
     private void Awake()
@@ -884,8 +886,14 @@ namespace NamPhuThuy.GamePlay
         {
             DebugLogger.LogSimple(message:$"special", context:this);
             GamePersistentVariable.currentTutLevelMode = currentLevelMode;
+            
+            specialTutIntroduceEvent?.Invoke(true);
             DelayShowTutorialSuggestion();
             return;
+        }
+        else
+        {
+            specialTutIntroduceEvent?.Invoke(false);
         }
         
         DebugLogger.LogSimple(message:$"levelMode: {currentLevelMode}");
