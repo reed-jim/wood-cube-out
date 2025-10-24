@@ -1,7 +1,9 @@
+using System.Collections;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,48 +15,68 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     [Header("Stats")]
     [SerializeField] private int prevRemaining = -1;
 
+    [Header("SpineAnim")]
+    [SerializeField] private SkeletonGraphic chainSkeGraphics;
+    private SkeletonGraphic ChainSkeGraphics
+    {
+        get
+        {
+            if (chainSkeGraphics == null)
+                chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return chainSkeGraphics;
+        }
+    }
+    
+    private string _chainIdleAnim = "begin";
+    private string _chainActionAnim = "action";
+    private string _chainReActiveAnim = "re-action";
+
+    
     #region Override Methods
 
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
     {
         base.Setup(levelMode, record);
+        ReActiveChain();
     }
 
     protected override void ReActive()
     {
         base.ReActive();
+        ReActiveChain();
         DebugLogger.LogSimple();
         prevRemaining = -1;
     }
 
-    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState action, object[] parameters)
+    protected override void UpdateUI(LevelMode levelMode, SpecialLevelUIState state, object[] parameters)
     {
+        base.UpdateUI(levelMode, state, parameters);
         if (levelMode != this.levelMode)
         {
             return;
         }
 
-        if (action == SpecialLevelUIState.Setup)
+        if (state == SpecialLevelUIState.Setup)
         {
             Setup((LevelMode)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.Showing)
+        else if (state == SpecialLevelUIState.Showing)
         {
             ShowUI();
         }
-        else if (action == SpecialLevelUIState.ReActive)
+        else if (state == SpecialLevelUIState.ReActive)
         {
             ReActive();
         }
-        else if (action == SpecialLevelUIState.UpdateProgress)
+        else if (state == SpecialLevelUIState.UpdateProgress)
         {
             UpdateProgress((SpecialLevelTaskRecord)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.UpdateTimeCount)
+        else if (state == SpecialLevelUIState.UpdateTimeCount)
         {
             UpdateTimeCount((int)parameters[0]);
         }
-        else if (action == SpecialLevelUIState.Hide)
+        else if (state == SpecialLevelUIState.Hide)
         {
             HideUI();
         }
@@ -64,6 +86,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
     private void UpdateProgress(SpecialLevelTaskRecord record)
     {
+        DebugLogger.LogSimple();
         int totalRemainingAmount = 0;
         int totalAmount = 0;
 
@@ -87,6 +110,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
         if (totalRemainingAmount <= 0)
         {
+            StartCoroutine(BreakChainAnim());
             foreach (var text in conditionTexts)
             {
                 SaferioTween.ScaleDownWithPunch(text.transform);
@@ -94,7 +118,6 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
             SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
 
-            SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
             SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
         }
         
@@ -119,4 +142,41 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
         prevRemaining = totalRemainingAmount;
     }
+
+    #region SpineAnim Methods
+
+   
+    private void ReActiveChain()
+    {
+        if (ChainSkeGraphics == null) return;
+
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+    }
+    
+    private IEnumerator BreakChainAnim()
+    {
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) yield break;
+
+        state.ClearTracks();
+
+        bool isAnimating = true;
+        state.SetAnimation(0, _chainActionAnim, false);
+
+        yield return null;
+    }
+
+    #endregion
 }

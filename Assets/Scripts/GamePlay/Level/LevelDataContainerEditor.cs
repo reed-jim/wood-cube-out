@@ -26,9 +26,23 @@ namespace NamPhuThuy.Data
         private bool _onlyNumberedLevels = true;
 
         #endregion
-
-
+        
+        
         #region Callbacks
+        
+        private void OnEnable()
+        {
+            // Try to load the folder asset for the current path
+            if (Directory.Exists(_levelPrefabsFolderPath))
+            {
+                _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(_levelPrefabsFolderPath);
+            }
+            
+            randomizeRangeStartProp = serializedObject.FindProperty("randomizeRangeStart");
+            randomizeRangeEndProp = serializedObject.FindProperty("randomizeRangeEnd");
+            randomizeOptionsProp = serializedObject.FindProperty("randomizeOptions");
+            levelsDataProp = serializedObject.FindProperty("levelsData");
+        }
 
         public override void OnInspectorGUI()
         {
@@ -123,18 +137,6 @@ namespace NamPhuThuy.Data
 
             EditorGUILayout.Space(5);
 
-            // Info display
-            if (container.LevelsData != null)
-            {
-                EditorGUILayout.LabelField($"Current Level Count: {container.LevelsData.Length}");
-                
-                int nullCount = container.LevelsData.Count(ld => ld == null || ld.levelPrefab == null);
-                if (nullCount > 0)
-                {
-                    EditorGUILayout.HelpBox($"{nullCount} levels have missing prefabs", MessageType.Warning);
-                }
-            }
-
             // Validate folder path
             if (!Directory.Exists(_levelPrefabsFolderPath))
             {
@@ -151,15 +153,47 @@ namespace NamPhuThuy.Data
                     EditorGUILayout.LabelField($"Numbered prefabs: {numberedPrefabs.Length}");
                 }
             }
+
+            DrawLevelDistributionGUI(container);
         }
 
-        private void OnEnable()
+        #endregion
+
+        #region Level Distribution
+        
+        private SerializedProperty randomizeRangeStartProp;
+        private SerializedProperty randomizeRangeEndProp;
+        private SerializedProperty randomizeOptionsProp;
+        private SerializedProperty levelsDataProp;
+        
+        private void DrawLevelDistributionGUI(LevelDataContainer container)
         {
-            // Try to load the folder asset for the current path
-            if (Directory.Exists(_levelPrefabsFolderPath))
+            serializedObject.Update();
+            
+            using (new EditorGUI.DisabledScope(randomizeOptionsProp.arraySize == 0 || levelsDataProp.arraySize == 0))
             {
-                _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(_levelPrefabsFolderPath);
+                if (GUILayout.Button("Randomize LevelModes In Range"))
+                {
+                    ApplyRandomizeFromEditor();
+                }
             }
+
+            serializedObject.ApplyModifiedProperties();
+        }
+        
+        private void ApplyRandomizeFromEditor()
+        {
+            var container = target as LevelDataContainer;
+            if (container == null) return;
+
+            // Record undo
+            Undo.RecordObject(container, "Randomize LevelModes");
+
+            // perform randomization
+            container.RandomizeLevelModesInRange(container.RandomizeRangeStart, container.RandomizeRangeEnd, container.RandomizeOptions);
+
+            // mark dirty so edits are saved
+            EditorUtility.SetDirty(container);
         }
 
         #endregion

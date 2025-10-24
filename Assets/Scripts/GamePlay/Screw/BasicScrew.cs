@@ -1,3 +1,4 @@
+using System;
 using CandyCoded.HapticFeedback;
 using PrimeTween;
 using UnityEngine;
@@ -22,28 +23,31 @@ namespace NamPhuThuy.GamePlay
             Loose(screwId, faction, screwBoxSlot, isCheckObstacles: true);
         }
 
-        public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot,
-            bool isCheckObstacles)
+        public override async void Loose(int screwId, GameEnum.GameFaction faction, ScrewBoxSlot screwBoxSlot, bool isCheckObstacles)
         {
             if (screwId != this.screwId) return;
-
             if (!_isInteractable) return;
-            else
-            {
-                _isInteractable = false;
-            }
-
             if (_isDone) return;
             if (_isMoving) return;
+            
+            _isInteractable = false;
 
             if (isCheckObstacles && !IsOutsideWithNoScrewBox)
             {
                 if (!GamePersistentVariable.isAutoTestingLevel)
                 {
                     // avoid loose screw that is covering by other objects
-                    bool isNotVisible = Physics.Raycast(
-                        transform.position + 0.5f * _renderer.bounds.size.z * transform.forward,
-                        _mainCamera.transform.position - transform.position, 5);
+                    bool isNotVisible = true;
+                    try
+                    {
+                        isNotVisible = Physics.Raycast(
+                            transform.position + 0.5f * _renderer.bounds.size.z * transform.forward,
+                            _mainCamera.transform.position - transform.position, 5);
+                    }
+                    catch (Exception e)
+                    {
+                        DebugLogger.LogSimple(message:$"Error: {e}", context:this);
+                    }
 
                     if (isNotVisible)
                     {
@@ -64,7 +68,6 @@ namespace NamPhuThuy.GamePlay
             if (_numberBlockingObjects > 0)
             {
                 FakeScrew fakeScrew = SpawnFakeScrew();
-
                 GetComponent<MeshRenderer>().enabled = false;
 
                 fakeScrew.IsRotating = true;

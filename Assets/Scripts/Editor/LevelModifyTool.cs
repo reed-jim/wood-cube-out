@@ -22,6 +22,14 @@ namespace NamPhuThuy.EditorTools
         private bool showUtilities = true;
         private int maxScrewCount = 100;
         private Material[] materialPool;
+        
+        #endregion
+
+        #region Screw Switching Fields
+
+        private static int screwPhase;
+        private LevelMode _levelMode;
+
         #endregion
         
         #region Callbacks
@@ -108,42 +116,50 @@ namespace NamPhuThuy.EditorTools
         private void DrawScrewSwitchingSection()
         {
             showScrewSwitching = EditorGUILayout.Foldout(showScrewSwitching, "Screw Switching", true);
-            if (showScrewSwitching)
+            if (!showScrewSwitching) return;
+            
+            EditorGUI.indentLevel++;
+            
+            EditorGUILayout.LabelField("Switch Screw Types", EditorStyles.boldLabel);
+            
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button("Switch to Normal Screws"))
             {
-                EditorGUI.indentLevel++;
-                
-                EditorGUILayout.LabelField("Switch Screw Types", EditorStyles.boldLabel);
-                
-                EditorGUILayout.BeginHorizontal();
-                if (GUILayout.Button("Switch to Normal Screws"))
-                {
-                    SwitchToNormalScrew(selectedLevel);
-                }
-                if (GUILayout.Button("Switch to Locked Color Screws"))
-                {
-                    SwitchToLockedColorScrew(selectedLevel);
-                }
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.Space(5);
-                EditorGUILayout.LabelField("Custom Screw Type", EditorStyles.boldLabel);
-                customPrefabPath = EditorGUILayout.TextField("Prefab Path", customPrefabPath);
-                customScrewTypeName = EditorGUILayout.TextField("Type Name", customScrewTypeName);
-                
-                if (GUILayout.Button("Switch to Custom Screw Type"))
-                {
-                    if (!string.IsNullOrEmpty(customPrefabPath))
-                    {
-                        SwitchScrewType(selectedLevel, customPrefabPath, customScrewTypeName);
-                    }
-                    else
-                    {
-                        Debug.LogWarning("Please specify a prefab path");
-                    }
-                }
-                
-                EditorGUI.indentLevel--;
+                SwitchToNormalScrew(selectedLevel);
             }
+            if (GUILayout.Button("Switch to Locked Color Screws"))
+            {
+                SwitchToLockedColorScrew(selectedLevel);
+            }
+            EditorGUILayout.EndHorizontal();
+            
+            _levelMode = (LevelMode)EditorGUILayout.EnumPopup("Level Mode", _levelMode);
+
+            screwPhase = EditorGUILayout.IntField("Screw Phase Num", screwPhase);
+            if (GUILayout.Button("Switch to Correspond Screws"))
+            {
+                SwitchScrewsToCorrespondType(selectedLevel, _levelMode);
+            }
+            
+
+            EditorGUILayout.Space(5);
+            EditorGUILayout.LabelField("Custom Screw Type", EditorStyles.boldLabel);
+            customPrefabPath = EditorGUILayout.TextField("Prefab Path", customPrefabPath);
+            customScrewTypeName = EditorGUILayout.TextField("Type Name", customScrewTypeName);
+            
+            if (GUILayout.Button("Switch to Custom Screw Type"))
+            {
+                if (!string.IsNullOrEmpty(customPrefabPath))
+                {
+                    SwitchScrewType(selectedLevel, customPrefabPath, customScrewTypeName);
+                }
+                else
+                {
+                    Debug.LogWarning("Please specify a prefab path");
+                }
+            }
+            
+            EditorGUI.indentLevel--;
         }
 
         private void DrawUtilitiesSection()
@@ -326,6 +342,86 @@ namespace NamPhuThuy.EditorTools
 
             EditorUtility.SetDirty(level);
             DebugLogger.Log($"Successfully switched {screws.Length} screws to locked color screws", Color.yellow, true);
+        }
+
+        public static void SwitchScrewsToCorrespondType(Transform level, LevelMode levelMode)
+        {
+            DebugLogger.LogSimple(message:$"levelMode: {levelMode}");
+            if (level == null)
+            {
+                DebugLogger.LogError("Level transform is null");
+                return;
+            }
+            
+             BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+
+            if (screws.Length == 0)
+            {
+                DebugLogger.LogWarning($"No screws found in level: {level.name}");
+                return;
+            }
+            
+            string newScrewPrefabPath = levelMode switch
+            {
+                LevelMode.MultipleLayers => GamePlayConst.MULTI_PHASE_SCREW_PREFAB_PATH,
+                LevelMode.LockScrewColor => GamePlayConst.LOCKED_COLOR_SCREW_PREFAB_PATH,
+                LevelMode.Normal => GamePlayConst.NORMAL_SCREW_PREFAB_PATH,
+                _ => null
+            };
+            
+            DebugLogger.LogSimple(message:$"path: {newScrewPrefabPath}");
+
+            GameObject newScrewPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(newScrewPrefabPath);
+
+            if (newScrewPrefab == null)
+            {
+                DebugLogger.LogError($"new screw prefab error: {newScrewPrefabPath}");
+                return;
+            }
+
+            List<BaseScrew> toRemoveList = new List<BaseScrew>(screws);
+
+            for (int i = 0; i < screws.Length; i++)
+            {
+                Transform originalScrew = screws[i].transform;
+                Transform parent = originalScrew.parent;
+
+                // Store original transform data
+                Vector3 position = originalScrew.position;
+                Quaternion rotation = originalScrew.rotation;
+                Vector3 localScale = originalScrew.localScale;
+                string screwName = originalScrew.name;
+
+                // Instantiate new locked color screw
+                Transform newScrew = ((GameObject)PrefabUtility.InstantiatePrefab(newScrewPrefab, parent))
+                    .transform;
+
+                switch (levelMode)
+                {
+                    case LevelMode.MultipleLayers:
+                        newScrew.GetComponent<MultiPhaseScrew>().Phase = screwPhase;
+                        break;
+                }
+                
+                // Apply original transform data
+                newScrew.position = position;
+                newScrew.rotation = rotation;
+                newScrew.localScale = localScale;
+                // newScrew.name = screwName;
+
+                DebugLogger.LogIf(i < 5, $"Switched screw {i + 1}: {screwName}", Color.yellow);
+
+               
+            }
+
+            // Remove original screws
+            foreach (var screw in toRemoveList)
+            {
+                Object.DestroyImmediate(screw.gameObject);
+            }
+
+            EditorUtility.SetDirty(level);
+            DebugLogger.Log($"Successfully switched {screws.Length} screws to {levelMode}", Color.yellow, true);
         }
 
         /// <summary>

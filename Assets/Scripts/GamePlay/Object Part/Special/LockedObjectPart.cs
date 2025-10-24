@@ -1,3 +1,4 @@
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using PrimeTween;
@@ -13,9 +14,20 @@ public class LockedObjectPart : BasicObjectPart
     [Header("UI")]
     [SerializeField] private RectTransform uiContainer;
     [SerializeField] private int requiredValueToUnlock;
+    
+    public int RequiredValueToUnlock
+    {
+        get => requiredValueToUnlock;
+        set
+        {
+            requiredValueToUnlock = value;
+            requiredValueText.text = $"{requiredValueToUnlock}";
+        }
+    }
 
     [SerializeField] private TMP_Text requiredValueText;
 
+   
     private BaseScrew[] _screws;
 
     protected override void MoreLogicOnAwake()
@@ -40,30 +52,35 @@ public class LockedObjectPart : BasicObjectPart
         foreach (var screw in _screws)
         {
             screw.GetComponent<MeshRenderer>().enabled = false;
-            // screw.gameObject.SetActive(false);
         }
 
         _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Locked);
 
-        requiredValueToUnlock = Random.Range(5, 10);
-
-        requiredValueText.text = $"{requiredValueToUnlock}";
+        RequiredValueToUnlock = Random.Range(5, 10);
     }
 
     private void OnScrewLoosed(BaseScrew screw)
     {
-        requiredValueToUnlock--;
+        if (screw.IsInScrewPort)
+        {
+            DebugLogger.LogSimple(message:$"screw on port", context:this);
+            return;
+        }
+        
+        
+        
+        DebugLogger.LogSimple();
+        RequiredValueToUnlock--;
 
-        VFXManager.Ins.PlayAt(
+        PlayVFX();
+        /*VFXManager.Ins.PlayAt(
             type: VFXType.STAT_CHANGE_TEXT,
             pos: requiredValueText.transform.position,
             amount: 1,
             initialParent: requiredValueText.transform,
             offset: new Vector2(-40f, 25f),
             distance: 20f,
-            color: Color.green);
-        
-        requiredValueText.text = $"{requiredValueToUnlock}";
+            color: Color.green);*/
 
         if (requiredValueToUnlock == 0)
         {
@@ -76,25 +93,9 @@ public class LockedObjectPart : BasicObjectPart
                 });
             });
 
-            float initialScale;
-
             for (int i = 0; i < _screws.Length; i++)
             {
-                int index = i;
-
-                initialScale = _screws[i].transform.localScale.x;
-
                 _screws[i].GetComponent<MeshRenderer>().enabled = true;
-
-                // _screws[i].gameObject.SetActive(true);
-                // _screws[i].transform.localScale = Vector3.zero;
-
-                // _screws[i].IsInteractable = false;
-
-                // SaferioTween.ScaleUpWithPunch(_screws[i].transform, initialScale, onCompleteAction: () =>
-                // {
-                //     _screws[index].IsInteractable = true;
-                // });
             }
 
             _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Normal);
@@ -103,10 +104,56 @@ public class LockedObjectPart : BasicObjectPart
             ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
 
             fx.transform.position = chainContainer.transform.position;
-
             fx.Play();
 
             SaferioTween.ScaleDownWithPunch(chainContainer.transform);
         }
     }
+
+    private void PlayVFX()
+    {
+        try
+        {
+            var targetTransform = requiredValueText != null ? requiredValueText.transform : transform;
+
+            ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+            ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
+
+            var looseScrewFxMain = looseScrewFx.main;
+            var ringFxMain = ringFx.main;
+
+            Color factionColor = FactionUtility.GetColorForFaction(GameEnum.GameFaction.Blue);
+            Color brighterFactionColor = ColorUtil.GetNearWhiteColor(factionColor);
+
+            looseScrewFxMain.startColor = factionColor;
+            ringFxMain.startColor = factionColor;
+            ringFxMain.startSize = 1.2f * targetTransform.lossyScale.x;
+
+            // Parent to the UI/text transform and position there
+            looseScrewFx.gameObject.SetActive(true);
+            looseScrewFx.transform.SetParent(targetTransform);
+            looseScrewFx.transform.localRotation = Quaternion.identity;
+            looseScrewFx.transform.localPosition = Vector3.zero + new Vector3(0, 0, -0.03f); // small offset in local space
+
+            ringFx.transform.SetParent(targetTransform);
+            ringFx.transform.localPosition = new Vector3(0, 0, -0.03f);
+            ringFx.transform.localRotation = Quaternion.identity;
+
+            looseScrewFx.Play();
+
+            Tween.Delay(1).OnComplete(() =>
+            {
+                // keep ringFx as child of the particle root (restore original intent)
+                ringFx.transform.SetParent(looseScrewFx.transform);
+                ringFx.transform.localPosition = new Vector3(0, 0, -0.19f);
+                ringFx.transform.localRotation = Quaternion.identity;
+            });
+        }
+        catch (System.Exception e)
+        {
+            DebugLogger.LogSimple(message:$"Error: {e}", color:Color.red);
+        }
+    }
+
+        
 }

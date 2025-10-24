@@ -106,9 +106,7 @@ namespace NamPhuThuy.VFX
 
         protected override void OnPlay()
         {
-            DebugLogger.LogSimple();
             SetValues();
-
             
             var targetRect = targetText.GetComponent<RectTransform>();
             var vfxRect = GetComponent<RectTransform>();

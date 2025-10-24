@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class BasicObjectPart : MonoBehaviour, IObjectPart
 {
-    [SerializeField] private Transform levelCenter;
     [SerializeField] private Rigidbody partRigidbody;
     [SerializeField] private MeshCollider meshCollider;
 
@@ -167,7 +166,7 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
     private void HideBeforeLevel()
     {
         _initialScale = transform.localScale;
-        DebugLogger.LogSimple(message:$"{name}: {_initialScale}");
+        // DebugLogger.LogSimple(message:$"{name}: {_initialScale}");
 
         transform.localScale = Vector3.zero;
     }
@@ -183,11 +182,9 @@ public class BasicObjectPart : MonoBehaviour, IObjectPart
 
         _tweens.Add(Tween.Delay(0.9f).OnComplete(() =>
         {
-            DebugLogger.LogSimple(message:$"2 - {name}: {_initialScale}");
             _tweens.Add(Tween.Scale(transform, 1.1f * _initialScale, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    DebugLogger.LogSimple(message:$"3 - {name}: {_initialScale}");
                     _tweens.Add(Tween.Scale(transform, _initialScale, duration: 0.1f));
                 })
             );

@@ -2,13 +2,25 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using UnityEngine;
 using static GameEnum;
 
 public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
 {
+    [Header("Resources")]
+    [Tooltip("Mesh: oc_low")]
+    [SerializeField] private Mesh normalScrewMesh;
+    
+    [Tooltip("screw_rusty_broken")]
+    [SerializeField] private Mesh rustyScrewMesh;
+
     private BaseScrew[] _rustyScrew;
+    
+    [Header("Flags")]
+    [SerializeField] private bool useCustomRustyScrewMesh = true;
     
     /// <summary>
     /// Current faction that is locked by rusty screws, O(n) based on number of requiredComponents
@@ -68,9 +80,12 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
             if (validScrews.Length < 0.3f * _screws.Length)
             {
                 UpdateUI(SpecialLevelUIState.Hide);
+                VFXManager.Ins.PlayAt(VFXType.POPUP_TEXT, 
+                    message:VFXPopupTextMessage.NO_MORE_CHALLENGES,
+                    initialParent: VFXManager.Ins.transform);
 
                 _isDoneCompletely = true;
-
+                
                 return;
             }
         }
@@ -95,6 +110,11 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         foreach (var item in _rustyScrew)
         {
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Rusty);
+            
+            if (rustyScrewMesh != null)
+            {
+               ChangeMeshToRustyScrew(item);
+            }
         }
     }
 
@@ -126,6 +146,8 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
         {
             item.ScrewServiceLocator.screwMaterialPropertyBlock.SetScrewCondition(ScrewCondition.Normal);
         }
+
+        ReapplyNormalMesh();
     }
 
     protected override void OnScrewLoosed(BaseScrew screw)
@@ -144,6 +166,58 @@ public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     {
         base.OnCompleteTaskStep();
         rustyBreakALayer?.Invoke();
+    }
+
+    #endregion
+
+    #region ScrewManipulation
+    
+    void ChangeMeshToRustyScrew(BaseScrew screw)
+    {
+        
+        if (screw == null || rustyScrewMesh == null) return;
+        if (!useCustomRustyScrewMesh) return;
+
+
+        try
+        {
+            var mf = screw.GetComponent<MeshFilter>();
+            if (mf != null)
+            {
+                DebugLogger.LogSimple(message:$"change to rusty mesh");
+                mf.sharedMesh = rustyScrewMesh;
+            }
+        }
+        catch (Exception e)
+        {
+            DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red);
+        }
+
+    }
+
+    public void ReapplyNormalMesh()
+    {
+        
+        if (normalScrewMesh == null) return;
+        if (!useCustomRustyScrewMesh) return;
+
+        foreach (var screw in _rustyScrew)
+        {
+            try
+            {
+                if (screw == null) continue;
+
+                DebugLogger.LogSimple(message:$"revert mesh");
+                
+                // Restore mesh on whichever renderer exists
+                var mf = screw.GetComponentInChildren<MeshFilter>(true);
+                if (mf != null) mf.sharedMesh = normalScrewMesh;
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red);
+            }
+        }
     }
 
     #endregion

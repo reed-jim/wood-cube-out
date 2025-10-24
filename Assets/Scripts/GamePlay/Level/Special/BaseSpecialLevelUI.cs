@@ -1,4 +1,5 @@
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -22,7 +23,6 @@ public class BaseSpecialLevelUI : MonoBehaviour
     [SerializeField] protected CanvasGroup lockedGroup;
     [SerializeField] protected TMP_Text[] conditionTexts;
     [SerializeField] protected TMP_Text timeCountingText;
-    [SerializeField] protected Image tickIcon;
 
     [SerializeField] protected LevelMode levelMode;
 
@@ -46,7 +46,6 @@ public class BaseSpecialLevelUI : MonoBehaviour
 
             container.gameObject.SetActive(false);
             timeCountingText.gameObject.SetActive(false);
-            tickIcon.gameObject.SetActive(false);
         }
     }
 
@@ -69,13 +68,18 @@ public class BaseSpecialLevelUI : MonoBehaviour
 
         SaferioTween.ScaleUpWithPunch(lockedGroup.transform, 1, delay: 0.3f);
 
-        SaferioTween.ScaleDownWithPunch(tickIcon.transform);
         SaferioTween.ScaleDownWithPunch(timeCountingText.transform);
     }
 
     protected virtual void UpdateUI(LevelMode levelMode, SpecialLevelUIState state, object[] parameters)
     {
-
+        switch (state)
+        {
+            case SpecialLevelUIState.Hide:
+                
+                
+                break;
+        }
     }
 
     protected virtual void UpdateTimeCount(int remaningTime)

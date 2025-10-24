@@ -1,38 +1,72 @@
+using System.Collections;
 using NamPhuThuy;
+using NamPhuThuy.Common;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
-using TMPro;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
-using static GameEnum;
 
 public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 {
     [Header("UI")]
-    // [SerializeField] private Image rustyScrew;
-    // [SerializeField] private Image tempRustyScrew;
     [SerializeField] private RectTransform normalScrew;
-    [SerializeField] private Image rustyScrew;
+
+    [SerializeField] private Image normalImage;
     [SerializeField] private Sprite[] rustyProgressSprites;
-    [SerializeField] private Image tempScrewFaction;
 
     [Header("Stats")]
     [SerializeField] private int prevRemaining = -1;
     private Tween _rustyProgressTween;
 
+    [Header("Anim")] 
+    [SerializeField] private SkeletonGraphic rustyLayerSkeGraphics;
+    private SkeletonGraphic RustyLayerSkeGraphics
+    {
+        get
+        {
+            if (rustyLayerSkeGraphics == null)
+                rustyLayerSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return rustyLayerSkeGraphics;
+        }
+    }
+    private string[] _rustyActionAnimNames = { "action4", "action3", "action2", "action1" };
+    private string _rustyIdleAnimName = "begin";
+    private string _rustyReActiveAnimName = "re-action";
+
+    [SerializeField] private SkeletonGraphic chainSkeGraphics;
+    private SkeletonGraphic ChainSkeGraphics
+    {
+        get
+        {
+            if (chainSkeGraphics == null)
+                chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            return chainSkeGraphics;
+        }
+    }
+    
+    private string _chainIdleAnim = "begin";
+    private string _chainActionAnim = "action";
+    private string _chainReActiveAnim = "re-action";
+    
+    
     #region Override Methods
 
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record)
     {
         base.Setup(levelMode);
+        ReActiveRustyLayer();
+        ReActiveChain();
         DebugLogger.LogSimple(message:$"mode: {levelMode.ToString()}, record: {record}");
     }
 
     protected override void ReActive()
     {
         base.ReActive();
+        ReActiveRustyLayer();
+        ReActiveChain();
         DebugLogger.LogSimple(message:$"");
         prevRemaining = -1;
     }
@@ -71,7 +105,87 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     }
 
     #endregion
+
+    #region Private Methods
+
+    private void ReActiveRustyLayer()
+    {
+        DebugLogger.LogSimple(message:$"");
+        
+        var ske = RustyLayerSkeGraphics;
+        if (ske == null) return;
+
+        var state = ske.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+
+        state.SetAnimation(0, _rustyReActiveAnimName, false);
+        state.AddAnimation(0, _rustyIdleAnimName, true, 0f);
+    }
+
+    private void ClearRustyParts(int partNum)
+    {
+        DebugLogger.LogSimple(message:$"partNum: {partNum}");
+        
+        var ske = RustyLayerSkeGraphics;
+        if (ske == null) return;
+
+        var state = ske.AnimationState;
+        if (state == null) return;
+
+        // Clamp to available action steps (e.g., 0..4)
+        int steps = _rustyActionAnimNames?.Length ?? 0;
+        int cleared = Mathf.Clamp(partNum, 0, steps);
+
+        DebugLogger.LogSimple(message: $"rusty cleared parts: {cleared}/{steps}");
+        state.ClearTrack(0);
+
+        if (cleared <= 0 || steps == 0)
+        {
+            state.SetAnimation(0, _rustyIdleAnimName, true);
+            return;
+        }
+
+        // Map: 1 -> "action1", 4 -> "action4" (array is ["action4","action3","action2","action1"])
+        string actionName = _rustyActionAnimNames[steps - cleared];
+
+        var entry = state.SetAnimation(0, actionName, false);
+    }
     
+    private void ReActiveChain()
+    {
+        if (ChainSkeGraphics == null) return;
+
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) return;
+
+        state.ClearTracks();
+        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+    }
+
+    private IEnumerator BreakChainAnim()
+    {
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null) yield break;
+
+        state.ClearTracks();
+
+        bool isAnimating = true;
+        state.SetAnimation(0, _chainActionAnim, false);
+
+        yield return null;
+    }
+
+    #endregion
 
     private void UpdateRustyLevel(SpecialLevelTaskRecord record)
     {
@@ -89,18 +203,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
             totalAmount += item.amount;
         }
 
-        tempScrewFaction.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
-
-        if (!rustyScrew.gameObject.activeInHierarchy)
-        {
-            rustyScrew.fillAmount = 1;
-            // rustyScrew.gameObject.SetActive(true);
-            // tempRustyScrew.gameObject.SetActive(false);
-
-            // rustyScrew.color = ColorUtil.WithAlpha(rustyScrew.color, 0);
-
-            // Tween.Alpha(rustyScrew, 1, duration: 0.3f);
-        }
+        normalImage.color = FactionUtility.GetColorForFaction(record.requiredComponents[0].faction);
 
         // Rusty
         if (totalRemainingAmount > 0)
@@ -111,33 +214,13 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
             {
                 _rustyProgressTween.Stop();
             }
-
-            _rustyProgressTween = Tween.Custom(rustyScrew.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
-            {
-                rustyScrew.fillAmount = newVal;
-            });
+            
+            ClearRustyParts((int)MathHelper.Map(1f - progress, 0f, 1f, 0f, 4f));
         }
         else
         {
-            foreach (var text in conditionTexts)
-            {
-                SaferioTween.ScaleDownWithPunch(text.transform);
-            }
-
-            SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
-
-            SaferioTween.ShowWithPunch(tickIcon.transform, 1, delay: 0.3f);
-            SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
-
-
-
-            // tempRustyScrew.gameObject.SetActive(false);
-
-            // Tween.Alpha(rustyScrew, 0, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     rustyScrew.gameObject.SetActive(false);
-            // });
+            ClearRustyParts(4);
+            StartCoroutine(DeadActiveMechanic());
         }
 
         if (prevRemaining < 0)
@@ -157,8 +240,21 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 distance: 20f,
                 color: Color.green);
         }
-        
 
         prevRemaining = totalRemainingAmount;
+    }
+
+    private IEnumerator DeadActiveMechanic()
+    {
+        yield return StartCoroutine(BreakChainAnim());
+        
+        foreach (var text in conditionTexts)
+        {
+            SaferioTween.ScaleDownWithPunch(text.transform);
+        }
+
+        SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+
+        SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
     }
 }

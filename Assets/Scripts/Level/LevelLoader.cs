@@ -30,6 +30,9 @@ namespace NamPhuThuy.GamePlay
     [Header("Textured Material Level")]
     [SerializeField] private Material texturedMaterial;
 
+    [Header("Stats")] 
+    [SerializeField] private float tutorialDelay = 0.2f;
+
     #region PRIVATE FIELD
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
@@ -195,21 +198,7 @@ namespace NamPhuThuy.GamePlay
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
         string levelName = $"Level {nextLevel}";
-
-        // A/B TEST LEVEL 4
-        if (nextLevel == 4)
-        {
-            int level4Variant = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_4_VARIANT, 0);
-
-            if (level4Variant == 1)
-            {
-                levelName = $"Level {nextLevel} - Variant 1";
-            }
-            else if (level4Variant == 2)
-            {
-                levelName = $"Level {nextLevel} - Variant 2";
-            }
-        }
+        levelName = ModifyNameInFixedLevel(levelName, nextLevel);
 
         // Memory Management
         Resources.UnloadUnusedAssets();
@@ -369,8 +358,6 @@ namespace NamPhuThuy.GamePlay
             #endregion
 
             GamePersistentVariable.isLevelLost = false;
-            
-            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
         }
 
         void SetIsLoopLevel(bool isLoop)
@@ -379,6 +366,8 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple(message:$"isLoop: {isLoopLevel}", color:Color.red);
         }
     }
+
+    
 
     private async void GoLevel(int level)
     {
@@ -424,6 +413,26 @@ namespace NamPhuThuy.GamePlay
 
         GoLevel(currentLevel.Value);
     }
+    #endregion
+
+    #region SPECIAL LEVELS
+
+    private string ModifyNameInFixedLevel(string levelName, int levelId)
+    {
+        string res = levelName;
+        
+        if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
+        if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+
+        LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
+        if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
+        {
+            res += " sub";
+        }
+
+        return res;
+    }
+    
     #endregion
 
     #region ASSIGN SCREW FACTION
@@ -870,12 +879,16 @@ namespace NamPhuThuy.GamePlay
     private LevelMode _tutorialMode = LevelMode.Normal;
     private void ShowSuggestion(int nextLevel, bool isLoopLevel)
     {
+        DebugLogger.LogSimple(message:$"nextLevel: {nextLevel}, isLoopLevel: {isLoopLevel}", context:this);
         int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
-        LevelMode currentLevelMode = levelDataContainer.LevelsData[nextLevel].levelMode;
-        if (levelDataContainer.LevelsData[nextLevel].isHasTutorial)
+        int currentLevel = nextLevel - 1;
+        
+        LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
+        if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
         {
+            DebugLogger.LogSimple(message:$"special", context:this);
             GamePersistentVariable.currentTutLevelMode = currentLevelMode;
-            DelayShowTutorialSuggestion(currentLevelMode);
+            DelayShowTutorialSuggestion();
             return;
         }
         
@@ -1025,13 +1038,14 @@ namespace NamPhuThuy.GamePlay
         }));
     }
 
-    private void DelayShowTutorialSuggestion(LevelMode levelMode)
+    private void DelayShowTutorialSuggestion()
     {
+        DebugLogger.LogSimple(context:this);
         CommonUtil.StopAllTweens(_tweens);
         
-        _tweens.Add(Tween.Delay(1).OnComplete(() =>
+        _tweens.Add(Tween.Delay(.3f).OnComplete(() =>
         {
-            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
+            switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
         }));
     }
     #endregion

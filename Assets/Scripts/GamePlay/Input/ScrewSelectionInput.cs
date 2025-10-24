@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Serialization;
@@ -30,6 +31,11 @@ public class ScrewSelectionInput : MonoBehaviour
     [Tooltip("Is the selection process currently happening (e.g., during hold)?")]
     [SerializeField] private bool isSelectingObjectPart;
     private float _timeHold;
+
+    [Header("Components")] 
+    [SerializeField] private SkeletonAnimation handTutSkeAnim;
+    [SerializeField] private Vector3 handTutOffset = new Vector3(-0.1f, -0.1f, 0f);
+    [SerializeField] private bool isTutorialMode = false;
     #endregion
 
     #region EVENT
@@ -47,7 +53,9 @@ public class ScrewSelectionInput : MonoBehaviour
         GameStateMachine.enableInputEvent += EnableInput;
 
         _mainCamera = Camera.main;
-
+        
+        if (isTutorialMode)
+            Cursor.visible = false;
         twoTouchPoints = new List<Vector3>();
     }
 
@@ -60,6 +68,9 @@ public class ScrewSelectionInput : MonoBehaviour
 
     void Update()
     {
+        if (isTutorialMode)
+            UpdateHandPosition();
+        
         if (Input.touchCount > 1)
         {
             return;
@@ -67,6 +78,8 @@ public class ScrewSelectionInput : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
+            if (isTutorialMode)
+                ActiveHandTutAnim(true);
             if (twoTouchPoints.Count == 0)
             {
                 twoTouchPoints.Add(Input.mousePosition);
@@ -271,4 +284,55 @@ public class ScrewSelectionInput : MonoBehaviour
         // DebugLogger.LogSimple(message:$"{res}");
         return res;
     }
+
+    #region Hand Tutorial Methods
+
+    private void ActiveHandTutAnim(bool isActive)
+    {
+        if (handTutSkeAnim == null)
+        {
+            return;
+        }
+
+        if (isActive)
+        {
+            handTutSkeAnim.gameObject.SetActive(true);
+            // Set action animation without looping (false)
+            handTutSkeAnim.AnimationState.SetAnimation(0, "action", false);
+            
+            Cursor.visible = false;
+
+            handTutSkeAnim.AnimationState.Complete += (entry =>
+            {
+                // handTutSkeAnim.gameObject.SetActive(false);
+                // Cursor.visible = true;
+            });
+            /*// Queue the begin animation to play after action completes
+            handTutSkeAnim.AnimationState.AddAnimation(0, "begin", true, 0);*/
+        }
+        else
+        {
+            handTutSkeAnim.AnimationState.SetAnimation(0, "begin", true);
+            handTutSkeAnim.gameObject.SetActive(false);
+        }
+    }
+    
+    
+    private void UpdateHandPosition()
+    {
+        if (handTutSkeAnim == null || !handTutSkeAnim.gameObject.activeSelf)
+            return;
+        
+        // Convert mouse position to world point with some distance from camera
+        Vector3 mouseWorldPos = _mainCamera.ScreenToWorldPoint(new Vector3(
+            Input.mousePosition.x, 
+            Input.mousePosition.y, 
+            10f)); // Using fixed distance from camera
+        
+        // Apply offset
+        handTutSkeAnim.transform.position = mouseWorldPos + handTutOffset;
+        DebugLogger.LogSimple();
+    }
+
+    #endregion
 }

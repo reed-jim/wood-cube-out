@@ -307,9 +307,6 @@ namespace NamPhuThuy.GamePlay
 
             Vector3 screwSize = TransformUtil.ComponentWiseMultiply(transform.lossyScale, meshFilter.mesh.bounds.size);
 
-            // // FOR ROTATING
-            // await Task.Delay(100);
-
             // LOOSE FX
             if (!_isInScrewPort && !_isOutsideWithNoScrewBox)
             {
@@ -379,47 +376,53 @@ namespace NamPhuThuy.GamePlay
                     .OnComplete(() =>
                     {
                         transform.localPosition = transform.localPosition.ChangeZ(-1.6f);
-                        // transform.localPosition = new Vector3(0, 0.4f, -1.6f);
-
-                        _tweens.Add(Tween.Delay(duration: 0)
-                        .OnComplete(() =>
+                        
+                        bool canPlayTightenSound = !GamePersistentVariable.isSoundTightenScrewPlaying
+                                                   && !_isInScrewPort
+                                                   && !_isOutsideWithNoScrewBox;
+                        
+                        if (canPlayTightenSound)
                         {
-                            // _isRotating = false;
-                            // rotateSpeed *= 2;
+                            SoundManager.Instance.PlaySoundTightenScrew();
+                            GamePersistentVariable.isSoundTightenScrewPlaying = true;
+                        }
 
-                            if (!GamePersistentVariable.isSoundTightenScrewPlaying && !_isInScrewPort && !_isOutsideWithNoScrewBox)
+                        Vector3 targetRotation = _localRotationOnScrewSlot - new Vector3(0f, 0f, 180f);
+                        float tightenHalfDuration = durationTightenScrewPort / 2f;
+                        
+                        _tweens.Add(Tween.LocalRotation(
+                            transform, 
+                            targetRotation, 
+                            cycles: 2, 
+                            cycleMode: CycleMode.Incremental,
+                            duration: tightenHalfDuration, 
+                            ease: Ease.Linear
+                        ));
+
+                        _tweens.Add(Tween.LocalPosition(
+                                transform, 
+                                finalLocalPosition, 
+                                duration: durationTightenScrewPort, 
+                                ease: Ease.InOutSine)
+                            .OnComplete(() =>
                             {
-                                SoundManager.Instance.PlaySoundTightenScrew();
+                                screwBoxSlot.CompleteFill();
 
-                                GamePersistentVariable.isSoundTightenScrewPlaying = true;
-                            }
+                                _isInScrewPort = screwBoxSlot.IsScrewPort;
+                                _isMoving = false;
 
-                            _tweens.Add(Tween.LocalRotation(
-                                transform, _localRotationOnScrewSlot - new Vector3(0, 0, 180), cycles: 2, cycleMode: CycleMode.Incremental,
-                                duration: durationTightenScrewPort / 2, ease: Ease.Linear
-                            ));
-
-                            _tweens.Add(Tween.LocalPosition(transform, finalLocalPosition, duration: durationTightenScrewPort, ease: Ease.InOutSine)
-                                .OnComplete(() =>
+                                if (!_isInScrewPort)
                                 {
-                                    screwBoxSlot.CompleteFill();
+                                    _isDone = true;
+                                }
 
-                                    _isInScrewPort = screwBoxSlot.IsScrewPort;
-                                    _isMoving = false;
+                                InvokeScrewLoosenedEvent();
+                                screwMovedCompletedEvent?.Invoke(this);
+                                onCompleteAction?.Invoke();
 
-                                    if (!_isInScrewPort)
-                                    {
-                                        _isDone = true;
-                                    }
-
-                                    InvokeScrewLoosenedEvent();
-                                    screwMovedCompletedEvent?.Invoke(this);
-                                    onCompleteAction?.Invoke();
-
-                                    GamePersistentVariable.isSoundTightenScrewPlaying = false;
-                                })
-                            );
-                        }));
+                                GamePersistentVariable.isSoundTightenScrewPlaying = false;
+                            })
+                        );
                     }));
                 }));
             }));

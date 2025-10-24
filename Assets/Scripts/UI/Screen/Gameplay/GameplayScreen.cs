@@ -10,6 +10,8 @@ using static GameEnum;
 
 public class GameplayScreen : Singleton<GameplayScreen>
 {
+    [Header("Buttons")]
+    [SerializeField] private Button helpButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
