@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class BasicObjectPart : MonoBehaviour, IObjectPart
 {
-    [SerializeField] private Transform levelCenter;
     [SerializeField] private Rigidbody partRigidbody;
     [SerializeField] private MeshCollider meshCollider;
 
