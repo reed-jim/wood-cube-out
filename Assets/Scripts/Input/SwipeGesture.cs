@@ -50,10 +50,10 @@ public class SwipeGesture : MonoBehaviour
             //     return;
             // }
 
-            if (!GamePersistentVariable.isPassedStepOneTutorial)
-            {
-                return;
-            }
+            // if (!GamePersistentVariable.isPassedStepOneTutorial)
+            // {
+            //     return;
+            // }
 
             Vector2 mousePosition = Input.mousePosition;
 
