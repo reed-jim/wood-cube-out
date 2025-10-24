@@ -12,6 +12,7 @@ public class SpoolManager : MonoBehaviour
 
     [SerializeField] private SpoolBox[] spoolBoxs;
     [SerializeField] private List<SpoolBoxSlot> piecePorts;
+    [SerializeField] private SpoolBoxSlot outsideSpoolSlot;
     [SerializeField] private Transform piecePortsContainer;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -855,30 +856,41 @@ public class SpoolManager : MonoBehaviour
 
     private void ClearAllPiecePorts()
     {
-        // int numPieceCleared = 0;
+        int numPieceCleared = 0;
 
-        // for (int i = 0; i < piecePorts.Count; i++)
-        // {
-        //     if (piecePorts[i].IsFilled)
-        //     {
-        //         if (piecePorts[i].Piece.IsMoving)
-        //         {
-        //             continue;
-        //         }
+        for (int i = 0; i < piecePorts.Count; i++)
+        {
+            if (piecePorts[i].IsFilled)
+            {
+                if (piecePorts[i].Piece.IsMoving)
+                {
+                    continue;
+                }
 
-        //         piecePorts[i].IsFilled = false;
+                piecePorts[i].IsFilled = false;
 
-        //         piecePorts[i].Piece.ForceUnpiece();
+                piecePorts[i].Piece.ForceUnpiece();
 
-        //         piecePorts[i].Piece = null;
+                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-        //         numPieceCleared++;
-        //     }
-        // }
+                yarn2D.Rewind(piecePorts[i].Piece.Faction, piecePorts[i], outsideSpoolSlot,
+                    onCompleteAction: () =>
+                    {
+                        // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
-        // spoolBoxesObserver.NumPieceInPiecePorts = GetNumPiecesInPiecePorts();
+                        // piece.InvokePieceLoosenedEvent();
+                    }
+                );
 
-        // piecePortsClearedEvent?.Invoke(numPieceCleared);
+                piecePorts[i].Piece = null;
+
+                numPieceCleared++;
+            }
+        }
+
+        spoolBoxesObserver.NumScrewInScrewPorts = GetNumPiecesInPiecePorts();
+
+        piecePortsClearedEvent?.Invoke(numPieceCleared);
     }
 
     private int GetNumPiecesInPiecePorts()
