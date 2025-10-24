@@ -289,9 +289,9 @@ public class YarnLevelLoader : MonoBehaviour
                 //     }
                 // }
 
-                // _isNotAutoCenterLevel = false;
+                _isNotAutoCenterLevel = false;
 
-                // level.transform.position = Vector3.zero;
+                level.transform.position = Vector3.zero;
 
                 if (!_isNotAutoCenterLevel)
                 {
@@ -330,27 +330,11 @@ public class YarnLevelLoader : MonoBehaviour
 
                     _isSetLevelGradientBound = false;
 
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: Vector3.zero);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
                 // 
-
-
-
-                // _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-
-                // // ASSIGN SCREW FACTIONS
-                // if (currentLevel.Value == 1)
-                // {
-                //     AutoAssignScrewFactionLevelManualGroup(level);
-                // }
-                // else
-                // {
-                //     AutoAssignScrewFaction(level);
-                // }
-
-                // AutoAssignScrewFactionMultiPhaseLevel(level);
 
                 // texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
