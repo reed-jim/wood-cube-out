@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public enum CloudStorageRequest
@@ -40,6 +41,11 @@ public static class GamePersistentVariable
     public static float userBasedLevelDifficulty;
     public static bool isHardMode;
     public static LongTermUserDifficultyConfig longTermUserDifficultyConfig;
+    #endregion
+
+    #region SPECIAL LEVEL
+    public static SpecialLevelConfig specialLevelConfig;
+    public static LevelMode currentTutLevelMode;
     #endregion
 
     #region LEVEL IN PROGRESS

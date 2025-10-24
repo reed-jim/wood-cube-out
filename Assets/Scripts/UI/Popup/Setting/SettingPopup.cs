@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -158,24 +159,29 @@ public class SettingPopup : BasePopup
     #region RATE
     private void Rate()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Rate);
+        // switchRouteEvent?.Invoke(ScreenRoute.Rate);
+        switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
     }
     #endregion
 
     #region Compensate
     private void OpenCompensatePopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Compensate);
+        // switchRouteEvent?.Invoke(ScreenRoute.Compensate);
+        switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
     }
     #endregion
 
     private void OpenBackupPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Backup);
+        DebugLogger.LogSimple();
+        // switchRouteEvent?.Invoke(ScreenRoute.Backup);
+        switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
     }
 
     private void OpenUserConsentPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
+        // switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
+        switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
     }
 }

@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
+using NamPhuThuy;
+using NamPhuThuy.Data;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.VisualScripting;
@@ -11,7 +14,9 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 
-public class LevelLoader : MonoBehaviour
+namespace NamPhuThuy.GamePlay
+{
+    public class LevelLoader : MonoBehaviour
 {
     [Header("Clone to calculate level rotation")]
     [SerializeField] private Transform cloneToCalculateRotation;
@@ -46,6 +51,7 @@ public class LevelLoader : MonoBehaviour
 
     #region EVENT
     public static event Action startLevelEvent;
+    public static event Action endCurrentLevelEvent;
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
@@ -60,6 +66,9 @@ public class LevelLoader : MonoBehaviour
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
+
+
+
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
@@ -106,6 +115,7 @@ public class LevelLoader : MonoBehaviour
     #region LEVEL
     private async void LoadLevel()
     {
+        DebugLogger.LogSimple();
         // // NO INTERNET
         // if (Application.internetReachability == NetworkReachability.NotReachable)
         // {
@@ -136,7 +146,8 @@ public class LevelLoader : MonoBehaviour
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
 
-                isLoopLevel = true;
+                // isLoopLevel = true;
+                SetIsLoopLevel(true);
             }
         }
         else
@@ -150,7 +161,8 @@ public class LevelLoader : MonoBehaviour
                 nextLevel = currentLevel.Value - UserData.NumLevelLoop;
             }
 
-            isLoopLevel = true;
+            // isLoopLevel = true;
+            SetIsLoopLevel(true);
         }
 
         // NOT LOOP
@@ -179,9 +191,10 @@ public class LevelLoader : MonoBehaviour
 
         setLevelNumberEvent?.Invoke();
 
+        nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
-        string levelPrefab = $"Level {nextLevel}";
+        string levelName = $"Level {nextLevel}";
 
         // A/B TEST LEVEL 4
         if (nextLevel == 4)
@@ -190,28 +203,13 @@ public class LevelLoader : MonoBehaviour
 
             if (level4Variant == 1)
             {
-                levelPrefab = $"Level {nextLevel} - Variant 1";
+                levelName = $"Level {nextLevel} - Variant 1";
             }
             else if (level4Variant == 2)
             {
-                levelPrefab = $"Level {nextLevel} - Variant 2";
+                levelName = $"Level {nextLevel} - Variant 2";
             }
         }
-
-        // // REMOTE LEVELS
-        // if (nextLevel > 10)
-        // {
-        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(true);
-
-        //         return;
-        //     }
-        //     else
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(false);
-        //     }
-        // }
 
         // Memory Management
         Resources.UnloadUnusedAssets();
@@ -220,173 +218,173 @@ public class LevelLoader : MonoBehaviour
         {
             Addressables.Release(_loadLevelHandle);
         }
-        //
 
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        DebugLogger.LogSimple(message:$"levelName: {levelName}");
+        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelName);
 
         _loadLevelHandle.Completed += (op) =>
         {
+            DebugLogger.LogSimple(message:$"{op.Status}", color: Color.red);
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                GameObject level = Instantiate(op.Result, transform);
-
-                _currentLevelContainer = level.transform;
-
-                #region ASSIGN CLONE TO CALC ROTATION
-                try
-                {
-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                }
-                catch (System.Exception e) { }
-                #endregion
-
-                // FIND DEPENDENCY
-                // delay for pieces scaling before level
-                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
-
-                _pieces = pieces.ToArray();
-
-                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                //
-
-                if (level.GetComponent<LevelTransformManualModifier>() == null)
-                {
-                    // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
-                    level.transform.position = Vector3.zero;
-                    // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                }
-
-                // // GENERATE CONVEX COLLIDERS
-                // for (int i = 0; i < pieces.Count; i++)
-                // {
-                //     BasicObjectPart piece = pieces[i];
-                //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
-                //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
-
-                //     if (!pieceCollider.convex)
-                //     {
-                //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
-
-                //         Destroy(pieceCollider);
-                //     }
-                // }
-
-
-
-                // AUTO CENTER LEVEL
-                _isNotAutoCenterLevel = false;
-
-                foreach (BasicObjectPart obj in pieces)
-                {
-                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-
-                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
-                    {
-                        _isNotAutoCenterLevel = true;
-
-                        break;
-                    }
-                }
-
-                _isNotAutoCenterLevel = false;
-
-                level.transform.position = Vector3.zero;
-
-                if (!_isNotAutoCenterLevel)
-                {
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform pivotAdjust = level.transform.GetChild(i);
-
-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
-                        {
-                            _pivotAdjust = pivotAdjust;
-
-                            _pivotAdjust.transform.position = Vector3.zero;
-                        }
-                    }
-
-                    foreach (BasicObjectPart piece in pieces)
-                    {
-                        if (_pivotAdjust == null)
-                        {
-                            _pivotAdjust = new GameObject().transform;
-                            _pivotAdjust.name = "Pivot Adjust";
-                            _pivotAdjust.SetParent(_currentLevelContainer);
-
-                            _pivotAdjust.transform.localPosition = Vector3.zero;
-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                            _pivotAdjust.transform.localScale = Vector3.one;
-                        }
-
-                        if (!piece.transform.IsChildOf(_pivotAdjust))
-                        {
-                            piece.transform.SetParent(_pivotAdjust);
-                        }
-                    }
-
-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
-
-                    _isSetLevelGradientBound = false;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
-
-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                }
-                // 
-
-
-
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-
-                // ASSIGN SCREW FACTIONS
-                if (currentLevel.Value == 1)
-                {
-                    AutoAssignScrewFactionLevelManualGroup(level);
-                }
-                else
-                {
-                    AutoAssignScrewFaction(level);
-                }
-
-                AutoAssignScrewFactionMultiPhaseLevel(level);
-
-                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
-
-                if (isLoopLevel)
-                {
-                    RandomizeLevelModelColor(level);
-                }
-                else
-                {
-                    SaferioTracking.TrackLevelStart(currentLevel.Value);
-                }
-
-                _nextLevel = nextLevel;
-                _isLoopLevel = isLoopLevel;
-
-                _tweens.Add(Tween.Delay(3).OnComplete(() =>
-                {
-                    ShowSuggestion(nextLevel, isLoopLevel);
-                }));
-                // SuggestHardMode();
-
-                #region EVENT ITEMS
-                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
-
-                CoinChallengeGameplayUI.Instance.SetNumber();
-                #endregion
-
-                GamePersistentVariable.isLevelLost = false;
+                ActualLoadLevel(op.Result);
             }
         };
 
         showSceneTransitionEvent?.Invoke();
+
+        void ActualLoadLevel(GameObject resultLoad)
+        {
+            GameObject level = Instantiate(resultLoad, transform);
+
+            _currentLevelContainer = level.transform;
+
+            #region ASSIGN CLONE TO CALC ROTATION
+
+            try
+            {
+                level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
+            }
+            catch (System.Exception e)
+            {
+                DebugLogger.LogException(e);
+            }
+            #endregion
+
+            // FIND DEPENDENCY
+            // delay for pieces scaling before level
+            List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
+
+            _pieces = pieces.ToArray();
+
+            Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
+            //
+
+            if (level.GetComponent<LevelTransformManualModifier>() == null)
+            {
+                level.transform.position = Vector3.zero;
+                level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+            }
+
+            // AUTO CENTER LEVEL
+            _isNotAutoCenterLevel = false;
+
+            foreach (BasicObjectPart obj in pieces)
+            {
+                MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+
+                if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
+                {
+                    _isNotAutoCenterLevel = true;
+
+                    break;
+                }
+            }
+
+            _isNotAutoCenterLevel = false;
+
+            level.transform.position = Vector3.zero;
+
+            if (!_isNotAutoCenterLevel)
+            {
+                for (int i = 0; i < level.transform.childCount; i++)
+                {
+                    Transform pivotAdjust = level.transform.GetChild(i);
+
+                    if (pivotAdjust.name.Contains("Pivot Adjust"))
+                    {
+                        _pivotAdjust = pivotAdjust;
+
+                        _pivotAdjust.transform.position = Vector3.zero;
+                    }
+                }
+
+                foreach (BasicObjectPart piece in pieces)
+                {
+                    if (_pivotAdjust == null)
+                    {
+                        _pivotAdjust = new GameObject().transform;
+                        _pivotAdjust.name = "Pivot Adjust";
+                        _pivotAdjust.SetParent(_currentLevelContainer);
+
+                        _pivotAdjust.transform.localPosition = Vector3.zero;
+                        _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                        _pivotAdjust.transform.localScale = Vector3.one;
+                    }
+
+                    if (!piece.transform.IsChildOf(_pivotAdjust))
+                    {
+                        piece.transform.SetParent(_pivotAdjust);
+                    }
+                }
+
+                GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
+
+                _isSetLevelGradientBound = false;
+
+                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+
+                _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+            }
+
+            _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
+
+            // ASSIGN SCREW FACTIONS
+            if (currentLevel.Value == 1)
+            {
+                AutoAssignScrewFactionLevelManualGroup(level);
+            }
+            else
+            {
+                AutoAssignScrewFaction(level);
+            }
+
+            AutoAssignScrewFactionMultiPhaseLevel(level);
+
+            texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
+
+           
+            if (isLoopLevel)
+            {
+                RandomizeLevelModelColor(level);
+            }
+            else
+            {
+                SaferioTracking.TrackLevelStart(currentLevel.Value);
+            }
+
+            _nextLevel = nextLevel;
+            _isLoopLevel = isLoopLevel;
+
+            _tweens.Add(Tween.Delay(3).OnComplete(() =>
+            {
+                ShowSuggestion(nextLevel, isLoopLevel);
+            }));
+            // SuggestHardMode();
+
+            #region EVENT ITEMS
+            GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
+
+            CoinChallengeGameplayUI.Instance.SetNumber();
+            #endregion
+
+            GamePersistentVariable.isLevelLost = false;
+            
+            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
+        }
+
+        void SetIsLoopLevel(bool isLoop)
+        {
+            isLoopLevel = isLoop;
+            DebugLogger.LogSimple(message:$"isLoop: {isLoopLevel}", color:Color.red);
+        }
     }
 
     private async void GoLevel(int level)
     {
+        endCurrentLevelEvent?.Invoke();
+        
+        // DebugLogger.LogSimple();
         await Task.Delay(500);
 
         if (gameObject.transform.childCount > 0)
@@ -409,16 +407,19 @@ public class LevelLoader : MonoBehaviour
 
     private void NextLevel()
     {
+        DebugLogger.LogSimple();
         GoLevel(currentLevel.Value + 1);
     }
 
     private void PrevLevel()
     {
+        DebugLogger.LogSimple();
         GoLevel(currentLevel.Value - 1);
     }
 
     private void Replay()
     {
+        DebugLogger.LogSimple();
         GamePersistentVariable.isPreventLoadLevelData = true;
 
         GoLevel(currentLevel.Value);
@@ -545,9 +546,6 @@ public class LevelLoader : MonoBehaviour
 
         float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
-        // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
-        //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
         int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
         int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
 
@@ -635,19 +633,6 @@ public class LevelLoader : MonoBehaviour
             remainingFactionForBlockedScrews.Remove(nextFaction);
         }
 
-        // RAMDOMIZE
-        // for (int i = 0; i < shuffledScrews.Count; i++)
-        // {
-        //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
-
-        //     shuffledScrews[i].ScrewId = i;
-        //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
-
-        //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-        //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
-        // }
-
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
     #endregion
@@ -655,6 +640,7 @@ public class LevelLoader : MonoBehaviour
     #region AUTO CENTER LEVEL
     private async void OnPieceCompleted(int pieceInstanceId)
     {
+        DebugLogger.LogSimple();
         // if (_isNotAutoCenterLevel)
         // {
         //     return;
@@ -733,35 +719,14 @@ public class LevelLoader : MonoBehaviour
             float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
             float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
 
-            if (boundXMin < minX)
-            {
-                minX = boundXMin;
-            }
 
-            if (boundXMax > maxX)
-            {
-                maxX = boundXMax;
-            }
+            minX = Mathf.Min(boundXMin, minX);
+            minY = Mathf.Min(boundYMin, minY);
+            minZ = Mathf.Min(boundZMin, minZ);
 
-            if (boundYMin < minY)
-            {
-                minY = boundYMin;
-            }
-
-            if (boundYMax > maxY)
-            {
-                maxY = boundYMax;
-            }
-
-            if (boundZMin < minZ)
-            {
-                minZ = boundZMin;
-            }
-
-            if (boundZMax > maxZ)
-            {
-                maxZ = boundZMax;
-            }
+            maxX = Mathf.Max(boundXMax, maxX);
+            maxY = Mathf.Max(boundYMax, maxY);
+            maxZ = Mathf.Max(boundZMax, maxZ);
         }
 
         _pivotAdjust.transform.position = currentPosition;
@@ -829,6 +794,20 @@ public class LevelLoader : MonoBehaviour
             targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
         }
 
+        try
+        {
+            ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
+
+            if (manualLevelZoomMultiplier != null)
+            {
+                targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
+
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 
         GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
@@ -879,12 +858,29 @@ public class LevelLoader : MonoBehaviour
             }
         }
     }
+
+    private void ModifyLevelBasedOnMode()
+    {
+
+    }
     #endregion
 
     #region BOOSTER SUGGESTION
+    
+    private LevelMode _tutorialMode = LevelMode.Normal;
     private void ShowSuggestion(int nextLevel, bool isLoopLevel)
     {
         int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
+        LevelMode currentLevelMode = levelDataContainer.LevelsData[nextLevel].levelMode;
+        if (levelDataContainer.LevelsData[nextLevel].isHasTutorial)
+        {
+            GamePersistentVariable.currentTutLevelMode = currentLevelMode;
+            DelayShowTutorialSuggestion(currentLevelMode);
+            return;
+        }
+        
+        DebugLogger.LogSimple(message:$"levelMode: {currentLevelMode}");
+        
 
         if (randomSuggestionIndex == 0)
         {
@@ -915,10 +911,7 @@ public class LevelLoader : MonoBehaviour
             }
         }
 
-        // if (IsShowBoosterSuggestion(nextLevel, isLoopLevel))
-        // {
-        //     DelayShowBoosterSuggest();
-        // }
+        
     }
 
     private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
@@ -1031,6 +1024,16 @@ public class LevelLoader : MonoBehaviour
             switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
         }));
     }
+
+    private void DelayShowTutorialSuggestion(LevelMode levelMode)
+    {
+        CommonUtil.StopAllTweens(_tweens);
+        
+        _tweens.Add(Tween.Delay(1).OnComplete(() =>
+        {
+            switchRouteEvent?.Invoke(ScreenRoute.Tutorial);
+        }));
+    }
     #endregion
 
     #region HARD MODE
@@ -1044,6 +1047,7 @@ public class LevelLoader : MonoBehaviour
 
     private void OnHardModeSuggestionClosed()
     {
+        DebugLogger.LogSimple();
         ShowSuggestion(_nextLevel, _isLoopLevel);
     }
     #endregion
@@ -1071,6 +1075,7 @@ public class LevelLoader : MonoBehaviour
 
     private void RandomizeLevelModelColor(GameObject level)
     {
+        DebugLogger.LogSimple();
         BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
         Renderer[] objectPartRenderers = new Renderer[objectParts.Length];
 
@@ -1154,4 +1159,6 @@ public class LevelLoader : MonoBehaviour
         }
     }
     #endregion
+}
+
 }

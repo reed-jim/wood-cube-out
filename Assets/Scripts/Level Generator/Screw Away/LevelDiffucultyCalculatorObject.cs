@@ -1,5 +1,6 @@
 #if UNITY_EDITOR
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using UnityEditor;
 using UnityEngine;
 
@@ -8,7 +9,6 @@ public class LevelDiffucultyCalculatorObject : MonoBehaviour
 {
     [SerializeField] private GameObject level;
     [SerializeField] private int levelNumber;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
 
     public void Calculate()
@@ -21,9 +21,6 @@ public class LevelDiffucultyCalculatorObject : MonoBehaviour
         const float WEIGHT_BLOCKED_RATIO_DIFFICULTY = 100f;
         const float WEIGHT_SCREW_PORT_FACTION_CHANCE_MODIFIER = 200f;
         const float WEIGHT_START_GAME_TRIPLE_SAME_FACTION_GENERATION = 200f;
-
-        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(levelNumber);
-
 
 
         // Number Screw difficulty

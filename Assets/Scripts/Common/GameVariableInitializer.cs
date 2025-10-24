@@ -58,6 +58,8 @@ public class GameVariableInitializer : MonoBehaviour
         GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
 
         GamePersistentVariable.longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
+
+        GamePersistentVariable.specialLevelConfig = new SpecialLevelConfig(){isEnable =  true};
     }
 
     private void Start()

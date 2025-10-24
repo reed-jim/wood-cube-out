@@ -180,11 +180,22 @@ public class RemoteConfigController : MonoBehaviour
         #region DIFFICULTY
         LongTermUserDifficultyConfig longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
 
-        GetJsonConfig(FirebaseConfig.longTermUserDifficultyMultiplier, out longTermUserDifficultyConfig);
+        GetJsonConfig(FirebaseConfig.longTermUserDifficultyConfig, out longTermUserDifficultyConfig);
 
         if (longTermUserDifficultyConfig != null)
         {
             GamePersistentVariable.longTermUserDifficultyConfig = longTermUserDifficultyConfig;
+        }
+        #endregion
+
+        #region SPECIAL LEVEL
+        SpecialLevelConfig specialLevelConfig = new SpecialLevelConfig();
+
+        GetJsonConfig(FirebaseConfig.specialLevelConfig, out specialLevelConfig);
+
+        if (specialLevelConfig != null)
+        {
+            GamePersistentVariable.specialLevelConfig = specialLevelConfig;
         }
         #endregion
 

@@ -4,6 +4,8 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
 using Unity.VisualScripting;
@@ -90,18 +92,6 @@ public class HingeJointGenerator : EditorWindow
         maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
         matchName = EditorGUILayout.TextField("Match Name", matchName);
 
-        // expectedLocalPositionOffset = EditorGUILayout.Vector3Field("Expected Local Position Offset", expectedLocalPositionOffset);
-        // expectedLocalRotationOffset = EditorGUILayout.Vector3Field("Expected Local Rotation Offset", expectedLocalRotationOffset);
-
-        // ratioSnapOffset = EditorGUILayout.FloatField("Ratio Snap Offset", ratioSnapOffset);
-
-        // expectedOffsetRatioAutoSnapSurface = EditorGUILayout.FloatField("Expected Offset Ratio Auto Snap Surface", expectedOffsetRatioAutoSnapSurface);
-
-        // if (GUILayout.Button("Generate"))
-        // {
-        //     Generate(prefabPath);
-        // }
-
         GUIStyle centeredStyle = new GUIStyle(EditorStyles.boldLabel)
         {
             alignment = TextAnchor.MiddleCenter,
@@ -150,6 +140,10 @@ public class HingeJointGenerator : EditorWindow
             RevertOriginalModelColor();
         }
 
+        if (GUILayout.Button("GenerateChain"))
+        {
+            GenerateChain();
+        }
         // if (GUILayout.Button("Fine Tune Level"))
         // {
         //     FineTuneLevel();
@@ -160,12 +154,14 @@ public class HingeJointGenerator : EditorWindow
 
         if (GUILayout.Button("Generate And Snap Screws"))
         {
+            ClearScrews();
             GenerateScrews();
             SnapSurfaceScrewForAllPieceSequentially();
         }
 
         if (GUILayout.Button("Generate Screws"))
         {
+            ClearScrews();
             GenerateScrews();
         }
 
@@ -194,81 +190,6 @@ public class HingeJointGenerator : EditorWindow
             RemoveAllMeshColliders();
         }
 
-        // if (GUILayout.Button("Generate Hinge Joint All Levels"))
-        // {
-        //     GenerateHingeJointAllLevels();
-        // }
-
-        // if (GUILayout.Button("Check HingeJoint Number"))
-        // {
-        //     CheckHingeJointNumber(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Reset Local Rotation"))
-        // {
-        //     ResetLocalRotation(target.transform);
-        // }
-
-        // if (GUILayout.Button("Flip Horizontally"))
-        // {
-        //     FlipHorizontally(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Flip Vertically"))
-        // {
-        //     FlipVertically(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Move"))
-        // {
-        //     Move(Selection.activeTransform, prefabPath);
-        // }
-
-        // if (GUILayout.Button("Auto Assign Screw Faction"))
-        // {
-        //     // AutoAssignScrewFaction(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Spawn Screw"))
-        // {
-        //     SpawnScrew(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Assign Material"))
-        // {
-        //     AssignMaterial(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Center Level Pivot"))
-        // {
-        //     CenterLevelPivot(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Remove All Grandchildren Of"))
-        // {
-        //     RemoveAllGrandchildrenOf();
-        // }
-
-        // if (GUILayout.Button("Get Screw Number By Phase"))
-        // {
-        //     GetScrewNumberByPhase(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Move All Screws"))
-        // {
-        //     MoveAllScrews(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Scale All Screws"))
-        // {
-        //     ScaleAllScrews(prefabPath);
-        // }
-
-        // if (GUILayout.Button("Snap Surface"))
-        // {
-        //     SnapSurface();
-        // }
-
         GUILayout.Space(16);
         GUILayout.Label("Delete", centeredStyle);
 
@@ -295,23 +216,8 @@ public class HingeJointGenerator : EditorWindow
             SnapSurfaceScrewForAllPieceSequentially();
         }
 
-        // if (GUILayout.Button("Snap Rotation Surface"))
-        // {
-        //     SnapRotationSurface();
-        // }
-
-        // if (GUILayout.Button("Magic Snap"))
-        // {
-        //     MagicSnap();
-        // }
-
         GUILayout.Space(16);
         GUILayout.Label("Extract other games' level", centeredStyle);
-
-        // if (GUILayout.Button("ChangeMesh"))
-        // {
-        //     ChangeMesh();
-        // }
 
         if (GUILayout.Button("Extract Pieces"))
         {
@@ -324,7 +230,12 @@ public class HingeJointGenerator : EditorWindow
         }
 
         GUILayout.Space(16);
-        GUILayout.Label("Util", centeredStyle);
+        GUILayout.Label("Utils", centeredStyle);
+        
+        if (GUILayout.Button("Remove Children's Components"))
+        {
+            RemoveComponentsForAllChildren();
+        }
 
         if (GUILayout.Button("Add Required Components To Pieces"))
         {
@@ -380,11 +291,6 @@ public class HingeJointGenerator : EditorWindow
         {
             FoldAllInPrefabMode();
         }
-
-        // if (GUILayout.Button("Overlap"))
-        // {
-        //     IsOverlapping(Selection.activeTransform.position, Selection.activeGameObject);
-        // }
 
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
@@ -566,27 +472,6 @@ public class HingeJointGenerator : EditorWindow
         for (int I = 0; I < hingeJoints.Length; I++)
         {
             DestroyImmediate(hingeJoints[I], true);
-        }
-    }
-
-    private void GenerateHingeJointAllLevels()
-    {
-        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
-
-        int level = 1;
-
-        for (int i = 0; i < levels.Length; i++)
-        {
-            RotateObject rotateObject = levels[i].GetComponent<RotateObject>();
-
-            if (rotateObject == null)
-            {
-                continue;
-            }
-
-            GenerateHingeJointAll(levels[i].transform, $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab");
-
-            level++;
         }
     }
 
@@ -1454,11 +1339,34 @@ public class HingeJointGenerator : EditorWindow
     #endregion
 
     #region UTIL
+
+    private void RemoveComponentsForAllChildren()
+    {
+        Transform level = Selection.activeTransform;
+        
+        if (level == null) return;
+
+        foreach (Transform child in level)
+        {
+            Component[] components = child.GetComponents<Component>();
+            foreach (var comp in components)
+            {
+                if (!(comp is Transform))
+                {
+                    DestroyImmediate(comp);
+                }
+                /*if (comp is BasicObjectPart)
+                    DestroyImmediate(comp);
+                if (comp is ObjectPartMaterialPropertyBlock)
+                    DestroyImmediate(comp);*/
+            }
+        }
+        EditorUtility.SetDirty(level);
+    }
+    
     private void AddRequiredComponentsToPieces()
     {
         Transform level = Selection.activeTransform;
-
-        // Transform[] pieces = GetComponentsFromAllChildren<Transform>(level).ToArray();
 
         if (level.GetComponent<RotateObject>() == null)
         {
@@ -1469,21 +1377,25 @@ public class HingeJointGenerator : EditorWindow
         {
             Transform piece = level.GetChild(i);
 
-            // // Level Container
-            // if (pieces[i] == level)
-            // {
-            //     if (pieces[i].GetComponent<RotateObject>() == null)
-            //     {
-            //         pieces[i].AddComponent<RotateObject>();
-            //     }
-
-            //     continue;
-            // }
-
             // Pieces
-            piece.AddComponent<BasicObjectPart>();
+            if (piece.GetComponent<BasicObjectPart>() == null)
+            {
+                piece.AddComponent<BasicObjectPart>();
+            }
+            
+            if (piece.GetComponent<ObjectPartMaterialPropertyBlock>() == null)
+            {
+                piece.AddComponent<ObjectPartMaterialPropertyBlock>();
+            }
+            
+            if (piece.GetComponent<Rigidbody>() == null)
+            {
+                piece.AddComponent<Rigidbody>();
+            }
+            
+            /*piece.AddComponent<BasicObjectPart>();
             piece.AddComponent<ObjectPartMaterialPropertyBlock>();
-            piece.AddComponent<Rigidbody>();
+            piece.AddComponent<Rigidbody>();*/
 
             if (piece.GetComponent<MeshCollider>() == null)
             {
@@ -1521,19 +1433,6 @@ public class HingeJointGenerator : EditorWindow
         {
             FoldRecursively(child);
         }
-    }
-
-    private static EditorWindow GetHierarchyWindow()
-    {
-        var windows = Resources.FindObjectsOfTypeAll<EditorWindow>();
-        foreach (var window in windows)
-        {
-            if (window.titleContent.text == "Hierarchy")
-            {
-                return window;
-            }
-        }
-        return null;
     }
 
     public List<T> GetComponentsFromAllChildren<T>(Transform parent) where T : Component
@@ -2996,6 +2895,85 @@ public class HingeJointGenerator : EditorWindow
 
         return absoluteOne;
     }
+
+    private void GenerateChain()
+    {
+        string prefabPath = "Assets/Prefabs/Screw Away/Special Level/Chain Container.prefab";
+
+        GameObject chainContainerPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+
+        Transform piece = Selection.activeTransform;
+
+        GameObject chainContainer = (GameObject)PrefabUtility.InstantiatePrefab(chainContainerPrefab, piece);
+
+        Vector3 center = FindCenterOfLargestFace(piece.gameObject);
+
+        chainContainer.transform.position = center;
+    }
+
+    private Vector3 FindCenterOfLargestFace(GameObject obj)
+    {
+        MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
+        if (meshFilter == null)
+        {
+            Debug.LogError("Object does not have a MeshFilter component.");
+            return Vector3.zero;
+        }
+
+        Mesh mesh = meshFilter.sharedMesh;
+        Vector3[] vertices = mesh.vertices;
+        int[] triangles = mesh.triangles;
+
+        // Variables to track the largest face
+        float maxFaceArea = 0f;
+        Vector3 largestFaceCenter = Vector3.zero;
+
+        // Iterate through all faces of the mesh
+        for (int i = 0; i < triangles.Length; i += 3)
+        {
+            // Get the vertices of the triangle
+            Vector3 v1 = vertices[triangles[i]];
+            Vector3 v2 = vertices[triangles[i + 1]];
+            Vector3 v3 = vertices[triangles[i + 2]];
+
+            // Calculate the lengths of the edges (hypotenuse candidates)
+            float edge1Length = (v2 - v1).magnitude;
+            float edge2Length = (v3 - v2).magnitude;
+            float edge3Length = (v1 - v3).magnitude;
+
+            // Identify the longest edge (hypotenuse)
+            float maxEdgeLength = Mathf.Max(edge1Length, edge2Length, edge3Length);
+            Vector3 midpoint = Vector3.zero;
+
+            if (maxEdgeLength == edge1Length)
+            {
+                midpoint = (v1 + v2) / 2f;
+            }
+            else if (maxEdgeLength == edge2Length)
+            {
+                midpoint = (v2 + v3) / 2f;
+            }
+            else
+            {
+                midpoint = (v1 + v3) / 2f;
+            }
+
+            // Calculate the area of the triangle (using cross product)
+            float area = Vector3.Cross(v2 - v1, v3 - v1).magnitude / 2f;
+
+            // Update largest face if this one is bigger
+            if (area > maxFaceArea)
+            {
+                maxFaceArea = area;
+                largestFaceCenter = midpoint; // Center of the hypotenuse
+            }
+        }
+
+        // Adjust the center for object space (to take into account the object's position, rotation, and scale)
+        largestFaceCenter = obj.transform.TransformPoint(largestFaceCenter);
+
+        return largestFaceCenter;
+    }
     #endregion
 
     #region GENERATE SCREW
@@ -3003,15 +2981,9 @@ public class HingeJointGenerator : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
-
-        List<BaseScrew> toRemoveList = new List<BaseScrew>();
-
-        toRemoveList.AddRange(screws);
-
-        foreach (var item in toRemoveList)
+        foreach (var screw in GetComponentsFromAllChildren<BaseScrew>(level))
         {
-            DestroyImmediate(item.gameObject, true);
+            DestroyImmediate(screw.gameObject, true);
         }
 
         EditorUtility.SetDirty(level);
@@ -3059,29 +3031,18 @@ public class HingeJointGenerator : EditorWindow
     private void GenerateScrews()
     {
         Transform level = Selection.activeTransform;
-
-        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[2];
-
-        // Remove old screws
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
-
-        List<BaseScrew> toRemoveList = new List<BaseScrew>();
-
-        toRemoveList.AddRange(screws);
-
-        foreach (var item in toRemoveList)
-        {
-            DestroyImmediate(item.gameObject, true);
-        }
+        // screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[3];
+        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.NORMAL_SCREW_PREFAB_PATH);
 
         BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
 
+        // Calculate CENTER POINT
+        /*Vector3 centerPoint = pieces.Aggregate(Vector3.zero, (sum, piece) => sum + piece.transform.position) / pieces.Length;*/
+
         Vector3 centerPoint = Vector3.zero;
 
-        for (int i = 0; i < pieces.Length; i++)
-        {
-            centerPoint += pieces[i].transform.position;
-        }
+        foreach (var objectPart in pieces)
+            centerPoint += objectPart.transform.position;
 
         centerPoint /= pieces.Length;
 
@@ -3098,11 +3059,9 @@ public class HingeJointGenerator : EditorWindow
             Quaternion cachedPieceRotation = piece.transform.rotation;
 
             piece.transform.rotation = Quaternion.identity;
-            //
 
+            MeshFilter meshFilter = piece.GetComponent<MeshFilter>();
             Vector3 pieceSize = piece.GetComponent<MeshCollider>().bounds.size;
-            Vector3 halfSize = 0.5f * pieceSize;
-
             Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
             Vector3 pieceBoundCenter = piece.GetComponent<MeshFilter>().sharedMesh.bounds.center;
 
@@ -3113,9 +3072,6 @@ public class HingeJointGenerator : EditorWindow
             maxScrewX = Mathf.Max(maxScrewX, 1);
             maxScrewY = Mathf.Max(maxScrewY, 1);
             maxScrewZ = Mathf.Max(maxScrewZ, 1);
-
-            // Debug.Log(piece.name + "/" + pieceSize + "/" + screwSize);
-            // Debug.Log(maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             // avoid spawn too many
             if (maxScrewX * maxScrewY * maxScrewZ > 16)
@@ -3128,44 +3084,18 @@ public class HingeJointGenerator : EditorWindow
             Dictionary<Vector3, bool> isTilesEmpty = new Dictionary<Vector3, bool>();
 
             for (int i = 0; i < maxScrewX; i++)
-            {
                 for (int j = 0; j < maxScrewY; j++)
-                {
                     for (int k = 0; k < maxScrewZ; k++)
-                    {
                         isTilesEmpty.Add(new Vector3(i, j, k), true);
-                    }
-                }
-            }
-
-            // Debug.Log("SAFERIO " + piece.name + "/" + screwSize + "/" + maxScrewX + "/" + maxScrewY + "/" + maxScrewZ);
 
             int numScrewSpawned = 0;
 
             for (int i = 0; i < maxScrewX; i++)
-            {
                 for (int j = 0; j < maxScrewY; j++)
-                {
                     for (int k = 0; k < maxScrewZ; k++)
                     {
-                        if (numScrewSpawned >= maxScrew)
-                        {
-                            break;
-                        }
-
-                        if (!IsValidTile(i, j, k, isTilesEmpty))
-                        {
-                            continue;
-                        }
-
-                        // bool isRandomSpawn = UnityEngine.Random.Range(0, 1) == 0;
-
-                        // isRandomSpawn = true;
-
-                        // if (!isRandomSpawn)
-                        // {
-                        //     continue;
-                        // }
+                        if (numScrewSpawned >= maxScrew) { break; }
+                        if (!IsValidTile(i, j, k, isTilesEmpty)) { continue; }
 
                         BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
 
@@ -3175,30 +3105,6 @@ public class HingeJointGenerator : EditorWindow
 
                         List<FaceDirection> poolDirection = new List<FaceDirection>();
 
-                        // poolDirection.Add(FaceDirection.Front);
-                        // poolDirection.Add(FaceDirection.Top);
-                        // poolDirection.Add(FaceDirection.Side);
-
-                        // if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.y > pieceSize.y)
-                        // {
-                        //     poolDirection.Remove(FaceDirection.Front);
-                        // }
-                        // if (1.6f * screwSize.y > pieceSize.y || 1.6f * screwSize.z > pieceSize.z)
-                        // {
-                        //     poolDirection.Remove(FaceDirection.Side);
-                        // }
-                        // if (1.6f * screwSize.x > pieceSize.x || 1.6f * screwSize.z > pieceSize.z)
-                        // {
-                        //     poolDirection.Remove(FaceDirection.Top);
-                        // }
-
-                        // if (poolDirection.Count == 0)
-                        // {
-                        //     poolDirection.Add(FaceDirection.Top);
-                        // }
-
-                        // FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
-
                         float areaFront = pieceSize.x * pieceSize.y;
                         float areaTop = pieceSize.x * pieceSize.z;
                         float areaSide = pieceSize.y * pieceSize.z;
@@ -3206,24 +3112,24 @@ public class HingeJointGenerator : EditorWindow
                         if (areaFront >= areaTop && areaFront >= areaSide)
                         {
                             poolDirection.Add(FaceDirection.Front);
-                            // poolDirection.Add(FaceDirection.Top);
                         }
 
                         if (areaTop >= areaFront && areaTop >= areaSide)
                         {
                             poolDirection.Add(FaceDirection.Top);
-                            // poolDirection.Add(FaceDirection.Side);
                         }
 
                         if (areaSide >= areaFront && areaSide >= areaTop)
                         {
                             poolDirection.Add(FaceDirection.Side);
-                            // poolDirection.Add(FaceDirection.Top);
                         }
 
                         FaceDirection faceDirection = poolDirection[UnityEngine.Random.Range(0, poolDirection.Count)];
 
-                        screw.transform.position = piece.transform.position +
+                        Vector3 localModelCenter = meshFilter.sharedMesh.bounds.center;
+                        Vector3 worldModelCenter = meshFilter.transform.TransformPoint(localModelCenter);
+
+                        screw.transform.position = worldModelCenter +
                             new Vector3
                             (
                                 (-(maxScrewX - 1) / 2f + i) * 0.7f * pieceSize.x / maxScrewX,
@@ -3231,10 +3137,7 @@ public class HingeJointGenerator : EditorWindow
                                 (-(maxScrewZ - 1) / 2f + k) * 0.7f * pieceSize.z / maxScrewZ
                             );
 
-                        int direction = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1;
-
-                        // prevent invalid screw generation
-                        direction = 1;
+                        int direction = 1/* = UnityEngine.Random.Range(0, 10) < 3 ? -1 : 1*/;
 
                         Debug.Log("SAFERIO " + piece.name + "/" + faceDirection);
 
@@ -3243,9 +3146,7 @@ public class HingeJointGenerator : EditorWindow
                             direction = piece.transform.position.z > centerPoint.z ? 1 : -1;
 
                             screw.transform.position = screw.transform.position.ChangeZ(piece.transform.position.z + 2 * direction * pieceSize.z);
-                            // screw.transform.rotation = Quaternion.Euler(new Vector3(180, 0, 0));
 
-                            // screw.transform.position = piece.transform.position + piece.transform.forward * pieceSize.z;
                             screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
 
                             if (direction == 1)
@@ -3265,9 +3166,7 @@ public class HingeJointGenerator : EditorWindow
                             direction = 1;
 
                             screw.transform.position = screw.transform.position.ChangeY(piece.transform.position.y + direction * pieceSize.y);
-                            // screw.transform.rotation = Quaternion.Euler(new Vector3(-90, 0, 0));
 
-                            // screw.transform.position = piece.transform.position + piece.transform.up * pieceSize.y;
                             screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
 
                             for (int m = 0; m < maxScrewY; m++)
@@ -3278,19 +3177,6 @@ public class HingeJointGenerator : EditorWindow
                         else
                         {
                             direction = piece.transform.position.x > centerPoint.x ? 1 : -1;
-                            // direction = UnityEngine.Random.Range(0, 10) < 5 ? -1 : 1;
-
-                            // if (direction == -1)
-                            // {
-                            //     RaycastHit hitFromPiece;
-
-                            //     level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, Vector3.left, out hitFromPiece);
-
-                            //     if (hitFromPiece.collider != null)
-                            //     {
-                            //         direction = 1;
-                            //     }
-                            // }
 
                             screw.transform.position = piece.transform.position + piece.transform.right * pieceSize.x;
                             screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
@@ -3312,28 +3198,11 @@ public class HingeJointGenerator : EditorWindow
                         }
 
                         // COMPENSATE MODEL BOUND CENTER NOT AT (0, 0, 0)
-                        screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
+                        // screw.transform.position += level.transform.localScale.x * pieceBoundCenter;
+
                         screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
-
-                        // // Remove invalid screw
-                        // RaycastHit hit;
-
-                        // level.gameObject.scene.GetPhysicsScene().Raycast(screw.transform.position, -screw.transform.forward, out hit);
-
-                        // if (hit.collider == null)
-                        // {
-                        //     DestroyImmediate(screw.gameObject);
-                        // }
-                        // else
-                        // {
-                        //     // if (hit.collider.GetComponent<BaseScrew>() != null)
-                        //     // {
-                        //     //     DestroyImmediate(screw.gameObject);
-                        //     // }
-                        // }
                     }
-                }
-            }
+
 
             piece.transform.rotation = cachedPieceRotation;
         }
@@ -3640,7 +3509,7 @@ public class HingeJointGenerator : EditorWindow
 
         Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
 
-        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[2];
+        screwPrefab = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Screw")[3];
 
         Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
 

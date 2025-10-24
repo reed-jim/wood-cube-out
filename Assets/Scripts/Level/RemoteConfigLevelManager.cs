@@ -63,12 +63,44 @@ public static class RemoteConfigLevelManager
 
         return originalLevelIndex;
     }
+
+    public static int GetReplacedLevelIndexInGroup(int originalLevelIndex)
+    {
+        try
+        {
+            RemoteConfigLevelList remoteConfigLevelList;
+
+            RemoteConfigController.GetJsonConfig(FirebaseConfig.REMOTE_CONFIG_LEVEL_LIST, out remoteConfigLevelList);
+
+            if (remoteConfigLevelList.toReplaceLevelGroupList == null)
+            {
+                return originalLevelIndex;
+            }
+
+            for (int i = 0; i < remoteConfigLevelList.toReplaceLevelGroupList.Length; i++)
+            {
+                if (remoteConfigLevelList.toReplaceLevelGroupList[i].toReplaceGroup.Contains(originalLevelIndex))
+                {
+                    int index = System.Array.IndexOf(remoteConfigLevelList.toReplaceLevelGroupList[i].toReplaceGroup, originalLevelIndex);
+
+                    return remoteConfigLevelList.toReplaceLevelGroupList[i].replaceWithGroup[index];
+                }
+            }
+
+            return originalLevelIndex;
+        }
+        catch (System.Exception)
+        {
+            return originalLevelIndex;
+        }
+    }
 }
 
 [System.Serializable]
 public class RemoteConfigLevelList
 {
     public RemoteConfigLevelPair[] toReplaceLevelList;
+    public RemoteConfigLevelGroupPair[] toReplaceLevelGroupList;
 }
 
 [System.Serializable]
@@ -76,4 +108,11 @@ public class RemoteConfigLevelPair
 {
     public int key;
     public int value;
+}
+
+[System.Serializable]
+public class RemoteConfigLevelGroupPair
+{
+    public int[] toReplaceGroup;
+    public int[] replaceWithGroup;
 }

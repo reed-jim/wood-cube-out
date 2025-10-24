@@ -135,6 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0b0abec1b51aad4c866d9ebd51ff589, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  screwServiceLocator: {fileID: 0}
   meshRenderer: {fileID: 3605883866489035732}
   materials:
   - {fileID: 2100000, guid: cae4256dfbcbdaa469382d8c947b581b, type: 2}
@@ -149,6 +150,9 @@ MonoBehaviour:
   secondaryColorReference: _SecondaryColor
   outlineWidthReference: 
   secondaryColorMultiplier: 0.6
+  screwConditionTextures:
+  - {fileID: 2800000, guid: bfafced37d594c9488a98af1e726f0f1, type: 3}
+  - {fileID: 2800000, guid: 8efd31919914f704599a31f5529441d3, type: 3}
   _renderer: {fileID: 3605883866489035732}
 --- !u!33 &3447841031173302842
 MeshFilter:

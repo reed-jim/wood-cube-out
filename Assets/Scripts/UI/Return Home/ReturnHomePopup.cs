@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.GamePlay;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -12,7 +13,6 @@ public class ReturnHomePopup : BasePopup
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
@@ -43,7 +43,7 @@ public class ReturnHomePopup : BasePopup
 
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.ReturnHome.ToString());
 
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.ReturnHome.ToString());
         }

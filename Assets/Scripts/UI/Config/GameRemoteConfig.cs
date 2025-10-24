@@ -97,3 +97,11 @@ public class DoubleInterAdsConfig
     }
 }
 #endregion
+
+#region SPECIAL LEVEL
+[System.Serializable]
+public class SpecialLevelConfig
+{
+    public bool isEnable;
+}
+#endregion

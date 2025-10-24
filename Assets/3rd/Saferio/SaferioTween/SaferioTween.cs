@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
+using PrimeTween;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -366,6 +367,55 @@ namespace Saferio.Util.SaferioTween
             target.localScale = end;
 
             onCompletedAction?.Invoke();
+        }
+
+        public static Sequence ScaleUpWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
+        {
+            target.gameObject.SetActive(true);
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f, startDelay: delay, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, targetScale, duration: 0.1f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+
+        public static Sequence ScaleDownWithPunch(Transform target, Action onCompleteAction = null)
+        {
+            float initialScale = target.localScale.x;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, 1.1f * initialScale, duration: 0.1f, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, 0, duration: 0.3f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    target.gameObject.SetActive(false);
+
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+
+        public static Sequence ShowWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
+        {
+            target.gameObject.SetActive(true);
+
+            target.transform.localScale = Vector3.zero;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, 1.1f * targetScale, duration: 0.3f, startDelay: delay, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, targetScale, duration: 0.1f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
         }
 
         #region SCALE - ASYNC

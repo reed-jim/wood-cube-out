@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -136,8 +137,6 @@ public class MenuScreen : MonoBehaviour
         canvasSize.Load();
 
         // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
-
-        // PreventSpammingStartButton();
     }
 
     void OnEnable()
@@ -196,20 +195,6 @@ public class MenuScreen : MonoBehaviour
         _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
         {
             startGameButton.interactable = true;
-
-            // startGameButton.gameObject.SetActive(true);
-
-            // startGameButton.transform.localScale = Vector3.one;
-
-            // _tweens.Add(Tween.Scale(startGameButton.transform, 1.1f, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     _tweens.Add(Tween.Scale(startGameButton.transform, 1f, duration: 0.1f)
-            //     .OnComplete(() =>
-            //     {
-            //         startGameButton.interactable = true;
-            //     }));
-            // }));
         }));
     }
 
@@ -220,6 +205,7 @@ public class MenuScreen : MonoBehaviour
 
     private void StartGame()
     {
+        // DebugLogger.LogSimple();
         if (_isGameStarted)
         {
             return;
@@ -239,11 +225,10 @@ public class MenuScreen : MonoBehaviour
         //     }
         // }
 
-        if (
-            GamePersistentVariable.livesConfig.isActive &&
-            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
-        )
+        if (GamePersistentVariable.livesConfig.isActive &&
+            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0)
         {
+            DebugLogger.LogSimple(message:"Place 1");
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
 
             GamePersistentVariable.isPendingStartLevel = true;
@@ -253,6 +238,7 @@ public class MenuScreen : MonoBehaviour
 
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
+            DebugLogger.LogSimple(message:"Place 2");
             GamePersistentVariable.isLoadingLevelInProgress = false;
 
             if (CommonUtil.IsLevelInProgress(currentLevel.Value))
@@ -266,6 +252,7 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
+            // DebugLogger.LogSimple(message:"Place 3");
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
 

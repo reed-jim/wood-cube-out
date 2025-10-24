@@ -448,6 +448,7 @@ public class FirebaseConfig
     public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
     public const string SCREW_HOLE_LEFT_TO_LOSE = "screw_hole_left_to_lose";
     public const string longTermUserDifficultyMultiplier = "long_term_user_difficulty_multiplier";
+    public const string specialLevelConfig = "special_level_config";
     public const string isDisableLoopLevel = "isTester";
     #endregion
 

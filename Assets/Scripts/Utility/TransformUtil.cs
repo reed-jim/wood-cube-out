@@ -102,6 +102,11 @@ public static class TransformUtil
         return components;
     }
 
+    public static T[] GetComponentArrayFromAllChildren<T>(Transform parent) where T : Component
+    {
+        return GetComponentsFromAllChildren<T>(parent).ToArray();
+    }
+
     public static T[] GetComponentsArrayFromAllChildren<T>(Transform parent) where T : Component
     {
         List<T> components = new List<T>();

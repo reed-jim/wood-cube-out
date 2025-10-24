@@ -1,0 +1,112 @@
+using NamPhuThuy.GamePlay;
+using NamPhuThuy.VFX;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
+using TMPro;
+using UnityEngine;
+
+public class LockedObjectPart : BasicObjectPart
+{
+    [Header("Chain")]
+    [SerializeField] private GameObject chainContainer;
+
+    [Header("UI")]
+    [SerializeField] private RectTransform uiContainer;
+    [SerializeField] private int requiredValueToUnlock;
+
+    [SerializeField] private TMP_Text requiredValueText;
+
+    private BaseScrew[] _screws;
+
+    protected override void MoreLogicOnAwake()
+    {
+        BaseScrew.screwLoosenedEvent += OnScrewLoosed;
+    }
+
+    protected override void MoreLogicOnDestroy()
+    {
+        BaseScrew.screwLoosenedEvent -= OnScrewLoosed;
+    }
+
+    private void Start()
+    {
+        Lock();
+    }
+
+    private void Lock()
+    {
+        _screws = TransformUtil.GetComponentArrayFromAllChildren<BaseScrew>(transform);
+
+        foreach (var screw in _screws)
+        {
+            screw.GetComponent<MeshRenderer>().enabled = false;
+            // screw.gameObject.SetActive(false);
+        }
+
+        _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Locked);
+
+        requiredValueToUnlock = Random.Range(5, 10);
+
+        requiredValueText.text = $"{requiredValueToUnlock}";
+    }
+
+    private void OnScrewLoosed(BaseScrew screw)
+    {
+        requiredValueToUnlock--;
+
+        VFXManager.Ins.PlayAt(
+            type: VFXType.STAT_CHANGE_TEXT,
+            pos: requiredValueText.transform.position,
+            amount: 1,
+            initialParent: requiredValueText.transform,
+            offset: new Vector2(-40f, 25f),
+            distance: 20f,
+            color: Color.green);
+        
+        requiredValueText.text = $"{requiredValueToUnlock}";
+
+        if (requiredValueToUnlock == 0)
+        {
+            Tween.Scale(uiContainer, 1.1f, duration: 0.3f).OnComplete(() =>
+            {
+                Tween.Scale(uiContainer, 0f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    uiContainer.gameObject.SetActive(false);
+                });
+            });
+
+            float initialScale;
+
+            for (int i = 0; i < _screws.Length; i++)
+            {
+                int index = i;
+
+                initialScale = _screws[i].transform.localScale.x;
+
+                _screws[i].GetComponent<MeshRenderer>().enabled = true;
+
+                // _screws[i].gameObject.SetActive(true);
+                // _screws[i].transform.localScale = Vector3.zero;
+
+                // _screws[i].IsInteractable = false;
+
+                // SaferioTween.ScaleUpWithPunch(_screws[i].transform, initialScale, onCompleteAction: () =>
+                // {
+                //     _screws[index].IsInteractable = true;
+                // });
+            }
+
+            _pieceMaterialPropertyBlock.SetCondition(PieceCondition.Normal);
+
+            // Chains
+            ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+
+            fx.transform.position = chainContainer.transform.position;
+
+            fx.Play();
+
+            SaferioTween.ScaleDownWithPunch(chainContainer.transform);
+        }
+    }
+}

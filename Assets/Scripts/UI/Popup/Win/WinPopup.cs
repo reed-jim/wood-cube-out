@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -29,7 +30,6 @@ public class WinPopup : BasePopup
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
-    [SerializeField] private LevelDataContainer levelDataContainer;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private GoldPassDataContainer goldPassDataContainer;
@@ -122,11 +122,10 @@ public class WinPopup : BasePopup
 
         TrackLevelWin();
 
-        if (currentLevel.Value - UserData.NumLevelLoop >= levelDataContainer.MaxLevel)
+        if (currentLevel.Value - UserData.NumLevelLoop >= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             await UserData.SetNumLevelLoop(UserData.NumLevelLoop + 1);
         }
-
         currentLevel.Value++;
         currentLevel.Save();
         DataUtility.Save(GameConstants.CURRENT_LEVEL_LOOP, -1);
@@ -309,7 +308,7 @@ public class WinPopup : BasePopup
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: true, EndLevelReason.Win.ToString());
         }

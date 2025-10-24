@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public class UnscrewTask : BaseWeeklyTask
@@ -35,7 +36,7 @@ public class UnscrewTask : BaseWeeklyTask
         parameter = GameConstants.TASK_DESCRIPTION_PARAMETER;
     }
 
-    private void OnScrewLoosened()
+    private void OnScrewLoosened(BaseScrew screw)
     {
         MakeProgress(1);
     }

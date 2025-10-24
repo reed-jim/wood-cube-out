@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
@@ -65,6 +66,7 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
+            DebugLogger.LogSimple();
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
