@@ -249,6 +249,15 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.useFakeLeaderboardScore = GetBoolConfig(FirebaseConfig.IS_ENABLE_LEADERBOARD, false);
         #endregion
 
+        #region LOOP LEVEL
+        GamePersistentVariable.isDisableLoopLevel = GetBoolConfig(FirebaseConfig.isDisableLoopLevel, false);
+
+        // if (Application.systemLanguage == SystemLanguage.Vietnamese)
+        // {
+        //     GamePersistentVariable.isDisableLoopLevel = true;
+        // }
+        #endregion
+
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);

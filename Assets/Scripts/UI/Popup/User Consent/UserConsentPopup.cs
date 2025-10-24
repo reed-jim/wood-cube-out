@@ -15,6 +15,7 @@ public class UserConsentPopup : BasePopup
     private void Accept()
     {
         DataUtility.Save("User Consent", true);
+        DataUtility.Save("Is User Customized Consent", true);
 
         Hide(onCompletedAction: () =>
         {
@@ -25,6 +26,7 @@ public class UserConsentPopup : BasePopup
     private void Decline()
     {
         DataUtility.Save("User Consent", false);
+        DataUtility.Save("Is User Customized Consent", true);
 
         Hide(onCompletedAction: () =>
         {

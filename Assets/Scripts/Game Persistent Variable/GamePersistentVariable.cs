@@ -34,6 +34,7 @@ public static class GamePersistentVariable
     public static Vector3 levelOffset;
     public static Vector3 boxForOutsideScrewScreenPosition;
     public static RaycastHit lastScrewSelectedSurfaceHit;
+    public static bool isDisableLoopLevel;
     #endregion
 
     #region LEVEL DIFFICULTY
@@ -106,6 +107,7 @@ public static class GamePersistentVariable
     public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
+    public static bool isUMPPersonalizedAdsConsent;
     #endregion
 
     #region LIVES SYSTEM

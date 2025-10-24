@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using AppsFlyerSDK;
 using Firebase.Analytics;
 using UnityEngine;
 using static GameEnum;
@@ -129,6 +131,18 @@ public static class SaferioTracking
         };
 
         FirebaseAnalytics.LogEvent("start_buy_iap", parameters);
+#endif
+    }
+
+    public static void TrackIAPCompleteEventAppsflyer(string revenue)
+    {
+#if !UNITY_EDITOR
+        Dictionary<string, string> eventValues = new Dictionary<string, string>();
+        eventValues.Add(AFInAppEvents.CURRENCY, "USD");
+        eventValues.Add(AFInAppEvents.REVENUE, revenue);
+        eventValues.Add("af_quantity", "1");
+
+        AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
 #endif
     }
 

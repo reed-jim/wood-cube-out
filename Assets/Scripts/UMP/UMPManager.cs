@@ -18,9 +18,14 @@ public class UMPManager : MonoBehaviour
         };
 
         // Create a ConsentRequestParameters object.
+        // ConsentRequestParameters request = new ConsentRequestParameters
+        // {
+        //     ConsentDebugSettings = debugSettings,
+        // };
+
         ConsentRequestParameters request = new ConsentRequestParameters
         {
-            ConsentDebugSettings = debugSettings,
+            TagForUnderAgeOfConsent = false
         };
 
         // Check the current consent information status.
@@ -31,8 +36,9 @@ public class UMPManager : MonoBehaviour
     {
         if (consentError != null)
         {
-            Debug.Log("SAFERIO " + consentError.Message);
             // Handle the error.
+            HandleConsentComplete();
+
             return;
         }
 
@@ -43,12 +49,18 @@ public class UMPManager : MonoBehaviour
             if (formError != null)
             {
                 // Consent gathering failed.
-                UnityEngine.Debug.LogError(consentError);
+                HandleConsentComplete();
+
                 return;
             }
 
             // Consent has been gathered.
-            SceneManager.LoadScene("Bootstrap");
+            HandleConsentComplete();
         });
+    }
+
+    private void HandleConsentComplete()
+    {
+        SceneManager.LoadScene("Bootstrap");
     }
 }

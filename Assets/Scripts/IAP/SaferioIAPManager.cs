@@ -287,6 +287,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
+                        SaferioTracking.TrackIAPCompleteEventAppsflyer($"{productData.Price}");
 
                         // // Simulate DELAY on iOS    
                         // Tween.Delay(3).OnComplete(() =>
