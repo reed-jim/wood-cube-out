@@ -822,7 +822,7 @@ public class PieceManager : MonoBehaviour
 
                         piece.IsInteractable = true;
 
-                        piece.Loose(piece.PieceId, faction, pieceBoxSlot);
+                        piece.Loose(piece.gameObject.GetInstanceID(), faction, pieceBoxSlot);
 
                         piece.IsOutsideWithNoSpoolBox = false;
 

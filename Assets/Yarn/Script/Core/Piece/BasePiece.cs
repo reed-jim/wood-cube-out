@@ -166,7 +166,7 @@ public class BasePiece : MonoBehaviour
 
     void Start()
     {
-        transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
+        // transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
     }
 
     void OnDestroy()
@@ -231,12 +231,26 @@ public class BasePiece : MonoBehaviour
                 pieceServiceLocator.pieceProperty.IsRewinding = true;
             }
 
+            BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
+
+            if (innerPieces.Length == 1)
+            {
+                for (int i = 0; i < transform.childCount; i++)
+                {
+                    Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
+
+                    if (rigidbody != null)
+                    {
+                        rigidbody.isKinematic = false;
+                        transform.GetChild(i).SetParent(transform.parent);
+                    }
+                }
+            }
+
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
             {
-                BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
-
                 if (innerPieces.Length > 1)
                 {
                     BasePiece firstInnerPiece = innerPieces[1];
@@ -258,16 +272,7 @@ public class BasePiece : MonoBehaviour
                 }
                 else
                 {
-                    for (int i = 0; i < transform.childCount; i++)
-                    {
-                        Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
 
-                        if (rigidbody != null)
-                        {
-                            rigidbody.isKinematic = false;
-                            transform.GetChild(i).SetParent(transform.parent);
-                        }
-                    }
                 }
 
                 pieceServiceLocator.pieceMeshRenderer.enabled = false;
@@ -294,6 +299,13 @@ public class BasePiece : MonoBehaviour
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
         // Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
+    }
+
+    public void ThrowOutside()
+    {
+        _isDone = false;
+        _isOutsideWithNoSpoolBox = true;
+        _isInPiecePort = false;
     }
 
     public void PullYarn()

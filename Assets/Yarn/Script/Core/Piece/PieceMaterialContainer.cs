@@ -1,11 +1,11 @@
 using System.IO;
 using System.Linq;
 using System.Text;
-using UnityEditor;
 #if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 using static GameEnum;
-#endif
 
 [CreateAssetMenu(fileName = "PieceMaterialContainer", menuName = "ScriptableObjects/PieceMaterialContainer")]
 public class PieceMaterialContainer : ScriptableObject

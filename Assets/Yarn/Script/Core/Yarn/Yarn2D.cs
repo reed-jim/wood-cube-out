@@ -50,6 +50,7 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _firstNodePosition;
     private Vector3 _firstNodeLocalPosition;
     private float lerpDelta;
+    private bool _isReverseSpoolDissolve;
     #endregion
 
     private Action onRewindYarnCompleted;
@@ -74,6 +75,8 @@ public class Yarn2D : MonoBehaviour
 
         InitPiece(piece);
 
+        _isReverseSpoolDissolve = false;
+
         // InitSpool(spool);
         spoolBoxSlot = spool;
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
@@ -96,6 +99,8 @@ public class Yarn2D : MonoBehaviour
 
         InitStartSpool(startSpool);
 
+        _isReverseSpoolDissolve = false;
+
         // InitSpool(spool);
         spoolBoxSlot = endSpool;
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
@@ -112,11 +117,34 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
+    public void Rewind(GameFaction faction, Transform startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
+    {
+        InitializeRope(endSpool.transform.position, faction);
+
+        InitStartNode(startSpool);
+
+        _dissolveAxis = DissolveAxis.Y;
+        _isReverseSpoolDissolve = true;
+
+        spoolBoxSlot = endSpool;
+        spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
+
+        Reset();
+
+        _firstNodePosition = endSpool.transform.position;
+
+        gameObject.SetActive(true);
+
+        onRewindYarnCompleted = onCompleteAction;
+
+        PlayRewindAnimation();
+    }
+
     private void InitPiece(BasePiece selectedPiece)
     {
         piece = selectedPiece;
 
-        modelSize = piece.PieceServiceLocator.pieceProperty.BoundSize;
+        modelSize = piece.PieceServiceLocator.pieceProperty.MeshBoundSize;
 
         _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
 
@@ -152,6 +180,23 @@ public class Yarn2D : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
+    private void InitStartNode(Transform startNodeParent)
+    {
+        modelSize = Vector3.zero;
+
+        velocity.x = velocityMultuplier.x * modelSize.x;
+
+        RopeSegment lastNode = segments[segmentCount - 1];
+
+        lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
+        lastNode.posOld = lastNode.posNow;
+
+        transform.SetParent(startNodeParent);
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+        transform.rotation = Quaternion.identity;
+    }
+
     private void UpdatePiece()
     {
         if (piece != null)
@@ -159,7 +204,14 @@ public class Yarn2D : MonoBehaviour
             piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight, _dissolveAxis);
         }
 
-        spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
+        if (_isReverseSpoolDissolve)
+        {
+            spoolBoxSlot.SetDissolveHeight(dissolveHeight);
+        }
+        else
+        {
+            spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
+        }
     }
 
     private void PlayRewindAnimation()
@@ -210,11 +262,11 @@ public class Yarn2D : MonoBehaviour
 
             if (_dissolveAxis == DissolveAxis.X)
             {
-                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, 0.5f * modelSize.x, 4, 0.4f * modelSize.y);
+                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, 0.5f * modelSize.x, 4, 0.51f * modelSize.y);
             }
             else
             {
-                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.y, 4, 0.4f * modelSize.x);
+                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.y, 4, 0.51f * modelSize.x);
             }
 
             segments[segmentCount - 1] = lastNode;
@@ -284,6 +336,16 @@ public class Yarn2D : MonoBehaviour
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
+
+        // if (_dissolveAxis == DissolveAxis.X)
+        // {
+        //     direction = piece.transform.right;
+        // }
+        // else
+        // {
+        //     direction = piece.transform.up;
+        // }
+
         float length = direction.magnitude;
         Vector3 right = direction.normalized;
 
@@ -324,7 +386,14 @@ public class Yarn2D : MonoBehaviour
             }
             else
             {
-                lineRenderer.SetPosition(i, (Vector3)segments[i].posNow.ChangeZ(lastNodePosition.z - 5));
+                if (_dissolveAxis == DissolveAxis.Y)
+                {
+                    lineRenderer.SetPosition(i, segments[i].posNow.AddY(-0.1f * modelSize.y));
+                }
+                else
+                {
+                    lineRenderer.SetPosition(i, segments[i].posNow);
+                }
             }
         }
     }

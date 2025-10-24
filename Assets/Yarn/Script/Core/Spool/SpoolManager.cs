@@ -12,7 +12,7 @@ public class SpoolManager : MonoBehaviour
 
     [SerializeField] private SpoolBox[] spoolBoxs;
     [SerializeField] private List<SpoolBoxSlot> piecePorts;
-    [SerializeField] private SpoolBoxSlot outsideSpoolSlot;
+    [SerializeField] private Transform outsideSpoolSlot;
     [SerializeField] private Transform piecePortsContainer;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -869,13 +869,17 @@ public class SpoolManager : MonoBehaviour
 
                 piecePorts[i].IsFilled = false;
 
-                piecePorts[i].Piece.ForceUnpiece();
+                piecePorts[i].Piece.ThrowOutside();
 
                 Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                yarn2D.Rewind(piecePorts[i].Piece.Faction, piecePorts[i], outsideSpoolSlot,
+                BasePiece cachePiece = piecePorts[i].Piece;
+
+                yarn2D.Rewind(piecePorts[i].Piece.Faction, outsideSpoolSlot.transform, piecePorts[i],
                     onCompleteAction: () =>
                     {
+                        cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = false;
+
                         // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
                         // piece.InvokePieceLoosenedEvent();

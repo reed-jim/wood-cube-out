@@ -6,6 +6,7 @@ public class PieceServiceLocator : MonoBehaviour
     [SerializeField] public PieceProperty pieceProperty;
     [SerializeField] public PieceMaterialPropertyBlock pieceMaterialPropertyBlock;
     // [SerializeField] public ScrewOutline screwOutline;
+    [SerializeField] public MeshFilter pieceMeshFilter;
     [SerializeField] public MeshRenderer pieceMeshRenderer;
     [SerializeField] public Collider pieceCollider;
 
@@ -14,6 +15,7 @@ public class PieceServiceLocator : MonoBehaviour
         piece = GetComponent<BasePiece>();
         pieceProperty = GetComponent<PieceProperty>();
         pieceMaterialPropertyBlock = GetComponent<PieceMaterialPropertyBlock>();
+        pieceMeshFilter = GetComponent<MeshFilter>();
         pieceMeshRenderer = GetComponent<MeshRenderer>();
         pieceCollider = GetComponent<Collider>();
     }
@@ -23,6 +25,7 @@ public class PieceServiceLocator : MonoBehaviour
         piece = GetComponent<BasePiece>();
         pieceProperty = GetComponent<PieceProperty>();
         pieceMaterialPropertyBlock = GetComponent<PieceMaterialPropertyBlock>();
+        pieceMeshFilter = GetComponent<MeshFilter>();
         pieceMeshRenderer = GetComponent<MeshRenderer>();
         pieceCollider = GetComponent<Collider>();
 

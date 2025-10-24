@@ -41,6 +41,11 @@ public class PieceProperty : MonoBehaviour
     {
         get => _boundSize;
     }
+
+    public Vector3 MeshBoundSize
+    {
+        get => pieceServiceLocator.pieceMeshFilter.mesh.bounds.size;
+    }
     #endregion
 
     void Awake()
