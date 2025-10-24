@@ -137,18 +137,6 @@ namespace NamPhuThuy.Data
 
             EditorGUILayout.Space(5);
 
-            // Info display
-            if (container.LevelsData != null)
-            {
-                EditorGUILayout.LabelField($"Current Level Count: {container.LevelsData.Length}");
-                
-                int nullCount = container.LevelsData.Count(ld => ld == null || ld.levelPrefab == null);
-                if (nullCount > 0)
-                {
-                    EditorGUILayout.HelpBox($"{nullCount} levels have missing prefabs", MessageType.Warning);
-                }
-            }
-
             // Validate folder path
             if (!Directory.Exists(_levelPrefabsFolderPath))
             {

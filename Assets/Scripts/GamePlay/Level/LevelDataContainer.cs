@@ -176,7 +176,6 @@ namespace NamPhuThuy.Data
     {
         public int levelId;
         public bool isHasTutorial;
-        public GameObject levelPrefab;
         public LevelMode levelMode;
     }
 
