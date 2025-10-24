@@ -21,7 +21,10 @@ public class LockedObjectPart : BasicObjectPart
         set
         {
             requiredValueToUnlock = value;
-            requiredValueText.text = $"{requiredValueToUnlock}";
+            SaferioTween.ScaleUpWithPunch(requiredValueText.transform, targetScale:1f, onCompleteAction:(() =>
+            {
+                requiredValueText.text = $"{requiredValueToUnlock}";
+            }));
         }
     }
 
@@ -73,14 +76,6 @@ public class LockedObjectPart : BasicObjectPart
         RequiredValueToUnlock--;
 
         PlayVFX();
-        /*VFXManager.Ins.PlayAt(
-            type: VFXType.STAT_CHANGE_TEXT,
-            pos: requiredValueText.transform.position,
-            amount: 1,
-            initialParent: requiredValueText.transform,
-            offset: new Vector2(-40f, 25f),
-            distance: 20f,
-            color: Color.green);*/
 
         if (requiredValueToUnlock == 0)
         {
@@ -106,7 +101,7 @@ public class LockedObjectPart : BasicObjectPart
             fx.transform.position = chainContainer.transform.position;
             fx.Play();
 
-            SaferioTween.ScaleDownWithPunch(chainContainer.transform);
+            SaferioTween.ScaleDownWithPunch(chainContainer.transform, scaleUpVal: 1.5f);
         }
     }
 
