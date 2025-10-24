@@ -39,6 +39,8 @@ namespace NamPhuThuy
         private static readonly Regex LevelRegex =
             new Regex(@"\bLevel\b\s*[-_ ]*\s*(\d+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
+        #region Callbacks
+
         [MenuItem("Tools/TrinhNam/Level Addressables Manager")]
         public static void ShowWindow()
         {
@@ -93,6 +95,8 @@ namespace NamPhuThuy
             EditorGUILayout.Space(6);
             DrawPreview();
         }
+
+        #endregion
 
         private void ScanFolder()
         {

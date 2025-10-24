@@ -184,8 +184,6 @@ namespace NamPhuThuy.GamePlay
         // }
         // // NOT LOOP
 
-        nextLevel = LevelIdModified(nextLevel);
-
         nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
 
         GamePersistentVariable.levelPrefab = nextLevel;
@@ -196,6 +194,7 @@ namespace NamPhuThuy.GamePlay
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
         string levelName = $"Level {nextLevel}";
+        levelName = ModifyNameInFixedLevel(levelName, nextLevel);
 
         // Memory Management
         Resources.UnloadUnusedAssets();
@@ -414,34 +413,22 @@ namespace NamPhuThuy.GamePlay
 
     #region SPECIAL LEVELS
 
-    private int LevelIdModified(int nextLevel)
+    private string ModifyNameInFixedLevel(string levelName, int levelId)
     {
-        int res = nextLevel;
-
-        if (!GamePersistentVariable.specialLevelConfig.isEnable) return res;
-        if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+        string res = levelName;
         
-        LevelMode mode = levelDataContainer.LevelsData[nextLevel - 1].levelMode;
+        if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
+        if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+
+        LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
         if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
         {
-            var normalIds = new List<int>();
-            for (int i = 10; i < levelDataContainer.LevelsData.Length; i++)
-            {
-                if (levelDataContainer.LevelsData[i].levelMode == LevelMode.Normal)
-                {
-                    normalIds.Add(i + 1);
-                }
-            }
-
-            if (normalIds.Count > 0)
-            {
-                res = normalIds[UnityEngine.Random.Range(0, normalIds.Count)];
-            }
+            res += " sub";
         }
 
         return res;
     }
-
+    
     #endregion
 
     #region ASSIGN SCREW FACTION

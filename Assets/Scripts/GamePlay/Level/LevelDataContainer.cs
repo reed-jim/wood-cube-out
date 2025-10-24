@@ -146,6 +146,8 @@ namespace NamPhuThuy.Data
                 if (d == null)
                     continue;
 
+                if ((i + 1) % 3 != 0) continue;
+
                 d.levelMode = PickWeightedMode(options, totalWeight, rng);
             }
         }
