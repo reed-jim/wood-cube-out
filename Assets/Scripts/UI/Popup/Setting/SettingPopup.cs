@@ -9,9 +9,9 @@ using static GameEnum;
 
 public class SettingPopup : BasePopup
 {
-    [SerializeField] private SaferioToggle turnMusicToggle;
-    [SerializeField] private SaferioToggle turnSoundToggle;
-    [SerializeField] private SaferioToggle vibrationToggle;
+    [SerializeField] private SettingItemUI turnMusicToggle;
+    [SerializeField] private SettingItemUI turnSoundToggle;
+    [SerializeField] private SettingItemUI vibrationToggle;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -45,9 +45,9 @@ public class SettingPopup : BasePopup
     {
         GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
 
-        turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
-        turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
-        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
+        turnMusicToggle.RegisterChangeStateEvent(SettingGameMusic);
+        turnSoundToggle.RegisterChangeStateEvent(SettingGameSound);
+        vibrationToggle.RegisterChangeStateEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);

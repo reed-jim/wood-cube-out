@@ -8,10 +8,9 @@ public class PausePopup : BasePopup
 {
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Button replayLevelButton;
-    [SerializeField] private Button openReviewIAPPopupButton;
-    [SerializeField] private SaferioToggle turnMusicToggle;
-    [SerializeField] private SaferioToggle turnSoundToggle;
-    [SerializeField] private SaferioToggle vibrationToggle;
+    [SerializeField] private SettingItemUI turnMusicToggle;
+    [SerializeField] private SettingItemUI turnSoundToggle;
+    [SerializeField] private SettingItemUI vibrationToggle;
 
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
@@ -37,9 +36,9 @@ public class PausePopup : BasePopup
 
         returnHomeButton.onClick.AddListener(ReturnHome);
         replayLevelButton.onClick.AddListener(Replay);
-        turnMusicToggle.RegisterOnSwitchedEvent(EnableGameMusic);
-        turnSoundToggle.RegisterOnSwitchedEvent(EnableGameSound);
-        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
+        turnMusicToggle.RegisterChangeStateEvent(EnableGameMusic);
+        turnSoundToggle.RegisterChangeStateEvent(EnableGameSound);
+        vibrationToggle.RegisterChangeStateEvent(EnableVibration);
     }
 
     protected override void UnregisterMoreEvent()
