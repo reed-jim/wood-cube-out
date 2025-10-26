@@ -12,7 +12,7 @@ public class SpoolManager : MonoBehaviour
 
     [SerializeField] private SpoolBox[] spoolBoxs;
     [SerializeField] private List<SpoolBoxSlot> piecePorts;
-    [SerializeField] private Transform outsideSpoolSlot;
+    [SerializeField] public Transform outsideSpoolSlot;
     [SerializeField] private Transform piecePortsContainer;
 
     [Header("SCRIPTABLE OBJECT")]

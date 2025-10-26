@@ -117,14 +117,14 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
-    public void Rewind(GameFaction faction, Transform startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
+    public void Rewind(GameFaction faction, Transform startSpool, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
         InitializeRope(endSpool.transform.position, faction);
 
         InitStartNode(startSpool);
 
         _dissolveAxis = DissolveAxis.Y;
-        _isReverseSpoolDissolve = true;
+        _isReverseSpoolDissolve = isReverseSpoolDissolve;
 
         spoolBoxSlot = endSpool;
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
@@ -396,6 +396,14 @@ public class Yarn2D : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void SetParent(Transform parent)
+    {
+        transform.SetParent(parent);
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+        transform.rotation = Quaternion.identity;
     }
 
     private class RopeSegment

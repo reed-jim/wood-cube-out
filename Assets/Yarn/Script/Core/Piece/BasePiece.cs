@@ -296,6 +296,49 @@ public class BasePiece : MonoBehaviour
         }
     }
 
+    public void LooseFromOutside(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
+    {
+        if (pieceId == gameObject.GetInstanceID())
+        {
+            if (!gameObject.activeInHierarchy)
+            {
+                gameObject.SetActive(true);
+            }
+
+            if (pieceServiceLocator.pieceProperty.IsRewinding)
+            {
+                return;
+            }
+            else
+            {
+                pieceServiceLocator.pieceProperty.IsRewinding = true;
+            }
+
+            Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+            yarn2D.Rewind(faction, SpoolManager.Instance.outsideSpoolSlot, spoolBoxSlot, isReverseSpoolDissolve: false, onCompleteAction: () =>
+            {
+                pieceServiceLocator.pieceMeshRenderer.enabled = false;
+                gameObject.SetActive(false);
+
+                spoolBoxSlot.CompleteFill();
+
+                InvokePieceLoosenedEvent();
+            });
+
+            spoolBoxSlot.Fill(this);
+
+            if (!spoolBoxSlot.IsAlternative)
+            {
+                _isDone = true;
+            }
+            else
+            {
+                _isInPiecePort = true;
+            }
+        }
+    }
+
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
         // Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
