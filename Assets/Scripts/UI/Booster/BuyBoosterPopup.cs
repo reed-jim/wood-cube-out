@@ -10,7 +10,6 @@ public class BuyBoosterPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
     [SerializeField] private Button buyWithDiamondButton;
-    [SerializeField] private Image buyWithDiamondButtonForeground;
     [SerializeField] private Button getWithAdsButton;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text costText;
