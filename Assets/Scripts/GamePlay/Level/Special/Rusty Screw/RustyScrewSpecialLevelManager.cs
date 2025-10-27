@@ -13,15 +13,18 @@ namespace NamPhuThuy.GamePlay
 {
     public class RustyScrewSpecialLevelManager : BaseSpecialLevelManager
     {
-        [Header("Resources")] [Tooltip("Mesh: oc_low")] [SerializeField]
+        [Header("Resources")]
+        [Tooltip("Mesh: oc_low")]
+        [SerializeField]
         private Mesh normalScrewMesh;
 
-        [Tooltip("screw_rusty_broken")] [SerializeField]
+        [Tooltip("screw_rusty_broken")]
+        [SerializeField]
         private Mesh rustyScrewMesh;
 
         private BaseScrew[] _rustyScrew;
 
-        [Header("Flags")] [SerializeField] private bool useCustomRustyScrewMesh = true;
+        [Header("Flags")][SerializeField] private bool useCustomRustyScrewMesh = true;
 
         /// <summary>
         /// Current faction that is locked by rusty screws, O(n) based on number of requiredComponents
@@ -154,14 +157,18 @@ namespace NamPhuThuy.GamePlay
 
         protected override void OnScrewLoosed(BaseScrew screw)
         {
-            base.OnScrewLoosed(screw);
-            if (_specialLevelTaskRecord.taskType == SpecialLevelTaskType.ScrewComplete)
+            if (_specialLevelTaskRecord != null)
             {
-                if (_specialLevelTaskRecord.IsTaskCompleted())
+                if (_specialLevelTaskRecord.taskType == SpecialLevelTaskType.ScrewComplete)
                 {
-                    SoundManager.Instance.PlaySoundRustyBreak();
+                    if (_specialLevelTaskRecord.IsTaskCompleted())
+                    {
+                        SoundManager.Instance.PlaySoundRustyBreak();
+                    }
                 }
             }
+
+            base.OnScrewLoosed(screw);
         }
 
         protected override void OnCompleteTaskStep()
