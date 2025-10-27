@@ -68,7 +68,7 @@ public class YarnLevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent += NextLevel;
         WinPopup.goLevelEvent += GoLevel;
         LosePopup.skipLevelEvent += NextLevel;
-        BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
+        BasePiece.pieceLoosenedEvent += OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
@@ -95,7 +95,7 @@ public class YarnLevelLoader : MonoBehaviour
         WinPopup.nextLevelEvent -= NextLevel;
         WinPopup.goLevelEvent -= GoLevel;
         LosePopup.skipLevelEvent -= NextLevel;
-        BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
+        BasePiece.pieceLoosenedEvent -= OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent -= LoadLevel;
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent -= OnHardModeSuggestionClosed;
 
@@ -637,13 +637,8 @@ public class YarnLevelLoader : MonoBehaviour
     #endregion
 
     #region AUTO CENTER LEVEL
-    private async void OnPieceCompleted(int pieceInstanceId)
+    private async void OnPieceCompleted()
     {
-        // if (_isNotAutoCenterLevel)
-        // {
-        //     return;
-        // }
-
         await Task.Delay(500);
 
         try
@@ -661,13 +656,15 @@ public class YarnLevelLoader : MonoBehaviour
 
             Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
 
+            await Task.Delay(500);
+
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
             _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f, ease: Ease.InOutSine));
         }
-        catch (System.Exception)
+        catch (System.Exception e)
         {
-
+            Debug.Log("SAFERIO orthographicSize " + e.Message);
         }
     }
 
@@ -701,6 +698,11 @@ public class YarnLevelLoader : MonoBehaviour
         foreach (BasePiece obj in objects)
         {
             if (!obj.transform.IsChildOf(_pivotAdjust))
+            {
+                continue;
+            }
+
+            if (!obj.gameObject.activeInHierarchy)
             {
                 continue;
             }
@@ -754,6 +756,8 @@ public class YarnLevelLoader : MonoBehaviour
         // Set Shader World Bound
         Vector3 currentCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
         Vector3 newCenter = -currentCenter / _currentLevelContainer.transform.localScale.x;
+
+        Debug.Log("SAFERIO SetFitCameraOrthographicSize " + new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
 
         if (!_isSetLevelGradientBound)
         {

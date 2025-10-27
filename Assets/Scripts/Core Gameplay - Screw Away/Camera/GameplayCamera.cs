@@ -46,9 +46,9 @@ public class GameplayCamera : MonoBehaviour
 
     private void Update()
     {
-        gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 0.333f);
+        gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 1 / 6f);
 
-        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 0.333f);
+        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 1 / 6f);
 
         updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }

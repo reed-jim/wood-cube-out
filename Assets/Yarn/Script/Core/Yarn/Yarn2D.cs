@@ -41,6 +41,7 @@ public class Yarn2D : MonoBehaviour
 
     [Header("Yarn Spool")]
     [SerializeField] private SpoolBoxSlot spoolBoxSlot;
+    [SerializeField] private SpoolBoxSlot startSpoolBoxSlot;
 
     [Header("SO")]
     [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
@@ -102,6 +103,7 @@ public class Yarn2D : MonoBehaviour
         _isReverseSpoolDissolve = false;
 
         // InitSpool(spool);
+        startSpoolBoxSlot = startSpool;
         spoolBoxSlot = endSpool;
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
@@ -207,16 +209,26 @@ public class Yarn2D : MonoBehaviour
         if (_isReverseSpoolDissolve)
         {
             spoolBoxSlot.SetDissolveHeight(dissolveHeight);
+
+            if (startSpoolBoxSlot != null)
+            {
+                startSpoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
+            }
         }
         else
         {
             spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
+
+            if (startSpoolBoxSlot != null)
+            {
+                startSpoolBoxSlot.SetDissolveHeight(dissolveHeight);
+            }
         }
     }
 
     private void PlayRewindAnimation()
     {
-        Tween.Custom(1, 0, duration: 0.8f, ease: Ease.Linear, onValueChange: newVal =>
+        Tween.Custom(1, 0, duration: 0.6f, ease: Ease.Linear, onValueChange: newVal =>
         {
             dissolveHeight = newVal;
 
@@ -241,6 +253,9 @@ public class Yarn2D : MonoBehaviour
                     if (index == segments.Count - 1)
                     {
                         gameObject.SetActive(false);
+
+                        startSpoolBoxSlot = null;
+                        spoolBoxSlot = null;
 
                         onRewindYarnCompleted?.Invoke();
                     }
