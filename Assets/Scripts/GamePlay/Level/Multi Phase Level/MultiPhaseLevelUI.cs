@@ -16,18 +16,18 @@ public class MultiPhaseLevelUI : BaseSpecialLevelUI
 
     private void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
+        /*LevelLoader.startLevelEvent += OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent += UpdateMultiPhaseLevelUI;
-        MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent += DisableMultiPhaseLevelUI;
+        MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent += DisableMultiPhaseLevelUI;*/
 
         _tweens = new List<Tween>();
     }
 
     private void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
+        /*LevelLoader.startLevelEvent -= OnLevelStarted;
         MultiPhaseLevelManager.updateUIEvent -= UpdateMultiPhaseLevelUI;
-        MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent -= DisableMultiPhaseLevelUI;
+        MultiPhaseLevelManager.disableMultiPhaseLevelUIEvent -= DisableMultiPhaseLevelUI;*/
 
         CommonUtil.StopAllTweens(_tweens);
     }

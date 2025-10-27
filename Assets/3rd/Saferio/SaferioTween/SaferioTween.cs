@@ -384,7 +384,40 @@ namespace Saferio.Util.SaferioTween
             return sequence;
         }
 
-        public static Sequence ScaleDownWithPunch(Transform target, Action onCompleteAction = null)
+        public static Sequence Punch(Transform target, float effectScale, float initScale = 1f, float duration = 0.2f, float delay = 0,
+            Action onCompleteAction = null)
+        {
+            target.gameObject.SetActive(true);
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, initScale * effectScale, duration: duration, startDelay: delay, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, initScale, duration: 0.1f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+        
+        public static Sequence ScaleDownWithPunch(Transform target, float scaleUpVal = 1.1f, Action onCompleteAction = null)
+        {
+            float initialScale = target.localScale.x;
+
+            Sequence sequence = Sequence.Create()
+                .Chain(Tween.Scale(target, scaleUpVal * initialScale, duration: 0.1f, ease: Ease.InOutSine))
+                .Chain(Tween.Scale(target, 0, duration: 0.3f, ease: Ease.InOutSine))
+                .OnComplete(() =>
+                {
+                    target.gameObject.SetActive(false);
+
+                    onCompleteAction?.Invoke();
+                });
+
+            return sequence;
+        }
+
+        /*public static Sequence ScaleDownWithPunch(Transform target, Action onCompleteAction = null)
         {
             float initialScale = target.localScale.x;
 
@@ -399,7 +432,7 @@ namespace Saferio.Util.SaferioTween
                 });
 
             return sequence;
-        }
+        }*/
 
         public static Sequence ShowWithPunch(Transform target, float targetScale, float delay = 0, Action onCompleteAction = null)
         {

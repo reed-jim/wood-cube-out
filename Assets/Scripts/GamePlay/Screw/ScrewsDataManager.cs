@@ -9,7 +9,9 @@ using PrimeTween;
 using UnityEngine;
 using static GameEnum;
 
-public class ScrewsDataManager : MonoBehaviour
+namespace NamPhuThuy.GamePlay
+{
+    public class ScrewsDataManager : MonoBehaviour
 {
     [SerializeField] private BaseScrew[] _screws;
 
@@ -348,4 +350,5 @@ public class ScrewsDataManager : MonoBehaviour
         SetFreshLevel(key);
     }
     #endregion
+}
 }

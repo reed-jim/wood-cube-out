@@ -37,7 +37,7 @@ public class BasePopup : MonoBehaviour
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     
-    [Header("Event Channels")]
+    /*[Header("Event Channels")]
     [SerializeField] protected SwitchRouteChannelSO switchRouteChannel;
     protected SwitchRouteChannelSO SwitchRouteChannel
     {
@@ -49,7 +49,7 @@ public class BasePopup : MonoBehaviour
             }
             return switchRouteChannel;
         }
-    }
+    }*/
    
     #endregion
 
@@ -62,12 +62,12 @@ public class BasePopup : MonoBehaviour
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         
-        /*SettingPopup.switchRouteEvent += OnRouteSwitched;
+        SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
-        PausePopup.switchRouteEvent += OnRouteSwitched;*/
+        PausePopup.switchRouteEvent += OnRouteSwitched;
         
-        SwitchRouteChannel.Event += OnRouteSwitched;
+        // SwitchRouteChannel.Event += OnRouteSwitched;
         
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
@@ -120,12 +120,12 @@ public class BasePopup : MonoBehaviour
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
-        /*PausePopup.switchRouteEvent -= OnRouteSwitched;
+        PausePopup.switchRouteEvent -= OnRouteSwitched;
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;*/
+        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
         
-        SwitchRouteChannel.Event -= OnRouteSwitched;
+        // SwitchRouteChannel.Event -= OnRouteSwitched;
         
         UnregisterMoreEvent();
 

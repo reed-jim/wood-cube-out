@@ -6,7 +6,9 @@ using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 
-public class LockedObjectPart : BasicObjectPart
+namespace NamPhuThuy.GamePlay
+{
+    public class LockedObjectPart : BasicObjectPart
 {
     [Header("Chain")]
     [SerializeField] private GameObject chainContainer;
@@ -21,7 +23,10 @@ public class LockedObjectPart : BasicObjectPart
         set
         {
             requiredValueToUnlock = value;
-            requiredValueText.text = $"{requiredValueToUnlock}";
+            SaferioTween.Punch(requiredValueText.transform.parent, effectScale:1.8f, onCompleteAction:(() =>
+            {
+                requiredValueText.text = $"{requiredValueToUnlock}";
+            }));
         }
     }
 
@@ -67,24 +72,14 @@ public class LockedObjectPart : BasicObjectPart
             return;
         }
         
-        
-        
         DebugLogger.LogSimple();
         RequiredValueToUnlock--;
 
         PlayVFX();
-        /*VFXManager.Ins.PlayAt(
-            type: VFXType.STAT_CHANGE_TEXT,
-            pos: requiredValueText.transform.position,
-            amount: 1,
-            initialParent: requiredValueText.transform,
-            offset: new Vector2(-40f, 25f),
-            distance: 20f,
-            color: Color.green);*/
 
         if (requiredValueToUnlock == 0)
         {
-            Tween.Scale(uiContainer, 1.1f, duration: 0.3f).OnComplete(() =>
+            Tween.Scale(uiContainer, 1.6f, duration: 0.3f).OnComplete(() =>
             {
                 Tween.Scale(uiContainer, 0f, duration: 0.3f)
                 .OnComplete(() =>
@@ -106,7 +101,7 @@ public class LockedObjectPart : BasicObjectPart
             fx.transform.position = chainContainer.transform.position;
             fx.Play();
 
-            SaferioTween.ScaleDownWithPunch(chainContainer.transform);
+            SaferioTween.ScaleDownWithPunch(chainContainer.transform, scaleUpVal: 2f);
         }
     }
 
@@ -156,4 +151,5 @@ public class LockedObjectPart : BasicObjectPart
     }
 
         
+}
 }

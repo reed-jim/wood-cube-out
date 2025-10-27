@@ -6,6 +6,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 
 
 #if UNITY_EDITOR
@@ -97,14 +98,16 @@ namespace NamPhuThuy.GamePlay
             // Play VFX if needed 
             if (remaining < prevRemaining)
             {
-                VFXManager.Ins.PlayAt(
+                SaferioTween.Punch(progressText.transform, effectScale: 1.2f, duration:0.2f);
+                
+                /*VFXManager.Ins.PlayAt(
                     type: VFXType.STAT_CHANGE_TEXT,
                     pos: progressText.transform.position,
                     amount: remaining - prevRemaining,
                     initialParent: progressText.transform,
                     offset: new Vector2(-0.5f, 0f),
                     distance: 1f,
-                    color: Color.green);
+                    color: Color.green);*/
 
                 prevRemaining = remaining;
             }
