@@ -26,6 +26,7 @@ public class YarnLevelLoader : MonoBehaviour
     [SerializeField] private Material texturedMaterial;
 
     #region PRIVATE FIELD
+    private Camera _mainCamera;
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
     private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -78,6 +79,8 @@ public class YarnLevelLoader : MonoBehaviour
         currentLevel.Load();
 
         _maxLevel = levelDataContainer.MaxLevel;
+
+        _mainCamera = Camera.main;
 
         GoLevel(currentLevel.Value);
 
@@ -675,6 +678,8 @@ public class YarnLevelLoader : MonoBehaviour
             return Vector3.zero;
         }
 
+        bool isValid = false;
+
         float minX = float.MaxValue;
         float maxX = float.MinValue;
 
@@ -705,6 +710,11 @@ public class YarnLevelLoader : MonoBehaviour
             if (!obj.gameObject.activeInHierarchy)
             {
                 continue;
+            }
+
+            if (!isValid)
+            {
+                isValid = true;
             }
 
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
@@ -750,14 +760,17 @@ public class YarnLevelLoader : MonoBehaviour
             }
         }
 
+        if (!isValid)
+        {
+            return Vector3.zero;
+        }
+
         _pivotAdjust.transform.position = currentPosition;
         _pivotAdjust.transform.eulerAngles = currentRotation;
 
         // Set Shader World Bound
         Vector3 currentCenter = new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
         Vector3 newCenter = -currentCenter / _currentLevelContainer.transform.localScale.x;
-
-        Debug.Log("SAFERIO SetFitCameraOrthographicSize " + new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
 
         if (!_isSetLevelGradientBound)
         {
@@ -815,6 +828,11 @@ public class YarnLevelLoader : MonoBehaviour
             float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
 
             targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
+        }
+
+        if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 2)
+        {
+            return;
         }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);

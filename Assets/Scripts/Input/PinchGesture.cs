@@ -126,8 +126,6 @@ public class PinchGesture : MonoBehaviour
             return;
         }
 
-        Debug.Log("SAFERIO OnZoomSliderValueChanged " + value + "/" + (maxZoom - value * (maxZoom - minZoom)));
-
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
         if (!_isZoomByPinching)
@@ -147,8 +145,10 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
-        maxZoom = (1 + zoomSlider.value) * orthographicSize;
-        minZoom = 0.5f * orthographicSize;
+        float unit = 0.5f * orthographicSize;
+
+        maxZoom = orthographicSize + zoomSlider.value * unit;
+        minZoom = orthographicSize - (1 - zoomSlider.value) * unit;
 
         // Tween.Delay(0.2f).OnComplete(() =>
         // {
