@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;
@@ -15,8 +16,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
-    [SerializeField] private Button debugNextLevelButton;
-    [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
 
@@ -70,6 +69,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void ToggleHelpButton(bool isActive)
     {
+        DebugLogger.LogSimple(message:$"isActive: {isActive}");
         helpButton.gameObject.SetActive(isActive);
     }
 

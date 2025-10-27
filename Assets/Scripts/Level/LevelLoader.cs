@@ -370,6 +370,7 @@ namespace NamPhuThuy.GamePlay
     }
 
     
+    
 
     private async void GoLevel(int level)
     {
@@ -888,7 +889,7 @@ namespace NamPhuThuy.GamePlay
         LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
         if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
         {
-            DebugLogger.LogSimple(message:$"special", context:this);
+            DebugLogger.LogSimple(message:$"special true", context:this);
             GamePersistentVariable.currentTutLevelMode = currentLevelMode;
             
             specialTutIntroduceEvent?.Invoke(true);
@@ -897,6 +898,7 @@ namespace NamPhuThuy.GamePlay
         }
         else
         {
+            DebugLogger.LogSimple(message:$"special false", context:this);
             specialTutIntroduceEvent?.Invoke(false);
         }
         
