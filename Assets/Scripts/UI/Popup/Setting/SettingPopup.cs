@@ -159,29 +159,29 @@ public class SettingPopup : BasePopup
     #region RATE
     private void Rate()
     {
-        // switchRouteEvent?.Invoke(ScreenRoute.Rate);
-        switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
+        switchRouteEvent?.Invoke(ScreenRoute.Rate);
+        // switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
     }
     #endregion
 
     #region Compensate
     private void OpenCompensatePopup()
     {
-        // switchRouteEvent?.Invoke(ScreenRoute.Compensate);
-        switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
+        switchRouteEvent?.Invoke(ScreenRoute.Compensate);
+        // switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
     }
     #endregion
 
     private void OpenBackupPopup()
     {
         DebugLogger.LogSimple();
-        // switchRouteEvent?.Invoke(ScreenRoute.Backup);
-        switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
+        switchRouteEvent?.Invoke(ScreenRoute.Backup);
+        // switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
     }
 
     private void OpenUserConsentPopup()
     {
-        // switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
-        switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
+        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
+        // switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
     }
 }

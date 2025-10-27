@@ -55,8 +55,8 @@ public class PausePopup : BasePopup
     {
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
-            // switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
-            switchRouteChannel.Invoke(ScreenRoute.ReturnHome, nameof(PausePopup));
+            switchRouteEvent?.Invoke(ScreenRoute.ReturnHome);
+            // switchRouteChannel.Invoke(ScreenRoute.ReturnHome, nameof(PausePopup));
         }
         else
         {
@@ -81,8 +81,8 @@ public class PausePopup : BasePopup
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
         {
             DebugLogger.LogSimple(message:$"first");
-            // switchRouteEvent?.Invoke(ScreenRoute.Replay);
-            switchRouteChannel.Invoke(ScreenRoute.Replay, nameof(PausePopup));
+            switchRouteEvent?.Invoke(ScreenRoute.Replay);
+            // switchRouteChannel.Invoke(ScreenRoute.Replay, nameof(PausePopup));
         }
         else
         {
@@ -153,8 +153,8 @@ public class PausePopup : BasePopup
     #region Review IAP
     private void OpenReviewIAPPopup()
     {
-        // switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
-        switchRouteChannel.Invoke(ScreenRoute.IAPReview, nameof(PausePopup));
+        switchRouteEvent?.Invoke(ScreenRoute.IAPReview);
+        // switchRouteChannel.Invoke(ScreenRoute.IAPReview, nameof(PausePopup));
     }
     #endregion
 }
