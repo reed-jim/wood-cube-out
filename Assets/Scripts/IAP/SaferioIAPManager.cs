@@ -67,7 +67,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
         }
 
-        Init();
+        StartCoroutine(DelayInit());
 
         DontDestroyOnLoad(gameObject);
 
@@ -92,6 +92,13 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice -= FetchLocalizedPrice;
+    }
+
+    private IEnumerator DelayInit()
+    {
+        yield return new WaitForSeconds(6);
+
+        Init();
     }
 
     private void Init()
