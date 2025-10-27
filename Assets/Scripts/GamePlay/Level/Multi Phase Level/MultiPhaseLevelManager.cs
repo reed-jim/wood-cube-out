@@ -5,7 +5,9 @@ using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 
-public class MultiPhaseLevelManager : BaseSpecialLevelManager
+namespace NamPhuThuy.GamePlay
+{
+    public class MultiPhaseLevelManager : BaseSpecialLevelManager
 {
     private List<MultiPhaseScrew> _multiPhaseScrews;
     private int _currentPhase;
@@ -176,4 +178,5 @@ public class MultiPhaseLevelManager : BaseSpecialLevelManager
 
         return numberScrewByPhase;
     }
+}
 }

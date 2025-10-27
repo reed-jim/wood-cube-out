@@ -6,7 +6,9 @@ using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 
-public class LockedObjectPart : BasicObjectPart
+namespace NamPhuThuy.GamePlay
+{
+    public class LockedObjectPart : BasicObjectPart
 {
     [Header("Chain")]
     [SerializeField] private GameObject chainContainer;
@@ -149,4 +151,5 @@ public class LockedObjectPart : BasicObjectPart
     }
 
         
+}
 }

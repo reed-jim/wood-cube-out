@@ -2,42 +2,46 @@ using System;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 
-public class UnscrewTask : BaseWeeklyTask
+namespace NamPhuThuy.GamePlay
 {
-    public override float RequirementValue
+    public class UnscrewTask : BaseWeeklyTask
     {
-        get; set;
+        public override float RequirementValue
+        {
+            get; set;
+        }
+
+        public override float CurrentValue
+        {
+            get; set;
+        }
+
+        public override int Reward
+        {
+            get; set;
+        }
+
+        public override bool IsDone
+        {
+            get; set;
+        }
+
+        public override void Init()
+        {
+            BaseScrew.screwLoosenedEvent += OnScrewLoosened;
+        }
+
+        public override void GetDesription(out string translationName, out string parameter)
+        {
+            translationName = GameConstants.UNSCREW_TASK_TRANSLATION_NAME;
+
+            parameter = GameConstants.TASK_DESCRIPTION_PARAMETER;
+        }
+
+        private void OnScrewLoosened(BaseScrew screw)
+        {
+            MakeProgress(1);
+        }
     }
 
-    public override float CurrentValue
-    {
-        get; set;
-    }
-
-    public override int Reward
-    {
-        get; set;
-    }
-
-    public override bool IsDone
-    {
-        get; set;
-    }
-
-    public override void Init()
-    {
-        BaseScrew.screwLoosenedEvent += OnScrewLoosened;
-    }
-
-    public override void GetDesription(out string translationName, out string parameter)
-    {
-        translationName = GameConstants.UNSCREW_TASK_TRANSLATION_NAME;
-
-        parameter = GameConstants.TASK_DESCRIPTION_PARAMETER;
-    }
-
-    private void OnScrewLoosened(BaseScrew screw)
-    {
-        MakeProgress(1);
-    }
 }

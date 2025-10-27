@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Dreamteck.Splines;
 using Lean.Localization;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;

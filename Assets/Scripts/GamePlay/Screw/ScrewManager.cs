@@ -11,7 +11,9 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using static GameEnum;
 
-public class ScrewManager : MonoBehaviour
+namespace NamPhuThuy.GamePlay
+{
+    public class ScrewManager : MonoBehaviour
 {
     [SerializeField] private ScrewBoxManager screwBoxManager;
 
@@ -941,4 +943,5 @@ public class ScrewManager : MonoBehaviour
     }
 
     #endregion
+}
 }
