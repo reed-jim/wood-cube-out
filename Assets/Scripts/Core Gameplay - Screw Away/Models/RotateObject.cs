@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static GameEnum;
 
 public class RotateObject : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class RotateObject : MonoBehaviour
 
     void Awake()
     {
-        ScrewSelectionInput.selectScrewEvent += DisableAutoRotating;
+        BasePiece.selectPieceEvent += OnPieceSelected;
         SwipeGesture.swipeGestureEvent += Rotate;
 
         rotateSpeedMultiplier = 0.006f;
@@ -39,7 +40,7 @@ public class RotateObject : MonoBehaviour
 
     void OnDestroy()
     {
-        ScrewSelectionInput.selectScrewEvent -= DisableAutoRotating;
+        BasePiece.selectPieceEvent -= OnPieceSelected;
         SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
@@ -115,5 +116,10 @@ public class RotateObject : MonoBehaviour
     private void DisableAutoRotating()
     {
         _isAutoRotating = false;
+    }
+
+    private void OnPieceSelected(int pieceInstanceId, GameFaction faction)
+    {
+        DisableAutoRotating();
     }
 }

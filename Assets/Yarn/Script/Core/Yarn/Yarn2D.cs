@@ -216,7 +216,7 @@ public class Yarn2D : MonoBehaviour
 
     private void PlayRewindAnimation()
     {
-        Tween.Custom(1, 0, duration: 1f, ease: Ease.Linear, onValueChange: newVal =>
+        Tween.Custom(1, 0, duration: 0.8f, ease: Ease.Linear, onValueChange: newVal =>
         {
             dissolveHeight = newVal;
 
@@ -251,7 +251,7 @@ public class Yarn2D : MonoBehaviour
 
     private void UpdateYarnState(float dissolveHeight)
     {
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).ChangeZ(segments[segmentCount - 1].posNow.z);
 
         if (dissolveHeight >= 0)
         {
@@ -262,11 +262,11 @@ public class Yarn2D : MonoBehaviour
 
             if (_dissolveAxis == DissolveAxis.X)
             {
-                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, 0.5f * modelSize.x, 4, 0.51f * modelSize.y);
+                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, modelSize.x, 3, 0.5f * modelSize.y);
             }
             else
             {
-                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.y, 4, 0.51f * modelSize.x);
+                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, modelSize.y, 3, 0.5f * modelSize.x);
             }
 
             segments[segmentCount - 1] = lastNode;
@@ -285,6 +285,15 @@ public class Yarn2D : MonoBehaviour
         // Total angle based on number of turns (in radians)
         float angle = yRatio * turns * 2 * Mathf.PI;
 
+        // if (yRatio < 0.5f)
+        // {
+        //     radius *= 2 * (1 - yRatio);
+        // }
+        if (yRatio < 0.2f)
+        {
+            radius *= 2 * yRatio;
+        }
+
         float x = Mathf.Cos(angle) * radius;
         float z = Mathf.Sin(angle) * radius;
 
@@ -300,6 +309,15 @@ public class Yarn2D : MonoBehaviour
 
         // Total angle based on number of turns (in radians)
         float angle = xRatio * turns * 2 * Mathf.PI;
+
+        // if (xRatio > 0.5f)
+        // {
+        //     radius *= 2 * (1 - xRatio);
+        // }
+        if (xRatio < 0.2f)
+        {
+            radius *= 2 * xRatio;
+        }
 
         float y = Mathf.Cos(angle) * radius;
         float z = Mathf.Sin(angle) * radius;
@@ -388,7 +406,7 @@ public class Yarn2D : MonoBehaviour
             {
                 if (_dissolveAxis == DissolveAxis.Y)
                 {
-                    lineRenderer.SetPosition(i, segments[i].posNow.AddY(-0.1f * modelSize.y));
+                    lineRenderer.SetPosition(i, segments[i].posNow.AddY(0f * modelSize.y));
                 }
                 else
                 {
