@@ -85,7 +85,6 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodePosition = startPoint;
-        // _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
 
         gameObject.SetActive(true);
 
@@ -110,7 +109,6 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodePosition = endSpool.transform.position;
-        // _firstNodePosition = transform.InverseTransformPoint(startPoint).AddZ(-0.1f);
 
         gameObject.SetActive(true);
 
@@ -226,20 +224,29 @@ public class Yarn2D : MonoBehaviour
         }
     }
 
-    private void PlayRewindAnimation()
+    private void ShowYarn(Action onCompleteAction)
     {
-        Tween.Custom(1, 0, duration: 0.6f, ease: Ease.Linear, onValueChange: newVal =>
-        {
-            dissolveHeight = newVal;
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
 
-            UpdateYarnState(newVal);
-        })
-        .OnComplete(() =>
+        for (int i = 0; i < segments.Count; i++)
         {
-            for (int i = 1; i < segments.Count; i++)
-            {
-                int index = i;
-                Tween.Custom(segments[index].posNow, segments[0].posNow, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+            segments[i].posNow = _firstNodeLocalPosition;
+
+            UpdateLineRenderer();
+        }
+
+        Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
+
+        for (int i = 0; i < segments.Count; i++)
+        {
+            int index = i;
+
+            Tween.Custom(
+                _firstNodeLocalPosition,
+                Vector3.Lerp(_firstNodeLocalPosition, lastNodeLocalPosition, (float)index / segmentCount),
+                duration: 0.2f,
+                ease: Ease.InOutSine,
+                onValueChange: newVal =>
                 {
                     segments[index].posNow = newVal;
 
@@ -247,20 +254,56 @@ public class Yarn2D : MonoBehaviour
                     {
                         UpdateLineRenderer();
                     }
-                })
-                .OnComplete(() =>
+                }
+            )
+            .OnComplete(() =>
+            {
+                if (index == segments.Count - 1)
                 {
-                    if (index == segments.Count - 1)
+                    onCompleteAction?.Invoke();
+                }
+            });
+        }
+    }
+
+    private void PlayRewindAnimation()
+    {
+        ShowYarn(() =>
+        {
+            Tween.Custom(1, 0, duration: 0.6f, ease: Ease.Linear, onValueChange: newVal =>
+            {
+                dissolveHeight = newVal;
+
+                UpdateYarnState(newVal);
+            })
+            .OnComplete(() =>
+            {
+                for (int i = 1; i < segments.Count; i++)
+                {
+                    int index = i;
+                    Tween.Custom(segments[index].posNow, segments[0].posNow, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
-                        gameObject.SetActive(false);
+                        segments[index].posNow = newVal;
 
-                        startSpoolBoxSlot = null;
-                        spoolBoxSlot = null;
+                        if (index == segments.Count - 1)
+                        {
+                            UpdateLineRenderer();
+                        }
+                    })
+                    .OnComplete(() =>
+                    {
+                        if (index == segments.Count - 1)
+                        {
+                            gameObject.SetActive(false);
 
-                        onRewindYarnCompleted?.Invoke();
-                    }
-                });
-            }
+                            startSpoolBoxSlot = null;
+                            spoolBoxSlot = null;
+
+                            onRewindYarnCompleted?.Invoke();
+                        }
+                    });
+                }
+            });
         });
     }
 
@@ -313,7 +356,7 @@ public class Yarn2D : MonoBehaviour
         {
             Vector3 worldPos = transform.TransformPoint(new Vector3(2 * radius, y, 0f));
 
-            Ray ray = new Ray(worldPos, -piece.transform.right);
+            Ray ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * radius, 0, 0)));
             RaycastHit hit;
 
             if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
@@ -360,7 +403,7 @@ public class Yarn2D : MonoBehaviour
         {
             Vector3 worldPos = transform.TransformPoint(new Vector3(x, 2 * radius, 0f));
 
-            Ray ray = new Ray(worldPos, -piece.transform.up);
+            Ray ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 2 * radius, 0)));
             RaycastHit hit;
 
             if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
@@ -404,7 +447,7 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-1f);
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
 
         Vector3 start = _firstNodeLocalPosition;
         Vector3 end = segments[segmentCount - 1].posNow;
@@ -426,7 +469,7 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
-        for (int i = 1; i < segmentCount - 1; i++)
+        for (int i = 0; i < segmentCount - 1; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
             float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * amplitude;
@@ -444,31 +487,33 @@ public class Yarn2D : MonoBehaviour
 
     void UpdateLineRenderer()
     {
-        transform.rotation = Quaternion.identity;
+        transform.localRotation = Quaternion.identity;
 
         lineRenderer.positionCount = segmentCount;
 
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).AddZ(-0.1f);
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
 
         Vector3 lastNodePosition = segments[segmentCount - 1].posNow;
 
         for (int i = 0; i < segmentCount; i++)
         {
-            if (i == 0)
-            {
-                lineRenderer.SetPosition(i, _firstNodeLocalPosition);
-            }
-            else
-            {
-                if (_dissolveAxis == DissolveAxis.Y)
-                {
-                    lineRenderer.SetPosition(i, segments[i].posNow.AddY(0f * modelSize.y));
-                }
-                else
-                {
-                    lineRenderer.SetPosition(i, segments[i].posNow);
-                }
-            }
+            lineRenderer.SetPosition(i, segments[i].posNow);
+
+            // if (i == 0)
+            // {
+            //     lineRenderer.SetPosition(i, _firstNodeLocalPosition);
+            // }
+            // else
+            // {
+            //     if (_dissolveAxis == DissolveAxis.Y)
+            //     {
+            //         lineRenderer.SetPosition(i, segments[i].posNow.AddY(0f * modelSize.y));
+            //     }
+            //     else
+            //     {
+            //         lineRenderer.SetPosition(i, segments[i].posNow);
+            //     }
+            // }
         }
     }
 
