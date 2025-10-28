@@ -457,6 +457,11 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
+        
+        if (screwBox == null)
+        {
+            DebugLogger.LogError(content:$"ScrewBoxManager.SpawnScrewBox(): The ScrewBox is null");
+        }
 
         screwBox.Faction = faction;
         screwBox.IsLocked = false;

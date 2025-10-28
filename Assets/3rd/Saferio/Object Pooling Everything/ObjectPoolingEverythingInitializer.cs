@@ -64,7 +64,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     private void Start()
     {
-        StartCoroutine(DelayInit());
+        // StartCoroutine(DelayInit());
+        if (!_isInitialized)
+        {
+            InitPool();
+        }
     }
 
     private IEnumerator DelayInit()

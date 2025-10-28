@@ -84,6 +84,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
 
     protected virtual void UpdateTimeCount(int remaningTime)
     {
-        timeCountingText.text = $"Lock in {remaningTime}s";
+        // timeCountingText.text = $"Lock in {remaningTime}s";
+        timeCountingText.text = $"{remaningTime}";
     }
 }
