@@ -304,9 +304,31 @@ public class Yarn2D : MonoBehaviour
         // {
         //     radius *= 2 * (1 - yRatio);
         // }
-        if (yRatio < 0.2f)
+        // if (yRatio < 0.2f)
+        // {
+        //     radius *= 2 * yRatio;
+        // }
+
+        if (piece != null)
         {
-            radius *= 2 * yRatio;
+            Vector3 worldPos = transform.TransformPoint(new Vector3(2 * radius, y, 0f));
+
+            Ray ray = new Ray(worldPos, -piece.transform.right);
+            RaycastHit hit;
+
+            if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Vector3 closestPoint = hit.point;
+
+                radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
+            }
+            else
+            {
+                radius = 0;
+            }
+
+            // Vector3 nearestPoint = piece.PieceServiceLocator.pieceCollider.ClosestPointOnBounds(worldPos);
+            // radius = Mathf.Abs(transform.InverseTransformPoint(nearestPoint).x);
         }
 
         float x = Mathf.Cos(angle) * radius;
@@ -329,9 +351,28 @@ public class Yarn2D : MonoBehaviour
         // {
         //     radius *= 2 * (1 - xRatio);
         // }
-        if (xRatio < 0.2f)
+        // if (xRatio < 0.2f)
+        // {
+        //     radius *= 2 * xRatio;
+        // }
+
+        if (piece != null)
         {
-            radius *= 2 * xRatio;
+            Vector3 worldPos = transform.TransformPoint(new Vector3(x, 2 * radius, 0f));
+
+            Ray ray = new Ray(worldPos, -piece.transform.up);
+            RaycastHit hit;
+
+            if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
+            {
+                Vector3 closestPoint = hit.point;
+
+                radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).y);
+            }
+            else
+            {
+                radius = 0;
+            }
         }
 
         float y = Mathf.Cos(angle) * radius;
