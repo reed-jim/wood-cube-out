@@ -16,6 +16,7 @@ namespace NamPhuThuy.UI
         private VideoPlayer videoPlayer;
 
         [SerializeField] private LeanLocalizedTextMeshProUGUI descriptionLocalized;
+        [SerializeField] private LeanLocalizedTextMeshProUGUI titleLocalized;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button okButton;
 
@@ -69,13 +70,22 @@ namespace NamPhuThuy.UI
                 // Set localized description
                 if (!string.IsNullOrEmpty(record.description))
                 {
-                    descriptionLocalized.TranslationName = record.description;
+                    DebugLogger.LogSimple(message:$"record.description: {record.description}", context: this);
+                    descriptionLocalized.TranslationName = record.descriptionTranslationName;
+                    // descriptionLocalized.UpdateTranslationWithParameter(record.modeName, record.description);
                 }
                 
-                if (record.description != null)
+                if (record.modeName != null)
+                {
+                    DebugLogger.LogSimple(message:$"record.modeName: {record.modeName}", context: this);
+                    titleLocalized.TranslationName = record.modeName;
+                    // titleLocalized.UpdateLocalization();
+                }
+                
+                /*if (record.description != null)
                 {
                     descriptionText.text = record.description;
-                }
+                }*/
             }
             else
             {

@@ -131,6 +131,7 @@ namespace NamPhuThuy.Data
     {
         public LevelMode levelMode = LevelMode.Normal;
         public string modeName;
+        public string descriptionTranslationName;
         public VideoClip videoClip;
         
         [TextArea(3, 10)]
