@@ -4,6 +4,7 @@ Github: https://github.com/NamPhuThuy
 
 using System;
 using DG.Tweening;
+using Lean.Localization;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -157,7 +158,9 @@ namespace NamPhuThuy.VFX
         public void SetContent(string message, Action moreSetup)
         {
             messageText.text = message;
+            messageText.GetComponent<LeanLocalizedTextMeshProUGUI>().TranslationName = message;
             moreSetup?.Invoke();
+            
         }
 
         #endregion
