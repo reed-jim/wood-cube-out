@@ -227,15 +227,14 @@ public class Yarn2D : MonoBehaviour
     private void ShowYarn(Action onCompleteAction)
     {
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
+        Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
 
         for (int i = 0; i < segments.Count; i++)
         {
-            segments[i].posNow = _firstNodeLocalPosition;
+            segments[i].posNow = lastNodeLocalPosition;
 
             UpdateLineRenderer();
         }
-
-        Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
 
         for (int i = 0; i < segments.Count; i++)
         {
@@ -243,7 +242,7 @@ public class Yarn2D : MonoBehaviour
 
             Tween.Custom(
                 _firstNodeLocalPosition,
-                Vector3.Lerp(_firstNodeLocalPosition, lastNodeLocalPosition, (float)index / segmentCount),
+                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, (float)index / segmentCount),
                 duration: 0.2f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>
