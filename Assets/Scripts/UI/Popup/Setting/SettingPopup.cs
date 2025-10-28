@@ -16,6 +16,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
+    [SerializeField] private Button openFacebookGroupButton;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -54,6 +55,7 @@ public class SettingPopup : BasePopup
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
         adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
         {
@@ -183,5 +185,10 @@ public class SettingPopup : BasePopup
     {
         switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
         // switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
+    }
+
+    private void OpenFacebookGroup()
+    {
+        Application.OpenURL("https://www.facebook.com/groups/2018540212314555");
     }
 }
