@@ -241,8 +241,8 @@ public class Yarn2D : MonoBehaviour
             int index = i;
 
             Tween.Custom(
-                _firstNodeLocalPosition,
-                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, (float)index / segmentCount),
+                lastNodeLocalPosition,
+                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - (float)index / segmentCount),
                 duration: 0.2f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>

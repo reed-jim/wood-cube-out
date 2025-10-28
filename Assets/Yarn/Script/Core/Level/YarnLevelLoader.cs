@@ -329,11 +329,11 @@ public class YarnLevelLoader : MonoBehaviour
                         }
                     }
 
-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
+                    GamePersistentVariable.levelOffset = new Vector3(0, 0.3f, 0);
 
                     _isSetLevelGradientBound = false;
 
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: Vector3.zero);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
@@ -659,7 +659,7 @@ public class YarnLevelLoader : MonoBehaviour
 
             Vector3 newCenter = -center / _currentLevelContainer.transform.localScale.x;
 
-            await Task.Delay(500);
+            // await Task.Delay(500);
 
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
@@ -667,7 +667,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            Debug.Log("SAFERIO orthographicSize " + e.Message);
+            
         }
     }
 
