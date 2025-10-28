@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -33,7 +34,8 @@ namespace NamPhuThuy.VFX
         private void Awake()
         {
             base.Awake();
-            PreloadAll();
+
+            StartCoroutine(DelayPreloadAll());
         }
 
         void Update()
@@ -51,6 +53,13 @@ namespace NamPhuThuy.VFX
         }
 
         #endregion
+
+        private IEnumerator DelayPreloadAll()
+        {
+            yield return new WaitForSeconds(5);
+
+            PreloadAll();
+        }
 
         void PreloadAll()
         {
