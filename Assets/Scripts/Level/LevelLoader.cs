@@ -886,23 +886,32 @@ namespace NamPhuThuy.GamePlay
         int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
         int currentLevel = nextLevel - 1;
         
-        LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
-        if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
+        
+        try
         {
-            DebugLogger.LogSimple(message:$"special true", context:this);
-            GamePersistentVariable.currentTutLevelMode = currentLevelMode;
+            LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
+            DebugLogger.LogSimple(message:$"levelMode: {currentLevelMode}");
             
-            specialTutIntroduceEvent?.Invoke(true);
-            DelayShowTutorialSuggestion();
-            return;
+            if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
+            {
+                DebugLogger.LogSimple(message: $"special true", context: this);
+                GamePersistentVariable.currentTutLevelMode = currentLevelMode;
+
+                specialTutIntroduceEvent?.Invoke(true);
+                DelayShowTutorialSuggestion();
+                return;
+            }
+            else
+            {
+                DebugLogger.LogSimple(message: $"special false", context: this);
+                specialTutIntroduceEvent?.Invoke(false);
+            }
         }
-        else
+        catch (Exception e)
         {
-            DebugLogger.LogSimple(message:$"special false", context:this);
+            DebugLogger.LogSimple(message:$"Error: {e}");
             specialTutIntroduceEvent?.Invoke(false);
         }
-        
-        DebugLogger.LogSimple(message:$"levelMode: {currentLevelMode}");
         
 
         if (randomSuggestionIndex == 0)

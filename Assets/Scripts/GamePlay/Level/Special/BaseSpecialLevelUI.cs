@@ -23,6 +23,8 @@ public class BaseSpecialLevelUI : MonoBehaviour
     [SerializeField] protected CanvasGroup lockedGroup;
     [SerializeField] protected TMP_Text[] conditionTexts;
     [SerializeField] protected TMP_Text timeCountingText;
+    
+    [SerializeField] protected Image reloadMaskImage;
 
     [SerializeField] protected LevelMode levelMode;
 

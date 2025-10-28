@@ -346,6 +346,7 @@ namespace NamPhuThuy.GamePlay
                 continue;
             }
 
+            /*
             if (_lockScrewBoxManager != null)
             {
                 DebugLogger.LogSimple(message:$"continue 4.2", context:this);
@@ -353,7 +354,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     DebugLogger.LogSimple(message:$"continue 4.3", context:this);
                 }
-            }
+            }*/
 
             
             

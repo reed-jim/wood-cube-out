@@ -92,8 +92,11 @@ namespace NamPhuThuy.GamePlay
 
             if (targetScrew == null)
             {
+                DebugLogger.LogSimple(message:$"found no screw");
                 return;
             }
+            
+            DebugLogger.LogSimple(message:$"Locked color: {targetScrew.Faction}");
 
             _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
             DebugLogger.LogSimple(message:$"generated new record {_specialLevelTaskRecord}");
