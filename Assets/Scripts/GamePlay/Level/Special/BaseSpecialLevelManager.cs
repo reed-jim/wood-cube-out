@@ -15,7 +15,7 @@ namespace NamPhuThuy.GamePlay
         protected BaseScrew[] _screws;
         protected Coroutine _delayedLockNextScrew;
 
-        protected SpecialLevelTaskRecord _specialLevelTaskRecord;
+        [SerializeField] protected SpecialLevelTaskRecord _specialLevelTaskRecord;
         protected bool _isFirstTime;
         protected bool _isDoneCompletely;
 
@@ -92,8 +92,11 @@ namespace NamPhuThuy.GamePlay
 
             if (targetScrew == null)
             {
+                DebugLogger.LogSimple(message:$"found no screw");
                 return;
             }
+            
+            DebugLogger.LogSimple(message:$"Locked color: {targetScrew.Faction}");
 
             _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
             DebugLogger.LogSimple(message:$"generated new record {_specialLevelTaskRecord}");
@@ -150,6 +153,7 @@ namespace NamPhuThuy.GamePlay
         {
             if (_specialLevelTaskRecord == null)
             {
+                DebugLogger.LogError(content:$"TaskRecord is null faction {faction}");
                 return false;
             }
 

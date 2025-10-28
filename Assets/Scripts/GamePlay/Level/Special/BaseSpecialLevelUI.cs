@@ -23,6 +23,8 @@ public class BaseSpecialLevelUI : MonoBehaviour
     [SerializeField] protected CanvasGroup lockedGroup;
     [SerializeField] protected TMP_Text[] conditionTexts;
     [SerializeField] protected TMP_Text timeCountingText;
+    
+    [SerializeField] protected Image reloadMaskImage;
 
     [SerializeField] protected LevelMode levelMode;
 
@@ -84,6 +86,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
 
     protected virtual void UpdateTimeCount(int remaningTime)
     {
-        timeCountingText.text = $"Lock in {remaningTime}s";
+        // timeCountingText.text = $"Lock in {remaningTime}s";
+        timeCountingText.text = $"{remaningTime}";
     }
 }

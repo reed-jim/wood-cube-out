@@ -232,15 +232,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         if (totalRemainingAmount < prevRemaining)
         {
             SaferioTween.Punch(conditionTexts[0].transform, effectScale: 1.2f, duration: 0.2f);
-            
-            /*VFXManager.Ins.PlayAt(
-                type: VFXType.STAT_CHANGE_TEXT,
-                pos: conditionTexts[0].transform.position,
-                amount: totalRemainingAmount - prevRemaining,
-                initialParent: conditionTexts[0].transform,
-                offset: new Vector2(-40f, 25f),
-                distance: 20f,
-                color: Color.green);*/
         }
 
         prevRemaining = totalRemainingAmount;

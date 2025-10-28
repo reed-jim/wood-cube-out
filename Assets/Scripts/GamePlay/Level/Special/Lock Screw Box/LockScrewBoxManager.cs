@@ -66,11 +66,11 @@ namespace NamPhuThuy.GamePlay
 
         private void LockBoxes(ScrewBox refScrewBox)
         {
-            currentRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
+            _specialLevelTaskRecord = SpecialLevelTaskRecord.GenerateTask(SpecialLevelTaskType.ScrewComplete);
 
-            currentRecord.requiredComponents[0].faction = refScrewBox.Faction;
+            _specialLevelTaskRecord.requiredComponents[0].faction = refScrewBox.Faction;
 
-            requestLockedScrewBox?.Invoke(refScrewBox, currentRecord);
+            requestLockedScrewBox?.Invoke(refScrewBox, _specialLevelTaskRecord);
             // ScrewBoxLocked screwBoxLocked = CommonUtil.ReplaceAndCopy<ScrewBox, ScrewBoxLocked>(screwBoxes[1].gameObject);
         }
 
@@ -89,6 +89,7 @@ namespace NamPhuThuy.GamePlay
 
         public override bool IsFactionLocked(GameEnum.GameFaction faction)
         {
+            DebugLogger.LogSimple();
             return base.IsFactionLocked(faction);
         }
 

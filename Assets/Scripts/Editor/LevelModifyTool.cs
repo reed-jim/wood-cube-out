@@ -421,7 +421,7 @@ namespace NamPhuThuy.EditorTools
             }
 
             EditorUtility.SetDirty(level);
-            DebugLogger.Log($"Successfully switched {screws.Length} screws to {levelMode}", Color.yellow, true);
+            // DebugLogger.Log($"Successfully switched {screws.Length} screws to {levelMode}", Color.yellow, true);
         }
 
         /// <summary>
@@ -431,7 +431,7 @@ namespace NamPhuThuy.EditorTools
         {
             if (level == null)
             {
-                DebugLogger.LogError("Level transform is null");
+                // DebugLogger.LogError("Level transform is null");
                 return;
             }
 
@@ -439,7 +439,7 @@ namespace NamPhuThuy.EditorTools
 
             if (screws.Length == 0)
             {
-                DebugLogger.LogWarning($"No screws found in level: {level.name}");
+                // DebugLogger.LogWarning($"No screws found in level: {level.name}");
                 return;
             }
 
@@ -447,14 +447,13 @@ namespace NamPhuThuy.EditorTools
 
             if (targetScrewPrefab == null)
             {
-                DebugLogger.LogError($"{screwTypeName} screw prefab not found at path: {prefabPath}");
+                // DebugLogger.LogError($"{screwTypeName} screw prefab not found at path: {prefabPath}");
                 return;
             }
 
             List<BaseScrew> toRemoveList = new List<BaseScrew>(screws);
 
-            DebugLogger.Log($"Switching {screws.Length} screws to {screwTypeName} screws in level: {level.name}",
-                Color.magenta);
+            // DebugLogger.Log($"Switching {screws.Length} screws to {screwTypeName} screws in level: {level.name}", Color.magenta);
 
             for (int i = 0; i < screws.Length; i++)
             {
@@ -484,8 +483,7 @@ namespace NamPhuThuy.EditorTools
             }
 
             EditorUtility.SetDirty(level);
-            DebugLogger.Log($"Successfully switched {screws.Length} screws to {screwTypeName} screws", Color.magenta,
-                true);
+            // DebugLogger.Log($"Successfully switched {screws.Length} screws to {screwTypeName} screws", Color.magenta, true);
         }
 
         #endregion

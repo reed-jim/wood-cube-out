@@ -320,6 +320,7 @@ namespace NamPhuThuy.GamePlay
         }
 
         List<GameFaction> factions = new List<GameFaction>(numObstacleEachScrewEachFaction.Keys);
+        
 
         // Calculate difficulty of each faction based on total obstacles of first three most "blocked-less" screws
         foreach (var faction in factions)
@@ -331,11 +332,13 @@ namespace NamPhuThuy.GamePlay
                 continue;
             }
 
+            
             if (_rustyScrewSpecialLevelManager != null && _rustyScrewSpecialLevelManager.IsFactionLocked(faction))
             {
                 difficultyLevelByFactions[faction] += 99999;
                 continue;
             }
+            
            
             if (_lockScrewColorLevelManager != null &&  _lockScrewColorLevelManager.IsFactionLocked(faction))
             {
@@ -343,11 +346,36 @@ namespace NamPhuThuy.GamePlay
                 continue;
             }
 
+            /*
+            if (_lockScrewBoxManager != null)
+            {
+                DebugLogger.LogSimple(message:$"continue 4.2", context:this);
+                if (_lockScrewBoxManager.IsFactionLocked(faction))
+                {
+                    DebugLogger.LogSimple(message:$"continue 4.3", context:this);
+                }
+            }*/
+
+            
+            
             if (_lockScrewBoxManager != null && _lockScrewBoxManager.IsFactionLocked(faction))
             {
-                difficultyLevelByFactions[faction] -= 999;
+                float progressPercent = GetLevelCompletePercent();
+                DebugLogger.LogSimple(message:$"currnetPro: {progressPercent}");
+                
+                if (progressPercent <= 40)
+                    difficultyLevelByFactions[faction] += 9999;
+                else
+                {
+                    difficultyLevelByFactions[faction] -= 999;    
+                }
+                
+                
+                
                 continue;
             }
+            
+            DebugLogger.LogSimple(message:$"continue 5");
 
             numObstacleEachScrewEachFaction[faction] = numObstacleEachScrewEachFaction[faction].OrderBy(item => item).ToList();
 
@@ -459,6 +487,32 @@ namespace NamPhuThuy.GamePlay
 
         levelObserver.Progress = 1 - (float)remainingScrew / _totalScrew;
     }
+    
+    // Add this method inside the ScrewManager class
+    public float GetLevelCompletePercent()
+    {
+        DebugLogger.LogSimple();
+        if (_screws == null || _totalScrew <= 0) return 0f;
+
+        int done = 0;
+        for (int i = 0; i < _screws.Count; i++)
+        {
+            var s = _screws[i];
+            if (s != null && s.IsDone) done++;
+        }
+
+        return (done / (float)_totalScrew) * 100f;
+    }
+
+// Optional: if you prefer using the existing progress calculation
+    public float GetLevelCompletePercentFast()
+    {
+        // CalculateCurrentProgress returns 0..1
+        float p = 0f;
+        try { p = CalculateCurrentProgress(); } catch { }
+        return Mathf.Clamp01(p) * 100f;
+    }
+    
     #endregion
 
     #region AUTO TESTING
@@ -659,44 +713,44 @@ namespace NamPhuThuy.GamePlay
 
         Dictionary<GameFaction, int> screwSlotAvailableByFaction = screwBoxManager.GetScrewSlotsAvailableByFaction();
         
-        /*DebugLogger.LogSimple(message:$"screwSlotAvailableByFaction:");
+        DebugLogger.LogSimple(message:$"screwSlotAvailableByFaction:");
         foreach (var kvp in screwSlotAvailableByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value} available slots", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
         
         Dictionary<GameFaction, int> remainingScrewByFaction = GetRemainingScrewByFaction();
-        /*DebugLogger.LogSimple(message:$"remainingScrewByFaction:");
+        DebugLogger.LogSimple(message:$"remainingScrewByFaction:");
         foreach (var kvp in remainingScrewByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
         
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
-        /*DebugLogger.LogSimple(message:$"totalBlockObjectsByFaction:");
+        DebugLogger.LogSimple(message:$"totalBlockObjectsByFaction:");
         foreach (var kvp in totalBlockObjectsByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
-        /*DebugLogger.LogSimple(message:$"shuffledDifficultyLevelByFaction:");
+        DebugLogger.LogSimple(message:$"shuffledDifficultyLevelByFaction:");
         foreach (var kvp in shuffledDifficultyLevelByFaction)
         {
             DebugLogger.Log($"{kvp.Key}: {kvp.Value}", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
-        /*DebugLogger.LogSimple(message:$"factionSortedByDifficulty:");
+        DebugLogger.LogSimple(message:$"factionSortedByDifficulty:");
         foreach (var kvp in factionSortedByDifficulty)
         {
             DebugLogger.Log($"{kvp} ", Color.cyan);
         }
-        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);*/
+        DebugLogger.LogSimple(message: $"---------------------------------", color: Color.black);
         
         bool isFound = false;
 

@@ -144,7 +144,7 @@ namespace NamPhuThuy
             string className = Path.GetFileNameWithoutExtension(filePath);
 
             Color currentColor = color == default ? Color.cyan : color;
-            Log($"{className}().{memberName}()::{line}: {message}", currentColor, context: context);
+            Log($"{className}.{memberName}::{line}: {message}", currentColor, context: context);
             /*Can replace UnityEngine.Debug.Log with any logging API you want
 
             Usage is simple: just put a LogCaller(); at any line you want. The compiler will pass in the 3 parameters for you.*/
