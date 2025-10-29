@@ -892,6 +892,7 @@ namespace NamPhuThuy.GamePlay
             LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
             DebugLogger.LogSimple(message:$"levelMode: {currentLevelMode}");
             
+            
             if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
             {
                 DebugLogger.LogSimple(message: $"special true", context: this);

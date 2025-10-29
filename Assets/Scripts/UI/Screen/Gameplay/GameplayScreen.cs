@@ -63,6 +63,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
+
     }
 
     #region Private Methods
@@ -70,7 +72,23 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private void ToggleHelpButton(bool isActive)
     {
         DebugLogger.LogSimple(message:$"isActive: {isActive}");
-        helpButton.gameObject.SetActive(isActive);
+        // guard against missing reference or destroyed object
+        if (helpButton == null)
+        {
+            DebugLogger.LogSimple(message: "helpButton is null. Assign it in the GameplayScreen inspector.", color: Color.yellow);
+            return;
+        }
+        if (helpButton.gameObject == null)
+        {
+            DebugLogger.LogSimple(message: "helpButton GameObject is missing/destroyed.", color: Color.yellow);
+            return;
+        }
+
+        // only toggle if state changes
+        if (helpButton.gameObject.activeSelf != isActive)
+        {
+            helpButton.gameObject.SetActive(isActive);
+        }
     }
 
     #endregion
