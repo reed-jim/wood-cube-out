@@ -247,6 +247,23 @@ public class BasePiece : MonoBehaviour
                 }
             }
 
+            // ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.rewindPieceFx);
+
+            // fx.transform.position = transform.position.AddZ(-3);
+            // fx.transform.localScale = 0.05f * Vector3.one;
+
+            // fx.Play();
+
+            Color currentColor = pieceServiceLocator.pieceMeshRenderer.material.GetColor("_Color");
+
+            Tween.Custom(currentColor,
+                1.3f * currentColor, duration: 0.2f, cycles: 2, cycleMode: CycleMode.Yoyo, ease: Ease.InOutSine
+                    , onValueChange: newVal =>
+                    {
+                        pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(newVal);
+                    }
+            );
+
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>

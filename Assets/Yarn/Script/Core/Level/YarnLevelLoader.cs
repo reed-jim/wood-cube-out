@@ -221,7 +221,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
         //
 
-        _loadLevelHandle = Addressables.InstantiateAsync("Level Test", transform);
+        _loadLevelHandle = Addressables.InstantiateAsync(levelPrefab, transform);
 
         _loadLevelHandle.Completed += (op) =>
         {

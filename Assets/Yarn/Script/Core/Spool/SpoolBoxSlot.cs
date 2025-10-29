@@ -167,6 +167,24 @@ public class SpoolBoxSlot : MonoBehaviour
                 lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
             }
         }
+
+        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 0);
+
+        for (int i = 0; i < upperLayers.Length; i++)
+        {
+            if (i > _currentPhase / 2)
+            {
+                upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+            }
+        }
+
+        for (int i = 0; i < lowerLayers.Length; i++)
+        {
+            if (i > (_currentPhase - 1) / 2)
+            {
+                lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+            }
+        }
     }
 
     float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)

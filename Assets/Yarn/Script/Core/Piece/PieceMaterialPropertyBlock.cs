@@ -91,11 +91,10 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         // Init();
 
-        // _propertyBlock.SetColor(colorReference, color);
+        _propertyBlock.SetColor("_Color", color);
         // _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
 
-        // _renderer.SetPropertyBlock(_propertyBlock);
-        // // _screwInsideRenderer.SetPropertyBlock(_propertyBlock);
+        _renderer.SetPropertyBlock(_propertyBlock);
     }
 
     public void ResetDissolveRatio()
