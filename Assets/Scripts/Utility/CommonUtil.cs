@@ -262,4 +262,26 @@ public static class CommonUtil
         return UnityEngine.Random.Range(0f, 1f) < probability;
     }
     #endregion
+
+    #region ENUM
+    public static TEnum FindEnumFromString<TEnum>(string searchString) where TEnum : Enum
+    {
+        searchString = RemoveAllSpaces(searchString);
+
+        foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
+        {
+            if (enumValue.ToString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                return enumValue;  // Return the first match found
+            }
+        }
+
+        return default;  // No match found
+
+        string RemoveAllSpaces(string input)
+        {
+            return input.Replace(" ", string.Empty);
+        }
+    }
+    #endregion
 }
