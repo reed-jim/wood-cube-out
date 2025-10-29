@@ -2,6 +2,8 @@ using System;
 using System.Threading.Tasks;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -13,6 +15,11 @@ public class SpoolBoxUI : MonoBehaviour
     [SerializeField] private RectTransform unlockByAdsButtonRT;
     [SerializeField] private RectTransform unlockBoxTextRT;
     [SerializeField] private Button unlockByAdsButton;
+    [SerializeField] private SkeletonGraphic lockedBoxSkeleton;
+
+    [Header("SPINE")]
+    [SerializeField, SpineAnimation] string lockedBoxIdle;
+    [SerializeField, SpineAnimation] string lockedBoxUnlock;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private ScrewBoxCameraObserver screwBoxCameraObserver;
@@ -67,6 +74,8 @@ public class SpoolBoxUI : MonoBehaviour
         unlockByAdsButtonRT.localScale = Vector3.one;
 
         unlockByAdsButton.gameObject.SetActive(true);
+
+        lockedBoxSkeleton.AnimationState.SetAnimation(0, lockedBoxIdle, false);
     }
 
     public void Unlock()
@@ -75,23 +84,38 @@ public class SpoolBoxUI : MonoBehaviour
 
         spoolBox.IsInTransition = true;
 
-        Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
-        {
-            Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
-            {
-                unlockByAdsButton.gameObject.SetActive(false);
+        TrackEntry trackEntry = lockedBoxSkeleton.AnimationState.SetAnimation(0, lockedBoxUnlock, false);
 
-                spoolBox.IsInTransition = false;
+        trackEntry.Complete += OnUnlockAnimationDone;
 
-                spoolBox.InvokeSpoolBoxUnlockedEvent();
-            });
-        });
+        // Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
+        // {
+        //     Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
+        //     {
+        //         unlockByAdsButton.gameObject.SetActive(false);
+
+        //         spoolBox.IsInTransition = false;
+
+        //         spoolBox.InvokeSpoolBoxUnlockedEvent();
+        //     });
+        // });
 
         unlockSpoolBox?.Invoke(gameObject.GetInstanceID());
 
         SoundManager.Instance.PlaySoundUnlockScrewBox();
 
         levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+
+        void OnUnlockAnimationDone(TrackEntry trackEntry)
+        {
+            trackEntry.Complete -= OnUnlockAnimationDone;
+
+            unlockByAdsButton.gameObject.SetActive(false);
+
+            spoolBox.IsInTransition = false;
+
+            spoolBox.InvokeSpoolBoxUnlockedEvent();
+        }
     }
 
     public void HideUnlockBoxButton()

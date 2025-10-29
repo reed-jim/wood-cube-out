@@ -221,26 +221,16 @@ public class YarnLevelLoader : MonoBehaviour
         }
         //
 
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>("Level Test");
+        _loadLevelHandle = Addressables.InstantiateAsync("Level Test", transform);
 
         _loadLevelHandle.Completed += (op) =>
         {
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                GameObject level = Instantiate(op.Result, transform);
+                GameObject level = op.Result;
 
                 _currentLevelContainer = level.transform;
 
-                // #region ASSIGN CLONE TO CALC ROTATION
-                // try
-                // {
-                //     level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                // }
-                // catch (System.Exception e) { }
-                // #endregion
-
-                // FIND DEPENDENCY
-                // delay for pieces scaling before level
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
                 YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(_pieces);
@@ -248,34 +238,6 @@ public class YarnLevelLoader : MonoBehaviour
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
                 setLevelScrewNumberEvent?.Invoke(_pieces.Length);
-
-                // Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                // //
-
-                // if (level.GetComponent<LevelTransformManualModifier>() == null)
-                // {
-                //     // level.transform.position = new Vector3(0, -0.03f * GamePersistentVariable.screenSizeWorld.y, 10);
-                //     level.transform.position = Vector3.zero;
-                //     // level.transform.rotation = Quaternion.Euler(new Vector3(-30, -45, 30));
-                //     level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                // }
-
-                // // // GENERATE CONVEX COLLIDERS
-                // // for (int i = 0; i < pieces.Count; i++)
-                // // {
-                // //     BasicObjectPart piece = pieces[i];
-                // //     MeshCollider pieceCollider = piece.GetComponent<MeshCollider>();
-                // //     MeshFilter pieceMeshFilter = piece.GetComponent<MeshFilter>();
-
-                // //     if (!pieceCollider.convex)
-                // //     {
-                // //         piece.AddComponent<CoACD>().RunACD(pieceMeshFilter.mesh);
-
-                // //         Destroy(pieceCollider);
-                // //     }
-                // // }
-
-
 
                 // // AUTO CENTER LEVEL
                 // _isNotAutoCenterLevel = false;

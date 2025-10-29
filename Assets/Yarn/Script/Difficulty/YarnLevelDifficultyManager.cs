@@ -17,7 +17,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         List<GameFaction> poolFaction = new List<GameFaction>();
 
         int index = 0;
-        GameFaction currentFaction = GameFaction.Red;
+        GameFaction currentFaction = GameFaction.YarnBlue;
 
         for (int i = 0; i < totalAdditionalFaction; i++)
         {
@@ -48,7 +48,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
                 generatedPiece.gameObject.name = $"Generated Piece {i} {j}";
 
-                GameFaction faction = GameFaction.Red;
+                GameFaction faction = GameFaction.YarnBlue;
 
                 if (poolFaction.Any(item => item != avoidFaction))
                 {
@@ -74,7 +74,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
                 generatedPiece.Lock();
 
-                Debug.Log($"SAFERIO {i} {j} {faction}");
+                Debug.Log($"SAFERIO {i} {j} {faction} {generatedPiece.name} {1 - (j + 1) * 0.1f}");
             }
         }
     }

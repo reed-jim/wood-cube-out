@@ -146,7 +146,8 @@ public class Yarn2D : MonoBehaviour
 
         modelSize = piece.PieceServiceLocator.pieceProperty.MeshBoundSize;
 
-        _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
+        // _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
+        _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
 
@@ -228,6 +229,11 @@ public class Yarn2D : MonoBehaviour
     {
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
         Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
+
+        if (_dissolveAxis == DissolveAxis.X)
+        {
+            lastNodeLocalPosition = new Vector3(0.5f * modelSize.x, 0, 0);
+        }
 
         for (int i = 0; i < segments.Count; i++)
         {
