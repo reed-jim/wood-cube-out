@@ -31,6 +31,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
+    // [SerializeField] private Button openFacebookGroupButton;
 
     #region SALE PACK BUTTONS
     [SerializeField] private Button[] openSaleIAPPackButtons;
@@ -103,6 +104,7 @@ public class MenuScreen : MonoBehaviour
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
+        // openFacebookGroupButton.onClick.AddListener(OpenFacebookGroupPopup);
 
         #region SALE IAP PACKS
         openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
@@ -228,7 +230,7 @@ public class MenuScreen : MonoBehaviour
         if (GamePersistentVariable.livesConfig.isActive &&
             DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0)
         {
-            DebugLogger.LogSimple(message:"Place 1");
+            DebugLogger.LogSimple(message: "Place 1");
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
 
             GamePersistentVariable.isPendingStartLevel = true;
@@ -238,7 +240,7 @@ public class MenuScreen : MonoBehaviour
 
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
-            DebugLogger.LogSimple(message:"Place 2");
+            DebugLogger.LogSimple(message: "Place 2");
             GamePersistentVariable.isLoadingLevelInProgress = false;
 
             if (CommonUtil.IsLevelInProgress(currentLevel.Value))
@@ -388,6 +390,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenEditProfilePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
+    }
+
+    private void OpenFacebookGroupPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.FacebookGroup);
     }
 
     #region SALE PACKS
