@@ -146,8 +146,8 @@ public class Yarn2D : MonoBehaviour
 
         modelSize = piece.PieceServiceLocator.pieceProperty.MeshBoundSize;
 
-        // _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
-        _dissolveAxis = DissolveAxis.Y;
+        _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
+        // _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
 
@@ -357,18 +357,38 @@ public class Yarn2D : MonoBehaviour
         //     radius *= 2 * yRatio;
         // }
 
+        bool isXLargerThanZ = modelSize.x > modelSize.z;
+
         if (piece != null)
         {
-            Vector3 worldPos = transform.TransformPoint(new Vector3(2 * radius, y, 0f));
+            Vector3 worldPos;
+            Ray ray = new Ray();
 
-            Ray ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * radius, 0, 0)));
+            if (isXLargerThanZ)
+            {
+                worldPos = transform.TransformPoint(new Vector3(2 * modelSize.x, y, 0f));
+                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * modelSize.x, 0, 0)));
+            }
+            else
+            {
+                worldPos = transform.TransformPoint(new Vector3(0, y, 2 * modelSize.z));
+                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
+            }
+
             RaycastHit hit;
 
             if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
             {
                 Vector3 closestPoint = hit.point;
 
-                radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
+                if (isXLargerThanZ)
+                {
+                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
+                }
+                else
+                {
+                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
+                }
             }
             else
             {
@@ -395,27 +415,38 @@ public class Yarn2D : MonoBehaviour
         // Total angle based on number of turns (in radians)
         float angle = xRatio * turns * 2 * Mathf.PI;
 
-        // if (xRatio > 0.5f)
-        // {
-        //     radius *= 2 * (1 - xRatio);
-        // }
-        // if (xRatio < 0.2f)
-        // {
-        //     radius *= 2 * xRatio;
-        // }
+        bool isYLargerThanZ = modelSize.y > modelSize.z;
 
         if (piece != null)
         {
-            Vector3 worldPos = transform.TransformPoint(new Vector3(x, 2 * radius, 0f));
+            Vector3 worldPos;
+            Ray ray = new Ray();
 
-            Ray ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 2 * radius, 0)));
+            if (isYLargerThanZ)
+            {
+                worldPos = transform.TransformPoint(new Vector3(x, 2 * modelSize.y, 0f));
+                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 2 * modelSize.y, 0)));
+            }
+            else
+            {
+                worldPos = transform.TransformPoint(new Vector3(0, 0, 2 * modelSize.z));
+                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
+            }
+
             RaycastHit hit;
 
             if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
             {
                 Vector3 closestPoint = hit.point;
 
-                radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).y);
+                if (isYLargerThanZ)
+                {
+                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).y);
+                }
+                else
+                {
+                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
+                }
             }
             else
             {
@@ -458,15 +489,6 @@ public class Yarn2D : MonoBehaviour
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
-
-        // if (_dissolveAxis == DissolveAxis.X)
-        // {
-        //     direction = piece.transform.right;
-        // }
-        // else
-        // {
-        //     direction = piece.transform.up;
-        // }
 
         float length = direction.magnitude;
         Vector3 right = direction.normalized;
