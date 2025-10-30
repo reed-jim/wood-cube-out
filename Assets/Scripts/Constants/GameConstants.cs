@@ -55,9 +55,7 @@ public static class GameConstants
     public static string FAKE_SCREW = "Fake Screw";
     public static string HAMMER = "Hammer";
     public static string SUPRISE_REWARD_FX = "SUPRISE_REWARD_FX";
-
-
-
+    public static string rewindPieceFx = "rewindPieceFx";
     public static string spoolBox = "spoolBox";
     #endregion
 

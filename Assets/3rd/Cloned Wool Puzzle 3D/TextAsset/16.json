@@ -1,0 +1,155 @@
+{
+"skeleton": {
+	"hash": "PtJb5znRWwA",
+	"spine": "4.0.64",
+	"x": -173,
+	"y": -203,
+	"width": 346,
+	"height": 406,
+	"images": "./images/",
+	"audio": "D:/Work/XGame/Anim/Room_Decor/Room_26/images"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "lo_suoi_sua", "parent": "root" },
+	{
+		"name": "01",
+		"parent": "lo_suoi_sua",
+		"length": 63.6,
+		"rotation": 90,
+		"x": -43.8,
+		"y": -50.64,
+		"scaleX": 0.8622,
+		"scaleY": 1.0716,
+		"shearY": 44.49
+	},
+	{
+		"name": "02",
+		"parent": "lo_suoi_sua",
+		"length": 63.6,
+		"rotation": 90,
+		"x": -20.42,
+		"y": -64.28,
+		"scaleX": 0.6984,
+		"scaleY": -0.7687,
+		"shearY": 3.23
+	},
+	{ "name": "03", "parent": "lo_suoi_sua", "length": 63.6, "rotation": 90, "x": -40.53, "y": -68.45 }
+],
+"slots": [
+	{ "name": "lo_suoi_sua", "bone": "lo_suoi_sua", "attachment": "lo_suoi_sua" },
+	{ "name": "01", "bone": "01", "attachment": "01" },
+	{ "name": "02", "bone": "02", "attachment": "01" },
+	{ "name": "03", "bone": "03", "attachment": "01" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"01": {
+				"01": { "x": 38.02, "rotation": -90, "width": 55, "height": 95 },
+				"02": { "x": 38.02, "rotation": -90, "width": 53, "height": 95 },
+				"03": { "x": 40.02, "y": -0.5, "rotation": -90, "width": 52, "height": 101 },
+				"04": { "x": 30.52, "rotation": -90, "width": 53, "height": 82 },
+				"05": { "x": 36.52, "rotation": -90, "width": 51, "height": 92 },
+				"06": { "x": 31.52, "y": -0.5, "rotation": -90, "width": 54, "height": 82 },
+				"07": { "x": 31.52, "rotation": -90, "width": 53, "height": 82 },
+				"08": { "x": 32.52, "rotation": -90, "width": 53, "height": 82 },
+				"09": { "x": 34.52, "rotation": -90, "width": 55, "height": 86 },
+				"10": { "x": 39.02, "rotation": -90, "width": 51, "height": 97 },
+				"11": { "x": 33.52, "rotation": -90, "width": 51, "height": 86 },
+				"12": { "x": 36.02, "rotation": -90, "width": 51, "height": 91 }
+			},
+			"02": {
+				"01": { "x": 38.02, "rotation": -90, "width": 55, "height": 95 },
+				"02": { "x": 38.02, "rotation": -90, "width": 53, "height": 95 },
+				"03": { "x": 40.02, "y": -0.5, "rotation": -90, "width": 52, "height": 101 },
+				"04": { "x": 30.52, "rotation": -90, "width": 53, "height": 82 },
+				"05": { "x": 36.52, "rotation": -90, "width": 51, "height": 92 },
+				"06": { "x": 31.52, "y": -0.5, "rotation": -90, "width": 54, "height": 82 },
+				"07": { "x": 31.52, "rotation": -90, "width": 53, "height": 82 },
+				"08": { "x": 32.52, "rotation": -90, "width": 53, "height": 82 },
+				"09": { "x": 34.52, "rotation": -90, "width": 55, "height": 86 },
+				"10": { "x": 39.02, "rotation": -90, "width": 51, "height": 97 },
+				"11": { "x": 33.52, "rotation": -90, "width": 51, "height": 86 },
+				"12": { "x": 36.02, "rotation": -90, "width": 51, "height": 91 }
+			},
+			"03": {
+				"01": { "x": 38.02, "rotation": -90, "width": 55, "height": 95 },
+				"02": { "x": 38.02, "rotation": -90, "width": 53, "height": 95 },
+				"03": { "x": 40.02, "y": -0.5, "rotation": -90, "width": 52, "height": 101 },
+				"04": { "x": 30.52, "rotation": -90, "width": 53, "height": 82 },
+				"05": { "x": 36.52, "rotation": -90, "width": 51, "height": 92 },
+				"06": { "x": 31.52, "y": -0.5, "rotation": -90, "width": 54, "height": 82 },
+				"07": { "x": 31.52, "rotation": -90, "width": 53, "height": 82 },
+				"08": { "x": 32.52, "rotation": -90, "width": 53, "height": 82 },
+				"09": { "x": 34.52, "rotation": -90, "width": 55, "height": 86 },
+				"10": { "x": 39.02, "rotation": -90, "width": 51, "height": 97 },
+				"11": { "x": 33.52, "rotation": -90, "width": 51, "height": 86 },
+				"12": { "x": 36.02, "rotation": -90, "width": 51, "height": 91 }
+			},
+			"lo_suoi_sua": {
+				"lo_suoi_sua": { "width": 346, "height": 406 }
+			}
+		}
+	}
+],
+"animations": {
+	"16_idle": {
+		"slots": {
+			"01": {
+				"attachment": [
+					{ "time": 0.0333, "name": "02" },
+					{ "time": 0.1, "name": "03" },
+					{ "time": 0.1333, "name": "04" },
+					{ "time": 0.2, "name": "05" },
+					{ "time": 0.2333, "name": "06" },
+					{ "time": 0.2667, "name": "07" },
+					{ "time": 0.3333, "name": "08" },
+					{ "time": 0.3667, "name": "09" },
+					{ "time": 0.4333, "name": "10" },
+					{ "time": 0.4667, "name": "11" },
+					{ "time": 0.5, "name": "12" },
+					{ "time": 0.5667, "name": "01" },
+					{ "time": 0.6333, "name": "02" },
+					{ "time": 0.7, "name": "03" },
+					{ "time": 0.7333, "name": "04" },
+					{ "time": 0.8, "name": "05" }
+				]
+			},
+			"02": {
+				"attachment": [
+					{ "time": 0.0667, "name": "02" },
+					{ "time": 0.1333, "name": "03" },
+					{ "time": 0.2, "name": "04" },
+					{ "time": 0.2667, "name": "05" },
+					{ "time": 0.3333, "name": "06" },
+					{ "time": 0.4, "name": "07" },
+					{ "time": 0.4667, "name": "08" },
+					{ "time": 0.5333, "name": "09" },
+					{ "time": 0.6, "name": "10" },
+					{ "time": 0.6667, "name": "11" },
+					{ "time": 0.7333, "name": "12" },
+					{ "time": 0.8, "name": "01" }
+				]
+			},
+			"03": {
+				"attachment": [
+					{ "time": 0.0667, "name": "02" },
+					{ "time": 0.1333, "name": "03" },
+					{ "time": 0.2, "name": "04" },
+					{ "time": 0.2667, "name": "05" },
+					{ "time": 0.3333, "name": "06" },
+					{ "time": 0.4, "name": "07" },
+					{ "time": 0.4667, "name": "08" },
+					{ "time": 0.5333, "name": "09" },
+					{ "time": 0.6, "name": "10" },
+					{ "time": 0.6667, "name": "11" },
+					{ "time": 0.7333, "name": "12" },
+					{ "time": 0.8, "name": "01" }
+				]
+			}
+		}
+	}
+}
+}

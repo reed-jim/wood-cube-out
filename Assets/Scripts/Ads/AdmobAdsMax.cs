@@ -163,7 +163,7 @@ public class AdmobAdsMax : MonoBehaviour
         // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
         MaxSdk.InitializeSdk();
         #endregion
-
+        UserData.IsRemoveAds = true;
         _isInited = true;
 
         // //#if !UNITY_EDITOR

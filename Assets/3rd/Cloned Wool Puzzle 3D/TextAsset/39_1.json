@@ -1,0 +1,45 @@
+{
+"skeleton": {
+	"hash": "BsfMOA5JA0k",
+	"spine": "4.0.64",
+	"x": -247.5,
+	"y": -168,
+	"width": 495,
+	"height": 336,
+	"images": "./images/",
+	"audio": "D:/Work/XGame/Anim/Room_Decor/Room_66/images"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "base", "parent": "root" }
+],
+"slots": [
+	{ "name": "w1", "bone": "base" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"w1": {
+				"w1": { "x": 2.5, "y": 8.5, "width": 378, "height": 213 },
+				"w2": { "x": 2.5, "y": 8.5, "width": 378, "height": 213 },
+				"w3": { "x": 2.5, "y": 8.5, "width": 378, "height": 213 }
+			}
+		}
+	}
+],
+"animations": {
+	"39_idle": {
+		"slots": {
+			"w1": {
+				"attachment": [
+					{ "name": "w1" },
+					{ "time": 0.5, "name": "w2" },
+					{ "time": 1, "name": "w3" },
+					{ "time": 1.5, "name": "w1" }
+				]
+			}
+		}
+	}
+}
+}

@@ -1,0 +1,273 @@
+{
+"skeleton": {
+	"hash": "SU9RRH2DS5I",
+	"spine": "4.0.64",
+	"x": -71.5,
+	"y": -91,
+	"width": 148,
+	"height": 227,
+	"images": "./images/",
+	"audio": "./images/"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "41", "parent": "root" },
+	{ "name": "41_wire3", "parent": "41", "length": 100, "rotation": -90, "x": 21.5, "y": 133.65 },
+	{ "name": "41_O4", "parent": "41_wire3", "rotation": 90, "x": 221.16, "y": 2.48 },
+	{ "name": "41_O3", "parent": "41_wire3", "rotation": 90, "x": 195.32, "y": -10.66 },
+	{ "name": "41_O2", "parent": "41_wire3", "rotation": 90, "x": 176.22, "y": 8.27 },
+	{ "name": "41_O", "parent": "41_wire3", "rotation": 90, "x": 152.32, "y": -9 },
+	{ "name": "41_wire1", "parent": "41", "length": 100, "rotation": -90, "x": -27.5, "y": 106.03 },
+	{ "name": "41_butter", "parent": "41_wire1", "rotation": 90, "x": 104.8 },
+	{ "name": "41_wire2", "parent": "41", "length": 100, "rotation": -90, "x": 66.5, "y": 129.47 },
+	{ "name": "41_shape", "parent": "41_wire2", "rotation": 90, "x": 108.71, "y": 2 },
+	{ "name": "41_wire4", "parent": "41", "length": 100, "rotation": -90, "x": -61.5, "y": 124.54 },
+	{ "name": "41_star", "parent": "41_wire4", "rotation": 90, "x": 204.48, "y": 3 }
+],
+"slots": [
+	{ "name": "41_wire4", "bone": "41_wire4", "attachment": "41_wire4" },
+	{ "name": "41_wire3", "bone": "41_wire3", "attachment": "41_wire3" },
+	{ "name": "41_wire2", "bone": "41_wire2", "attachment": "41_wire2" },
+	{ "name": "41_wire1", "bone": "41_wire1", "attachment": "41_wire1" },
+	{ "name": "41_O", "bone": "41_O" },
+	{ "name": "41_O2", "bone": "41_O2" },
+	{ "name": "41_O3", "bone": "41_O3" },
+	{ "name": "41_O4", "bone": "41_O4" },
+	{ "name": "41_shape", "bone": "41_shape" },
+	{ "name": "41_star", "bone": "41_star" },
+	{ "name": "41_butter", "bone": "41_butter" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"41_butter": {
+				"41_butter": { "y": -13.83, "width": 52, "height": 51 }
+			},
+			"41_O": {
+				"41_O": { "width": 26, "height": 26 }
+			},
+			"41_O2": {
+				"41_O": { "scaleX": 0.8791, "scaleY": 0.8791, "width": 26, "height": 26 }
+			},
+			"41_O3": {
+				"41_O": { "scaleX": 0.8597, "scaleY": 0.8597, "width": 26, "height": 26 }
+			},
+			"41_O4": {
+				"41_O": { "scaleX": 0.8365, "scaleY": 0.8365, "width": 26, "height": 26 }
+			},
+			"41_shape": {
+				"41_shape": { "width": 38, "height": 67 }
+			},
+			"41_star": {
+				"41_star": { "width": 58, "height": 79 }
+			},
+			"41_wire1": {
+				"41_wire1": { "x": 52.03, "rotation": 90, "width": 20, "height": 108 }
+			},
+			"41_wire2": {
+				"41_wire2": { "x": 56.47, "rotation": 90, "width": 20, "height": 110 }
+			},
+			"41_wire3": {
+				"41_wire3": { "x": 111.15, "rotation": 90, "width": 20, "height": 227 }
+			},
+			"41_wire4": {
+				"41_wire4": { "x": 102.04, "rotation": 90, "width": 20, "height": 211 }
+			}
+		}
+	}
+],
+"animations": {
+	"41_fall": {
+		"slots": {
+			"41_butter": {
+				"attachment": [
+					{ "time": 0.4, "name": "41_butter" }
+				]
+			},
+			"41_O": {
+				"attachment": [
+					{ "time": 1, "name": "41_O" }
+				]
+			},
+			"41_O2": {
+				"attachment": [
+					{ "time": 1.0667, "name": "41_O" }
+				]
+			},
+			"41_O3": {
+				"attachment": [
+					{ "time": 1.1667, "name": "41_O" }
+				]
+			},
+			"41_O4": {
+				"attachment": [
+					{ "time": 1.2667, "name": "41_O" }
+				]
+			},
+			"41_shape": {
+				"attachment": [
+					{ "time": 0.5667, "name": "41_shape" }
+				]
+			},
+			"41_star": {
+				"attachment": [
+					{ "time": 0.7333, "name": "41_star" }
+				]
+			}
+		},
+		"bones": {
+			"41_wire3": {
+				"scale": [
+					{ "x": 0, "curve": "stepped" },
+					{
+						"time": 0.5,
+						"x": 0,
+						"curve": [ 0.633, 0, 0.767, 1.076, 0.633, 1, 0.767, 1 ]
+					},
+					{
+						"time": 0.9,
+						"x": 1.076,
+						"curve": [ 0.967, 1.076, 1.033, 1, 0.967, 1, 1.033, 1 ]
+					},
+					{ "time": 1.1 }
+				]
+			},
+			"41_wire1": {
+				"scale": [
+					{
+						"x": 0,
+						"curve": [ 0.133, 0, 0.267, 1.076, 0.133, 1, 0.267, 1 ]
+					},
+					{
+						"time": 0.4,
+						"x": 1.076,
+						"curve": [ 0.467, 1.076, 0.533, 1, 0.467, 1, 0.533, 1 ]
+					},
+					{ "time": 0.6 }
+				]
+			},
+			"41_wire2": {
+				"scale": [
+					{ "x": 0, "curve": "stepped" },
+					{
+						"time": 0.1667,
+						"x": 0,
+						"curve": [ 0.3, 0, 0.433, 1.076, 0.3, 1, 0.433, 1 ]
+					},
+					{
+						"time": 0.5667,
+						"x": 1.076,
+						"curve": [ 0.633, 1.076, 0.7, 1, 0.633, 1, 0.7, 1 ]
+					},
+					{ "time": 0.7667 }
+				]
+			},
+			"41_wire4": {
+				"scale": [
+					{ "x": 0, "curve": "stepped" },
+					{
+						"time": 0.3333,
+						"x": 0,
+						"curve": [ 0.467, 0, 0.6, 1.076, 0.467, 1, 0.6, 1 ]
+					},
+					{
+						"time": 0.7333,
+						"x": 1.076,
+						"curve": [ 0.8, 1.076, 0.867, 1, 0.8, 1, 0.867, 1 ]
+					},
+					{ "time": 0.9333 }
+				]
+			},
+			"41_butter": {
+				"scale": [
+					{ "time": 0.4, "x": 0, "y": 0 },
+					{ "time": 0.5667, "x": 1.193, "y": 1.193 },
+					{ "time": 0.7333 }
+				]
+			},
+			"41_star": {
+				"scale": [
+					{ "time": 0.7333, "x": 0, "y": 0 },
+					{ "time": 0.9, "x": 1.122, "y": 1.122 },
+					{ "time": 1.0667 }
+				]
+			},
+			"41_shape": {
+				"scale": [
+					{ "time": 0.5667, "x": 0, "y": 0 },
+					{ "time": 0.7333, "x": 1.244, "y": 1.244 },
+					{ "time": 0.9 }
+				]
+			},
+			"41_O4": {
+				"scale": [
+					{ "time": 1.2667, "x": 0, "y": 0 },
+					{ "time": 1.4333, "x": 1.089, "y": 1.089 },
+					{ "time": 1.6 }
+				]
+			},
+			"41_O3": {
+				"scale": [
+					{ "time": 1.1667, "x": 0, "y": 0 },
+					{ "time": 1.3333, "x": 1.089, "y": 1.089 },
+					{ "time": 1.5 }
+				]
+			},
+			"41_O2": {
+				"scale": [
+					{ "time": 1.0667, "x": 0, "y": 0 },
+					{ "time": 1.2333, "x": 1.089, "y": 1.089 },
+					{ "time": 1.4 }
+				]
+			},
+			"41_O": {
+				"scale": [
+					{ "time": 1, "x": 0, "y": 0 },
+					{ "time": 1.1667, "x": 1.089, "y": 1.089 },
+					{ "time": 1.3333 }
+				]
+			}
+		}
+	},
+	"41_idle": {
+		"slots": {
+			"41_butter": {
+				"attachment": [
+					{ "name": "41_butter" }
+				]
+			},
+			"41_O": {
+				"attachment": [
+					{ "name": "41_O" }
+				]
+			},
+			"41_O2": {
+				"attachment": [
+					{ "name": "41_O" }
+				]
+			},
+			"41_O3": {
+				"attachment": [
+					{ "name": "41_O" }
+				]
+			},
+			"41_O4": {
+				"attachment": [
+					{ "name": "41_O" }
+				]
+			},
+			"41_shape": {
+				"attachment": [
+					{ "name": "41_shape" }
+				]
+			},
+			"41_star": {
+				"attachment": [
+					{ "name": "41_star" }
+				]
+			}
+		}
+	}
+}
+}

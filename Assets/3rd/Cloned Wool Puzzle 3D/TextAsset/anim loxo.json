@@ -1,0 +1,210 @@
+{
+"skeleton": {
+	"hash": "P82h6bbnHOc",
+	"spine": "4.0.64",
+	"x": -112.7,
+	"y": -98.32,
+	"width": 331.26,
+	"height": 269.46,
+	"images": "./images/",
+	"audio": "E:/thaotp/Screw/Anim/Lava_quest/Lo_xo"
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "be2", "parent": "root", "x": 161.86, "y": 111.03 },
+	{ "name": "que copy", "parent": "be2", "length": 421.51, "rotation": -147.13, "x": -1.67, "y": 1.67 },
+	{ "name": "modul", "parent": "que copy", "x": 26.14, "y": -0.63, "transform": "noScale" },
+	{ "name": "que copy2", "parent": "que copy", "x": 71.53, "y": -0.55, "transform": "noScale" },
+	{ "name": "que copy3", "parent": "que copy", "x": 119.24, "y": 2.98, "transform": "noScale" },
+	{ "name": "que copy4", "parent": "que copy", "x": 166.28, "y": 1.94, "transform": "noScale" },
+	{ "name": "que copy5", "parent": "que copy", "x": 220.82, "y": 1.01, "transform": "noScale" },
+	{ "name": "que copy6", "parent": "que copy", "x": 277.65, "y": -0.18, "transform": "noScale" },
+	{ "name": "que copy7", "parent": "que copy", "x": 333.87, "y": 1.48, "transform": "noScale" },
+	{
+		"name": "que copy16",
+		"parent": "root",
+		"rotation": -147.13,
+		"x": -71.52,
+		"y": -36.58,
+		"transform": "noRotationOrReflection",
+		"color": "ff3f00ff"
+	}
+],
+"slots": [
+	{ "name": "be2", "bone": "be2", "attachment": "be2" },
+	{ "name": "que copy", "bone": "que copy", "attachment": "que copy" },
+	{ "name": "modul", "bone": "modul", "attachment": "modul" },
+	{ "name": "modul copy", "bone": "que copy2", "attachment": "modul copy" },
+	{ "name": "modul copy 2", "bone": "que copy3", "attachment": "modul copy 2" },
+	{ "name": "modul copy 3", "bone": "que copy4", "attachment": "modul copy 3" },
+	{ "name": "modul copy 4", "bone": "que copy5", "attachment": "modul copy 4" },
+	{ "name": "modul copy 5", "bone": "que copy6", "attachment": "modul copy 5" },
+	{ "name": "modul copy 6", "bone": "que copy7", "attachment": "modul copy 6" },
+	{ "name": "be", "bone": "root", "attachment": "be" },
+	{ "name": "dau", "bone": "que copy16", "attachment": "dau" },
+	{ "name": "root", "bone": "root", "attachment": "root" }
+],
+"ik": [
+	{
+		"name": "que copy16",
+		"order": 1,
+		"bones": [ "que copy" ],
+		"target": "que copy16",
+		"compress": true
+	}
+],
+"path": [
+	{
+		"name": "root",
+		"bones": [ "que copy16" ],
+		"target": "root",
+		"position": 0.6971
+	}
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"be": {
+				"be": { "x": 148.55, "y": 100.14, "width": 96, "height": 102 }
+			},
+			"be2": {
+				"be2": { "x": -9.81, "y": -3.39, "width": 133, "height": 127 }
+			},
+			"dau": {
+				"dau": { "x": -16.55, "y": 2.94, "rotation": 147.13, "width": 111, "height": 116 }
+			},
+			"modul": {
+				"modul": { "x": 18.9, "y": 3.74, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy": {
+				"modul copy": { "x": 18.15, "y": 4.58, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy 2": {
+				"modul copy 2": { "x": 19.61, "y": 1.47, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy 3": {
+				"modul copy 3": { "x": 19.95, "y": 0.42, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy 4": {
+				"modul copy 4": { "x": 20.33, "y": 1.58, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy 5": {
+				"modul copy 5": { "x": 21.18, "y": 3.59, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"modul copy 6": {
+				"modul copy 6": { "x": 21.26, "y": 2.46, "rotation": 147.13, "width": 63, "height": 65 }
+			},
+			"que copy": {
+				"que copy": { "x": 214.95, "y": 1.66, "rotation": 147.13, "width": 350, "height": 235 }
+			},
+			"root": {
+				"root": {
+					"type": "path",
+					"lengths": [ 403.85, 807.7 ],
+					"vertexCount": 6,
+					"vertices": [ 267.64, 179.62, 165.37, 114.67, 63.1, 49.71, -73.26, -36.9, -175.53, -101.85, -277.8, -166.81 ]
+				}
+			}
+		}
+	}
+],
+"events": {
+	"shoot": {}
+},
+"animations": {
+	"attack": {
+		"bones": {
+			"que copy16": {
+				"scale": [
+					{},
+					{ "time": 0.2333, "x": 0.793, "y": 0.917, "curve": "stepped" },
+					{
+						"time": 0.8333,
+						"x": 0.793,
+						"y": 0.917,
+						"curve": [ 0.856, 0.793, 0.878, 0.907, 0.856, 0.917, 0.878, 1.047 ]
+					},
+					{ "time": 0.9, "x": 1.135, "y": 1.308 },
+					{ "time": 1.2333, "x": 0.957, "y": 1.097 },
+					{ "time": 2.3333 }
+				]
+			}
+		},
+		"path": {
+			"root": {
+				"position": [
+					{
+						"value": 0.6971,
+						"curve": [ 0.333, 0.6971, 0.122, 0.2699 ]
+					},
+					{ "time": 0.2333, "value": 0.2699, "curve": "stepped" },
+					{
+						"time": 0.8333,
+						"value": 0.2699,
+						"curve": [ 0.856, 0.2699, -1.792, 1 ]
+					},
+					{
+						"time": 0.9,
+						"value": 1,
+						"curve": [ 1.011, 1, 1.088, 0.5812 ]
+					},
+					{
+						"time": 1.1667,
+						"value": 0.6465,
+						"curve": [ 1.327, 0.7803, 1.378, 0.8447 ]
+					},
+					{
+						"time": 1.5,
+						"value": 0.8447,
+						"curve": [ 1.644, 0.8447, 1.705, 0.7357 ]
+					},
+					{
+						"time": 1.9667,
+						"value": 0.6851,
+						"curve": [ 2.002, 0.6783, 2.122, 0.6787 ]
+					},
+					{ "time": 2.3333, "value": 0.6971 }
+				]
+			}
+		},
+		"events": [
+			{ "time": 0.9, "name": "shoot" }
+		]
+	},
+	"idle": {
+		"path": {
+			"root": {
+				"position": [
+					{
+						"value": 0.6971,
+						"curve": [ 0.333, 0.6971, 0.667, 0.6602 ]
+					},
+					{
+						"time": 1,
+						"value": 0.6602,
+						"curve": [ 1.333, 0.6602, 1.667, 0.6971 ]
+					},
+					{ "time": 2, "value": 0.6971 }
+				]
+			}
+		}
+	},
+	"idle_close": {
+		"bones": {
+			"que copy16": {
+				"scale": [
+					{ "x": 0.793, "y": 0.917 }
+				]
+			}
+		},
+		"path": {
+			"root": {
+				"position": [
+					{ "value": 0.2699 }
+				]
+			}
+		}
+	}
+}
+}

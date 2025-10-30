@@ -629,7 +629,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
         catch (System.Exception e)
         {
-            
+
         }
     }
 
@@ -785,17 +785,21 @@ public class YarnLevelLoader : MonoBehaviour
 
         targetOrthographicSize = 1.5f * expectedLevelSize.y;
 
-        if (maxExpectedLevelSize > expectedLevelSize.y)
-        {
-            float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
+        // if (maxExpectedLevelSize > expectedLevelSize.y)
+        // {
+        //     float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
 
-            targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
-        }
+        //     targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
+        // }
+
+        // Debug.Log("SAFERIO 0" + targetOrthographicSize + "/" + expectedLevelSize);
 
         if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 2)
         {
             return;
         }
+
+        // Debug.Log("SAFERIO 1" + targetOrthographicSize + "/" + expectedLevelSize);
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 

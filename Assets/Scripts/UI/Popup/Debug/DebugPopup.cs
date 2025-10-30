@@ -23,6 +23,10 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button clearAddressablesCacheButton;
     [SerializeField] private TMP_Text debugAdsText;
 
+    [SerializeField] private Button easyButton;
+    [SerializeField] private Button normalButton;
+    [SerializeField] private Button hardButton;
+
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<int> toLevelEvent;
@@ -30,6 +34,7 @@ public class DebugPopup : BasePopup
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
     public static event Action startAutoTestLevelEvent;
+    public static event Action<float> changeDifficultyEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -42,6 +47,10 @@ public class DebugPopup : BasePopup
         debugAddCoinButton.onClick.AddListener(AddCoin);
         startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
+
+        easyButton.onClick.AddListener(() => ChangeDifficulty(0));
+        normalButton.onClick.AddListener(() => ChangeDifficulty(0.5f));
+        hardButton.onClick.AddListener(() => ChangeDifficulty(0.7f));
 
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
     }
@@ -149,5 +158,10 @@ public class DebugPopup : BasePopup
     private void ClearAddressablesCache()
     {
         Caching.ClearCache();
+    }
+
+    private void ChangeDifficulty(float difficulty)
+    {
+        changeDifficultyEvent?.Invoke(difficulty);
     }
 }

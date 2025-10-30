@@ -145,7 +145,7 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
-        float unit = 0.5f * orthographicSize;
+        float unit = 0.8f * orthographicSize;
 
         maxZoom = orthographicSize + zoomSlider.value * unit;
         minZoom = orthographicSize - (1 - zoomSlider.value) * unit;
