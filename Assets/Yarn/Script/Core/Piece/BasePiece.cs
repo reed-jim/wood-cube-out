@@ -257,12 +257,22 @@ public class BasePiece : MonoBehaviour
             Color currentColor = pieceServiceLocator.pieceMeshRenderer.material.GetColor("_Color");
 
             Tween.Custom(currentColor,
-                1.3f * currentColor, duration: 0.2f, cycles: 2, cycleMode: CycleMode.Yoyo, ease: Ease.InOutSine
+                0.9f * currentColor, duration: 0.2f, ease: Ease.InOutSine
                     , onValueChange: newVal =>
                     {
                         pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(newVal);
                     }
-            );
+            )
+            .OnComplete(() =>
+            {
+                Tween.Custom(0.9f * currentColor,
+                    currentColor, duration: 0.1f, ease: Ease.InOutSine
+                    , onValueChange: newVal =>
+                    {
+                        pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(newVal);
+                    }
+                );
+            });
 
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
