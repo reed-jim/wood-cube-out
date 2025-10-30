@@ -1,3 +1,5 @@
+using System.Collections;
+using Dreamteck.Splines.Primitives;
 using NamPhuThuy.GamePlay;
 using NamPhuThuy.VFX;
 using Saferio.Util.SaferioTween;
@@ -24,7 +26,7 @@ public class BaseSpecialLevelUI : MonoBehaviour
     [SerializeField] protected TMP_Text[] conditionTexts;
     [SerializeField] protected TMP_Text timeCountingText;
     
-    [SerializeField] protected Image reloadMaskImage;
+    // [SerializeField] protected Image reloadMaskImage;
 
     [SerializeField] protected LevelMode levelMode;
 
@@ -45,10 +47,17 @@ public class BaseSpecialLevelUI : MonoBehaviour
         if (levelMode == this.levelMode)
         {
             gameObject.SetActive(true);
+            // StartCoroutine(IEActiveObjectDelay(0.3f));
 
             container.gameObject.SetActive(false);
             timeCountingText.gameObject.SetActive(false);
         }
+    }
+    
+    private IEnumerator IEActiveObjectDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        gameObject.SetActive(true);
     }
 
     protected virtual void ShowUI()

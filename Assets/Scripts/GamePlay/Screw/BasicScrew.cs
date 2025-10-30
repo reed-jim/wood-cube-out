@@ -46,7 +46,7 @@ namespace NamPhuThuy.GamePlay
                     }
                     catch (Exception e)
                     {
-                        DebugLogger.LogSimple(message:$"Error: {e}", context:this);
+                        DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red, context:this);
                     }
 
                     if (isNotVisible)

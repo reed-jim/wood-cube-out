@@ -121,6 +121,7 @@ namespace NamPhuThuy.GamePlay
     private async void LoadLevel()
     {
         DebugLogger.LogSimple();
+        // showSceneTransitionEvent?.Invoke();
         // // NO INTERNET
         // if (Application.internetReachability == NetworkReachability.NotReachable)
         // {

@@ -37,13 +37,14 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
     {
         base.Setup(levelMode, record);
-        ReActiveChain();
+        gameObject.SetActive(true);
+        StartCoroutine(IEReActiveChain(0.6f));
     }
 
     protected override void ReActive()
     {
         base.ReActive();
-        ReActiveChain();
+        StartCoroutine(IEReActiveChain(0.6f));
         DebugLogger.LogSimple();
         prevRemaining = -1;
     }
@@ -146,25 +147,68 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
     #region SpineAnim Methods
 
-   
-    private void ReActiveChain()
+
+    IEnumerator IEReActiveChain(float delay)
     {
-        if (ChainSkeGraphics == null) return;
+        DebugLogger.LogSimple(message:$"before check");
+        
+        ChainSkeGraphics?.gameObject.SetActive(false);
+        DebugLogger.LogSimple(message:$"after check");
+        
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(ReActiveChain());
+    }
+   
+    private IEnumerator ReActiveChain()
+    {
+        DebugLogger.LogSimple();
+        
+        int currentLoop = 0;
 
-        var go = ChainSkeGraphics.gameObject;
-        if (!go.activeSelf) go.SetActive(true);
+        do
+        {
+            yield return new WaitForSeconds(0.05f);
+            currentLoop++;
+           
+            if (ChainSkeGraphics == null)
+            {
+                continue;
+                yield break;
+            };
+            DebugLogger.LogSimple(message:$"1");
+        
+            var go = ChainSkeGraphics.gameObject;
+            if (!go.activeSelf) go.SetActive(true);
+        
+            DebugLogger.LogSimple(message:$"3");
 
-        var state = ChainSkeGraphics.AnimationState;
-        if (state == null) return;
+            var state = ChainSkeGraphics.AnimationState;
+            if (state == null)
+            {
+                continue;
+                yield break;
+            }
+        
+            DebugLogger.LogSimple(message:$"4");
 
-        state.ClearTracks();
-        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
-        state.SetAnimation(0, _chainReActiveAnim, false);
-        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+            state.ClearTracks();
+            DebugLogger.LogSimple(message:$"5");
+            state.SetAnimation(0, _chainReActiveAnim, false);
+            DebugLogger.LogSimple(message:$"6");
+            state.AddAnimation(0, _chainIdleAnim, true, 0f);
+        
+            DebugLogger.LogSimple(message:$"7");
+            currentLoop += 2000;
+        } while (currentLoop < 1000);
     }
     
     private IEnumerator BreakChainAnim()
     {
+        if (ChainSkeGraphics == null)
+        {
+            DebugLogger.LogSimple(message:$"chain ske graphics is null");
+            yield break;
+        }
         var go = ChainSkeGraphics.gameObject;
         if (!go.activeSelf) go.SetActive(true);
 

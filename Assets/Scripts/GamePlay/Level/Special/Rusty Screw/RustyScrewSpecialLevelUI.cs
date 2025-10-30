@@ -28,7 +28,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         get
         {
             if (rustyLayerSkeGraphics == null)
-                rustyLayerSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+                rustyLayerSkeGraphics = transform.GetChild(0).GetChild(1).GetComponent<SkeletonGraphic>() /*GetComponentInChildren<SkeletonGraphic>()*/;
             return rustyLayerSkeGraphics;
         }
     }
@@ -42,7 +42,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         get
         {
             if (chainSkeGraphics == null)
-                chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+                chainSkeGraphics = transform.GetChild(1).GetComponent<SkeletonGraphic>()/*GetComponentInChildren<SkeletonGraphic>()*/;
             return chainSkeGraphics;
         }
     }
@@ -57,16 +57,17 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     protected override void Setup(LevelMode levelMode, SpecialLevelTaskRecord record)
     {
         base.Setup(levelMode);
-        ReActiveRustyLayer();
-        ReActiveChain();
+        gameObject.SetActive(true);
+        StartCoroutine(IEReActiveRustyLayer(delay: 0.6f));
+        StartCoroutine(IEReActiveChain(0.6f));
         DebugLogger.LogSimple(message:$"mode: {levelMode.ToString()}, record: {record}");
     }
 
     protected override void ReActive()
     {
         base.ReActive();
-        ReActiveRustyLayer();
-        ReActiveChain();
+        StartCoroutine(IEReActiveRustyLayer(delay: 0.6f));
+        StartCoroutine(IEReActiveChain(0.6f));
         DebugLogger.LogSimple(message:$"");
         prevRemaining = -1;
     }
@@ -107,21 +108,58 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     #endregion
 
     #region Private Methods
+    
+    private IEnumerator IEReActiveRustyLayer(float delay)
+    {
+        DebugLogger.LogSimple(message:$"before check");
+        
+        RustyLayerSkeGraphics?.gameObject.SetActive(false);
+        DebugLogger.LogSimple(message:$"after check");
+        
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(ReActiveRustyLayer());
+    }
 
-    private void ReActiveRustyLayer()
+    private IEnumerator ReActiveRustyLayer()
     {
         DebugLogger.LogSimple(message:$"");
+
+        int currentLoop = 0;
+
+        do
+        {
+            yield return new WaitForSeconds(0.05f);
+            currentLoop++;
+            var ske = RustyLayerSkeGraphics;
+            if (ske == null)
+            {
+                continue;
+                yield break;
+            }
+            DebugLogger.LogSimple(message:$"1");
+
+            var state = ske.AnimationState;
+            if (state == null)
+            {
+                continue;
+                yield break;
+            };
+            DebugLogger.LogSimple(message:$"2");
+
+            state.ClearTracks();
         
-        var ske = RustyLayerSkeGraphics;
-        if (ske == null) return;
+            DebugLogger.LogSimple(message:$"3");
 
-        var state = ske.AnimationState;
-        if (state == null) return;
+            state.SetAnimation(0, _rustyReActiveAnimName, false);
+            DebugLogger.LogSimple(message:$"4");
+            state.AddAnimation(0, _rustyIdleAnimName, true, 0f);
+            DebugLogger.LogSimple(message:$"5");
 
-        state.ClearTracks();
-
-        state.SetAnimation(0, _rustyReActiveAnimName, false);
-        state.AddAnimation(0, _rustyIdleAnimName, true, 0f);
+            currentLoop += 2000;
+        } while (currentLoop < 1000);
+        
+        
+        
     }
 
     private void ClearRustyParts(int partNum)
@@ -152,21 +190,60 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
         var entry = state.SetAnimation(0, actionName, false);
     }
-    
-    private void ReActiveChain()
+
+    private IEnumerator IEReActiveChain(float delay)
     {
-        if (ChainSkeGraphics == null) return;
+        DebugLogger.LogSimple(message:$"before check");
+        ChainSkeGraphics?.gameObject.SetActive(false);
+        DebugLogger.LogSimple(message:$"after check");
+        yield return new WaitForSeconds(delay);
+        StartCoroutine(ReActiveChain());
+    }
+    
+    private IEnumerator ReActiveChain()
+    {
+        DebugLogger.LogSimple(message:$"");
+        
+        int currentLoop = 0;
+        
+        do
+        {
+            
+            yield return new WaitForSeconds(0.05f);
+            currentLoop++;
+            if (ChainSkeGraphics == null)
+            {
+                continue;
+                yield break;
+            };
+        
+        
+            DebugLogger.LogSimple(message:$"1");
 
-        var go = ChainSkeGraphics.gameObject;
-        if (!go.activeSelf) go.SetActive(true);
+            var go = ChainSkeGraphics.gameObject;
+            if (!go.activeSelf) go.SetActive(true);
+        
+            DebugLogger.LogSimple(message:$"2");
 
-        var state = ChainSkeGraphics.AnimationState;
-        if (state == null) return;
+            var state = ChainSkeGraphics.AnimationState;
+            if (state == null)
+            {
+                continue;
+                yield break;
+            };
+        
+            DebugLogger.LogSimple(message:$"3");
 
-        state.ClearTracks();
-        DebugLogger.LogSimple(message:$"Reactive ChainAnim");
-        state.SetAnimation(0, _chainReActiveAnim, false);
-        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+            state.ClearTracks();
+            DebugLogger.LogSimple(message:$"4");
+            state.SetAnimation(0, _chainReActiveAnim, false);
+            DebugLogger.LogSimple(message:$"5");
+            state.AddAnimation(0, _chainIdleAnim, true, 0f);
+            DebugLogger.LogSimple(message:$"6");
+            currentLoop += 2000;
+        } while (currentLoop < 1000);
+        
+        
     }
 
     private IEnumerator BreakChainAnim()

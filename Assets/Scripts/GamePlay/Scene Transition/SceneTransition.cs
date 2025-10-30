@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -48,6 +49,8 @@ public class SceneTransition : MonoBehaviour
     private Coroutine _waitForLevelLoadedCoroutine;
 
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     
     {
@@ -88,10 +91,7 @@ public class SceneTransition : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void BlackScreenTransition()
-    {
-        BlackScreenTransition(blackScreenStartDelay, onCompletedAction: null);
-    }
+    #endregion
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
@@ -182,6 +182,7 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
+        DebugLogger.LogSimple();
         if (_isFirstTimeEnterScene)
         {
             loadLevelInProgressContainer.gameObject.SetActive(false);
