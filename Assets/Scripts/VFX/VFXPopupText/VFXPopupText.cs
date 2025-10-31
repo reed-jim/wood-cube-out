@@ -157,8 +157,10 @@ namespace NamPhuThuy.VFX
         
         public void SetContent(string message, Action moreSetup)
         {
-            messageText.text = message;
+            DebugLogger.LogSimple(message:$"{message}");
+            // messageText.text = message;
             messageText.GetComponent<LeanLocalizedTextMeshProUGUI>().TranslationName = message;
+            DebugLogger.LogSimple(message:$"{messageText.text}");
             moreSetup?.Invoke();
             
         }
