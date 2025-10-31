@@ -34,26 +34,6 @@ namespace NamPhuThuy.UI
         
         #region MonoBehaviour Callbacks
 
-        private void Start()
-        {
-            // DebugLogger.LogSimple(context:this);
-            /*if (levelSpecialTutorialData != null)
-            {
-                foreach (var record in levelSpecialTutorialData.records)
-                {
-                    if (record.videoClip != null)
-                    {
-                        PrewarmTutorialClip(videoPlayer, record.videoClip);
-                    }
-                }
-            }
-            else
-            {
-                DebugLogger.LogSimple(message:$"levelSpecialTutData is null!", context: this);
-            }*/
-            
-        }
-
         #endregion
 
         #region Override Methods
@@ -79,31 +59,6 @@ namespace NamPhuThuy.UI
         
         #endregion
 
-        #region Initialization Methods
-
-        /*void PrewarmTutorialClip(VideoPlayer vp, VideoClip clip)
-        {
-            DebugLogger.LogSimple(message:$"{clip.name}", context: this);
-            vp.playOnAwake = false;
-            vp.waitForFirstFrame = true;
-            vp.audioOutputMode = VideoAudioOutputMode.None;
-            vp.clip = clip;
-
-            if (!vp.isPrepared)
-            {
-                vp.prepareCompleted += OnPrepared;
-                vp.Prepare();
-            }
-
-            void OnPrepared(VideoPlayer _)
-            {
-                vp.prepareCompleted -= OnPrepared;
-                // Ready for instant Play() later
-            }
-        }*/
-
-        #endregion
-        
         #region Private Methods
 
         private void SwitchVideoBasedOnLevelMode()
