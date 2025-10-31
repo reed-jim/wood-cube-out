@@ -49,6 +49,8 @@ public class GameLoading : MonoBehaviour
     private AsyncOperationHandle _menuSceneHandle;
 
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -87,6 +89,8 @@ public class GameLoading : MonoBehaviour
 
         CommonUtil.StopAllTweens(_tweens);
     }
+
+    #endregion
 
     private IEnumerator SlowTransititon()
     {
