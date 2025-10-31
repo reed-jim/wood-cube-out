@@ -212,10 +212,6 @@ public class MenuScreen : MonoBehaviour
         {
             return;
         }
-        else
-        {
-            _isGameStarted = true;
-        }
 
         // if (currentLevel.Value > 10)
         // {
@@ -250,12 +246,14 @@ public class MenuScreen : MonoBehaviour
             else
             {
                 Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                _isGameStarted = true;
             }
         }
         else
         {
             // DebugLogger.LogSimple(message:"Place 3");
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            _isGameStarted = true;
         }
 
         startGameButton.interactable = false;
