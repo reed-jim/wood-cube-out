@@ -516,9 +516,12 @@ public class SpoolManager : MonoBehaviour
 
                 if (spoolBoxSlot.IsFilled)
                 {
-                    spoolBoxSlot.Piece.gameObject.SetActive(false);
+                    if (spoolBoxSlot.Piece != null)
+                    {
+                        spoolBoxSlot.Piece.gameObject.SetActive(false);
 
-                    spoolBoxSlot.Piece = null;
+                        spoolBoxSlot.Piece = null;
+                    }
 
                     spoolBoxSlot.IsFilled = false;
                 }
