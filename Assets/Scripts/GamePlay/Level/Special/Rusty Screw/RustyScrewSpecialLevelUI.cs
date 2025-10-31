@@ -122,7 +122,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
     private IEnumerator ReActiveRustyLayer()
     {
-        DebugLogger.LogSimple(message:$"");
+        DebugLogger.LogSimple(message:$"", context:this);
 
         int currentLoop = 0;
 
@@ -136,7 +136,10 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 continue;
                 yield break;
             }
-            DebugLogger.LogSimple(message:$"1");
+            DebugLogger.LogSimple(message:$"1", context:this);
+            
+            var go = RustyLayerSkeGraphics.gameObject;
+            if (!go.activeSelf) go.SetActive(true);
 
             var state = ske.AnimationState;
             if (state == null)
@@ -144,16 +147,16 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 continue;
                 yield break;
             };
-            DebugLogger.LogSimple(message:$"2");
+            DebugLogger.LogSimple(message:$"2", context:this);
 
             state.ClearTracks();
         
-            DebugLogger.LogSimple(message:$"3");
+            DebugLogger.LogSimple(message:$"3", context:this);
 
             state.SetAnimation(0, _rustyReActiveAnimName, false);
-            DebugLogger.LogSimple(message:$"4");
+            DebugLogger.LogSimple(message:$"4", context:this);
             state.AddAnimation(0, _rustyIdleAnimName, true, 0f);
-            DebugLogger.LogSimple(message:$"5");
+            DebugLogger.LogSimple(message:$"5", context:this);
 
             currentLoop += 2000;
         } while (currentLoop < 1000);
@@ -208,7 +211,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         
         do
         {
-            
             yield return new WaitForSeconds(0.05f);
             currentLoop++;
             if (ChainSkeGraphics == null)
@@ -216,7 +218,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
                 continue;
                 yield break;
             };
-        
         
             DebugLogger.LogSimple(message:$"1");
 
