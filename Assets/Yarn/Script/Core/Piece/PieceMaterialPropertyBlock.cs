@@ -101,7 +101,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     {
         _propertyBlock.SetFloat("_DissolveRatioX", 1);
         _propertyBlock.SetFloat("_DissolveRatioY", 1);
-        _propertyBlock.SetFloat("_DissolveStrength", 0);
+        _propertyBlock.SetFloat("_DissolveHeight", 0);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
@@ -117,7 +117,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
             _propertyBlock.SetFloat("_DissolveRatioY", value);
         }
 
-        _propertyBlock.SetFloat("_DissolveStrength", 1 - value);
+        _propertyBlock.SetFloat("_DissolveHeight", 1 - value);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }

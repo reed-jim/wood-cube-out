@@ -52,6 +52,7 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _firstNodeLocalPosition;
     private float lerpDelta;
     private bool _isReverseSpoolDissolve;
+    private float _prevRadius;
     #endregion
 
     private Action onRewindYarnCompleted;
@@ -147,7 +148,7 @@ public class Yarn2D : MonoBehaviour
         modelSize = piece.PieceServiceLocator.pieceProperty.MeshBoundSize;
 
         _dissolveAxis = modelSize.x > 1.5f * modelSize.y ? DissolveAxis.X : DissolveAxis.Y;
-        // _dissolveAxis = DissolveAxis.Y;
+        _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
 
@@ -248,7 +249,7 @@ public class Yarn2D : MonoBehaviour
 
             Tween.Custom(
                 lastNodeLocalPosition,
-                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - (float)index / segmentCount),
+                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - (float)(index / (segmentCount - 1))),
                 duration: 0.2f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>
@@ -301,6 +302,7 @@ public class Yarn2D : MonoBehaviour
                         {
                             gameObject.SetActive(false);
 
+                            piece = null;
                             startSpoolBoxSlot = null;
                             spoolBoxSlot = null;
 
@@ -348,62 +350,81 @@ public class Yarn2D : MonoBehaviour
         // Total angle based on number of turns (in radians)
         float angle = yRatio * turns * 2 * Mathf.PI;
 
-        // if (yRatio < 0.5f)
-        // {
-        //     radius *= 2 * (1 - yRatio);
-        // }
-        // if (yRatio < 0.2f)
-        // {
-        //     radius *= 2 * yRatio;
-        // }
-
         bool isXLargerThanZ = modelSize.x > modelSize.z;
 
-        if (piece != null)
+        // if (piece != null)
+        // {
+        //     Vector3 worldPos;
+        //     Ray ray = new Ray();
+
+        //     if (isXLargerThanZ)
+        //     {
+        //         worldPos = transform.TransformPoint(new Vector3(2 * modelSize.x, y, 0f));
+        //         ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * modelSize.x, 0, 0)));
+        //     }
+        //     else
+        //     {
+        //         worldPos = transform.TransformPoint(new Vector3(0, y, 2 * modelSize.z));
+        //         ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
+        //     }
+
+        //     RaycastHit hit;
+
+        //     if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
+        //     {
+        //         Vector3 closestPoint = hit.point;
+
+        //         if (isXLargerThanZ)
+        //         {
+        //             radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
+        //         }
+        //         else
+        //         {
+        //             radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
+        //         }
+        //     }
+        //     else
+        //     {
+        //         radius = _prevRadius;
+        //     }
+
+        //     // Vector3 nearestPoint = piece.PieceServiceLocator.pieceCollider.ClosestPointOnBounds(worldPos);
+        //     // radius = Mathf.Abs(transform.InverseTransformPoint(nearestPoint).x);
+        // }
+
+        radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
+
+        Vector3 raycastPoint = new Vector3(Mathf.Cos(angle) * 2 * radius, y, Mathf.Sin(angle) * 2 * radius);
+        Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
+        Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
+
+        if (isXLargerThanZ)
         {
-            Vector3 worldPos;
-            Ray ray = new Ray();
+            pointOnModel = new Vector3(raycastPoint.x, y, 0);
+        }
+        else
+        {
+            pointOnModel = new Vector3(0, y, raycastPoint.z);
+        }
 
-            if (isXLargerThanZ)
-            {
-                worldPos = transform.TransformPoint(new Vector3(2 * modelSize.x, y, 0f));
-                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * modelSize.x, 0, 0)));
-            }
-            else
-            {
-                worldPos = transform.TransformPoint(new Vector3(0, y, 2 * modelSize.z));
-                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
-            }
+        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(pointOnModel - raycastPoint));
+        RaycastHit hit;
 
-            RaycastHit hit;
-
-            if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
-            {
-                Vector3 closestPoint = hit.point;
-
-                if (isXLargerThanZ)
-                {
-                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
-                }
-                else
-                {
-                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
-                }
-            }
-            else
-            {
-                radius = 0;
-            }
-
-            // Vector3 nearestPoint = piece.PieceServiceLocator.pieceCollider.ClosestPointOnBounds(worldPos);
-            // radius = Mathf.Abs(transform.InverseTransformPoint(nearestPoint).x);
+        if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, 5 * radius))
+        {
+            return piece.transform.InverseTransformPoint(hit.point);
+        }
+        else
+        {
+            return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld));
         }
 
         float x = Mathf.Cos(angle) * radius;
         float z = Mathf.Sin(angle) * radius;
 
-        // Position relative to parent
         Vector3 localPos = new Vector3(x, y, z);
+
+        _prevRadius = radius;
 
         return localPos;
     }
@@ -429,7 +450,7 @@ public class Yarn2D : MonoBehaviour
             }
             else
             {
-                worldPos = transform.TransformPoint(new Vector3(0, 0, 2 * modelSize.z));
+                worldPos = transform.TransformPoint(new Vector3(x, 0, 2 * modelSize.z));
                 ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
             }
 
@@ -450,7 +471,7 @@ public class Yarn2D : MonoBehaviour
             }
             else
             {
-                radius = 0;
+                radius = _prevRadius;
             }
         }
 
@@ -459,6 +480,8 @@ public class Yarn2D : MonoBehaviour
 
         // Position relative to parent
         Vector3 localPos = new Vector3(x, y, z);
+
+        _prevRadius = radius;
 
         return localPos;
     }

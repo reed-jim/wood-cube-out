@@ -257,7 +257,7 @@ public class BasePiece : MonoBehaviour
             Color currentColor = pieceServiceLocator.pieceMeshRenderer.material.GetColor("_Color");
 
             Tween.Custom(currentColor,
-                0.9f * currentColor, duration: 0.2f, ease: Ease.InOutSine
+                0.5f * currentColor, duration: 0.2f, ease: Ease.InOutSine
                     , onValueChange: newVal =>
                     {
                         pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(newVal);
@@ -265,7 +265,7 @@ public class BasePiece : MonoBehaviour
             )
             .OnComplete(() =>
             {
-                Tween.Custom(0.9f * currentColor,
+                Tween.Custom(0.5f * currentColor,
                     currentColor, duration: 0.1f, ease: Ease.InOutSine
                     , onValueChange: newVal =>
                     {
