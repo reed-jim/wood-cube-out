@@ -345,6 +345,11 @@ public class Yarn2D : MonoBehaviour
 
     Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
     {
+        if (piece == null)
+        {
+            return Vector3.zero;
+        }
+
         float y = (yRatio - 0.5f) * spiralHeight;
 
         // Total angle based on number of turns (in radians)
@@ -431,6 +436,11 @@ public class Yarn2D : MonoBehaviour
 
     Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
     {
+        if (piece == null)
+        {
+            return Vector3.zero;
+        }
+        
         float x = (xRatio - 0.5f) * spiralHeight;
 
         // Total angle based on number of turns (in radians)

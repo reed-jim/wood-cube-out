@@ -84,31 +84,26 @@ public class SpoolBoxUI : MonoBehaviour
 
         spoolBox.IsInTransition = true;
 
-        TrackEntry trackEntry = lockedBoxSkeleton.AnimationState.SetAnimation(0, lockedBoxUnlock, false);
+        Vector3 cachedScale = lockedBoxSkeleton.transform.localScale;
 
-        trackEntry.Complete += OnUnlockAnimationDone;
+        Tween.Scale(lockedBoxSkeleton.transform, 1.1f * cachedScale, duration: 0.3f, ease: Ease.InOutSine).OnComplete(() =>
+        {
+            TrackEntry trackEntry = lockedBoxSkeleton.AnimationState.SetAnimation(0, lockedBoxUnlock, false);
 
-        // Tween.ShakeScale(transform, strength: 0.3f * Vector3.one, duration: 0.8f).OnComplete(() =>
-        // {
-        //     Tween.PositionY(unlockByAdsButtonRT, unlockByAdsButtonRT.position.y + 10, duration: 0.3f).OnComplete(() =>
-        //     {
-        //         unlockByAdsButton.gameObject.SetActive(false);
+            trackEntry.Complete += OnUnlockAnimationDone;
 
-        //         spoolBox.IsInTransition = false;
+            unlockSpoolBox?.Invoke(gameObject.GetInstanceID());
 
-        //         spoolBox.InvokeSpoolBoxUnlockedEvent();
-        //     });
-        // });
+            SoundManager.Instance.PlaySoundUnlockScrewBox();
 
-        unlockSpoolBox?.Invoke(gameObject.GetInstanceID());
-
-        SoundManager.Instance.PlaySoundUnlockScrewBox();
-
-        levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+            levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+        });
 
         void OnUnlockAnimationDone(TrackEntry trackEntry)
         {
             trackEntry.Complete -= OnUnlockAnimationDone;
+
+            lockedBoxSkeleton.transform.localScale = cachedScale;
 
             unlockByAdsButton.gameObject.SetActive(false);
 
