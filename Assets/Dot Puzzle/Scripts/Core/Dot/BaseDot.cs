@@ -18,6 +18,11 @@ public class BaseDot : MonoBehaviour
     private MaterialPropertyBlock _materialPropertyBlock;
     private int _currentPhase;
 
+    public DotServiceLocator DotServiceLocator
+    {
+        get => dotServiceLocator;
+    }
+
     #region Event
     public static event Action<BaseDot, bool> selectDotEvent;
     #endregion
@@ -31,25 +36,21 @@ public class BaseDot : MonoBehaviour
     {
         dotServiceLocator.dotProperty.IsActive = !dotServiceLocator.dotProperty.IsActive;
 
+        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
         if (dotServiceLocator.dotProperty.IsActive)
         {
-            Tween.Custom(0, 1, duration: 0.6f, onValueChange: newVal =>
-            {
-                Rewind(newVal);
-            });
+            yarn2D.Rewind(new Vector3(0, 4, 0), this, isReverse: false);
         }
         else
         {
-            Tween.Custom(1, 0, duration: 0.6f, onValueChange: newVal =>
-            {
-                Rewind(newVal);
-            });
+            yarn2D.Rewind(new Vector3(0, 4, 0), this, isReverse: true);
         }
 
         selectDotEvent?.Invoke(this, dotServiceLocator.dotProperty.IsActive);
     }
 
-    public void Rewind(float pieceDissolveValue)
+    public void UpdateYarnState(float pieceDissolveValue)
     {
         for (int i = 0; i < 6; i++)
         {

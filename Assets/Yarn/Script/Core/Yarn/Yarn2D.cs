@@ -50,9 +50,15 @@ public class Yarn2D : MonoBehaviour
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
     private Vector3 _firstNodePosition;
     private Vector3 _firstNodeLocalPosition;
+    private Vector3 _endNodePosition;
+    private Vector3 _endNodeLocalPosition;
     private float lerpDelta;
     private bool _isReverseSpoolDissolve;
     private float _prevRadius;
+    #endregion
+
+    #region Dot Puzzle
+    private BaseDot _endDot;
     #endregion
 
     private Action onRewindYarnCompleted;
@@ -61,7 +67,6 @@ public class Yarn2D : MonoBehaviour
     {
         yarnMaterialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock = new MaterialPropertyBlock();
-        // yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
     }
 
     private void Reset()
@@ -141,6 +146,38 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
+    #region Generic
+    public void Rewind(Vector3 startPoint, BaseDot endDot, bool isReverse, Action onCompleteAction = null)
+    {
+        InitializeRope(startPoint, GameFaction.YarnSnow);
+
+        AttachToDot(endDot);
+
+        _isReverseSpoolDissolve = isReverse;
+
+        Reset();
+
+        _firstNodePosition = startPoint;
+        _endNodePosition = endDot.transform.position;
+
+        _endDot = endDot;
+
+        gameObject.SetActive(true);
+
+        onRewindYarnCompleted = onCompleteAction;
+
+        PlayRewindAnimation();
+    }
+
+    private void AttachToDot(BaseDot dot)
+    {
+        transform.SetParent(dot.transform);
+        transform.localPosition = Vector3.zero;
+        transform.localScale = Vector3.one;
+        transform.rotation = Quaternion.identity;
+    }
+    #endregion
+
     private void InitPiece(BasePiece selectedPiece)
     {
         piece = selectedPiece;
@@ -199,29 +236,17 @@ public class Yarn2D : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
-    private void UpdatePiece()
+    private void UpdateDot()
     {
-        if (piece != null)
+        if (_endDot != null)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveHeight(dissolveHeight, _dissolveAxis);
-        }
-
-        if (_isReverseSpoolDissolve)
-        {
-            spoolBoxSlot.SetDissolveHeight(dissolveHeight);
-
-            if (startSpoolBoxSlot != null)
+            if (_isReverseSpoolDissolve)
             {
-                startSpoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
+                _endDot.UpdateYarnState(dissolveHeight);
             }
-        }
-        else
-        {
-            spoolBoxSlot.SetDissolveHeight(1 - dissolveHeight);
-
-            if (startSpoolBoxSlot != null)
+            else
             {
-                startSpoolBoxSlot.SetDissolveHeight(dissolveHeight);
+                _endDot.UpdateYarnState(1 - dissolveHeight);
             }
         }
     }
@@ -238,9 +263,23 @@ public class Yarn2D : MonoBehaviour
 
         for (int i = 0; i < segments.Count; i++)
         {
-            segments[i].posNow = lastNodeLocalPosition;
+            segments[i].posNow = _firstNodeLocalPosition;
 
             UpdateLineRenderer();
+        }
+
+        Vector3 start;
+        Vector3 end;
+
+        if (_isReverseSpoolDissolve)
+        {
+            start = lastNodeLocalPosition;
+            end = _firstNodeLocalPosition;
+        }
+        else
+        {
+            start = _firstNodeLocalPosition;
+            end = lastNodeLocalPosition;
         }
 
         for (int i = 0; i < segments.Count; i++)
@@ -248,8 +287,8 @@ public class Yarn2D : MonoBehaviour
             int index = i;
 
             Tween.Custom(
-                lastNodeLocalPosition,
-                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - (float)(index / (segmentCount - 1))),
+                start,
+                Vector3.Lerp(start, end, 1 - (float)(index / (segmentCount - 1))),
                 duration: 0.2f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>
@@ -284,10 +323,21 @@ public class Yarn2D : MonoBehaviour
             })
             .OnComplete(() =>
             {
-                for (int i = 1; i < segments.Count; i++)
+                Vector3 end;
+
+                if (_isReverseSpoolDissolve)
+                {
+                    end = segments[0].posNow;
+                }
+                else
+                {
+                    end = Vector3.zero;
+                }
+
+                for (int i = 0; i < segments.Count; i++)
                 {
                     int index = i;
-                    Tween.Custom(segments[index].posNow, segments[0].posNow, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+                    Tween.Custom(segments[index].posNow, end, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
                         segments[index].posNow = newVal;
 
@@ -336,7 +386,7 @@ public class Yarn2D : MonoBehaviour
 
             segments[segmentCount - 1] = lastNode;
 
-            UpdatePiece();
+            UpdateDot();
             UpdateRope();
         }
 
@@ -565,14 +615,6 @@ public class Yarn2D : MonoBehaviour
             //     }
             // }
         }
-    }
-
-    public void SetParent(Transform parent)
-    {
-        transform.SetParent(parent);
-        transform.localPosition = Vector3.zero;
-        transform.localScale = Vector3.one;
-        transform.rotation = Quaternion.identity;
     }
 
     private class RopeSegment
