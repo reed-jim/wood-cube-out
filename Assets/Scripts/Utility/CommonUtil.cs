@@ -284,4 +284,11 @@ public static class CommonUtil
         }
     }
     #endregion
+
+    #region MATH
+    public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
+    {
+        return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+    }
+    #endregion
 }
