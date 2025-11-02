@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
 using PrimeTween;
 using UnityEngine;
@@ -289,6 +290,24 @@ public static class CommonUtil
     public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
     {
         return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+    }
+    #endregion
+
+    #region Collection
+    public static bool AreArraysEqualIgnoreOrder<T>(T[] arrayA, T[] arrayB)
+    {
+        if (arrayA == null || arrayB == null)
+            return false;
+
+        if (arrayA.Length != arrayB.Length)
+            return false;
+
+        // Group and compare element counts (handles duplicates correctly)
+        var groupA = arrayA.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+        var groupB = arrayB.GroupBy(x => x).ToDictionary(g => g.Key, g => g.Count());
+
+        return groupA.Count == groupB.Count &&
+               !groupA.Except(groupB).Any();
     }
     #endregion
 }

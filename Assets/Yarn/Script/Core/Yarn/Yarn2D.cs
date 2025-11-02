@@ -54,6 +54,7 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _endNodeLocalPosition;
     private float lerpDelta;
     private bool _isReverseSpoolDissolve;
+    private bool _isHideAferRewinding;
     private float _prevRadius;
     #endregion
 
@@ -147,13 +148,14 @@ public class Yarn2D : MonoBehaviour
     }
 
     #region Generic
-    public void Rewind(Vector3 startPoint, BaseDot endDot, bool isReverse, Action onCompleteAction = null)
+    public void Rewind(Vector3 startPoint, BaseDot endDot, bool isReverse, bool isHideAfterRewinding, Action onCompleteAction = null)
     {
         InitializeRope(startPoint, GameFaction.YarnSnow);
 
         AttachToDot(endDot);
 
         _isReverseSpoolDissolve = isReverse;
+        _isHideAferRewinding = isHideAfterRewinding;
 
         Reset();
 
@@ -323,6 +325,18 @@ public class Yarn2D : MonoBehaviour
             })
             .OnComplete(() =>
             {
+                if (!_isHideAferRewinding)
+                {
+                    lineRenderer.positionCount = 2;
+
+                    lineRenderer.SetPosition(0, _firstNodeLocalPosition);
+                    lineRenderer.SetPosition(1, Vector3.zero);
+
+                    onRewindYarnCompleted?.Invoke();
+
+                    return;
+                }
+
                 Vector3 end;
 
                 if (_isReverseSpoolDissolve)

@@ -24,30 +24,37 @@ public class BaseDot : MonoBehaviour
     }
 
     #region Event
-    public static event Action<BaseDot, bool> selectDotEvent;
+    public static event Action<BaseDot> selectDotEvent;
     #endregion
 
     void Awake()
     {
+        DotPuzzleInput.unselectAllDotsEvent += Unselect;
+
         _materialPropertyBlock = new MaterialPropertyBlock();
+    }
+
+    void OnDestroy()
+    {
+        DotPuzzleInput.unselectAllDotsEvent -= Unselect;
     }
 
     public void Select()
     {
-        dotServiceLocator.dotProperty.IsActive = !dotServiceLocator.dotProperty.IsActive;
+        selectDotEvent?.Invoke(this);
+    }
 
-        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-        if (dotServiceLocator.dotProperty.IsActive)
+    private void Unselect()
+    {
+        if (dotServiceLocator.dotProperty.IsActive && !dotServiceLocator.dotProperty.IsPartOfAShape)
         {
-            yarn2D.Rewind(new Vector3(0, 4, 0), this, isReverse: false);
-        }
-        else
-        {
-            yarn2D.Rewind(new Vector3(0, 4, 0), this, isReverse: true);
-        }
+            dotServiceLocator.dotProperty.IsActive = false;
 
-        selectDotEvent?.Invoke(this, dotServiceLocator.dotProperty.IsActive);
+            Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+            {
+                UpdateYarnState(newVal);
+            });
+        }
     }
 
     public void UpdateYarnState(float pieceDissolveValue)
@@ -111,5 +118,10 @@ public class BaseDot : MonoBehaviour
                 lowerLayers[i].SetPropertyBlock(_materialPropertyBlock);
             }
         }
+    }
+
+    public bool IsValidToDeselect()
+    {
+        return !dotServiceLocator.dotProperty.IsPartOfAShape;
     }
 }

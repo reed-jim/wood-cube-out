@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class DotPuzzleInput : MonoBehaviour
@@ -8,6 +9,8 @@ public class DotPuzzleInput : MonoBehaviour
     {
         _mainCamera = Camera.main;
     }
+
+    public static event Action unselectAllDotsEvent;
 
     void Update()
     {
@@ -35,7 +38,7 @@ public class DotPuzzleInput : MonoBehaviour
         }
         else
         {
-
+            unselectAllDotsEvent?.Invoke();
         }
     }
 }
