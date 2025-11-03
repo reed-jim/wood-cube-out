@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.Data;
@@ -12,12 +13,16 @@ namespace NamPhuThuy.UI
 {
     public class LevelSpecialTutorialPopup : BasePopup
     {
-        [Header("Components")] [SerializeField]
+        [Header("Components")] 
+        [SerializeField]
         private VideoPlayer videoPlayer;
 
         [SerializeField] private LeanLocalizedTextMeshProUGUI descriptionLocalized;
         [SerializeField] private LeanLocalizedTextMeshProUGUI titleLocalized;
+        [SerializeField] private LeanLocalizedTextMeshProUGUI loadingLocalized;
+        [SerializeField] private TextMeshProUGUI dotText;
         [SerializeField] private TextMeshProUGUI descriptionText;
+        [SerializeField] private RawImage rawImage;
         [SerializeField] private Button okButton;
 
         [Header("Data")] 
@@ -45,7 +50,10 @@ namespace NamPhuThuy.UI
             {
                 currentMode = GamePersistentVariable.currentTutLevelMode;
                 SwitchVideoBasedOnLevelMode();
-                videoPlayer.Play();
+                PrepareVideo(OnVideoPrepared);
+                loadingLocalized.gameObject.SetActive(true);
+                StartDotAnimation();
+                // videoPlayer.Play();
             });
         }
 
@@ -54,7 +62,7 @@ namespace NamPhuThuy.UI
             base.Hide();
             DebugLogger.LogSimple(context: this);
 
-            videoPlayer.Stop();
+            videoPlayer.Pause();
         }
         
         #endregion
@@ -100,6 +108,56 @@ namespace NamPhuThuy.UI
             }
         }
 
+        private void PrepareVideo(VideoPlayer.EventHandler onPrepared = null)
+        {
+            videoPlayer.isLooping = true;
+            videoPlayer.Prepare();
+            videoPlayer.prepareCompleted += onPrepared;
+        }
+        
+        private void OnVideoPrepared(VideoPlayer vp)
+        {
+            StopDotAnimation();
+            videoPlayer.Play();
+            loadingLocalized.gameObject.SetActive(false);
+        }
+
+        #endregion
+
+        #region Loading Animation
+
+        private Coroutine dotAnimationCoroutine;
+        [SerializeField] private float dotAnimationSpeed = 0.5f;
+        public void StartDotAnimation()
+        {
+            StopDotAnimation();
+            dotText.gameObject.SetActive(true);
+            dotAnimationCoroutine = StartCoroutine(AnimateDotsCoroutine());
+        }
+
+        public void StopDotAnimation()
+        {
+            dotText.gameObject.SetActive(false);
+            if (dotAnimationCoroutine != null)
+            {
+                StopCoroutine(dotAnimationCoroutine);
+                dotAnimationCoroutine = null;
+            }
+            dotText.text = "";
+        }
+        
+        private IEnumerator AnimateDotsCoroutine()
+        {
+            int dotCount = 0;
+    
+            while (true)
+            {
+                dotCount = (dotCount % 3) + 1; // Cycle between 1, 2, 3
+                dotText.text = new string('.', dotCount);
+        
+                yield return new WaitForSeconds(dotAnimationSpeed);
+            }
+        }
 
         #endregion
     }

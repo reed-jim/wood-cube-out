@@ -71,9 +71,7 @@ namespace NamPhuThuy.GamePlay
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
-
-
-
+        
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
@@ -92,10 +90,13 @@ namespace NamPhuThuy.GamePlay
         currentLevel.Load();
 
         _maxLevel = levelDataContainer.MaxLevel;
-
         GoLevel(currentLevel.Value);
-
         GamePersistentVariable.hasPlayerReachedGameplay = true;
+    }
+
+    private void Start()
+    {
+        // GoLevel(currentLevel.Value);
     }
 
     void OnDestroy()
@@ -268,6 +269,7 @@ namespace NamPhuThuy.GamePlay
                 if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
                 {
                     _isNotAutoCenterLevel = true;
+                    
 
                     break;
                 }
