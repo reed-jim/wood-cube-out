@@ -51,6 +51,31 @@ public class PausePopup : BasePopup
         ScriptableObjectInitializer.gameSettingLoadedEvent -= OnGameSettingLoaded;
     }
 
+    #region MonoBehaviour Callbacks
+
+    private void OnEnable()
+    {
+        
+    }
+
+    #region Overrdide Methods
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+        returnHomeButton.interactable = true;
+        replayLevelButton.interactable = true;
+    }
+
+    protected override void Hide(Action onCompletedAction = null)
+    {
+        base.Hide(onCompletedAction);
+    }
+
+    #endregion
+
+    #endregion
+
     private void ReturnHome()
     {
         if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
