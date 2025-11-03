@@ -212,7 +212,7 @@ namespace NamPhuThuy.GamePlay
         }
 
         DebugLogger.LogSimple(message:$"levelName: {levelName}");
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelName);
+        _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
 
         _loadLevelHandle.Completed += (op) =>
         {
@@ -227,7 +227,7 @@ namespace NamPhuThuy.GamePlay
 
         void ActualLoadLevel(GameObject resultLoad)
         {
-            GameObject level = Instantiate(resultLoad, transform);
+            GameObject level = resultLoad;
 
             _currentLevelContainer = level.transform;
 
