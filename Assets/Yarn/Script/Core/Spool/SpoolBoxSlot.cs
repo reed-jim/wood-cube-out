@@ -150,6 +150,15 @@ public class SpoolBoxSlot : MonoBehaviour
             lowerLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         }
 
+        if (Mathf.Approximately(pieceDissolveValue, 1))
+        {
+            ConfirmFillValue(1);
+        }
+        else if (Mathf.Approximately(pieceDissolveValue, 0))
+        {
+            ConfirmFillValue(0);
+        }
+
         yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 1);
 
         for (int i = 0; i < upperLayers.Length; i++)
@@ -184,6 +193,21 @@ public class SpoolBoxSlot : MonoBehaviour
             {
                 lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
             }
+        }
+    }
+
+    public void ConfirmFillValue(float finalFillValue)
+    {
+        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", finalFillValue);
+
+        for (int i = 0; i < upperLayers.Length; i++)
+        {
+            upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+        }
+
+        for (int i = 0; i < lowerLayers.Length; i++)
+        {
+            lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         }
     }
 

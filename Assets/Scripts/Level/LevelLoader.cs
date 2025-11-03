@@ -218,13 +218,13 @@ public class LevelLoader : MonoBehaviour
         }
         //
 
-        _loadLevelHandle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
+        _loadLevelHandle = Addressables.InstantiateAsync(levelPrefab, transform);
 
         _loadLevelHandle.Completed += (op) =>
         {
             if (op.Status == AsyncOperationStatus.Succeeded)
             {
-                GameObject level = Instantiate(op.Result, transform);
+                GameObject level = op.Result;
 
                 _currentLevelContainer = level.transform;
 

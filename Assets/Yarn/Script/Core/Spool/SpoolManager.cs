@@ -178,7 +178,7 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.05f * piecePorts[i].transform.lossyScale.x;
+            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.06f * piecePorts[i].transform.lossyScale.x;
 
             piecePorts[i].transform.position = piecePortPosition;
         }
@@ -218,7 +218,7 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.05f * piecePorts[i].transform.lossyScale.x;
+            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.06f * piecePorts[i].transform.lossyScale.x;
 
             piecePorts[i].transform.position = piecePortPosition;
         }
