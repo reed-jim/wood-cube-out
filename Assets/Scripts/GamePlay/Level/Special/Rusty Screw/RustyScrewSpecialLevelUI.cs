@@ -160,9 +160,6 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
             currentLoop += 2000;
         } while (currentLoop < 1000);
-        
-        
-        
     }
 
     private void ClearRustyParts(int partNum)

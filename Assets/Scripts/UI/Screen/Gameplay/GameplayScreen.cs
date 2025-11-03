@@ -40,10 +40,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewManager.winLevelEvent += OnLevelWin;
         ScrewBoxManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
-
         LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
         
-
         pauseButton.onClick.AddListener(Pause);
         helpButton.onClick.AddListener(OnClickHelp);
         
@@ -60,7 +58,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
         skipLevelButton.gameObject.SetActive(false);
     }
 
-
     void OnDestroy()
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
@@ -70,10 +67,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewBoxManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
-
     }
-
-   
 
     #endregion
     
@@ -82,7 +76,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private void OnLevelWin()
     {
         helpButton.gameObject.SetActive(false);
-        
     }
 
     private void OnLevelLose()

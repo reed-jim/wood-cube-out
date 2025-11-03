@@ -5938,31 +5938,31 @@ MonoBehaviour:
   data: 0
   entries:
   - Language: English
-    Text: Loading...
+    Text: Loading
     Object: {fileID: 0}
   - Language: French
-    Text: Chargement...
+    Text: Chargement
     Object: {fileID: 0}
   - Language: German
-    Text: Laden...
+    Text: Laden
     Object: {fileID: 0}
   - Language: Italian
-    Text: Caricamento...
+    Text: Caricamento
     Object: {fileID: 0}
   - Language: Japanese
-    Text: "\u8AAD\u307F\u8FBC\u307F\u4E2D..."
+    Text: "\u8AAD\u307F\u8FBC\u307F\u4E2D"
     Object: {fileID: 0}
   - Language: Korean
-    Text: "\uB85C\uB4DC \uC911..."
+    Text: "\uB85C\uB4DC \uC911"
     Object: {fileID: 0}
   - Language: Portuguese
-    Text: Carregando...
+    Text: Carregando
     Object: {fileID: 0}
   - Language: Russian
-    Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
+    Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430"
     Object: {fileID: 0}
   - Language: Spanish
-    Text: Cargando...
+    Text: Cargando
     Object: {fileID: 0}
 --- !u!1 &4255559527617466109
 GameObject:
@@ -7840,7 +7840,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: English
+  currentLanguage: French
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -8481,6 +8481,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "Tabla de clasificaci\xF3n"
+    Object: {fileID: 0}
+--- !u!1 &5796307587483656834
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 479432077649398448}
+  - component: {fileID: 7990522852714396702}
+  m_Layer: 0
+  m_Name: Loading...
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &479432077649398448
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796307587483656834}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4794135649136676461}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7990522852714396702
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5796307587483656834}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Loading...
+    Object: {fileID: 0}
+  - Language: French
+    Text: Chargement...
+    Object: {fileID: 0}
+  - Language: German
+    Text: Laden...
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Caricamento...
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u8AAD\u307F\u8FBC\u307F\u4E2D..."
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB85C\uB4DC \uC911..."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Carregando...
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Cargando...
     Object: {fileID: 0}
 --- !u!1 &5825909724513701167
 GameObject:
@@ -13195,6 +13268,7 @@ Transform:
   - {fileID: 4840057289905268581}
   - {fileID: 5102948530347734093}
   - {fileID: 3172891254533891615}
+  - {fileID: 479432077649398448}
   - {fileID: 3047985053959780477}
   m_Father: {fileID: 2382114561705044355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -13889,11 +13963,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_text
-      value: Relax for a while before the next screw challenge.
+      value: "D\xE9tendez-vous pendant un certain temps avant le prochain d\xE9fi
+        \xE0 la vis."
       objectReference: {fileID: 0}
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_fontSize
-      value: 62.15
+      value: 49.4
       objectReference: {fileID: 0}
     - target: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Pivot.x
