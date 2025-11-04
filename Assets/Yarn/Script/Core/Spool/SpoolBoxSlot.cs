@@ -126,6 +126,8 @@ public class SpoolBoxSlot : MonoBehaviour
 
     public void UpdateState(float pieceDissolveValue)
     {
+        _currentPhase = 5;
+
         for (int i = 0; i < 6; i++)
         {
             if (pieceDissolveValue >= i * 1 / 6f && pieceDissolveValue < (i + 1) * 1 / 6f)
@@ -148,66 +150,6 @@ public class SpoolBoxSlot : MonoBehaviour
         else
         {
             lowerLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-        }
-
-        if (Mathf.Approximately(pieceDissolveValue, 1))
-        {
-            ConfirmFillValue(1);
-        }
-        else if (Mathf.Approximately(pieceDissolveValue, 0))
-        {
-            ConfirmFillValue(0);
-        }
-
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 1);
-
-        for (int i = 0; i < upperLayers.Length; i++)
-        {
-            if (i < _currentPhase / 2)
-            {
-                upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
-        }
-
-        for (int i = 0; i < lowerLayers.Length; i++)
-        {
-            if (i < (_currentPhase - 1) / 2)
-            {
-                lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
-        }
-
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 0);
-
-        for (int i = 0; i < upperLayers.Length; i++)
-        {
-            if (i > _currentPhase / 2)
-            {
-                upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
-        }
-
-        for (int i = 0; i < lowerLayers.Length; i++)
-        {
-            if (i > (_currentPhase - 1) / 2)
-            {
-                lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
-        }
-    }
-
-    public void ConfirmFillValue(float finalFillValue)
-    {
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", finalFillValue);
-
-        for (int i = 0; i < upperLayers.Length; i++)
-        {
-            upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-        }
-
-        for (int i = 0; i < lowerLayers.Length; i++)
-        {
-            lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         }
     }
 
