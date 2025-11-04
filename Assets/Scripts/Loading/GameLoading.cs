@@ -24,6 +24,7 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private RectTransform heartIcon;
 
     [Header("REMOTE ADDRESSABLES")]
     [SerializeField] private TMP_Text downloadProgressText;
@@ -46,6 +47,7 @@ public class GameLoading : MonoBehaviour
     private List<Tween> _tweens;
     private bool _isMenuSceneLoaded;
     private AsyncOperationHandle _menuSceneHandle;
+    private RectTransform _progressBarFillRT;
 
 
     private void Awake()
@@ -57,6 +59,8 @@ public class GameLoading : MonoBehaviour
         _tweens = new List<Tween>();
 
         GamePersistentVariable.hasAppJustLaunched = true;
+
+        _progressBarFillRT = progressBarFill.GetComponent<RectTransform>();
 
         // blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
@@ -133,7 +137,7 @@ public class GameLoading : MonoBehaviour
 
             progress += deltaProgress;
 
-
+            heartIcon.anchoredPosition = new Vector2(progress * _progressBarFillRT.sizeDelta.x, heartIcon.anchoredPosition.y);
 
             timePassedAfterSceneLoaded += Time.fixedDeltaTime;
 
@@ -183,6 +187,8 @@ public class GameLoading : MonoBehaviour
             // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
 
             loadingText.text = $"{(int)(newVal * 100)}%";
+
+            heartIcon.anchoredPosition = new Vector2(newVal * _progressBarFillRT.sizeDelta.x, heartIcon.anchoredPosition.y);
         }));
 
         _tweens.Add(Tween.Delay(loadingDuration).OnComplete(
