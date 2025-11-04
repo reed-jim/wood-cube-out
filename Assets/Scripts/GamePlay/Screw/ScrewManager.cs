@@ -355,8 +355,6 @@ namespace NamPhuThuy.GamePlay
                     DebugLogger.LogSimple(message:$"continue 4.3", context:this);
                 }
             }*/
-
-            
             
             if (_lockScrewBoxManager != null && _lockScrewBoxManager.IsFactionLocked(faction))
             {
@@ -369,8 +367,6 @@ namespace NamPhuThuy.GamePlay
                 {
                     difficultyLevelByFactions[faction] -= 999;    
                 }
-                
-                
                 
                 continue;
             }
