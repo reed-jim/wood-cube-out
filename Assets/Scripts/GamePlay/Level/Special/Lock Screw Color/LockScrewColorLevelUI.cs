@@ -42,7 +42,8 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         base.Setup(levelMode, record);
         gameObject.SetActive(true);
         // StartCoroutine(IEReActiveChain(0.6f));
-        ReActiveChain();
+        // ReActiveChain();
+        StartCoroutine(SetupChainSafely());
     }
 
     protected override void ReActive()
@@ -109,15 +110,31 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         for (int i = 0; i < record.requiredComponents.Count; i++)
         {
             SpecialLevelTaskComponentAmount item = record.requiredComponents[i];
-
+            
+            DebugLogger.LogSimple(message:$"Setting locked color image {i} to faction {record.requiredComponents[i].faction}");
+            
             lockedColorImages[i].color = FactionUtility.GetColorForFaction(record.requiredComponents[i].faction);
             conditionTexts[i].text = $"{item.remainingAmount}/{item.amount}";
         }
+        
 
         if (totalRemainingAmount > 0)
         {
             lockedGroup.transform.localScale = Vector3.one;
+            for (int i = 0; i < record.requiredComponents.Count; i++)
+            {
+                DebugLogger.LogSimple(message:$"loop {i}");
+                if (lockedColorImages[i] != null) 
+                {
+                    DebugLogger.LogSimple(message:$"set for image {i}");
+                    lockedColorImages[i].transform.localScale = Vector3.one;
+                }    
+            }
+            
+            
         }
+
+        DebugLogger.LogSimple(message:$"lockedGroup: {lockedGroup.transform.localScale}");
 
         if (totalRemainingAmount <= 0)
         {
@@ -158,18 +175,6 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
     #region SpineAnim Methods
 
-
-    IEnumerator IEReActiveChain(float delay)
-    {
-        DebugLogger.LogSimple(message:$"before check");
-        
-        ChainSkeGraphics?.gameObject.SetActive(false);
-        DebugLogger.LogSimple(message:$"after check");
-        
-        yield return new WaitForSeconds(delay);
-        // StartCoroutine(ReActiveChain());
-    }
-   
     private void ReActiveChain()
     {
         if (ChainSkeGraphics == null)
@@ -232,6 +237,15 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         } while (currentLoop < 1000);*/
     }
     
+    private IEnumerator IEReactiveChain(float delay)
+    {
+        DebugLogger.LogSimple(message:$"before check");
+        ChainSkeGraphics?.gameObject.SetActive(false);
+        DebugLogger.LogSimple(message:$"after check");
+        yield return new WaitForSeconds(delay);
+        ReActiveChain();
+    }
+    
     private IEnumerator BreakChainAnim()
     {
         if (ChainSkeGraphics == null)
@@ -253,5 +267,56 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         yield return null;
     }
 
+    private IEnumerator SetupChainSafely() {
+        // Wait one frame so Canvas/Surface are alive (important on Android & after activity switches)
+        yield return null;
+
+        // If graphics device is still null (rare but can happen), wait until it’s back
+        while (SystemInfo.graphicsDeviceType == UnityEngine.Rendering.GraphicsDeviceType.Null) {
+            yield return null;
+        }
+
+        // Ensure the SkeletonGraphic exists and is initialized
+        var sg = ChainSkeGraphics;
+        if (sg == null) {
+            DebugLogger.LogSimple(message: "ChainSkeGraphics is null after Setup");
+            yield break;
+        }
+        if (!sg.gameObject.activeSelf) sg.gameObject.SetActive(true);
+        if (!sg.IsValid)
+        {
+            sg.Initialize(true);
+            sg.OnRebuild += SafePlayChainReactivation;
+        }
+
+        /*
+        // Wait until AnimationState is available (usually same frame, but guard anyway)
+        float t = 0f, timeout = 2f;
+        while ((sg.AnimationState == null || !sg.IsValid) && t < timeout) {
+            yield return null;
+            t += Time.unscaledDeltaTime;
+            if (!sg.IsValid)
+            {
+                sg.Initialize(true);
+            }
+        }
+        */
+
+        // Now it’s safe
+        SafePlayChainReactivation(sg);
+    }
+    
+    private void SafePlayChainReactivation(SkeletonGraphic sg) 
+    {
+        sg.OnRebuild -= SafePlayChainReactivation;
+        var state = sg.AnimationState;
+        if (state == null) { DebugLogger.LogSimple(message:"State null in SafePlayChainReactivation"); return; }
+
+        state.ClearTracks();
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
+
+        CanvasUpdateRegistry.IsRebuildingGraphics();
+    }
     #endregion
 }

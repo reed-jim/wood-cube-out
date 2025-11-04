@@ -44,6 +44,7 @@ public class DailyRewardCounter : SaferioTweenBehaviour
         
         IEnumerator IEEnableGiftSkeGraphicsDelay(float delay)
         {
+            
             yield return new WaitForSeconds(delay);
             giftSkeGraphics?.gameObject.SetActive(true);
         }

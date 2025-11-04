@@ -1716,6 +1716,7 @@ MonoBehaviour:
   selectButton: {fileID: 182404061}
   unlockLevelText: {fileID: 1825710472}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+  giftSkeGraphics: {fileID: 284431460}
 --- !u!1 &193457155
 GameObject:
   m_ObjectHideFlags: 0
@@ -2288,6 +2289,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: be39c1d7b9b2d3e448555c27a7df6c19, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -2295,14 +2299,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 100, y: 100}
+  referenceScale: 1
+  rectTransformSize: {x: 100, y: 100}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -2313,6 +2323,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &243590717
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7427,7 +7439,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonGraphic
   m_Material: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -7437,22 +7449,30 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 2b0be66bdaed99742bec9976a3238a40, type: 2}
-  initialSkinName: default
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
+  initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
   startingAnimation: animation
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 100, y: 100}
+  referenceScale: 1
+  rectTransformSize: {x: 100, y: 100}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
-  canvasRenderers:
-  - {fileID: 1637297053}
+  canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -7463,6 +7483,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &284431461
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -9538,6 +9560,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 9047fd5ad15f87547929e1776d9d8622, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -9545,14 +9570,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -9563,6 +9594,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &453744283
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -10509,11 +10542,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6024373688370426182, guid: 0b065cd6fee5c594f8fb7bd9318fae4d, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.2777778
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6024373688370426182, guid: 0b065cd6fee5c594f8fb7bd9318fae4d, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.1421875
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6024373688370426182, guid: 0b065cd6fee5c594f8fb7bd9318fae4d, type: 3}
       propertyPath: m_AnchorMin.x
@@ -19105,6 +19138,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: e34eabed544d0e944802a1457c6ac30a, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -19112,14 +19148,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -19130,6 +19172,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &983839220
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -19978,6 +20022,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 385dcf40b56e67246b116befef1dbfe2, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -19985,14 +20032,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -20003,6 +20056,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1069299667
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20158,6 +20213,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: e34eabed544d0e944802a1457c6ac30a, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -20165,14 +20223,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -20183,6 +20247,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1085868132
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20430,6 +20496,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: fd59df6cf0b86b34ca0c82f28cfdb9ed, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
@@ -20437,14 +20506,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 100, y: 100}
+  referenceScale: 1
+  rectTransformSize: {x: 100, y: 100}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -20455,6 +20530,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1162118980
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -20973,6 +21050,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 95930087c663645498de1b161478fa4e, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -20980,14 +21060,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 100, y: 100}
+  referenceScale: 1
+  rectTransformSize: {x: 100, y: 100}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -20998,6 +21084,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1224188391
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29301,7 +29389,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1637297051}
   - component: {fileID: 1637297053}
-  - component: {fileID: 1637297052}
+  - component: {fileID: 1637297054}
   m_Layer: 0
   m_Name: Renderer0
   m_TagString: Untagged
@@ -29328,33 +29416,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1637297052
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1637297050}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 0
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Texture: {fileID: 0}
-  m_UVRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
 --- !u!222 &1637297053
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29363,6 +29424,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1637297050}
   m_CullTransparentMesh: 1
+--- !u!114 &1637297054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1637297050}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: deeb12332c062954093c24a3fab10b83, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonSubmeshGraphic
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 0
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1640045585
 GameObject:
   m_ObjectHideFlags: 0
@@ -29421,6 +29502,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 08bc1d539bbe5cc47b64cefed0148eb2, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -29428,14 +29512,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 100, y: 100}
+  referenceScale: 1
+  rectTransformSize: {x: 100, y: 100}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -29446,6 +29536,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1640045588
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -29512,6 +29604,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 32c4fa9142c85024a96d7332544cae61, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -29519,14 +29614,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -29537,6 +29638,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1647071450
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -35692,6 +35795,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: f1d0813a674934e42ad21d7a7ef7a1d9, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -35699,14 +35805,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -35717,6 +35829,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1744877570
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -35934,6 +36048,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 3a92a8a5ba0865e4b80da6ff3299e3ab, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -35941,14 +36058,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -35959,6 +36082,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &1762667058
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -43843,6 +43968,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 5038d89109dc49e48a3d637a2918e990, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: default
   initialFlipX: 0
   initialFlipY: 0
@@ -43850,14 +43978,20 @@ MonoBehaviour:
   startingLoop: 1
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -43868,6 +44002,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!222 &2116761159
 CanvasRenderer:
   m_ObjectHideFlags: 0
