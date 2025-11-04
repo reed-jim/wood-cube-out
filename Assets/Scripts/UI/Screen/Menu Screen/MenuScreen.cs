@@ -44,7 +44,6 @@ public class MenuScreen : MonoBehaviour
     #endregion
 
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
-    [SerializeField] private Image topBarDivider;
 
     [SerializeField] private AudioListener menuScreenAudioListener;
 
@@ -56,7 +55,6 @@ public class MenuScreen : MonoBehaviour
     private float _initialOpenRemoveAdPopupButtonPositionY;
     private Tween _openRemoveAdPopupButtonTween;
     private Tween _openUnlockScrewBoxesPopupButtonTween;
-    private Tween _topBarDividerTween;
     private bool _isGameStarted;
     #endregion
 
@@ -120,7 +118,6 @@ public class MenuScreen : MonoBehaviour
         _tweens = new List<Tween>();
 
         _initialOpenRemoveAdPopupButtonPositionY = openRemoveAdPopupButtonRT.localPosition.y;
-        topBarDivider.color = ColorUtil.WithAlpha(topBarDivider.color, 0);
 
         if (UserData.IsRemoveAds)
         {
@@ -552,7 +549,6 @@ public class MenuScreen : MonoBehaviour
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)
     {
         ShowOpenRemoveAdPopupButtonOnScreenRouteSwitch(screenRoute);
-        ShowTopBarDivider(screenRoute);
     }
 
     private void OnAdsRemoved()
@@ -621,20 +617,6 @@ public class MenuScreen : MonoBehaviour
             _openUnlockScrewBoxesPopupButtonTween = Tween.LocalPositionX(buttonsCanvasGroupRT, positionX, duration: 0.3f);
 
             // _openUnlockScrewBoxesPopupButtonTween = Tween.Alpha(buttonsCanvasGroup, 0, duration: 0.3f);
-        }
-    }
-
-    private void ShowTopBarDivider(ScreenRoute screenRoute)
-    {
-        CommonUtil.StopTween(_topBarDividerTween);
-
-        if (screenRoute != ScreenRoute.Home)
-        {
-            _topBarDividerTween = Tween.Alpha(topBarDivider, 1, 0.3f);
-        }
-        else
-        {
-            _topBarDividerTween = Tween.Alpha(topBarDivider, 0, 0.3f);
         }
     }
 
