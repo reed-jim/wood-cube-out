@@ -95,6 +95,8 @@ public class ClaimRewardPopup : BasePopup
         }
     }
 
+    #region MonoBehaviour Callbacks
+
     private void OnEnable()
     {
         Reset();
@@ -124,6 +126,8 @@ public class ClaimRewardPopup : BasePopup
 
         chest.AnimationState.SetAnimation(0, "idle", true);
     }
+
+    #endregion
 
     private void Claim(int multiplier)
     {

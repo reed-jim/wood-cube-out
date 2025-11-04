@@ -114,6 +114,11 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
             conditionTexts[i].text = $"{item.remainingAmount}/{item.amount}";
         }
 
+        if (totalRemainingAmount > 0)
+        {
+            lockedGroup.transform.localScale = Vector3.one;
+        }
+
         if (totalRemainingAmount <= 0)
         {
             StartCoroutine(BreakChainAnim());

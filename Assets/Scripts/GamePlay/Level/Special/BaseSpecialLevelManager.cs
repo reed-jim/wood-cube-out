@@ -157,8 +157,7 @@ namespace NamPhuThuy.GamePlay
                 return false;
             }
 
-            return _specialLevelTaskRecord.requiredComponents
-                        .Any(item => item.componentType == GameComponentType.Screw && item.faction == faction);
+            return _specialLevelTaskRecord.requiredComponents.Any(item => item.componentType == GameComponentType.Screw && item.faction == faction);
         }
 
         #region CALLBACK
