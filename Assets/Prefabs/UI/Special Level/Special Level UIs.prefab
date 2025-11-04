@@ -71,7 +71,7 @@ MonoBehaviour:
   lockedColorImages:
   - {fileID: 819970553406691210}
   prevRemaining: -1
-  chainSkeGraphics: {fileID: 8017581981163641417}
+  chainSkeGraphics: {fileID: 5541341403441214779}
 --- !u!114 &1423098518172789881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,7 +690,7 @@ GameObject:
   - component: {fileID: 2636842484120123412}
   - component: {fileID: 2583761514030791880}
   - component: {fileID: 5133998960914797553}
-  - component: {fileID: 8017581981163641417}
+  - component: {fileID: 5541341403441214779}
   m_Layer: 5
   m_Name: 'SkeAnim Chain '
   m_TagString: Untagged
@@ -781,7 +781,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &8017581981163641417
+--- !u!114 &5541341403441214779
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -792,7 +792,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonGraphic
   m_Material: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -801,22 +801,31 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  skeletonDataAsset: {fileID: 11400000, guid: 2958428b1dbae724aaa72209137980c0, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 19e875bfedf1bbc45af064a163de73db, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
-  startingAnimation: begin
+  startingAnimation: 
   startingLoop: 0
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 176, y: 136}
+  referenceScale: 1
+  rectTransformSize: {x: 176, y: 136}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -827,6 +836,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &2847556167584360689
 GameObject:
   m_ObjectHideFlags: 0
@@ -1067,7 +1078,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: d0965134ce5aee042845f9419b1aef47, type: 2}
   prevRemaining: -1
   rustyLayerSkeGraphics: {fileID: 1685728120754801281}
-  chainSkeGraphics: {fileID: 3179646843002244430}
+  chainSkeGraphics: {fileID: 1675342905047435725}
 --- !u!114 &8593531000741360047
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1222,6 +1233,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   skeletonDataAsset: {fileID: 11400000, guid: 7f7a42a7841218549ac05e2be50ae5c5, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
@@ -1229,14 +1243,20 @@ MonoBehaviour:
   startingLoop: 0
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -1247,6 +1267,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &5922570325995261729
 GameObject:
   m_ObjectHideFlags: 0
@@ -2012,7 +2034,7 @@ GameObject:
   - component: {fileID: 2250487696900070592}
   - component: {fileID: 2049623161884756528}
   - component: {fileID: 4775515641909110072}
-  - component: {fileID: 3179646843002244430}
+  - component: {fileID: 1675342905047435725}
   m_Layer: 5
   m_Name: SkeAnim Chain - dont change position
   m_TagString: Untagged
@@ -2103,7 +2125,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &3179646843002244430
+--- !u!114 &1675342905047435725
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2114,7 +2136,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d85b887af7e6c3f45a2e2d2920d641bc, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: spine-unity::Spine.Unity.SkeletonGraphic
   m_Material: {fileID: 2100000, guid: b66cf7a186d13054989b33a5c90044e4, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
@@ -2123,22 +2145,31 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  skeletonDataAsset: {fileID: 11400000, guid: 2958428b1dbae724aaa72209137980c0, type: 2}
+  skeletonDataAsset: {fileID: 11400000, guid: 19e875bfedf1bbc45af064a163de73db, type: 2}
+  additiveMaterial: {fileID: 0}
+  multiplyMaterial: {fileID: 0}
+  screenMaterial: {fileID: 0}
   initialSkinName: 
   initialFlipX: 0
   initialFlipY: 0
-  startingAnimation: begin
+  startingAnimation: 
   startingLoop: 0
   timeScale: 1
   freeze: 0
+  layoutScaleMode: 0
+  referenceSize: {x: 1, y: 1}
+  referenceScale: 1
+  rectTransformSize: {x: 0, y: 0}
+  editReferenceRect: 0
   updateWhenInvisible: 3
-  unscaledTime: 0
   allowMultipleCanvasRenderers: 0
   canvasRenderers: []
   separatorSlotNames: []
   enableSeparatorSlots: 0
   separatorParts: []
   updateSeparatorPartLocation: 1
+  updateSeparatorPartScale: 0
+  disableMeshAssignmentOnOverride: 1
   meshGenerator:
     settings:
       useClipping: 1
@@ -2149,6 +2180,8 @@ MonoBehaviour:
       calculateTangents: 0
       addNormals: 0
       immutableTriangles: 0
+  updateTiming: 1
+  unscaledTime: 0
 --- !u!1 &8495308949889080384
 GameObject:
   m_ObjectHideFlags: 0

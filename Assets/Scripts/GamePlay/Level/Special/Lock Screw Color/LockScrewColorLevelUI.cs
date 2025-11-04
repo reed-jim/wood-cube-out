@@ -22,7 +22,10 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         get
         {
             if (chainSkeGraphics == null)
+            {
+                DebugLogger.LogSimple(message:"Chain Spine is null");
                 chainSkeGraphics = GetComponentInChildren<SkeletonGraphic>();
+            }
             return chainSkeGraphics;
         }
     }
@@ -38,13 +41,15 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     {
         base.Setup(levelMode, record);
         gameObject.SetActive(true);
-        StartCoroutine(IEReActiveChain(0.6f));
+        // StartCoroutine(IEReActiveChain(0.6f));
+        ReActiveChain();
     }
 
     protected override void ReActive()
     {
         base.ReActive();
-        StartCoroutine(IEReActiveChain(0.6f));
+        // StartCoroutine(IEReActiveChain(0.6f));
+        ReActiveChain();
         DebugLogger.LogSimple();
         prevRemaining = -1;
     }
@@ -123,6 +128,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         }
         
         if (prevRemaining < 0)
+            
         {
             prevRemaining = totalRemainingAmount;
             return;
@@ -156,14 +162,33 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         DebugLogger.LogSimple(message:$"after check");
         
         yield return new WaitForSeconds(delay);
-        StartCoroutine(ReActiveChain());
+        // StartCoroutine(ReActiveChain());
     }
    
-    private IEnumerator ReActiveChain()
+    private void ReActiveChain()
     {
+        if (ChainSkeGraphics == null)
+        {
+            DebugLogger.LogSimple(message:$"ChainSkeGraphics is null");
+        };
+        
+        var go = ChainSkeGraphics.gameObject;
+        if (!go.activeSelf) go.SetActive(true);
+        
+        var state = ChainSkeGraphics.AnimationState;
+        if (state == null)
+        {
+            DebugLogger.LogSimple(message:$"The state is null");
+        }
+
+        state.ClearTracks();
+        DebugLogger.LogSimple(message:$"5");
+        state.SetAnimation(0, _chainReActiveAnim, false);
+        DebugLogger.LogSimple(message:$"6");
+        state.AddAnimation(0, _chainIdleAnim, true, 0f);
         DebugLogger.LogSimple();
         
-        int currentLoop = 0;
+        /*int currentLoop = 0;
 
         do
         {
@@ -199,7 +224,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         
             DebugLogger.LogSimple(message:$"7");
             currentLoop += 2000;
-        } while (currentLoop < 1000);
+        } while (currentLoop < 1000);*/
     }
     
     private IEnumerator BreakChainAnim()
