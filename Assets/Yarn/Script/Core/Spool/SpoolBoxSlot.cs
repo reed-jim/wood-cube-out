@@ -130,7 +130,7 @@ public class SpoolBoxSlot : MonoBehaviour
 
         for (int i = 0; i < 6; i++)
         {
-            if (pieceDissolveValue >= i * 1 / 6f && pieceDissolveValue < (i + 1) * 1 / 6f)
+            if (pieceDissolveValue > i * 1 / 6f && pieceDissolveValue <= (i + 1) * 1 / 6f)
             {
                 _currentPhase = i;
 
