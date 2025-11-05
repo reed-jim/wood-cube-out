@@ -17,7 +17,7 @@ namespace NamPhuThuy
     /// </summary>
     public static class DebugLogger
     {
-        public static bool enableLog = true;
+        public static bool enableLog = false;
         private static readonly Color defaultColor = Color.white;
 
         #region Log Error
