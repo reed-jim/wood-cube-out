@@ -1111,7 +1111,25 @@ public class YarnGameTool : EditorWindow
 
                     renderer.material = match;
 
-                    Debug.Log("SAFERIO material " + item.name + "/" + match);
+                    // Debug.Log("SAFERIO material " + item.name + "/" + match);
+                }
+
+                // Assign material for decor models
+                for (int i = 0; i < item.childCount; i++)
+                {
+                    Renderer decorRenderer = item.GetChild(i).GetComponent<Renderer>();
+
+                    Material[] materialArray = new Material[decorRenderer.sharedMaterials.Length];
+
+                    for (int j = 0; j < materialArray.Length; j++)
+                    {
+                        materialArray[j] = pieceMaterialContainer.materials[0];
+                    }
+
+                    for (int j = 0; j < decorRenderer.sharedMaterials.Length; j++)
+                    {
+                        decorRenderer.sharedMaterials = materialArray;
+                    }
                 }
             }
         }
