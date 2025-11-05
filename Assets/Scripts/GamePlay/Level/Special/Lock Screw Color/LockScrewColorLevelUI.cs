@@ -41,15 +41,13 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
     {
         base.Setup(levelMode, record);
         gameObject.SetActive(true);
-        // StartCoroutine(IEReActiveChain(0.6f));
-        // ReActiveChain();
+        
         StartCoroutine(SetupChainSafely());
     }
 
     protected override void ReActive()
     {
         base.ReActive();
-        // StartCoroutine(IEReActiveChain(0.6f));
         ReActiveChain();
         DebugLogger.LogSimple();
         prevRemaining = -1;
@@ -145,6 +143,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
             }
 
             SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+            DebugLogger.LogSimple(message:$"lockedGroup: ScaleDown");
 
             SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
         }
@@ -177,6 +176,12 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
 
     private void ReActiveChain()
     {
+        if (lockedGroup != null)
+        {
+            lockedGroup.transform.localScale = Vector3.one;
+            DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
+        }
+        
         if (ChainSkeGraphics == null)
         {
             DebugLogger.LogSimple(message:$"ChainSkeGraphics is null");
@@ -197,53 +202,6 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         DebugLogger.LogSimple(message:$"6");
         state.AddAnimation(0, _chainIdleAnim, true, 0f);
         DebugLogger.LogSimple();
-        
-        /*int currentLoop = 0;
-
-        do
-        {
-            yield return new WaitForSeconds(0.05f);
-            currentLoop++;
-           
-            if (ChainSkeGraphics == null)
-            {
-                continue;
-                yield break;
-            };
-            DebugLogger.LogSimple(message:$"1");
-        
-            var go = ChainSkeGraphics.gameObject;
-            if (!go.activeSelf) go.SetActive(true);
-        
-            DebugLogger.LogSimple(message:$"3");
-
-            var state = ChainSkeGraphics.AnimationState;
-            if (state == null)
-            {
-                continue;
-                yield break;
-            }
-        
-            DebugLogger.LogSimple(message:$"4");
-
-            state.ClearTracks();
-            DebugLogger.LogSimple(message:$"5");
-            state.SetAnimation(0, _chainReActiveAnim, false);
-            DebugLogger.LogSimple(message:$"6");
-            state.AddAnimation(0, _chainIdleAnim, true, 0f);
-        
-            DebugLogger.LogSimple(message:$"7");
-            currentLoop += 2000;
-        } while (currentLoop < 1000);*/
-    }
-    
-    private IEnumerator IEReactiveChain(float delay)
-    {
-        DebugLogger.LogSimple(message:$"before check");
-        ChainSkeGraphics?.gameObject.SetActive(false);
-        DebugLogger.LogSimple(message:$"after check");
-        yield return new WaitForSeconds(delay);
-        ReActiveChain();
     }
     
     private IEnumerator BreakChainAnim()
@@ -288,22 +246,13 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
             sg.Initialize(true);
             sg.OnRebuild += SafePlayChainReactivation;
         }
-
-        /*
-        // Wait until AnimationState is available (usually same frame, but guard anyway)
-        float t = 0f, timeout = 2f;
-        while ((sg.AnimationState == null || !sg.IsValid) && t < timeout) {
-            yield return null;
-            t += Time.unscaledDeltaTime;
-            if (!sg.IsValid)
-            {
-                sg.Initialize(true);
-            }
-        }
-        */
-
-        // Now it’s safe
         SafePlayChainReactivation(sg);
+        yield return new WaitForSeconds(0.5f);
+        
+        
+        
+        lockedGroup.transform.localScale = Vector3.one;
+        DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
     }
     
     private void SafePlayChainReactivation(SkeletonGraphic sg) 

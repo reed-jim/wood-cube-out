@@ -120,6 +120,11 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     
     private void ReActiveRustyLayer()
     {
+        if (lockedGroup != null)
+        {
+            lockedGroup.transform.localScale = Vector3.one;
+            DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
+        }
         DebugLogger.LogSimple(message:$"", context:this);
 
         if (RustyLayerSkeGraphics == null)
@@ -179,6 +184,11 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     
     private void ReActiveChain()
     {
+        if (lockedGroup != null)
+        {
+            lockedGroup.transform.localScale = Vector3.one;
+            DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
+        }
         DebugLogger.LogSimple(message:$"");
         if (ChainSkeGraphics == null)
         {
@@ -256,6 +266,10 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
         // Now it’s safe
         SafePlayChainReactivation(sg);
+        
+        yield return new WaitForSeconds(0.5f);
+        lockedGroup.transform.localScale = Vector3.one;
+        DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
     }
     
     private void SafePlayChainReactivation(SkeletonGraphic sg) 
@@ -299,6 +313,10 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
 
         // Now it’s safe
         SafePlayRustyReactivation(sg);
+        
+        yield return new WaitForSeconds(0.5f);
+        lockedGroup.transform.localScale = Vector3.one;
+        DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
     }
     
     private void SafePlayRustyReactivation(SkeletonGraphic sg) 
@@ -374,6 +392,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         }
 
         SaferioTween.ScaleDownWithPunch(lockedGroup.transform);
+        DebugLogger.LogSimple(message:$"lockedGroup: ScaleDown");
 
         SaferioTween.ShowWithPunch(timeCountingText.transform, 1, delay: 0.3f);
     }
