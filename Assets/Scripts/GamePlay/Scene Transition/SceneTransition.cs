@@ -147,6 +147,10 @@ public class SceneTransition : MonoBehaviour
 
     private IEnumerator WaitForLevelLoaded()
     {
+        if (CanvasUpdateRegistry.IsRebuildingGraphics() || CanvasUpdateRegistry.IsRebuildingLayout())
+        {
+            yield return new WaitForEndOfFrame();
+        }
         ShowBlackScreenImmediately();
 
         yield return new WaitUntil(() => _isLevelLoaded);
