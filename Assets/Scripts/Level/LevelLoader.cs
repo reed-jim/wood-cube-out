@@ -433,9 +433,18 @@ namespace NamPhuThuy.GamePlay
             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
 
             LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
+
+            // find level to replace MultipleLayers & ProtectedObjectPart levels
             if (mode == LevelMode.MultipleLayers || mode == LevelMode.ProtectedObjectPart)
             {
-                res += " sub";
+                // int replaceLevelIndex = levelDataContainer.LevelsData.First(item => item.levelId > 20 && item.levelMode == LevelMode.Normal).levelId;
+                int replaceLevelIndex = levelDataContainer.LevelsData
+                    .Where(i => i.levelId > 20 && i.levelMode == LevelMode.Normal)
+                    .OrderBy(_ => UnityEngine.Random.value)
+                    .Select(i => i.levelId)
+                    .FirstOrDefault();
+
+                res = $"Level {replaceLevelIndex}";
             }
 
             return res;
