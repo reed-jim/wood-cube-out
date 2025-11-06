@@ -58,10 +58,16 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     {
         base.Setup(levelMode);
         gameObject.SetActive(true);
-        // StartCoroutine(IEReActiveRustyLayer(delay: 0.6f));
-        // ReActiveRustyLayer();
-        // StartCoroutine(IEReActiveChain(0.6f));
-        // ReActiveChain();
+        
+        // turn on the children
+        lockedGroup?.gameObject.SetActive(true);
+        
+        foreach (var text in conditionTexts)
+        {
+            if (text == null) continue;
+            text.gameObject.SetActive(true);
+            text.transform.localScale = Vector3.one;
+        }
         
         StartCoroutine(SetupChainSafely());
         StartCoroutine(SetupRustySafely());
@@ -72,10 +78,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
     protected override void ReActive()
     {
         base.ReActive();
-        // StartCoroutine(IEReActiveRustyLayer(delay: 0.6f));
         ReActiveRustyLayer();
-        
-        // StartCoroutine(IEReActiveChain(0.6f));
         ReActiveChain();
         DebugLogger.LogSimple(message:$"");
         prevRemaining = -1;
@@ -316,6 +319,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         
         yield return new WaitForSeconds(0.5f);
         lockedGroup.transform.localScale = Vector3.one;
+        
         DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
     }
     
@@ -353,6 +357,7 @@ public class RustyScrewSpecialLevelUI : BaseSpecialLevelUI
         // Rusty
         if (totalRemainingAmount > 0)
         {
+            lockedGroup.transform.localScale = Vector3.one;
             float progress = (float)totalRemainingAmount / totalAmount;
 
             if (_rustyProgressTween.isAlive)

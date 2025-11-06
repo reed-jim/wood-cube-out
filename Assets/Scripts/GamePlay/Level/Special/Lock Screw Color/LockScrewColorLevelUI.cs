@@ -95,6 +95,7 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         
         foreach (var text in conditionTexts)
         {
+            if (text == null) continue;
             text.gameObject.SetActive(true);
             text.transform.localScale = Vector3.one;
         }
@@ -308,7 +309,6 @@ public class LockScrewColorLevelUI : BaseSpecialLevelUI
         }
         SafePlayChainReactivation(sg);
         yield return new WaitForSeconds(0.5f);
-        
         lockedGroup.transform.localScale = Vector3.one;
         DebugLogger.LogSimple(message:$"lockedGroup: SetScale");
     }
