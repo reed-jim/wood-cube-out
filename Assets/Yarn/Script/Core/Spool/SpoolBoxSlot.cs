@@ -142,32 +142,29 @@ public class SpoolBoxSlot : MonoBehaviour
 
         float remappedValue = Remap(pieceDissolveValue, _currentPhase * 1 / 6f, (_currentPhase + 1) * 1 / 6f, 0, 1);
 
-        Debug.Log("SAFERIO " + pieceDissolveValue + "/" + _currentPhase + "/" + remappedValue);
-
         yarnSpoolMaterialPropertyBlock.SetInt("_IsFillFromLeft", isFillFromLeft ? 1 : 0);
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", remappedValue);
+        // yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", remappedValue);
 
-        if (_currentPhase % 2 == 0)
+        for (int i = 0; i < upperLayers.Length; i++)
         {
-            upperLayers[_currentPhase / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+            int layerPhase = 2 * i;
+
+            remappedValue = Remap(pieceDissolveValue, layerPhase * 1 / 6f, (layerPhase + 1) * 1 / 6f, 0, 1);
+
+            yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", remappedValue);
+
+            upperLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         }
-        else
-        {
-            lowerLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-        }
 
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 1);
-
-        if (_currentPhase > 0)
+        for (int i = 0; i < lowerLayers.Length; i++)
         {
-            if ((_currentPhase - 1) % 2 == 0)
-            {
-                upperLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
-            else
-            {
-                lowerLayers[((_currentPhase - 1) - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-            }
+            int layerPhase = 2 * i + 1;
+
+            remappedValue = Remap(pieceDissolveValue, layerPhase * 1 / 6f, (layerPhase + 1) * 1 / 6f, 0, 1);
+
+            yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", remappedValue);
+
+            lowerLayers[i].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
         }
     }
 
