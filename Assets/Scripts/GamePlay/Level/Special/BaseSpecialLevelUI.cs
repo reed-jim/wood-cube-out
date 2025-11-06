@@ -29,6 +29,10 @@ public class BaseSpecialLevelUI : MonoBehaviour
     // [SerializeField] protected Image reloadMaskImage;
 
     [SerializeField] protected LevelMode levelMode;
+    
+    protected Coroutine monitoringCoroutine;
+
+    #region MonoBehaviour Callbacks
 
     void Awake()
     {
@@ -41,6 +45,8 @@ public class BaseSpecialLevelUI : MonoBehaviour
     {
         BaseSpecialLevelManager.updateUI -= UpdateUI;
     }
+
+    #endregion
 
     protected virtual void Setup(LevelMode levelMode, SpecialLevelTaskRecord record = null)
     {
