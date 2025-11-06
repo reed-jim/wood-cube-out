@@ -406,6 +406,7 @@ public class FirebaseConfig
 {
     #region SAFERIO
     public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
+    public const string specialLevelDifficultyMultiplier = "special_level_difficulty_multiplier";
     public const string ENABLE_JOINT = "enable_joint";
     public const string IS_ENABLE_HINGE_JOINT = "is_enable_hinge_joint";
     public const string IS_SHOW_BANNER = "is_show_banner";

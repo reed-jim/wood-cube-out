@@ -35,6 +35,7 @@ public static class GamePersistentVariable
     public static Vector3 boxForOutsideScrewScreenPosition;
     public static RaycastHit lastScrewSelectedSurfaceHit;
     public static bool isDisableLoopLevel;
+    public static LevelMode currentLevelMode;
     #endregion
 
     #region LEVEL DIFFICULTY
