@@ -1570,8 +1570,8 @@ RectTransform:
   - {fileID: 477194870}
   m_Father: {fileID: 1411237950}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.03671706}
-  m_AnchorMax: {x: 1, y: 0.9492441}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -2534,6 +2534,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skeletonDataAsset: {fileID: 11400000, guid: 5b46f6026e0f43c47bd1352a2803250a, type: 2}
   initialSkinName: 
+  fixPrefabOverrideViaMeshFilter: 2
   initialFlipX: 0
   initialFlipY: 0
   updateWhenInvisible: 3
@@ -2554,6 +2555,8 @@ MonoBehaviour:
     materialsInsideMask: []
     materialsOutsideMask: []
   disableRenderingOnOverride: 1
+  updateTiming: 1
+  unscaledTime: 0
   _animationName: 
   loop: 0
   timeScale: 1
@@ -8046,6 +8049,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   screwBoxesObserver: {fileID: 11400000, guid: 4267c2c43005a7e4ab25c441ead4cb81, type: 2}
   delayToEnableInputAfterRevived: 1
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+  levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
+  levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
 --- !u!1 &1829304987
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,98 +7,105 @@ using static GameEnum;
 namespace NamPhuThuy.GamePlay
 {
     public class GameStateMachine : MonoBehaviour
-{
-    private BaseGameState currentState;
-
-    [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
-
-    [SerializeField] private float delayToEnableInputAfterRevived;
-
-    public GameState CurrentState
     {
-        get => currentState.GameState;
-    }
+        private BaseGameState currentState;
 
-    public ScrewBoxesObserver ScrewBoxesObserver
-    {
-        get => screwBoxesObserver;
-    }
+        [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
 
-    public static event Action<bool> enableInputEvent;
+        [SerializeField] private float delayToEnableInputAfterRevived;
 
-    private void Awake()
-    {
-        LevelLoader.startLevelEvent += EnterPlayingState;
-        ScrewManager.winLevelEvent += EnterWinState;
-        ScrewBoxManager.loseLevelEvent += EnterLoseState;
-        RevivePopup.reviveEvent += OnRevived;
+        [Header("SCRIPTABLE OBJECT")]
+        [SerializeField] private IntVariable currentLevel;
+        [SerializeField] private LevelObserver levelObserver;
+        [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
-        ChangeState(new GameStatePlaying());
-    }
-
-    void OnDestroy()
-    {
-        LevelLoader.startLevelEvent -= EnterPlayingState;
-        ScrewManager.winLevelEvent -= EnterWinState;
-        ScrewBoxManager.loseLevelEvent -= EnterLoseState;
-        RevivePopup.reviveEvent -= OnRevived;
-    }
-
-    // void Update()
-    // {
-    //     if (currentState != null)
-    //     {
-    //         currentState.Update();
-    //     }
-    // }
-
-    public void ChangeState(BaseGameState newState)
-    {
-        // DebugLogger.LogSimple(message:$"newState: {newState.GameState}");
-        if (!newState.CanTransitionTo())
+        public GameState CurrentState
         {
-            return;
+            get => currentState.GameState;
         }
 
-        if (currentState != null)
+        public ScrewBoxesObserver ScrewBoxesObserver
         {
-            currentState.Exit();
+            get => screwBoxesObserver;
         }
 
-        currentState = newState;
+        public static event Action<bool> enableInputEvent;
 
-        currentState.Enter();
-    }
-
-    private void EnterPlayingState()
-    {
-        DebugLogger.LogSimple();
-        ChangeState(new GameStatePlaying());
-
-        Tween.Delay(delayToEnableInputAfterRevived).OnComplete(() =>
+        private void Awake()
         {
-            enableInputEvent?.Invoke(true);
-        });
-    }
+            LevelLoader.startLevelEvent += EnterPlayingState;
+            ScrewManager.winLevelEvent += EnterWinState;
+            ScrewBoxManager.loseLevelEvent += EnterLoseState;
+            RevivePopup.reviveEvent += OnRevived;
 
-    private void EnterWinState()
-    {
-        DebugLogger.LogSimple();
-        ChangeState(new GameStateWin(this));
-    }
+            ChangeState(new GameStatePlaying());
+        }
 
-    private void EnterLoseState()
-    {
-        DebugLogger.LogSimple();
-        enableInputEvent?.Invoke(false);
+        void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= EnterPlayingState;
+            ScrewManager.winLevelEvent -= EnterWinState;
+            ScrewBoxManager.loseLevelEvent -= EnterLoseState;
+            RevivePopup.reviveEvent -= OnRevived;
+        }
 
-        ChangeState(new GameStateLose(this));
-    }
+        // void Update()
+        // {
+        //     if (currentState != null)
+        //     {
+        //         currentState.Update();
+        //     }
+        // }
 
-    private void OnRevived(BoosterType boosterType)
-    {
-        DebugLogger.LogSimple();
-        EnterPlayingState();
+        public void ChangeState(BaseGameState newState)
+        {
+            // DebugLogger.LogSimple(message:$"newState: {newState.GameState}");
+            if (!newState.CanTransitionTo())
+            {
+                return;
+            }
+
+            if (currentState != null)
+            {
+                currentState.Exit();
+            }
+
+            currentState = newState;
+
+            currentState.Enter();
+        }
+
+        private void EnterPlayingState()
+        {
+            DebugLogger.LogSimple();
+            ChangeState(new GameStatePlaying());
+
+            Tween.Delay(delayToEnableInputAfterRevived).OnComplete(() =>
+            {
+                enableInputEvent?.Invoke(true);
+            });
+        }
+
+        private void EnterWinState()
+        {
+            DebugLogger.LogSimple();
+            ChangeState(new GameStateWin(this));
+        }
+
+        private void EnterLoseState()
+        {
+            DebugLogger.LogSimple();
+            enableInputEvent?.Invoke(false);
+
+            ChangeState(new GameStateLose(this));
+
+            SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
+        }
+
+        private void OnRevived(BoosterType boosterType)
+        {
+            DebugLogger.LogSimple();
+            EnterPlayingState();
+        }
     }
-}
 }
