@@ -16,21 +16,21 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
     //     List<GameFaction> poolFaction = new List<GameFaction>();
 
-    //     int index = 0;
-    //     GameFaction currentFaction = GameFaction.YarnBlue;
+    // int index = 0;
+    // GameFaction currentFaction = GameFaction.YarnBlue;
 
-    //     for (int i = 0; i < totalAdditionalFaction; i++)
+    // for (int i = 0; i < totalAdditionalFaction; i++)
+    // {
+    //     if (index % 3 == 0)
     //     {
-    //         if (index % 3 == 0)
-    //         {
-    //             // currentFaction = GetRandomEnumValue<GameFaction>();
-    //             currentFaction = (GameFaction)Random.Range(0, 8);
-    //         }
-
-    //         poolFaction.Add(currentFaction);
-
-    //         index++;
+    //         // currentFaction = GetRandomEnumValue<GameFaction>();
+    //         currentFaction = (GameFaction)Random.Range(0, 8);
     //     }
+
+    //     poolFaction.Add(currentFaction);
+
+    //     index++;
+    // }
 
     //     for (int i = 0; i < totalPiece; i++)
     //     {
@@ -79,33 +79,83 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
     //     }
     // }
 
-    public void GenerateAddionalFaction(BasePiece[] pieces)
+    public void GenerateAddionalFaction(Transform level, BasePiece[] pieces)
     {
         GameFaction[] currentFactions = pieces.Select(item => item.Faction).ToArray();
 
-        int[] expanded;
-        int[] added;
-        (expanded, added) = ExpandArrayEnsureCountsDivisibleBy3(currentFactions.Select(item => (int)item).ToArray(), 2);
+        Dictionary<GameFaction, int> finalFactions = new Dictionary<GameFaction, int>();
+        List<GameFaction> innerPieceFactions = new List<GameFaction>();
+
+        for (int i = 0; i < currentFactions.Length; i++)
+        {
+            if (finalFactions.ContainsKey(currentFactions[i]))
+            {
+                finalFactions[currentFactions[i]]++;
+            }
+            else
+            {
+                finalFactions.Add(currentFactions[i], 1);
+            }
+        }
+
+        int currentTotalPieces = pieces.Length;
+
+        // fix current faction not divisible by 3
+        foreach (var faction in finalFactions.Keys)
+        {
+            if (finalFactions[faction] % 3 != 0)
+            {
+                int numToAdd = 3 - finalFactions[faction] % 3;
+
+                currentTotalPieces += numToAdd;
+
+                for (int i = 0; i < numToAdd; i++)
+                {
+                    innerPieceFactions.Add(faction);
+                }
+            }
+        }
+
+        // add new factions
+
+        int numFactionsToAdd = 36;
+
+        int index = 0;
+        GameFaction currentFaction = GameFaction.YarnBlue;
+
+        for (int i = 0; i < numFactionsToAdd; i++)
+        {
+            if (index % 3 == 0)
+            {
+                // currentFaction = GetRandomEnumValue<GameFaction>();
+                currentFaction = (GameFaction)Random.Range(0, 24);
+            }
+
+            innerPieceFactions.Add(currentFaction);
+
+            index++;
+        }
 
         int originalPieceIndex = 0;
         int count = 0;
 
-        for (int i = 0; i < added.Length; i++)
+        Dictionary<BasePiece, Transform> generatedPieces = new Dictionary<BasePiece, Transform>();
+
+        for (int i = 0; i < innerPieceFactions.Count; i++)
         {
-            BasePiece generatedPiece = Instantiate(pieces[originalPieceIndex].gameObject, pieces[originalPieceIndex].transform).GetComponent<BasePiece>();
+            BasePiece generatedPiece = Instantiate(pieces[originalPieceIndex].gameObject, level).GetComponent<BasePiece>();
 
             generatedPiece.gameObject.name = $"Generated Piece {originalPieceIndex} {count}";
 
-            GameFaction faction = (GameFaction)added[i];
+            generatedPieces.Add(generatedPiece, pieces[originalPieceIndex].transform);
+
+            GameFaction faction = innerPieceFactions[i];
 
             generatedPiece.Faction = faction;
-            generatedPiece.transform.localPosition = Vector3.zero;
-            generatedPiece.transform.localRotation = Quaternion.identity;
-            generatedPiece.transform.localScale *= 1 - (count + 1) * 0.1f;
-
             generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
-
             generatedPiece.Lock();
+
+            // Debug.Log($"SAFERIO {originalPieceIndex} {count} {faction} {generatedPiece.name} {1 - (count + 1) * 0.1f}");
 
             count++;
 
@@ -118,8 +168,16 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
                 count = 0;
             }
+        }
 
-            Debug.Log($"SAFERIO {originalPieceIndex} {count} {faction} {generatedPiece.name} {1 - (count + 1) * 0.1f}");
+        // Make new generated pieces child of original pieces
+        foreach (var piece in generatedPieces.Keys)
+        {
+            piece.transform.SetParent(generatedPieces[piece]);
+
+            piece.transform.localPosition = Vector3.zero;
+            piece.transform.localRotation = Quaternion.identity;
+            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.05f;
         }
     }
 

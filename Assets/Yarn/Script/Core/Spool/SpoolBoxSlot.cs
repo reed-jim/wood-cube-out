@@ -140,8 +140,12 @@ public class SpoolBoxSlot : MonoBehaviour
 
         bool isFillFromLeft = _currentPhase % 2 != 0;
 
+        float remappedValue = Remap(pieceDissolveValue, _currentPhase * 1 / 6f, (_currentPhase + 1) * 1 / 6f, 0, 1);
+
+        Debug.Log("SAFERIO " + pieceDissolveValue + "/" + _currentPhase + "/" + remappedValue);
+
         yarnSpoolMaterialPropertyBlock.SetInt("_IsFillFromLeft", isFillFromLeft ? 1 : 0);
-        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", Remap(pieceDissolveValue, _currentPhase * 1 / 6f, (_currentPhase + 1) * 1 / 6f, 0, 1));
+        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", remappedValue);
 
         if (_currentPhase % 2 == 0)
         {
@@ -150,6 +154,20 @@ public class SpoolBoxSlot : MonoBehaviour
         else
         {
             lowerLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+        }
+
+        yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 1);
+
+        if (_currentPhase > 0)
+        {
+            if ((_currentPhase - 1) % 2 == 0)
+            {
+                upperLayers[(_currentPhase - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+            }
+            else
+            {
+                lowerLayers[((_currentPhase - 1) - 1) / 2].SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
+            }
         }
     }
 

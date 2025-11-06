@@ -37,7 +37,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 8def7303003d5e844aaa7b1c64e545c6, type: 3}
+        m_Texture: {fileID: 2800000, guid: 1d936d04006a98b44a7f45ea35ef4c24, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
@@ -58,9 +58,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _AO: 0
     - _ColorStrength: 1
-    - _DarkColorMultiplier: 0.45
-    - _DarkThreshold: 0.5
+    - _DarkColorMultiplier: 0.5
+    - _DarkThreshold: 0.4
     - _DissolveEdgeWidth: 0.5
     - _DissolveHeight: 0
     - _DissolveRatioX: 1
@@ -68,6 +69,7 @@ Material:
     - _DissolveStrength: 0.1
     - _GradientColorTwoMultiplier: 0
     - _Metallic: 0
+    - _Metallic_1: 0
     - _NoiseStrength: 0
     - _NormalMapRotation: 0
     - _NormalStrength: 0
@@ -75,6 +77,8 @@ Material:
     - _PositionMultiplier: 0
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _Saturation: 1.25
+    - _Smoothness: 0
     - _WorldMaxX: 5
     - _WorldMaxY: 5
     - _WorldMinX: -5
