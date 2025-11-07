@@ -441,7 +441,7 @@ namespace NamPhuThuy.GamePlay
                 int replaceLevelIndex = levelDataContainer.LevelsData
                     .Where(i => i.levelId > 20 && i.levelMode == LevelMode.Normal)
                     .OrderBy(_ => UnityEngine.Random.value)
-                    .Select(i => i.levelId)
+                    .Select(i => i.levelId + 1)
                     .FirstOrDefault();
 
                 res = $"Level {replaceLevelIndex}";
