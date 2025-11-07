@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy;
 using UnityEngine;
 
 public class ScriptableObjectInitializer : MonoBehaviour
@@ -25,6 +26,7 @@ public class ScriptableObjectInitializer : MonoBehaviour
 
     private async void LoadGameSetting()
     {
+        // DebugLogger.LogSimple();
         await gameSetting.LoadAsync();
 
         gameSettingLoadedEvent?.Invoke();

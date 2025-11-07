@@ -241,6 +241,7 @@ public class BuyBoosterPopup : BasePopup
     private void ShowAdsNotLoadedPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
+        // switchRouteChannel.Invoke(ScreenRoute.NoInternet, nameof(BuyBoosterPopup));
 
         isAbleToHideOnClickOutside = true;
     }

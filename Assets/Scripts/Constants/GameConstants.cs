@@ -53,6 +53,7 @@ public static class GameConstants
     public static string FAKE_SCREW = "Fake Screw";
     public static string HAMMER = "Hammer";
     public static string SUPRISE_REWARD_FX = "SUPRISE_REWARD_FX";
+    public static string SCREW_BOX_LOCKED = "Screw Box Locked";
     #endregion
 
     #region SOUND
@@ -71,6 +72,10 @@ public static class GameConstants
     public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
     public static string OPEN_CHEST_SOUND = "Open Chest Sound";
     public static string REWARD_ITEM_SOUND = "Reward Item Sound";
+    public static string CHAIN_BREAK_SOUND = "Chain Break Sound";
+    public static string COMPlETE_TASK_SOUND = "Complete Task Sound";
+    public static string GENERATE_TASK_SOUND = "Generate Task Sound";
+    public static string RUSTY_BREAK_SOUND = "Rusty Break Sound";
     #endregion
 
     #region ANIMATION
@@ -136,7 +141,7 @@ public static class GameConstants
     #endregion
 
     #region SCREW AWAY
-    public static int NUMBER_SLOT_PER_SCREW_BOX = 3;
+    public const int NUMBER_SLOT_PER_SCREW_BOX = 3;
     public static int DEFAULT_INITIAL_NUMBER_SCREW_BOXES = 2;
     public static int DEFAULT_NUMBER_SCREW_PORT = 5;
     public static GameFaction[] SCREW_FACTION = new GameFaction[8]

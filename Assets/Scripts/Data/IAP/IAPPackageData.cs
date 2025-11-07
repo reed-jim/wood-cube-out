@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/IAPPackageData")]
+[CreateAssetMenu(menuName = "WoodCube/IAPPackageData")]
 public class IAPPackageData : ScriptableObject
 {
     [SerializeField] private string productId;

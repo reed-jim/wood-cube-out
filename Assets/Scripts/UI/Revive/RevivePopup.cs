@@ -39,7 +39,6 @@ public class RevivePopup : BasePopup
     public static event Action<BoosterType> reviveEvent;
     public static event Action reviveRefusedEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
-    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -30,6 +31,7 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private RectTransform openRemoveAdPopupButtonRT;
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
+    // [SerializeField] private Button openFacebookGroupButton;
 
     #region SALE PACK BUTTONS
     [SerializeField] private Button[] openSaleIAPPackButtons;
@@ -57,6 +59,7 @@ public class MenuScreen : MonoBehaviour
     private Tween _openRemoveAdPopupButtonTween;
     private Tween _openUnlockScrewBoxesPopupButtonTween;
     private Tween _topBarDividerTween;
+    private bool _isGameStarted;
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
@@ -87,8 +90,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openCoinChallengePopupEvent += OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent += OnRemoteConfigReady;
 
-        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
-
         startGameButton.onClick.AddListener(StartGame);
         openRemoveAdPopupButton.onClick.AddListener(OpenRemoveAdPopup);
         openAllScrewBoxesForeverButton.onClick.AddListener(OpenUnlockAllScrewBoxesForeverPopup);
@@ -103,6 +104,7 @@ public class MenuScreen : MonoBehaviour
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
+        // openFacebookGroupButton.onClick.AddListener(OpenFacebookGroupPopup);
 
         #region SALE IAP PACKS
         openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
@@ -136,9 +138,12 @@ public class MenuScreen : MonoBehaviour
         currentLevel.Load();
         canvasSize.Load();
 
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+    }
 
-        // PreventSpammingStartButton();
+    void OnEnable()
+    {
+        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private async Task Start()
@@ -182,8 +187,6 @@ public class MenuScreen : MonoBehaviour
         GameEventManager.openCoinChallengePopupEvent -= OpenCoinChallengePopup;
         RemoteConfigController.remoteConfigReadyEvent -= OnRemoteConfigReady;
 
-        localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
-
         CommonUtil.StopAllTweens(_tweens);
     }
 
@@ -194,30 +197,22 @@ public class MenuScreen : MonoBehaviour
         _tweens.Add(Tween.Delay(0.5f).OnComplete(() =>
         {
             startGameButton.interactable = true;
-
-            // startGameButton.gameObject.SetActive(true);
-
-            // startGameButton.transform.localScale = Vector3.one;
-
-            // _tweens.Add(Tween.Scale(startGameButton.transform, 1.1f, duration: 0.3f)
-            // .OnComplete(() =>
-            // {
-            //     _tweens.Add(Tween.Scale(startGameButton.transform, 1f, duration: 0.1f)
-            //     .OnComplete(() =>
-            //     {
-            //         startGameButton.interactable = true;
-            //     }));
-            // }));
         }));
     }
 
     private void OnLevelTextTranslated()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void StartGame()
     {
+        // DebugLogger.LogSimple();
+        if (_isGameStarted)
+        {
+            return;
+        }
+
         // if (currentLevel.Value > 10)
         // {
         //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
@@ -228,11 +223,10 @@ public class MenuScreen : MonoBehaviour
         //     }
         // }
 
-        if (
-            GamePersistentVariable.livesConfig.isActive &&
-            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0
-        )
+        if (GamePersistentVariable.livesConfig.isActive &&
+            DataUtility.Load(GameConstants.USER_LIVES_DATA, new LivesData()).CurrentLives == 0)
         {
+            DebugLogger.LogSimple(message: "Place 1");
             switchRouteEvent?.Invoke(ScreenRoute.LivesShop);
 
             GamePersistentVariable.isPendingStartLevel = true;
@@ -242,6 +236,7 @@ public class MenuScreen : MonoBehaviour
 
         if (GamePersistentVariable.isEnableLoadingLevelInProgress)
         {
+            DebugLogger.LogSimple(message: "Place 2");
             GamePersistentVariable.isLoadingLevelInProgress = false;
 
             if (CommonUtil.IsLevelInProgress(currentLevel.Value))
@@ -251,11 +246,14 @@ public class MenuScreen : MonoBehaviour
             else
             {
                 Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                _isGameStarted = true;
             }
         }
         else
         {
+            // DebugLogger.LogSimple(message:"Place 3");
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            _isGameStarted = true;
         }
 
         startGameButton.interactable = false;
@@ -390,6 +388,11 @@ public class MenuScreen : MonoBehaviour
     private void OpenEditProfilePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
+    }
+
+    private void OpenFacebookGroupPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.FacebookGroup);
     }
 
     #region SALE PACKS
@@ -528,14 +531,14 @@ public class MenuScreen : MonoBehaviour
 
     private void UpdateCurrentLevelText()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void UpdateCurrentLevelTextOnBackup()
     {
         currentLevel.Load();
 
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        // localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void OnScreenRouteSwitched(ScreenRoute screenRoute)

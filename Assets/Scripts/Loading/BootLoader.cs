@@ -30,6 +30,8 @@ public class BootLoader : MonoBehaviour
         if (handle.Status == AsyncOperationStatus.Succeeded)
         {
             Debug.Log("SAFERIO Catalog loaded successfully.");
+            
+            
 
             Addressables.LoadSceneAsync(GameConstants.LOADING_SCENE);
         }

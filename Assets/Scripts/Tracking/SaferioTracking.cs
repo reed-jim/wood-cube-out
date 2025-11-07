@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using AppsFlyerSDK;
 using Firebase.Analytics;
 using UnityEngine;
 using static GameEnum;
@@ -132,6 +134,18 @@ public static class SaferioTracking
 #endif
     }
 
+    public static void TrackIAPCompleteEventAppsflyer(string revenue)
+    {
+#if !UNITY_EDITOR
+        Dictionary<string, string> eventValues = new Dictionary<string, string>();
+        eventValues.Add(AFInAppEvents.CURRENCY, "USD");
+        eventValues.Add(AFInAppEvents.REVENUE, revenue);
+        eventValues.Add("af_quantity", "1");
+
+        AppsFlyer.sendEvent(AFInAppEvents.PURCHASE, eventValues);
+#endif
+    }
+
     public static void TrackInvalidIAPEvent(string reason)
     {
 #if !UNITY_EDITOR
@@ -169,6 +183,13 @@ public static class SaferioTracking
         FirebaseAnalytics.LogEvent("interstitial_ad_completed", parameters);
 #endif
     }
+
+    #region USER PROPERTY
+    public static void TrackNumLevelPassed(int numLevelPassed)
+    {
+        FirebaseAnalytics.SetUserProperty("num_level_passed", $"{numLevelPassed}");
+    }
+    #endregion
 
     #region COMPENSATE
     public static void TrackClaimCompensateReward(string code, string deviceId)

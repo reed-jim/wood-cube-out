@@ -57,7 +57,9 @@ public class GameVariableInitializer : MonoBehaviour
 
         GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
 
-        UserData.IsRemoveAds = true;
+        GamePersistentVariable.longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
+
+        GamePersistentVariable.specialLevelConfig = new SpecialLevelConfig(){isEnable =  true};
     }
 
     private void Start()

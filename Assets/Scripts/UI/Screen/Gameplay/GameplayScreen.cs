@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -9,11 +11,11 @@ using static GameEnum;
 
 public class GameplayScreen : Singleton<GameplayScreen>
 {
+    [Header("Buttons")]
+    [SerializeField] private Button helpButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
-    [SerializeField] private Button debugNextLevelButton;
-    [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
 
@@ -28,15 +30,21 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
 
+    #region MonoBehaviour Callbacks
+
     protected override void MoreActionOnAwake()
     {
-        localizedLevelText.textTranslatedEvent += OnLevelTextTranslated;
         LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setLevelNumberEvent += SetLevelText;
         ScrewManager.updateRemainingScrewEvent += UpdateRemainingScrew;
+        ScrewManager.winLevelEvent += OnLevelWin;
+        ScrewBoxManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
-
+        LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
+        
         pauseButton.onClick.AddListener(Pause);
+        helpButton.onClick.AddListener(OnClickHelp);
+        
         skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
@@ -52,17 +60,66 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     void OnDestroy()
     {
-        localizedLevelText.textTranslatedEvent -= OnLevelTextTranslated;
         LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setLevelNumberEvent -= SetLevelText;
         ScrewManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        ScrewManager.winLevelEvent -= OnLevelWin;
+        ScrewBoxManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
     }
 
+    #endregion
+    
+    #region Private Methods
+
+    private void OnLevelWin()
+    {
+        helpButton.gameObject.SetActive(false);
+    }
+
+    private void OnLevelLose()
+    {
+        helpButton.gameObject.SetActive(false);
+    }
+    
+    private void ToggleHelpButton(bool isActive)
+    {
+        DebugLogger.LogSimple(message:$"isActive: {isActive}");
+        // guard against missing reference or destroyed object
+        if (helpButton == null)
+        {
+            DebugLogger.LogSimple(message: "helpButton is null. Assign it in the GameplayScreen inspector.", color: Color.yellow);
+            return;
+        }
+        if (helpButton.gameObject == null)
+        {
+            DebugLogger.LogSimple(message: "helpButton GameObject is missing/destroyed.", color: Color.yellow);
+            return;
+        }
+
+        // only toggle if state changes
+        if (helpButton.gameObject.activeSelf != isActive)
+        {
+            helpButton.gameObject.SetActive(isActive);
+        }
+    }
+
+    #endregion
+
+    #region Button Events
+    
     private async void Pause()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
     }
+    
+    private void OnClickHelp()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
+    }
+    
+    #endregion
 
     private void OpenDebugPopupButton()
     {

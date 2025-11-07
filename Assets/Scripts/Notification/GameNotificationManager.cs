@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Notifications.Android;
 using UnityEngine;
 
@@ -19,6 +20,13 @@ public class GameNotificationManager : MonoBehaviour
 
             DontDestroyOnLoad(gameObject);
         }
+
+        StartCoroutine(DelayInit());
+    }
+
+    private IEnumerator DelayInit()
+    {
+        yield return new WaitForSeconds(7);
 
         if (Application.platform == RuntimePlatform.Android)
         {

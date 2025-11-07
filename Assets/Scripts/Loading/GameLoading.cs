@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
@@ -48,6 +49,8 @@ public class GameLoading : MonoBehaviour
     private AsyncOperationHandle _menuSceneHandle;
 
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -65,6 +68,7 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
+            DebugLogger.LogSimple();
             Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
@@ -85,6 +89,8 @@ public class GameLoading : MonoBehaviour
 
         CommonUtil.StopAllTweens(_tweens);
     }
+
+    #endregion
 
     private IEnumerator SlowTransititon()
     {

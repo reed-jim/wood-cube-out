@@ -406,6 +406,7 @@ public class FirebaseConfig
 {
     #region SAFERIO
     public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
+    public const string specialLevelDifficultyMultiplier = "special_level_difficulty_multiplier";
     public const string ENABLE_JOINT = "enable_joint";
     public const string IS_ENABLE_HINGE_JOINT = "is_enable_hinge_joint";
     public const string IS_SHOW_BANNER = "is_show_banner";
@@ -446,6 +447,10 @@ public class FirebaseConfig
     public const string DAILY_REWARD_CONFIG = "daily_reward_config";
     public const string COIN_CHALLENGE_CONFIG = "coin_challenge_config";
     public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
+    public const string SCREW_HOLE_LEFT_TO_LOSE = "screw_hole_left_to_lose";
+    public const string longTermUserDifficultyConfig = "long_term_user_difficulty_config";
+    public const string specialLevelConfig = "special_level_config";
+    public const string isDisableLoopLevel = "isTester";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

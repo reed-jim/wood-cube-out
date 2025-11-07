@@ -55,6 +55,15 @@ public class CoinChallengeConfig
     }
 }
 
+#region DIFFICULTY
+public class LongTermUserDifficultyConfig
+{
+    public bool isEnable;
+    public int minLevel;
+    public float difficultyMultiplier;
+}
+#endregion
+
 #region LIVES SYSTEM
 [System.Serializable]
 public class LivesConfig
@@ -86,5 +95,13 @@ public class DoubleInterAdsConfig
     {
         return isEnable && GamePersistentVariable.currentLevel >= minLevel && isEnableInterPopupInteract;
     }
+}
+#endregion
+
+#region SPECIAL LEVEL
+[System.Serializable]
+public class SpecialLevelConfig
+{
+    public bool isEnable;
 }
 #endregion

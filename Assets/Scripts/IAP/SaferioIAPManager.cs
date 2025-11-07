@@ -67,7 +67,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
             googlePlayStoreProducts[i].ProductType = ProductType.Consumable;
         }
 
-        Init();
+        StartCoroutine(DelayInit());
 
         DontDestroyOnLoad(gameObject);
 
@@ -92,6 +92,13 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
         UnlockAllScrewBoxesForeverPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         DailyOfferPopup.requestFetchIAPPrice -= FetchLocalizedPrice;
         PackageIAPUnderPopupSwiper.requestFetchIAPPrice -= FetchLocalizedPrice;
+    }
+
+    private IEnumerator DelayInit()
+    {
+        yield return new WaitForSeconds(6);
+
+        Init();
     }
 
     private void Init()
@@ -287,6 +294,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         SaferioTracking.TrackIAPEventCostCenter(currentLevel.Value, productData.Price, "$", productData.ProductId);
+                        SaferioTracking.TrackIAPCompleteEventAppsflyer($"{productData.Price}");
 
                         // // Simulate DELAY on iOS    
                         // Tween.Delay(3).OnComplete(() =>

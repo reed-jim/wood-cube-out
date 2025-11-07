@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class SettingPopup : BasePopup
     [SerializeField] private SaferioToggle vibrationToggle;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
+    [SerializeField] private Button adPreferencesButton;
+    [SerializeField] private Button openFacebookGroupButton;
 
     #region LANGUAGE
     [SerializeField] private RectTransform chooseLanguageContainer;
@@ -50,7 +53,9 @@ public class SettingPopup : BasePopup
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
+        adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
         openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
         {
@@ -157,6 +162,7 @@ public class SettingPopup : BasePopup
     private void Rate()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Rate);
+        // switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
     }
     #endregion
 
@@ -164,11 +170,25 @@ public class SettingPopup : BasePopup
     private void OpenCompensatePopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Compensate);
+        // switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
     }
     #endregion
 
     private void OpenBackupPopup()
     {
+        DebugLogger.LogSimple();
         switchRouteEvent?.Invoke(ScreenRoute.Backup);
+        // switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
+    }
+
+    private void OpenUserConsentPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
+        // switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
+    }
+
+    private void OpenFacebookGroup()
+    {
+        Application.OpenURL("https://www.facebook.com/groups/2018540212314555");
     }
 }

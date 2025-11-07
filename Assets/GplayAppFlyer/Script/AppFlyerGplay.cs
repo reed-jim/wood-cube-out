@@ -36,9 +36,9 @@ public class AppFlyerGplay : MonoBehaviour, IAppsFlyerConversionData
 
         AppsFlyer.setIsDebug(isDebug);
         AppsFlyer.initSDK(devKey, appId, getConversionData ? this : null);
-#if UNITY_IOS && !UNITY_EDITOR
-        AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
-#endif
+// #if UNITY_IOS && !UNITY_EDITOR
+//         AppsFlyer.waitForATTUserAuthorizationWithTimeoutInterval(60);
+// #endif
         AppsFlyer.startSDK();
     }
 

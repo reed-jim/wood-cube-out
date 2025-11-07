@@ -3,87 +3,90 @@ using System.Threading.Tasks;
 using UnityEngine;
 using static GameEnum;
 
-public class GameTaskManager : MonoBehaviour
+namespace NamPhuThuy.GamePlay
 {
-    private BaseWeeklyTask[] _tasks;
-
-    public BaseWeeklyTask[] Tasks
+    public class GameTaskManager : MonoBehaviour
     {
-        get => _tasks;
-    }
+        private BaseWeeklyTask[] _tasks;
 
-    private void Awake()
-    {
-        _tasks = LoadTasks();
-
-        InitTasks();
-
-        StartCoroutine(PeriodicallySaving());
-    }
-
-    private IEnumerator PeriodicallySaving()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(2);
-
-        while (true)
+        public BaseWeeklyTask[] Tasks
         {
-            yield return waitForSeconds;
-
-            SaveTasks();
+            get => _tasks;
         }
-    }
 
-    private void InitTasks()
-    {
-        for (int i = 0; i < _tasks.Length; i++)
+        private void Awake()
         {
-            _tasks[i].Init();
+            _tasks = LoadTasks();
+
+            InitTasks();
+
+            StartCoroutine(PeriodicallySaving());
         }
-    }
 
-    private BaseWeeklyTask[] LoadTasks()
-    {
-        BaseWeeklyTask[] tasks = DataUtility.Load(GameConstants.SAVE_FILE_NAME, GameConstants.WEEKLY_TASKS, new BaseWeeklyTask[2]);
-
-        if (tasks[0] == null)
+        private IEnumerator PeriodicallySaving()
         {
-            for (int i = 0; i < tasks.Length; i++)
+            WaitForSeconds waitForSeconds = new WaitForSeconds(2);
+
+            while (true)
             {
-                tasks[i] = GenerateTask();
+                yield return waitForSeconds;
+
+                SaveTasks();
             }
         }
 
-        return tasks;
-    }
-
-    public void SaveTasks()
-    {
-        DataUtility.SaveAsync(GameConstants.SAVE_FILE_NAME, GameConstants.WEEKLY_TASKS, _tasks);
-    }
-
-    private BaseWeeklyTask GenerateTask()
-    {
-        BaseWeeklyTask task;
-
-        TaskType randomTaskType = GetRandomEnumValue<TaskType>();
-
-        int randomDifficultyFactor = Random.Range(1, 5);
-
-        if (randomTaskType == TaskType.Uncrew)
+        private void InitTasks()
         {
-            task = new UnscrewTask();
-
-            task.RequirementValue = randomDifficultyFactor * 50;
-        }
-        else
-        {
-            task = new CompleteLevelTask();
-
-            task.RequirementValue = randomDifficultyFactor * 2;
+            for (int i = 0; i < _tasks.Length; i++)
+            {
+                _tasks[i].Init();
+            }
         }
 
-        task.Reward = randomDifficultyFactor * 2;
+        private BaseWeeklyTask[] LoadTasks()
+        {
+            BaseWeeklyTask[] tasks = DataUtility.Load(GameConstants.SAVE_FILE_NAME, GameConstants.WEEKLY_TASKS, new BaseWeeklyTask[2]);
 
-        return task;
+            if (tasks[0] == null)
+            {
+                for (int i = 0; i < tasks.Length; i++)
+                {
+                    tasks[i] = GenerateTask();
+                }
+            }
+
+            return tasks;
+        }
+
+        public void SaveTasks()
+        {
+            DataUtility.SaveAsync(GameConstants.SAVE_FILE_NAME, GameConstants.WEEKLY_TASKS, _tasks);
+        }
+
+        private BaseWeeklyTask GenerateTask()
+        {
+            BaseWeeklyTask task;
+
+            TaskType randomTaskType = GetRandomEnumValue<TaskType>();
+
+            int randomDifficultyFactor = Random.Range(1, 5);
+
+            if (randomTaskType == TaskType.Uncrew)
+            {
+                task = new UnscrewTask();
+
+                task.RequirementValue = randomDifficultyFactor * 50;
+            }
+            else
+            {
+                task = new CompleteLevelTask();
+
+                task.RequirementValue = randomDifficultyFactor * 2;
+            }
+
+            task.Reward = randomDifficultyFactor * 2;
+
+            return task;
+        }
     }
 }

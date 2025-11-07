@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Events;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -34,6 +36,21 @@ public class BasePopup : MonoBehaviour
     public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
+    
+    /*[Header("Event Channels")]
+    [SerializeField] protected SwitchRouteChannelSO switchRouteChannel;
+    protected SwitchRouteChannelSO SwitchRouteChannel
+    {
+        get
+        {
+            if (switchRouteChannel == null)
+            {
+                switchRouteChannel = Resources.Load<SwitchRouteChannelSO>(nameof(SwitchRouteChannelSO));
+            }
+            return switchRouteChannel;
+        }
+    }*/
+   
     #endregion
 
     private void Awake()
@@ -43,12 +60,15 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
+        LevelLoader.switchRouteEvent += OnRouteSwitched;
+        
         SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
-        RevivePopup.switchRouteEvent += OnRouteSwitched;
-        LevelLoader.switchRouteEvent += OnRouteSwitched;
         PausePopup.switchRouteEvent += OnRouteSwitched;
+        
+        // SwitchRouteChannel.Event += OnRouteSwitched;
+        
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
 
@@ -93,15 +113,20 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
-        SettingPopup.switchRouteEvent -= OnRouteSwitched;
-        IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
-        RevivePopup.switchRouteEvent -= OnRouteSwitched;
+       
+        
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
-        PausePopup.switchRouteEvent -= OnRouteSwitched;
+        
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
+        PausePopup.switchRouteEvent -= OnRouteSwitched;
+        SettingPopup.switchRouteEvent -= OnRouteSwitched;
+        IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
+        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
+        
+        // SwitchRouteChannel.Event -= OnRouteSwitched;
+        
         UnregisterMoreEvent();
 
         CommonUtil.StopAllTweens(_tweens);

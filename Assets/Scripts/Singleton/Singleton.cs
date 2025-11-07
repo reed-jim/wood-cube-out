@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
 {
-    public static T Instance;
+    public static T Ins;
 
     // Ensure only one instance exists
     protected virtual void Awake()
     {
-        if (Instance != null && Instance != this)
+        if (Ins != null && Ins != this)
         {
             gameObject.SetActive(false);
 
@@ -15,7 +15,7 @@ public class Singleton<T> : MonoBehaviour where T : MonoBehaviour
         }
         else
         {
-            Instance = this as T;
+            Ins = this as T;
         }
 
         MoreActionOnAwake();

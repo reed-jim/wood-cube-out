@@ -1,130 +1,129 @@
-using System.Collections;
-using Google.Play.Review;
-using UnityEngine;
-// using UnityEngine.iOS;
+// using System.Collections;
+// using Google.Play.Review;
+// using UnityEngine;
 
-public class InAppReviewManager : MonoBehaviour
-{
-#if UNITY_ANDROID
-    private ReviewManager _reviewManager;
-    private PlayReviewInfo _playReviewInfo;
-    private Coroutine _coroutine;
-#endif
-
-//     void Awake()
-//     {
-//         RatePopup.launchInAppReviewEvent += RateAndReview;
-//     }
-
-//     private void Start()
-//     {
+// public class InAppReviewManager : MonoBehaviour
+// {
 // #if UNITY_ANDROID
-//         _coroutine = StartCoroutine(InitReview());
+//     private ReviewManager _reviewManager;
+//     private PlayReviewInfo _playReviewInfo;
+//     private Coroutine _coroutine;
+// #endif
+
+// //     void Awake()
+// //     {
+// //         RatePopup.launchInAppReviewEvent += RateAndReview;
+// //     }
+
+// //     private void Start()
+// //     {
+// // #if UNITY_ANDROID
+// //         _coroutine = StartCoroutine(InitReview());
+// // #endif
+// //     }
+
+// //     void OnDestroy()
+// //     {
+// //         RatePopup.launchInAppReviewEvent += RateAndReview;
+// //     }
+
+//     public void RateAndReview()
+//     {
+// #if UNITY_IOS
+//         Device.RequestStoreReview();
+// #elif UNITY_ANDROID
+//         StartCoroutine(LaunchReview());
 // #endif
 //     }
 
-//     void OnDestroy()
+// #if UNITY_ANDROID
+//     private IEnumerator InitReview(bool force = false)
 //     {
-//         RatePopup.launchInAppReviewEvent += RateAndReview;
+//         if (_reviewManager == null) _reviewManager = new ReviewManager();
+
+//         var requestFlowOperation = _reviewManager.RequestReviewFlow();
+//         yield return requestFlowOperation;
+//         if (requestFlowOperation.Error != ReviewErrorCode.NoError)
+//         {
+//             if (force) OpenReviewPage();
+//             yield break;
+//         }
+
+//         _playReviewInfo = requestFlowOperation.GetResult();
 //     }
 
-    public void RateAndReview()
-    {
-#if UNITY_IOS
-        Device.RequestStoreReview();
-#elif UNITY_ANDROID
-        StartCoroutine(LaunchReview());
-#endif
-    }
+//     public IEnumerator LaunchReview()
+//     {
+//         if (_playReviewInfo == null)
+//         {
+//             if (_coroutine != null) StopCoroutine(_coroutine);
+//             yield return StartCoroutine(InitReview(true));
+//         }
 
-#if UNITY_ANDROID
-    private IEnumerator InitReview(bool force = false)
-    {
-        if (_reviewManager == null) _reviewManager = new ReviewManager();
+//         var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
+//         yield return launchFlowOperation;
+//         _playReviewInfo = null;
+//         if (launchFlowOperation.Error != ReviewErrorCode.NoError)
+//         {
+//             OpenReviewPage();
+//             yield break;
+//         }
+//     }
+// #endif
 
-        var requestFlowOperation = _reviewManager.RequestReviewFlow();
-        yield return requestFlowOperation;
-        if (requestFlowOperation.Error != ReviewErrorCode.NoError)
-        {
-            if (force) OpenReviewPage();
-            yield break;
-        }
+//     public void OpenReviewPage()
+//     {
+//         string url = "https://play.google.com/store/apps/details?id=com.gplay.wood.cube.out";
 
-        _playReviewInfo = requestFlowOperation.GetResult();
-    }
+//         Application.OpenURL(url);
+//     }
 
-    public IEnumerator LaunchReview()
-    {
-        if (_playReviewInfo == null)
-        {
-            if (_coroutine != null) StopCoroutine(_coroutine);
-            yield return StartCoroutine(InitReview(true));
-        }
+//     // private ReviewManager _reviewManager;
+//     // private PlayReviewInfo _playReviewInfo;
 
-        var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
-        yield return launchFlowOperation;
-        _playReviewInfo = null;
-        if (launchFlowOperation.Error != ReviewErrorCode.NoError)
-        {
-            OpenReviewPage();
-            yield break;
-        }
-    }
-#endif
+//     // private void Awake()
+//     // {
+//     //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
 
-    public void OpenReviewPage()
-    {
-        string url = "https://play.google.com/store/apps/details?id=com.gplay.wood.cube.out";
+//     //     _reviewManager = new ReviewManager();
+//     // }
 
-        Application.OpenURL(url);
-    }
+//     // private void OnDestroy()
+//     // {
+//     //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
+//     // }
 
-    // private ReviewManager _reviewManager;
-    // private PlayReviewInfo _playReviewInfo;
+//     // private void LaunchInAppReview()
+//     // {
+//     //     StartCoroutine(LaunchingInAppReview());
+//     // }
 
-    // private void Awake()
-    // {
-    //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
+//     // private IEnumerator LaunchingInAppReview()
+//     // {
+//     //     var requestFlowOperation = _reviewManager.RequestReviewFlow();
 
-    //     _reviewManager = new ReviewManager();
-    // }
+//     //     yield return requestFlowOperation;
 
-    // private void OnDestroy()
-    // {
-    //     RatePopup.launchInAppReviewEvent += LaunchInAppReview;
-    // }
+//     //     if (requestFlowOperation.Error != ReviewErrorCode.NoError)
+//     //     {
+//     //         yield break;
+//     //     }
 
-    // private void LaunchInAppReview()
-    // {
-    //     StartCoroutine(LaunchingInAppReview());
-    // }
+//     //     _playReviewInfo = requestFlowOperation.GetResult();
 
-    // private IEnumerator LaunchingInAppReview()
-    // {
-    //     var requestFlowOperation = _reviewManager.RequestReviewFlow();
+//     //     yield return new WaitForSeconds(3);
 
-    //     yield return requestFlowOperation;
+//     //     var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
 
-    //     if (requestFlowOperation.Error != ReviewErrorCode.NoError)
-    //     {
-    //         yield break;
-    //     }
+//     //     yield return launchFlowOperation;
 
-    //     _playReviewInfo = requestFlowOperation.GetResult();
+//     //     _playReviewInfo = null;
 
-    //     yield return new WaitForSeconds(3);
+//     //     Debug.Log("SAFERIO " + launchFlowOperation.IsDone + "/" + launchFlowOperation.IsSuccessful);
 
-    //     var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
-
-    //     yield return launchFlowOperation;
-
-    //     _playReviewInfo = null;
-
-    //     Debug.Log("SAFERIO " + launchFlowOperation.IsDone + "/" + launchFlowOperation.IsSuccessful);
-
-    //     if (launchFlowOperation.Error != ReviewErrorCode.NoError)
-    //     {
-    //         yield break;
-    //     }
-    // }
-}
+//     //     if (launchFlowOperation.Error != ReviewErrorCode.NoError)
+//     //     {
+//     //         yield break;
+//     //     }
+//     // }
+// }

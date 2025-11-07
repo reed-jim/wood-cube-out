@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public enum CloudStorageRequest
@@ -33,11 +34,19 @@ public static class GamePersistentVariable
     public static Vector3 levelOffset;
     public static Vector3 boxForOutsideScrewScreenPosition;
     public static RaycastHit lastScrewSelectedSurfaceHit;
+    public static bool isDisableLoopLevel;
+    public static LevelMode currentLevelMode;
     #endregion
 
     #region LEVEL DIFFICULTY
     public static float userBasedLevelDifficulty;
     public static bool isHardMode;
+    public static LongTermUserDifficultyConfig longTermUserDifficultyConfig;
+    #endregion
+
+    #region SPECIAL LEVEL
+    public static SpecialLevelConfig specialLevelConfig;
+    public static LevelMode currentTutLevelMode;
     #endregion
 
     #region LEVEL IN PROGRESS
@@ -88,6 +97,10 @@ public static class GamePersistentVariable
     public static bool isFirebaseRemoteConfigLoaded;
     #endregion
 
+    #region CORE GAMEPLAY CONFIG
+    public static int screwHoleLeftToLose;
+    #endregion
+
     #region ADS
     public static bool isShowBanner;
     public static bool remoteConfigIsShowMREC;
@@ -96,6 +109,7 @@ public static class GamePersistentVariable
     public static int minLevelDisableRewardedAds;
     public static ActionWatchVideo currentReasonRewardedAd;
     public static DoubleInterAdsConfig doubleInterAdsConfig;
+    public static bool isUMPPersonalizedAdsConsent;
     #endregion
 
     #region LIVES SYSTEM

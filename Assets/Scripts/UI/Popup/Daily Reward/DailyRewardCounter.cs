@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using Lean.Localization;
 using PrimeTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +18,9 @@ public class DailyRewardCounter : SaferioTweenBehaviour
     [SerializeField] private LeanLocalizedTextMeshProUGUI unlockLevelText;
 
     [SerializeField] private IntVariable currentLevel;
+
+    [Header("Components")] 
+    [SerializeField] private SkeletonGraphic giftSkeGraphics;
 
     protected override void MoreActionInAwake()
     {
@@ -34,7 +38,16 @@ public class DailyRewardCounter : SaferioTweenBehaviour
 
     void OnEnable()
     {
+        giftSkeGraphics?.gameObject.SetActive(true);
+        StartCoroutine(IEEnableGiftSkeGraphicsDelay(1.5f));
         Refresh();
+        
+        IEnumerator IEEnableGiftSkeGraphicsDelay(float delay)
+        {
+            
+            yield return new WaitForSeconds(delay);
+            giftSkeGraphics?.gameObject.SetActive(true);
+        }
     }
 
     private void OnRemoteConfigReady()

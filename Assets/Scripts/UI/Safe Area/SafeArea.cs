@@ -4,6 +4,7 @@ public class SafeArea : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
 
+    /*SendMessage cannot be called during Awake, CheckConsistency, or OnValidate */
     private void Awake()
     {
         AdjustToSafeArea();

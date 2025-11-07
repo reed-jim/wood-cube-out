@@ -1,4 +1,6 @@
 using System;
+using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;
 using Unity.VisualScripting;
@@ -58,6 +60,7 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
     public void SetNumber()
     {
+        DebugLogger.LogSimple();
         bool isUnlocked = currentLevel.Value >= 30;
 
         if (!isUnlocked || _isCompleted)
@@ -90,6 +93,7 @@ public class CoinChallengeGameplayUI : SaferioTweenBehaviour
 
     private void OnLevelLoaded()
     {
+        // DebugLogger.LogSimple();
         _data = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
 
         currentLevel.Load();

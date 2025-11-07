@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Threading.Tasks;
+using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

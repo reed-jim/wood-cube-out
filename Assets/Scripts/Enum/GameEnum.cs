@@ -5,7 +5,7 @@ public class GameEnum : MonoBehaviour
 {
     public enum ScreenRoute
     {
-        Waiting,
+        Waiting = 0,
         Lobby,
         LobbyRoom,
         Screen1,
@@ -65,7 +65,10 @@ public class GameEnum : MonoBehaviour
         JoinSpaceRace,
         StarTournament,
         EditProfile,
-        ChooseDifficulty
+        ChooseDifficulty,
+        UserConsent,
+        SpecialLevelTutorial,
+        FacebookGroup
     }
 
     public enum GameFaction

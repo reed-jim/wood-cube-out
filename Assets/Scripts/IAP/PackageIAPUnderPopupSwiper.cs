@@ -38,6 +38,12 @@ public class PackageIAPUnderPopupSwiper : MonoBehaviour, IPointerDownHandler, IP
 
     private void OnEnable()
     {
+        // temp
+        target.gameObject.SetActive(false);
+
+        return;
+        //
+        
         try
         {
             target.gameObject.SetActive(true);

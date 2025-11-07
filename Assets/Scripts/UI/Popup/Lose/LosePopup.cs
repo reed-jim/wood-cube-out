@@ -1,5 +1,6 @@
 using System;
 using Firebase.RemoteConfig;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -17,7 +18,6 @@ public class LosePopup : BasePopup
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
-    [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelObserver levelObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
@@ -82,7 +82,7 @@ public class LosePopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
         // don't track loop level CostCenter
-        if (currentLevel.Value <= levelDataContainer.MaxLevel)
+        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Lose.ToString());
         }

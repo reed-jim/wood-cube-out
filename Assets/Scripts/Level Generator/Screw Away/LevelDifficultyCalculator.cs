@@ -1,6 +1,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.Data;
+using NamPhuThuy.GamePlay;
 using Unity.Mathematics;
 using UnityEngine;
 using static GameEnum;
@@ -201,9 +203,6 @@ public class LevelDifficultyCalculator : EditorWindow
         prefabPath = $"Assets/Prefabs/Screw Away/Levels/Level {level}.prefab";
 
         GameObject levelPrefab = PrefabUtility.LoadPrefabContents(prefabPath);
-
-        _currentLevelDifficultyConfiguration = levelDataContainer.GetLevelDifficultyConfiguration(level);
-
 
 
         // Number Screw difficulty
@@ -460,7 +459,6 @@ public class LevelDifficultyCalculator : EditorWindow
             }
         }
 
-        levelDataContainer.SetLevelDifficultyConfiguration(level, generatedLevelPhases.ToArray());
     }
 
     #region SCREW
@@ -587,13 +585,34 @@ public static class LevelDifficultyCalculatorUltility
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
         float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0.0f);
 
+        if (GamePersistentVariable.currentLevelMode != LevelMode.Normal)
+        {
+            DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.specialLevelDifficultyMultiplier, 0.0f);
+        }
+
+        try
+        {
+            LongTermUserDifficultyConfig longTermUserDifficultyConfig = GamePersistentVariable.longTermUserDifficultyConfig;
+
+            if (longTermUserDifficultyConfig.isEnable)
+            {
+                if (level >= longTermUserDifficultyConfig.minLevel)
+                {
+                    DIFFICULTY_MULTIPLIER = longTermUserDifficultyConfig.difficultyMultiplier;
+                }
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
+
         float MAX_SCREW_BOXES_GENERATION_DIFFICULTY = Mathf.Pow(2, GameConstants.SCREW_FACTION.Length - 1);
 
         List<LevelPhase> generatedLevelPhases = new List<LevelPhase>();
 
         int PREDICTED_MAX_LEVEL = 175;
 
-        // float[] weightForModules = new float[5] { 0.08f, 0.12f, 0.18f, 0.4f, 0.22f };
         float[] weightForModules = new float[5] { 0.2f, 0.3f, 0.45f, 1f, 0.55f };
 
         // REMOTE CONFIG
@@ -617,21 +636,6 @@ public static class LevelDifficultyCalculatorUltility
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 
-        // // DEBUG
-        // for (int i = 1; i <= 125; i++)
-        // {
-        //     float test =
-        //     DIFFICULTY_MULTIPLIER *
-        //         (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(i, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)i / PREDICTED_MAX_LEVEL));
-
-        //     test *= (0.4f / 1f);
-
-        //     Debug.Log($"SAFERIO LEVEL {i} - Hard Percent: {test * 100}%");
-        // }
-
-        // // RANDOMIZE
-        // maxPhaseIndex = UnityEngine.Random.Range(GameConstants.SCREW_FACTION.Length / 2, GameConstants.SCREW_FACTION.Length - 1);
-
         for (int i = maxPhaseIndex; i >= 0; i--)
         {
             int phaseIndex = i;
@@ -652,7 +656,6 @@ public static class LevelDifficultyCalculatorUltility
         }
 
         LevelDifficultyConfiguration levelDifficultyConfiguration = new LevelDifficultyConfiguration();
-        // LevelDifficultyConfiguration levelDifficultyConfiguration = ScriptableObject.CreateInstance<LevelDifficultyConfiguration>();
 
         levelDifficultyConfiguration.LevelPhases = generatedLevelPhases.ToArray();
         levelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier = -99;
@@ -740,6 +743,11 @@ public static class LevelDifficultyCalculatorUltility
             for (int i = 0; i < nextPiece.childCount; i++)
             {
                 BaseScrew screw = nextPiece.GetChild(i).GetComponent<BaseScrew>();
+
+                if (screw == null)
+                {
+                    continue;
+                }
 
                 List<Transform> newFoundPieces = GetScrewObstacles(screw.transform, true);
 

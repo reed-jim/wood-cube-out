@@ -79,6 +79,8 @@ public class RemoteConfigController : MonoBehaviour
 
                 FetchAsync();
 
+                SetupAdvancedDataTrackingCostCenter();
+
                 GamePersistentVariable.isFirebaseAvailable = true;
             }
             else
@@ -171,6 +173,32 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
 
+        #region CORE GAMEPLAY CONFIG
+        GamePersistentVariable.screwHoleLeftToLose = /*GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 1)*/1;
+        #endregion
+
+        #region DIFFICULTY
+        LongTermUserDifficultyConfig longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();
+
+        GetJsonConfig(FirebaseConfig.longTermUserDifficultyConfig, out longTermUserDifficultyConfig);
+
+        if (longTermUserDifficultyConfig != null)
+        {
+            GamePersistentVariable.longTermUserDifficultyConfig = longTermUserDifficultyConfig;
+        }
+        #endregion
+
+        #region SPECIAL LEVEL
+        SpecialLevelConfig specialLevelConfig = new SpecialLevelConfig();
+
+        GetJsonConfig(FirebaseConfig.specialLevelConfig, out specialLevelConfig);
+
+        if (specialLevelConfig != null)
+        {
+            GamePersistentVariable.specialLevelConfig = specialLevelConfig;
+        }
+        #endregion
+
         #region DOUBLE INTER
         DoubleInterAdsConfig doubleInterAdsConfig = new DoubleInterAdsConfig();
 
@@ -221,6 +249,15 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.useFakeLeaderboardScore = GetBoolConfig(FirebaseConfig.IS_ENABLE_LEADERBOARD, false);
         #endregion
 
+        #region LOOP LEVEL
+        GamePersistentVariable.isDisableLoopLevel = GetBoolConfig(FirebaseConfig.isDisableLoopLevel, false);
+
+        // if (Application.systemLanguage == SystemLanguage.Vietnamese)
+        // {
+        //     GamePersistentVariable.isDisableLoopLevel = true;
+        // }
+        #endregion
+
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);
@@ -240,6 +277,15 @@ public class RemoteConfigController : MonoBehaviour
             GamePersistentVariable.doubleInterAdsConfig.isEnable = false;
             GamePersistentVariable.isShowBanner = false;
         }
+    }
+    #endregion
+
+    #region COST CENTER
+    private void SetupAdvancedDataTrackingCostCenter()
+    {
+        string attributionId = AppsFlyerSDK.AppsFlyer.getAppsFlyerId();
+
+        Firebase.Analytics.FirebaseAnalytics.SetUserProperty("attribution_id", attributionId);
     }
     #endregion
 }
