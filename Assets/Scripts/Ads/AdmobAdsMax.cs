@@ -114,6 +114,8 @@ public class AdmobAdsMax : MonoBehaviour
 
     public IEnumerator Init()
     {
+        yield break;
+        
         yield return new WaitForSeconds(8);
 
         //countdownAds = 0;
