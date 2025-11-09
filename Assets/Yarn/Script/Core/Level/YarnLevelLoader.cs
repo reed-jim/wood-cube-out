@@ -233,7 +233,7 @@ public class YarnLevelLoader : MonoBehaviour
 
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
-                YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(_pieces);
+                YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(level.transform, _pieces);
 
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 

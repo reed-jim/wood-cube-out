@@ -1199,14 +1199,26 @@ public class YarnGameTool : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
+        level.AddComponent<RotateObject>();
+
+        Material noDepthWriteMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Yarn/Shader/Yarn No Depth Write.shadergraph");
+        PieceMaterialContainer pieceMaterialContainer = AssetDatabase.LoadAssetAtPath<PieceMaterialContainer>("Assets/Yarn/SO/PieceMaterialContainer.asset");
+
         for (int i = 0; i < level.childCount; i++)
         {
             Transform piece = level.GetChild(i);
 
+            piece.gameObject.layer = LayerMask.NameToLayer("Default");
+
             piece.AddComponent<BasePiece>();
             piece.AddComponent<PieceProperty>();
-            piece.AddComponent<PieceMaterialPropertyBlock>();
+            PieceMaterialPropertyBlock pieceMaterialPropertyBlock = piece.AddComponent<PieceMaterialPropertyBlock>();
             piece.AddComponent<PieceServiceLocator>().AssignComponents();
+
+            pieceMaterialPropertyBlock.noDepthWriteMaterial = noDepthWriteMaterial;
+            pieceMaterialPropertyBlock.pieceMaterialContainer = pieceMaterialContainer;
+
+            piece.GetComponent<MeshCollider>().convex = true;
         }
 
         // BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);

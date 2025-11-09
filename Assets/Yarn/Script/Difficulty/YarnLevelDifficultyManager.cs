@@ -121,19 +121,38 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         int numFactionsToAdd = 36;
 
         int index = 0;
-        GameFaction currentFaction = GameFaction.YarnBlue;
+        int currentFactionIndex = 0;
+
+        List<GameFaction> validFactionsForInnerPieces = GetEnumValuesList<GameFaction>();
+
+        foreach (var faction in finalFactions.Keys)
+        {
+            validFactionsForInnerPieces.Remove(faction);
+        }
+
+        validFactionsForInnerPieces.Remove(GameFaction.None);
 
         for (int i = 0; i < numFactionsToAdd; i++)
         {
             if (index % 3 == 0)
             {
                 // currentFaction = GetRandomEnumValue<GameFaction>();
-                currentFaction = (GameFaction)Random.Range(0, 24);
+                // currentFaction = validFactionsForInnerPieces[Random.Range(0, validFactionsForInnerPieces.Count)];
             }
 
-            innerPieceFactions.Add(currentFaction);
+            innerPieceFactions.Add(validFactionsForInnerPieces[currentFactionIndex]);
 
             index++;
+
+            if (index % 3 == 0)
+            {
+                currentFactionIndex++;
+
+                if (currentFactionIndex >= validFactionsForInnerPieces.Count)
+                {
+                    currentFactionIndex = 0;
+                }
+            }
         }
 
         int originalPieceIndex = 0;
@@ -141,7 +160,11 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         Dictionary<BasePiece, Transform> generatedPieces = new Dictionary<BasePiece, Transform>();
 
-        for (int i = 0; i < innerPieceFactions.Count; i++)
+        int totalInnerPieces = innerPieceFactions.Count;
+
+        GameFaction currentInnerPieceFaction = GameFaction.None;
+
+        for (int i = 0; i < totalInnerPieces; i++)
         {
             BasePiece generatedPiece = Instantiate(pieces[originalPieceIndex].gameObject, level).GetComponent<BasePiece>();
 
@@ -149,7 +172,30 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             generatedPieces.Add(generatedPiece, pieces[originalPieceIndex].transform);
 
-            GameFaction faction = innerPieceFactions[i];
+            GameFaction faction = innerPieceFactions.First();
+
+            // List<GameFaction> otherInnerPieceFactionSameParent = new List<GameFaction>();
+
+            // for (int j = 0; j < pieces[originalPieceIndex].transform.childCount; j++)
+            // {
+            //     BasePiece innerPiece = pieces[originalPieceIndex].transform.GetChild(j).GetComponent<BasePiece>();
+
+            //     if (innerPiece != null)
+            //     {
+            //         otherInnerPieceFactionSameParent.Add(innerPiece.Faction);
+            //     }
+            // }
+
+            // Debug.Log("SAFERIO " + otherInnerPieceFactionSameParent.Count + "/" + (innerPieceFactions.Any(item => !otherInnerPieceFactionSameParent.Contains(item))));
+
+            if (innerPieceFactions.Any(item => item != currentInnerPieceFaction))
+            {
+                faction = innerPieceFactions.First(item => item != currentInnerPieceFaction);
+            }
+
+            currentInnerPieceFaction = faction;
+
+            innerPieceFactions.Remove(faction);
 
             generatedPiece.Faction = faction;
             generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
@@ -167,6 +213,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 }
 
                 count = 0;
+                currentInnerPieceFaction = GameFaction.None;
             }
         }
 

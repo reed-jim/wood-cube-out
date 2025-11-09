@@ -6,10 +6,10 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 {
     // [SerializeField] private Material[] materials;
 
-    [SerializeField] private Material noDepthWriteMaterial;
+    [SerializeField] public Material noDepthWriteMaterial;
     private Material _previousMaterial;
 
-    [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
+    [SerializeField] public PieceMaterialContainer pieceMaterialContainer;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private string colorReference;
