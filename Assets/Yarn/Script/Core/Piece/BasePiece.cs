@@ -231,6 +231,11 @@ public class BasePiece : MonoBehaviour
                 pieceServiceLocator.pieceProperty.IsRewinding = true;
             }
 
+            if (!GamePersistentVariable.isLevelDirty)
+            {
+                GamePersistentVariable.isLevelDirty = true;
+            }
+
             BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
 
             if (innerPieces.Length == 1)
