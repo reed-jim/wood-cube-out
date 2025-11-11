@@ -52,6 +52,23 @@ public class GameVariableInitializer : MonoBehaviour
 
         GamePersistentVariable.currentLevel = currentLevel.Value;
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
+        
+        #region Picture Reward Config
+        
+        GalleryRewardConfigItem[] items = new GalleryRewardConfigItem[4] {
+            new GalleryRewardConfigItem(1, 8, 1),
+            new GalleryRewardConfigItem(9, 14,3),
+            new GalleryRewardConfigItem(13, 32,5),
+            new GalleryRewardConfigItem(31, 44,7)
+        };
+
+        RemoteGalleryRewardConfig galleryRewardConfig = new RemoteGalleryRewardConfig(items);
+
+        GamePersistentVariable.galleryRewardConfig = galleryRewardConfig;
+
+        #endregion
+        
+        
         GamePersistentVariable.livesConfig = new LivesConfig();
         GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
 

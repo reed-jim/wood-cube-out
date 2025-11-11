@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
+using NamPhuThuy.UI;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -42,7 +43,13 @@ public class WinPopup : BasePopup
     private int _multiplierCoinWinLevel;
     private int _currentCollectedCoin;
     private bool _isAlreadyWatchRewardedAd;
-
+    
+    [Header("WIN ANIM")]
+    [SerializeField] private bool interactable = true;
+    [SerializeField] private SegmentedProgressBar picRewardProgressBar;
+    private bool isRewardProgressCompleted;
+    
+    
     #region EVENT
     private bool _isCoinChallengeClaimable;
     #endregion
@@ -51,13 +58,34 @@ public class WinPopup : BasePopup
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
 
+
+    #region Override Methods
+
+    protected override void MoreActionInAwake()
+    {
+        base.MoreActionInAwake();
+        picRewardProgressBar.InitRewardProgressBar();
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+        DisableInteract();
+        picRewardProgressBar.SetupRewardProgressBar();
+    }
+
+    protected override void Hide(Action onCompletedAction = null)
+    {
+        base.Hide(onCompletedAction);
+    }
+
     protected override void RegisterMoreEvent()
     {
         GameStateWin.winLevelEvent += OnLevelWinAsync;
         DebugPopup.winLevelEvent += OnLevelWinAsync;
 
-        continueButton.onClick.AddListener(Continue);
-        returnHomeButton.onClick.AddListener(ReturnHome);
+        continueButton.onClick.AddListener(OnClickContinue);
+        returnHomeButton.onClick.AddListener(OnClickHome);
         x5CoinButton.onClick.AddListener(X5Coin);
     }
 
@@ -66,6 +94,9 @@ public class WinPopup : BasePopup
         GameStateWin.winLevelEvent -= OnLevelWinAsync;
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
     }
+    
+
+    #endregion
 
     private async void OnLevelWinAsync()
     {
@@ -113,6 +144,15 @@ public class WinPopup : BasePopup
         SoundManager.Instance.PlaySoundWin();
 
         await Task.Delay(500);
+
+        #region NEW
+
+        picRewardProgressBar.Progress(() =>
+        {
+            EnableInteract();
+        });
+
+        #endregion
 
         _currentCollectedCoin = 0;
 
@@ -196,11 +236,13 @@ public class WinPopup : BasePopup
         }
     }
 
-    private async void Continue()
+    #region Button Events
+
+    private async void OnClickContinue()
     {
         // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
 
-        // await Task.Delay(3000);
+        if (!interactable) return;
 
         if (_isAlreadyWatchRewardedAd)
         {
@@ -225,6 +267,14 @@ public class WinPopup : BasePopup
             }
         }
     }
+    private void OnClickHome()
+    {
+        returnHomeButton.interactable = false;
+
+        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
+    }
+
+    #endregion
 
     private void OnInterstitialAdCompleted()
     {
@@ -288,12 +338,7 @@ public class WinPopup : BasePopup
     }
     #endregion
 
-    private void ReturnHome()
-    {
-        returnHomeButton.interactable = false;
-
-        Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
-    }
+    
 
     private async void TrackLevelWin()
     {
@@ -444,7 +489,7 @@ public class WinPopup : BasePopup
     {
         if (currentLevel.Value == 30 && !DataUtility.Load("Is Coin Challenge Suggested", false))
         {
-            ReturnHome();
+            OnClickHome();
 
             return true;
         }
@@ -453,21 +498,21 @@ public class WinPopup : BasePopup
 
         if (starLevelData.starCollected >= GameConstants.REQUIRE_STAR)
         {
-            ReturnHome();
+            OnClickHome();
 
             return true;
         }
 
         if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
         {
-            ReturnHome();
+            OnClickHome();
 
             return true;
         }
 
         if (_isCoinChallengeClaimable)
         {
-            ReturnHome();
+            OnClickHome();
 
             return true;
         }
@@ -503,5 +548,20 @@ public class WinPopup : BasePopup
             starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
         }
     }
+    
+    
+    #endregion
+    
+    #region Progress
+    private void EnableInteract()
+    {
+        interactable = true;
+    }
+    
+    private void DisableInteract()
+    {
+        interactable = false;
+    }
+
     #endregion
 }

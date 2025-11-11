@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -18,6 +19,7 @@ public class BasePopup : MonoBehaviour
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
     [SerializeField] protected bool isShowingInterAdOnInteract;
+    [SerializeField] protected bool isHideOthers = true;
 
     #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
@@ -54,6 +56,7 @@ public class BasePopup : MonoBehaviour
         PausePopup.switchRouteEvent += OnRouteSwitched;
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
+        PictureRewardSegmentedProgressBar.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -106,6 +109,7 @@ public class BasePopup : MonoBehaviour
         PausePopup.switchRouteEvent -= OnRouteSwitched;
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
+        PictureRewardSegmentedProgressBar.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 
@@ -136,13 +140,15 @@ public class BasePopup : MonoBehaviour
 
     private void OnRouteSwitched(ScreenRoute route)
     {
+        
         if (route == this.route)
         {
             Show();
         }
         else
         {
-            Hide();
+            if (isHideOthers)
+                Hide();
         }
     }
     

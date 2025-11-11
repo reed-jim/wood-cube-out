@@ -164,7 +164,7 @@ namespace NamPhuThuy.UI
                     pictureImageContainer.gameObject.SetActive(false);
                     videoContainer.gameObject.SetActive(true);
 
-                    videoFrame.sizeDelta = new Vector2(0.9f * GamePersistentVariable.canvasSize.x, 0.6f * GamePersistentVariable.canvasSize.y);
+                    videoFrame.sizeDelta = new Vector2(0.8f * GamePersistentVariable.canvasSize.x, 0.5f * GamePersistentVariable.canvasSize.y);
 
                     imageToCalulateSizeForVideo.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
                     imageToCalulateSizeForVideo.FitImageToRectTransform(videoFrame);

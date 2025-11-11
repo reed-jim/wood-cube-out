@@ -52,6 +52,8 @@ public static class GamePersistentVariable
     public static int currentPictureId_PictureDetails;
     public static List<int> picIdList_PictureDetails;
     
+    public static RemoteGalleryRewardConfig galleryRewardConfig;
+    
     
     #endregion
     
