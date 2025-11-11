@@ -46,6 +46,15 @@ public static class GamePersistentVariable
     public static float testDifficultyMultiplier;
     #endregion
 
+    #region PICTURE
+    public static bool isUseVideoBackground;
+    public static int currentPictureId_PictureNew;
+    public static int currentPictureId_PictureDetails;
+    public static List<int> picIdList_PictureDetails;
+    
+    
+    #endregion
+    
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
@@ -60,6 +69,12 @@ public static class GamePersistentVariable
     public static bool isMenuLoading;
     public static bool hasPlayerReachedGameplay;
     public static bool isLevelLost;
+    #endregion
+
+    #region RESOURCE 
+
+    public static string spendCoinReason;
+
     #endregion
 
     #region LIVES

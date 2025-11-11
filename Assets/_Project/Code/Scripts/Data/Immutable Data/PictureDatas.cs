@@ -43,6 +43,7 @@ namespace NamPhuThuy.Data
                 if (allPictureDatas[i] != null)
                 {
                     allPictureDatas[i].picId = i; // auto-increment, matches list index
+                    allPictureDatas[i].videoName = $"Video {i}";
                 }
             }
         }
@@ -67,12 +68,12 @@ namespace NamPhuThuy.Data
         }
 
         public int picId;
+        
         public string picName;
+        public string videoName;
+        
         public PictureRarity rarity;
         public PictureStyle style;
         public Sprite mainImage;
-
-        // public bool isVideo;
-        public VideoClip video;
     }
 }

@@ -500,7 +500,10 @@ public class FirebaseConfig
     public const string ON_OFF_PVP1 = "on_off_pvp1";
     public const string DEFAULT_NUM_ADD_STAND = "default_num_add_stand";
     public const string TIME_COOL_DOWN_PVP1_TICKET = "time_cool_down_pvp1_ticket";
-
+    
+    // Gallery
+    public const string isUseVideoBackground = "isUseVideoBackground";
+    
     //Banner Collap
     public const string ENABLE_ADMOB_BANNER = "enable_banner_admob";
     public const string ENABLE_ADMOB_COLLAPSE_BANNER = "enable_collapse_banner_admob";

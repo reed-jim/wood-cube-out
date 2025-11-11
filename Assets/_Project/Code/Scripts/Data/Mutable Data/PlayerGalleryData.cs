@@ -1,9 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Tools;
-using NamPhuThuy.Data;
-using UnityEngine;
 
 namespace NamPhuThuy.Data
 {
@@ -224,13 +221,14 @@ namespace NamPhuThuy.Data
         public PictureData.PictureStyle style;
 
 
-        public bool isDownloaded;
-
-        public PlayerPictureData(int pictureId = -1, LikeState likeState = LikeState.NONE, bool isDownloaded = false, PictureData.PictureRarity rarity = PictureData.PictureRarity.NONE, PictureData.PictureStyle style = PictureData.PictureStyle.NONE)
+        public bool isDownloadedImage;
+        public bool isDownloadedVideo;
+        
+        public PlayerPictureData(int pictureId = -1, LikeState likeState = LikeState.NONE, bool isDownloadedImage = false, PictureData.PictureRarity rarity = PictureData.PictureRarity.NONE, PictureData.PictureStyle style = PictureData.PictureStyle.NONE)
         {
             this.pictureId = pictureId;
             this.likeState = likeState;
-            this.isDownloaded = isDownloaded;
+            this.isDownloadedImage = isDownloadedImage;
             this.rarity = rarity;
             this.style = style;
         }

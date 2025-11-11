@@ -8111,6 +8111,85 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Tabla de clasificaci\xF3n"
     Object: {fileID: 0}
+--- !u!1 &5819926339486860017
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5824173147026317244}
+  - component: {fileID: 7398877749248410738}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5824173147026317244
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5819926339486860017}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 328848638671994766}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7398877749248410738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5819926339486860017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94d0856787119b468265f9a12c3b7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.Data.DataManager
+  cachedPlayerData:
+    currentLevelId: 0
+    isLoopLevel: 0
+    numLevelLoop: 0
+    currentLevelLoop: 0
+    isCurrentLevelLoopRandomized: 0
+    isTutorialBoosterDone: 
+    currentCoinRewardProgress: 0
+    requiredLevelForCoinRewardGift: 0
+    isAllowPersonalizedAds: 0
+    currentBackgroundId: 0
+    coin: 0
+    isRemoveAds: 0
+    boosters: []
+    grantedLevelRewardIds: 
+    lastFreeFortuneSpinTs: 0
+  cachedPlayerSettingsData:
+    musicVolume: 0
+    sfxVolume: 0
+    musicEnabled: 0
+    sfxEnabled: 0
+    vibrationEnabled: 0
+    notifyEnabled: 0
+  cachedPlayerGalleryData:
+    playerPictures: []
+    isUnlockedAllAnimePics: 0
+    isUnlockedAllUniformPics: 0
+    isUnlockedAllSexyPics: 0
+    currentProgressPictureId: 0
+    unlockNewPictureProgress: 0
+  pictureDatas: {fileID: 11400000, guid: d37d12b4b7941f4458202d267226255e, type: 2}
+  galleryPackDatas: {fileID: 11400000, guid: 09f4ddaebb8d91a49b9aca35201f1294, type: 2}
+  rewardDatas: {fileID: 0}
+  resourceData: {fileID: 0}
+  serviceData: {fileID: 11400000, guid: 5ab3bf34aca11fd459c84795191e6507, type: 2}
 --- !u!1 &5825909724513701167
 GameObject:
   m_ObjectHideFlags: 0
@@ -9653,6 +9732,7 @@ Transform:
   - {fileID: 1892475344800608237}
   - {fileID: 8159467473394628847}
   - {fileID: 1726258303790225064}
+  - {fileID: 5824173147026317244}
   - {fileID: 5168989241011953330}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

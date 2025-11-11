@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
@@ -30,9 +31,12 @@ namespace NamPhuThuy.UI
         [SerializeField] private ButtonClicky nextButton;
 
         [Space(5)]
-        // [SerializeField] private ButtonClicky downloadWithAdsButton;
-        // [SerializeField] private ButtonClicky downloadWithCoinButton;
+        [SerializeField] private ButtonClicky adsDownloadButton;
+        [SerializeField] private ButtonClicky videoDownloadButton;
+        [SerializeField] private ButtonClicky imageDownloadButton;
         [SerializeField] private ButtonClicky useAsBackgroundButton;
+        [SerializeField] private Image imageCompleteTick;
+        [SerializeField] private Image videoCompleteTick;
 
         [Space(5)]
         [SerializeField] private ButtonClicky likeButton;
@@ -42,11 +46,12 @@ namespace NamPhuThuy.UI
         [Header("Buttons Switch")]
         [SerializeField] private ButtonSwitch likeSwitch;
         [SerializeField] private ButtonSwitch dislikeSwitch;
-        [SerializeField] private ButtonSwitch downloadWithAdsSwitch;
-        [SerializeField] private ButtonSwitch downloadWithCoinSwitch;
+        [SerializeField] private ButtonSwitch imageDownloadSwitch;
+        [SerializeField] private ButtonSwitch videoDownloadSwitch;
 
         [Header("Texts")]
-        [SerializeField] private TextMeshProUGUI coinToDownloadText;
+        [SerializeField] private TextMeshProUGUI imageDownloadText;
+        [SerializeField] private TextMeshProUGUI videoDownloadText;
 
         [Header("Images")]
         [SerializeField] private Image pictureImage;
@@ -58,7 +63,8 @@ namespace NamPhuThuy.UI
         public int CurrentPictureId => currentPictureId;
         [SerializeField] private int currentListId;
 
-        [SerializeField] private PlayerPictureData currentPictureData;
+        [SerializeField] private PlayerPictureData currentPlayerPicData;
+        [SerializeField] private PictureData currentPicData;
 
         #endregion
 
@@ -117,15 +123,15 @@ namespace NamPhuThuy.UI
 
         private void OnClickLike()
         {
-            bool tmp = currentPictureData.PicLikeState == PlayerPictureData.LikeState.LIKE;
+            bool tmp = currentPlayerPicData.PicLikeState == PlayerPictureData.LikeState.LIKE;
 
             if (tmp == true)
             {
-                currentPictureData.PicLikeState = PlayerPictureData.LikeState.NONE;
+                currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.NONE;
             }
             else
             {
-                currentPictureData.PicLikeState = PlayerPictureData.LikeState.LIKE;
+                currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.LIKE;
             }
 
             ChangeLikeState?.Invoke();
@@ -202,15 +208,15 @@ namespace NamPhuThuy.UI
 
         private void OnClickDisLike()
         {
-            bool tmp = currentPictureData.PicLikeState == PlayerPictureData.LikeState.DISLIKE;
+            bool tmp = currentPlayerPicData.PicLikeState == PlayerPictureData.LikeState.DISLIKE;
 
             if (tmp == true)
             {
-                currentPictureData.PicLikeState = PlayerPictureData.LikeState.NONE;
+                currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.NONE;
             }
             else
             {
-                currentPictureData.PicLikeState = PlayerPictureData.LikeState.DISLIKE;
+                currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.DISLIKE;
             }
 
             ChangeLikeState?.Invoke();
@@ -224,7 +230,7 @@ namespace NamPhuThuy.UI
             void EarnReward()
             {
                 StartCoroutine(IEShowLoadingPopup());
-                currentPictureData.isDownloaded = true;
+                currentPlayerPicData.isDownloadedImage = true;
             }
 
             void OnLoadVideoFailed()
@@ -249,7 +255,7 @@ namespace NamPhuThuy.UI
                 DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
                 StartCoroutine(IEShowLoadingPopup());
 
-                currentPictureData.isDownloaded = true;
+                currentPlayerPicData.isDownloadedImage = true;
                 // SetStateDownloadSwitches();
             }
             else
@@ -286,8 +292,8 @@ namespace NamPhuThuy.UI
         private bool CheckValidatePictureData(int pictureID)
         {
 
-            currentPictureData = DataManager.Ins.PlayerGalleryData.FindByPictureId(pictureID);
-            if (currentPictureData == null)
+            currentPlayerPicData = DataManager.Ins.PlayerGalleryData.FindByPictureId(pictureID);
+            if (currentPlayerPicData == null)
             {
                 Debug.LogError($"GUIPictureDetails: Show - No picture data found for ID {pictureID}");
                 return false;
@@ -298,20 +304,39 @@ namespace NamPhuThuy.UI
 
         private void SetStateDownloadSwitches()
         {
-            return;
-            if (currentPictureData.isDownloaded)
+            if (currentPlayerPicData.isDownloadedImage)
             {
-                downloadWithAdsSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
-                downloadWithCoinSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
-                // downloadWithAdsButton.interactable = false;
-                // downloadWithCoinButton.interactable = false;
+                imageDownloadSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
+                imageDownloadButton.interactable = false;
+                imageDownloadButton.DisableButton();
+                imageCompleteTick.gameObject.SetActive(true);
+
+                ObjScaleAuto scaleAuto = imageDownloadButton.GetComponent<ObjScaleAuto>();
+                scaleAuto?.Stop();
             }
             else
             {
-                downloadWithAdsSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
-                downloadWithCoinSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
-                // downloadWithAdsButton.interactable = true;
-                // downloadWithCoinButton.interactable = true;
+                imageDownloadSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
+                imageDownloadButton.interactable = true;
+                imageDownloadButton.EnableButton();
+                imageCompleteTick.gameObject.SetActive(false);
+            }
+
+            if (currentPlayerPicData.isDownloadedVideo)
+            {
+                videoDownloadSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
+                videoDownloadButton.interactable = false;
+                videoDownloadButton.DisableButton();
+                videoCompleteTick.gameObject.SetActive(true);
+                ObjScaleAuto scaleAuto = videoDownloadButton.GetComponent<ObjScaleAuto>();
+                scaleAuto?.Stop();
+            }
+            else
+            {
+                videoDownloadSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
+                videoDownloadButton.interactable = true;
+                videoDownloadButton.EnableButton();
+                videoCompleteTick.gameObject.SetActive(false);
             }
         }
 
@@ -370,7 +395,7 @@ namespace NamPhuThuy.UI
 
         public void SetStateReactButtons()
         {
-            switch (currentPictureData.PicLikeState)
+            switch (currentPlayerPicData.PicLikeState)
             {
                 case PlayerPictureData.LikeState.LIKE:
                     likeSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);

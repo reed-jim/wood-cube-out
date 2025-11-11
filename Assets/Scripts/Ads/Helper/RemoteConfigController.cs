@@ -238,6 +238,12 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.useFakeLeaderboardScore = GetBoolConfig(FirebaseConfig.IS_ENABLE_LEADERBOARD, false);
         #endregion
 
+        #region GALLERY
+
+        GamePersistentVariable.isUseVideoBackground = GetBoolConfig(FirebaseConfig.isUseVideoBackground, true);
+
+        #endregion
+
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);

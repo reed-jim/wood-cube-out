@@ -17,13 +17,13 @@ public class LevelInProgressPopup : BasePopup
     {
         GamePersistentVariable.isLoadingLevelInProgress = true;
 
-        Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
     }
 
     private void NewLevel()
     {
         GamePersistentVariable.isPreventLoadLevelData = true;
 
-        Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+        Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
     }
 }

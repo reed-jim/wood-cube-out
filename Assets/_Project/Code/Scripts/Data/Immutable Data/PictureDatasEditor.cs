@@ -59,15 +59,6 @@ namespace NamPhuThuy.Data
 
             serializedObject.ApplyModifiedProperties();
         }
-        
-        
-        
-        
-        
-        
-        
-        
-        
 
         #endregion
 

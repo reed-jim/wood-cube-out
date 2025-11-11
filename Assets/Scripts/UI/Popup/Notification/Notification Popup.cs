@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.Common;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -77,6 +78,12 @@ public class NotificationPopup : BasePopup
     {
         base.Hide();
 
+        if (!blackBackground)
+        {
+            DebugLogger.Log(message:$"Black background Null");
+            return;
+        }
+        
         if (blackBackground.gameObject.activeSelf)
         {
             _tweens.Add(Tween.Alpha(blackBackground, 0, duration: 0.3f).OnComplete(() =>

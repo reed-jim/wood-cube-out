@@ -166,6 +166,21 @@ JSON for:
                 return resourceData;
             }
         }
+        
+        [SerializeField] private ServiceData serviceData;
+
+        public ServiceData ServiceData
+        {
+            get
+            {
+                if (serviceData == null)
+                {
+                    serviceData = Resources.Load<ServiceData>("ServiceData");
+                }
+
+                return serviceData;
+            }
+        }
 
         #endregion
 
@@ -479,6 +494,7 @@ JSON for:
 
     public enum ServiceType
     {
-        DOWNLOAD_IMAGE = 0
+        DOWNLOAD_IMAGE = 0,
+        DOWNLOAD_VIDEO = 1
     }
 }

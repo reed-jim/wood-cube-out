@@ -26,6 +26,9 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button easyButton;
     [SerializeField] private Button normalButton;
     [SerializeField] private Button hardButton;
+    
+    [Header("Gallery")]
+    [SerializeField] private Button showPictureNewButton;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
@@ -53,7 +56,11 @@ public class DebugPopup : BasePopup
         hardButton.onClick.AddListener(() => ChangeDifficulty(0.7f));
 
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
+        
+        showPictureNewButton.onClick.AddListener(OnClickShowPictureNew);
     }
+
+    
 
     protected override void MoreActionInAwake()
     {
@@ -164,4 +171,14 @@ public class DebugPopup : BasePopup
     {
         changeDifficultyEvent?.Invoke(difficulty);
     }
+
+    #region GALLERY
+
+    private void OnClickShowPictureNew()
+    {
+        GamePersistentVariable.currentPictureId_PictureNew = 1;
+        SwitchRoute(GameEnum.ScreenRoute.PictureNew, new object[] {1});
+    }
+
+    #endregion
 }

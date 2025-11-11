@@ -270,12 +270,12 @@ public class MenuScreen : MonoBehaviour
             }
             else
             {
-                Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
             }
         }
         else
         {
-            Addressables.LoadSceneAsync(GameConstants.GAMEPLAY_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
         }
 
         startGameButton.interactable = false;
@@ -653,7 +653,7 @@ public class MenuScreen : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (scene.name == GameConstants.GAMEPLAY_SCENE)
+        if (scene.name == GameConstants.YARN_SCENE)
         {
             menuScreenAudioListener.enabled = false;
 

@@ -55,6 +55,8 @@ public class GameVariableInitializer : MonoBehaviour
         GamePersistentVariable.livesConfig = new LivesConfig();
         GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
 
+        GamePersistentVariable.isUseVideoBackground = true;
+        
         GamePersistentVariable.coinChallengeConfig = new CoinChallengeConfig();
 
         GamePersistentVariable.longTermUserDifficultyConfig = new LongTermUserDifficultyConfig();

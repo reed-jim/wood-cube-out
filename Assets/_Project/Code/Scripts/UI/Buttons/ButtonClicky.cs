@@ -28,6 +28,7 @@ namespace NamPhuThuy.UI
         [Header("Flags")]
         public bool isUseClickyFX = true;
         public bool isUseHoverFX = true;
+        public bool isActive = true;
 
         private RectTransform _rectTransform;
         private float _changeY = 5.6f;
@@ -103,6 +104,7 @@ namespace NamPhuThuy.UI
 
         private void PlayAnimationOnClick()
         {
+            if (!isActive) return;
             if (_sequence != null)
             {
                 _sequence.Complete();
@@ -113,6 +115,20 @@ namespace NamPhuThuy.UI
             _sequence.Append(transform.DOScale(1.15f * _originalLocalScale, 0.2f).SetEase(Ease.InOutSine));
             _sequence.Append(transform.DOScale(_originalLocalScale, 0.1f).SetEase(Ease.InOutSine));
         }
+        
+        #region Public Methods
+
+        public void EnableButton()
+        {
+            isActive = true;
+        }
+        
+        public void DisableButton()
+        {
+            isActive = false;
+        }
+
+        #endregion
     }
 
 #if UNITY_EDITOR

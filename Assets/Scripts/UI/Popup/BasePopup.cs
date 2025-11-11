@@ -32,6 +32,7 @@ public class BasePopup : MonoBehaviour
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
+    public static event Action<ScreenRoute, object[]> switchPopupRouteParamsEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     #endregion
@@ -39,6 +40,8 @@ public class BasePopup : MonoBehaviour
     private void Awake()
     {
         switchPopupRouteEvent += OnRouteSwitched;
+        switchPopupRouteParamsEvent += OnRouteSwitched;
+        
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
@@ -89,6 +92,8 @@ public class BasePopup : MonoBehaviour
     private void OnDestroy()
     {
         switchPopupRouteEvent -= OnRouteSwitched;
+        switchPopupRouteParamsEvent -= OnRouteSwitched;
+        
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
@@ -139,6 +144,11 @@ public class BasePopup : MonoBehaviour
         {
             Hide();
         }
+    }
+    
+    private void OnRouteSwitched(ScreenRoute route, params object[] parameters)
+    {
+        OnRouteSwitched(route);
     }
 
     // private void OnRouteSwitchedWithoutAd(ScreenRoute route)
@@ -360,6 +370,11 @@ public class BasePopup : MonoBehaviour
     protected void SwitchRoute(ScreenRoute route)
     {
         switchPopupRouteEvent?.Invoke(route);
+    }
+    
+    protected void SwitchRoute(ScreenRoute route, params object[] parameters)
+    {
+        switchPopupRouteParamsEvent?.Invoke(route, parameters);
     }
 
     protected void ShowNotification(string title, string description)
