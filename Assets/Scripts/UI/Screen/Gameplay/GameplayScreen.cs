@@ -10,6 +10,7 @@ using static GameEnum;
 public class GameplayScreen : Singleton<GameplayScreen>
 {
     [SerializeField] private Button pauseButton;
+    [SerializeField] private Button openShopButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private Button debugNextLevelButton;
@@ -36,6 +37,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
 
         pauseButton.onClick.AddListener(Pause);
+        openShopButton.onClick.AddListener(OpenShop);
         skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
@@ -57,9 +59,14 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
 
-    private async void Pause()
+    private void Pause()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
+    }
+
+    private void OpenShop()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPShopPopup);
     }
 
     private void OpenDebugPopupButton()

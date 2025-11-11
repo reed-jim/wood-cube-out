@@ -1111,7 +1111,25 @@ public class YarnGameTool : EditorWindow
 
                     renderer.material = match;
 
-                    Debug.Log("SAFERIO material " + item.name + "/" + match);
+                    // Debug.Log("SAFERIO material " + item.name + "/" + match);
+                }
+
+                // Assign material for decor models
+                for (int i = 0; i < item.childCount; i++)
+                {
+                    Renderer decorRenderer = item.GetChild(i).GetComponent<Renderer>();
+
+                    Material[] materialArray = new Material[decorRenderer.sharedMaterials.Length];
+
+                    for (int j = 0; j < materialArray.Length; j++)
+                    {
+                        materialArray[j] = pieceMaterialContainer.materials[0];
+                    }
+
+                    for (int j = 0; j < decorRenderer.sharedMaterials.Length; j++)
+                    {
+                        decorRenderer.sharedMaterials = materialArray;
+                    }
                 }
             }
         }
@@ -1181,14 +1199,26 @@ public class YarnGameTool : EditorWindow
     {
         Transform level = Selection.activeTransform;
 
+        level.AddComponent<RotateObject>();
+
+        Material noDepthWriteMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Yarn/Shader/Yarn No Depth Write.shadergraph");
+        PieceMaterialContainer pieceMaterialContainer = AssetDatabase.LoadAssetAtPath<PieceMaterialContainer>("Assets/Yarn/SO/PieceMaterialContainer.asset");
+
         for (int i = 0; i < level.childCount; i++)
         {
             Transform piece = level.GetChild(i);
 
+            piece.gameObject.layer = LayerMask.NameToLayer("Default");
+
             piece.AddComponent<BasePiece>();
             piece.AddComponent<PieceProperty>();
-            piece.AddComponent<PieceMaterialPropertyBlock>();
+            PieceMaterialPropertyBlock pieceMaterialPropertyBlock = piece.AddComponent<PieceMaterialPropertyBlock>();
             piece.AddComponent<PieceServiceLocator>().AssignComponents();
+
+            pieceMaterialPropertyBlock.noDepthWriteMaterial = noDepthWriteMaterial;
+            pieceMaterialPropertyBlock.pieceMaterialContainer = pieceMaterialContainer;
+
+            piece.GetComponent<MeshCollider>().convex = true;
         }
 
         // BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class GameEnum : MonoBehaviour
@@ -67,6 +69,7 @@ public class GameEnum : MonoBehaviour
         EditProfile,
         ChooseDifficulty,
         UserConsent,
+        Language
         Gallery,
         GalleryPack,
         PictureNew,
@@ -179,5 +182,27 @@ public class GameEnum : MonoBehaviour
         System.Random random = new System.Random();
 
         return (T)enumValues.GetValue(random.Next(enumValues.Length));
+    }
+
+    public static T GetRandomEnumValueExcluding<T>(params T[] excluded) where T : Enum
+    {
+        // Get all enum values
+        T[] allValues = (T[])Enum.GetValues(typeof(T));
+
+        // Filter out excluded ones
+        T[] available = allValues.Except(excluded).ToArray();
+
+        if (available.Length == 0)
+        {
+            throw new InvalidOperationException($"No available values left in enum {typeof(T).Name}");
+        }
+
+        // Pick a random one
+        return available[UnityEngine.Random.Range(0, available.Length)];
+    }
+
+    public static List<T> GetEnumValuesList<T>() where T : Enum
+    {
+        return new List<T>((T[])Enum.GetValues(typeof(T)));
     }
 }

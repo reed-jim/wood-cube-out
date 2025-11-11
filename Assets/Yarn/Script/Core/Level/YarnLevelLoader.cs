@@ -233,7 +233,7 @@ public class YarnLevelLoader : MonoBehaviour
 
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
-                YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(_pieces);
+                YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(level.transform, _pieces);
 
                 _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
 
@@ -783,7 +783,7 @@ public class YarnLevelLoader : MonoBehaviour
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize;
 
-        targetOrthographicSize = 1.5f * expectedLevelSize.y;
+        targetOrthographicSize = 1.35f * expectedLevelSize.y;
 
         // if (maxExpectedLevelSize > expectedLevelSize.y)
         // {
@@ -792,14 +792,10 @@ public class YarnLevelLoader : MonoBehaviour
         //     targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
         // }
 
-        // Debug.Log("SAFERIO 0" + targetOrthographicSize + "/" + expectedLevelSize);
-
         if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 2)
         {
             return;
         }
-
-        // Debug.Log("SAFERIO 1" + targetOrthographicSize + "/" + expectedLevelSize);
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
 

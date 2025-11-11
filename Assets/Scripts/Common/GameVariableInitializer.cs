@@ -91,6 +91,12 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.goldPassData = savedGoldPassData;
         }
 
+        Debug.Log("SAFERIO Remove Later");
+        GamePersistentVariable.livesConfig = new LivesConfig()
+        {
+            isActive = true
+        };
+
         currentLevelFetchedEvent?.Invoke();
     }
 
