@@ -13,7 +13,7 @@ using UnityEditor;
 namespace NamPhuThuy.UI
 {
 
-    public class GUIPictureDetails : GUIBase
+    public class GUIPictureDetails : BasePopup
     {
         #region Public Fields
 
@@ -84,7 +84,6 @@ namespace NamPhuThuy.UI
 
         void OnEnable()
         {
-            GUIMaskInitialAlpha = 1f;
             closeButton.onClick.AddListener(OnClickClose);
 
             likeButton.onClick.AddListener(OnClickLike);
@@ -361,11 +360,12 @@ namespace NamPhuThuy.UI
 
         #region Override Methods
 
-        public override void Show(params object[] parameters)
+        protected override void Show(Action onCompletedAction = null)
         {
-            base.Show(parameters);
-            currentPictureId = parameters.Length > 0 ? (int)parameters[0] : -1;
-            currentPictureIdList = parameters.Length > 1 ? (List<int>)parameters[1] : new List<int>();
+            base.Show(onCompletedAction);
+            
+            currentPictureId = GamePersistentVariable.currentPictureId_PictureDetails;
+            currentPictureIdList = GamePersistentVariable.picIdList_PictureDetails;
 
             currentListId = 0;
             for (int i = 0; i < currentPictureIdList.Count; i++)
@@ -384,11 +384,12 @@ namespace NamPhuThuy.UI
             SetStateDownloadSwitches();
         }
 
-        public override void Hide(params object[] parameters)
+        protected override void Hide(Action onCompletedAction = null)
         {
-            base.Hide(parameters);
+            base.Hide(onCompletedAction);
         }
 
+        
         #endregion
 
         #region Public Methods

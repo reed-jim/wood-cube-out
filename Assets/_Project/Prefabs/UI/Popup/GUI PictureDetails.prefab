@@ -150,8 +150,8 @@ RectTransform:
   - {fileID: 3906295394320134044}
   m_Father: {fileID: 5224202035234168122}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9491228}
+  m_AnchorMin: {x: 0, y: 0.03671706}
+  m_AnchorMax: {x: 1, y: 0.9492441}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -243,26 +243,38 @@ MonoBehaviour:
   closeButton: {fileID: 4024346581929654545}
   prevButton: {fileID: 2636672694926211239}
   nextButton: {fileID: 3454303382627553246}
-  downloadWithAdsButton: {fileID: 0}
-  downloadWithCoinButton: {fileID: 0}
+  adsDownloadButton: {fileID: 0}
+  videoDownloadButton: {fileID: 0}
+  imageDownloadButton: {fileID: 0}
   useAsBackgroundButton: {fileID: 8322970052577105590}
+  imageCompleteTick: {fileID: 0}
+  videoCompleteTick: {fileID: 0}
   likeButton: {fileID: 3603100490424525086}
   dislikeButton: {fileID: 8378536621647404416}
   likeSwitch: {fileID: 7554976536579280727}
   dislikeSwitch: {fileID: 5426270319109596498}
-  downloadWithAdsSwitch: {fileID: 0}
-  downloadWithCoinSwitch: {fileID: 0}
-  coinToDownloadText: {fileID: 0}
+  imageDownloadSwitch: {fileID: 0}
+  videoDownloadSwitch: {fileID: 0}
+  imageDownloadText: {fileID: 0}
+  videoDownloadText: {fileID: 0}
   pictureImage: {fileID: 583754134656135056}
   currentPictureIdList: 
   currentPictureId: 1
   currentListId: 0
-  currentPictureData:
+  currentPlayerPicData:
     pictureId: 0
     likeState: 0
     rarity: 0
     style: 0
-    isDownloaded: 0
+    isDownloadedImage: 0
+    isDownloadedVideo: 0
+  currentPicData:
+    picId: 0
+    picName: 
+    videoName: 
+    rarity: 0
+    style: 0
+    mainImage: {fileID: 0}
 --- !u!1 &7054059491983931782
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,7 +1205,7 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 3538980602633852327, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1571139390290232836}
+      addedObject: {fileID: 6968288409444878220}
   m_SourcePrefab: {fileID: 100100000, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
 --- !u!114 &583754134656135056 stripped
 MonoBehaviour:
@@ -1216,7 +1228,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 3538980602633852327, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
   m_PrefabInstance: {fileID: 4608145815374009029}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1571139390290232836
+--- !u!114 &6968288409444878220
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1225,9 +1237,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1076237370328549218}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3314aed3ea84d1d4e8111bdfc02d1036, type: 3}
+  m_Script: {fileID: 11500000, guid: a272c02a8b4ec5441ba4ce71de674c48, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.AnimateWithScripts.FitImageToScreen
   canvas: {fileID: 0}
 --- !u!1001 &7165663984650788786
 PrefabInstance:

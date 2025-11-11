@@ -161,7 +161,6 @@ namespace NamPhuThuy.UI
                     videoDownloadButton?.gameObject.SetActive(true);
                     imageDownloadButton?.gameObject.SetActive(true);
 
-
                     pictureImageContainer.gameObject.SetActive(false);
                     videoContainer.gameObject.SetActive(true);
 
@@ -227,6 +226,7 @@ namespace NamPhuThuy.UI
             }
 
             GamePersistentVariable.currentPictureId_PictureDetails = currentPictureId;
+            GamePersistentVariable.picIdList_PictureDetails = pictureIdList;
             SwitchRoute(GameEnum.ScreenRoute.PictureDetails);
         }
 
