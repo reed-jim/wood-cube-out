@@ -105,7 +105,7 @@ namespace NamPhuThuy.UI
                                  _contentBuffer;
         }
 
-        public void UpdateContent(GUIGallery.FilterChoice filterChoice)
+        public void UpdateContent(GalleryPopup.FilterChoice filterChoice)
         {
             HideAllElements();
 
@@ -136,12 +136,12 @@ namespace NamPhuThuy.UI
 
             switch (filterChoice.Kind)
             {
-                case GUIGallery.FilterKind.All:
+                case GalleryPopup.FilterKind.All:
                     // No extra filter
                     DebugResultList("Nothing");
                     break;
 
-                case GUIGallery.FilterKind.LikeState:
+                case GalleryPopup.FilterKind.LikeState:
                     foreach (int id in finalPictureIdList)
                     {
                         if (DataManager.Ins.PlayerGalleryData.playerPictures[dictPictureToElementId[id]].likeState == filterChoice.LikeState)
@@ -154,7 +154,7 @@ namespace NamPhuThuy.UI
 
                     DebugResultList(filterChoice.LikeState.ToString());
                     break;
-                case GUIGallery.FilterKind.Style:
+                case GalleryPopup.FilterKind.Style:
                     foreach (int id in finalPictureIdList)
                     {
                         if (DataManager.Ins.PictureDatas.allPictureDatas[id/*picData.PictureId*/].style == filterChoice.Style)
@@ -200,7 +200,7 @@ namespace NamPhuThuy.UI
             }
         }
 
-        public List<int> UpdateContent2(GUIGallery.FilterChoice filterChoice)
+        public List<int> UpdateContent2(GalleryPopup.FilterChoice filterChoice)
         {
             HideAllElements();
 
@@ -231,12 +231,12 @@ namespace NamPhuThuy.UI
 
             switch (filterChoice.Kind)
             {
-                case GUIGallery.FilterKind.All:
+                case GalleryPopup.FilterKind.All:
                     // No extra filter
                     DebugResultList("Nothing");
                     break;
 
-                case GUIGallery.FilterKind.LikeState:
+                case GalleryPopup.FilterKind.LikeState:
                     foreach (int id in finalPictureIdList)
                     {
                         if (DataManager.Ins.PlayerGalleryData.playerPictures[dictPictureToElementId[id]].likeState == filterChoice.LikeState)
@@ -249,7 +249,7 @@ namespace NamPhuThuy.UI
 
                     DebugResultList(filterChoice.LikeState.ToString());
                     break;
-                case GUIGallery.FilterKind.Style:
+                case GalleryPopup.FilterKind.Style:
                     foreach (int id in finalPictureIdList)
                     {
                         if (DataManager.Ins.PictureDatas.allPictureDatas[id/*picData.PictureId*/].style == filterChoice.Style)

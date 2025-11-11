@@ -74,6 +74,7 @@ public class SpoolBoxSlot : MonoBehaviour
     }
 
     public void CompleteFill()
+    
     {
         if (transform.GetSiblingIndex() == 2)
         {

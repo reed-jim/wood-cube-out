@@ -18,6 +18,8 @@ namespace NamPhuThuy.Data
         int indexOffset = 0;
         static readonly Regex trailingNumber = new Regex(@"(\d+)$", RegexOptions.Compiled);
 
+        #region CallBacks
+
         void OnEnable()
         {
             allPictureDatasProp = serializedObject.FindProperty("allPictureDatas");
@@ -46,7 +48,7 @@ namespace NamPhuThuy.Data
 
 
                     AutoAssignMainImages((PictureDatas)target, mainImagefolderPath, indexOffset);
-                    AutoAssignSubImages((PictureDatas)target, subImagefolderPath, indexOffset);
+                    // AutoAssignSubImages((PictureDatas)target, subImagefolderPath, indexOffset);
                 }
 
                 if (GUILayout.Button("CheckNullReference"))
@@ -57,6 +59,17 @@ namespace NamPhuThuy.Data
 
             serializedObject.ApplyModifiedProperties();
         }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+
+        #endregion
 
         static void AutoAssignMainImages(PictureDatas data, string folderPath, int indexOffset)
         {

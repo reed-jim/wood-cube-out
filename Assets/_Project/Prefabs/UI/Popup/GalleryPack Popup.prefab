@@ -305,7 +305,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3326216717600406955}
-  - component: {fileID: 3267166974952707801}
   - component: {fileID: 6160266906073707005}
   m_Layer: 5
   m_Name: Content
@@ -331,24 +330,11 @@ RectTransform:
   - {fileID: 485931353957510581}
   m_Father: {fileID: 3680259924023507963}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.03671706}
+  m_AnchorMax: {x: 1, y: 0.9492441}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3267166974952707801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2623463562560414730}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a833a2ef14bad94a8625b8562fd82db, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
 --- !u!225 &6160266906073707005
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -874,8 +860,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3680259924023507963}
   - component: {fileID: 1364310711680111746}
+  - component: {fileID: 7606328408033806127}
   m_Layer: 5
-  m_Name: GUI GalleryPack
+  m_Name: GalleryPack Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -914,21 +901,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdca1d64c323b8447be63ae20da8da40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDuration: 0.4
-  hideDuration: 0.4
-  GUIMaskInitialAlpha: 1
-  showDelay: 0
-  hideDelay: 0
-  guiMask: {fileID: 8027615457498067696}
-  canvasGroup: {fileID: 6160266906073707005}
-  canvasGroupRT: {fileID: 0}
-  isShowing: 0
-  currentType: 0
-  backButton: {fileID: 5409966929704131277}
+  container: {fileID: 3326216717600406955}
+  closeButton: {fileID: 5409966929704131277}
+  detectClickOutsideButton: {fileID: 0}
+  route: 63
+  isRouteActiveFromStart: 0
+  isAbleToHideOnClickOutside: 0
+  isShowingInterAdOnInteract: 0
   shopButton: {fileID: 8480527476826575079}
   galleryButton: {fileID: 6253389691883563692}
   scrollRect: {fileID: 4070741886720164167}
   scrollViewGallery: {fileID: 5481930760327463879}
+--- !u!114 &7606328408033806127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6094848344167348920}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef156ecbdc1a8c94b87faa623d10b6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleTransition
+  target: {fileID: 3326216717600406955}
+  canvasGroup: {fileID: 6160266906073707005}
+  canvasSize: {fileID: 11400000, guid: cff3c506c9f63d645a923fa57c7a07c1, type: 2}
+  duration: 0.3
 --- !u!1 &7610880707145232805
 GameObject:
   m_ObjectHideFlags: 0
@@ -1307,14 +1306,53 @@ PrefabInstance:
       propertyPath: m_Name
       value: CoinPanel
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3264659669528695246, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6923766836772425453, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 273785878528217566}
   m_SourcePrefab: {fileID: 100100000, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+--- !u!114 &1846300408674798759 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 2858907370196780696, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+  m_PrefabInstance: {fileID: 4482068353441794623}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &2308272235697671803 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 2178370261001372740, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+  m_PrefabInstance: {fileID: 4482068353441794623}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &6784013315209708754 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6923766836772425453, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+  m_PrefabInstance: {fileID: 4482068353441794623}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &273785878528217566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784013315209708754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0ea6172170916e40b5500f9f5213e9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.UI.CoinPanel
+  coinText: {fileID: 1846300408674798759}
+  coinImage: {fileID: 7575972782332751938}
+--- !u!224 &7575972782332751938 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6273728069753879165, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
   m_PrefabInstance: {fileID: 4482068353441794623}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5059843166764934056
@@ -1561,17 +1599,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 3873479467623524153, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
   m_PrefabInstance: {fileID: 6380849461522943909}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8027615457498067696 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4029179596452281685, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
-  m_PrefabInstance: {fileID: 6380849461522943909}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &6621624085415269321
 PrefabInstance:
   m_ObjectHideFlags: 0

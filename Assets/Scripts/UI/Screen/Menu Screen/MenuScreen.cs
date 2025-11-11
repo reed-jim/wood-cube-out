@@ -31,6 +31,11 @@ public class MenuScreen : MonoBehaviour
     [SerializeField] private Button luckyWheelButton;
     [SerializeField] private Button weeklyTaskButton;
 
+    [Header("Collection")] 
+    [SerializeField] private Button openGalleryButton;
+    [SerializeField] private Button openGalleryPackButton;
+    [SerializeField] private Button imagePackButton;
+
     #region SALE PACK BUTTONS
     [SerializeField] private Button[] openSaleIAPPackButtons;
     // [SerializeField] private Button openDailyOfferButton;
@@ -100,6 +105,11 @@ public class MenuScreen : MonoBehaviour
         openMedalTournamentPopupButton.onClick.AddListener(OpenMedalTournamentPopup);
         openSpaceRacePopupButton.onClick.AddListener(OpenSpaceRacePopup);
         openEditProfilePopupButton.onClick.AddListener(OpenEditProfilePopup);
+        
+        // GALLERY
+        openGalleryButton.onClick.AddListener(OpenGalleryPopup);
+        openGalleryPackButton.onClick.AddListener(OpenGalleryPackPopup);
+        
 
         #region SALE IAP PACKS
         openSaleIAPPackButtons[0].onClick.AddListener(OpenDailyOfferPopup);
@@ -136,6 +146,8 @@ public class MenuScreen : MonoBehaviour
 
         // PreventSpammingStartButton();
     }
+
+    
 
     void OnEnable()
     {
@@ -399,6 +411,20 @@ public class MenuScreen : MonoBehaviour
     {
         switchRouteEvent?.Invoke(ScreenRoute.EditProfile);
     }
+
+    #region Gallery
+
+    private void OpenGalleryPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.Gallery);
+    }
+    
+    private void OpenGalleryPackPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.GalleryPack);
+    }
+
+    #endregion
 
     #region SALE PACKS
     private void OpenDailyOfferPopup()

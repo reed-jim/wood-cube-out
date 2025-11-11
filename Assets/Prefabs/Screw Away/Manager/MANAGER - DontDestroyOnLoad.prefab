@@ -223,12 +223,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 149502133893662216}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2382114561705044355}
+  m_Father: {fileID: 205307710554826335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2881958302265918079
 MonoBehaviour:
@@ -830,6 +830,44 @@ MonoBehaviour:
   - Language: Spanish
     Text: Level de alcance <color=#FAE143>{level}</color> para abrir!
     Object: {fileID: 0}
+--- !u!1 &589913485841428165
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 205307710554826335}
+  m_Layer: 0
+  m_Name: '- G'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &205307710554826335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 589913485841428165}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8486438347331193126}
+  - {fileID: 1302253949715669778}
+  - {fileID: 6163143093406979}
+  - {fileID: 2668634392204488274}
+  - {fileID: 3756439636338471250}
+  - {fileID: 4958461103991944606}
+  - {fileID: 4541886165200960805}
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &602139710279757417
 GameObject:
   m_ObjectHideFlags: 0
@@ -1739,6 +1777,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "M\xFAsica"
+    Object: {fileID: 0}
+--- !u!1 &1388471585109716839
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1302253949715669778}
+  - component: {fileID: 7344146330634876640}
+  m_Layer: 0
+  m_Name: Gallery
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1302253949715669778
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388471585109716839}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 205307710554826335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7344146330634876640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1388471585109716839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Gallery
+    Object: {fileID: 0}
+  - Language: French
+    Text: Galerie
+    Object: {fileID: 0}
+  - Language: German
+    Text: Galerie
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Galleria
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AE\u30E3\u30E9\u30EA\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC31\uB3C4"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Galeria
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0413\u0430\u043B\u0435\u0440\u0435\u044F"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Galer\xEDa"
     Object: {fileID: 0}
 --- !u!1 &1430454504432383064
 GameObject:
@@ -5201,6 +5312,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Tornillo
     Object: {fileID: 0}
+--- !u!1 &3806811271729342715
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6163143093406979}
+  - component: {fileID: 187299635274906142}
+  m_Layer: 0
+  m_Name: Gallery Pack
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6163143093406979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3806811271729342715}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 205307710554826335}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &187299635274906142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3806811271729342715}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Gallery Pack
+    Object: {fileID: 0}
+  - Language: French
+    Text: Pack Galerie
+    Object: {fileID: 0}
+  - Language: German
+    Text: Galeriepaket
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Pacchetto Galleria
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AE\u30E3\u30E9\u30EA\u30FC\u30D1\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC24\uB7EC\uB9AC \uD329"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Pacote Galeria
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0430\u043A\u0435\u0442 \u0433\u0430\u043B\u0435\u0440\u0435\u0438"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Paquete de galer\xEDa"
+    Object: {fileID: 0}
 --- !u!1 &3940197230121762536
 GameObject:
   m_ObjectHideFlags: 0
@@ -7046,12 +7230,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5502802275755428258}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2382114561705044355}
+  m_Father: {fileID: 205307710554826335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &4887625146966181101
 MonoBehaviour:
@@ -7143,7 +7327,6 @@ Transform:
   - {fileID: 7428905947490041623}
   - {fileID: 2254138635818537290}
   - {fileID: 8030546101956796002}
-  - {fileID: 8486438347331193126}
   - {fileID: 6445199107740687515}
   - {fileID: 1245141187961976138}
   - {fileID: 4442183312776532345}
@@ -7196,10 +7379,10 @@ Transform:
   - {fileID: 7817906148625695434}
   - {fileID: 8507283964500150942}
   - {fileID: 3380033969785000492}
+  - {fileID: 205307710554826335}
   - {fileID: 5878051487173715360}
   - {fileID: 846080783612132214}
   - {fileID: 5805252857955100956}
-  - {fileID: 2668634392204488274}
   - {fileID: 6831952986062408873}
   - {fileID: 5143082378998638560}
   - {fileID: 8209887054358523460}
@@ -7229,7 +7412,6 @@ Transform:
   - {fileID: 7430420593622774833}
   - {fileID: 1686278075662265061}
   - {fileID: 2650602578617798148}
-  - {fileID: 3756439636338471250}
   - {fileID: 7367402812740906260}
   - {fileID: 3647435359176526275}
   - {fileID: 8310468995580669769}
@@ -7247,12 +7429,10 @@ Transform:
   - {fileID: 6700176649557869687}
   - {fileID: 3340717748302135925}
   - {fileID: 2214865672367787036}
-  - {fileID: 4958461103991944606}
   - {fileID: 288815520507083103}
   - {fileID: 8171862183138182860}
   - {fileID: 251688403071055784}
   - {fileID: 3195634283824755932}
-  - {fileID: 4541886165200960805}
   - {fileID: 5983658462392147714}
   - {fileID: 3506375045831821090}
   - {fileID: 3960666977441167762}
@@ -8590,12 +8770,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6397578843248181853}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2382114561705044355}
+  m_Father: {fileID: 205307710554826335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9147282729077819012
 MonoBehaviour:
@@ -9220,12 +9400,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6922724606570284174}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2382114561705044355}
+  m_Father: {fileID: 205307710554826335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5041266731474378597
 MonoBehaviour:
@@ -11754,12 +11934,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8646290984459753504}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 2382114561705044355}
+  m_Father: {fileID: 205307710554826335}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2750197867086792030
 MonoBehaviour:
@@ -12839,7 +13019,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_fontSize
-      value: 62.15
+      value: 66.1
       objectReference: {fileID: 0}
     - target: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Pivot.x

@@ -13,12 +13,12 @@ using UnityEditor;
 namespace NamPhuThuy.UI
 {
 
-    public class GUIGalleryPack : GUIBase
+    public class GalleryPackPopup : BasePopup
     {
         #region Private Serializable Fields
 
         [Header("Buttons")]
-        [SerializeField] private ButtonClicky backButton;
+        // [SerializeField] private ButtonClicky backButton;
         [SerializeField] private ButtonClicky shopButton;
         [SerializeField] private ButtonClicky galleryButton;
 
@@ -30,6 +30,8 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Private Fields
+        
+        public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
 
         #endregion
 
@@ -37,20 +39,20 @@ namespace NamPhuThuy.UI
 
         private void OnEnable()
         {
-            backButton.onClick.AddListener((() => Hide()));
+            // backButton.onClick.AddListener((() => Hide()));
             shopButton.onClick.AddListener((() =>
             {
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIShop);
             }));
             galleryButton.onClick.AddListener(() =>
             {
-                // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIGallery)
+                switchRouteEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
             });
     }
 
         private void OnDisable()
         {
-            backButton.onClick.RemoveAllListeners();
+            // backButton.onClick.RemoveAllListeners();
             shopButton.onClick.RemoveAllListeners();
             galleryButton.onClick.RemoveAllListeners();
         }
@@ -62,12 +64,19 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Public Methods
-        public override void Show(params object[] parameters)
+        /*protected override void Show(params object[] parameters)
         {
             base.Show(parameters);
 
             scrollRect.LockVerticalScrollALittle();
+        }*/
+
+        protected override void Show(Action onCompletedAction = null)
+        {
+            base.Show(onCompletedAction);
+            scrollRect.LockVerticalScrollALittle();
         }
+
         #endregion
     }
 }

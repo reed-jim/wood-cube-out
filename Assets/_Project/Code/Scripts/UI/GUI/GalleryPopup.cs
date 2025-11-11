@@ -17,12 +17,12 @@ using UnityEditor;
 namespace NamPhuThuy.UI
 {
 
-    public class GUIGallery : GUIBase
+    public class GalleryPopup : BasePopup
     {
         #region Private Serializable Fields
 
         [Header("Buttons")]
-        [SerializeField] private ButtonClicky backButton;
+        // [SerializeField] private ButtonClicky backButton;
         [SerializeField] private Button confirmFilterButton;
 
         [Space(5)]
@@ -121,7 +121,7 @@ namespace NamPhuThuy.UI
 
         void OnEnable()
         {
-            backButton.onClick.AddListener((() => Hide()));
+            // backButton.onClick.AddListener((() => Hide()));
             confirmFilterButton.onClick.AddListener(OnClickConfirmFilter);
 
             specialFilterButton.onClick.AddListener(OnClickSpecialFilter);
@@ -188,7 +188,7 @@ namespace NamPhuThuy.UI
 
         void OnDisable()
         {
-            backButton.onClick.RemoveAllListeners();
+            // backButton.onClick.RemoveAllListeners();
             confirmFilterButton.onClick.RemoveAllListeners();
 
             specialFilterButton.onClick.RemoveAllListeners();
@@ -439,9 +439,9 @@ namespace NamPhuThuy.UI
 
         #region Public Methods
 
-        public override void Hide(params object[] parameters)
+        protected override void Hide(Action onCompletedAction = null)
         {
-            base.Hide(parameters);
+            base.Hide(onCompletedAction);
 
             AnimationUtils.HideDropdown(_filterView, _filterViewCanvasGroup);
         }

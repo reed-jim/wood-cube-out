@@ -50,6 +50,8 @@ public class GameLoading : MonoBehaviour
     private RectTransform _progressBarFillRT;
 
 
+    #region MonoBehaviour Methods
+
     private void Awake()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -69,13 +71,13 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            Addressables.LoadSceneAsync("Yarn", LoadSceneMode.Additive);
+            Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
         else
         {
-            _menuSceneHandle = Addressables.LoadSceneAsync("Yarn", LoadSceneMode.Additive);
+            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
         }
 
         // StartCoroutine(LoadFromGitHub());
@@ -89,6 +91,8 @@ public class GameLoading : MonoBehaviour
 
         CommonUtil.StopAllTweens(_tweens);
     }
+
+    #endregion
 
     private IEnumerator SlowTransititon()
     {

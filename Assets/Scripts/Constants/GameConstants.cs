@@ -6,6 +6,7 @@ public static class GameConstants
     public static string LOADING_SCENE = "Loading";
     public static string MENU_SCENE = "Menu";
     public static string GAMEPLAY_SCENE = "Gameplay";
+    public static string YARN_SCENE = "Yarn";
 
     #region SCREEN ROUTE
     public static string LOBBY_DETAIL_ROUTE = "Lobby Detail";

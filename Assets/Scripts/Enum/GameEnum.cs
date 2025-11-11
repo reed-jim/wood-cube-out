@@ -5,10 +5,10 @@ public class GameEnum : MonoBehaviour
 {
     public enum ScreenRoute
     {
-        Waiting,
-        Lobby,
-        LobbyRoom,
-        Screen1,
+        Waiting = 0,
+        Lobby = 1,
+        LobbyRoom = 2,
+        Screen1 = 3,
         Screen2,
         Screen3,
         Screen4,
@@ -66,7 +66,9 @@ public class GameEnum : MonoBehaviour
         StarTournament,
         EditProfile,
         ChooseDifficulty,
-        UserConsent
+        UserConsent,
+        Gallery,
+        GalleryPack
     }
 
     public enum GameFaction
