@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using NamPhuThuy.UI;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace NamPhuThuy.UI
 
             RemoteGalleryRewardConfig galleryRewardConfig = GamePersistentVariable.galleryRewardConfig;
 
-            int currentLevel = DataManager.Ins.PlayerData.CurrentLevelId + 1;
+            int currentLevel = DataManager.Ins.CurrentLevel.Value;
 
             for (int i = 0; i < galleryRewardConfig.Items.Length; i++)
             {
@@ -40,8 +41,10 @@ namespace NamPhuThuy.UI
                 }
             }
 
-            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(DataManager.Ins.PlayerData.CurrentLevel);
-            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(DataManager.Ins.PlayerData.CurrentLevel);
+            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(DataManager.Ins.CurrentLevel.Value - 1);
+            
+            DebugLogger.Log(message:$"numLevelRequired: {_numLevelRequiredForNextReward}, currentLvProgress: {_currentRewardProgress}", color:Color.yellow, context:this);
+            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(DataManager.Ins.CurrentLevel.Value - 1);
 
             base.SetupRewardProgressBar(_currentRewardProgress, prevRewardProgress);
 

@@ -27,12 +27,20 @@ JSON for:
 
     public class DataManager : Singleton<DataManager>
     {
+        #region Serializable Fields
+
+        [SerializeField] private IntVariable currentLevel;
+        public IntVariable CurrentLevel => currentLevel;
+
+        #endregion
+        
         #region Private Fields
 
         
 
         private Coroutine _saveDebounce;
 
+        
         #endregion
 
         #region Mutable Datas
@@ -321,10 +329,14 @@ JSON for:
 
         private void LoadGalleryData()
         {
-            // Debug.Log($"DataManager.LoadGalleryData()");
+            DebugLogger.Log(message:$"Load Data", context:this);
             _saveGalleryDataPath = $"{Application.persistentDataPath}/gallery.{DataConst.DATA_FILES_EXTENSION}";
+            
+            
             if (File.Exists(_saveGalleryDataPath))
             {
+                
+                DebugLogger.Log(message:$"{cachedPlayerGalleryData}", context:this);
                 try
                 {
                     string data = File.ReadAllText(_saveGalleryDataPath);
@@ -332,6 +344,8 @@ JSON for:
                     if (string.IsNullOrEmpty(data))
                     {
                         string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
+                        
+                        DebugLogger.Log(message:$"data: {decrypted}", context:this);
                         cachedPlayerGalleryData = JsonUtility.FromJson<PlayerGalleryData>(decrypted);
                         _isGalleryDataLoaded = true;
                     }
@@ -339,6 +353,10 @@ JSON for:
                     {
                         if(cachedPlayerGalleryData == null)
                             ResetGalleryData();
+                        else
+                        {
+                            DebugLogger.Log(message:$"Not null", context:this);
+                        }
                     }
                 }
                 catch (Exception e)
@@ -366,6 +384,7 @@ JSON for:
 
         public void ResetGalleryData()
         {
+            DebugLogger.Log(message:$"");
             // Debug.Log($"DataManager.LoadResetData()");
             cachedPlayerGalleryData = new PlayerGalleryData();
             _isGalleryDataLoaded = true;
@@ -416,6 +435,8 @@ JSON for:
             // Debug.Log($"DataManager.LoadData()");
             LoadPlayerData();
             LoadSettingsData();
+
+            cachedPlayerGalleryData = null;
             LoadGalleryData();
         }
 

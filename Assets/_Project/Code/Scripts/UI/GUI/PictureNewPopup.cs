@@ -52,7 +52,7 @@ namespace NamPhuThuy.UI
         [SerializeField] private RectTransform videoPlaceholderRT;
         
         [Header("Assets Download")]
-        [SerializeField] private ButtonClicky adsDownloadButton;
+        // [SerializeField] private ButtonClicky adsDownloadButton;
         [SerializeField] private ButtonClicky imageDownloadButton;
         [SerializeField] private ButtonClicky videoDownloadButton;
         
@@ -64,11 +64,16 @@ namespace NamPhuThuy.UI
         
         [SerializeField] private Image imageCompleteTick;
         [SerializeField] private Image videoCompleteTick;
+        
+        [Header("ScriptableObjects")]
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
+        [SerializeField] private IntVariable currentLevel;
 
         private RectTransform _imageToCalulateSizeForVideoRT;
         private bool _isVideoPrepareCompleted;
         public event Action ChangeLikeState;
 
+        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
         #endregion
 
         #region Private Fields
@@ -80,6 +85,7 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region MonoBehaviour Callbacks
+        
 
         private void Start()
         {
@@ -96,7 +102,7 @@ namespace NamPhuThuy.UI
             dislikeButton.onClick.AddListener(OnClickDisLike);
 
 
-            adsDownloadButton.onClick.AddListener(OnClickDownloadWithAds);
+            // adsDownloadButton.onClick.AddListener(OnClickDownloadWithAds);
             videoDownloadButton.onClick.AddListener(OnClickVideoDownload);
             imageDownloadButton.onClick.AddListener(OnClickImageDownloadVer2);
             
@@ -109,7 +115,7 @@ namespace NamPhuThuy.UI
             likeButton.onClick.RemoveListener(OnClickLike);
             dislikeButton.onClick.RemoveListener(OnClickDisLike);
 
-            adsDownloadButton.onClick.RemoveListener(OnClickDownloadWithAds);
+            // adsDownloadButton.onClick.RemoveListener(OnClickDownloadWithAds);
             videoDownloadButton.onClick.RemoveAllListeners();
             imageDownloadButton.onClick.RemoveAllListeners();
 
@@ -130,8 +136,6 @@ namespace NamPhuThuy.UI
             base.Show(onCompletedAction);
             
             currentPictureId = GamePersistentVariable.currentPictureId_PictureNew;
-
-            // AudioManager.Ins.Play(AudioEnum.SFX_REWAR_APPEAR);
 
             imageButton.isUseClickyFX = false; // Turn off the ClickyFX 
             
@@ -215,10 +219,11 @@ namespace NamPhuThuy.UI
 
         #region Button Events
 
+        /// <summary>
+        /// Show the picture details popup
+        /// </summary>
         private void OnClickImage()
         {
-            // Show the picture details
-
             List<int> pictureIdList = new List<int>();
             foreach (PlayerPictureData data in DataManager.Ins.PlayerGalleryData.playerPictures)
             {
@@ -227,7 +232,7 @@ namespace NamPhuThuy.UI
 
             GamePersistentVariable.currentPictureId_PictureDetails = currentPictureId;
             GamePersistentVariable.picIdList_PictureDetails = pictureIdList;
-            SwitchRoute(GameEnum.ScreenRoute.PictureDetails);
+            SwitchRoute(GameEnum.ScreenRoute.PictureDetails, false);
         }
 
         private void OnClickLike()
@@ -291,11 +296,17 @@ namespace NamPhuThuy.UI
             _downloadedNoti = _imageDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_IMAGE).price;
 
-            if (DataManager.Ins.PlayerData.Coin >= downloadPrice)
+            if (userResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
             {
                 GamePersistentVariable.spendCoinReason = "DownloadPicture";
 
-                DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
+                // DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
+                userResourcesObserver.ChangeCoin(-downloadPrice);
+                SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
+                
+                
                 ShowLoadingPopup();
 
                 currentPlayerPicData.isDownloadedImage = true;
@@ -303,7 +314,8 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin);
+                // SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin, false);
+                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
             }
         }
         
@@ -313,25 +325,18 @@ namespace NamPhuThuy.UI
         private void OnClickImageDownloadVer2()
         {
             _downloadedNoti = _imageDownloadedNoti;
-            // AdsManager.Ins.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DOWNLOAD_PICTURE, PlaceWatchVideo.GUI_PICTURE_NEW);
+            AdmobAdsMax.Instance.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DownloadPicture);
 
             void EarnReward()
             {
-                if (!PermissionUtil.ManuallyRequestPermission())
-                {
-                    ShowPermissionNotAllowedNotification();
-
-                    return;
-                }
-
                 ShowLoadingPopup();
 
                 Texture2D texture = currentPicData.mainImage.texture;
 
                 // Save to gallery with callback
-                /*NativeGallery.SaveImageToGallery(
+                NativeGallery.SaveImageToGallery(
                     texture,
-                    "Tile Aqua Girl", // Album name
+                    LocalizationConst.AQUA_GIRL_WOOL, // Album name
                     $"Picture_{currentPictureId}.png", // Filename
                     (success, path) =>
                     {
@@ -342,15 +347,15 @@ namespace NamPhuThuy.UI
                         }
                         else
                         {
-                            _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                            _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                         }
                     }
-                );*/
+                );
             }
 
             void OnLoadVideoFailed()
             {
-                // AdsManager.Ins.ShowAdNotLoadedNotification();
+                InvokeShowAdNotLoadedPopupEvent();
             }
 
             void OnAdsClosed()
@@ -361,21 +366,23 @@ namespace NamPhuThuy.UI
         
         private void OnClickVideoDownload()
         {
-            if (!PermissionUtil.ManuallyRequestPermission())
-            {
-                ShowPermissionNotAllowedNotification();
-
-                return;
-            }
+            DebugLogger.Log(message:$"1");
 
             _downloadedNoti = _videoDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
 
-            if (DataManager.Ins.PlayerData.Coin >= downloadPrice)
+            if (userResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
             {
+                DebugLogger.Log(message:$"3");
                 GamePersistentVariable.spendCoinReason = "DownloadVideo";
 
-                DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
+                userResourcesObserver.ChangeCoin(-downloadPrice);
+                SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
+                
+                
+                
                 ShowLoadingPopup();
                 // DownloadVideo();
                 StartCoroutine(IEDownLoadVideo());
@@ -383,7 +390,9 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin);
+                DebugLogger.Log(message:$"4");
+                // SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin, false);
+                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
             }
 
             IEnumerator IEDownLoadVideo()
@@ -400,9 +409,10 @@ namespace NamPhuThuy.UI
                         byte[] videoBytes = www.downloadHandler.data;
 
                         // Save directly using byte array
-                        /*NativeGallery.SaveVideoToGallery(
+                        
+                        NativeGallery.SaveVideoToGallery(
                             videoBytes,
-                            "Tile Aqua Girl",
+                            LocalizationConst.AQUA_GIRL_WOOL,
                             $"Video_{currentPictureId}.mp4",
                             (success, path) =>
                             {
@@ -413,14 +423,14 @@ namespace NamPhuThuy.UI
                                 }
                                 else
                                 {
-                                    _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                                    _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                                 }
                             }
-                        );*/
+                        );
                     }
                     else
                     {
-                        // _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                        _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                     }
                 }
             }
@@ -519,18 +529,20 @@ namespace NamPhuThuy.UI
         private void ShowLoadingPopup()
         {
             // Show Loading Popup
-            /*GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPopupLoading, 0f, 2f, "DOWNLOADING...");
-            GUIManager.Ins.GUIPopupLoading.OnLoadComplete += HandleLoaded;
+            
+            SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
 
             void HandleLoaded()
             {
-                GUIManager.Ins.GUIPopupLoading.OnLoadComplete -= HandleLoaded;
-                GUIManager.Ins.GUIPopupLoading.Hide();
-                VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: _downloadedNoti,
-                    initialParent: transform);
-            }*/
+                var args = new PopupTextArgs {
+                    message = _downloadedNoti,
+                    worldPos = transform.position,
+                    color = Color.white,
+                    duration = 1f,
+                    onComplete = null
+                };
+                VFXManager.Ins.Play<PopupTextArgs>(args);
+            }
         }
         
         private void ShowPermissionNotAllowedNotification()

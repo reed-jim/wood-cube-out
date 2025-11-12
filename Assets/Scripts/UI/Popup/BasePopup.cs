@@ -33,6 +33,7 @@ public class BasePopup : MonoBehaviour
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
+    public static event Action<ScreenRoute, bool> switchPopupRouteHideEvent;
     public static event Action<ScreenRoute, object[]> switchPopupRouteParamsEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
@@ -42,6 +43,7 @@ public class BasePopup : MonoBehaviour
     {
         switchPopupRouteEvent += OnRouteSwitched;
         switchPopupRouteParamsEvent += OnRouteSwitched;
+        switchPopupRouteHideEvent += OnRouteSwitched;
         
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
@@ -96,6 +98,7 @@ public class BasePopup : MonoBehaviour
     {
         switchPopupRouteEvent -= OnRouteSwitched;
         switchPopupRouteParamsEvent -= OnRouteSwitched;
+        switchPopupRouteHideEvent -= OnRouteSwitched;
         
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
@@ -188,30 +191,14 @@ public class BasePopup : MonoBehaviour
         {
             return;
         }
+        
+        transform.SetAsLastSibling();
 
         ActualShowAfterAd(onCompletedAction);
 
-        // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-        // {
-        //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
-        // }
-        // else
-        // {
-        //     ActualShowAfterAd(onCompletedAction);
-        // }
-
+        
         _isInTransition = true;
     }
-
-    // protected void ShowWithoutAd(Action onCompletedAction = null)
-    // {
-    //     if (_isInTransition)
-    //     {
-    //         return;
-    //     }
-
-    //     ActualShowAfterAd(onCompletedAction);
-    // }
 
     private void ActualShowAfterAd(Action onCompletedAction = null)
     {
@@ -226,6 +213,7 @@ public class BasePopup : MonoBehaviour
 
         enableSwipingScreenEvent?.Invoke(false);
 
+        
         void OnTransitionCompleted()
         {
             _isInTransition = false;
@@ -389,6 +377,11 @@ public class BasePopup : MonoBehaviour
     protected void SwitchRoute(ScreenRoute route)
     {
         switchPopupRouteEvent?.Invoke(route);
+    }
+    
+    protected void SwitchRoute(ScreenRoute route, bool isHideOthers = true)
+    {
+        switchPopupRouteHideEvent?.Invoke(route, isHideOthers);
     }
     
     protected void SwitchRoute(ScreenRoute route, params object[] parameters)

@@ -250,9 +250,9 @@ namespace NamPhuThuy.UI
                         byte[] videoBytes = www.downloadHandler.data;
 
                         // Save directly using byte array
-                        /*NativeGallery.SaveVideoToGallery(
+                        NativeGallery.SaveVideoToGallery(
                             videoBytes,
-                            "Tile Aqua Girl",
+                            LocalizationConst.AQUA_GIRL_WOOL,
                             $"Video_{currentPictureId}.mp4",
                             (success, path) =>
                             {
@@ -263,14 +263,14 @@ namespace NamPhuThuy.UI
                                 }
                                 else
                                 {
-                                    _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                                    _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                                 }
                             }
-                        );*/
+                        );
                     }
                     else
                     {
-                        // _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                        _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                     }
                 }
             }

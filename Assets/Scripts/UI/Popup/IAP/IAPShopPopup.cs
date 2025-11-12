@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,6 +27,7 @@ public class IAPShopPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         BuyBoosterPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
+        PictureNewPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         RevivePopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         LivesShopPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
@@ -34,6 +36,8 @@ public class IAPShopPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         BuyBoosterPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        PictureNewPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        
         RevivePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         LivesShopPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;

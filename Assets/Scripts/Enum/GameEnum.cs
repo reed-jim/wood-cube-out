@@ -74,7 +74,8 @@ public class GameEnum : MonoBehaviour
         GalleryPack = 64,
         PictureNew = 65,
         PictureDetails = 66,
-        NotEnoughCoin = 67
+        NotEnoughCoin = 67,
+        Popup_Loading = 68
     }
 
     public enum GameFaction

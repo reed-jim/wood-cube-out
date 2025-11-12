@@ -3,6 +3,7 @@ using Firebase.Analytics;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -716,19 +717,20 @@ public enum ActionClick
 public enum ActionWatchVideo
 {
     None = 0,
-    AddHole,
-    BreakObject,
-    ClearHoles,
-    UnlockScrewBox,
-    SkipLevel,
-    MultiplyCoinWinLevel,
-    BoosterSuggestion,
-    ClaimDoubleScrewBoxes,
-    DailyReward,
-    StarChest,
-    LevelChest,
-    SpaceRace,
-    CoinChallenge
+    AddHole = 1,
+    BreakObject = 2,
+    ClearHoles = 3,
+    UnlockScrewBox = 4,
+    SkipLevel = 5,
+    MultiplyCoinWinLevel = 6,
+    BoosterSuggestion = 7,
+    ClaimDoubleScrewBoxes = 8,
+    DailyReward = 9,
+    StarChest = 10,
+    LevelChest = 11,
+    SpaceRace = 12,
+    CoinChallenge = 13,
+    DownloadPicture = 14
 }
 
 public enum ActionShowInter

@@ -1001,7 +1001,6 @@ MonoBehaviour:
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
   isShowingInterAdOnInteract: 0
-  isHideOthers: 0
   currentPictureId: 0
   currentPlayerPicData:
     pictureId: 0
@@ -1033,7 +1032,6 @@ MonoBehaviour:
   videoFrame: {fileID: 4783233769922878818}
   videoPlaceholder: {fileID: 1797360863428777086}
   videoPlaceholderRT: {fileID: 1144067527772360155}
-  adsDownloadButton: {fileID: 6037762113674917363}
   imageDownloadButton: {fileID: 3588194663113476456}
   videoDownloadButton: {fileID: 2843591459376172575}
   imageDownloadPriceText: {fileID: 8091484123434835749}
@@ -1042,6 +1040,8 @@ MonoBehaviour:
   videoDownloadSwitch: {fileID: 5386047698539247327}
   imageCompleteTick: {fileID: 4413944789802125819}
   videoCompleteTick: {fileID: 8314523569182490963}
+  userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
 --- !u!114 &1301001744908728455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4184,17 +4184,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7031968142950609373, guid: 7ac06d178ef7a9a4ca7546c86ebcc112, type: 3}
   m_PrefabInstance: {fileID: 4844427206289439991}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &6037762113674917363 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1220664922996279556, guid: 7ac06d178ef7a9a4ca7546c86ebcc112, type: 3}
-  m_PrefabInstance: {fileID: 4844427206289439991}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8143638792135757353}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 03308c36c1afab44ea5b877b646a4e76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &8143638792135757353 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3620569423347806942, guid: 7ac06d178ef7a9a4ca7546c86ebcc112, type: 3}
