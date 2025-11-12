@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
@@ -25,8 +26,14 @@ namespace NamPhuThuy.UI
         [Header("Stats")]
         public int pictureId;
         public PlayerPictureData.LikeState likeState;
-
+    
         [SerializeField] private Button pictureButton;
+
+        #endregion
+
+        #region Events
+
+        public static event Action<GameEnum.ScreenRoute, bool> switchRouteEvent; 
 
         #endregion
 
@@ -52,7 +59,9 @@ namespace NamPhuThuy.UI
 
         private void OnClickPicture()
         {
-            // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPictureDetails, 0f, pictureId, GUIManager.Ins.GUIGallery.CurrentPictureIdList);
+            DebugLogger.Log(message:$"Clicked the picture with ID: {pictureId}", context:this);
+            GamePersistentVariable.currentPictureId_PictureDetails = pictureId;
+            switchRouteEvent.Invoke(GameEnum.ScreenRoute.PictureDetails, false);
         }
 
         #endregion

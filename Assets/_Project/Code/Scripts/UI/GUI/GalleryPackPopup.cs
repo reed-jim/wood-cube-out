@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using NamPhuThuy.Common;
 
 
 #if UNITY_EDITOR
@@ -18,7 +19,6 @@ namespace NamPhuThuy.UI
         #region Private Serializable Fields
 
         [Header("Buttons")]
-        // [SerializeField] private ButtonClicky backButton;
         [SerializeField] private ButtonClicky shopButton;
         [SerializeField] private ButtonClicky galleryButton;
 
@@ -39,20 +39,19 @@ namespace NamPhuThuy.UI
 
         private void OnEnable()
         {
-            // backButton.onClick.AddListener((() => Hide()));
             shopButton.onClick.AddListener((() =>
             {
-                // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIShop);
+                switchRouteEvent?.Invoke(GameEnum.ScreenRoute.IAPShop);
             }));
             galleryButton.onClick.AddListener(() =>
             {
+                DebugLogger.Log(message:$"");
                 switchRouteEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
             });
     }
 
         private void OnDisable()
         {
-            // backButton.onClick.RemoveAllListeners();
             shopButton.onClick.RemoveAllListeners();
             galleryButton.onClick.RemoveAllListeners();
         }
@@ -64,12 +63,6 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Public Methods
-        /*protected override void Show(params object[] parameters)
-        {
-            base.Show(parameters);
-
-            scrollRect.LockVerticalScrollALittle();
-        }*/
 
         protected override void Show(Action onCompletedAction = null)
         {

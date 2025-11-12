@@ -13,7 +13,7 @@ using UnityEditor;
 namespace NamPhuThuy.UI
 {
 
-    public class GUIPictureDetails : BasePopup
+    public class PictureDetailsPopup : BasePopup
     {
         #region Public Fields
 
@@ -24,14 +24,11 @@ namespace NamPhuThuy.UI
         #region Private Serializable Fields
 
         [Header("Buttons")]
-        [SerializeField] private ButtonClicky closeButton;
-
         [Space(5)]
         [SerializeField] private ButtonClicky prevButton;
         [SerializeField] private ButtonClicky nextButton;
 
         [Space(5)]
-        [SerializeField] private ButtonClicky adsDownloadButton;
         [SerializeField] private ButtonClicky videoDownloadButton;
         [SerializeField] private ButtonClicky imageDownloadButton;
         [SerializeField] private ButtonClicky useAsBackgroundButton;
@@ -50,8 +47,8 @@ namespace NamPhuThuy.UI
         [SerializeField] private ButtonSwitch videoDownloadSwitch;
 
         [Header("Texts")]
-        [SerializeField] private TextMeshProUGUI imageDownloadText;
-        [SerializeField] private TextMeshProUGUI videoDownloadText;
+        [SerializeField] private TextMeshProUGUI imageDownloadPriceText;
+        [SerializeField] private TextMeshProUGUI videoDownloadPriceText;
 
         [Header("Images")]
         [SerializeField] private Image pictureImage;
@@ -69,6 +66,10 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Private Fields
+        
+        private string _downloadedNoti = _videoDownloadedNoti;
+        private static readonly string _videoDownloadedNoti = "Video Downloaded"; 
+        private static readonly string _imageDownloadedNoti = "Image Downloaded"; 
 
         #endregion
 
@@ -84,16 +85,15 @@ namespace NamPhuThuy.UI
 
         void OnEnable()
         {
-            closeButton.onClick.AddListener(OnClickClose);
-
             likeButton.onClick.AddListener(OnClickLike);
             dislikeButton.onClick.AddListener(OnClickDisLike);
 
             prevButton.onClick.AddListener(OnClickPrev);
             nextButton.onClick.AddListener(OnClickNext);
 
-            // downloadWithAdsButton.onClick.AddListener(OnClickDownloadWithAds);
-            // downloadWithCoinButton.onClick.AddListener(OnClickDownloadWithCoin);
+            videoDownloadButton.onClick.AddListener(OnClickDownloadWithCoin);
+            imageDownloadButton.onClick.AddListener(OnClickImageDownloadVer2);
+            
             useAsBackgroundButton.onClick.AddListener(OnClickUseAsBackground);
         }
 
@@ -106,19 +106,15 @@ namespace NamPhuThuy.UI
             prevButton.onClick.RemoveAllListeners();
             nextButton.onClick.RemoveAllListeners();
 
-            // downloadWithAdsButton.onClick.RemoveAllListeners();
-            // downloadWithCoinButton.onClick.RemoveAllListeners();
+            videoDownloadButton.onClick.RemoveAllListeners();
+            imageDownloadButton.onClick.RemoveAllListeners();
+            
             useAsBackgroundButton.onClick.RemoveAllListeners();
         }
 
         #endregion
 
         #region Button Events
-
-        private void OnClickClose()
-        {
-            Hide();
-        }
 
         private void OnClickLike()
         {
@@ -138,12 +134,10 @@ namespace NamPhuThuy.UI
 
         public void OnClickPrev()
         {
-            // Debug.Log($"GUIPictureDetails.OnClickPrev()");
-            // int tmp = currentPictureId - 1;
             int nextListId = currentListId - 1;
             if (nextListId < 0)
             {
-                PlayVFX();
+                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
                 return;
             }
 
@@ -157,27 +151,16 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                PlayVFX();
-            }
-
-            void PlayVFX()
-            {
-                /*VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: VFXPopupTextMessage.NO_PICTURE,
-                    initialParent: /*VFXManager.Ins.#1#transform);*/
+                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
             }
         }
 
         public void OnClickNext()
         {
-            // Debug.Log($"GUIPictureDetails.OnClickNext()");
-            // int tmp = currentPictureId + 1;
-
             int nextListId = currentListId + 1;
             if (nextListId >= currentPictureIdList.Count)
             {
-                PlayVFX();
+                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
                 return;
             }
 
@@ -193,16 +176,20 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                PlayVFX();
+                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
             }
+        }
 
-            void PlayVFX()
-            {
-                /*VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: VFXPopupTextMessage.NO_PICTURE,
-                    initialParent: /*VFXManager.Ins.#1#transform);*/
-            }
+        private void PlayVFX(string message)
+        {
+            var args = new PopupTextArgs {
+                message = message,
+                worldPos = transform.position,
+                color = Color.white,
+                duration = 1f,
+                onComplete = null
+            };
+            VFXManager.Ins.Play<PopupTextArgs>(args);
         }
 
         private void OnClickDisLike()
@@ -222,24 +209,70 @@ namespace NamPhuThuy.UI
             // SetStateForButton();
         }
 
-        private void OnClickDownloadWithAds()
+        private void OnClickVideoDownload()
         {
-            // AdsManager.Ins.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.EARN_COIN_END_LEVEL, PlaceWatchVideo.GUI_PICTURE_DETAILS);
-
-            void EarnReward()
+            if (!PermissionUtil.ManuallyRequestPermission())
             {
-                StartCoroutine(IEShowLoadingPopup());
-                currentPlayerPicData.isDownloadedImage = true;
+                ShowPermissionNotAllowedNotification();
+
+                return;
             }
 
-            void OnLoadVideoFailed()
+            _downloadedNoti = _videoDownloadedNoti;
+            int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
+
+            if (DataManager.Ins.PlayerData.Coin >= downloadPrice)
             {
-                // AdsManager.Ins.ShowAdNotLoadedNotification();
+                GamePersistentVariable.spendCoinReason = "DownloadVideo";
+
+                DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
+                ShowLoadingPopup();
+                // DownloadVideo();
+                StartCoroutine(IEDownLoadVideo());
+                // SetStateDownloadSwitches();
+            }
+            else
+            {
+                SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin);
             }
 
-            void OnAdsClosed()
+            IEnumerator IEDownLoadVideo()
             {
-                // Debug.Log($"GUIPictureNew.OnClickDownloadWithAds.OnAdsClosed()");
+                string videoPath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{currentPicData.videoName}.mp4");
+
+                // Load video bytes from StreamingAssets
+                using (UnityEngine.Networking.UnityWebRequest www = UnityEngine.Networking.UnityWebRequest.Get(videoPath))
+                {
+                    yield return www.SendWebRequest();
+
+                    if (www.result == UnityEngine.Networking.UnityWebRequest.Result.Success)
+                    {
+                        byte[] videoBytes = www.downloadHandler.data;
+
+                        // Save directly using byte array
+                        /*NativeGallery.SaveVideoToGallery(
+                            videoBytes,
+                            "Tile Aqua Girl",
+                            $"Video_{currentPictureId}.mp4",
+                            (success, path) =>
+                            {
+                                if (success)
+                                {
+                                    currentPlayerPicData.isDownloadedVideo = true;
+                                    SetStateDownloadSwitches();
+                                }
+                                else
+                                {
+                                    _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                                }
+                            }
+                        );*/
+                    }
+                    else
+                    {
+                        // _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                    }
+                }
             }
         }
 
@@ -278,14 +311,87 @@ namespace NamPhuThuy.UI
 
         #endregion
 
+        #region Download Feature
+
+        /// <summary>
+        /// Download image version 2 (reward ads)
+        /// </summary>
+        private void OnClickImageDownloadVer2()
+        {
+            _downloadedNoti = _imageDownloadedNoti;
+            // AdsManager.Ins.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DOWNLOAD_PICTURE, PlaceWatchVideo.GUI_PICTURE_NEW);
+
+            void EarnReward()
+            {
+                if (!PermissionUtil.ManuallyRequestPermission())
+                {
+                    ShowPermissionNotAllowedNotification();
+
+                    return;
+                }
+
+                ShowLoadingPopup();
+
+                Texture2D texture = currentPicData.mainImage.texture;
+
+                // Save to gallery with callback
+                /*NativeGallery.SaveImageToGallery(
+                    texture,
+                    "Tile Aqua Girl", // Album name
+                    $"Picture_{currentPictureId}.png", // Filename
+                    (success, path) =>
+                    {
+                        if (success)
+                        {
+                            currentPlayerPicData.isDownloadedImage = true;
+                            SetStateDownloadSwitches();
+                        }
+                        else
+                        {
+                            _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                        }
+                    }
+                );*/
+            }
+
+            void OnLoadVideoFailed()
+            {
+                // AdsManager.Ins.ShowAdNotLoadedNotification();
+            }
+
+            void OnAdsClosed()
+            {
+                // Debug.Log($"GUIPictureNew.OnClickDownloadWithAds.OnAdsClosed()");
+            }
+        }
+
+        #endregion
+
         #region Private Methods
+        
+        private void ShowLoadingPopup()
+        {
+            // Show Loading Popup
+            /*GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPopupLoading, 0f, 2f, "DOWNLOADING...");
+            GUIManager.Ins.GUIPopupLoading.OnLoadComplete += HandleLoaded;
+
+            void HandleLoaded()
+            {
+                GUIManager.Ins.GUIPopupLoading.OnLoadComplete -= HandleLoaded;
+                GUIManager.Ins.GUIPopupLoading.Hide();
+                VFXManager.Ins.PlayAt(
+                    VFXType.POPUP_TEXT,
+                    message: _downloadedNoti,
+                    initialParent: transform);
+            }*/
+        }
 
         public void ChangePicture(int pictureID)
         {
             currentPictureId = pictureID;
             pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[pictureID].mainImage;
 
-            // pictureImage.FitImageToRectTransform(GUIManager.Ins.GetComponent<RectTransform>());
+            pictureImage.FitImageToRectTransform(GetComponent<RectTransform>());
         }
 
         private bool CheckValidatePictureData(int pictureID)
@@ -355,6 +461,20 @@ namespace NamPhuThuy.UI
 
             yield return null;
         }
+        
+        private void ShowPermissionNotAllowedNotification()
+        {
+            _downloadedNoti = "Permission Denied";
+            
+            var args = new PopupTextArgs {
+                message = _downloadedNoti,
+                worldPos = transform.position,
+                color = Color.white,
+                duration = 1f,
+                onComplete = null
+            };
+            VFXManager.Ins.Play<PopupTextArgs>(args);
+        }
 
         #endregion
 
@@ -375,6 +495,16 @@ namespace NamPhuThuy.UI
                     currentListId = i;
                     break;
                 }
+            }
+            
+            if (videoDownloadPriceText != null)
+            {
+                videoDownloadPriceText.text = $"{DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price}";
+            }
+
+            if (imageDownloadPriceText != null)
+            {
+                imageDownloadPriceText.text = $"{DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_IMAGE).price}";
             }
 
             if (CheckValidatePictureData(currentPictureId))
@@ -418,17 +548,17 @@ namespace NamPhuThuy.UI
     }
 
 #if UNITY_EDITOR
-    [CustomEditor(typeof(GUIPictureDetails))]
+    [CustomEditor(typeof(PictureDetailsPopup))]
     public class GUIPictureDetailsEditor : Editor
     {
-        private GUIPictureDetails target;
+        private PictureDetailsPopup target;
         public override void OnInspectorGUI()
         {
             // Draw the default inspector
             base.OnInspectorGUI();
 
             // Get the target component
-            target = (GUIPictureDetails)serializedObject.targetObject;
+            target = (PictureDetailsPopup)serializedObject.targetObject;
 
             // Display the current picture ID
             EditorGUILayout.LabelField("Current Picture ID", target.CurrentPictureId.ToString());

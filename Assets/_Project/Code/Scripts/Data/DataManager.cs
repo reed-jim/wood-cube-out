@@ -187,8 +187,9 @@ JSON for:
 
         #region MonoBehaviour Callbacks
 
-        private void Start()
+        protected override void Awake()
         {
+            base.Awake();
             // Debug.Log($"path: {Application.persistentDataPath}");
             _savePlayerDataPath = $"{Application.persistentDataPath}/player.{DataConst.DATA_FILES_EXTENSION}";
             _saveSettingsDataPath = $"{Application.persistentDataPath}/settings.{DataConst.DATA_FILES_EXTENSION}";
@@ -264,9 +265,19 @@ JSON for:
                  */
                     string data = File.ReadAllText(_savePlayerDataPath);
 
-                    //Large string operations can be memory and CPU intensive
-                    string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
-                    cachedPlayerData = JsonUtility.FromJson<PlayerData>(decrypted);
+                    if (!string.IsNullOrEmpty(data))
+                    {
+                        //Large string operations can be memory and CPU intensive
+                        string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
+                        cachedPlayerData = JsonUtility.FromJson<PlayerData>(decrypted);    
+                    }
+                    else
+                    {
+                        if (cachedPlayerData == null)
+                            ResetPlayerData();
+                    }
+
+                    
                 }
                 catch (Exception e)
                 {
@@ -286,8 +297,17 @@ JSON for:
                 try
                 {
                     string data = File.ReadAllText(_saveSettingsDataPath);
-                    string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
-                    cachedPlayerSettingsData = JsonUtility.FromJson<PlayerSettingsData>(decrypted);
+
+                    if (string.IsNullOrEmpty(data))
+                    {
+                        string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
+                        cachedPlayerSettingsData = JsonUtility.FromJson<PlayerSettingsData>(decrypted);
+                    }
+                    else
+                    {
+                        if(cachedPlayerSettingsData == null)
+                            ResetSettingsData();
+                    }
                 }
                 catch (Exception e)
                 {
@@ -308,9 +328,18 @@ JSON for:
                 try
                 {
                     string data = File.ReadAllText(_saveGalleryDataPath);
-                    string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
-                    cachedPlayerGalleryData = JsonUtility.FromJson<PlayerGalleryData>(decrypted);
-                    _isGalleryDataLoaded = true;
+
+                    if (string.IsNullOrEmpty(data))
+                    {
+                        string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
+                        cachedPlayerGalleryData = JsonUtility.FromJson<PlayerGalleryData>(decrypted);
+                        _isGalleryDataLoaded = true;
+                    }
+                    else
+                    {
+                        if(cachedPlayerGalleryData == null)
+                            ResetGalleryData();
+                    }
                 }
                 catch (Exception e)
                 {

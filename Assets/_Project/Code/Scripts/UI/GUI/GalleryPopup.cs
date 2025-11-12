@@ -58,7 +58,17 @@ namespace NamPhuThuy.UI
         [SerializeField] private ScrollViewGallery scrollViewGallery;
         public ScrollViewGallery ScrollViewGallery => scrollViewGallery;
         [SerializeField] private List<int> currentPictureIdList;
-        public List<int> CurrentPictureIdList => currentPictureIdList;
+
+        public List<int> CurrentPictureIdList
+        {
+            private set
+            {
+                currentPictureIdList = value;
+                GamePersistentVariable.picIdList_PictureDetails = currentPictureIdList;
+            }
+            
+            get => currentPictureIdList;
+        }
 
         /// <summary>
         /// Fired whenever the gallery list changes (filter or sort).
@@ -233,7 +243,8 @@ namespace NamPhuThuy.UI
             ScrollTheViewToTop();
 
             // scrollViewGallery.UpdateContent(currentFilterChoice);
-            currentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            CurrentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            
         }
         #endregion
 
@@ -244,7 +255,7 @@ namespace NamPhuThuy.UI
             // Debug.Log($"GUIGallery.OnClickConfirmFilter() FilterChoice: {currentFilterChoice.Kind}, {currentFilterChoice.Style}, {currentFilterChoice.Rarity}, {currentFilterChoice.LikeState}");
 
             // scrollViewGallery.UpdateContent(currentFilterChoice);
-            currentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            CurrentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
 
             // NEW
             ScrollTheViewToTop();
@@ -273,7 +284,7 @@ namespace NamPhuThuy.UI
             ScrollTheViewToTop();
 
             // scrollViewGallery.UpdateContent(currentFilterChoice);
-            currentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            CurrentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
         }
 
         private void OnClickNormalFilter()
@@ -287,7 +298,7 @@ namespace NamPhuThuy.UI
             ScrollTheViewToTop();
 
             // scrollViewGallery.UpdateContent(currentFilterChoice);
-            currentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            CurrentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
         }
 
         private void OnClickToggleFilterView()
@@ -441,14 +452,16 @@ namespace NamPhuThuy.UI
 
         protected override void Hide(Action onCompletedAction = null)
         {
+            if (gameObject.activeSelf)
+                AnimationUtils.HideDropdown(_filterView, _filterViewCanvasGroup);
             base.Hide(onCompletedAction);
-
-            AnimationUtils.HideDropdown(_filterView, _filterViewCanvasGroup);
+            
+            
         }
 
         public void OnChangeLikeState()
         {
-            currentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
+            CurrentPictureIdList = scrollViewGallery.UpdateContent2(currentFilterChoice);
         }
         
         #endregion

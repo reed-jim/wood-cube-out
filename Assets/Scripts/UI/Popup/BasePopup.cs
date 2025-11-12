@@ -19,7 +19,6 @@ public class BasePopup : MonoBehaviour
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
     [SerializeField] protected bool isShowingInterAdOnInteract;
-    [SerializeField] protected bool isHideOthers = true;
 
     #region PRIVATE FIELD
     private ISaferioUIAnimation _transitionAnimation;
@@ -57,6 +56,7 @@ public class BasePopup : MonoBehaviour
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
         PictureRewardSegmentedProgressBar.switchRouteEvent += OnRouteSwitched;
+        ElementGallery.switchRouteEvent += OnRouteSwitched;
 
         if (closeButton != null)
         {
@@ -110,6 +110,7 @@ public class BasePopup : MonoBehaviour
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
         PictureRewardSegmentedProgressBar.switchRouteEvent -= OnRouteSwitched;
+        ElementGallery.switchRouteEvent -= OnRouteSwitched;
 
         UnregisterMoreEvent();
 
@@ -137,8 +138,20 @@ public class BasePopup : MonoBehaviour
     {
 
     }
-
     private void OnRouteSwitched(ScreenRoute route)
+    {
+        
+        if (route == this.route)
+        {
+            Show();
+        }
+        else
+        {
+            Hide();
+        }
+    }
+
+    private void OnRouteSwitched(ScreenRoute route, bool isHideOthers = true)
     {
         
         if (route == this.route)
