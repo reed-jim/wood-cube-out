@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using NamPhuThuy.AnimateWithScripts;
+using Unity.VisualScripting;
 using UnityEngine.Video;
 
 #if UNITY_EDITOR
@@ -71,8 +72,7 @@ namespace NamPhuThuy.UI
 
         private RectTransform _imageToCalulateSizeForVideoRT;
         private bool _isVideoPrepareCompleted;
-        public event Action ChangeLikeState;
-
+        public static event Action likeStateChangeEvent;
         public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
         #endregion
 
@@ -85,7 +85,18 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region MonoBehaviour Callbacks
-        
+
+        protected override void MoreActionInAwake()
+        {
+            base.MoreActionInAwake();
+            likeStateChangeEvent += OnLikeStateChanged;
+        }
+
+        protected override void MoreActionOnDestroy()
+        {
+            base.MoreActionOnDestroy();
+            likeStateChangeEvent -= OnLikeStateChanged;
+        }
 
         private void Start()
         {
@@ -209,7 +220,7 @@ namespace NamPhuThuy.UI
                     currentPlayerPicData = DataManager.Ins.PlayerGalleryData.FindByPictureId(currentPictureId);
                 }
 
-            SetStateForButton();
+            SetStateReactButtons();
             SetStateDownloadSwitches();
 
             AnimateNewPicture();
@@ -248,7 +259,8 @@ namespace NamPhuThuy.UI
                 currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.LIKE;
             }
 
-            ChangeLikeState?.Invoke();
+            likeStateChangeEvent?.Invoke();
+            SetStateReactButtons();
         }
 
         private void OnClickDisLike()
@@ -264,28 +276,8 @@ namespace NamPhuThuy.UI
                 currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.DISLIKE;
             }
 
-            ChangeLikeState?.Invoke();
-        }
-
-        private void OnClickDownloadWithAds()
-        {
-            // AdsManager.Ins.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DOWNLOAD_PICTURE, PlaceWatchVideo.GUI_PICTURE_NEW);
-
-            void EarnReward()
-            {
-                ShowLoadingPopup();
-                currentPlayerPicData.isDownloadedImage = true;
-            }
-
-            void OnLoadVideoFailed()
-            {
-                // AdsManager.Ins.ShowAdNotLoadedNotification();
-            }
-
-            void OnAdsClosed()
-            {
-
-            }
+            likeStateChangeEvent?.Invoke();
+            SetStateReactButtons();
         }
 
         /// <summary>
@@ -384,7 +376,6 @@ namespace NamPhuThuy.UI
                 
                 
                 ShowLoadingPopup();
-                // DownloadVideo();
                 StartCoroutine(IEDownLoadVideo());
                 // SetStateDownloadSwitches();
             }
@@ -449,14 +440,8 @@ namespace NamPhuThuy.UI
 
                 //GamePlayManager.Ins.BackgroundRenderer.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
                 
-                var args = new PopupTextArgs {
-                    message = "Background Updated",
-                    worldPos = transform.position,
-                    color = Color.white,
-                    duration = 1f,
-                    onComplete = null
-                };
-                VFXManager.Ins.Play<PopupTextArgs>(args);
+                PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
+                
                 MMEventManager.TriggerEvent(new ELevelCameraUpdated());
             }
         }
@@ -534,14 +519,7 @@ namespace NamPhuThuy.UI
 
             void HandleLoaded()
             {
-                var args = new PopupTextArgs {
-                    message = _downloadedNoti,
-                    worldPos = transform.position,
-                    color = Color.white,
-                    duration = 1f,
-                    onComplete = null
-                };
-                VFXManager.Ins.Play<PopupTextArgs>(args);
+                PlayVFXPopupText(_downloadedNoti);
             }
         }
         
@@ -549,14 +527,7 @@ namespace NamPhuThuy.UI
         {
             _downloadedNoti = "Permission Denied";
             
-            var args = new PopupTextArgs {
-                message = _downloadedNoti,
-                worldPos = transform.position,
-                color = Color.white,
-                duration = 1f,
-                onComplete = null
-            };
-            VFXManager.Ins.Play<PopupTextArgs>(args);
+            PlayVFXPopupText(_downloadedNoti);
         }
         
         IEnumerator LoadVideoFromStreamingAssets(string videoName)
@@ -597,11 +568,17 @@ namespace NamPhuThuy.UI
             videoPlayer.Play();
             videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
         }
+        
+        private void OnLikeStateChanged()
+        {
+            SetStateReactButtons();
+        }
+
         #endregion
 
         #region Public Methods
 
-        public void SetStateForButton()
+        public void SetStateReactButtons()
         {
             switch (currentPlayerPicData.PicLikeState)
             {
@@ -618,6 +595,20 @@ namespace NamPhuThuy.UI
                     dislikeSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
                     break;
             }
+        }
+        
+        private void PlayVFXPopupText(string message)
+        {
+            var args = new PopupTextArgs {
+                message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+                worldPos = transform.position,
+                initialParent = transform,
+                font = GUIManager.Instance.DefaultFont,
+                color = Color.white,
+                duration = 1f,
+                onComplete = null
+            };
+            VFXManager.Ins.Play<PopupTextArgs>(args);
         }
 
         #endregion

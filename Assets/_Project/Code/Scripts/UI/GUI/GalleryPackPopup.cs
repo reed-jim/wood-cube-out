@@ -31,7 +31,9 @@ namespace NamPhuThuy.UI
 
         #region Private Fields
         
+        
         public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
+        public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
 
         #endregion
 
@@ -46,7 +48,7 @@ namespace NamPhuThuy.UI
             galleryButton.onClick.AddListener(() =>
             {
                 DebugLogger.Log(message:$"");
-                switchRouteEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
+                switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.Gallery, false);
             });
     }
 

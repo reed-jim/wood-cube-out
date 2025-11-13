@@ -62,7 +62,7 @@ namespace NamPhuThuy.UI
                     currentValue = x;
                     coinText.text = currentValue.ToString();
                 },
-                DataManager.Ins.PlayerData.Coin,
+                (int)DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity,
                 0.3f
             )
             .SetEase(Ease.Linear);

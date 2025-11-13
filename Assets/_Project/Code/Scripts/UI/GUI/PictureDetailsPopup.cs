@@ -17,8 +17,6 @@ namespace NamPhuThuy.UI
     {
         #region Public Fields
 
-        public event Action ChangeLikeState;
-
         #endregion
 
         #region Private Serializable Fields
@@ -73,9 +71,24 @@ namespace NamPhuThuy.UI
 
         #endregion
 
+        #region Events
+        public static event Action likeStateChangeEvent;
+        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
+
+        #endregion
+
 
 
         #region MonoBehaviour Callbacks
+
+        protected override void MoreActionInAwake()
+        {
+            base.MoreActionInAwake();
+            likeStateChangeEvent += OnLikeStateChanged;
+
+        }
+
+        
 
         private void Start()
         {
@@ -91,7 +104,7 @@ namespace NamPhuThuy.UI
             prevButton.onClick.AddListener(OnClickPrev);
             nextButton.onClick.AddListener(OnClickNext);
 
-            videoDownloadButton.onClick.AddListener(OnClickDownloadWithCoin);
+            videoDownloadButton.onClick.AddListener(OnClickVideoDownload);
             imageDownloadButton.onClick.AddListener(OnClickImageDownloadVer2);
             
             useAsBackgroundButton.onClick.AddListener(OnClickUseAsBackground);
@@ -99,7 +112,6 @@ namespace NamPhuThuy.UI
 
         void OnDisable()
         {
-            closeButton.onClick.RemoveAllListeners();
             likeButton.onClick.RemoveAllListeners();
             dislikeButton.onClick.RemoveAllListeners();
 
@@ -129,7 +141,8 @@ namespace NamPhuThuy.UI
                 currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.LIKE;
             }
 
-            ChangeLikeState?.Invoke();
+            likeStateChangeEvent?.Invoke();
+            SetStateReactButtons();
         }
 
         public void OnClickPrev()
@@ -137,7 +150,7 @@ namespace NamPhuThuy.UI
             int nextListId = currentListId - 1;
             if (nextListId < 0)
             {
-                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
+                PlayVFXPopupText(LocalizationConst.NO_PICTURE);
                 return;
             }
 
@@ -146,12 +159,14 @@ namespace NamPhuThuy.UI
             if (CheckValidatePictureData(tmp))
             {
                 ChangePicture(tmp);
+                currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
+                
                 SetStateReactButtons();
                 currentListId--;
             }
             else
             {
-                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
+                PlayVFXPopupText(LocalizationConst.NO_PICTURE);
             }
         }
 
@@ -160,7 +175,7 @@ namespace NamPhuThuy.UI
             int nextListId = currentListId + 1;
             if (nextListId >= currentPictureIdList.Count)
             {
-                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
+                PlayVFXPopupText(LocalizationConst.NO_PICTURE);
                 return;
             }
 
@@ -170,21 +185,26 @@ namespace NamPhuThuy.UI
             if (CheckValidatePictureData(tmp))
             {
                 ChangePicture(tmp);
+                currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
+                
                 SetStateReactButtons();
+                
                 // SetStateDownloadSwitches();
                 currentListId++;
             }
             else
             {
-                PlayVFX(VFXPopupTextMessage.NO_PICTURE);
+                PlayVFXPopupText(LocalizationConst.NO_PICTURE);
             }
         }
 
-        private void PlayVFX(string message)
+        private void PlayVFXPopupText(string message)
         {
             var args = new PopupTextArgs {
-                message = message,
+                message = Lean.Localization.LeanLocalization.GetTranslationText(message),
                 worldPos = transform.position,
+                initialParent = transform,
+                font = GUIManager.Instance.DefaultFont,
                 color = Color.white,
                 duration = 1f,
                 onComplete = null
@@ -205,35 +225,32 @@ namespace NamPhuThuy.UI
                 currentPlayerPicData.PicLikeState = PlayerPictureData.LikeState.DISLIKE;
             }
 
-            ChangeLikeState?.Invoke();
-            // SetStateForButton();
+            likeStateChangeEvent?.Invoke();
+            SetStateReactButtons();
         }
 
         private void OnClickVideoDownload()
         {
-            if (!PermissionUtil.ManuallyRequestPermission())
-            {
-                ShowPermissionNotAllowedNotification();
-
-                return;
-            }
-
             _downloadedNoti = _videoDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
 
-            if (DataManager.Ins.PlayerData.Coin >= downloadPrice)
+            if (DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
             {
                 GamePersistentVariable.spendCoinReason = "DownloadVideo";
 
-                DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
+                DataManager.Ins.UserResourcesObserver.ChangeCoin(-downloadPrice);
+                SaferioTracking.TrackResourceSink(
+                    DataManager.Ins.CurrentLevel.Value, "Coin",
+                    downloadPrice, (int)DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
+                
                 ShowLoadingPopup();
-                // DownloadVideo();
                 StartCoroutine(IEDownLoadVideo());
                 // SetStateDownloadSwitches();
             }
             else
             {
-                SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin);
+                DebugLogger.Log(message:$"Not enough coin");
+                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureDetails);
             }
 
             IEnumerator IEDownLoadVideo()
@@ -276,26 +293,6 @@ namespace NamPhuThuy.UI
             }
         }
 
-        private void OnClickDownloadWithCoin()
-        {
-            // Debug.Log($"GUIPictureDetails.OnClickDownLoadWithCoin()");
-            int downloadPrice = 0;
-            // downloadPrice = DataManager.Ins.ServiceDatas.GetService(ServiceType.DOWNLOAD_IMAGE).price;
-
-            if (DataManager.Ins.PlayerData.Coin > downloadPrice)
-            {
-                DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
-                StartCoroutine(IEShowLoadingPopup());
-
-                currentPlayerPicData.isDownloadedImage = true;
-                // SetStateDownloadSwitches();
-            }
-            else
-            {
-                // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
-            }
-        }
-
         private void OnClickUseAsBackground()
         {
             DataManager.Ins.PlayerData.CurrentBackgroundId = currentPictureId;
@@ -303,10 +300,7 @@ namespace NamPhuThuy.UI
             // GamePlayManager.Ins.SetupBackground();
 
             // GamePlayManager.Ins.BackgroundRenderer.GetComponent<SpriteAutoScaler>().ScaleSpriteToScreen();
-            /*VFXManager.Ins.PlayAt(
-                VFXType.POPUP_TEXT,
-                message: VFXPopupTextMessage.BACKGROUND_UPDATED,
-                initialParent: /*VFXManager.Ins.#1#transform);*/
+           PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
         }
 
         #endregion
@@ -319,25 +313,18 @@ namespace NamPhuThuy.UI
         private void OnClickImageDownloadVer2()
         {
             _downloadedNoti = _imageDownloadedNoti;
-            // AdsManager.Ins.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DOWNLOAD_PICTURE, PlaceWatchVideo.GUI_PICTURE_NEW);
+            AdmobAdsMax.Instance.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DownloadPicture);
 
             void EarnReward()
             {
-                if (!PermissionUtil.ManuallyRequestPermission())
-                {
-                    ShowPermissionNotAllowedNotification();
-
-                    return;
-                }
-
                 ShowLoadingPopup();
 
                 Texture2D texture = currentPicData.mainImage.texture;
 
                 // Save to gallery with callback
-                /*NativeGallery.SaveImageToGallery(
+                NativeGallery.SaveImageToGallery(
                     texture,
-                    "Tile Aqua Girl", // Album name
+                    LocalizationConst.AQUA_GIRL_WOOL, // Album name
                     $"Picture_{currentPictureId}.png", // Filename
                     (success, path) =>
                     {
@@ -348,15 +335,15 @@ namespace NamPhuThuy.UI
                         }
                         else
                         {
-                            _downloadedNoti = VFXPopupTextMessage.DOWNLOAD_FAILED;
+                            _downloadedNoti = LocalizationConst.DOWNLOAD_FAILED;
                         }
                     }
-                );*/
+                );
             }
 
             void OnLoadVideoFailed()
             {
-                // AdsManager.Ins.ShowAdNotLoadedNotification();
+                InvokeShowAdNotLoadedPopupEvent();
             }
 
             void OnAdsClosed()
@@ -371,19 +358,19 @@ namespace NamPhuThuy.UI
         
         private void ShowLoadingPopup()
         {
-            // Show Loading Popup
-            /*GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPopupLoading, 0f, 2f, "DOWNLOADING...");
-            GUIManager.Ins.GUIPopupLoading.OnLoadComplete += HandleLoaded;
+            SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
 
             void HandleLoaded()
             {
-                GUIManager.Ins.GUIPopupLoading.OnLoadComplete -= HandleLoaded;
-                GUIManager.Ins.GUIPopupLoading.Hide();
-                VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: _downloadedNoti,
-                    initialParent: transform);
-            }*/
+                var args = new PopupTextArgs {
+                    message = _downloadedNoti,
+                    worldPos = transform.position,
+                    color = Color.white,
+                    duration = 1f,
+                    onComplete = null
+                };
+                VFXManager.Ins.Play<PopupTextArgs>(args);
+            }
         }
 
         public void ChangePicture(int pictureID)
@@ -474,6 +461,11 @@ namespace NamPhuThuy.UI
                 onComplete = null
             };
             VFXManager.Ins.Play<PopupTextArgs>(args);
+        }
+        
+        private void OnLikeStateChanged()
+        {
+            SetStateReactButtons();
         }
 
         #endregion

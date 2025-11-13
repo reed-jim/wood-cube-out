@@ -31,6 +31,8 @@ JSON for:
 
         [SerializeField] private IntVariable currentLevel;
         public IntVariable CurrentLevel => currentLevel;
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
+        public UserResourcesObserver UserResourcesObserver => userResourcesObserver;
 
         #endregion
         
@@ -436,7 +438,7 @@ JSON for:
             LoadPlayerData();
             LoadSettingsData();
 
-            cachedPlayerGalleryData = null;
+            cachedPlayerGalleryData = null; //? Why this data is not null before load-process
             LoadGalleryData();
         }
 
