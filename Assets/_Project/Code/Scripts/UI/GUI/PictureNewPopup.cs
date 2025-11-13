@@ -74,6 +74,7 @@ namespace NamPhuThuy.UI
         private bool _isVideoPrepareCompleted;
         public static event Action likeStateChangeEvent;
         public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
+        public static event Action updateBackgroundEvent;
         #endregion
 
         #region Private Fields
@@ -435,10 +436,8 @@ namespace NamPhuThuy.UI
             void ChangeBackground()
             {
                 DataManager.Ins.PlayerData.CurrentBackgroundId = currentPictureId;
-
-                // GamePlayManager.Ins.SetupBackground();
-
-                //GamePlayManager.Ins.BackgroundRenderer.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
+                
+                updateBackgroundEvent?.Invoke();
                 
                 PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
                 

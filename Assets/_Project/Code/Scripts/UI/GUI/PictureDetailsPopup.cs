@@ -74,6 +74,7 @@ namespace NamPhuThuy.UI
         #region Events
         public static event Action likeStateChangeEvent;
         public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
+        public static event Action updateBackgroundEvent;
 
         #endregion
 
@@ -294,13 +295,12 @@ namespace NamPhuThuy.UI
         }
 
         private void OnClickUseAsBackground()
-        {
+        { 
+            DebugLogger.Log();
             DataManager.Ins.PlayerData.CurrentBackgroundId = currentPictureId;
 
-            // GamePlayManager.Ins.SetupBackground();
-
-            // GamePlayManager.Ins.BackgroundRenderer.GetComponent<SpriteAutoScaler>().ScaleSpriteToScreen();
-           PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
+            PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
+            updateBackgroundEvent?.Invoke();
         }
 
         #endregion

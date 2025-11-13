@@ -10,7 +10,7 @@ namespace NamPhuThuy.UI
     public class PictureRewardSegmentedProgressBar : SegmentedProgressBar
     {
         [SerializeField] private RectTransform picture;
-        public static event Action<GameEnum.ScreenRoute> switchRouteEvent; 
+        public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent; 
 
         public override void SetupRewardProgressBar()
         {
@@ -83,7 +83,7 @@ namespace NamPhuThuy.UI
             #region NEW
 
             GamePersistentVariable.currentPictureId_PictureNew = DataManager.Ins.PlayerGalleryData.CurrentProgressPictureId;
-            switchRouteEvent.Invoke(GameEnum.ScreenRoute.PictureNew);
+            switchRouteHideEvent.Invoke(GameEnum.ScreenRoute.PictureNew, false);
 
             #endregion
             

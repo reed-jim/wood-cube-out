@@ -28,6 +28,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action skipLevelEvent;
+    
+    public static event Action triggerUpdateBackgroundEvent;
+
+    #region MonoBehaviour Callbacks
 
     protected override void MoreActionOnAwake()
     {
@@ -49,6 +53,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         }
 
         skipLevelButton.gameObject.SetActive(false);
+        triggerUpdateBackgroundEvent?.Invoke();
     }
 
     void OnDestroy()
@@ -58,6 +63,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         PieceManager.updateRemainingPieceEvent -= UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
     }
+
+    #endregion
 
     private void Pause()
     {

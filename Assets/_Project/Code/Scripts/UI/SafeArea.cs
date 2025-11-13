@@ -19,10 +19,10 @@ namespace NamPhuThuy.UI
             AdjustToSafeArea();
         }
 
-        private void OnValidate()
+        /*private void OnValidate()
         {
             AdjustToSafeArea();
-        }
+        }*/
 
         [ContextMenu("AdjustToSafeArea")]
         public void AdjustToSafeArea()

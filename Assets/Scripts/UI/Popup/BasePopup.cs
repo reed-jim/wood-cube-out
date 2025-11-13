@@ -44,7 +44,7 @@ public class BasePopup : MonoBehaviour
     {
         switchPopupRouteEvent += OnRouteSwitched;
         switchPopupRouteParamsEvent += OnRouteSwitched;
-        switchPopupRouteHideEvent += OnRouteSwitched;
+        switchPopupRouteHideEvent += OnRouteHideSwitched;
         
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
@@ -54,14 +54,14 @@ public class BasePopup : MonoBehaviour
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
         RevivePopup.switchRouteEvent += OnRouteSwitched;
-        GalleryPackPopup.switchRouteHideEvent += OnRouteSwitched;
+        GalleryPackPopup.switchRouteHideEvent += OnRouteHideSwitched;
         
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         PausePopup.switchRouteEvent += OnRouteSwitched;
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
-        PictureRewardSegmentedProgressBar.switchRouteEvent += OnRouteSwitched;
-        ElementGallery.switchRouteEvent += OnRouteSwitched;
+        PictureRewardSegmentedProgressBar.switchRouteHideEvent += OnRouteHideSwitched;
+        ElementGallery.switchRouteEvent += OnRouteHideSwitched;
 
         if (closeButton != null)
         {
@@ -101,7 +101,7 @@ public class BasePopup : MonoBehaviour
     {
         switchPopupRouteEvent -= OnRouteSwitched;
         switchPopupRouteParamsEvent -= OnRouteSwitched;
-        switchPopupRouteHideEvent -= OnRouteSwitched;
+        switchPopupRouteHideEvent -= OnRouteHideSwitched;
         
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
@@ -111,14 +111,14 @@ public class BasePopup : MonoBehaviour
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
         RevivePopup.switchRouteEvent -= OnRouteSwitched;
-        GalleryPackPopup.switchRouteHideEvent -= OnRouteSwitched;
+        GalleryPackPopup.switchRouteHideEvent -= OnRouteHideSwitched;
         
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
         PausePopup.switchRouteEvent -= OnRouteSwitched;
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
-        PictureRewardSegmentedProgressBar.switchRouteEvent -= OnRouteSwitched;
-        ElementGallery.switchRouteEvent -= OnRouteSwitched;
+        PictureRewardSegmentedProgressBar.switchRouteHideEvent -= OnRouteHideSwitched;
+        ElementGallery.switchRouteEvent -= OnRouteHideSwitched;
 
         UnregisterMoreEvent();
 
@@ -159,7 +159,7 @@ public class BasePopup : MonoBehaviour
         }
     }
 
-    private void OnRouteSwitched(ScreenRoute route, bool isHideOthers = true)
+    private void OnRouteHideSwitched(ScreenRoute route, bool isHideOthers = true)
     {
         
         if (route == this.route)

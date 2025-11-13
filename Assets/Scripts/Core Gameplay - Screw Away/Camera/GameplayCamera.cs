@@ -1,18 +1,30 @@
 using System;
+using System.Collections;
+using NamPhuThuy.Common;
+using NamPhuThuy.Data;
+using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
+using UnityEngine.Video;
 
 public class GameplayCamera : MonoBehaviour
 {
     [SerializeField] private Camera gameplayCamera;
-    [SerializeField] private Transform background;
+    
 
+    [Header("Background")]
+    [SerializeField] private Transform background;
+    [SerializeField] private VideoPlayer videoPlayer;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    
     private float _initialOrthographicSize;
     private float _targetOrthographicSize;
     private Vector3 _initialBackgroundScale;
     private Vector3 _targetBackgroundScale;
 
     public static event Action<float> updateCameraZoomRatioEvent;
+
+    #region Callbacks
 
     private void Awake()
     {
@@ -23,6 +35,11 @@ public class GameplayCamera : MonoBehaviour
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
         MultiPhaseLevelManager.resetCameraEvent += Reset;
+        
+        // BACKGROUND
+        PictureDetailsPopup.updateBackgroundEvent += SetupBackground;
+        PictureNewPopup.updateBackgroundEvent += SetupBackground;
+        GameplayScreen.triggerUpdateBackgroundEvent += SetupBackground;
 
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
@@ -42,6 +59,11 @@ public class GameplayCamera : MonoBehaviour
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
+        
+        // BACKGROUND
+        PictureDetailsPopup.updateBackgroundEvent -= SetupBackground;
+        PictureNewPopup.updateBackgroundEvent -= SetupBackground;
+        GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
     }
 
     private void Update()
@@ -52,6 +74,64 @@ public class GameplayCamera : MonoBehaviour
 
         updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }
+    
+
+    #endregion
+
+    #region Background 
+
+    public void SetupBackground()
+    {
+        DebugLogger.Log();
+        try
+        {
+            PictureData currentPictureData = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
+
+            if (currentPictureData != null)
+            {
+                if (!string.IsNullOrEmpty(currentPictureData.videoName) && GamePersistentVariable.isUseVideoBackground)
+                {
+                    spriteRenderer.gameObject.SetActive(false);
+                    videoPlayer.gameObject.SetActive(true);
+
+                    StartCoroutine(LoadVideoFromStreamingAssets(currentPictureData.videoName));
+                }
+                else
+                {
+                    spriteRenderer.gameObject.SetActive(true);
+                    videoPlayer.gameObject.SetActive(false);
+
+                    spriteRenderer.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
+                }
+            }
+        }
+        catch (System.Exception)
+        {
+
+        }
+    }
+    
+    IEnumerator LoadVideoFromStreamingAssets(string videoName)
+    {
+        DebugLogger.Log();
+        string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
+
+        yield return null;
+
+        videoPlayer.url = $"file://{filePath}"; ;
+        videoPlayer.isLooping = true;
+        videoPlayer.Prepare();
+        videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
+    }
+
+    private void OnVideoPreparedCompleted(VideoPlayer videoPlayer)
+    {
+        DebugLogger.Log();
+        videoPlayer.Play();
+        videoPlayer.isLooping = true;
+        videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
+    }
+    #endregion
 
     private void OnLevelStart()
     {

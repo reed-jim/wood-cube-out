@@ -4,14 +4,14 @@ public class SafeArea : MonoBehaviour
 {
     [SerializeField] private Canvas canvas;
 
-    private void Awake()
+    private void Start() //Awake
     {
         AdjustToSafeArea();
     }
 
     private void OnValidate()
     {
-        AdjustToSafeArea();
+        // AdjustToSafeArea();
     }
 
     private void AdjustToSafeArea()
