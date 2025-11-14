@@ -91,6 +91,7 @@ public class GameplayCamera : MonoBehaviour
             {
                 if (!string.IsNullOrEmpty(currentPictureData.videoName) && GamePersistentVariable.isUseVideoBackground)
                 {
+                    DebugLogger.Log(message:$"Use Video for BG");
                     spriteRenderer.gameObject.SetActive(false);
                     videoPlayer.gameObject.SetActive(true);
 
@@ -98,10 +99,11 @@ public class GameplayCamera : MonoBehaviour
                 }
                 else
                 {
+                    DebugLogger.Log(message:$"Use Image for BG");
                     spriteRenderer.gameObject.SetActive(true);
                     videoPlayer.gameObject.SetActive(false);
 
-                    spriteRenderer.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
+                    spriteRenderer.sprite = currentPictureData.mainImage;
                 }
             }
         }

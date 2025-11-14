@@ -1,10 +1,14 @@
 using System.Collections;
 using System.Reflection;
 using NamPhuThuy.UI;
-using UnityEditor;
-using UnityEditor.SceneManagement;
+
 using UnityEngine;
 using UnityEngine.UI;
+
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+#endif
 
 namespace NamPhuThuy.AnimateWithScripts
 {

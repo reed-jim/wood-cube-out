@@ -741,26 +741,6 @@ public class YarnLevelLoader : MonoBehaviour
             SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
         }
 
-        // float halfDistance = (maxY - minY) / 2;
-        // float shaderMinY = newCenter.y - halfDistance;
-        // float shaderMaxY = newCenter.y + halfDistance;
-
-        // if (!_isSetLevelGradientBound)
-        // {
-        //     if (_pieces != null)
-        //     {
-        //         for (int i = 0; i < _pieces.Length; i++)
-        //         {
-        //             if (_pieces[i] != null)
-        //             {
-        //                 _pieces[i].PieceMaterialPropertyBlock.SetWorldBound(shaderMinY, shaderMaxY);
-        //             }
-        //         }
-
-        //         _isSetLevelGradientBound = true;
-        //     }
-        // }
-
         return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
     }
     #endregion
