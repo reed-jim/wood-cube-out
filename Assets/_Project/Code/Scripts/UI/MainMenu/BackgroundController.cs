@@ -1,8 +1,11 @@
 using System.Collections;
+using DG.Tweening;
 using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using NamPhuThuy.UI;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Video;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -17,6 +20,8 @@ namespace NamPhuThuy
 
         [Header("Components")] 
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer blackOverlay;
+        [SerializeField] private TextMeshProUGUI blackOverlayText;
 
         [SerializeField] private VideoPlayer videoPlayer;
         [SerializeField] private Camera mainCamera;
@@ -42,14 +47,14 @@ namespace NamPhuThuy
             // BACKGROUND
             PictureDetailsPopup.updateBackgroundEvent += SetupBackground;
             PictureNewPopup.updateBackgroundEvent += SetupBackground;
-            GameplayScreen.triggerUpdateBackgroundEvent += SetupBackground;
+            // GameplayScreen.triggerUpdateBackgroundEvent += SetupBackground;
+            SceneManager.sceneLoaded += OnSceneLoaded;
 
             _initialOrthoSize = mainCamera.orthographicSize;
             _targetOrthoSize = mainCamera.orthographicSize;
 
             _initialBackgroundScale = transform.localScale;
             _targetBackgroundScale = transform.localScale;
-            SetupBackground();
         }
 
         private void OnDestroy()
@@ -57,7 +62,8 @@ namespace NamPhuThuy
             // BACKGROUND
             PictureDetailsPopup.updateBackgroundEvent -= SetupBackground;
             PictureNewPopup.updateBackgroundEvent -= SetupBackground;
-            GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
+            // GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
+            SceneManager.sceneLoaded -= OnSceneLoaded;
         }
 
         #endregion
@@ -82,7 +88,7 @@ namespace NamPhuThuy
 
         public void SetupBackground()
         {
-            DebugLogger.Log();
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
             try
             {
                 currentPicData =
@@ -94,6 +100,7 @@ namespace NamPhuThuy
                         GamePersistentVariable.isUseVideoBackground)
                     {
                         DebugLogger.Log(message:$"Use Video for BG");
+                        ShowBlackOverlay();
                         ActiveVideo();
                     }
                     else
@@ -109,16 +116,33 @@ namespace NamPhuThuy
             }
         }
 
+        private void ShowBlackOverlay()
+        {
+            Color color = blackOverlay.color;
+            color.a = 1f;
+            blackOverlay.color = color;
+
+            color = blackOverlayText.color;
+            color.a = 1f;
+            blackOverlayText.color = color;
+            
+            blackOverlayText.gameObject.SetActive(true);
+            blackOverlay.gameObject.SetActive(true);
+        }
+
         private void ActiveVideo()
         {
-            spriteRenderer.gameObject.SetActive(false);
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
             videoPlayer.gameObject.SetActive(true);
+            
+           
 
             StartCoroutine(LoadVideoFromStreamingAssets(currentPicData.videoName));
         }
         
         private void ActiveImage()
         {
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
             spriteRenderer.gameObject.SetActive(true);
             videoPlayer.gameObject.SetActive(false);
 
@@ -128,7 +152,7 @@ namespace NamPhuThuy
 
         private IEnumerator LoadVideoFromStreamingAssets(string videoName)
         {
-            DebugLogger.Log();
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
             
             string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
             
@@ -151,7 +175,19 @@ namespace NamPhuThuy
 
         private void OnVideoPreparedCompleted(VideoPlayer videoPlayer)
         {
-            DebugLogger.Log();
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            spriteRenderer.gameObject.SetActive(false);
+            // Fade out the black overlay
+            blackOverlay.DOFade(0f, 1f).OnComplete(() =>
+            {
+                blackOverlay.gameObject.SetActive(false);
+            });
+
+            blackOverlayText.DOFade(0f, 1f).OnComplete(() =>
+            {
+                blackOverlayText.gameObject.SetActive(false);
+            });
+            
             videoPlayer.Play();
             videoPlayer.isLooping = true;
             videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
@@ -160,8 +196,18 @@ namespace NamPhuThuy
 
         #endregion
 
-        #region Public Methods
+        #region Private Methods
 
+        private void OnSceneLoaded(Scene scene, LoadSceneMode loadMode)
+        {
+            if (scene.name == GameConstants.MENU_SCENE 
+                || scene.name == GameConstants.YARN_SCENE)
+            {
+                DebugLogger.Log(message:$"Scene loaded: {scene.name}, updating background", context: this);
+                SetupBackground();
+            }
+        }
+        
         #endregion
 
         #region Editor Methods

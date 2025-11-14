@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using NamPhuThuy;
 using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using NamPhuThuy.UI;
@@ -36,11 +37,6 @@ public class GameplayCamera : MonoBehaviour
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
         MultiPhaseLevelManager.resetCameraEvent += Reset;
         
-        // BACKGROUND
-        PictureDetailsPopup.updateBackgroundEvent += SetupBackground;
-        PictureNewPopup.updateBackgroundEvent += SetupBackground;
-        GameplayScreen.triggerUpdateBackgroundEvent += SetupBackground;
-
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
 
@@ -60,79 +56,18 @@ public class GameplayCamera : MonoBehaviour
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
         
-        // BACKGROUND
-        PictureDetailsPopup.updateBackgroundEvent -= SetupBackground;
-        PictureNewPopup.updateBackgroundEvent -= SetupBackground;
-        GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
     }
 
     private void Update()
     {
         gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 1 / 12f);
 
-        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 1 / 12f);
+        // background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 1 / 12f);
 
         updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }
     
 
-    #endregion
-
-    #region Background 
-
-    public void SetupBackground()
-    {
-        DebugLogger.Log();
-        try
-        {
-            PictureData currentPictureData = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
-
-            if (currentPictureData != null)
-            {
-                if (!string.IsNullOrEmpty(currentPictureData.videoName) && GamePersistentVariable.isUseVideoBackground)
-                {
-                    DebugLogger.Log(message:$"Use Video for BG");
-                    spriteRenderer.gameObject.SetActive(false);
-                    videoPlayer.gameObject.SetActive(true);
-
-                    StartCoroutine(LoadVideoFromStreamingAssets(currentPictureData.videoName));
-                }
-                else
-                {
-                    DebugLogger.Log(message:$"Use Image for BG");
-                    spriteRenderer.gameObject.SetActive(true);
-                    videoPlayer.gameObject.SetActive(false);
-
-                    spriteRenderer.sprite = currentPictureData.mainImage;
-                }
-            }
-        }
-        catch (System.Exception)
-        {
-
-        }
-    }
-    
-    IEnumerator LoadVideoFromStreamingAssets(string videoName)
-    {
-        DebugLogger.Log();
-        string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
-
-        yield return null;
-
-        videoPlayer.url = $"file://{filePath}"; ;
-        videoPlayer.isLooping = true;
-        videoPlayer.Prepare();
-        videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
-    }
-
-    private void OnVideoPreparedCompleted(VideoPlayer videoPlayer)
-    {
-        DebugLogger.Log();
-        videoPlayer.Play();
-        videoPlayer.isLooping = true;
-        videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
-    }
     #endregion
 
     private void OnLevelStart()
