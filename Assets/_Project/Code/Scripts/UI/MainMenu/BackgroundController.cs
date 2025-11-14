@@ -88,7 +88,7 @@ namespace NamPhuThuy
 
         public void SetupBackground()
         {
-            DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             try
             {
                 currentPicData =
@@ -99,20 +99,20 @@ namespace NamPhuThuy
                     if (!string.IsNullOrEmpty(currentPicData.videoName) &&
                         GamePersistentVariable.isUseVideoBackground)
                     {
-                        DebugLogger.Log(message:$"Use Video for BG");
+                        // DebugLogger.Log(message:$"Use Video for BG");
                         ShowBlackOverlay();
                         ActiveVideo();
                     }
                     else
                     {
-                        DebugLogger.Log(message:$"Use Image for BG");
+                        // DebugLogger.Log(message:$"Use Image for BG");
                         ActiveImage();
                     }
                 }
             }
             catch (System.Exception e)
             {
-                DebugLogger.Log(message: $"{e.Message}");
+                DebugLogger.LogError(message: $"{e.Message}");
             }
         }
 
@@ -132,7 +132,7 @@ namespace NamPhuThuy
 
         private void ActiveVideo()
         {
-            DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             videoPlayer.gameObject.SetActive(true);
             
            
@@ -142,7 +142,7 @@ namespace NamPhuThuy
         
         private void ActiveImage()
         {
-            DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             spriteRenderer.gameObject.SetActive(true);
             videoPlayer.gameObject.SetActive(false);
 
@@ -152,7 +152,7 @@ namespace NamPhuThuy
 
         private IEnumerator LoadVideoFromStreamingAssets(string videoName)
         {
-            DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             
             string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
             
@@ -203,7 +203,7 @@ namespace NamPhuThuy
             if (scene.name == GameConstants.MENU_SCENE 
                 || scene.name == GameConstants.YARN_SCENE)
             {
-                DebugLogger.Log(message:$"Scene loaded: {scene.name}, updating background", context: this);
+                // DebugLogger.Log(message:$"Scene loaded: {scene.name}, updating background", context: this);
                 SetupBackground();
             }
         }

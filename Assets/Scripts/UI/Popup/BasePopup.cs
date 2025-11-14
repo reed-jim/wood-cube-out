@@ -55,6 +55,7 @@ public class BasePopup : MonoBehaviour
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
         RevivePopup.switchRouteEvent += OnRouteSwitched;
         GalleryPackPopup.switchRouteHideEvent += OnRouteHideSwitched;
+        GalleryPackPopup.switchRouteHideEvent += OnRouteHideSwitched;
         
         LevelLoader.switchRouteEvent += OnRouteSwitched;
         PausePopup.switchRouteEvent += OnRouteSwitched;
@@ -111,6 +112,7 @@ public class BasePopup : MonoBehaviour
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
         RevivePopup.switchRouteEvent -= OnRouteSwitched;
+        GalleryPackPopup.switchRouteHideEvent -= OnRouteHideSwitched;
         GalleryPackPopup.switchRouteHideEvent -= OnRouteHideSwitched;
         
         LevelLoader.switchRouteEvent -= OnRouteSwitched;

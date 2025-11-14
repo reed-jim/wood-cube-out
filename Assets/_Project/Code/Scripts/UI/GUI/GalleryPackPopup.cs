@@ -43,12 +43,14 @@ namespace NamPhuThuy.UI
         {
             shopButton.onClick.AddListener((() =>
             {
-                switchRouteEvent?.Invoke(GameEnum.ScreenRoute.IAPShop);
+                // switchRouteEvent?.Invoke(GameEnum.ScreenRoute.IAPShop);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShop, false);
             }));
             galleryButton.onClick.AddListener(() =>
             {
                 DebugLogger.Log(message:$"");
-                switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.Gallery, false);
+                // switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.Gallery, false);
+                SwitchRoute(GameEnum.ScreenRoute.Gallery, false);
             });
     }
 

@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Lean.Localization;
+using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DebugLogger = NamPhuThuy.Common.DebugLogger;
 
 namespace NamPhuThuy.UI
 {
@@ -54,6 +56,13 @@ namespace NamPhuThuy.UI
 
         #endregion
 
+        #region Events
+
+        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
+        public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
+
+        #endregion
+        
         #region Private Fields
 
         #endregion
@@ -132,7 +141,7 @@ namespace NamPhuThuy.UI
 
         private void CheckAvailablePictures()
         {
-            Debug.Log($"GalleryPackElement.CheckAvailablePictures() - {currentPackStyle}");
+            DebugLogger.Log(message:$"currentPackStyle: {currentPackStyle}");
             switch (currentPackStyle)
             {
                 case PictureData.PictureStyle.ANIME:
@@ -153,7 +162,7 @@ namespace NamPhuThuy.UI
 
             void SetOffStateBuyButton()
             {
-                Debug.Log($"GalleryPackElement.CheckAvailablePictures.SetOffStateBuyButton() - {currentPackStyle}");
+                DebugLogger.Log(message:$"{currentPackStyle}");
                 buyButtonSwitch?.SetState(ButtonSwitch.ButtonSwitchState.OFF);
                 if (buyButton != null)
                     buyButton.interactable = false;
@@ -182,6 +191,38 @@ namespace NamPhuThuy.UI
         {
             PackQuantity = 1;
         }
+        
+        private void PlayVFXPopupText(string message)
+        {
+            var args = new PopupTextArgs {
+                message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+                worldPos = transform.position,
+                initialParent = transform, // GUIManager.Ins.GUIGalleryPack.transform
+                font = GUIManager.Instance.DefaultFont,
+                color = Color.white,
+                duration = 1f,
+                onComplete = null
+            };
+            VFXManager.Ins.Play<PopupTextArgs>(args);
+        }
+        
+        private void ShowLoadingPopup()
+        {
+            // SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
+            switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.Popup_Loading, false);
+
+            void HandleLoaded()
+            {
+                var args = new PopupTextArgs {
+                    message = LocalizationConst.BUY_SUCCESS,
+                    worldPos = transform.position,
+                    color = Color.white,
+                    duration = 1f,
+                    onComplete = null
+                };
+                VFXManager.Ins.Play<PopupTextArgs>(args);
+            }
+        }
         #endregion
 
         #region Public Methods
@@ -191,7 +232,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickPlus()
         {
-            Debug.Log($"GalleryPackElement.OnClickPlus()");
+            DebugLogger.Log(message:$"");
 
             DataManager.Ins.PlayerGalleryData.DictStyleCount.TryGetValue(currentPackStyle, out var value);
             int ownedAmount = value;
@@ -201,10 +242,8 @@ namespace NamPhuThuy.UI
                 totalAmount)
             {
                 Debug.Log($"GalleryPackElement.OnClickPlus() - Out of pictures");
-                /*VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: VFXPopupTextMessage.OUT_OF_PICTURES,
-                    initialParent: GUIManager.Ins.GUIGalleryPack.transform);*/
+             
+                PlayVFXPopupText(LocalizationConst.OUT_OF_PICTURES);
                 return;
             }
 
@@ -212,10 +251,7 @@ namespace NamPhuThuy.UI
                 PackQuantity += 1;
             else
             {
-                /*VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: VFXPopupTextMessage.CANT_INCREASE_MORE,
-                    initialParent: GUIManager.Ins.GUIGalleryPack.transform);*/
+                PlayVFXPopupText(LocalizationConst.CANT_INCREASE_MORE);
             }
         }
 
@@ -225,22 +261,20 @@ namespace NamPhuThuy.UI
                 PackQuantity -= 1;
             else
             {
-                /*VFXManager.Ins.PlayAt(
-                    VFXType.POPUP_TEXT,
-                    message: VFXPopupTextMessage.CANT_DECREASE_MORE,
-                    initialParent: GUIManager.Ins.GUIGalleryPack.transform);*/
+                PlayVFXPopupText(LocalizationConst.CANT_DECREASE_MORE);
             }
         }
 
         private void OnClickBuy()
         {
-            bool isEnoughCoin = DataManager.Ins.PlayerData.Coin >= TotalPrice;
+            
+            bool isEnoughCoin = DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= TotalPrice;
 
-            // SaferioTracking.TrackBuyPicture(DataManager.Ins.PlayerData.CurrentLevelId, isEnoughCoin, currentPackStyle.ToString());
 
             if (!isEnoughCoin)
             {
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
+                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
                 return;
             }
 
@@ -267,23 +301,8 @@ namespace NamPhuThuy.UI
             else
             {
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
+                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
             }
-
-            void ShowLoadingPopup()
-            {
-                /*GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPopupLoading);
-                GUIManager.Ins.GUIPopupLoading.OnLoadComplete += HandleLoaded;*/
-            }
-
-
-            void HandleLoaded()
-            {
-                /*GUIManager.Ins.GUIPopupLoading.OnLoadComplete -= HandleLoaded;
-                GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIGalleryPackResults, 0f, picked);
-
-                GUIManager.Ins.GUIPopupLoading.Hide();*/
-            }
-
         }
 
         #endregion

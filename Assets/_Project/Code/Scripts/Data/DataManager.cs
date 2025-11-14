@@ -132,18 +132,18 @@ JSON for:
             set => pictureDatas = value;
         }
 
-        [SerializeField] private GalleryPackDatas galleryPackDatas;
+        [SerializeField] private GalleryPackData galleryPackData;
 
-        public GalleryPackDatas GalleryPackDatas
+        public GalleryPackData GalleryPackData
         {
             get
             {
-                if (galleryPackDatas == null)
+                if (galleryPackData == null)
                 {
-                    galleryPackDatas = Resources.Load<GalleryPackDatas>("GalleryPackDatas");
+                    galleryPackData = Resources.Load<GalleryPackData>("GalleryPackDatas");
                 }
 
-                return galleryPackDatas;
+                return galleryPackData;
             }
         }
 
@@ -448,7 +448,7 @@ JSON for:
         public bool LoadStaticDatas()
         {
             pictureDatas = Resources.Load<PictureDatas>("PictureDatas");
-            galleryPackDatas = Resources.Load<GalleryPackDatas>("GalleryPackDatas");
+            galleryPackData = Resources.Load<GalleryPackData>("GalleryPackData");
             rewardDatas = Resources.Load<RewardDatas>("RewardDatas");
             resourceData = Resources.Load<ResourceData>("ResourceData");
 

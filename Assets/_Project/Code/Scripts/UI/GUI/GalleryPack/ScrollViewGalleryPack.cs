@@ -65,27 +65,29 @@ namespace NamPhuThuy.UI
             _currentElementPositionY -= rect.sizeDelta.y + _elementSpacing.y;
         }
 
-        private void LoadGalleryPack(GalleryPackData packData)
+        private void LoadGalleryPack(GalleryPackRecord packRecord)
         {
             // Debug.Log($"ScrolLViewGallery.LoadGalleryPack()");
             GalleryPackElement element = Instantiate(galleryPackElement, content.transform);
 
             RectTransform rect = element.GetComponent<RectTransform>();
             ExpandContentSizeDelta(rect);
+            
+            element.currentPackStyle = packRecord.packType;
 
-            element.backGroundImage.sprite = packData.backgroundSprite;
+            element.backGroundImage.sprite = packRecord.backgroundSprite;
             // element.descriptionImage.sprite = packData.descriptionSprite;
-            element.titleImage.sprite = packData.titleSprite;
-            element.titleText.GetComponent<LeanLocalizedTextMeshProUGUI>().TranslationName = packData.packName;
+            element.titleImage.sprite = packRecord.titleSprite;
+            element.titleText.GetComponent<LeanLocalizedTextMeshProUGUI>().TranslationName = packRecord.packName;
 
-            element.priceText.text = packData.price.ToString();
-            element.currentPackStyle = packData.packType;
-            element.packPrice = packData.price;
+            element.priceText.text = packRecord.price.ToString();
+            
+            element.packPrice = packRecord.price;
         }
 
         private void UpdateContent()
         {
-            foreach (GalleryPackData packData in DataManager.Ins.GalleryPackDatas.galleryPackList)
+            foreach (GalleryPackRecord packData in DataManager.Ins.GalleryPackData.data)
             {
                 LoadGalleryPack(packData);
             }
