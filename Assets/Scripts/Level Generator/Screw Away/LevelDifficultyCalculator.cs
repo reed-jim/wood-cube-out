@@ -585,11 +585,6 @@ public static class LevelDifficultyCalculatorUltility
         float WEIGHT_LEVEL_INDEX = 1 - WEIGHT_REPEAT_TEMPLATE;
         float DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.DIFFICULTY_MULTIPLIER, 0.0f);
 
-        if (GamePersistentVariable.currentLevelMode != LevelMode.Normal)
-        {
-            DIFFICULTY_MULTIPLIER = RemoteConfigController.GetFloatConfig(FirebaseConfig.specialLevelDifficultyMultiplier, 0.0f);
-        }
-
         try
         {
             LongTermUserDifficultyConfig longTermUserDifficultyConfig = GamePersistentVariable.longTermUserDifficultyConfig;
@@ -633,6 +628,11 @@ public static class LevelDifficultyCalculatorUltility
         float expectedDifficultyNormalized =
             DIFFICULTY_MULTIPLIER *
                 (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(level, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL));
+
+        // if (GamePersistentVariable.currentLevelMode != LevelMode.Normal)
+        // {
+        //     expectedDifficultyNormalized = RemoteConfigController.GetFloatConfig(FirebaseConfig.specialLevelDifficultyMultiplier, 0.0f);
+        // }
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 

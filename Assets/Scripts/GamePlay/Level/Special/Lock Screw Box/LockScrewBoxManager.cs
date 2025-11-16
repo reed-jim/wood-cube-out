@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using static GameEnum;
+using System.Linq;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -27,6 +29,10 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
+        public GameFaction LockedScrewFaction => _specialLevelTaskRecord?.requiredComponents?
+            .Where(component => component.componentType == GameComponentType.Screw)
+            .FirstOrDefault()?.faction ?? GameFaction.None;
+
         public static event Action<ScrewBox, SpecialLevelTaskRecord> requestLockedScrewBox;
         public static event Action<LockScrewBoxManager> lockScrewBoxManagerInitEvent;
 
@@ -39,8 +45,8 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent += OnScewBoxLockSpawned;
-            
-            
+
+
             StartCoroutine(IETriggerInitEvent());
             IEnumerator IETriggerInitEvent()
             {
@@ -61,8 +67,6 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Private Methods
-
-
 
         private void LockBoxes(ScrewBox refScrewBox)
         {
