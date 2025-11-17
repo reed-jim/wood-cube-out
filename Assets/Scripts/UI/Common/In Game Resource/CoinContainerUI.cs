@@ -13,7 +13,7 @@ public class CoinContainerUI : MonoBehaviour
 
     [SerializeField] private Vector2Variable canvasSize;
     [SerializeField] private Vector2Variable canvasScale;
-    [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private Button addButton;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;

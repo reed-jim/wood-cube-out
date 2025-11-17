@@ -8,8 +8,8 @@ using static GameEnum;
 public class UserLivesUI : SaferioTweenBehaviour
 {
     [SerializeField] private RectTransform container;
-    [SerializeField] private TMP_Text numLivesText;
-    [SerializeField] private TMP_Text replenishLifeTimeText;
+    [SerializeField] private TextMeshProUGUI numLivesText;
+    [SerializeField] private TextMeshProUGUI replenishLifeTimeText;
     [SerializeField] private Button openLivesShopPopupButton;
     [SerializeField] private RectTransform liveIcon;
 

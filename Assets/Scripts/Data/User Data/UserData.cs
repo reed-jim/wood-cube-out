@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using NamPhuThuy.Common;
 using UnityEngine;
 
 public static class UserData
@@ -90,10 +91,12 @@ public static class UserData
     {
         get
         {
+            DebugLogger.Log(message:$"Get Data");
             return DataUtility.Load(GameConstants.IS_REMOVE_ADS, false);
         }
         set
         {
+            DebugLogger.Log(message:$"Set IsRemoveAds: {value}");
             DataUtility.SaveAsync(GameConstants.IS_REMOVE_ADS, value);
         }
     }
