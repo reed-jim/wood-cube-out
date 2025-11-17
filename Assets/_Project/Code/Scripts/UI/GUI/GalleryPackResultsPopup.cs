@@ -14,13 +14,10 @@ using UnityEditor;
 namespace NamPhuThuy.UI
 {
     
-    public class GUIGalleryPackResults : GUIBase
+    public class GalleryPackResultsPopup : BasePopup
     {
         #region Private Serializable Fields
 
-        [Header("Buttons")]
-        [SerializeField] private ButtonClicky closeButton;
-        
         [Header("ScrollView")]
         [SerializeField] private RectTransform contentParent;
         [SerializeField] private ElementGalleryPackResult resultPrefab;
@@ -104,24 +101,20 @@ namespace NamPhuThuy.UI
 
         #region Override Methods
 
-        public override void Show(params object[] parameters)
+        protected override void Show(Action onCompletedAction = null)
         {
-            base.Show(parameters);
-
+            base.Show(onCompletedAction);
+            
             // AudioManager.Ins.Play(AudioEnum.SFX_WOLF_WHISTLE);
             ClearPrevResults();
             
             // NEW
             scrollRect.LockVerticalScrollALittle();
-           
-            pictureDataList = (List<PictureData>)parameters[0];
+
+            pictureDataList = GamePersistentVariable.picDataList_PictureGalleryPackResults;
             InitElement();
             UpdateSizesInfo();
             UpdateContentSizeDelta();
-            
-            
-            
-
             void ClearPrevResults()
             {
                 int childCnt = contentParent.transform.childCount;
@@ -132,11 +125,10 @@ namespace NamPhuThuy.UI
             }
         }
 
-        public override void Hide(params object[] parameters)
+        protected override void Hide(Action onCompletedAction = null)
         {
-            base.Hide(parameters);
+            base.Hide(onCompletedAction);
         }
-
         #endregion
     }
 }

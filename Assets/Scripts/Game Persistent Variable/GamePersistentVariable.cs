@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NamPhuThuy.Data;
 using UnityEngine;
 
 public enum CloudStorageRequest
@@ -51,6 +52,7 @@ public static class GamePersistentVariable
     public static int currentPictureId_PictureNew;
     public static int currentPictureId_PictureDetails;
     public static List<int> picIdList_PictureDetails;
+    public static List<PictureData> picDataList_PictureGalleryPackResults;
     
     public static RemoteGalleryRewardConfig galleryRewardConfig;
     

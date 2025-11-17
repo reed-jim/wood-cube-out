@@ -308,6 +308,15 @@ namespace NamPhuThuy.UI
             ShowLoadingPopup();
             UnlockPictures(picked);
             PackQuantity = 1;
+            
+            GamePersistentVariable.picDataList_PictureGalleryPackResults = picked;
+            StartCoroutine(ShowResults());
+
+            IEnumerator ShowResults()
+            {
+                yield return YieldHelper.GetRealtime(2f);
+                switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.GalleryPackResults, false);
+            }
         }
 
         #endregion

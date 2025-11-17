@@ -308,7 +308,7 @@ JSON for:
                 {
                     string data = File.ReadAllText(_saveSettingsDataPath);
 
-                    if (string.IsNullOrEmpty(data))
+                    if (!string.IsNullOrEmpty(data))
                     {
                         string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
                         cachedPlayerSettingsData = JsonUtility.FromJson<PlayerSettingsData>(decrypted);
@@ -343,7 +343,7 @@ JSON for:
                 {
                     string data = File.ReadAllText(_saveGalleryDataPath);
 
-                    if (string.IsNullOrEmpty(data))
+                    if (!string.IsNullOrEmpty(data))
                     {
                         string decrypted = EncryptHelper.XOROperator(data, DataConst.DATA_ENCRYPT_KEY);
                         
@@ -374,12 +374,14 @@ JSON for:
 
         public void ResetPlayerData()
         {
+            DebugLogger.Log(message:$"");
             cachedPlayerData = new PlayerData();
             SavePlayerData();
         }
 
         public void ResetSettingsData()
         {
+            DebugLogger.Log(message:$"");
             cachedPlayerSettingsData = new PlayerSettingsData();
             SaveSettingsData();
         }

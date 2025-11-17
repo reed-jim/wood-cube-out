@@ -47,8 +47,9 @@ GameObject:
   m_Component:
   - component: {fileID: 4491068403901395734}
   - component: {fileID: 7973482255512217622}
+  - component: {fileID: 1949134684952557127}
   m_Layer: 5
-  m_Name: GUI GalleryPackResults
+  m_Name: GalleryPackResults Popup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -87,22 +88,34 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e9b977030dfd3bf4a966cdc0dd8e9ce0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showDuration: 0.4
-  hideDuration: 0.4
-  GUIMaskInitialAlpha: 0.95
-  showDelay: 0
-  hideDelay: 0
-  guiMask: {fileID: 3016794928464016470}
-  canvasGroup: {fileID: 8226551296108373847}
-  canvasGroupRT: {fileID: 0}
-  isShowing: 0
-  currentType: 0
+  container: {fileID: 233973093836851172}
   closeButton: {fileID: 2585358367552465574}
+  detectClickOutsideButton: {fileID: 0}
+  route: 69
+  isRouteActiveFromStart: 0
+  isAbleToHideOnClickOutside: 0
+  isShowingInterAdOnInteract: 0
   contentParent: {fileID: 4279738746588042836}
   resultPrefab: {fileID: 2670718240790546146, guid: 1faeb2897fc337a458a1dca35f5d3808, type: 3}
   contentGridLayoutGroup: {fileID: 2255871994071093650}
   scrollRect: {fileID: 4503502718231134468}
   pictureDataList: []
+--- !u!114 &1949134684952557127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3003190335657517589}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef156ecbdc1a8c94b87faa623d10b6a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScaleTransition
+  target: {fileID: 233973093836851172}
+  canvasGroup: {fileID: 8226551296108373847}
+  canvasSize: {fileID: 11400000, guid: 868c53afb89f6fb4eb2dc813d4847328, type: 2}
+  duration: 0
 --- !u!1 &5949026624843471754
 GameObject:
   m_ObjectHideFlags: 0
@@ -416,17 +429,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
---- !u!114 &3016794928464016470 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4029179596452281685, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
-  m_PrefabInstance: {fileID: 2177290850445691139}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &3167745172771319354 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3873479467623524153, guid: f5738fac0757df8429a4fd8fe9b9f802, type: 3}
