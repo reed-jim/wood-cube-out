@@ -56,6 +56,7 @@ public class YarnLevelLoader : MonoBehaviour
     public static event Action<bool> enableSwipingEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
     public static event Action<bool> showLoadLevelErrorEvent;
+    public static event Action resetCameraEvent;
     #endregion
 
     private void Awake()
@@ -73,6 +74,8 @@ public class YarnLevelLoader : MonoBehaviour
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
+        resetCameraEvent?.Invoke();
+        
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
 

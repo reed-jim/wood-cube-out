@@ -67,6 +67,7 @@ namespace NamPhuThuy.Data
             UNIFORM = 3
         }
 
+        [HelpBox("auto-assigned id", HelpBoxMessageType.Info)]
         public int picId;
         
         public string picName;
