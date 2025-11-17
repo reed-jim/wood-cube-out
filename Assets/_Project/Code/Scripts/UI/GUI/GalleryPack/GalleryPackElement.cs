@@ -47,6 +47,7 @@ namespace NamPhuThuy.UI
         public Button minusButton;
         public ButtonClicky buyButton;
         public ButtonSwitch buyButtonSwitch;
+       
 
         [Header("Images")]
         public Image backGroundImage;
@@ -60,6 +61,7 @@ namespace NamPhuThuy.UI
 
         public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
         public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
+        public static event Action updateCoinTextEvent;
 
         #endregion
         
@@ -132,8 +134,10 @@ namespace NamPhuThuy.UI
 
         private void UnlockPictures(List<PictureData> pics)
         {
+            DebugLogger.Log();
             foreach (var p in pics)
             {
+                DebugLogger.Log(message:$"Unlock: {p.picId}");
                 if (DataManager.Ins.PlayerGalleryData.IsContain(p.picId)) continue;
                 DataManager.Ins.PlayerGalleryData.AddNewPicture(p.picId);
             }
@@ -208,7 +212,7 @@ namespace NamPhuThuy.UI
         
         private void ShowLoadingPopup()
         {
-            // SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
+            DebugLogger.Log();
             switchRouteHideEvent?.Invoke(GameEnum.ScreenRoute.Popup_Loading, false);
 
             void HandleLoaded()
@@ -269,10 +273,13 @@ namespace NamPhuThuy.UI
         {
             
             bool isEnoughCoin = DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= TotalPrice;
+            
+            DebugLogger.Log(message:$"playerCoint: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}, totalPrice: {TotalPrice}, isEnoughCoin: {isEnoughCoin}");
 
 
             if (!isEnoughCoin)
             {
+                DebugLogger.Log(message:$"Not enough coin");
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
                 openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
                 return;
@@ -290,19 +297,17 @@ namespace NamPhuThuy.UI
                 buyButton.interactable = false;
                 SetUnlockedAllPictureOfStyle();
             }
+            
+            DebugLogger.Log(message:$"Buy successfully - picked.Count: {picked.Count}");
+            DataManager.Ins.UserResourcesObserver.ChangeCoin(-TotalPrice);
+            SaferioTracking.TrackResourceSource(
+                DataManager.Ins.CurrentLevel.Value, "Gallery Pack", PackQuantity, TotalPrice, "buy_with_coin");
 
-            if (DataManager.Ins.PlayerData.TrySpendCoins(TotalPrice))
-            {
-                // Buy successfully
-                ShowLoadingPopup();
-                UnlockPictures(picked);
-                PackQuantity = 1;
-            }
-            else
-            {
-                // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
-                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
-            }
+            updateCoinTextEvent?.Invoke();
+            
+            ShowLoadingPopup();
+            UnlockPictures(picked);
+            PackQuantity = 1;
         }
 
         #endregion

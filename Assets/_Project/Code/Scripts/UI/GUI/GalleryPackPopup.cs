@@ -24,7 +24,7 @@ namespace NamPhuThuy.UI
 
         [Header("Scrollview")]
         [SerializeField] private ScrollRect scrollRect;
-
+        
         [SerializeField] private ScrollViewGalleryPack scrollViewGallery;
 
         #endregion
@@ -34,7 +34,7 @@ namespace NamPhuThuy.UI
         
         public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
         public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
-
+ 
         #endregion
 
         #region MonoBehaviour Callbacks

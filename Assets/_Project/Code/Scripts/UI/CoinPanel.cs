@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using MoreMountains.Tools;
 using NamPhuThuy.Data;
@@ -21,6 +22,16 @@ namespace NamPhuThuy.UI
 
         #region MonoBehaviour Callbacks
 
+        private void Awake()
+        {
+            GalleryPackElement.updateCoinTextEvent += UpdateUI;
+        }
+
+        private void OnDestroy()
+        {
+            GalleryPackElement.updateCoinTextEvent -= UpdateUI;
+        }
+
         void OnEnable()
         {
             UpdateUI();
@@ -36,7 +47,7 @@ namespace NamPhuThuy.UI
 
         #region Private Methods
 
-        private void UpdateUI()
+        public void UpdateUI()
         {
             // The cost of a null check (if (coinText != null)) is negligible compared to UI updates or string conversions.
             // if (coinText != null)
@@ -51,7 +62,6 @@ namespace NamPhuThuy.UI
         private void AnimateCoinUpdate()
         {
             int currentCoin = int.Parse(CoinText.text);
-
             int currentValue = currentCoin;
 
             DOTween.To
