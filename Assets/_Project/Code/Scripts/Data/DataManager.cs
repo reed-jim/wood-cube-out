@@ -34,6 +34,11 @@ JSON for:
         [SerializeField] private UserResourcesObserver userResourcesObserver;
         public UserResourcesObserver UserResourcesObserver => userResourcesObserver;
 
+        [Header("IAP")] 
+        [SerializeField] private IAPPackageData removeAdsPackIAP;
+
+        public IAPPackageData RemoveAdsPackIAP => removeAdsPackIAP;
+
         #endregion
         
         #region Private Fields

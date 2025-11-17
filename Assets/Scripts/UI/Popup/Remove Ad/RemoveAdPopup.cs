@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Data;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -8,9 +9,7 @@ using static GameEnum;
 public class RemoveAdPopup : BasePopup
 {
     [SerializeField] private Button buyButton;
-    [SerializeField] private TMP_Text priceText;
-
-    [SerializeField] private IAPPackageData iapData;
+    [SerializeField] private TextMeshProUGUI priceText;
 
     #region EVENT
     public static event Action<string> buyIAPEvent;
@@ -48,7 +47,7 @@ public class RemoveAdPopup : BasePopup
         }
         else
         {
-            buyIAPEvent?.Invoke(iapData.ProductId);
+            buyIAPEvent?.Invoke(DataManager.Ins.RemoveAdsPackIAP.ProductId);
 
             buyButton.interactable = false;
 
@@ -69,9 +68,20 @@ public class RemoveAdPopup : BasePopup
 
     private void UpdatePrice(string productId, string price)
     {
+        IAPPackageData iapData = DataManager.Ins.RemoveAdsPackIAP;
         if (productId == iapData.ProductId)
         {
             priceText.text = price;
         }
+    }
+
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+    }
+
+    protected override void Hide(Action onCompletedAction = null)
+    {
+        base.Hide(onCompletedAction);
     }
 }
