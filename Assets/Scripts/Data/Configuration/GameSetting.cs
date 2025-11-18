@@ -8,6 +8,7 @@ public class GameSetting : ScriptableObject
     [SerializeField] private bool isTurnOnBackgroundMusic = true;
     [SerializeField] private bool isTurnOnSound = true;
     [SerializeField] private bool isVibrate = true;
+    
     [SerializeField] private string currentLanguage;
 
     public bool IsDebug

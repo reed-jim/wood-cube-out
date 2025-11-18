@@ -40,6 +40,10 @@ JSON for:
         [SerializeField] private LevelObserver levelObserver;
         public LevelObserver LevelObserver => levelObserver;
 
+        [Header("Game Settings")]
+        [SerializeField] private GameSetting gameSetting;
+        public GameSetting GameSetting => gameSetting;
+        
         [Header("IAP")] 
         [SerializeField] private IAPPackageData removeAdsPackIAP;
 
