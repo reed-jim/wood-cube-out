@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +9,9 @@ using static GameEnum;
 public class RevivePopup : BasePopup
 {
     [SerializeField] private Button reviveByDiamondButton;
-    [SerializeField] private Image reviveByDiamondButtonForeground;
     [SerializeField] private Image boosterImage;
     [SerializeField] private Button reviveByAdsButton;
-    [SerializeField] private TMP_Text costText;
+    [SerializeField] private TextMeshProUGUI costText;
 
     [Header("COIN BALANCE")]
     [SerializeField] private RectTransform coinBalanceCointaner;
@@ -41,6 +41,9 @@ public class RevivePopup : BasePopup
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
 
+
+    #region MonoBehaviour Callbacks
+    
     protected override void MoreActionInAwake()
     {
         costText.text = $"{boosterDataObserver.BoosterCosts.Last()}";
@@ -50,8 +53,21 @@ public class RevivePopup : BasePopup
 
         _reviveCoinButtonPosition = _reviveByDiamondButtonRT.localPosition;
         _reviveAdsButtonPosition = _reviveByAdsButtonRT.localPosition;
+        
+        
+        var eventTrigger = peekButton.gameObject.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+    
+        var pointerDown = new UnityEngine.EventSystems.EventTrigger.Entry();
+        pointerDown.eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown;
+        pointerDown.callback.AddListener((data) => { _isButtonPressed = true; });
+        eventTrigger.triggers.Add(pointerDown);
+    
+        var pointerUp = new UnityEngine.EventSystems.EventTrigger.Entry();
+        pointerUp.eventID = UnityEngine.EventSystems.EventTriggerType.PointerUp;
+        pointerUp.callback.AddListener((data) => { OnButtonRelease(); });
+        eventTrigger.triggers.Add(pointerUp);
     }
-
+    
     protected override void RegisterMoreEvent()
     {
         GameStateLose.showRevivePopupEvent += ShowRevivePopup;
@@ -64,6 +80,18 @@ public class RevivePopup : BasePopup
     {
         GameStateLose.showRevivePopupEvent -= ShowRevivePopup;
     }
+
+    void Update()
+    {
+        PeekPicture();
+    }
+
+    #endregion
+
+
+
+
+    #region Override Methods
 
     protected override void Show(Action onCompletedAction = null)
     {
@@ -88,6 +116,8 @@ public class RevivePopup : BasePopup
             reviveRefusedEvent?.Invoke();
         });
     }
+
+    #endregion
 
     private void ShowRevivePopup(BoosterType boosterType)
     {
@@ -206,6 +236,53 @@ public class RevivePopup : BasePopup
 
         // switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
     }
+
+    #region Private Methods
+    
+    [Header("Peek Level")]
+    [SerializeField] private Button peekButton;
+    private float _holdingDuration;
+    private Tween _peekingPictureTween;
+    private bool _isPeekingPicture;
+    private bool _isButtonPressed;
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private float holdThreshold = 0.6f;
+
+    public static event Action OnPeekPicture;
+    public static event Action OnStopPeekPicture;
+
+    private void PeekPicture()
+    {
+        if (_isButtonPressed)
+        {
+            _holdingDuration += Time.deltaTime;
+
+            if (_holdingDuration > holdThreshold && !_isPeekingPicture)
+            {
+                _peekingPictureTween?.Kill();
+                _peekingPictureTween = canvasGroup.DOFade(0, 0.3f);
+                _isPeekingPicture = true;
+                OnPeekPicture?.Invoke();
+            }
+        }
+    }
+    
+    private void OnButtonRelease()
+    {
+        _isButtonPressed = false;
+    
+        if (_isPeekingPicture)
+        {
+            _peekingPictureTween?.Kill();
+            _peekingPictureTween = canvasGroup.DOFade(1, 0.3f);
+            _isPeekingPicture = false;
+            OnStopPeekPicture?.Invoke();
+        }
+    
+        _holdingDuration = 0;
+    }
+
+    #endregion
 
     #region REMOTE CONFIG REWARDED AD
     private void SetupRewardedAdsButton(bool forceEnable = false)

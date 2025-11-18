@@ -29,10 +29,16 @@ JSON for:
     {
         #region Serializable Fields
 
+        [Header("Progress Data")]
         [SerializeField] private IntVariable currentLevel;
         public IntVariable CurrentLevel => currentLevel;
         [SerializeField] private UserResourcesObserver userResourcesObserver;
         public UserResourcesObserver UserResourcesObserver => userResourcesObserver;
+        [SerializeField] private BoosterDataObserver boosterDataObserver;
+        public BoosterDataObserver BoosterDataObserver => boosterDataObserver;
+        
+        [SerializeField] private LevelObserver levelObserver;
+        public LevelObserver LevelObserver => levelObserver;
 
         [Header("IAP")] 
         [SerializeField] private IAPPackageData removeAdsPackIAP;
