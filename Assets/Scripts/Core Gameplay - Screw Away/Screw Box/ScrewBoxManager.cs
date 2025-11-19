@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.Common;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -812,6 +814,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     public void AddMoreScrewPort()
     {
+        DebugLogger.Log();
         ScrewBoxSlot addedScrewBoxSlot = ObjectPoolingEverything.GetFromPool<ScrewBoxSlot>(GameConstants.SCREW_PORT_SLOT);
 
         screwPorts.Add(addedScrewBoxSlot);
@@ -826,18 +829,33 @@ public class ScrewBoxManager : MonoBehaviour
         // addedScrewBoxSlot.transform.position = position + new Vector3(10, 0, 0);
         addedScrewBoxSlot.transform.localScale = Vector3.zero;
 
+
+        float targetScale = 1f;
+        /*if (screwPorts[0] != null)
+        {
+            targetScale = screwPorts[0].transform.localScale.x;
+        }
+        else
+        {
+            targetScale = GamePlayConst.spoolPort;
+        }*/
+        
+        targetScale = GamePlayConst.spoolPortScale;
+
         for (int i = 0; i < screwPorts.Count; i++)
         {
-            int index = i;
+            DebugLogger.Log(message:$"index: {i}");
 
             position.x = (-(screwPorts.Count - 1) / 2f + i) * 1.05f * screwPorts[0].transform.lossyScale.x;
 
             _tweens.Add(Tween.Position(screwPorts[i].transform, position, duration: 0.3f)
             .OnComplete(() =>
             {
-                if (index == screwPorts.Count - 1)
+                DebugLogger.Log(message:$"Change position");
+                if (i == screwPorts.Count - 1)
                 {
-                    _tweens.Add(Tween.Scale(addedScrewBoxSlot.transform, Vector3.one, duration: 0.3f));
+                    DebugLogger.Log(message:$"Set the scale for target");
+                    _tweens.Add(Tween.Scale(addedScrewBoxSlot.transform, Vector3.one * targetScale, duration: 0.3f));
                 }
             }));
         }

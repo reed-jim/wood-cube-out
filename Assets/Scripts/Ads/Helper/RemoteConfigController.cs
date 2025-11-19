@@ -65,6 +65,7 @@ public class RemoteConfigController : MonoBehaviour
             Instance = this;
 
             DontDestroyOnLoad(gameObject);
+            
         }
 
         Firebase.FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(async task =>

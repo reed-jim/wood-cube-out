@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -126,6 +127,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
+        DebugLogger.Log();
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
@@ -138,6 +140,7 @@ public class BoosterUI : MonoBehaviour
 
         if (boosterType == BoosterType.AddScrewPort)
         {
+            DebugLogger.Log();
             AddMoreScrewPort();
         }
         else if (boosterType == BoosterType.BreakObject)
@@ -152,6 +155,7 @@ public class BoosterUI : MonoBehaviour
 
     private void AddMoreScrewPort()
     {
+        DebugLogger.Log();
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.AddScrewPort);
@@ -171,6 +175,7 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 0);
 
         addMoreScrewPortEvent?.Invoke();
+        DebugLogger.Log(message:$"Invoked AddMoreScrewPort Event", setBold:true);
 
         _numScrewPortsAdded++;
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -178,7 +179,7 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.06f * piecePorts[i].transform.lossyScale.x;
+            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * GamePlayConst.spoolXDistanceScale * piecePorts[i].transform.lossyScale.x;
 
             piecePorts[i].transform.position = piecePortPosition;
         }
@@ -218,7 +219,7 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * 1.06f * piecePorts[i].transform.lossyScale.x;
+            piecePortPosition.x = (-(piecePorts.Count - 1) / 2f + i) * GamePlayConst.spoolXDistanceScale * piecePorts[i].transform.lossyScale.x;
 
             piecePorts[i].transform.position = piecePortPosition;
         }
@@ -838,18 +839,29 @@ public class SpoolManager : MonoBehaviour
         // addedSpoolBoxSlot.transform.position = position + new Vector3(10, 0, 0);
         addedSpoolBoxSlot.transform.localScale = Vector3.zero;
 
+        
+        float targetScale = 1f;
+        if (piecePorts[0] != null)
+        {
+            targetScale = piecePorts[0].transform.localScale.x;
+        }
+        else
+        {
+            targetScale = GamePlayConst.spoolPortScale;
+        }
+        
         for (int i = 0; i < piecePorts.Count; i++)
         {
             int index = i;
 
-            position.x = (-(piecePorts.Count - 1) / 2f + i) * 1.05f * piecePorts[0].transform.lossyScale.x;
+            position.x = (-(piecePorts.Count - 1) / 2f + i) * GamePlayConst.spoolXDistanceScale * piecePorts[0].transform.lossyScale.x;
 
             _tweens.Add(Tween.Position(piecePorts[i].transform, position, duration: 0.3f)
             .OnComplete(() =>
             {
                 if (index == piecePorts.Count - 1)
                 {
-                    _tweens.Add(Tween.Scale(addedSpoolBoxSlot.transform, Vector3.one, duration: 0.3f));
+                    _tweens.Add(Tween.Scale(addedSpoolBoxSlot.transform, Vector3.one * targetScale, duration: 0.3f));
                 }
             }));
         }
