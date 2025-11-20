@@ -127,7 +127,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        DebugLogger.Log();
+        DebugLogger.Log(message:$"{boosterType}");
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
