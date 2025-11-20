@@ -78,9 +78,7 @@ namespace NamPhuThuy.UI
             vibrationButton.onClick.RemoveAllListeners();
             notificationButton.onClick.RemoveAllListeners();
         }
-
         
-     
         #endregion
 
         #region Private Methods
