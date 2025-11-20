@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
@@ -44,7 +45,7 @@ namespace NamPhuThuy.UI
         private void Start()
         {
             versionText.text = $"Version {Application.version}";
-            SetStateForButton();
+            
         }
 
         void OnEnable()
@@ -60,6 +61,8 @@ namespace NamPhuThuy.UI
             sfxButton.onClick.AddListener(OnClickSound);
             vibrationButton.onClick.AddListener(OnClickVibration);
             notificationButton.onClick.AddListener(OnClickNotification);
+            
+            SetStateForButton();
         }
 
         private void OnDisable()
@@ -84,13 +87,13 @@ namespace NamPhuThuy.UI
         
         private void SetStateForButton()
         {
+            DebugLogger.Log();
             bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
             ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
             if (musicSwitch != null)
             {
                 musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
             
             tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();

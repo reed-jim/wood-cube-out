@@ -9,9 +9,18 @@ public class LanguageButton : MonoBehaviour
     [SerializeField] private Image activeIcon;
     [SerializeField] private TMP_Text languageText;
 
+    [Header("Flags")] 
+    [SerializeField] private bool isSelected;
+    
+    [Header("Selected state")]
     [SerializeField] private Material selectedMaterial;
+    [SerializeField] private Image selectedBackground;
+    
+    [Header("Unselected state")]
     [SerializeField] private Material unselectedMaterial;
-
+    [SerializeField] private Image unselectedBackground;
+    
+    
     [SerializeField] private string language;
 
     private Action _onSelect;
@@ -23,19 +32,23 @@ public class LanguageButton : MonoBehaviour
 
     public void SetStateBasedOnLanguage(string language)
     {
-        bool isSelected = language == this.language;
+        isSelected = language == this.language;
 
         activeIcon.gameObject.SetActive(isSelected);
 
         if (isSelected)
         {
-            languageText.color = ColorUtil.GetColorFromHex("#83EE64");
-            languageText.fontSharedMaterial = selectedMaterial;
+            /*languageText.color = ColorUtil.GetColorFromHex("#83EE64");
+            languageText.fontSharedMaterial = selectedMaterial;*/
+            selectedBackground.gameObject.SetActive(true);
+            unselectedBackground.gameObject.SetActive(false);
         }
         else
         {
-            languageText.color = ColorUtil.GetColorFromHex("#ffffff");
-            languageText.fontSharedMaterial = unselectedMaterial;
+            /*languageText.color = ColorUtil.GetColorFromHex("#ffffff");
+            languageText.fontSharedMaterial = unselectedMaterial;*/
+            selectedBackground.gameObject.SetActive(false);
+            unselectedBackground.gameObject.SetActive(true);
         }
     }
 

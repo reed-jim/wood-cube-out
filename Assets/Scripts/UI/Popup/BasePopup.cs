@@ -16,7 +16,7 @@ public class BasePopup : MonoBehaviour
     [SerializeField] protected Button detectClickOutsideButton;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private ScreenRoute route;
+    [SerializeField] protected ScreenRoute route;
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
     [SerializeField] protected bool isShowingInterAdOnInteract;
@@ -58,7 +58,11 @@ public class BasePopup : MonoBehaviour
         GalleryPackElement.switchRouteHideEvent += OnRouteHideSwitched;
         
         LevelLoader.switchRouteEvent += OnRouteSwitched;
+        
         PausePopup.switchRouteEvent += OnRouteSwitched;
+        NamPhuThuy.UI.PausePopup.switchRouteEvent += OnRouteSwitched;
+        
+        
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
         PictureRewardSegmentedProgressBar.switchRouteHideEvent += OnRouteHideSwitched;
@@ -117,6 +121,8 @@ public class BasePopup : MonoBehaviour
         
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
         PausePopup.switchRouteEvent -= OnRouteSwitched;
+        NamPhuThuy.UI.PausePopup.switchRouteEvent -= OnRouteSwitched;
+        
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
         PictureRewardSegmentedProgressBar.switchRouteHideEvent -= OnRouteHideSwitched;

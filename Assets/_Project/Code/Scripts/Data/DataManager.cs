@@ -39,15 +39,20 @@ JSON for:
         
         [SerializeField] private LevelObserver levelObserver;
         public LevelObserver LevelObserver => levelObserver;
+        [SerializeField] private LevelBoosterObserver levelBoosterObserver;
+        public LevelBoosterObserver LevelBoosterObserver => levelBoosterObserver;
 
         [Header("Game Settings")]
         [SerializeField] private GameSetting gameSetting;
         public GameSetting GameSetting => gameSetting;
         
-        [Header("IAP")] 
+        [Header("Game Data")] 
         [SerializeField] private IAPPackageData removeAdsPackIAP;
 
         public IAPPackageData RemoveAdsPackIAP => removeAdsPackIAP;
+        
+        [SerializeField] private LevelDataContainer levelDataContainer;
+        public LevelDataContainer LevelDataContainer => levelDataContainer;
 
         #endregion
         

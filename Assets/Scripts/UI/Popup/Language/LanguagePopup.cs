@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using Lean.Localization;
+using NamPhuThuy.UI;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -24,6 +25,8 @@ public class LanguagePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction: () => ScrollToCurrentLanguage());
+        
+        scrollRect.LockVerticalScrollALittle();
 
         foreach (var item in chooseLanguageButtons)
         {

@@ -62,6 +62,8 @@ public class YarnLevelLoader : MonoBehaviour
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
+        NamPhuThuy.UI.PausePopup.replayLevelEvent += Replay;
+        
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
@@ -93,6 +95,8 @@ public class YarnLevelLoader : MonoBehaviour
     void OnDestroy()
     {
         PausePopup.replayLevelEvent -= Replay;
+        NamPhuThuy.UI.PausePopup.replayLevelEvent -= Replay;
+        
         LosePopup.replayLevelEvent -= Replay;
         ReplayPopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
