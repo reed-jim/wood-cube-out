@@ -28,6 +28,9 @@ public class GameLoading : MonoBehaviour
 
     [Header("REMOTE ADDRESSABLES")]
     [SerializeField] private TMP_Text downloadProgressText;
+    
+    [Header("Loading Anim")]
+    [SerializeField] private SkeletonGraphic loadingSkeGraphic;
 
     [Header("NO INTERNET")]
     [SerializeField] private RectTransform noInternetContainer;
@@ -83,6 +86,8 @@ public class GameLoading : MonoBehaviour
         // StartCoroutine(LoadFromGitHub());
 
         StartCoroutine(SlowTransititon());
+        
+        PlayLoadingAnimations();
     }
 
     private void OnDestroy()
@@ -90,6 +95,24 @@ public class GameLoading : MonoBehaviour
         SceneManager.sceneLoaded -= OnSceneLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void PlayLoadingAnimations() 
+    {
+        if (loadingSkeGraphic == null || loadingSkeGraphic.AnimationState == null)
+            return;
+
+        // play `start` once
+        var trackEntry = loadingSkeGraphic.AnimationState.SetAnimation(0, "appear", false);
+
+        // when `start` finishes, play `idle` in loop
+        trackEntry.Complete += entry => {
+            loadingSkeGraphic.AnimationState.SetAnimation(0, "idle", true);
+        };
     }
 
     #endregion
