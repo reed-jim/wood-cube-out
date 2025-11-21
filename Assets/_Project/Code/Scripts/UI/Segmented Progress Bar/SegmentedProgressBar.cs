@@ -71,12 +71,16 @@ namespace NamPhuThuy.UI
 
         public virtual void SetupRewardProgressBar(float currentProgress, float prevProgress)
         {
+            DebugLogger.Log();
             _currentRewardProgress = currentProgress;
 
             rewardProgressFill.fillAmount = prevProgress == 1 ? 0 : prevProgress;
 
+            DebugLogger.Log(message:$"_currentRewardProgress: {_currentRewardProgress}");
+            
             if (_currentRewardProgress < 1)
             {
+                DebugLogger.Log(message:$"Done 1");
                 rewardProgressTextTMP.color = Color.white;
 
                 rewardProgressText.TranslationName = "Only n levels left";
@@ -87,6 +91,7 @@ namespace NamPhuThuy.UI
             }
             else
             {
+                DebugLogger.Log(message:$"Done 2");
                 rewardProgressTextTMP.color = ColorHelper.GetColorFromHex("#78EB66");
 
                 rewardProgressText.TranslationName = "Reward Completed";

@@ -4,60 +4,38 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
-using Saferio.Util.SaferioTween;
-using Unity.Mathematics;
+using NamPhuThuy.Common;
+using NamPhuThuy.EditorTools;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.AddressableAssets;
-using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 
 public class YarnGameTool : EditorWindow
 {
-    private GameObject target;
-    private GameObject screwPrefab;
     private Material targetMaterial;
-
-
-
-    private Vector3 dimensionSize;
-    private Vector3 distance;
-    private float expectedScale = 1.2f;
-    private int maxScrew = 124;
-    private float expectedOffsetRatioAutoSnapSurface = 0.55f;
-    private Vector3 expectedLocalPositionOffset;
-    private Vector3 expectedLocalRotationOffset;
-
-
+    private PieceMaterialContainer _pieceMaterialContainer;
     private FaceDirection expectedDirection;
 
-
-
-    private float ratioSnapOffset = 0.06f;
-
-
-
-    private string prefabPath = "Assets/Prefabs/MyPrefab.prefab";
-
-
-    private Vector2 scrollPosition;
-
-    #region GENERATE LEVEL
-    private GameObject piecePrefab;
-    #endregion
+    private GUIStyle _centeredButtonStyle;
 
     #region RANDOMIZE MODEL COLOR
+
     private Dictionary<Renderer, Material> _cachedMaterialDictionary;
+
     #endregion
 
     #region EXTRACT FROM OTHER GAMES' LEVEL
+
     private string matchName;
+
     #endregion
 
     #region Color Convert
+
     public Vector4 rgba;
+
     #endregion
 
 
@@ -69,6 +47,8 @@ public class YarnGameTool : EditorWindow
 
     private CountryDataContainer countryDataContainer;
 
+    #region CALLBACKS
+
     private void OnGUI()
     {
         float padding = 20f;
@@ -76,15 +56,25 @@ public class YarnGameTool : EditorWindow
         Rect areaRect = new Rect(padding, padding, position.width - 2 * padding, position.height - 2 * padding);
 
         GUILayout.BeginArea(areaRect);
-        scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, true);
-
-        screwPrefab = (GameObject)EditorGUILayout.ObjectField("Screw Prefab", screwPrefab, typeof(GameObject), true);
-        piecePrefab = (GameObject)EditorGUILayout.ObjectField("Piece Prefab", piecePrefab, typeof(GameObject), true);
+        
+        if (_centeredButtonStyle == null)
+        {
+            _centeredButtonStyle = new GUIStyle(GUI.skin.button)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                fontSize = 14,
+                fontStyle = FontStyle.Bold
+            };
+        }
+        
         countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
-
-        expectedScale = EditorGUILayout.FloatField("Expected Scale", expectedScale);
-
-        maxScrew = EditorGUILayout.IntField("Max Screw", maxScrew);
+        _pieceMaterialContainer = (PieceMaterialContainer)EditorGUILayout.ObjectField("pieceMaterialContainer", _pieceMaterialContainer, typeof(PieceMaterialContainer), true);
+        
+        GUILayout.Button("Load Assets");
+        {
+            _pieceMaterialContainer = Resources.Load<PieceMaterialContainer>("PieceMaterialContainer");
+        }
+        
         matchName = EditorGUILayout.TextField("Match Name", matchName);
 
         GUIStyle centeredStyle = new GUIStyle(EditorStyles.boldLabel)
@@ -98,27 +88,9 @@ public class YarnGameTool : EditorWindow
         EditorGUILayout.ColorField("RGBA Color", color);
 
         GUILayout.Space(16);
-        GUILayout.Label("Yarn", centeredStyle);
-
-        if (GUILayout.Button("AssignComponentsForPieces"))
-        {
-            AssignComponentsForPieces();
-        }
-
-        if (GUILayout.Button("CheckFactionsYarnLevel"))
-        {
-            CheckFactionsYarnLevel();
-        }
-
-        if (GUILayout.Button("ExtractFullLevel"))
-        {
-            ExtractFullLevel();
-        }
-
-        if (GUILayout.Button("AssignFactionBasedOnMaterial"))
-        {
-            AssignFactionBasedOnMaterial();
-        }
+        GUILayout.Label("Yarn Level Setup", centeredStyle);
+       
+        SetupLevelButtons();
 
         GUILayout.Space(16);
         GUILayout.Label("Util", centeredStyle);
@@ -127,643 +99,329 @@ public class YarnGameTool : EditorWindow
         GUILayout.EndArea();
     }
 
-    private void AutoAssignSprites()
+    private void SetupLevelButtons()
     {
-        string[] files = Directory.GetFiles("Assets/Sprites/Country Flags", "flag_*.png");
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Step 1:  Assign Materials", GUILayout.Width(250)))
+            AssignMaterials();
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Step 2: Add MeshColliders For Children", GUILayout.Width(250)))
+            AddMeshCollidersForChilren();
+        
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Step 3: AssignComponentsForPieces", GUILayout.Width(250)))
+            AssignComponentsForPieces();
+        
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
 
-        var sortedFiles = files.OrderBy(file =>
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Step 4: AssignFactionBasedOnMaterial", GUILayout.Width(250)))
+            AssignFactionBasedOnMaterial();
+        
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        
+        GUILayout.Space(8);
+        
+        GUILayout.BeginHorizontal();
+        GUILayout.FlexibleSpace();
+        if (GUILayout.Button("Run All Level Setup Steps", GUILayout.Width(300)))
+            SetupSelectedLevels();
+        GUILayout.FlexibleSpace();
+        GUILayout.EndHorizontal();
+        
+        
+        if (GUILayout.Button("CheckFactionsYarnLevel"))
         {
-            var match = Regex.Match(Path.GetFileNameWithoutExtension(file), @"flag_(\d+)");
-            return match.Success ? int.Parse(match.Groups[1].Value) : int.MaxValue;
-        });
-
-        int index = 0;
-
-        foreach (string file in sortedFiles)
-        {
-            Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(file);
-
-            countryDataContainer.Countries[index].Flag = sprite;
-
-            index++;
+            CheckFactionsYarnLevel();
         }
     }
 
-    #region CHECKING LEVEL
-    private void CheckLevelIssues()
+    #endregion
+
+    #region YARN LEVEL SETUP
+
+    private void AssignMaterials()
     {
-        GameObject level = Selection.activeGameObject;
+        Transform level = Selection.activeTransform;
+        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+        
+        if (_pieceMaterialContainer == null)
+            DebugLogger.LogError("PieceMaterialContainer not found in Resources!");
 
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
-
-        int numScrew = screws.Length;
-        Vector3 screwSize = screws[0].GetComponent<MeshRenderer>().bounds.size;
-
-
-
-        Dictionary<string, List<string>> obstaclesOfPieces = new Dictionary<string, List<string>>();
-
-        int totalBlockedScrew = 0;
-
-        for (int i = 0; i < numScrew; i++)
+        foreach (var item in allChildren)
         {
-            string pieceName = screws[i].transform.parent.name;
-
-            List<string> obstacleName = GetScrewObstacles(screws[i].transform, isIncludeHiddenScrew: false);
-
-            if (obstacleName.Count > 0)
+            Renderer renderer = item.GetComponent<Renderer>();
+            if (renderer == null)
             {
-                totalBlockedScrew++;
+                DebugLogger.LogError(message: $"Renderere is null");
+                continue;
             }
 
-            if (!obstaclesOfPieces.ContainsKey(pieceName))
+            Material currentMaterial = renderer.sharedMaterial;
+
+            if (_pieceMaterialContainer.materials.Any(material => ShareCommonWord(material.name, currentMaterial.name)))
             {
-                obstaclesOfPieces.Add(pieceName, obstacleName);
+                Material match = _pieceMaterialContainer.materials.First(material => ShareCommonWord(material.name, currentMaterial.name));
+                renderer.material = match;
             }
-            else
+        }
+
+        RemoveMissingScripts();
+
+        EditorUtility.SetDirty(level);
+
+        
+    }
+
+    private void AddMeshCollidersForChilren()
+    {
+        Transform root = Selection.activeTransform;
+        if (root == null)
+        {
+            DebugLogger.LogError(message: "No Transform selected to add MeshColliders for children.");
+            return;
+        }
+
+        int addedCount = 0;
+        AddMeshCollidersRecursive(root, ref addedCount);
+
+        DebugLogger.Log(message: $"Added MeshCollider to {addedCount} child object(s).");
+
+        if (addedCount > 0)
+        {
+            EditorUtility.SetDirty(root);
+            EditorSceneManager.MarkSceneDirty(root.gameObject.scene);
+        }
+
+        void AddMeshCollidersRecursive(Transform parent, ref int count)
+        {
+            foreach (Transform child in parent)
             {
-                foreach (var item in obstacleName)
+                // Only add if it has a MeshFilter and no MeshCollider yet
+                MeshFilter meshFilter = child.GetComponent<MeshFilter>();
+                MeshCollider meshCollider = child.GetComponent<MeshCollider>();
+
+                if (meshFilter != null && meshCollider == null)
                 {
-                    if (!obstaclesOfPieces[pieceName].Contains(item))
-                    {
-                        obstaclesOfPieces[pieceName].Add(item);
-                    }
-                }
-            }
-
-
-            // Check screws that are too near each other
-            for (int j = 0; j < screws[i].transform.parent.childCount; j++)
-            {
-                Transform checkScrew = screws[i].transform.parent.GetChild(j);
-
-                if (checkScrew.GetInstanceID() == screws[i].transform.GetInstanceID())
-                {
-                    continue;
+                    meshCollider = child.gameObject.AddComponent<MeshCollider>();
+                    meshCollider.sharedMesh = meshFilter.sharedMesh;
+                    meshCollider.convex = true;
+                    count++;
                 }
 
-                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.3f * screwSize.x)
-                {
-                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name} {checkScrew.name}</color>");
-
-                    break;
-                }
-            }
-        }
-
-        foreach (var obstaclesOfPiece in obstaclesOfPieces)
-        {
-            foreach (var obstacle in obstaclesOfPiece.Value)
-            {
-                if (obstaclesOfPieces[obstacle].Contains(obstaclesOfPiece.Key))
-                {
-                    Debug.Log($"SAFERIO <color=#73FF83>Level {level}:<color=#fff> {obstaclesOfPiece.Key} {obstacle} <color=#FF7A75>INVALID<color=#fff>");
-
-                    // isValid = false;
-
-                    // break;
-                }
+                AddMeshCollidersRecursive(child, ref count);
             }
         }
     }
-    private void CheckHingeJointNumber()
-    {
-        GameObject levelPrefab = Selection.activeGameObject;
-
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
-        BaseScrew[] screw = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
-
-        int numScrew = screw.Length;
-        int numHingeJoint = 0;
-
-        for (int i = 0; i < objectParts.Length; i++)
-        {
-            HingeJoint[] hingeJoints = objectParts[i].GetComponents<HingeJoint>();
-
-            if (hingeJoints.Length == 0)
-            {
-                break;
-            }
-
-            if (hingeJoints[0].connectedBody == null)
-            {
-                break;
-            }
-
-            // Check DUPLICATE components
-            BasicObjectPart[] basicObjectParts = objectParts[i].GetComponents<BasicObjectPart>();
-
-            if (basicObjectParts.Length > 1)
-            {
-                break;
-            }
-
-            int numHingeJointInObjectPart = hingeJoints.Length;
-
-            numHingeJoint += numHingeJointInObjectPart;
-        }
-
-        bool isPassed = numHingeJoint == numScrew;
-
-        if (numScrew % 3 != 0)
-        {
-            isPassed = false;
-        }
-
-        string resultText = $"<color=#89FF5B>Passed</color>";
-
-        if (!isPassed)
-        {
-            resultText = $"<color=#FF7878>Failed</color>";
-        }
-
-        Debug.Log($"{levelPrefab.name}: {numHingeJoint}/{numScrew} - {resultText}<color=#fff></color>");
-    }
-
-    private void CheckHingeJointNumber(string path)
-    {
-        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
-
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
-        BaseScrew[] screw = GetComponentsFromAllChildren<BaseScrew>(levelPrefab.transform).ToArray();
-
-        int numScrew = screw.Length;
-        int numHingeJoint = 0;
-
-        for (int i = 0; i < objectParts.Length; i++)
-        {
-            HingeJoint[] hingeJoints = objectParts[i].GetComponents<HingeJoint>();
-
-            if (hingeJoints.Length == 0)
-            {
-                break;
-            }
-
-            if (hingeJoints[0].connectedBody == null)
-            {
-                break;
-            }
-
-            // Check DUPLICATE components
-            BasicObjectPart[] basicObjectParts = objectParts[i].GetComponents<BasicObjectPart>();
-
-            if (basicObjectParts.Length > 1)
-            {
-                break;
-            }
-
-            int numHingeJointInObjectPart = hingeJoints.Length;
-
-            numHingeJoint += numHingeJointInObjectPart;
-        }
-
-        bool isPassed = numHingeJoint == numScrew;
-
-        if (numScrew % 3 != 0)
-        {
-            isPassed = false;
-        }
-
-        string resultText = $"<color=#89FF5B>Passed</color>";
-
-        if (!isPassed)
-        {
-            resultText = $"<color=#FF7878>Failed</color>";
-        }
-
-        Debug.Log($"{levelPrefab.name}: {numHingeJoint}/{numScrew} - {resultText}<color=#fff></color>");
-    }
-
-    private void CheckHingeJointNumberAllLevels()
-    {
-        for (int i = 1; i <= 225; i++)
-        {
-            CheckHingeJointNumber($"Assets/Prefabs/Screw Away/Levels/Level {i}.prefab");
-        }
-    }
-
-    private void CheckInvalidScrews()
+    
+    private void AssignComponentsForPieces()
     {
         Transform level = Selection.activeTransform;
 
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(level).ToArray();
+        level.AddComponent<RotateObject>();
 
-        Vector3 screwSize = screws[0].GetComponent<MeshRenderer>().bounds.size;
+        Material noDepthWriteMaterial =
+            AssetDatabase.LoadAssetAtPath<Material>("Assets/Yarn/Shader/Yarn No Depth Write.shadergraph");
+        
 
-        for (int i = 0; i < screws.Length - 1; i++)
-        {
-            for (int j = 0; j < screws[i].transform.parent.childCount; j++)
-            {
-                Transform checkScrew = screws[i].transform.parent.GetChild(j);
-
-                if (checkScrew.GetInstanceID() == screws[i].transform.GetInstanceID())
-                {
-                    continue;
-                }
-
-                if (Vector3.Distance(checkScrew.position, screws[i].transform.position) < 0.5f * screwSize.x)
-                {
-                    Debug.Log($"<color=#Ff8E9E> invalid: {screws[i].transform.parent.name} / {screws[i].name}</color>");
-
-                    break;
-                }
-            }
-        }
-    }
-
-    private void CheckAddressablesLevels()
-    {
-        int total = 0;
-
-        for (int i = 1; i <= 175; i++)
-        {
-            int level = i;
-
-            string levelPrefab = $"Level {level}";
-
-            AsyncOperationHandle<GameObject> handle = Addressables.LoadAssetAsync<GameObject>(levelPrefab);
-
-            handle.Completed += (op) =>
-            {
-                if (op.Status == AsyncOperationStatus.Succeeded)
-                {
-                    total++;
-
-                    Debug.Log($"<color=#32CD32>SAFERIO Level {level} Passed</color> - Total: {total}");
-                }
-            };
-        }
-    }
-
-    private void CheckForConcaveColliderAllLevels()
-    {
-        GameObject[] levels = LoadAllPrefabsInFolder("Assets/Prefabs/Screw Away/Levels");
-
-        int totalConcavePieces = 0;
-
-        for (int i = 0; i < levels.Length; i++)
-        {
-            if (levels[i].name.Contains("Level"))
-            {
-                totalConcavePieces += CheckForConcaveCollider(levels[i].transform);
-            }
-        }
-
-        Debug.Log("SAFERIO " + totalConcavePieces);
-    }
-
-    private int CheckForNullHingeJointRigidbody(Transform level)
-    {
-        HingeJoint[] hingeJoints = GetComponentsFromAllChildren<HingeJoint>(level).ToArray();
-
-        int totalConcavePieces = 0;
-
-        for (int i = 0; i < hingeJoints.Length; i++)
-        {
-            if (hingeJoints[i].connectedBody == null)
-            {
-                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + hingeJoints[i].transform.parent.name + "</color>");
-
-                totalConcavePieces++;
-            }
-        }
-
-        return totalConcavePieces;
-    }
-
-    private int CheckForConcaveCollider(Transform level)
-    {
-        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
-
-        int totalConcavePieces = 0;
-
-        for (int i = 0; i < pieces.Length; i++)
-        {
-            if (!pieces[i].GetComponent<MeshCollider>().convex)
-            {
-                Debug.Log("<color=#f99>SAFERIO LEVEL " + level.name + "/" + pieces[i].name + "</color>");
-
-                totalConcavePieces++;
-            }
-        }
-
-        return totalConcavePieces;
-    }
-
-    private void CheckMissingComponents()
-    {
-        Transform selected = Selection.activeTransform;
-
-        GameObject go = selected.gameObject;
-        Component[] components = go.GetComponents<Component>();
-
-        Debug.Log("SAFERIO " + components.Length);
-
-        for (int i = 0; i < components.Length; i++)
-        {
-            if (components[i] == null)
-            {
-                Debug.Log($"SAFERIO Missing Component found on GameObject: {go.name}", go);
-            }
-        }
-    }
-    #endregion
-
-    private void AssignMaterial(string path)
-    {
-        GameObject levelPrefab = PrefabUtility.LoadPrefabContents(path);
-
-        BasicObjectPart[] objectParts = GetComponentsFromAllChildren<BasicObjectPart>(levelPrefab.transform).ToArray();
-
-        for (int i = 0; i < objectParts.Length; i++)
-        {
-            MeshRenderer meshRenderer = objectParts[i].GetComponent<MeshRenderer>();
-
-            Debug.Log(meshRenderer);
-
-            List<Material> materials = meshRenderer.materials.ToList();
-
-            materials[0] = targetMaterial;
-
-            meshRenderer.SetMaterials(materials);
-        }
-
-        EditorUtility.SetDirty(levelPrefab);
-
-        PrefabUtility.SaveAsPrefabAsset(levelPrefab, path);
-    }
-
-    #region REMOVE
-    private void RemoveAllGrandchildrenOf()
-    {
-        List<GameObject> toRemoveList = new List<GameObject>();
-
-        for (int i = 0; i < Selection.activeTransform.childCount; i++)
-        {
-            for (int j = 0; j < Selection.activeTransform.GetChild(i).childCount; j++)
-            {
-                toRemoveList.Add(Selection.activeTransform.GetChild(i).GetChild(j).gameObject);
-            }
-        }
-
-        foreach (var item in toRemoveList)
-        {
-            DestroyImmediate(item);
-        }
-
-        EditorUtility.SetDirty(Selection.activeTransform);
-    }
-
-    private void RemoveAllMeshColliders()
-    {
-        Transform[] selections = Selection.transforms;
-
-        for (int i = 0; i < selections.Length; i++)
-        {
-            RemoveAllMeshColliders(selections[i]);
-        }
-    }
-
-    private void RemoveAllMeshColliders(Transform selection)
-    {
-        MeshCollider[] meshColliders = selection.GetComponents<MeshCollider>();
-
-        // Remove all existing blocks
-        List<MeshCollider> toRemoveList = new List<MeshCollider>();
-
-        for (int i = 0; i < meshColliders.Length; i++)
-        {
-            toRemoveList.Add(meshColliders[i]);
-        }
-
-        foreach (var item in toRemoveList)
-        {
-            DestroyImmediate(item);
-        }
-    }
-    #endregion
-
-    #region INFO
-
-    #endregion
-
-    #region SNAP
-    private void SnapSurface(Transform target)
-    {
-        Transform selectedObject = target;
-
-        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
-        screwSize.z *= 0.779f;
-
-        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-
-        int maxRaycastDistance = 100;
-
-        RaycastHit hit;
-
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, maxRaycastDistance))
-        {
-            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-            if (objectPart != null)
-            {
-                Snap();
-            }
-            else
-            {
-                SnapByDirection(selectedObject.forward);
-                // RaycastAgain();
-            }
-        }
-        else
-        {
-            SnapByDirection(selectedObject.forward);
-            // RaycastAgain();
-        }
-
-        void SnapByDirection(Vector3 raycastDirection)
-        {
-            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, raycastDirection, out hit, maxRaycastDistance))
-            {
-                IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-                if (objectPart != null)
-                {
-                    Snap();
-                }
-            }
-        }
-
-        void RaycastAgain()
-        {
-            Vector3 direction = -target.transform.position + target.parent.position;
-
-            target.rotation = Quaternion.LookRotation(-direction);
-
-            if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, maxRaycastDistance))
-            {
-                IObjectPart recastObjectPart = hit.collider.GetComponent<IObjectPart>();
-
-                if (recastObjectPart != null)
-                {
-                    Snap();
-                }
-            }
-        }
-
-        void Snap()
-        {
-            selectedObject.position = hit.point - expectedOffsetRatioAutoSnapSurface * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-
-            Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
-
-            selectedObject.rotation = surfaceRotation;
-            selectedObject.localEulerAngles = selectedObject.localEulerAngles.ChangeZ(0);
-        }
-    }
-
-    private void SnapSurface()
-    {
-        SnapSurface(Selection.activeTransform);
-    }
-
-    private void SnapSurfaceAll(Transform target)
-    {
-        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(target).ToArray();
-
-        foreach (var screw in screws)
-        {
-            SnapSurface(screw.transform);
-        }
-
-        EditorUtility.SetDirty(Selection.activeTransform);
-    }
-
-    private void SnapSurfaceScrewForAllPieceSequentially()
-    {
-        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(Selection.activeTransform).ToArray();
-
-        foreach (var piece in pieces)
-        {
-            for (int i = 0; i < pieces.Length; i++)
-            {
-                pieces[i].gameObject.SetActive(false);
-            }
-
-            piece.gameObject.SetActive(true);
-
-            SnapSurfaceAll(piece.transform);
-        }
-
-        foreach (var piece in pieces)
-        {
-            piece.gameObject.SetActive(true);
-        }
-
-        EditorUtility.SetDirty(Selection.activeTransform);
-    }
-
-    private void SnapParentSurface()
-    {
-        Transform selectedObject = Selection.activeTransform;
-
-        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
-
-        Vector3 origin = selectedObject.position + 1f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-        Vector3 direction = selectedObject.parent.position - selectedObject.position;
-
-        RaycastHit hit;
-
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, direction, out hit, 10))
-        {
-            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-            if (objectPart != null)
-            {
-                selectedObject.position = hit.point - 0.3f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-
-                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
-
-                selectedObject.rotation = surfaceRotation;
-            }
-        }
-    }
-
-    private void SnapRotationSurface()
-    {
-        Transform selectedObject = Selection.activeTransform;
-
-        RaycastHit hit;
-
-        Vector3 direction = selectedObject.parent.position - selectedObject.position;
-
-        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
-
-        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
-
-        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, direction, out hit, 10))
-        {
-            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
-
-            if (objectPart != null)
-            {
-                Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
-
-                selectedObject.rotation = surfaceRotation;
-            }
-        }
-    }
-
-    private void MagicSnap()
-    {
-        SnapRotationSurface();
-        SnapSurface();
-    }
-    #endregion
-
-    #region UTIL
-    private void AddRequiredComponentsToPieces()
-    {
-        Transform level = Selection.activeTransform;
-
-        // Transform[] pieces = GetComponentsFromAllChildren<Transform>(level).ToArray();
-
-        if (level.GetComponent<RotateObject>() == null)
-        {
-            level.AddComponent<RotateObject>();
-        }
-
+        /*
         for (int i = 0; i < level.childCount; i++)
         {
             Transform piece = level.GetChild(i);
 
-            // // Level Container
-            // if (pieces[i] == level)
-            // {
-            //     if (pieces[i].GetComponent<RotateObject>() == null)
-            //     {
-            //         pieces[i].AddComponent<RotateObject>();
-            //     }
+            piece.gameObject.layer = LayerMask.NameToLayer("Default");
 
-            //     continue;
-            // }
+            piece.AddComponent<BasePiece>();
+            piece.AddComponent<PieceProperty>();
+            PieceMaterialPropertyBlock pieceMaterialPropertyBlock = piece.AddComponent<PieceMaterialPropertyBlock>();
+            piece.AddComponent<PieceServiceLocator>().AssignComponents();
 
-            // Pieces
-            piece.AddComponent<BasicObjectPart>();
-            piece.AddComponent<ObjectPartMaterialPropertyBlock>();
-            piece.AddComponent<Rigidbody>();
+            pieceMaterialPropertyBlock.noDepthWriteMaterial = noDepthWriteMaterial;
+            pieceMaterialPropertyBlock.pieceMaterialContainer = _pieceMaterialContainer;
 
-            if (piece.GetComponent<MeshCollider>() == null)
+            piece.GetComponent<MeshCollider>().convex = true;
+        }*/
+        
+        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+        foreach (var item in allChildren)
+        {
+            Renderer renderer = item.GetComponent<Renderer>();
+            if (renderer == null)
             {
-                MeshCollider meshCollider = piece.AddComponent<MeshCollider>();
+                DebugLogger.LogError(message: $"Renderere is null");
+                continue;
+            }
 
-                meshCollider.convex = true;
+            Material currentMaterial = renderer.sharedMaterial;
+
+            if (_pieceMaterialContainer.materials.Any(material => ShareCommonWord(material.name, currentMaterial.name)))
+            {
+                Material match = _pieceMaterialContainer.materials.First(material => ShareCommonWord(material.name, currentMaterial.name));
+                
+                item.gameObject.layer = LayerMask.NameToLayer("Default");
+
+                item.AddComponent<BasePiece>();
+                item.AddComponent<PieceProperty>();
+                PieceMaterialPropertyBlock pieceMaterialPropertyBlock = item.AddComponent<PieceMaterialPropertyBlock>();
+                item.AddComponent<PieceServiceLocator>().AssignComponents();
+
+                pieceMaterialPropertyBlock.noDepthWriteMaterial = noDepthWriteMaterial;
+                pieceMaterialPropertyBlock.pieceMaterialContainer = _pieceMaterialContainer;
+
+                item.GetComponent<MeshCollider>().convex = true;
             }
         }
 
         EditorUtility.SetDirty(level);
     }
+
+    private void AssignFactionBasedOnMaterial()
+    {
+        Transform level = Selection.activeTransform;
+
+        BasePiece[] pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform).ToArray();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            PieceServiceLocator pieceServiceLocator = pieces[i].GetComponent<PieceServiceLocator>();
+
+            pieceServiceLocator.pieceProperty.Faction = CommonUtil.FindEnumFromString<GameFaction>(
+                pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+    
+    private bool ShareCommonWord(string str1, string str2)
+    {
+        if (string.IsNullOrEmpty(str1) || string.IsNullOrEmpty(str2))
+            return false;
+
+        var separators = new[] { ' ', '_', '-' };
+
+        // Local helper to check if a word is excluded
+        bool IsExcluded(string w) =>
+            YarnGameToolConst.ExceptWordsCompare
+                .Any(e => string.Equals(e, w, System.StringComparison.OrdinalIgnoreCase));
+
+        var words1 = str1
+            .Split(separators, System.StringSplitOptions.RemoveEmptyEntries)
+            .Where(w => !IsExcluded(w))
+            .Select(w => w.ToLowerInvariant())
+            .ToArray();
+
+        var words2 = str2
+            .Split(separators, System.StringSplitOptions.RemoveEmptyEntries)
+            .Where(w => !IsExcluded(w))
+            .Select(w => w.ToLowerInvariant())
+            .ToArray();
+
+        DebugLogger.Log(message: $"words1: => {string.Join(",", words1)}");
+        DebugLogger.Log(message: $"words2: => {string.Join(",", words2)}");
+
+        var set1 = new HashSet<string>(words1);
+        return words2.Any(set1.Contains);
+    }
+   
+    
+    private void SetupSelectedLevels()
+    {
+        Transform[] levels = Selection.transforms;
+        if (levels == null || levels.Length == 0)
+        {
+            DebugLogger.LogError(message: "No levels selected. Please select one or more level root Transforms.");
+            return;
+        }
+
+        DebugLogger.Log(message: $"Running level setup for {levels.Length} level(s).");
+
+        foreach (Transform level in levels)
+        {
+            if (level == null) continue;
+            SetupLevel(level);
+        }
+    }
+    
+    private void SetupLevel(Transform levelRoot)
+    {
+        if (levelRoot == null)
+        {
+            DebugLogger.LogError(message: "Level root is null when running setup.");
+            return;
+        }
+
+        // Temporarily set the active transform so existing methods work as-is
+        Transform previousSelection = Selection.activeTransform;
+        Selection.activeTransform = levelRoot;
+
+        try
+        {
+            AssignMaterials();
+            AddMeshCollidersForChilren();
+            AssignComponentsForPieces();
+            AssignFactionBasedOnMaterial();
+
+            DebugLogger.Log(message: $"Level setup completed for: {levelRoot.name}");
+        }
+        finally
+        {
+            // Restore previous selection
+            Selection.activeTransform = previousSelection;
+        }
+    }
+    
+    #endregion
+
+
+    #region CHECKING LEVEL
+
+    private void CheckFactionsYarnLevel()
+    {
+        Transform level = Selection.activeTransform;
+
+        BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
+
+        Dictionary<GameFaction, int> numPiecesByFaction = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            GameFaction faction = pieces[i].GetComponent<PieceProperty>().Faction;
+
+            if (numPiecesByFaction.ContainsKey(faction))
+            {
+                numPiecesByFaction[faction]++;
+            }
+            else
+            {
+                numPiecesByFaction.Add(faction, 1);
+            }
+        }
+
+        foreach (var item in numPiecesByFaction)
+        {
+            Debug.Log($"SAFERIO {item.Key}: {item.Value}");
+        }
+
+        EditorUtility.SetDirty(level);
+    }
+
+    #endregion
+
+    #region UTIL
 
     private void FoldAllInPrefabMode()
     {
@@ -802,6 +460,7 @@ public class YarnGameTool : EditorWindow
                 return window;
             }
         }
+
         return null;
     }
 
@@ -831,96 +490,10 @@ public class YarnGameTool : EditorWindow
         return UnityEngine.Random.Range(1, maxValue) * (UnityEngine.Random.Range(0, 2) * 2 - 1);
     }
 
-    public List<string> GetScrewObstacles(Transform screw, bool isIncludeHiddenScrew)
-    {
-        MeshFilter meshFilter = screw.GetComponent<MeshFilter>();
-
-        float screwRadius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
-
-        Vector3 pointOne = screw.position + screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z * screw.forward;
-        Vector3 pointTwo = pointOne + 10f * screw.forward;
-
-        Collider[] hits = new Collider[16];
-
-        Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, screwRadius, hits, LayerMask.GetMask("Default"));
-
-        List<string> obstacleInstanceIds = new List<string>();
-
-        if (hits != null)
-        {
-            for (int i = 0; i < hits.Length; i++)
-            {
-                if (hits[i] == null)
-                {
-                    continue;
-                }
-
-                if (hits[i].transform == screw.parent)
-                {
-                    continue;
-                }
-
-                IObjectPart objectPart = hits[i].transform.GetComponent<IObjectPart>();
-
-                if (objectPart != null)
-                {
-                    if (isIncludeHiddenScrew)
-                    {
-                        continue;
-                    }
-
-                    Vector3 hitPos;
-
-                    // Concave
-                    if (objectPart.IsConcave)
-                    {
-                        RaycastHit hit;
-
-                        float radius = screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x;
-
-                        Physics.CapsuleCast(
-                            pointOne - radius * screw.forward, pointOne - radius * screw.forward + 0.01f * screw.forward,
-                            screw.lossyScale.x * 0.45f * 0.779f * meshFilter.sharedMesh.bounds.size.x, screw.forward, out hit, 10, LayerMask.GetMask("Default"));
-
-                        if (hit.collider != null)
-                        {
-                            hitPos = hit.point;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        hitPos = hits[i].ClosestPoint(pointOne);
-                    }
-
-                    // Perpendicular distance
-                    Vector3 positionInScrewSpace = screw.InverseTransformPoint(hitPos);
-
-                    float distance = positionInScrewSpace.z - screw.lossyScale.z * 1f * 0.779f * meshFilter.sharedMesh.bounds.size.z;
-
-                    distance = Mathf.Max(distance, 0);
-
-                    if (distance < screw.lossyScale.z * 0.5f * 0.779f * meshFilter.sharedMesh.bounds.size.z)
-                    {
-                        if (Mathf.Abs(positionInScrewSpace.x) > screwRadius || Mathf.Abs(positionInScrewSpace.y) > screwRadius)
-                        {
-                            continue;
-                        }
-
-                        obstacleInstanceIds.Add(hits[i].transform.name);
-                    }
-                }
-            }
-        }
-
-        return obstacleInstanceIds;
-    }
     #endregion
 
     #region GENERATE LEVEL
+
     private GameObject[] LoadAllPrefabsInFolder(string folder)
     {
         List<GameObject> prefabs = new List<GameObject>();
@@ -988,189 +561,17 @@ public class YarnGameTool : EditorWindow
 
         return absoluteOne;
     }
+
     #endregion
 
     #region EXTRACT OTHER GAMES' LEVEL
-    private void ChangeMesh()
-    {
-        Transform selection = Selection.activeTransform;
-
-        MeshFilter meshFilter = selection.GetComponent<MeshFilter>();
-
-        Mesh originalMesh = meshFilter.sharedMesh;
-
-        Mesh newMesh = new Mesh();
-
-        newMesh.vertices = originalMesh.vertices;
-        newMesh.triangles = originalMesh.triangles;
-
-        Vector3[] newVertices = originalMesh.vertices;
-
-        for (int i = 0; i < newMesh.vertexCount; i++)
-        {
-            int random = UnityEngine.Random.Range(0, 2);
-
-            if (random == 0)
-            {
-                newVertices[i].x *= 1.2f;
-            }
-        }
-
-        newMesh.vertices = newVertices;
-
-        newMesh.RecalculateNormals();
-        newMesh.RecalculateBounds();
-
-        newMesh.name = "Generated";
-
-        meshFilter.mesh = newMesh;
-    }
-    private void ExtractPieces()
-    {
-        Transform level = Selection.activeTransform;
-
-        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
-
-        Material[] materialPool = LoadAllMaterialsInFolder("Assets/Materials/Wood/Single Color");
-
-        Material randomMaterial = materialPool[UnityEngine.Random.Range(0, materialPool.Length)];
-
-        for (int i = 0; i < allChildren.Length; i++)
-        {
-            Transform child = allChildren[i];
-
-            if (child.name.Contains(matchName))
-            {
-                Transform piece = Instantiate(child, level);
-
-                piece.transform.position = child.position;
-
-                Component[] components = piece.GetComponents<Component>();
-
-                foreach (Component component in components)
-                {
-                    if (!(component is Transform) && !(component is MeshFilter) && !(component is MeshRenderer) && !(component is MeshCollider))
-                    {
-                        DestroyImmediate(component, allowDestroyingAssets: true);
-                    }
-
-                    if (component == null)
-                    {
-                        GameObjectUtility.RemoveMonoBehavioursWithMissingScript(piece.gameObject);
-                    }
-                }
-
-                MeshRenderer meshRenderer = piece.GetComponent<MeshRenderer>();
-
-                if (meshRenderer != null)
-                {
-                    meshRenderer.sharedMaterial = randomMaterial;
-                }
-                else
-                {
-                    DestroyImmediate(piece.gameObject, allowDestroyingAssets: true);
-
-                    continue;
-                }
-
-                // Remove all existing blocks
-                List<GameObject> toRemoveList = new List<GameObject>();
-
-                for (int j = 0; j < piece.childCount; j++)
-                {
-                    toRemoveList.Add(piece.GetChild(j).gameObject);
-                }
-
-                foreach (var item in toRemoveList)
-                {
-                    DestroyImmediate(item, allowDestroyingAssets: true);
-                }
-            }
-        }
-    }
-
-    private void ExtractFullLevel()
-    {
-        Transform level = Selection.activeTransform;
-
-        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
-
-        PieceMaterialContainer pieceMaterialContainer = AssetDatabase.LoadAssetAtPath<PieceMaterialContainer>("Assets/Yarn/SO/PieceMaterialContainer.asset");
-
-        foreach (var item in allChildren)
-        {
-            Renderer renderer = item.GetComponent<Renderer>();
-
-            if (renderer != null)
-            {
-                Material currentMaterial = renderer.sharedMaterial;
-
-                if (pieceMaterialContainer.materials.Any(item => ShareCommonWord(item.name, currentMaterial.name)))
-                {
-                    Material match = pieceMaterialContainer.materials.First(item => ShareCommonWord(item.name, currentMaterial.name));
-
-                    renderer.material = match;
-
-                    // Debug.Log("SAFERIO material " + item.name + "/" + match);
-                }
-
-                // Assign material for decor models
-                for (int i = 0; i < item.childCount; i++)
-                {
-                    Renderer decorRenderer = item.GetChild(i).GetComponent<Renderer>();
-
-                    Material[] materialArray = new Material[decorRenderer.sharedMaterials.Length];
-
-                    for (int j = 0; j < materialArray.Length; j++)
-                    {
-                        materialArray[j] = pieceMaterialContainer.materials[0];
-                    }
-
-                    for (int j = 0; j < decorRenderer.sharedMaterials.Length; j++)
-                    {
-                        decorRenderer.sharedMaterials = materialArray;
-                    }
-                }
-            }
-        }
-
-        RemoveMissingScripts();
-
-        EditorUtility.SetDirty(level);
-
-        bool ShareCommonWord(string str1, string str2)
-        {
-            // Split both strings into words, considering non-alphabetical characters as delimiters
-            var words1 = str1.Split(new char[] { ' ', '_', '-' }, System.StringSplitOptions.RemoveEmptyEntries);
-            var words2 = str2.Split(new char[] { ' ', '_', '-' }, System.StringSplitOptions.RemoveEmptyEntries);
-
-            // Check if there's any overlap between the words in the two strings
-            return words1.Intersect(words2).Any();
-        }
-    }
-
-    private void AssignFactionBasedOnMaterial()
-    {
-        Transform level = Selection.activeTransform;
-
-        BasePiece[] pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform).ToArray();
-
-        for (int i = 0; i < pieces.Length; i++)
-        {
-            PieceServiceLocator pieceServiceLocator = pieces[i].GetComponent<PieceServiceLocator>();
-
-            pieceServiceLocator.pieceProperty.Faction = CommonUtil.FindEnumFromString<GameFaction>(
-                pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
-        }
-
-        EditorUtility.SetDirty(level);
-    }
 
     private static void RemoveMissingScripts()
     {
         GameObject selection = Selection.activeGameObject;
 
-        Transform[] selectedGameObjects = TransformUtil.GetComponentsFromAllChildren<Transform>(selection.transform).ToArray();
+        Transform[] selectedGameObjects =
+            TransformUtil.GetComponentsFromAllChildren<Transform>(selection.transform).ToArray();
 
         int totalCount = 0;
         foreach (Transform go in selectedGameObjects)
@@ -1180,6 +581,7 @@ public class YarnGameTool : EditorWindow
             {
                 Debug.Log($"Removed {count} missing scripts from GameObject: {go.name}", go);
             }
+
             totalCount += count;
         }
 
@@ -1192,74 +594,15 @@ public class YarnGameTool : EditorWindow
             Debug.Log($"Total missing scripts removed: {totalCount}");
         }
     }
+
     #endregion
 
     #region YARN
-    private void AssignComponentsForPieces()
-    {
-        Transform level = Selection.activeTransform;
 
-        level.AddComponent<RotateObject>();
+    
 
-        Material noDepthWriteMaterial = AssetDatabase.LoadAssetAtPath<Material>("Assets/Yarn/Shader/Yarn No Depth Write.shadergraph");
-        PieceMaterialContainer pieceMaterialContainer = AssetDatabase.LoadAssetAtPath<PieceMaterialContainer>("Assets/Yarn/SO/PieceMaterialContainer.asset");
+   
 
-        for (int i = 0; i < level.childCount; i++)
-        {
-            Transform piece = level.GetChild(i);
-
-            piece.gameObject.layer = LayerMask.NameToLayer("Default");
-
-            piece.AddComponent<BasePiece>();
-            piece.AddComponent<PieceProperty>();
-            PieceMaterialPropertyBlock pieceMaterialPropertyBlock = piece.AddComponent<PieceMaterialPropertyBlock>();
-            piece.AddComponent<PieceServiceLocator>().AssignComponents();
-
-            pieceMaterialPropertyBlock.noDepthWriteMaterial = noDepthWriteMaterial;
-            pieceMaterialPropertyBlock.pieceMaterialContainer = pieceMaterialContainer;
-
-            piece.GetComponent<MeshCollider>().convex = true;
-        }
-
-        // BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
-
-        // for (int i = 0; i < pieces.Length; i++)
-        // {
-        //     pieces[i].GetComponent<PieceServiceLocator>().AssignComponents();
-        // }
-
-        EditorUtility.SetDirty(level);
-    }
-
-    private void CheckFactionsYarnLevel()
-    {
-        Transform level = Selection.activeTransform;
-
-        BasePiece[] pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level);
-
-        Dictionary<GameFaction, int> numPiecesByFaction = new Dictionary<GameFaction, int>();
-
-        for (int i = 0; i < pieces.Length; i++)
-        {
-            GameFaction faction = pieces[i].GetComponent<PieceProperty>().Faction;
-
-            if (numPiecesByFaction.ContainsKey(faction))
-            {
-                numPiecesByFaction[faction]++;
-            }
-            else
-            {
-                numPiecesByFaction.Add(faction, 1);
-            }
-        }
-
-        foreach (var item in numPiecesByFaction)
-        {
-            Debug.Log($"SAFERIO {item.Key}: {item.Value}");
-        }
-
-        EditorUtility.SetDirty(level);
-    }
     #endregion
 }
 #endif

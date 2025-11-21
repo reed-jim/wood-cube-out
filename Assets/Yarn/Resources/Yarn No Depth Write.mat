@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Yarn Test
-  m_Shader: {fileID: -6465566751694194690, guid: e89d28c191704894e99d7607d74deb05, type: 3}
+  m_Name: Yarn No Depth Write
+  m_Shader: {fileID: -6465566751694194690, guid: 507dddb5f15aa75479e731a0d7e25365, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -25,19 +25,19 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _AmbientOcclusionMap:
-        m_Texture: {fileID: 2800000, guid: dc8a86f2c388c5a419ff772acfcdd243, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DissolveMap:
-        m_Texture: {fileID: 2800000, guid: 66cffd667e8d6574186db99b3950cb80, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
-        m_Texture: {fileID: 2800000, guid: dc8a86f2c388c5a419ff772acfcdd243, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _NormalMap:
-        m_Texture: {fileID: 2800000, guid: 1d936d04006a98b44a7f45ea35ef4c24, type: 3}
+        m_Texture: {fileID: 2800000, guid: 60b07d04d61e0f047b01629de68b3648, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SmoothnessMap:
@@ -59,14 +59,10 @@ Material:
     m_Ints: []
     m_Floats:
     - _ColorStrength: 1
-    - _DarkColorMultiplier: 0.5
-    - _DarkThreshold: 0.4
-    - _DiffusePower: 2
     - _DissolveEdgeWidth: 0.5
-    - _DissolveHeight: 0
-    - _DissolveRatioX: 1
-    - _DissolveRatioY: 1
-    - _DissolveStrength: 0.2
+    - _DissolveRatioX: 0
+    - _DissolveRatioY: 0
+    - _DissolveStrength: 0
     - _GradientColorTwoMultiplier: 0
     - _Metallic: 0
     - _NoiseStrength: 0
@@ -76,23 +72,21 @@ Material:
     - _PositionMultiplier: 0
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _Saturation: 1.25
     - _WorldMaxX: 5
-    - _WorldMaxY: 0.5
+    - _WorldMaxY: 5
     - _WorldMinX: -5
-    - _WorldMinY: -0.5
+    - _WorldMinY: -5
     - _XRMotionVectorsPass: 1
     m_Colors:
-    - _Color: {r: 1, g: 0.9372549, b: 0.10980392, a: 1}
-    - _DarkColor: {r: 0, g: 0, b: 0, a: 1}
+    - _Color: {r: 1, g: 0.875397, b: 0, a: 1}
     - _DissolveEdgeColor: {r: 4, g: 0.9012944, b: 0, a: 1}
     - _MainTextureOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _MainTextureTiling: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _MainTextureTiling: {r: 0, g: 0, b: 0, a: 0}
     - _NormalMapOffset: {r: 0, g: 0, b: 0, a: 0}
-    - _NormalMapTiling: {r: 0.5, g: 0.5, b: 0, a: 0}
+    - _NormalMapTiling: {r: 1, g: 1, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
---- !u!114 &5432524523536435302
+--- !u!114 &2400556262048866099
 MonoBehaviour:
   m_ObjectHideFlags: 11
   m_CorrespondingSourceObject: {fileID: 0}

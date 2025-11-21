@@ -11,14 +11,10 @@ public class BasePiece : MonoBehaviour
 
     #region COMPONENT
     protected PieceServiceLocator pieceServiceLocator;
-    [SerializeField] protected MeshFilter meshFilter;
-    [SerializeField] protected HingeJoint joint;
     #endregion
 
     [Header("CUSTOMIZE")]
-    [SerializeField] protected float scaleOnPieceBox;
     [SerializeField] private int pieceDifficultyModifier;
-    [SerializeField] protected float rotateSpeed = 0.3f;
 
     [Header("CUSTOMIZE - UNSCREW ANIMATION")]
     [SerializeField] private float durationMoveOut = 0.3f;
@@ -28,15 +24,9 @@ public class BasePiece : MonoBehaviour
 
     #region PRIVATE FIELD
     protected List<Tween> _tweens = new List<Tween>();
-    protected Camera _mainCamera;
-    protected Renderer _renderer;
     protected int _numberBlockingObjects;
-    protected Vector3 _initialScale;
-    protected float _initialRotateSpeed;
     protected bool _isMoving;
     protected bool _isRotating;
-    protected bool _isRotatingToCorrectAngleOnPieceBox;
-    protected Vector3 _localRotationOnPieceSlot;
     protected bool _isInteractable = true;
     protected bool _isDone;
     protected bool _isOutsideWithNoSpoolBox;
@@ -50,16 +40,6 @@ public class BasePiece : MonoBehaviour
     {
         get => pieceId;
         set => pieceId = value;
-    }
-
-    public HingeJoint Joint
-    {
-        set => joint = value;
-    }
-
-    public MeshFilter MeshFilter
-    {
-        get => meshFilter;
     }
 
     public SpoolBoxSlot SpoolBoxSlot
@@ -125,10 +105,6 @@ public class BasePiece : MonoBehaviour
         set => _isInPiecePort = value;
     }
 
-    public int PieceDifficultyModifier
-    {
-        get => pieceDifficultyModifier;
-    }
     #endregion
 
     #region EVENT
@@ -136,11 +112,7 @@ public class BasePiece : MonoBehaviour
     public static event Action<int, GameFaction> autoSelectPieceEvent;
     public static event Action<BasePiece> addPieceToListEvent;
     public static event Action<BasePiece> pieceMovedCompletedEvent;
-    public static event Action<int> breakJointEvent;
-    public static event Action<int> pieceStartLoosenedEvent;
     public static event Action pieceLoosenedEvent;
-    public static event Action updateOutsidePieceNumberEvent;
-    public static event Action updateEventItem;
     #endregion
 
     #region LIFE CYCLE
@@ -152,21 +124,10 @@ public class BasePiece : MonoBehaviour
         RegisterMoreEvent();
 
         pieceServiceLocator = GetComponent<PieceServiceLocator>();
-        _renderer = GetComponent<Renderer>();
 
         AddScrewToList();
 
-        _initialScale = transform.localScale;
-        _initialRotateSpeed = rotateSpeed;
-
-        _mainCamera = Camera.main;
-
         MoreLogicInAwake();
-    }
-
-    void Start()
-    {
-        // transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
     }
 
     void OnDestroy()
