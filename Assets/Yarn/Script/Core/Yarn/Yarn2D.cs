@@ -57,6 +57,8 @@ public class Yarn2D : MonoBehaviour
 
     private Action onRewindYarnCompleted;
 
+    #region MonoBehaviour Callbacks
+
     void Awake()
     {
         yarnMaterialPropertyBlock = new MaterialPropertyBlock();
@@ -70,6 +72,25 @@ public class Yarn2D : MonoBehaviour
         dissolveHeight = 1;
         lerpDelta = 0.1f;
     }
+    
+    private void OnDrawGizmos()
+    {
+        if (!debugRaycast)
+            return;
+
+        // draw ray
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawLine(_debugRayOrigin, _debugRayOrigin + _debugRayDirection);
+        Gizmos.DrawSphere(_debugRayOrigin, 0.02f);
+
+        if (_debugHasHit)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(_debugHitPoint, 0.03f);
+        }
+    }
+
+    #endregion
 
     public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onCompleteAction = null)
     {
@@ -342,6 +363,14 @@ public class Yarn2D : MonoBehaviour
 
         UpdateLineRenderer();
     }
+    
+    // NEW
+    [Header("Debug")]
+    [SerializeField] private bool debugRaycast = true;
+    private Vector3 _debugRayOrigin;
+    private Vector3 _debugRayDirection;
+    private Vector3 _debugHitPoint;
+    private bool _debugHasHit;
 
     Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
     {
@@ -357,70 +386,56 @@ public class Yarn2D : MonoBehaviour
 
         bool isXLargerThanZ = modelSize.x > modelSize.z;
 
-        // if (piece != null)
-        // {
-        //     Vector3 worldPos;
-        //     Ray ray = new Ray();
-
-        //     if (isXLargerThanZ)
-        //     {
-        //         worldPos = transform.TransformPoint(new Vector3(2 * modelSize.x, y, 0f));
-        //         ray = new Ray(worldPos, -transform.TransformVector(new Vector3(2 * modelSize.x, 0, 0)));
-        //     }
-        //     else
-        //     {
-        //         worldPos = transform.TransformPoint(new Vector3(0, y, 2 * modelSize.z));
-        //         ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
-        //     }
-
-        //     RaycastHit hit;
-
-        //     if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
-        //     {
-        //         Vector3 closestPoint = hit.point;
-
-        //         if (isXLargerThanZ)
-        //         {
-        //             radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).x);
-        //         }
-        //         else
-        //         {
-        //             radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
-        //         }
-        //     }
-        //     else
-        //     {
-        //         radius = _prevRadius;
-        //     }
-
-        //     // Vector3 nearestPoint = piece.PieceServiceLocator.pieceCollider.ClosestPointOnBounds(worldPos);
-        //     // radius = Mathf.Abs(transform.InverseTransformPoint(nearestPoint).x);
-        // }
-
         radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
 
         Vector3 raycastPoint = new Vector3(Mathf.Cos(angle) * 2 * radius, y, Mathf.Sin(angle) * 2 * radius);
         Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
-        Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
+        // Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
+        
+        Vector3 pointOnModel = isXLargerThanZ
+            ? new Vector3(raycastPoint.x, y, 0)
+            : new Vector3(0, y, raycastPoint.z);
 
-        if (isXLargerThanZ)
+        /*if (isXLargerThanZ)
         {
             pointOnModel = new Vector3(raycastPoint.x, y, 0);
         }
         else
         {
             pointOnModel = new Vector3(0, y, raycastPoint.z);
-        }
+        }*/
 
+        Vector3 dirWorld = transform.TransformVector(pointOnModel - raycastPoint);
+        
         Ray ray = new Ray(raycastPointWorld, transform.TransformVector(pointOnModel - raycastPoint));
         RaycastHit hit;
+        
+        // NEW
+        if (debugRaycast)
+        {
+            _debugRayOrigin = raycastPointWorld;
+            _debugRayDirection = dirWorld.normalized * (5f * radius);
+            _debugHasHit = false;
+        }
 
         if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, 5 * radius))
         {
+            if (debugRaycast)
+            {
+                _debugHasHit = true;
+                _debugHitPoint = hit.point;
+            }
+            
             return piece.transform.InverseTransformPoint(hit.point);
         }
         else
         {
+            
+            if (debugRaycast)
+            {
+                _debugHasHit = true;
+                _debugHitPoint = piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld);
+            }
             return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld));
         }
 

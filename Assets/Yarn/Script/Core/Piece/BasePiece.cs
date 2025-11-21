@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.AnimateWithScripts;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -204,11 +205,13 @@ public class BasePiece : MonoBehaviour
                 for (int i = 0; i < transform.childCount; i++)
                 {
                     Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
+                    Transform currentChild = transform.GetChild(i);
+                    DebugLogger.Log(message:$"currentChild: {currentChild.name}");
 
                     if (rigidbody != null)
                     {
                         rigidbody.isKinematic = false;
-                        transform.GetChild(i).SetParent(transform.parent);
+                        currentChild.SetParent(transform.parent);
                     }
                 }
             }
@@ -250,13 +253,35 @@ public class BasePiece : MonoBehaviour
 
                     for (int i = 2; i < innerPieces.Length; i++)
                     {
-                        innerPieces[i].transform.SetParent(firstInnerPiece.transform);
+                        Transform innerPieceTrans = innerPieces[i].transform;
+                        
+                        // Vector3 scaleFactor = currentChild.lossyScale/*.x / transform.GetChild(i).parent.localScale.x*/;
+                        Vector3 scaleFactor = innerPieceTrans.lossyScale;
+                        // Vector3 scaleFactor = innerPieceTrans.parent.localScale;
+                        
+                        DebugLogger.Log(message:$"scaleFactor {innerPieceTrans.parent.name}: {scaleFactor}");
+                        innerPieceTrans.SetParent(firstInnerPiece.transform);
+                        
+                        DebugLogger.Log(message:$"currentChild.parent.localScale: {innerPieceTrans.parent.localScale}");
+                        // DebugLogger.Log(message:$"scale factor: {TransformUtil.ComponentWiseDivine(scaleFactor, innerPieceTrans.parent.localScale)}");
+                        
+                        DebugLogger.Log(message:$"finalScale: {new Vector3( innerPieceTrans.localScale.x * scaleFactor.x,  innerPieceTrans.localScale.y * scaleFactor.y,  innerPieceTrans.localScale.z * scaleFactor.z)}");
+
+
+                        Vector3 targetScale =
+                            TransformUtil.ComponentWiseDivine(scaleFactor, innerPieceTrans.parent.lossyScale);
+                        innerPieceTrans.localScale = TransformUtil.ComponentWiseDivine(scaleFactor, innerPieceTrans.parent.lossyScale);
+                        
+                        /*innerPieceTrans.localScale = new Vector3(
+                            innerPieceTrans.localScale.x * scaleFactor.x, 
+                            innerPieceTrans.localScale.y * scaleFactor.y, 
+                            innerPieceTrans.localScale.z * scaleFactor.z);*/
                     }
 
-                    Tween.Scale(firstInnerPiece.transform, 1.1f, duration: 0.3f)
+                    Tween.Scale(firstInnerPiece.transform, 1.1f * firstInnerPiece.transform.localScale.x, duration: 0.3f)
                     .OnComplete(() =>
                     {
-                        Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
+                        Tween.Scale(firstInnerPiece.transform, 1f * firstInnerPiece.transform.localScale.x, duration: 0.1f);
                     });
 
                     firstInnerPiece.transform.SetParent(transform.parent);

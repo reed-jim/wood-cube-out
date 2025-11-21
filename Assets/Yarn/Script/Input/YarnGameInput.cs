@@ -48,20 +48,6 @@ public class YarnGameInput : MonoBehaviour
             {
                 HoldPiece();
             }
-
-            // if (_inputMode == InputMode.Select)
-            // {
-            //     if (_timeHold > timeToConfirmSelectObjectPart && !_isSelectingObjectPart)
-            //     {
-            //         SelectObjectPart();
-
-            //         _isSelectingObjectPart = true;
-            //     }
-            // }
-            // else if (_inputMode == InputMode.BreakObject)
-            // {
-            //     SelectObjectPart();
-            // }
         }
 
         if (Input.GetMouseButtonUp(0))
