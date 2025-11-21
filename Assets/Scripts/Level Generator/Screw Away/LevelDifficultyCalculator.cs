@@ -633,7 +633,6 @@ public static class LevelDifficultyCalculatorUltility
                 (WEIGHT_REPEAT_TEMPLATE * weightForModules[(Mathf.Max(level, 1) - 1) % 5] + WEIGHT_LEVEL_INDEX * ((float)validLevel / PREDICTED_MAX_LEVEL));
 
         expectedDifficultyNormalized = GamePersistentVariable.testDifficultyMultiplier;
-        Debug.Log("SAFERIO " + expectedDifficultyNormalized);
 
         int maxPhaseIndex = GameConstants.SCREW_FACTION.Length - 1;
 

@@ -43,9 +43,9 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         }
 
         // add new factions
-
-        int numFactionsToAdd = 0;
-        numFactionsToAdd = Mathf.Min(finalFactions.Keys.Count * 3 - currentTotalPieces, 0); 
+        int numFactionsToAdd = Mathf.Min(3 * Random.Range(1, 16), 2 * pieces.Length);
+        numFactionsToAdd -= numFactionsToAdd % 3;
+        // numFactionsToAdd = Mathf.Min(finalFactions.Keys.Count * 3 - currentTotalPieces, 0);
 
         int index = 0;
         int currentFactionIndex = 0;
@@ -97,19 +97,12 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             GameFaction faction = innerPieceFactions.First();
 
-            // List<GameFaction> otherInnerPieceFactionSameParent = new List<GameFaction>();
-
-            // for (int j = 0; j < pieces[originalPieceIndex].transform.childCount; j++)
-            // {
-            //     BasePiece innerPiece = pieces[originalPieceIndex].transform.GetChild(j).GetComponent<BasePiece>();
-
-            //     if (innerPiece != null)
-            //     {
-            //         otherInnerPieceFactionSameParent.Add(innerPiece.Faction);
-            //     }
-            // }
-
             // Debug.Log("SAFERIO " + otherInnerPieceFactionSameParent.Count + "/" + (innerPieceFactions.Any(item => !otherInnerPieceFactionSameParent.Contains(item))));
+
+            if (currentInnerPieceFaction == GameFaction.None)
+            {
+                currentInnerPieceFaction = pieces[originalPieceIndex].Faction;
+            }
 
             if (innerPieceFactions.Any(item => item != currentInnerPieceFaction))
             {
@@ -148,6 +141,16 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
             piece.transform.localPosition = Vector3.zero;
             piece.transform.localRotation = Quaternion.identity;
             piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.05f;
+        }
+
+        int EnsureDivisibleByThree(int value, int addedValue)
+        {
+            int remainder = (value + addedValue) % 3;
+            if (remainder != 0)
+            {
+                value -= remainder;
+            }
+            return value;
         }
     }
 
