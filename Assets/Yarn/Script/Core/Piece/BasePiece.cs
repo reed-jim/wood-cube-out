@@ -245,6 +245,13 @@ public class BasePiece : MonoBehaviour
 
             Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
+            if (innerPieces.Length > 1)
+            {
+                BasePiece firstInnerPiece = innerPieces[1];
+
+                firstInnerPiece.gameObject.SetActive(true);
+            }
+
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
             {
                 if (innerPieces.Length > 1)

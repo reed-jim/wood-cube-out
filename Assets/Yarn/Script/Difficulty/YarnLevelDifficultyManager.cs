@@ -89,6 +89,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         {
             BasePiece generatedPiece = Instantiate(pieces[originalPieceIndex].gameObject, level).GetComponent<BasePiece>();
 
+            generatedPiece.gameObject.SetActive(false);
+
             generatedPiece.gameObject.name = $"Generated Piece {originalPieceIndex} {count}";
 
             generatedPieces.Add(generatedPiece, pieces[originalPieceIndex].transform);

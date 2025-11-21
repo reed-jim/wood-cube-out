@@ -168,6 +168,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
                 continue;
             }
 
+            item.gameObject.SetActive(true);
             item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.Less);
         }
 
@@ -206,6 +207,16 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 
             _renderer.SetPropertyBlock(_propertyBlock);
+
+            foreach (var item in childPieces)
+            {
+                if (item == _pieceServiceLocator.piece)
+                {
+                    continue;
+                }
+
+                item.gameObject.SetActive(false);
+            }
         });
     }
     #endregion
