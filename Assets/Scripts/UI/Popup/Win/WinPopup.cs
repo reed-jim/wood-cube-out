@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
+using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.UI;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -20,6 +21,7 @@ public class WinPopup : BasePopup
     [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
+    [SerializeField] private TextMeshProUGUI multiplyCoinText;
     [SerializeField] private TMP_Text starText;
     [SerializeField] private TMP_Text goldPassKeyText;
     [SerializeField] private RectTransform coinGroup;
@@ -135,9 +137,8 @@ public class WinPopup : BasePopup
                 _tweens.Add(Tween.Scale(localizedMultiplyCoinText.transform, 1, duration: 0.3f));
             }));
         }
-        //
 
-        CheckEvent();
+        // CheckEvent();
 
         Show();
 
@@ -190,12 +191,14 @@ public class WinPopup : BasePopup
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
     {
         coinText.text = $"{_currentCollectedCoin}";
+        DebugLogger.Log(message:$"_currentCollectedCoin: {_currentCollectedCoin}");
 
         int deltaCoin = (int)(numCoin / 10f);
 
         _tweens.Add(Tween.Custom(_currentCollectedCoin, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
         {
             coinText.text = $"{(int)newVal}";
+            multiplyCoinText.text = $"{_multiplierCoinWinLevel * (int)newVal}"; 
         })
         .OnComplete(() =>
             {
