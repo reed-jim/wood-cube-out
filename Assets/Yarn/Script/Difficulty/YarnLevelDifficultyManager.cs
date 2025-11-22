@@ -140,7 +140,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             piece.transform.localPosition = Vector3.zero;
             piece.transform.localRotation = Quaternion.identity;
-            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.000f;
+            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.001f;
         }
 
         int EnsureDivisibleByThree(int value, int addedValue)
