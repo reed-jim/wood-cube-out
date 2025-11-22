@@ -70,8 +70,8 @@ public class BottomBarItem : MonoBehaviour
             // textRT.localScale = ratio * Vector3.one;
 
             // activeState.color = ColorUtil.WithAlpha(activeState.color, ratio);
-            activeState.transform.localPosition = new Vector3(0, ratio * 20);
-            activeState.transform.localScale = (0.4f * ratio + 1) * Vector3.one;
+            activeState.transform.localPosition = new Vector3(0, ratio * 12 - 3);
+            activeState.transform.localScale = (0.45f * ratio + 0.75f) * Vector3.one;
         }
 
         // if (ratio == 1)
