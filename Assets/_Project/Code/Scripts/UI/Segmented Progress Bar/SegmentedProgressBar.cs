@@ -76,11 +76,11 @@ namespace NamPhuThuy.UI
 
             rewardProgressFill.fillAmount = prevProgress == 1 ? 0 : prevProgress;
 
-            DebugLogger.Log(message:$"_currentRewardProgress: {_currentRewardProgress}");
-            
+            DebugLogger.Log(message: $"_currentRewardProgress: {_currentRewardProgress}");
+
             if (_currentRewardProgress < 1)
             {
-                DebugLogger.Log(message:$"Done 1");
+                DebugLogger.Log(message: $"Done 1");
                 rewardProgressTextTMP.color = Color.white;
 
                 rewardProgressText.TranslationName = "Only n levels left";
@@ -91,7 +91,7 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                DebugLogger.Log(message:$"Done 2");
+                DebugLogger.Log(message: $"Done 2");
                 rewardProgressTextTMP.color = ColorHelper.GetColorFromHex("#78EB66");
 
                 rewardProgressText.TranslationName = "Reward Completed";
@@ -117,7 +117,6 @@ namespace NamPhuThuy.UI
             {
                 segmentSize = progressBarSegmentPrefab.InitialSize * 2.5f;
             }
-            // segmentSize = progressBarSegmentPrefab.InitialSize * 2;
 
             rewardProgressBackground.sizeDelta = new Vector2((numSegment + 2) * segmentSize.x, rewardProgressBackground.sizeDelta.y);
             rewardProgressFillRT.sizeDelta = 1.01f * rewardProgressBackground.sizeDelta;
@@ -180,7 +179,7 @@ namespace NamPhuThuy.UI
 
                 if (segment != null)
                 {
-                    if (segment.gameObject.activeInHierarchy)
+                    if (segment.gameObject.activeSelf)
                     {
                         _currentProgressBarSegments.Add(segment);
                     }
@@ -204,6 +203,8 @@ namespace NamPhuThuy.UI
                     _currentProgressBarSegments[i].SetLocalPositionX(-((numSegment - 1) / 2f) * segmentSize.x + (i - 2) * segmentSize.x);
                 }
 
+                // set background for the segment
+                // warning: case _currentProgressBarSegments[i] scale = 0
                 _currentProgressBarBackgroundSegments[i].transform.position = _currentProgressBarSegments[i].transform.position;
                 _currentProgressBarBackgroundSegments[i].SetSizeDeltaX(segmentSize.x);
             }

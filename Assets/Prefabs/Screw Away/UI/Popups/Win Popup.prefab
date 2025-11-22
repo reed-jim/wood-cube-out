@@ -534,7 +534,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x5 Coin
+  m_text: x{value} Coin
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 01e014f8413104a45889577f3d82c1a5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 22163427e4eb61347a441fb06f0f558d, type: 2}
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.8
+  m_fontSize: 39.5
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1238,7 +1238,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2462661810120900210
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2501,6 +2501,10 @@ PrefabInstance:
     - target: {fileID: 8478233673309348219, guid: 8f325017683336d45b34bb66e99f4b4c, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9199668207888837299, guid: 8f325017683336d45b34bb66e99f4b4c, type: 3}
+      propertyPath: m_text
+      value: Only {level} levels left
       objectReference: {fileID: 0}
     - target: {fileID: 9199668207888837299, guid: 8f325017683336d45b34bb66e99f4b4c, type: 3}
       propertyPath: m_fontColor.a

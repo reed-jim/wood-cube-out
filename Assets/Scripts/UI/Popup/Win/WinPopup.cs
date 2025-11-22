@@ -66,14 +66,16 @@ public class WinPopup : BasePopup
     protected override void MoreActionInAwake()
     {
         base.MoreActionInAwake();
-        picRewardProgressBar.InitRewardProgressBar();
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
-        DisableInteract();
+        picRewardProgressBar.InitRewardProgressBar();
         picRewardProgressBar.SetupRewardProgressBar();
+        
+        base.Show(onCompletedAction);
+
+        DisableInteract();
     }
 
     protected override void Hide(Action onCompletedAction = null)
