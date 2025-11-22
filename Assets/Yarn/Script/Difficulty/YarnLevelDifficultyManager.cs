@@ -43,7 +43,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         }
 
         // add new factions
-        int numFactionsToAdd = Mathf.Min(3 * Random.Range(1, 16), 2 * pieces.Length);
+        int numFactionsToAdd = Mathf.Min(3 * Random.Range(1, 4), 2 * pieces.Length);
         numFactionsToAdd -= numFactionsToAdd % 3;
         // numFactionsToAdd = Mathf.Min(finalFactions.Keys.Count * 3 - currentTotalPieces, 0);
 

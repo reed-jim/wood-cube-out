@@ -72,7 +72,7 @@ public class Yarn2D : MonoBehaviour
         dissolveHeight = 1;
         lerpDelta = 0.1f;
     }
-    
+
     private void OnDrawGizmos()
     {
         if (!debugRaycast)
@@ -305,17 +305,24 @@ public class Yarn2D : MonoBehaviour
             })
             .OnComplete(() =>
             {
-                for (int i = 1; i < segments.Count; i++)
+                for (int i = 0; i < segments.Count; i++)
                 {
                     int index = i;
-                    Tween.Custom(segments[index].posNow, segments[0].posNow, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
-                    {
-                        segments[index].posNow = newVal;
 
-                        if (index == segments.Count - 1)
-                        {
-                            UpdateLineRenderer();
-                        }
+                    Vector3 startPos = segments[index].posNow;
+
+                    Tween.Custom(0, 1, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+                    {
+                        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
+
+                        segments[index].posNow = Vector3.Lerp(startPos, _firstNodeLocalPosition, newVal);
+
+                        UpdateLineRenderer();
+
+                        // if (index == segments.Count - 1)
+                        // {
+                        //     UpdateLineRenderer();
+                        // }
                     })
                     .OnComplete(() =>
                     {
@@ -363,7 +370,7 @@ public class Yarn2D : MonoBehaviour
 
         UpdateLineRenderer();
     }
-    
+
     // NEW
     [Header("Debug")]
     [SerializeField] private bool debugRaycast = true;
@@ -391,7 +398,7 @@ public class Yarn2D : MonoBehaviour
         Vector3 raycastPoint = new Vector3(Mathf.Cos(angle) * 2 * radius, y, Mathf.Sin(angle) * 2 * radius);
         Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
         // Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
-        
+
         Vector3 pointOnModel = isXLargerThanZ
             ? new Vector3(raycastPoint.x, y, 0)
             : new Vector3(0, y, raycastPoint.z);
@@ -406,10 +413,10 @@ public class Yarn2D : MonoBehaviour
         }*/
 
         Vector3 dirWorld = transform.TransformVector(pointOnModel - raycastPoint);
-        
+
         Ray ray = new Ray(raycastPointWorld, transform.TransformVector(pointOnModel - raycastPoint));
         RaycastHit hit;
-        
+
         // NEW
         if (debugRaycast)
         {
@@ -425,12 +432,12 @@ public class Yarn2D : MonoBehaviour
                 _debugHasHit = true;
                 _debugHitPoint = hit.point;
             }
-            
+
             return piece.transform.InverseTransformPoint(hit.point);
         }
         else
         {
-            
+
             if (debugRaycast)
             {
                 _debugHasHit = true;
@@ -455,7 +462,7 @@ public class Yarn2D : MonoBehaviour
         {
             return Vector3.zero;
         }
-        
+
         float x = (xRatio - 0.5f) * spiralHeight;
 
         // Total angle based on number of turns (in radians)

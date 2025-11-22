@@ -147,8 +147,8 @@ public class PinchGesture : MonoBehaviour
     {
         float unit = 0.8f * orthographicSize;
 
-        maxZoom = orthographicSize + zoomSlider.value * unit;
-        minZoom = orthographicSize - (1 - zoomSlider.value) * unit;
+        maxZoom = orthographicSize + 1.5f * zoomSlider.value * unit;
+        minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
 
         // Tween.Delay(0.2f).OnComplete(() =>
         // {

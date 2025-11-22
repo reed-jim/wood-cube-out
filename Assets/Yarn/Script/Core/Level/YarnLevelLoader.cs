@@ -63,7 +63,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent += Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent += Replay;
-        
+
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
         DebugPopup.toLevelEvent += GoLevel;
@@ -77,7 +77,7 @@ public class YarnLevelLoader : MonoBehaviour
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
         resetCameraEvent?.Invoke();
-        
+
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
 
@@ -96,7 +96,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent -= Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent -= Replay;
-        
+
         LosePopup.replayLevelEvent -= Replay;
         ReplayPopup.replayLevelEvent -= Replay;
         DebugPopup.toLevelEvent -= GoLevel;
@@ -188,21 +188,6 @@ public class YarnLevelLoader : MonoBehaviour
         nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
         string levelPrefab = $"Level {nextLevel}";
-
-        // A/B TEST LEVEL 4
-        if (nextLevel == 4)
-        {
-            int level4Variant = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_4_VARIANT, 0);
-
-            if (level4Variant == 1)
-            {
-                levelPrefab = $"Level {nextLevel} - Variant 1";
-            }
-            else if (level4Variant == 2)
-            {
-                levelPrefab = $"Level {nextLevel} - Variant 2";
-            }
-        }
 
         // // REMOTE LEVELS
         // if (nextLevel > 10)
@@ -298,6 +283,22 @@ public class YarnLevelLoader : MonoBehaviour
                         }
                     }
 
+                    // Decor
+                    for (int i = 0; i < level.transform.childCount; i++)
+                    {
+                        Transform child = level.transform.GetChild(i);
+
+                        CheckCreatePivotAdjust();
+
+                        if (child.GetComponent<BasePiece>() == null)
+                        {
+                            if (!child.transform.IsChildOf(_pivotAdjust))
+                            {
+                                child.transform.SetParent(_pivotAdjust);
+                            }
+                        }
+                    }
+
                     GamePersistentVariable.levelOffset = new Vector3(0, 0.3f, 0);
 
                     _isSetLevelGradientBound = false;
@@ -306,7 +307,21 @@ public class YarnLevelLoader : MonoBehaviour
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
-                // 
+                //
+
+                void CheckCreatePivotAdjust()
+                {
+                    if (_pivotAdjust == null)
+                    {
+                        _pivotAdjust = new GameObject().transform;
+                        _pivotAdjust.name = "Pivot Adjust";
+                        _pivotAdjust.SetParent(_currentLevelContainer);
+
+                        _pivotAdjust.transform.localPosition = Vector3.zero;
+                        _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                        _pivotAdjust.transform.localScale = Vector3.one;
+                    }
+                }
 
                 // texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
@@ -772,12 +787,10 @@ public class YarnLevelLoader : MonoBehaviour
 
         targetOrthographicSize = 1.35f * expectedLevelSize.y;
 
-        // if (maxExpectedLevelSize > expectedLevelSize.y)
-        // {
-        //     float ratio = (maxExpectedLevelSize / expectedLevelSize.y);
-
-        //     targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
-        // }
+        if (maxExpectedLevelSize > 1.8f * expectedLevelSize.y)
+        {
+            targetOrthographicSize *= maxExpectedLevelSize / expectedLevelSize.y;
+        }
 
         if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 2)
         {

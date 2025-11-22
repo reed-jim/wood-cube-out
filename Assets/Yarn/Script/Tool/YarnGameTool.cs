@@ -56,7 +56,7 @@ public class YarnGameTool : EditorWindow
         Rect areaRect = new Rect(padding, padding, position.width - 2 * padding, position.height - 2 * padding);
 
         GUILayout.BeginArea(areaRect);
-        
+
         if (_centeredButtonStyle == null)
         {
             _centeredButtonStyle = new GUIStyle(GUI.skin.button)
@@ -66,20 +66,20 @@ public class YarnGameTool : EditorWindow
                 fontStyle = FontStyle.Bold
             };
         }
-        
+
         countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
         _pieceMaterialContainer = (PieceMaterialContainer)EditorGUILayout.ObjectField("pieceMaterialContainer", _pieceMaterialContainer, typeof(PieceMaterialContainer), true);
-        
+
         GUILayout.Button("Load Assets");
         {
             _pieceMaterialContainer = Resources.Load<PieceMaterialContainer>("PieceMaterialContainer");
         }
-        
+
         /*SerializedObject so = new SerializedObject(this);
        SerializedProperty listProp = so.FindProperty(nameof(interactablePieces));
        EditorGUILayout.PropertyField(listProp, new GUIContent("Interactable Pieces"), true);
        so.ApplyModifiedProperties();*/
-        
+
         matchName = EditorGUILayout.TextField("Match Name", matchName);
 
         GUIStyle centeredStyle = new GUIStyle(EditorStyles.boldLabel)
@@ -108,25 +108,25 @@ public class YarnGameTool : EditorWindow
     {
         if (GUILayout.Button("Step 1:  Assign Materials", GUILayout.Width(250)))
             AssignMaterials();
-        
+
         if (GUILayout.Button("Step 2: Add MeshColliders For Children", GUILayout.Width(250)))
             AddMeshCollidersForChilren(Selection.activeTransform);
-        
-        
+
+
         if (GUILayout.Button("Step 3: AssignComponentsForPieces", GUILayout.Width(250)))
             AssignComponentsForPieces();
 
-        
+
         if (GUILayout.Button("Step 4: AssignFactionBasedOnMaterial", GUILayout.Width(250)))
             AssignFactionBasedOnMaterial(Selection.activeTransform);
-        
-        
+
+
         GUILayout.Space(8);
-        
+
         if (GUILayout.Button("Setup for Selected Levels", GUILayout.Width(300)))
             SetupSelectedLevels();
-        
-        
+
+
         if (GUILayout.Button("CheckFactionsYarnLevel"))
         {
             CheckFactionsYarnLevel();
@@ -136,15 +136,15 @@ public class YarnGameTool : EditorWindow
     #endregion
 
     #region YARN LEVEL SETUP
-    
+
     List<Transform> interactablePieces = new List<Transform>();
-    
+
     private void FilterInteractablePieces(Transform level)
     {
         Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
-        
+
         interactablePieces.Clear();
-        
+
         foreach (var item in allChildren)
         {
             Renderer renderer = item.GetComponent<Renderer>();
@@ -159,6 +159,10 @@ public class YarnGameTool : EditorWindow
             if (_pieceMaterialContainer.materials.Any(material => ShareCommonWord(material.name, currentMaterial.name)))
             {
                 interactablePieces.Add(item);
+            }
+            else // Decor
+            {
+                item.AddComponent<Rigidbody>().isKinematic = true;
             }
         }
     }
@@ -225,7 +229,7 @@ public class YarnGameTool : EditorWindow
             }
         }
     }
-    
+
     private void AssignComponentsForPieces()
     {
         Transform level = Selection.activeTransform;
@@ -234,7 +238,7 @@ public class YarnGameTool : EditorWindow
 
         Material noDepthWriteMaterial =
             AssetDatabase.LoadAssetAtPath<Material>("Assets/Yarn/Shader/Yarn No Depth Write.shadergraph");
-        
+
         foreach (var item in interactablePieces)
         {
             Renderer renderer = item.GetComponent<Renderer>();
@@ -247,7 +251,7 @@ public class YarnGameTool : EditorWindow
             Material currentMaterial = renderer.sharedMaterial;
 
             Material match = _pieceMaterialContainer.materials.First(material => ShareCommonWord(material.name, currentMaterial.name));
-                
+
             item.gameObject.layer = LayerMask.NameToLayer("Default");
 
             item.AddComponent<BasePiece>();
@@ -278,7 +282,7 @@ public class YarnGameTool : EditorWindow
 
         EditorUtility.SetDirty(level);
     }
-    
+
     private bool ShareCommonWord(string str1, string str2)
     {
         if (string.IsNullOrEmpty(str1) || string.IsNullOrEmpty(str2))
@@ -290,6 +294,9 @@ public class YarnGameTool : EditorWindow
         bool IsExcluded(string w) =>
             YarnGameToolConst.ExceptWordsCompare
                 .Any(e => string.Equals(e, w, System.StringComparison.OrdinalIgnoreCase));
+
+        str1 = Regex.Replace(str1, @"\d", "");
+        str2 = Regex.Replace(str2, @"\d", "");
 
         var words1 = str1
             .Split(separators, System.StringSplitOptions.RemoveEmptyEntries)
@@ -309,8 +316,8 @@ public class YarnGameTool : EditorWindow
         var set1 = new HashSet<string>(words1);
         return words2.Any(set1.Contains);
     }
-   
-    
+
+
     private void SetupSelectedLevels()
     {
         Transform[] levels = Selection.transforms;
@@ -329,7 +336,7 @@ public class YarnGameTool : EditorWindow
             EditorUtility.SetDirty(level);
         }
     }
-    
+
     private void SetupLevel(Transform levelRoot)
     {
         if (levelRoot == null)
@@ -358,7 +365,7 @@ public class YarnGameTool : EditorWindow
             Selection.activeTransform = previousSelection;
         }
     }
-    
+
     #endregion
 
 
@@ -574,9 +581,9 @@ public class YarnGameTool : EditorWindow
 
     #region YARN
 
-    
 
-   
+
+
 
     #endregion
 }
