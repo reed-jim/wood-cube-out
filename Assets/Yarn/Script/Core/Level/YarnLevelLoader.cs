@@ -792,7 +792,7 @@ public class YarnLevelLoader : MonoBehaviour
             targetOrthographicSize *= maxExpectedLevelSize / expectedLevelSize.y;
         }
 
-        if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 2)
+        if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 4.5f)
         {
             return;
         }

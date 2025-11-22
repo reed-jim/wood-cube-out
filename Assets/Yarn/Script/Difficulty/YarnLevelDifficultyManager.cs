@@ -43,7 +43,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         }
 
         // add new factions
-        int numFactionsToAdd = Mathf.Min(3 * Random.Range(1, 4), 2 * pieces.Length);
+        int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
         numFactionsToAdd -= numFactionsToAdd % 3;
         // numFactionsToAdd = Mathf.Min(finalFactions.Keys.Count * 3 - currentTotalPieces, 0);
 
@@ -140,7 +140,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             piece.transform.localPosition = Vector3.zero;
             piece.transform.localRotation = Quaternion.identity;
-            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.05f;
+            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.000f;
         }
 
         int EnsureDivisibleByThree(int value, int addedValue)

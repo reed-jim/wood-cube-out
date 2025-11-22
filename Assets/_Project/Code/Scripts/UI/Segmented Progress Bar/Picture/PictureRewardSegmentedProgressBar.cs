@@ -41,10 +41,9 @@ namespace NamPhuThuy.UI
                 }
             }
 
-            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(DataManager.Ins.CurrentLevel.Value - 1);
+            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(DataManager.Ins.CurrentLevel.Value);
             
-            DebugLogger.Log(message:$"numLevelRequired: {_numLevelRequiredForNextReward}, currentLvProgress: {_currentRewardProgress}", color:Color.yellow, context:this);
-            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(DataManager.Ins.CurrentLevel.Value - 1);
+            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(DataManager.Ins.CurrentLevel.Value);
 
             base.SetupRewardProgressBar(_currentRewardProgress, prevRewardProgress);
 
