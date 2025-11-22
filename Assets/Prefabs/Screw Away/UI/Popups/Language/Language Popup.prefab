@@ -37,7 +37,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -17, y: 0}
+  m_SizeDelta: {x: -17, y: 60}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &5710551303012245883
 CanvasRenderer:
@@ -124,7 +124,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 24}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6963096674875215452
@@ -217,7 +217,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &8684835883523114881
 RectTransform:
   m_ObjectHideFlags: 0
@@ -732,11 +732,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -110.70001
+      value: -99.6
       objectReference: {fileID: 0}
     - target: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -90.099976
+      value: -93.1
       objectReference: {fileID: 0}
     - target: {fileID: 5228802592774246861, guid: bdaf14bdb59371c4a8af2fcaaa60e539, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1091,7 +1091,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3952597634097154433, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 607.5325
+      value: 600
       objectReference: {fileID: 0}
     - target: {fileID: 3952597634097154433, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1191,18 +1191,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2575245404619607430}
     m_Modifications:
-    - target: {fileID: 2299654018792571382, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: m_text
-      value: English
-      objectReference: {fileID: 0}
-    - target: {fileID: 3191940933968823590, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: FallbackText
-      value: French
-      objectReference: {fileID: 0}
-    - target: {fileID: 3191940933968823590, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: translationName
-      value: French
-      objectReference: {fileID: 0}
     - target: {fileID: 5281017869879661506, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -1283,14 +1271,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7727103623239708700, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: m_text
-      value: French
-      objectReference: {fileID: 0}
-    - target: {fileID: 8240040655558819764, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: language
-      value: French
-      objectReference: {fileID: 0}
     - target: {fileID: 9163631269140830874, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
       propertyPath: m_Name
       value: French Button
@@ -1324,14 +1304,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2575245404619607430}
     m_Modifications:
-    - target: {fileID: 2299654018792571382, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: m_text
-      value: English
-      objectReference: {fileID: 0}
-    - target: {fileID: 4748986446593881679, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
-      propertyPath: translationName
-      value: English
-      objectReference: {fileID: 0}
     - target: {fileID: 5281017869879661506, guid: d2aa64ae9e6b6c3479f38e92130d896b, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
