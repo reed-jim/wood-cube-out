@@ -49,9 +49,9 @@ public class SceneTransition : MonoBehaviour
 
     private void Awake()
     {
-        LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
-        ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
-        LevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
+        YarnLevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
+        PieceManager.levelSetupCompletedEvent += SetIsLevelLoaded;
+        YarnLevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
 
         _tweens = new List<Tween>();
 
@@ -79,9 +79,9 @@ public class SceneTransition : MonoBehaviour
 
     private void OnDestroy()
     {
-        LevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
-        ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
-        LevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
+        YarnLevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
+        PieceManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
+        YarnLevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
     }

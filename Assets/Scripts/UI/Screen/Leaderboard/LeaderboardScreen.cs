@@ -79,7 +79,7 @@ public class LeaderboardScreen : UIScreen
 
     protected override void Show()
     {
-        Setup();
+        // Setup();
 
         base.Show();
 

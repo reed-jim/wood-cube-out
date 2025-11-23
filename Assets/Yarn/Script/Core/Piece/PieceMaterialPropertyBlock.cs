@@ -1,3 +1,4 @@
+using System.Linq;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -97,6 +98,13 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
+    public void SetAlpha(float value)
+    {
+        _propertyBlock.SetFloat("_ObjectAlpha", value);
+
+        _renderer.SetPropertyBlock(_propertyBlock);
+    }
+
     public void ResetDissolveRatio()
     {
         _propertyBlock.SetFloat("_DissolveRatioX", 1);
@@ -161,6 +169,8 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         BasePiece[] childPieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(transform);
 
+        bool isFirst = true;
+
         foreach (var item in childPieces)
         {
             if (item == _pieceServiceLocator.piece)
@@ -168,11 +178,17 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
                 continue;
             }
 
-            item.gameObject.SetActive(true);
+            if (isFirst)
+            {
+                item.gameObject.SetActive(true);
+
+                isFirst = false;
+            }
+
             item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.Less);
         }
 
-        _currentAlphaTransition = Tween.Custom(1, 0.4f, duration: 0.3f, onValueChange: newVal =>
+        _currentAlphaTransition = Tween.Custom(1, 0.05f, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 
@@ -202,7 +218,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
             item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.LessEqual);
         }
 
-        _currentAlphaTransition = Tween.Custom(0.4f, 1, duration: 0.3f, onValueChange: newVal =>
+        _currentAlphaTransition = Tween.Custom(0.05f, 1, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 

@@ -250,6 +250,7 @@ public class BasePiece : MonoBehaviour
                 BasePiece firstInnerPiece = innerPieces[1];
 
                 firstInnerPiece.gameObject.SetActive(true);
+                firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(0.3f);
             }
 
             yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
@@ -265,15 +266,19 @@ public class BasePiece : MonoBehaviour
                         innerPieceTrans.SetParent(firstInnerPiece.transform);
                     }
 
-                    Tween.Scale(firstInnerPiece.transform, 1.1f, duration: 0.3f)
+                    Tween.Scale(firstInnerPiece.transform, 1.05f, duration: 0.3f)
                     .OnComplete(() =>
                     {
                         Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
                     });
 
                     firstInnerPiece.transform.SetParent(transform.parent);
-
                     firstInnerPiece.Unlock();
+
+                    Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
+                    {
+                        firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(newVal);
+                    });
                 }
                 else
                 {

@@ -28,6 +28,7 @@ public class GameStateWin : BaseGameState
 
     public override void Enter()
     {
+        Debug.Log("SAFERIO Enter");
         winLevelEvent?.Invoke();
     }
 

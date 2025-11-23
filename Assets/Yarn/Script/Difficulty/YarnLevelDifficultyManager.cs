@@ -45,6 +45,11 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         // add new factions
         int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
         numFactionsToAdd -= numFactionsToAdd % 3;
+
+        if (pieces.Length <= 3)
+        {
+            numFactionsToAdd = 0;
+        }
         // numFactionsToAdd = Mathf.Min(finalFactions.Keys.Count * 3 - currentTotalPieces, 0);
 
         int index = 0;
@@ -83,6 +88,11 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         int totalInnerPieces = innerPieceFactions.Count;
 
+        foreach (var item in innerPieceFactions)
+        {
+            Debug.Log("SAFERIO " + item);
+        }
+
         GameFaction currentInnerPieceFaction = GameFaction.None;
 
         for (int i = 0; i < totalInnerPieces; i++)
@@ -103,6 +113,8 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
             {
                 currentInnerPieceFaction = pieces[originalPieceIndex].Faction;
             }
+
+            Debug.Log("SAFERIO " + currentInnerPieceFaction + "/" + innerPieceFactions.Any(item => item != currentInnerPieceFaction));
 
             if (innerPieceFactions.Any(item => item != currentInnerPieceFaction))
             {
