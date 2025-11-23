@@ -170,7 +170,7 @@ PlayerSettings:
   androidMaxAspectRatio: 2.4
   androidMinAspectRatio: 1
   applicationIdentifier:
-    Android: com.gplay.wood.cube.out
+    Android: com.gplay.wool.pull.girl3d
     Standalone: com.Unity-Technologies.com.unity.template.urp-blank
     iPhone: com.gplay.wood.cube.out
   buildNumber:
@@ -179,7 +179,7 @@ PlayerSettings:
     iPhone: 2025081501
     tvOS: 0
   overrideDefaultApplicationIdentifier: 1
-  AndroidBundleVersionCode: 2025091001
+  AndroidBundleVersionCode: 2025231101
   AndroidMinSdkVersion: 24
   AndroidTargetSdkVersion: 34
   AndroidPreferredInstallLocation: 1
@@ -302,7 +302,7 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 239220c08ec8edf438cbacb028e1ef08, type: 3}
+      m_Icon: {fileID: 2800000, guid: e4a466b91b6c19e498fa77f7a8e0e586, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
@@ -844,9 +844,24 @@ PlayerSettings:
   webWasm2023: 0
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
-    Android: LEVELPLAY_DEPENDENCIES_INSTALLED;DREAMTECK_SPLINES;UNITY_PIPELINE_URP
-    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED;DREAMTECK_SPLINES;UNITY_PIPELINE_URP
-    iPhone: DREAMTECK_SPLINES;UNITY_PIPELINE_URP
+    Android: LEVELPLAY_DEPENDENCIES_INSTALLED;DREAMTECK_SPLINES;UNITY_PIPELINE_URP;DOTWEEN
+    EmbeddedLinux: DOTWEEN
+    GameCoreScarlett: DOTWEEN
+    GameCoreXboxOne: DOTWEEN
+    Kepler: DOTWEEN
+    LinuxHeadlessSimulation: DOTWEEN
+    Nintendo Switch: DOTWEEN
+    PS4: DOTWEEN
+    PS5: DOTWEEN
+    QNX: DOTWEEN
+    ReservedCFE: DOTWEEN
+    Standalone: LEVELPLAY_DEPENDENCIES_INSTALLED;DREAMTECK_SPLINES;UNITY_PIPELINE_URP;DOTWEEN
+    VisionOS: DOTWEEN
+    WebGL: DOTWEEN
+    Windows Store Apps: DOTWEEN
+    XboxOne: DOTWEEN
+    iPhone: DREAMTECK_SPLINES;UNITY_PIPELINE_URP;DOTWEEN
+    tvOS: DOTWEEN
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend:
