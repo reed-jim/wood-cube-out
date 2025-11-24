@@ -28,8 +28,8 @@ public class Yarn2D : MonoBehaviour
     [SerializeField] private Vector2 velocity;
     [SerializeField] private Vector2 velocityMultuplier;
     [SerializeField] private float dissolveDelta;
-    [SerializeField] private float frequency;
-    [SerializeField] private float amplitude;
+    [SerializeField] private float frequency = 6;
+    [SerializeField] private float amplitude = 0.24f; // 
     [SerializeField] private float waveSpeed;
 
     [Header("Model")]
