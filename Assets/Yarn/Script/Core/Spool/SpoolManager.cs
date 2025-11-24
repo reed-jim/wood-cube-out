@@ -70,7 +70,7 @@ public class SpoolManager : MonoBehaviour
         BasePiece.autoSelectPieceEvent += OnPieceAutoSelected;
         BasePiece.pieceMovedCompletedEvent += MoveSinglePieceFromHoleToSpoolBox;
         ScrewBoxCameraManager.setCameraEvent += OnSpoolBoxCameraSet;
-        PieceManager.magicPickPieceEvent += OnPieceSelected;
+        PieceManager.magicPickPieceEvent += OnPieceMagicPicked;
         PieceManager.spawnSpoolBoxEvent += SpawnSpoolBox;
         PieceManager.spawnAdsSpoolBoxesEvent += SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent += OnSpoolBoxCompleted;
@@ -92,7 +92,7 @@ public class SpoolManager : MonoBehaviour
         BasePiece.autoSelectPieceEvent -= OnPieceAutoSelected;
         BasePiece.pieceMovedCompletedEvent -= MoveSinglePieceFromHoleToSpoolBox;
         ScrewBoxCameraManager.setCameraEvent -= OnSpoolBoxCameraSet;
-        PieceManager.magicPickPieceEvent -= OnPieceSelected;
+        PieceManager.magicPickPieceEvent -= OnPieceMagicPicked;
         PieceManager.spawnSpoolBoxEvent -= SpawnSpoolBox;
         PieceManager.spawnAdsSpoolBoxesEvent -= SpawnAdsSpoolBoxes;
         SpoolBox.spoolBoxCompletedEvent -= OnSpoolBoxCompleted;
@@ -150,6 +150,8 @@ public class SpoolManager : MonoBehaviour
                 Destroy(piecePorts[i].Piece.gameObject);
 
                 piecePorts[i].Piece = null;
+
+                piecePorts[i].Reset();
             }
         }
 
@@ -260,6 +262,16 @@ public class SpoolManager : MonoBehaviour
         }
 
         GamePersistentVariable.isFreshLevel = false;
+    }
+
+    private void OnPieceMagicPicked(int pieceId, GameFaction selectedFaction)
+    {
+        SpoolBoxSlot spoolBoxSlot = CheckAvailableSpoolBoxes(selectedFaction, isIncludePiecePorts: false);
+
+        if (spoolBoxSlot != null)
+        {
+            loosePieceEvent?.Invoke(pieceId, selectedFaction, spoolBoxSlot);
+        }
     }
 
     private void OnPieceAutoSelected(int pieceId, GameFaction selectedFaction)
@@ -839,7 +851,7 @@ public class SpoolManager : MonoBehaviour
         // addedSpoolBoxSlot.transform.position = position + new Vector3(10, 0, 0);
         addedSpoolBoxSlot.transform.localScale = Vector3.zero;
 
-        
+
         float targetScale = 1f;
         if (piecePorts[0] != null)
         {
@@ -849,7 +861,7 @@ public class SpoolManager : MonoBehaviour
         {
             targetScale = GamePlayConst.spoolPortScale;
         }
-        
+
         for (int i = 0; i < piecePorts.Count; i++)
         {
             int index = i;

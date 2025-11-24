@@ -870,9 +870,22 @@ public class PieceManager : MonoBehaviour
     #region MAGIC PICK
     private void MagicPick()
     {
-        BasePiece selectedPiece = _pieces.First(item => !item.IsDone && !item.IsInPiecePort);
+        GameFaction[] validFactions = SpoolManager.Instance.SpoolBoxs
+            .Where(item => item != null)
+            .Where(item => !item.IsLocked && !item.IsInTransition)
+            .Select(item => item.Faction).ToArray();
 
-        magicPickPieceEvent?.Invoke(selectedPiece.gameObject.GetInstanceID(), selectedPiece.Faction);
+        BasePiece selectedPiece = _pieces.First(
+            item => !item.IsDone &&
+            !item.IsInPiecePort &&
+            !item.PieceServiceLocator.pieceProperty.IsRewinding &&
+            validFactions.Contains(item.Faction)
+        );
+
+        if (selectedPiece != null)
+        {
+            magicPickPieceEvent?.Invoke(selectedPiece.gameObject.GetInstanceID(), selectedPiece.Faction);
+        }
     }
     #endregion
 }
