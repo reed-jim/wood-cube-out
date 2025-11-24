@@ -203,8 +203,7 @@ namespace NamPhuThuy.UI
         {
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
-                worldPos = transform.position,
-                initialParent = transform,
+                // startParent = transform,
                 font = GUIManager.Instance.DefaultFont,
                 color = Color.white,
                 duration = 1f,
@@ -364,7 +363,6 @@ namespace NamPhuThuy.UI
             {
                 var args = new PopupTextArgs {
                     message = _downloadedNoti,
-                    worldPos = transform.position,
                     color = Color.white,
                     duration = 1f,
                     onComplete = null
@@ -455,7 +453,6 @@ namespace NamPhuThuy.UI
             
             var args = new PopupTextArgs {
                 message = _downloadedNoti,
-                worldPos = transform.position,
                 color = Color.white,
                 duration = 1f,
                 onComplete = null

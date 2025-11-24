@@ -600,8 +600,7 @@ namespace NamPhuThuy.UI
         {
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
-                worldPos = transform.position,
-                initialParent = transform,
+                // startParent = transform,
                 font = GUIManager.Instance.DefaultFont,
                 color = Color.white,
                 duration = 1f,

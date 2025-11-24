@@ -160,6 +160,8 @@ public class MenuScreen : MonoBehaviour
             yield return YieldHelper.GetRealtime(0.2f);
             localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");    
         }
+        
+        
     }
 
     private async Task Start()
