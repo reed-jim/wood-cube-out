@@ -92,6 +92,14 @@ public class Yarn2D : MonoBehaviour
 
     #endregion
 
+    /// <summary>
+    /// From model to spool slot
+    /// </summary>
+    /// <param name="startPoint"></param>
+    /// <param name="faction"></param>
+    /// <param name="piece"></param>
+    /// <param name="spool"></param>
+    /// <param name="onCompleteAction"></param>
     public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onCompleteAction = null)
     {
         InitializeRope(startPoint, faction);
@@ -115,6 +123,13 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
+    /// <summary>
+    /// From waiting line to spool
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <param name="startSpool"></param>
+    /// <param name="endSpool"></param>
+    /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
     {
         InitializeRope(endSpool.transform.position, faction);
@@ -139,6 +154,15 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
+    
+    /// <summary>
+    /// From outside box to spool
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <param name="startSpool"></param>
+    /// <param name="endSpool"></param>
+    /// <param name="isReverseSpoolDissolve"></param>
+    /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, Transform startSpool, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
         InitializeRope(endSpool.transform.position, faction);

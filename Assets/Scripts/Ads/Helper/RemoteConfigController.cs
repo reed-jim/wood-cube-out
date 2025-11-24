@@ -175,7 +175,7 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
 
         #region CORE GAMEPLAY CONFIG
-        GamePersistentVariable.screwHoleLeftToLose = GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 0);
+        GamePersistentVariable.screwHoleLeftToLose = GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 1);
         #endregion
 
         #region DIFFICULTY

@@ -1,3 +1,4 @@
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,12 +37,12 @@ public class PopupFadeBackground : MonoBehaviour
         fadeBackground.gameObject.SetActive(true);
 
         // Set position in hierarchy to near last
-        var parent = transform.parent;
+        /*var parent = transform.parent;
         if (parent != null && parent.childCount >= 2)
         {
             int nearLastIndex = parent.childCount - 2;
             transform.SetSiblingIndex(nearLastIndex);
-        }
+        }*/
         
         CommonUtil.StopTween(_transitionTween);
 
@@ -50,6 +51,7 @@ public class PopupFadeBackground : MonoBehaviour
 
     private void OnPopupClose()
     {
+        DebugLogger.Log();
         Transform popupContainer = transform.parent;
 
         int numActivePopup = 0;
@@ -64,6 +66,7 @@ public class PopupFadeBackground : MonoBehaviour
 
         if (numActivePopup > 1)
         {
+            DebugLogger.Log(message:$"numActivePopup: {numActivePopup}, skip disable");
             return;
         }
 
@@ -71,6 +74,7 @@ public class PopupFadeBackground : MonoBehaviour
 
         _transitionTween = Tween.Alpha(fadeBackground, 0, duration: transitionDuration).OnComplete(() =>
         {
+            DebugLogger.Log(message:$"Disable");
             fadeBackground.gameObject.SetActive(false);
         });
     }
