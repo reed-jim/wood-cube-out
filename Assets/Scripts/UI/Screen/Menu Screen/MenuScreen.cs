@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -151,7 +153,13 @@ public class MenuScreen : MonoBehaviour
 
     void OnEnable()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        StartCoroutine(UpdateLevelText());
+
+        IEnumerator UpdateLevelText()
+        {
+            yield return YieldHelper.GetRealtime(0.2f);
+            localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");    
+        }
     }
 
     private async Task Start()

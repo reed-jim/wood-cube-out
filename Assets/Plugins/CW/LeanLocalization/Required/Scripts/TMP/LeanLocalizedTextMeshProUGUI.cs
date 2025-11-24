@@ -59,6 +59,14 @@ namespace Lean.Localization
 		}
 
 		// SAFERIO - CUSTOMIZATION
+		/// <summary>
+		/// You typically use UpdateTranslationWithParameter when your localized string contains a placeholder like {PlayerName} or {Score} and you want to replace it at runtime.
+		/// In your LeanLocalization data (or FallbackText) you have something like:
+		/// "Hello, {PlayerName}! You have {Score} coins."
+		/// localizedText.UpdateTranslationWithParameter("PlayerName", "Alice");
+		/// </summary>
+		/// <param name="parameter"></param>
+		/// <param name="value"></param>
 		public void UpdateTranslationWithParameter(string parameter, string value)
 		{
 			var textMeshPro = GetComponent<TextMeshProUGUI>();
@@ -78,7 +86,10 @@ namespace Lean.Localization
 			pattern.Append(parameter);
 			pattern.Append("}");
 
+			// Debug.Log($"LevelText: {textMeshPro.text}");
+			
 			textMeshPro.text = textMeshPro.text.Replace(pattern.ToString(), value);
+			// Debug.Log($"LevelText 2: {textMeshPro.text}");
 
 			_cachedParameter = parameter;
 			_cachedParameterValue = value;
