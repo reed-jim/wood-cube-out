@@ -225,7 +225,7 @@ public class ScrewBoxManager : MonoBehaviour
 
     private void OnRevived(BoosterType boosterType)
     {
-        if (boosterType == BoosterType.UnlockScrewBox)
+        if (boosterType == BoosterType.UnlockSpoolBox)
         {
             for (int i = 0; i < screwBoxs.Length; i++)
             {
@@ -242,7 +242,7 @@ public class ScrewBoxManager : MonoBehaviour
                 }
             }
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.ClearAlternativeSpools)
         {
             ClearAllScrewPorts();
         }

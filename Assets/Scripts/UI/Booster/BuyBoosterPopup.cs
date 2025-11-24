@@ -44,7 +44,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action unlockSpoolBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
-    public static event Action<int> updateBoosterQuantityEvent;
+    public static event Action<BoosterType> updateBoosterQuantityEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -89,7 +89,7 @@ public class BuyBoosterPopup : BasePopup
 
         getWithAdsButton.onClick.RemoveAllListeners();
 
-        if (boosterType == BoosterType.UnlockScrewBox)
+        if (boosterType == BoosterType.UnlockSpoolBox)
         {
             getWithAdsButton.onClick.AddListener(UnlockScrewBoxWithAds);
         }
@@ -109,18 +109,18 @@ public class BuyBoosterPopup : BasePopup
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {
-            if (_boosterType == BoosterType.BreakObject)
+            if (_boosterType == BoosterType.MagicPick)
             {
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
 
-                updateBoosterQuantityEvent?.Invoke(boosterIndex);
+                updateBoosterQuantityEvent?.Invoke(_boosterType);
 
                 _isBoughtBreakObjectBoosterByCoin = true;
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
             }
-            else if (_boosterType == BoosterType.UnlockScrewBox)
+            else if (_boosterType == BoosterType.UnlockSpoolBox)
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
@@ -152,7 +152,7 @@ public class BuyBoosterPopup : BasePopup
 
                 // userResourcesObserver.UserResources = adjustedUserResources;
 
-                updateBoosterQuantityEvent?.Invoke(boosterIndex);
+                updateBoosterQuantityEvent?.Invoke(_boosterType);
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
@@ -180,9 +180,9 @@ public class BuyBoosterPopup : BasePopup
 
         switch (_boosterType)
         {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
+            case BoosterType.AddSpoolSlot: actionWatchVideo = ActionWatchVideo.AddHole; break;
+            case BoosterType.MagicPick: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.ClearAlternativeSpools: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
             default: actionWatchVideo = ActionWatchVideo.AddHole; break;
         }
 
@@ -193,7 +193,7 @@ public class BuyBoosterPopup : BasePopup
     {
         userResourcesObserver.ChangeBoosterQuantity((int)_boosterType, 1);
 
-        updateBoosterQuantityEvent?.Invoke((int)_boosterType);
+        updateBoosterQuantityEvent?.Invoke(_boosterType);
 
         Hide(onCompletedAction: () =>
         {

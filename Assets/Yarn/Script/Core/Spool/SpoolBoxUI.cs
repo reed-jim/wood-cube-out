@@ -66,7 +66,7 @@ public class SpoolBoxUI : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
-        showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockSpoolBox);
     }
 
     public void Lock()
@@ -96,7 +96,7 @@ public class SpoolBoxUI : MonoBehaviour
 
             SoundManager.Instance.PlaySoundUnlockScrewBox();
 
-            levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+            levelBoosterObserver.UseBooster(BoosterType.UnlockSpoolBox);
         });
 
         void OnUnlockAnimationDone(TrackEntry trackEntry)

@@ -78,7 +78,7 @@ public class ScrewBoxUI : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
-        showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        // showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
     }
 
     public void Lock()
@@ -110,7 +110,7 @@ public class ScrewBoxUI : MonoBehaviour
 
         SoundManager.Instance.PlaySoundUnlockScrewBox();
 
-        levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
+        // levelBoosterObserver.UseBooster(boosterIndex: GameConstants.UNLOCK_SCREW_BOX_BOOSTER_INDEX);
     }
 
     public void HideUnlockBoxButton()

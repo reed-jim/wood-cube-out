@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using static GameEnum;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/UserResourcesObserver")]
 public class UserResourcesObserver : ScriptableObject
@@ -62,13 +63,13 @@ public class UserResourcesObserver : ScriptableObject
         Save();
     }
 
-    public void ConsumeBooster(int boosterIndex)
+    public void ConsumeBooster(BoosterType boosterType)
     {
         Load();
 
-        if (userResources.BoosterQuantities[boosterIndex] > 0)
+        if (userResources.BoosterQuantities[(int)boosterType] > 0)
         {
-            userResources.BoosterQuantities[boosterIndex]--;
+            userResources.BoosterQuantities[(int)boosterType]--;
 
             Save();
         }

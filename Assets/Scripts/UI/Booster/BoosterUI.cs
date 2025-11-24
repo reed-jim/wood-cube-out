@@ -38,7 +38,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action disableBreakObjectModeEvent;
     public static event Action clearAllScrewPortsEvent;
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
-    public static event Action<int> updateBoosterQuantityEvent;
+    public static event Action<BoosterType> updateBoosterQuantityEvent;
     public static event Action shakeScrewPortsEvent;
     public static event Action<string, string> showNotificationEvent;
 
@@ -58,15 +58,14 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
-        ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
-        ScrewBoxManager.enableBoosterEvent += EnableBooster;
-        ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
-        ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
+        SpoolManager.enableBoosterEvent += EnableBooster;
+        PieceManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
+        SpoolManager.piecePortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
 
-        addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
-        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
-        clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
+        addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddSpoolSlot));
+        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.MagicPick));
+        clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearAlternativeSpools));
         disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         _tweens = new List<Tween>();
@@ -87,10 +86,9 @@ public class BoosterUI : MonoBehaviour
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
-        ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
-        ScrewBoxManager.enableBoosterEvent -= EnableBooster;
-        ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
-        ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
+        SpoolManager.enableBoosterEvent -= EnableBooster;
+        PieceManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
+        SpoolManager.piecePortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
 
         CommonUtil.StopAllTweens(_tweens);
@@ -127,7 +125,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        DebugLogger.Log(message:$"{boosterType}");
+        DebugLogger.Log(message: $"{boosterType}");
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
@@ -138,16 +136,16 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
-        if (boosterType == BoosterType.AddScrewPort)
+        if (boosterType == BoosterType.AddSpoolSlot)
         {
             DebugLogger.Log();
             AddMoreScrewPort();
         }
-        else if (boosterType == BoosterType.BreakObject)
+        else if (boosterType == BoosterType.MagicPick)
         {
             MagicPick();
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.ClearAlternativeSpools)
         {
             ClearAllScrewPorts();
         }
@@ -155,10 +153,9 @@ public class BoosterUI : MonoBehaviour
 
     private void AddMoreScrewPort()
     {
-        DebugLogger.Log();
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.AddScrewPort);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.AddSpoolSlot);
 
             return;
         }
@@ -172,10 +169,10 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 0);
+        ConsumeBooster(BoosterType.AddSpoolSlot);
 
         addMoreScrewPortEvent?.Invoke();
-        DebugLogger.Log(message:$"Invoked AddMoreScrewPort Event", setBold:true);
+        DebugLogger.Log(message: $"Invoked AddMoreScrewPort Event", setBold: true);
 
         _numScrewPortsAdded++;
 
@@ -210,7 +207,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            // showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
 
             return;
         }
@@ -224,7 +221,7 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 1);
+        ConsumeBooster(BoosterType.MagicPick);
 
         magicPickPieceEvent?.Invoke();
 
@@ -238,7 +235,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            // showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
 
             return;
         }
@@ -293,7 +290,7 @@ public class BoosterUI : MonoBehaviour
 
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            // showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
 
             return;
         }
@@ -331,31 +328,24 @@ public class BoosterUI : MonoBehaviour
         }
     }
 
-    private void ConsumeBooster(int boosterIndex)
+    private void ConsumeBooster(BoosterType boosterType)
     {
-        userResourcesObserver.ConsumeBooster(boosterIndex: boosterIndex);
-        levelBoosterObserver.UseBooster(boosterIndex);
+        userResourcesObserver.ConsumeBooster(boosterType);
+        levelBoosterObserver.UseBooster(boosterType);
 
-        updateBoosterQuantityEvent?.Invoke(boosterIndex);
-
-        BoosterType boosterType = (BoosterType)boosterIndex;
+        updateBoosterQuantityEvent?.Invoke(boosterType);
 
         SaferioTracking.TrackBoosterUsage(boosterType);
         SaferioTracking.TrackResourceSink(
             currentLevel.Value, boosterType.ToString(),
-            1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], $"Consume_Booster_{boosterType}");
-    }
-
-    private void UseBreakObjectBooster()
-    {
-        ConsumeBooster(boosterIndex: 1);
+            1, userResourcesObserver.UserResources.BoosterQuantities[(int)boosterType], $"Consume_Booster_{boosterType}");
     }
 
     private void OnAllScrewPortsCleared(int numScrewCleared)
     {
         if (numScrewCleared > 0)
         {
-            ConsumeBooster(boosterIndex: 2);
+            ConsumeBooster(BoosterType.ClearAlternativeSpools);
         }
         else
         {

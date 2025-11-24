@@ -61,9 +61,9 @@ public class BoosterSuggestPopup : BasePopup
 
     private void OnRewaredAdCompleted()
     {
-        userResourcesObserver.ChangeBoosterQuantity((int)BoosterType.ClearScrewPorts, rewardQuantity);
+        userResourcesObserver.ChangeBoosterQuantity((int)BoosterType.ClearAlternativeSpools, rewardQuantity);
 
-        updateBoosterQuantityEvent?.Invoke((int)BoosterType.ClearScrewPorts);
+        updateBoosterQuantityEvent?.Invoke((int)BoosterType.ClearAlternativeSpools);
 
         Hide(onCompletedAction: () =>
         {
@@ -71,9 +71,9 @@ public class BoosterSuggestPopup : BasePopup
 
             InvokeShowResourcesEarnPopupPopupEvent(0, boosterQuantites, false);
 
-            SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{BoosterType.ClearScrewPorts}");
+            SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{BoosterType.ClearAlternativeSpools}");
             SaferioTracking.TrackResourceSource(
-                    currentLevel.Value, BoosterType.ClearScrewPorts.ToString(), rewardQuantity, userResourcesObserver.UserResources.BoosterQuantities[2], "booster_suggestion");
+                    currentLevel.Value, BoosterType.ClearAlternativeSpools.ToString(), rewardQuantity, userResourcesObserver.UserResources.BoosterQuantities[2], "booster_suggestion");
         });
     }
 

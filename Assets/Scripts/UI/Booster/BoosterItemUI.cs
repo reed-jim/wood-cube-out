@@ -66,9 +66,9 @@ public class BoosterItemUI : MonoBehaviour
         showBuyBoosterPopupEvent?.Invoke((BoosterType)boosterIndex);
     }
 
-    private void UpdateQuantityText(int boosterIndex)
+    private void UpdateQuantityText(BoosterType boosterType)
     {
-        if (boosterIndex == this.boosterIndex)
+        if ((int)boosterType == this.boosterIndex)
         {
             userResourcesObserver.Load();
 

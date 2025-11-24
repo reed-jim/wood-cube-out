@@ -1,4 +1,5 @@
 using UnityEngine;
+using static GameEnum;
 
 [CreateAssetMenu(menuName = "ScriptableObject/Saferio/Screw Away/LevelBoosterObserver")]
 public class LevelBoosterObserver : ScriptableObject
@@ -14,9 +15,9 @@ public class LevelBoosterObserver : ScriptableObject
         }
     }
 
-    public void UseBooster(int boosterIndex)
+    public void UseBooster(BoosterType boosterType)
     {
-        boosterQuantitiesUsed[boosterIndex]++;
+        boosterQuantitiesUsed[(int)boosterType]++;
     }
 
     public void Reset()

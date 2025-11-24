@@ -132,11 +132,11 @@ public class RevivePopup : BasePopup
 
         SoundManager.Instance.PlaySoundLose();
 
-        if (boosterType == BoosterType.UnlockScrewBox)
+        if (boosterType == BoosterType.UnlockSpoolBox)
         {
             boosterImage.sprite = unlockBoxSprite;
         }
-        else if (boosterType == BoosterType.ClearScrewPorts)
+        else if (boosterType == BoosterType.ClearAlternativeSpools)
         {
             boosterImage.sprite = clearHolesSprite;
         }
@@ -180,7 +180,7 @@ public class RevivePopup : BasePopup
 
             // userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
-            if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
+            if (_currentBoosterOnRevive == BoosterType.ClearAlternativeSpools)
             {
                 userResourcesObserver.ChangeBoosterQuantity(2, 1);
             }
@@ -209,10 +209,10 @@ public class RevivePopup : BasePopup
 
         switch (_currentBoosterOnRevive)
         {
-            case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
-            case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
-            case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
+            case BoosterType.AddSpoolSlot: actionWatchVideo = ActionWatchVideo.AddHole; break;
+            case BoosterType.MagicPick: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.ClearAlternativeSpools: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
+            case BoosterType.UnlockSpoolBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
         }
 
