@@ -85,6 +85,7 @@ namespace NamPhuThuy.UI
             if (loadingSlider == null)
             {
                 Debug.LogWarning("[GUIPopupLoading] No Slider assigned.");
+                OnLoadComplete?.Invoke();
                 yield break;
             }
 

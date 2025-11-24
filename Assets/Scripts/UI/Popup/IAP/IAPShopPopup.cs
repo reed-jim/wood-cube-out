@@ -30,6 +30,7 @@ public class IAPShopPopup : BasePopup
         PictureNewPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         PictureDetailsPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         GalleryPackElement.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
+        GalleryPackPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         
         RevivePopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         LivesShopPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
@@ -42,6 +43,7 @@ public class IAPShopPopup : BasePopup
         PictureNewPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         PictureDetailsPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         GalleryPackElement.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        GalleryPackPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         
         RevivePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         LivesShopPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
