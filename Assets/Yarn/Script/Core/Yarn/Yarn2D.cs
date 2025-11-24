@@ -154,7 +154,7 @@ public class Yarn2D : MonoBehaviour
         PlayRewindAnimation();
     }
 
-    
+
     /// <summary>
     /// From outside box to spool
     /// </summary>
@@ -169,6 +169,8 @@ public class Yarn2D : MonoBehaviour
 
         InitStartNode(startSpool);
 
+        transform.position = Camera.main.ScreenToWorldPoint(startSpool.position);
+
         _dissolveAxis = DissolveAxis.Y;
         _isReverseSpoolDissolve = isReverseSpoolDissolve;
 
@@ -178,6 +180,37 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodePosition = endSpool.transform.position;
+
+        gameObject.SetActive(true);
+
+        onRewindYarnCompleted = onCompleteAction;
+
+        PlayRewindAnimation();
+    }
+
+    /// <summary>
+    /// From spool to outside box
+    /// </summary>
+    /// <param name="faction"></param>
+    /// <param name="startSpool"></param>
+    /// <param name="endSpool"></param>
+    /// <param name="isReverseSpoolDissolve"></param>
+    /// <param name="onCompleteAction"></param>
+    public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, Transform outsideBox, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
+    {
+        InitializeRope(Camera.main.ScreenToWorldPoint(outsideBox.position), faction);
+
+        InitStartNode(startSpool.transform);
+
+        _dissolveAxis = DissolveAxis.Y;
+        _isReverseSpoolDissolve = isReverseSpoolDissolve;
+
+        spoolBoxSlot = startSpool;
+        spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
+
+        Reset();
+
+        _firstNodePosition = Camera.main.ScreenToWorldPoint(outsideBox.position);
 
         gameObject.SetActive(true);
 

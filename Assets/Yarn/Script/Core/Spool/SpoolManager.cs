@@ -890,7 +890,7 @@ public class SpoolManager : MonoBehaviour
 
                 BasePiece cachePiece = piecePorts[i].Piece;
 
-                yarn2D.Rewind(piecePorts[i].Piece.Faction, outsideSpoolSlot.transform, piecePorts[i],
+                yarn2D.Rewind(piecePorts[i].Piece.Faction, piecePorts[i], outsideSpoolSlot,
                     onCompleteAction: () =>
                     {
                         cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = false;
