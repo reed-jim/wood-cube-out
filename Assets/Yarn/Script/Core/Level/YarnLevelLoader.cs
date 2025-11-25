@@ -303,6 +303,8 @@ public class YarnLevelLoader : MonoBehaviour
 
                     _isSetLevelGradientBound = false;
 
+                    _mainCamera.orthographicSize = GameConstants.defaultCameraOrthographicSize;
+
                     Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;

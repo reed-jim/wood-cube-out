@@ -123,6 +123,7 @@ public class Yarn2D : MonoBehaviour
 
         gameObject.SetActive(true);
 
+        onDissolveCompleted = onDissolveCompleteAction;
         onRewindYarnCompleted = onCompleteAction;
         onDissolveCompleted = onDissolveCompleteAction;
 
@@ -320,6 +321,8 @@ public class Yarn2D : MonoBehaviour
             lastNodeLocalPosition = new Vector3(0.5f * modelSize.x, 0, 0);
         }
 
+        lastNodeLocalPosition = GetFirstPointOnModel();
+
         for (int i = 0; i < segments.Count; i++)
         {
             segments[i].posNow = lastNodeLocalPosition;
@@ -363,6 +366,8 @@ public class Yarn2D : MonoBehaviour
         lineRenderer.startWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
         lineRenderer.endWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
 
+        lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
+
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
         _currentAmplitude = amplitudeMultiplier * Vector3.Distance(_firstNodeLocalPosition, Vector3.zero);
 
@@ -376,8 +381,8 @@ public class Yarn2D : MonoBehaviour
             })
             .OnComplete(() =>
             {
-                
                 onDissolveCompleted?.Invoke();
+
                 for (int i = 0; i < segments.Count; i++)
                 {
                     int index = i;
@@ -592,6 +597,22 @@ public class Yarn2D : MonoBehaviour
         _prevRadius = radius;
 
         return localPos;
+    }
+
+    Vector3 GetFirstPointOnModel()
+    {
+        Vector3 referencePoint = new Vector3(0, 0.5f * modelSize.y, 0);
+
+        if (piece == null)
+        {
+            return referencePoint;
+        }
+
+        Vector3 referencePointWorld = piece.transform.TransformPoint(referencePoint);
+
+        Vector3 pointOnModelWorld = piece.PieceServiceLocator.pieceCollider.ClosestPoint(referencePointWorld);
+
+        return piece.transform.InverseTransformPoint(pointOnModelWorld);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)

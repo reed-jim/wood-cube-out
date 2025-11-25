@@ -156,6 +156,7 @@ public static class GameConstants
 
     #region LEVEL
     public static string IS_FIRST_WIN_LEVEL = "is_first_win_level";
+    public static float defaultCameraOrthographicSize = 12;
     #endregion
 
     #region LOCALIZE

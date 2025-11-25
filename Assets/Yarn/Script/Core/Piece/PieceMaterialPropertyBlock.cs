@@ -188,7 +188,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
             item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.Less);
         }
 
-        _currentAlphaTransition = Tween.Custom(1, 0.05f, duration: 0.3f, onValueChange: newVal =>
+        _currentAlphaTransition = Tween.Custom(1, 0.2f, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 
@@ -218,7 +218,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
             item.PieceServiceLocator.pieceMaterialPropertyBlock.SetZTest(UnityEngine.Rendering.CompareFunction.LessEqual);
         }
 
-        _currentAlphaTransition = Tween.Custom(0.05f, 1, duration: 0.3f, onValueChange: newVal =>
+        _currentAlphaTransition = Tween.Custom(0.2f, 1, duration: 0.3f, onValueChange: newVal =>
         {
             _propertyBlock.SetFloat("_ObjectAlpha", newVal);
 
