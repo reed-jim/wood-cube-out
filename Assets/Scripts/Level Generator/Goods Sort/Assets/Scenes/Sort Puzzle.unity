@@ -248,7 +248,6 @@ MonoBehaviour:
   m_ScreenCoordScaleBias: {x: 0, y: 0, z: 0, w: 0}
   m_RequiresDepthTexture: 0
   m_RequiresColorTexture: 0
-  m_Version: 2
   m_TaaSettings:
     m_Quality: 3
     m_FrameInfluence: 0.1
@@ -256,6 +255,7 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+  m_Version: 2
 --- !u!1 &241837923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1007,7 +1007,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 639515188}
-  - component: {fileID: 639515189}
   m_Layer: 0
   m_Name: Input Manager
   m_TagString: Untagged
@@ -1030,18 +1029,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1560200953}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &639515189
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 639515187}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 772f5885dcc3bae43941cebf32e42561, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &668236935
 GameObject:
   m_ObjectHideFlags: 0
@@ -1811,7 +1798,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Skip Level
-  parameter: 
   FallbackText: Skip
 --- !u!114 &1063445556
 MonoBehaviour:
@@ -2327,6 +2313,7 @@ MonoBehaviour:
   prefab: {fileID: 6655206068968023495, guid: 32c18610d458dfa40af83d745434d857, type: 3}
   container: {fileID: 1128645139}
   poolSize: 16
+  resourceSprites: []
 --- !u!1 &1152529020
 GameObject:
   m_ObjectHideFlags: 0
@@ -2940,7 +2927,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   translationName: Level
-  parameter: 
   FallbackText: Level 58
 --- !u!114 &1472340508
 MonoBehaviour:
@@ -3295,6 +3281,8 @@ SpriteRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3316,6 +3304,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -3395,6 +3384,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseButton: {fileID: 1119286756}
+  openShopButton: {fileID: 0}
   skipLevelButton: {fileID: 1481600960}
   openDebugPopupButton: {fileID: 532483107}
   debugNextLevelButton: {fileID: 0}
@@ -3403,6 +3393,7 @@ MonoBehaviour:
   localizedLevelText: {fileID: 1472340507}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+  hardModeCanvasGroup: {fileID: 0}
 --- !u!114 &1507326295
 MonoBehaviour:
   m_ObjectHideFlags: 0

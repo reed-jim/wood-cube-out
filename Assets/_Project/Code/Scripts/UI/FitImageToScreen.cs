@@ -17,6 +17,8 @@ namespace NamPhuThuy.AnimateWithScripts
     public class FitImageToScreen : MonoBehaviour
     {
         [SerializeField] private RectTransform canvas;
+        [SerializeField] private bool autoActiveOnEnable = true;
+        public bool AutoActiveOnEnable { get => autoActiveOnEnable; set => autoActiveOnEnable = value; }
 
         // void Start()
         // {
@@ -25,6 +27,7 @@ namespace NamPhuThuy.AnimateWithScripts
 
         void OnEnable()
         {
+            if (!autoActiveOnEnable) return;
             StartCoroutine(DelayFitToScreen());
         }
 
@@ -38,6 +41,7 @@ namespace NamPhuThuy.AnimateWithScripts
         [ContextMenu("FitImage")]
         void FitImage()
         {
+            DebugLogger.Log();
             Image image = GetComponent<Image>();
             if (image != null)
             {

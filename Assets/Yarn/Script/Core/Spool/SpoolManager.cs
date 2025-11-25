@@ -495,6 +495,8 @@ public class SpoolManager : MonoBehaviour
         _tweens.Add(Tween.LocalPosition(spoolBox.transform, destination, duration: 0.4f).OnComplete(() =>
         {
             spoolBox.IsInTransition = false;
+            spoolBox.transform.localPosition = new Vector3(spoolBox.transform.localPosition.x,
+                spoolBox.transform.localPosition.y, GamePlayConst.gameplayElementZOffset);
 
             MoveFromPiecePortToSpoolBox(spoolBox);
 
