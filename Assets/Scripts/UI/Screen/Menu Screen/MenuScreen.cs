@@ -245,7 +245,7 @@ public class MenuScreen : MonoBehaviour
         }
         else
         {
-            _isGameStarted = true;
+           
         }
 
         // if (currentLevel.Value > 10)
@@ -281,11 +281,13 @@ public class MenuScreen : MonoBehaviour
             else
             {
                 Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+                _isGameStarted = true;
             }
         }
         else
         {
             Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            _isGameStarted = true;
         }
 
         startGameButton.interactable = false;

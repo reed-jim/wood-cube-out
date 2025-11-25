@@ -93,19 +93,24 @@ namespace NamPhuThuy
             {
                 currentPicData =
                     DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
+                
 
                 if (currentPicData != null)
                 {
+                    spriteRenderer.sprite = currentPicData.mainImage;
+                    
                     if (!string.IsNullOrEmpty(currentPicData.videoName) &&
                         GamePersistentVariable.isUseVideoBackground)
                     {
                         // DebugLogger.Log(message:$"Use Video for BG");
                         ShowBlackOverlay();
+                        spriteRenderer.gameObject.SetActive(true);
                         ActiveVideo();
                     }
                     else
                     {
                         // DebugLogger.Log(message:$"Use Image for BG");
+                        videoPlayer.gameObject.SetActive(false);
                         ActiveImage();
                     }
                 }
@@ -134,8 +139,6 @@ namespace NamPhuThuy
         {
             // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             videoPlayer.gameObject.SetActive(true);
-            
-           
 
             StartCoroutine(LoadVideoFromStreamingAssets(currentPicData.videoName));
         }
@@ -144,9 +147,6 @@ namespace NamPhuThuy
         {
             // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             spriteRenderer.gameObject.SetActive(true);
-            videoPlayer.gameObject.SetActive(false);
-
-            spriteRenderer.sprite = currentPicData.mainImage;
         }
 
 
