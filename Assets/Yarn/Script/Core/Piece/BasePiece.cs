@@ -253,45 +253,45 @@ public class BasePiece : MonoBehaviour
                 firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(0.3f);
             }
 
-            yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot, onCompleteAction: () =>
-            {
-                if (innerPieces.Length > 1)
+            yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot,
+                onDissolveCompleteAction: () =>
                 {
-                    BasePiece firstInnerPiece = innerPieces[1];
-
-                    for (int i = 2; i < innerPieces.Length; i++)
+                    if (innerPieces.Length > 1)
                     {
-                        Transform innerPieceTrans = innerPieces[i].transform;
+                        BasePiece firstInnerPiece = innerPieces[1];
 
-                        innerPieceTrans.SetParent(firstInnerPiece.transform);
+                        for (int i = 2; i < innerPieces.Length; i++)
+                        {
+                            Transform innerPieceTrans = innerPieces[i].transform;
+
+                            innerPieceTrans.SetParent(firstInnerPiece.transform);
+                        }
+
+                        Tween.Scale(firstInnerPiece.transform, 1.05f, duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+                            Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
+                        });
+
+                        firstInnerPiece.transform.SetParent(transform.parent);
+                        firstInnerPiece.Unlock();
+
+                        Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
+                        {
+                            firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(newVal);
+                        });
                     }
-
-                    Tween.Scale(firstInnerPiece.transform, 1.05f, duration: 0.3f)
-                    .OnComplete(() =>
-                    {
-                        Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
-                    });
-
-                    firstInnerPiece.transform.SetParent(transform.parent);
-                    firstInnerPiece.Unlock();
-
-                    Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
-                    {
-                        firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(newVal);
-                    });
-                }
-                else
+                },
+                onCompleteAction: () =>
                 {
+                    pieceServiceLocator.pieceMeshRenderer.enabled = false;
+                    gameObject.SetActive(false);
 
+                    spoolBoxSlot.CompleteFill();
+
+                    InvokePieceLoosenedEvent();
                 }
-
-                pieceServiceLocator.pieceMeshRenderer.enabled = false;
-                gameObject.SetActive(false);
-
-                spoolBoxSlot.CompleteFill();
-
-                InvokePieceLoosenedEvent();
-            });
+            );
 
             spoolBoxSlot.Fill(this);
 
