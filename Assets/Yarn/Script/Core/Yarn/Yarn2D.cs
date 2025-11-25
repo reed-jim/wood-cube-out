@@ -310,7 +310,7 @@ public class Yarn2D : MonoBehaviour
 
     private void ShowYarn(Action onCompleteAction)
     {
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
+        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1));
         Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
 
         if (_dissolveAxis == DissolveAxis.X)
@@ -329,10 +329,12 @@ public class Yarn2D : MonoBehaviour
         {
             int index = i;
 
+            Vector3 endPosition = Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - ((float)index / (segmentCount - 1)));
+
             Tween.Custom(
                 lastNodeLocalPosition,
-                Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - (float)(index / (segmentCount - 1))),
-                duration: 0.2f,
+                endPosition,
+                duration: 0.3f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>
                 {
@@ -362,7 +364,7 @@ public class Yarn2D : MonoBehaviour
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
         _currentAmplitude = amplitudeMultiplier * Vector3.Distance(_firstNodeLocalPosition, Vector3.zero);
 
-        ShowYarn(() =>
+        ShowYarn(onCompleteAction: () =>
         {
             Tween.Custom(1, 0, duration: 0.6f, ease: Ease.Linear, onValueChange: newVal =>
             {
@@ -640,14 +642,13 @@ public class Yarn2D : MonoBehaviour
 
     void UpdateLineRenderer()
     {
-        transform.localRotation = Quaternion.identity;
+        // transform.localRotation = Quaternion.identity;
 
         lineRenderer.positionCount = segmentCount;
 
         for (int i = 0; i < segmentCount; i++)
         {
-            lineRenderer.SetPosition(i, Vector3.Lerp(lineRenderer.GetPosition(i), segments[i].posNow, 1f / 3));
-            // lineRenderer.SetPosition(i, segments[i].posNow);
+            lineRenderer.SetPosition(i, segments[i].posNow);
         }
     }
 
