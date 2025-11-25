@@ -56,6 +56,7 @@ public class Yarn2D : MonoBehaviour
     private bool _isReverseSpoolDissolve;
     private float _prevRadius;
     private float _currentAmplitude;
+    private float _currentAngle;
     #endregion
 
     private Action onDissolveCompleted;
@@ -470,13 +471,13 @@ public class Yarn2D : MonoBehaviour
         float y = (yRatio - 0.5f) * spiralHeight;
 
         // Total angle based on number of turns (in radians)
-        float angle = yRatio * turns * 2 * Mathf.PI;
+        _currentAngle = yRatio * turns * 2 * Mathf.PI;
 
         bool isXLargerThanZ = modelSize.x > modelSize.z;
 
         radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
 
-        Vector3 raycastPoint = new Vector3(Mathf.Cos(angle) * 2 * radius, y, Mathf.Sin(angle) * 2 * radius);
+        Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 2 * radius, y, Mathf.Sin(_currentAngle) * 2 * radius);
         Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
         // Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
 
@@ -495,7 +496,7 @@ public class Yarn2D : MonoBehaviour
 
         Vector3 dirWorld = transform.TransformVector(pointOnModel - raycastPoint);
 
-        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(pointOnModel - raycastPoint));
+        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(-raycastPoint));
         RaycastHit hit;
 
         // NEW
@@ -514,27 +515,17 @@ public class Yarn2D : MonoBehaviour
                 _debugHitPoint = hit.point;
             }
 
-            return piece.transform.InverseTransformPoint(hit.point);
+            return piece.transform.InverseTransformPoint(hit.point).ChangeY(y);
         }
         else
         {
-
             if (debugRaycast)
             {
                 _debugHasHit = true;
                 _debugHitPoint = piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld);
             }
-            return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld));
+            return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(y);
         }
-
-        float x = Mathf.Cos(angle) * radius;
-        float z = Mathf.Sin(angle) * radius;
-
-        Vector3 localPos = new Vector3(x, y, z);
-
-        _prevRadius = radius;
-
-        return localPos;
     }
 
     Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
@@ -656,7 +647,7 @@ public class Yarn2D : MonoBehaviour
 
             Vector3 pointOnLine = start + right * (length * t);
 
-            positions[i] = pointOnLine + up * sine;
+            positions[i] = pointOnLine + (1 - t) * Vector3.right * sine;
 
             segments[i].posNow = positions[i];
         }
