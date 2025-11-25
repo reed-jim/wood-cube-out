@@ -72,6 +72,8 @@ public class SpoolBox : MonoBehaviour
         get => spoolBoxServiceLocator;
     }
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         ScrewBoxCameraManager.setCameraEvent += OnSpoolBoxCameraSet;
@@ -93,7 +95,9 @@ public class SpoolBox : MonoBehaviour
 
         CommonUtil.StopAllSequences(_sequences);
     }
+    
 
+    #endregion
     private void OnSpoolBoxCameraSet(Camera spoolBoxCamera)
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(spoolBoxCamera);
@@ -138,7 +142,7 @@ public class SpoolBox : MonoBehaviour
 
             float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
 
-            _sequences.Add(Tween.LocalPositionY(boxLid, 0.4f, duration: closeBoxLidDuration)
+            _sequences.Add(Tween.LocalPositionY(boxLid, 0.12f, duration: closeBoxLidDuration)
                 .OnComplete(() =>
                 {
                     shakeCameraEvent?.Invoke();
@@ -173,7 +177,7 @@ public class SpoolBox : MonoBehaviour
                                 }
 
                                 rippleFx.gameObject.SetActive(true);
-                                rippleFx.transform.position = transform.position.ChangeZ(-9);
+                                rippleFx.transform.position = transform.position.ChangeZ(10); // -9
 
                                 // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
                                 // {
