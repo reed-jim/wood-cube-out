@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d95efff860dbee479b99be3bc7e0e3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Yarn2D
-  segmentCount: 12
+  segmentCount: 32
   segmentLength: 0.2
   lineRenderer: {fileID: 3942872581513249101}
   maxStep: 8
@@ -53,8 +53,9 @@ MonoBehaviour:
   velocityMultuplier: {x: 0.016, y: 0}
   dissolveDelta: 0.012
   frequency: 4
-  amplitude: 0.3
-  waveSpeed: 20
+  amplitudeMultiplier: 0.03
+  waveSpeed: 16
+  widthMultiplier: 0.5
   spoolBoxSlot: {fileID: 0}
   startSpoolBoxSlot: {fileID: 0}
   pieceMaterialContainer: {fileID: 11400000, guid: e54d3dfec74c3d544a7d17209c3b3106, type: 2}
@@ -112,7 +113,7 @@ LineRenderer:
   - {x: 0, y: 0, z: 0}
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 0.15
+    widthMultiplier: 0.1
     widthCurve:
       serializedVersion: 2
       m_Curve:
