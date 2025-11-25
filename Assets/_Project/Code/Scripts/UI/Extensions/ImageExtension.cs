@@ -58,5 +58,43 @@ namespace NamPhuThuy.UI
             rt.sizeDelta = new Vector2(targetWidth, targetHeight);
             rt.localPosition = Vector2.zero + offset;
         }
+        
+        public static void FitImageToRectTransformNoStretch(this Image image, RectTransform targetRect = null)
+        {
+            RectTransform rt = image.rectTransform;
+
+            float imageWidth = image.sprite.rect.width;
+            float imageHeight = image.sprite.rect.height;
+            float imageAspect = imageWidth / imageHeight;
+
+            float screenWidth;
+            float screenHeight;
+
+            if (targetRect != null)
+            {
+                screenWidth = targetRect.sizeDelta.x;
+                screenHeight = targetRect.sizeDelta.y;
+            }
+            else
+            {
+                screenWidth = GamePersistentVariable.canvasSize.x;
+                screenHeight = GamePersistentVariable.canvasSize.y;
+            }
+
+            float widthFactor = screenWidth / imageWidth;
+            float heightFactor = screenHeight / imageHeight;
+            float scaleFactor = Mathf.Min(widthFactor, heightFactor);
+            
+            float screenAspect = screenWidth / screenHeight;
+
+            float targetWidth = imageWidth * scaleFactor;
+            float targetHeight = imageHeight * scaleFactor;
+
+            Vector2 offset = Vector2.zero;
+
+
+            rt.sizeDelta = new Vector2(targetWidth, targetHeight);
+            rt.localPosition = Vector2.zero + offset;
+        }
     }
 }

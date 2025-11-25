@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using NamPhuThuy.AnimateWithScripts;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DebugLogger = NamPhuThuy.AnimateWithScripts.DebugLogger;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
@@ -87,6 +89,7 @@ namespace NamPhuThuy.UI
             base.MoreActionInAwake();
             likeStateChangeEvent += OnLikeStateChanged;
 
+            
         }
 
         
@@ -373,10 +376,12 @@ namespace NamPhuThuy.UI
 
         public void ChangePicture(int pictureID)
         {
+            Common.DebugLogger.Log();
             currentPictureId = pictureID;
             pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[pictureID].mainImage;
 
-            pictureImage.FitImageToRectTransform(GetComponent<RectTransform>());
+            // pictureImage.FitImageToRectTransform(GetComponent<RectTransform>());
+            pictureImage.FitImageToRectTransformNoStretch(GetComponent<RectTransform>());
         }
 
         private bool CheckValidatePictureData(int pictureID)
@@ -497,10 +502,19 @@ namespace NamPhuThuy.UI
             }
 
             if (CheckValidatePictureData(currentPictureId))
-                ChangePicture(currentPictureId);
+            {
+                StartCoroutine(IEChangePicture());
+                // ChangePicture(currentPictureId);
+            }
 
             SetStateReactButtons();
             SetStateDownloadSwitches();
+
+            IEnumerator IEChangePicture()
+            {
+                yield return YieldHelper.GetRealtime(0.2f);
+                ChangePicture(currentPictureId);
+            }
         }
 
         protected override void Hide(Action onCompletedAction = null)
