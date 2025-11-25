@@ -18,6 +18,18 @@ public class GameplayCamera : MonoBehaviour
     
     private float _initialOrthographicSize;
     private float _targetOrthographicSize;
+
+    private float TargetOrthographicSize
+    {
+        set
+        {
+            _targetOrthographicSize = value;
+            gameplayCamera.orthographicSize = _targetOrthographicSize;
+            updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
+        }
+    }
+    
+    
     private Vector3 _initialBackgroundScale;
     private Vector3 _targetBackgroundScale;
 
@@ -58,11 +70,11 @@ public class GameplayCamera : MonoBehaviour
 
     private void Update()
     {
-        gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 1 / 12f);
+        /*gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 1 / 12f);
 
         // background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 1 / 12f);
 
-        updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
+        updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);*/
     }
     
 
@@ -75,19 +87,20 @@ public class GameplayCamera : MonoBehaviour
 
     private void Reset()
     {
-        _targetOrthographicSize = _initialOrthographicSize;
+        TargetOrthographicSize = _initialOrthographicSize;
         _targetBackgroundScale = _initialBackgroundScale;
     }
 
     private void Zoom(float orthographicSize)
     {
-        _targetOrthographicSize = orthographicSize;
+        TargetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
+
     }
 
     private void SetInitialOrthographicSize(float orthographicSize)
     {
-        _targetOrthographicSize = orthographicSize;
+        TargetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
     }
 

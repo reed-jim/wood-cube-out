@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,6 +28,8 @@ public class PinchGesture : MonoBehaviour
     public static event Action<bool> enableSwipingEvent;
     #endregion
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         YarnLevelLoader.startLevelEvent += OnLevelStarted;
@@ -38,9 +41,6 @@ public class PinchGesture : MonoBehaviour
         zoomSlider.onValueChanged.AddListener(OnZoomSliderValueChanged);
 
         _tweens = new List<Tween>();
-
-        minZoom = 0.85f * cameraToZoom.orthographicSize;
-        maxZoom = 1.3f * cameraToZoom.orthographicSize;
     }
 
     void OnDestroy()
@@ -107,7 +107,9 @@ public class PinchGesture : MonoBehaviour
             }
         }
     }
+    
 
+    #endregion
     private void OnLevelStarted()
     {
         _isDisabled = false;
@@ -145,15 +147,12 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
-        float unit = 0.8f * orthographicSize;
+        float unit = 0.4f * orthographicSize; //0.8f * orthographicSize
 
-        maxZoom = orthographicSize + 1.5f * zoomSlider.value * unit;
+        maxZoom = orthographicSize + 1.1f * zoomSlider.value * unit;
         minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
 
-        // Tween.Delay(0.2f).OnComplete(() =>
-        // {
-        //     zoomSlider.value = 0.5f;
-        // });
+        DebugLogger.Log(message:$"maxZoom: {maxZoom}, minZoom: {minZoom}", context:this);
     }
 
     private void EnablePinching(bool isEnable)
