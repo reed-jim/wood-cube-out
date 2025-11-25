@@ -59,6 +59,7 @@ public class Yarn2D : MonoBehaviour
     #endregion
 
     private Action onDissolveCompleted;
+    private Action onDissolveCompleted;
     private Action onRewindYarnCompleted;
 
     #region MonoBehaviour Callbacks
@@ -105,6 +106,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="spool"></param>
     /// <param name="onCompleteAction"></param>
     public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
+    public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
     {
         InitializeRope(startPoint, faction);
 
@@ -125,6 +127,7 @@ public class Yarn2D : MonoBehaviour
 
         onDissolveCompleted = onDissolveCompleteAction;
         onRewindYarnCompleted = onCompleteAction;
+        onDissolveCompleted = onDissolveCompleteAction;
 
         PlayRewindAnimation();
     }
