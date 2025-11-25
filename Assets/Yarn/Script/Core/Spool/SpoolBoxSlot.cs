@@ -6,8 +6,7 @@ using static GameEnum;
 
 public class SpoolBoxSlot : MonoBehaviour
 {
-    // [SerializeField] private Renderer spoolRenderer;
-    [SerializeField] private MeshFilter spoolMeshFilter;
+    [SerializeField] private Renderer spoolRenderer;
 
     [Header("Yarn Layer")]
     [SerializeField] private SpriteRenderer[] upperLayers;
@@ -27,10 +26,10 @@ public class SpoolBoxSlot : MonoBehaviour
         set => _piece = value;
     }
 
-    // public Renderer SpoolRenderer
-    // {
-    //     get => spoolRenderer;
-    // }
+    public Renderer SpoolRenderer
+    {
+        get => spoolRenderer;
+    }
 
     public bool IsFilled
     {
@@ -50,6 +49,7 @@ public class SpoolBoxSlot : MonoBehaviour
 
     void Awake()
     {
+        spoolRenderer = GetComponent<Renderer>();
         yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
 
         // Bounds bounds = spoolMeshFilter.sharedMesh.bounds;
@@ -74,7 +74,7 @@ public class SpoolBoxSlot : MonoBehaviour
     }
 
     public void CompleteFill()
-    
+
     {
         if (transform.GetSiblingIndex() == 2)
         {
