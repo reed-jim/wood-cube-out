@@ -145,7 +145,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
             }
         }
 
-        float scaleOffset = 0.08f; // 0.001f
+        float scaleOffset = 0.1f; // 0.001f
         // Make new generated pieces child of original pieces
         foreach (var piece in generatedPieces.Keys)
         {

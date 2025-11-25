@@ -6314,6 +6314,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Art\xEDculo de venta"
     Object: {fileID: 0}
+--- !u!1 &4047137995393806337
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1357146002947502926}
+  - component: {fileID: 923963378369054063}
+  m_Layer: 0
+  m_Name: Buy success
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1357146002947502926
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4047137995393806337}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4212655842818712914}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &923963378369054063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4047137995393806337}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Buy success
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Achetez le succ\xE8s"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Kaufen Sie Erfolg
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Acquista il successo
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u6210\u529F\u3092\u8CB7\u3046"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAD6C\uB9E4 \uC131\uACF5"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Compre sucesso
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041A\u0443\u043F\u0438\u0442\u044C \u0443\u0441\u043F\u0435\u0445"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Comprar \xE9xito"
+    Object: {fileID: 0}
 --- !u!1 &4115055034587319219
 GameObject:
   m_ObjectHideFlags: 0
@@ -12092,6 +12165,7 @@ Transform:
   - {fileID: 3481048240272949203}
   - {fileID: 1955812423835390525}
   - {fileID: 837884004581421451}
+  - {fileID: 1357146002947502926}
   - {fileID: 6812481513501464050}
   m_Father: {fileID: 2382114561705044355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
