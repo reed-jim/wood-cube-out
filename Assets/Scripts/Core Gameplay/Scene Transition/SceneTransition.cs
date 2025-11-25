@@ -12,7 +12,6 @@ using UnityEngine.UI;
 public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
-    [SerializeField] private RectTransform container;
     [SerializeField] private RectTransform loadingContent;
     [SerializeField] private RectTransform progressFillRT;
     [SerializeField] private RectTransform loadingTextRT;
