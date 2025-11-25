@@ -145,6 +145,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
             }
         }
 
+        float scaleOffset = 0.08f; // 0.001f
         // Make new generated pieces child of original pieces
         foreach (var piece in generatedPieces.Keys)
         {
@@ -152,7 +153,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             piece.transform.localPosition = Vector3.zero;
             piece.transform.localRotation = Quaternion.identity;
-            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * 0.001f;
+            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * scaleOffset;
         }
 
         int EnsureDivisibleByThree(int value, int addedValue)

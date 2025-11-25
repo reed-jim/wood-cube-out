@@ -55,6 +55,7 @@ public class Yarn2D : MonoBehaviour
     private float _prevRadius;
     #endregion
 
+    private Action onDissolveCompleted;
     private Action onRewindYarnCompleted;
 
     #region MonoBehaviour Callbacks
@@ -100,7 +101,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="piece"></param>
     /// <param name="spool"></param>
     /// <param name="onCompleteAction"></param>
-    public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onCompleteAction = null)
+    public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
     {
         InitializeRope(startPoint, faction);
 
@@ -119,6 +120,7 @@ public class Yarn2D : MonoBehaviour
         gameObject.SetActive(true);
 
         onRewindYarnCompleted = onCompleteAction;
+        onDissolveCompleted = onDissolveCompleteAction;
 
         PlayRewindAnimation();
     }
@@ -362,6 +364,8 @@ public class Yarn2D : MonoBehaviour
             })
             .OnComplete(() =>
             {
+                
+                onDissolveCompleted?.Invoke();
                 for (int i = 0; i < segments.Count; i++)
                 {
                     int index = i;
