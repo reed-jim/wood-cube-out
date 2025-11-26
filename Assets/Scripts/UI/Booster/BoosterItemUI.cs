@@ -23,6 +23,8 @@ public class BoosterItemUI : MonoBehaviour
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
+    #region MonoBehaviour Callbacks
+
     void Awake()
     {
         BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
@@ -39,8 +41,13 @@ public class BoosterItemUI : MonoBehaviour
         BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+        
+        addButton.onClick.RemoveAllListeners();
     }
+    
+    
 
+    #endregion
     private async void Setup()
     {
         userResourcesObserver.Load();
