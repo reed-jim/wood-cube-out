@@ -44,6 +44,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action unlockSpoolBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<float> updateCoinTextEvent;
     public static event Action<BoosterType> updateBoosterQuantityEvent;
 
     protected override void MoreActionInAwake()
@@ -124,6 +125,8 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
+                updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
+
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
@@ -140,10 +143,6 @@ public class BuyBoosterPopup : BasePopup
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
 
-                SaferioTracking.TrackResourceSink(
-                    currentLevel.Value, "Coin",
-                    boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
-
                 // // WARNING: DO NOT change User Resource by property more than 1 time. The last one will overwrite the previous one.
                 // UserResources adjustedUserResources = userResourcesObserver.UserResources;
 
@@ -152,7 +151,12 @@ public class BuyBoosterPopup : BasePopup
 
                 // userResourcesObserver.UserResources = adjustedUserResources;
 
+                updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
                 updateBoosterQuantityEvent?.Invoke(_boosterType);
+
+                SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");

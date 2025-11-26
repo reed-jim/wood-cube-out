@@ -34,6 +34,7 @@ public class UserResourcesManager : MonoBehaviour
 
     private void AddCoin(float value)
     {
+        // already change coin before
         // userResourcesObserver.ChangeCoin(value);
 
         userResourcesObserver.Load();
