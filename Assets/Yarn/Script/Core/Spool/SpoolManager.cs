@@ -485,6 +485,8 @@ public class SpoolManager : MonoBehaviour
 
         Vector3 destination = GetSpoolBoxNextPosition(spoolBox, index);
 
+        destination.z -= 20f;
+  
         spoolBox.transform.localPosition = destination.ChangeX(getInDirection == Direction.Right ? -10 : 10);
 
         // destination.x = (-(maxSpoolBox - 1) / 2f + index) * _spoolBoxDistance;

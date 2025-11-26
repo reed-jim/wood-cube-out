@@ -92,6 +92,12 @@ public class BoosterUI : MonoBehaviour
         RevivePopup.reviveEvent -= OnRevived;
 
         CommonUtil.StopAllTweens(_tweens);
+        addMoreScrewPortButton.onClick.RemoveAllListeners();
+        breakObjectButton.onClick.RemoveAllListeners();
+        clearAllScrewPortsButton.onClick.RemoveAllListeners();
+        disableBreakObjectModeEarlyButton.onClick.RemoveAllListeners();
+
+        
     }
 
     private void Reset()
@@ -155,6 +161,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
+            DebugLogger.Log(message:$"Check 1 {BoosterType.AddSpoolSlot}");
             showBuyBoosterPopupEvent?.Invoke(BoosterType.AddSpoolSlot);
 
             return;
@@ -207,8 +214,8 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            // showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
-
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.MagicPick);
+            
             return;
         }
 
@@ -290,7 +297,7 @@ public class BoosterUI : MonoBehaviour
 
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
-            // showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearAlternativeSpools);
 
             return;
         }

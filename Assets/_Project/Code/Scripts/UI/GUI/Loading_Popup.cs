@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.AnimateWithScripts;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -60,6 +61,7 @@ namespace NamPhuThuy.UI
         /// </summary>
         public void Begin(float duration)
         {
+            Common.DebugLogger.Log();
             StopLoading();
             _routine = StartCoroutine(RunLoading(duration));
         }
@@ -69,6 +71,7 @@ namespace NamPhuThuy.UI
         /// </summary>
         public void StopLoading()
         {
+            Common.DebugLogger.Log();
             if (_routine != null)
             {
                 StopCoroutine(_routine);
@@ -82,6 +85,7 @@ namespace NamPhuThuy.UI
 
         private IEnumerator RunLoading(float duration)
         {
+            Common.DebugLogger.Log();
             if (loadingSlider == null)
             {
                 Debug.LogWarning("[GUIPopupLoading] No Slider assigned.");

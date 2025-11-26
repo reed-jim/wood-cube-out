@@ -3191,6 +3191,10 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 21300000, guid: 771d26d8aaa6ebd42bf46f013d142a1c, type: 3}
+    - target: {fileID: 5086887070518600629, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_RaycastTarget
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5155357768742764304, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -8631,6 +8635,50 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!1 &1762278673
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1762278675}
+  - component: {fileID: 1762278674}
+  m_Layer: 0
+  m_Name: UIClickDetector
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1762278674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762278673}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a365f0685acacf479cfaefc81e394ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NamPhuThuy.Common::NamPhuThuy.UIClickDetector
+--- !u!4 &1762278675
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762278673}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1781493978
 GameObject:
   m_ObjectHideFlags: 0
@@ -9871,3 +9919,4 @@ SceneRoots:
   - {fileID: 1522712152}
   - {fileID: 117890140}
   - {fileID: 1680990592}
+  - {fileID: 1762278675}

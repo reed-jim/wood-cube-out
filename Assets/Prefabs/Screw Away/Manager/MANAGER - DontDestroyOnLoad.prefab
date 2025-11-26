@@ -2784,6 +2784,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: "\xA1Active el Pase de oro para desbloquear recompensas exclusivas!"
     Object: {fileID: 0}
+--- !u!1 &1703726063385434727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8375933140761860963}
+  - component: {fileID: 7805718095323332175}
+  m_Layer: 0
+  m_Name: Magic Pick
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8375933140761860963
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703726063385434727}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2224263547979054287}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7805718095323332175
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1703726063385434727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: Magic Pick
+    Object: {fileID: 0}
+  - Language: French
+    Text: Choix magique
+    Object: {fileID: 0}
+  - Language: German
+    Text: Magische Auswahl
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scelta magica
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30DE\u30B8\u30C3\u30AF\u30D4\u30C3\u30AF"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB9E4\uC9C1\uD53D"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Escolha M\xE1gica"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u043E\u043B\u0448\u0435\u0431\u043D\u044B\u0439 \u0432\u044B\u0431\u043E\u0440"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Selecci\xF3n m\xE1gica"
+    Object: {fileID: 0}
 --- !u!1 &1756017778084187885
 GameObject:
   m_ObjectHideFlags: 0
@@ -3526,6 +3599,7 @@ Transform:
   - {fileID: 251688403071055784}
   - {fileID: 3195634283824755932}
   - {fileID: 8572974239894032366}
+  - {fileID: 8375933140761860963}
   - {fileID: 782550024743564524}
   m_Father: {fileID: 2382114561705044355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
