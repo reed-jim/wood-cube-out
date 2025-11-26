@@ -40,7 +40,6 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         CoinContainerUI.collectCoinEvent += Collect;
         // CoinContainerUI.collectItemsEvent += CollectItem;
-        WinPopup.collectCoinEvent += Collect;
 
         CreatePool();
     }
@@ -49,7 +48,6 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     {
         CoinContainerUI.collectCoinEvent -= Collect;
         // CoinContainerUI.collectItemsEvent -= CollectItem;
-        WinPopup.collectCoinEvent -= Collect;
     }
 
     private void CreatePool()
