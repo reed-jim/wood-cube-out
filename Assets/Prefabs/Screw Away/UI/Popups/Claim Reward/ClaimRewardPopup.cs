@@ -310,7 +310,7 @@ public class ClaimRewardPopup : BasePopup
 
         _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>
         {
-            chest.AnimationState.SetAnimation(0, "end", true);
+            chest.AnimationState.SetAnimation(0, "idle_open", true);
 
             // Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
             // {
