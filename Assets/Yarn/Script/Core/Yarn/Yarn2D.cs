@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
@@ -76,23 +77,6 @@ public class Yarn2D : MonoBehaviour
         step = 0;
         dissolveHeight = 1;
         lerpDelta = 0.1f;
-    }
-
-    private void OnDrawGizmos()
-    {
-        if (!debugRaycast)
-            return;
-
-        // draw ray
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawLine(_debugRayOrigin, _debugRayOrigin + _debugRayDirection);
-        Gizmos.DrawSphere(_debugRayOrigin, 0.02f);
-
-        if (_debugHasHit)
-        {
-            Gizmos.color = Color.red;
-            Gizmos.DrawSphere(_debugHitPoint, 0.03f);
-        }
     }
 
     #endregion
@@ -468,7 +452,7 @@ public class Yarn2D : MonoBehaviour
             return Vector3.zero;
         }
 
-        float y = (yRatio - 0.5f) * spiralHeight;
+        float y = 0.9f * ((yRatio) - 0.5f) * spiralHeight;
 
         // Total angle based on number of turns (in radians)
         _currentAngle = yRatio * turns * 2 * Mathf.PI;
@@ -477,7 +461,7 @@ public class Yarn2D : MonoBehaviour
 
         radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
 
-        Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 2 * radius, y, Mathf.Sin(_currentAngle) * 2 * radius);
+        Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, y, Mathf.Sin(_currentAngle) * 4 * radius);
         Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
         // Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
 
@@ -496,36 +480,29 @@ public class Yarn2D : MonoBehaviour
 
         Vector3 dirWorld = transform.TransformVector(pointOnModel - raycastPoint);
 
-        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(-raycastPoint));
+        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(new Vector3(0, y, 0) - raycastPoint));
         RaycastHit hit;
 
-        // NEW
-        if (debugRaycast)
+        RaycastHit[] hits = Physics.BoxCastAll(
+            center: raycastPointWorld,
+            halfExtents: new Vector3(1f * radius, 0.1f * radius, 1f * radius),
+            direction: transform.TransformVector(new Vector3(0, y, 0) - raycastPoint),
+            orientation: piece.transform.rotation,
+            maxDistance: 8 * radius
+        );
+
+        if (hits.Length > 0)
         {
-            _debugRayOrigin = raycastPointWorld;
-            _debugRayDirection = dirWorld.normalized * (5f * radius);
-            _debugHasHit = false;
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                {
+                    return transform.InverseTransformPoint(hits[i].point);
+                }
+            }
         }
 
-        if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, 5 * radius))
-        {
-            if (debugRaycast)
-            {
-                _debugHasHit = true;
-                _debugHitPoint = hit.point;
-            }
-
-            return piece.transform.InverseTransformPoint(hit.point).ChangeY(y);
-        }
-        else
-        {
-            if (debugRaycast)
-            {
-                _debugHasHit = true;
-                _debugHitPoint = piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld);
-            }
-            return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(y);
-        }
+        return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(y);
     }
 
     Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
@@ -592,18 +569,22 @@ public class Yarn2D : MonoBehaviour
 
     Vector3 GetFirstPointOnModel()
     {
-        Vector3 referencePoint = new Vector3(0, 0.5f * modelSize.y, 0);
+        // Vector3 referencePoint = 0.5f * modelSize;
 
-        if (piece == null)
-        {
-            return referencePoint;
-        }
+        // if (piece == null)
+        // {
+        //     return referencePoint;
+        // }
 
-        Vector3 referencePointWorld = piece.transform.TransformPoint(referencePoint);
+        // Vector3 referencePointWorld = piece.transform.TransformPoint(referencePoint);
 
-        Vector3 pointOnModelWorld = piece.PieceServiceLocator.pieceCollider.ClosestPoint(referencePointWorld);
+        // Vector3 pointOnModelWorld = piece.PieceServiceLocator.pieceCollider.ClosestPoint(referencePointWorld);
 
-        return piece.transform.InverseTransformPoint(pointOnModelWorld);
+        // Debug.Log("SAFERIO modelsize " + modelSize + "/" + piece.transform.InverseTransformPoint(pointOnModelWorld));
+
+        // return piece.transform.InverseTransformPoint(pointOnModelWorld);
+
+        return GetSpiralPositionYAxis(dissolveHeight, modelSize.y, 3, 0.5f * modelSize.x);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)
@@ -640,10 +621,12 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
+        float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
+
         for (int i = 1; i < segmentCount - 1; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
-            float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * _currentAmplitude;
+            float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * delayedAmplitude;
 
             Vector3 pointOnLine = start + right * (length * t);
 
