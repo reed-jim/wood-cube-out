@@ -198,11 +198,11 @@ public class Yarn2D : MonoBehaviour
         _isReverseSpoolDissolve = isReverseSpoolDissolve;
 
         spoolBoxSlot = startSpool;
-        spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
         Reset();
 
         _firstNodePosition = Camera.main.ScreenToWorldPoint(outsideBox.position);
+        spoolSlotSizeY = 0;
 
         gameObject.SetActive(true);
 
@@ -349,9 +349,8 @@ public class Yarn2D : MonoBehaviour
     private void PlayRewindAnimation()
     {
         lineRenderer.startWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
-        lineRenderer.endWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
-
         lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
+        lineRenderer.endWidth = lineRenderer.startWidth;
 
         _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
         _currentAmplitude = amplitudeMultiplier * Vector3.Distance(_firstNodeLocalPosition, Vector3.zero);
@@ -621,6 +620,7 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
+        _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector3.Distance(start, end), 12);
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
 
         for (int i = 1; i < segmentCount - 1; i++)

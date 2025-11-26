@@ -171,6 +171,16 @@ public class SpoolBoxSlot : MonoBehaviour
 
     float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
     {
+        if (value > fromMax)
+        {
+            return toMax;
+        }
+
+        if (value < fromMin)
+        {
+            return toMin;
+        }
+
         return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 }
