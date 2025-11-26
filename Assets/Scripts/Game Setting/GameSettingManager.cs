@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.UI;
 using UnityEngine;
 
 public class GameSettingManager : MonoBehaviour
@@ -11,8 +12,8 @@ public class GameSettingManager : MonoBehaviour
 
     private void Awake()
     {
-        SettingPopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
-        SettingPopup.enableGameSoundEvent += EnableGameSound;
+        SettingsPopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
+        SettingsPopup.enableGameSoundEvent += EnableGameSound;
         PausePopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
         PausePopup.enableGameSoundEvent += EnableGameSound;
 
@@ -24,8 +25,8 @@ public class GameSettingManager : MonoBehaviour
 
     private void OnDestroy()
     {
-        SettingPopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
-        SettingPopup.enableGameSoundEvent -= EnableGameSound;
+        SettingsPopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
+        SettingsPopup.enableGameSoundEvent -= EnableGameSound;
         PausePopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
         PausePopup.enableGameSoundEvent -= EnableGameSound;
     }

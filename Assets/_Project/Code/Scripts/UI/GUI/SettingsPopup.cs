@@ -11,7 +11,7 @@ using UnityEditor;
 
 namespace NamPhuThuy.UI
 {
-    
+
     public class SettingsPopup : BasePopup
     {
         #region Private Serializable Fields
@@ -22,30 +22,33 @@ namespace NamPhuThuy.UI
         [SerializeField] private ButtonClicky privacyPolicyButton;
         [SerializeField] private ButtonClicky termsOfServiceButton;
         [SerializeField] private ButtonClicky rateButton;
-        
+
         [Header("Texts")]
         [SerializeField] private TextMeshProUGUI versionText;
-        
+
         [Header("Audio Settings")]
         [SerializeField] private ButtonClicky musicButton;
         [SerializeField] private ButtonClicky sfxButton;
         [SerializeField] private ButtonClicky vibrationButton;
         [SerializeField] private ButtonClicky notificationButton;
-        
+
+        [SerializeField] private GameSetting gameSetting;
+
         #endregion
 
         #region Private Fields
 
-        
-
         #endregion
 
+        public static event Action<bool> enableBackgroundMusicEvent;
+        public static event Action<bool> enableGameSoundEvent;
+
         #region MonoBehaviour Callbacks
-        
+
         private void Start()
         {
             versionText.text = $"Version {Application.version}";
-            
+
         }
 
         void OnEnable()
@@ -55,13 +58,13 @@ namespace NamPhuThuy.UI
             supportButton.onClick.AddListener(OnClickSupport);
             privacyPolicyButton.onClick.AddListener(OnClickPrivacyPolicy);
             termsOfServiceButton.onClick.AddListener(OnClickTermsOfService);
-            
+
             // AUDIO SETTINGS
             musicButton.onClick.AddListener(OnClickMusic);
             sfxButton.onClick.AddListener(OnClickSound);
             vibrationButton.onClick.AddListener(OnClickVibration);
             notificationButton.onClick.AddListener(OnClickNotification);
-            
+
             SetStateForButton();
         }
 
@@ -78,44 +81,36 @@ namespace NamPhuThuy.UI
             vibrationButton.onClick.RemoveAllListeners();
             notificationButton.onClick.RemoveAllListeners();
         }
-        
+
         #endregion
 
         #region Private Methods
-        
+
         private void SetStateForButton()
         {
             DebugLogger.Log();
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
+            bool tmp = gameSetting.IsTurnOnBackgroundMusic;
             ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
             if (musicSwitch != null)
             {
                 musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
-            tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
+
+            tmp = gameSetting.IsTurnOnSound;
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
             if (sfxSwitch != null)
             {
                 sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
-            tmp = DataManager.Ins.GameSetting.IsVibrate;
+
+            tmp = gameSetting.IsVibrate;
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
             if (vibrateSwitch != null)
             {
                 vibrateSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
-            /*tmp = DataManager.Ins.PlayerSettingsData.notifyEnabled;
-            ButtonSwitch notifySwitch = notificationButton.GetComponent<ButtonSwitch>();
-            if (notifySwitch != null)
-            {
-                if (tmp) notifySwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
-                else notifySwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
-            }*/
         }
-        
+
         #endregion
 
         #region Public Methods
@@ -132,9 +127,9 @@ namespace NamPhuThuy.UI
         {
             // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIRating);
             SwitchRoute(GameEnum.ScreenRoute.Rate, false);
-            
+
         }
-        
+
         private void OnClickLanguage()
         {
             // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUILanguage);
@@ -158,35 +153,30 @@ namespace NamPhuThuy.UI
 
         private void OnClickMusic()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsTurnOnBackgroundMusic = !gameSetting.IsTurnOnBackgroundMusic;
+
+            enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);
+
             ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
-            musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            musicSwitch?.SetState(gameSetting.IsTurnOnBackgroundMusic ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         private void OnClickSound()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsTurnOnSound = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsTurnOnSound = !gameSetting.IsTurnOnSound;
+
+            enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
+
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
-            sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            sfxSwitch?.SetState(gameSetting.IsTurnOnSound ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         private void OnClickVibration()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsVibrate;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsVibrate = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsVibrate = !gameSetting.IsVibrate;
+
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
-            vibrateSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            vibrateSwitch?.SetState(gameSetting.IsVibrate ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         private void OnClickNotification()
@@ -195,12 +185,11 @@ namespace NamPhuThuy.UI
             tmp = !tmp;
             DataManager.Ins.PlayerSettingsData.notifyEnabled = tmp;
             DataManager.Ins.MarkDirty();
-            
+
             ButtonSwitchFade notifySwitch = sfxButton.GetComponent<ButtonSwitchFade>();
             notifySwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
-    
         #endregion
     }
 }
