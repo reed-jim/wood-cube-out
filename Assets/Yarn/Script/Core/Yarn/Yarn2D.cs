@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.AnimateWithScripts;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
@@ -625,7 +626,9 @@ public class Yarn2D : MonoBehaviour
         // Create a perpendicular vector for sine offset (upward by default)
         Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
 
-        _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector3.Distance(start, end), 12);
+        _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector2.Distance(start, end), 11);
+        DebugLogger.Log(message:$"_currentAmplitude {_currentAmplitude} amplitudeMultiplier {amplitudeMultiplier} distance {Vector3.Distance(start, end)}", context:this);
+        
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
 
         for (int i = 1; i < segmentCount - 1; i++)
@@ -635,7 +638,7 @@ public class Yarn2D : MonoBehaviour
 
             Vector3 pointOnLine = start + right * (length * t);
 
-            positions[i] = pointOnLine + (1 - t) * Vector3.right * sine;
+            positions[i] = pointOnLine + Vector3.right * ((1 - t) * sine);
 
             segments[i].posNow = positions[i];
         }
