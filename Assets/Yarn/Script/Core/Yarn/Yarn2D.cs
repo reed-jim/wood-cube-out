@@ -62,6 +62,7 @@ public class Yarn2D : MonoBehaviour
 
     private Action onDissolveCompleted;
     private Action onRewindYarnCompleted;
+    public static Action updateOutsideScrewNumberEvent;
 
     #region MonoBehaviour Callbacks
 
@@ -177,6 +178,8 @@ public class Yarn2D : MonoBehaviour
 
         onRewindYarnCompleted = onCompleteAction;
 
+        updateOutsideScrewNumberEvent?.Invoke();
+
         PlayRewindAnimation();
     }
 
@@ -207,6 +210,8 @@ public class Yarn2D : MonoBehaviour
         gameObject.SetActive(true);
 
         onRewindYarnCompleted = onCompleteAction;
+
+        updateOutsideScrewNumberEvent?.Invoke();
 
         PlayRewindAnimation();
     }

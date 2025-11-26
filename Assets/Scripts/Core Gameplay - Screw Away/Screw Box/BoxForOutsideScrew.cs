@@ -13,10 +13,8 @@ public class BoxForOutsideScrew : MonoBehaviour
 
     void Awake()
     {
-        LevelLoader.startLevelEvent += OnLevelStarted;
-        BaseScrew.updateOutsideScrewNumberEvent += UpdateNumber;
-        ScrewManager.updateOutsideScrewNumberEvent += UpdateNumber;
-        ScrewsDataManager.updateOutsideScrewNumberEvent += UpdateNumber;
+        YarnLevelLoader.startLevelEvent += OnLevelStarted;
+        Yarn2D.updateOutsideScrewNumberEvent += UpdateNumber;
 
         _tweens = new List<Sequence>();
 
@@ -32,10 +30,8 @@ public class BoxForOutsideScrew : MonoBehaviour
 
     void OnDestroy()
     {
-        LevelLoader.startLevelEvent -= OnLevelStarted;
-        BaseScrew.updateOutsideScrewNumberEvent -= UpdateNumber;
-        ScrewManager.updateOutsideScrewNumberEvent -= UpdateNumber;
-        ScrewsDataManager.updateOutsideScrewNumberEvent -= UpdateNumber;
+        YarnLevelLoader.startLevelEvent -= OnLevelStarted;
+        Yarn2D.updateOutsideScrewNumberEvent -= UpdateNumber;
 
         CommonUtil.StopAllSequences(_tweens);
     }

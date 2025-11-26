@@ -822,6 +822,8 @@ public class PieceManager : MonoBehaviour
 
                         piece.IsInteractable = true;
 
+                        GamePersistentVariable.numOutsideScrew--;
+
                         piece.LooseFromOutside(piece.gameObject.GetInstanceID(), faction, pieceBoxSlot);
 
                         piece.IsOutsideWithNoSpoolBox = false;
@@ -830,8 +832,6 @@ public class PieceManager : MonoBehaviour
                         {
                             isFound = true;
                         }
-
-                        GamePersistentVariable.numOutsideScrew--;
                     }
                 }
             }
