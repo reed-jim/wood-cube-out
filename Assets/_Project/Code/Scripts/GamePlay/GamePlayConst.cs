@@ -13,6 +13,6 @@ namespace NamPhuThuy.GamePlay
         public static readonly float spoolPortScale = 1.8f;
         public static readonly float spoolXDistanceScale = 0.85f;
         
-        public static readonly float gameplayElementZOffset = -10f;
+        public static readonly float spoolBoxZOffset = -10f;
     }
 }

@@ -498,7 +498,7 @@ public class SpoolManager : MonoBehaviour
         {
             spoolBox.IsInTransition = false;
             spoolBox.transform.localPosition = new Vector3(spoolBox.transform.localPosition.x,
-                spoolBox.transform.localPosition.y, GamePlayConst.gameplayElementZOffset);
+                spoolBox.transform.localPosition.y, GamePlayConst.spoolBoxZOffset);
 
             MoveFromPiecePortToSpoolBox(spoolBox);
 
