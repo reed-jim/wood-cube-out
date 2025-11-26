@@ -103,7 +103,7 @@ public class MenuScreenTransition : MonoBehaviour
             StopCoroutine(_fakeLoadingCoroutine);
         }
 
-        _fakeLoadingCoroutine = StartCoroutine(RotatingIcon());
+        // _fakeLoadingCoroutine = StartCoroutine(RotatingIcon());
 
         AdmobAdsMax.Instance.ShowMRec();
 
