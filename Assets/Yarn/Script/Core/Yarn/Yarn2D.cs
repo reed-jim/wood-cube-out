@@ -60,7 +60,7 @@ public class Yarn2D : MonoBehaviour
     private float _prevRadius;
     private float _currentAmplitude;
     private float _currentAngle;
-    
+
     // NEW 
     private Quaternion _initialRotation;
     #endregion
@@ -249,10 +249,10 @@ public class Yarn2D : MonoBehaviour
         lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
         lastNode.posOld = lastNode.posNow;
 
-        transform.SetParent(piece.transform);
-        transform.localPosition = Vector3.zero;
-        transform.localScale = Vector3.one;
-        transform.rotation = Quaternion.identity;
+        // transform.SetParent(piece.transform);
+        // transform.localPosition = Vector3.zero;
+        // transform.localScale = Vector3.one;
+        // transform.rotation = Quaternion.identity;
     }
 
     private void InitStartSpool(SpoolBoxSlot startSpool)
@@ -444,7 +444,7 @@ public class Yarn2D : MonoBehaviour
             }
             else
             {
-                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, modelSize.y, 3, 0.5f * modelSize.x);
+                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.x);
             }
 
             segments[segmentCount - 1] = lastNode;
@@ -464,50 +464,26 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _debugHitPoint;
     private bool _debugHasHit;
 
-    Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
+    Vector3 GetSpiralPositionYAxis(float yRatio, float radius)
     {
         if (piece == null)
         {
             return Vector3.zero;
         }
 
-        float y = 0.9f * ((yRatio) - 0.5f) * spiralHeight;
+        float distance = 6 * radius;
 
-        // Total angle based on number of turns (in radians)
-        _currentAngle = yRatio * turns * 2 * Mathf.PI;
-
-        bool isXLargerThanZ = modelSize.x > modelSize.z;
-
-        radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
-
-        Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, y, Mathf.Sin(_currentAngle) * 4 * radius);
-        Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
-        // Vector3 pointOnModel = new Vector3(raycastPoint.x, y, 0);
-
-        Vector3 pointOnModel = isXLargerThanZ
-            ? new Vector3(raycastPoint.x, y, 0)
-            : new Vector3(0, y, raycastPoint.z);
-
-        /*if (isXLargerThanZ)
-        {
-            pointOnModel = new Vector3(raycastPoint.x, y, 0);
-        }
-        else
-        {
-            pointOnModel = new Vector3(0, y, raycastPoint.z);
-        }*/
-
-        Vector3 dirWorld = transform.TransformVector(pointOnModel - raycastPoint);
-
-        Ray ray = new Ray(raycastPointWorld, transform.TransformVector(new Vector3(0, y, 0) - raycastPoint));
-        RaycastHit hit;
+        Vector3 raycastTopPoint = piece.transform.position + distance * Vector3.up;
+        Vector3 raycastBottomPoint = piece.transform.position - distance * Vector3.up;
+        Vector3 pointOnTopSurface = new Vector3();
+        Vector3 pointOnBottomSurface = new Vector3();
 
         RaycastHit[] hits = Physics.BoxCastAll(
-            center: raycastPointWorld,
-            halfExtents: new Vector3(1f * radius, 0.1f * radius, 1f * radius),
-            direction: transform.TransformVector(new Vector3(0, y, 0) - raycastPoint),
-            orientation: piece.transform.rotation,
-            maxDistance: 8 * radius
+            center: raycastTopPoint,
+            halfExtents: new Vector3(radius, radius, radius),
+            direction: piece.transform.position - raycastTopPoint,
+            orientation: Quaternion.identity,
+            maxDistance: 2 * distance
         );
 
         if (hits.Length > 0)
@@ -516,13 +492,138 @@ public class Yarn2D : MonoBehaviour
             {
                 if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
                 {
-                    return transform.InverseTransformPoint(hits[i].point);
+                    pointOnTopSurface = hits[i].point;
+
+                    break;
                 }
             }
         }
 
-        return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(y);
+        hits = Physics.BoxCastAll(
+            center: raycastBottomPoint,
+            halfExtents: radius * Vector3.one,
+            direction: piece.transform.position - raycastBottomPoint,
+            orientation: Quaternion.identity,
+            maxDistance: 2 * distance
+        );
+
+        if (hits.Length > 0)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                {
+                    pointOnBottomSurface = hits[i].point;
+
+                    break;
+                }
+            }
+        }
+
+        Vector3 currentPoint = pointOnTopSurface;
+        currentPoint.y = pointOnBottomSurface.y + yRatio * Vector3.Distance(pointOnTopSurface, pointOnBottomSurface);
+
+
+
+        // Calc surface
+        _currentAngle = yRatio * 2 * Mathf.PI;
+
+        Vector3 raycastPoint = piece.transform.position + new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, 0, Mathf.Sin(_currentAngle) * 4 * radius);
+        raycastPoint.y = currentPoint.y;
+
+        Vector3 raycastDestination = piece.transform.position.ChangeY(currentPoint.y);
+
+        hits = Physics.BoxCastAll(
+            center: raycastPoint,
+            halfExtents: radius * Vector3.one,
+            direction: transform.TransformVector(raycastDestination - raycastPoint),
+            orientation: Quaternion.identity,
+            maxDistance: 2 * distance
+        );
+
+        if (hits.Length > 0)
+        {
+            for (int i = 0; i < hits.Length; i++)
+            {
+                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                {
+                    Debug.Log("SAFERIO BoxCastAll 0");
+                    return hits[i].point;
+                }
+            }
+        }
+
+        Debug.Log("SAFERIO BoxCastAll 1");
+        return currentPoint;
     }
+
+    // Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
+    // {
+    //     if (piece == null)
+    //     {
+    //         return Vector3.zero;
+    //     }
+
+    //     #region Spiral around up axis in world space (orthonormal basis)
+    //     Vector3 localSpiralAxis = piece.transform.InverseTransformDirection(Vector3.up);
+    //     Vector3 localSpiralAxisX = Vector3.Cross(localSpiralAxis, Vector3.forward);
+
+    //     // If axisY is parallel to forward, use right instead
+    //     if (localSpiralAxisX.sqrMagnitude < 0.0001f)
+    //         localSpiralAxisX = Vector3.Cross(localSpiralAxis, Vector3.right);
+
+    //     localSpiralAxisX.Normalize();
+
+    //     Vector3 localSpiralAxisZ = Vector3.Cross(localSpiralAxis, localSpiralAxisX).normalized;
+    //     #endregion
+
+    //     float y = 0.9f * ((yRatio) - 0.5f) * spiralHeight;
+
+    //     // Total angle based on number of turns (in radians)
+    //     _currentAngle = yRatio * turns * 2 * Mathf.PI;
+
+    //     bool isXLargerThanZ = modelSize.x > modelSize.z;
+
+    //     radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
+
+    //     Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, y, Mathf.Sin(_currentAngle) * 4 * radius);
+    //     raycastPoint.x = Vector3.Dot(raycastPoint, localSpiralAxisX.normalized);
+    //     raycastPoint.y = Vector3.Dot(raycastPoint, localSpiralAxis.normalized);
+    //     raycastPoint.z = Vector3.Dot(raycastPoint, localSpiralAxisZ.normalized);
+    //     Vector3 raycastDestination = new Vector3(0, y, 0);
+    //     raycastDestination.x = Vector3.Dot(raycastDestination, localSpiralAxisX.normalized);
+    //     raycastDestination.y = Vector3.Dot(raycastDestination, localSpiralAxis.normalized);
+    //     raycastDestination.z = Vector3.Dot(raycastDestination, localSpiralAxisZ.normalized);
+
+    //     Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
+
+    //     Vector3 pointOnModel = isXLargerThanZ
+    //         ? new Vector3(raycastPoint.x, y, 0)
+    //         : new Vector3(0, y, raycastPoint.z);
+
+    //     RaycastHit hit;
+
+    //     RaycastHit[] hits = Physics.BoxCastAll(
+    //         center: raycastPointWorld,
+    //         halfExtents: new Vector3(1f * radius, 0.1f * radius, 1f * radius),
+    //         direction: transform.TransformVector(raycastDestination - raycastPoint),
+    //         orientation: piece.transform.rotation,
+    //         maxDistance: 8 * radius
+    //     );
+
+    //     if (hits.Length > 0)
+    //     {
+    //         for (int i = 0; i < hits.Length; i++)
+    //         {
+    //             if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+    //             {
+    //                 return transform.InverseTransformPoint(hits[i].point);
+    //             }
+    //         }
+    //     }
+
+    //     return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(raycastPoint.y);
+    // }
 
     Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
     {
@@ -603,7 +704,7 @@ public class Yarn2D : MonoBehaviour
 
         // return piece.transform.InverseTransformPoint(pointOnModelWorld);
 
-        return GetSpiralPositionYAxis(dissolveHeight, modelSize.y, 3, 0.5f * modelSize.x);
+        return GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.x);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)
@@ -639,8 +740,10 @@ public class Yarn2D : MonoBehaviour
 
         _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector2.Distance(start, end), 11);
         // DebugLogger.Log(message:$"_currentAmplitude {_currentAmplitude} amplitudeMultiplier {amplitudeMultiplier} distance {Vector3.Distance(start, end)}", context:this);
-        
+
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
+
+        delayedAmplitude = 0;
 
         for (int i = 1; i < segmentCount - 1; i++)
         {
