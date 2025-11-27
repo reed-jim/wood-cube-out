@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using PrimeTween;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -74,9 +75,9 @@ public class SpoolBoxSlot : MonoBehaviour
     }
 
     public void CompleteFill()
-
     {
-        if (transform.GetSiblingIndex() == 2)
+        DebugLogger.Log(message:$"sibling index: {transform.GetSiblingIndex()}", context:this);
+        if (transform.GetSiblingIndex() == 4)
         {
             spoolBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());
         }
