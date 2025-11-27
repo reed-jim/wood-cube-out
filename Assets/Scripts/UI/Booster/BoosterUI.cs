@@ -131,11 +131,12 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        DebugLogger.Log(message: $"{boosterType}");
+        DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context:this);
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
             {
+                DebugLogger.Log(message:$"Check 1");
                 showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
             }
 

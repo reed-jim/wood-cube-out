@@ -76,7 +76,7 @@ public class SpoolBoxSlot : MonoBehaviour
 
     public void CompleteFill()
     {
-        DebugLogger.Log(message:$"sibling index: {transform.GetSiblingIndex()}", context:this);
+        // DebugLogger.Log(message:$"sibling index: {transform.GetSiblingIndex()}", context:this);
         if (transform.GetSiblingIndex() == 4)
         {
             spoolBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());

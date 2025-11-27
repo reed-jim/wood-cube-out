@@ -124,7 +124,7 @@ public class SpoolBox : MonoBehaviour
 
     private async void OnSpoolBoxCompleted(int instanceId)
     {
-        DebugLogger.Log(context:this);
+        // DebugLogger.Log(context:this);
         if (instanceId != gameObject.GetInstanceID()) return;
 
         /*if (instanceId == gameObject.GetInstanceID())
