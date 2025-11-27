@@ -211,13 +211,13 @@ public class SpoolManager : MonoBehaviour
             _spoolBoxDistance = 0.13f * worldSize.y;
         }
 
-        _spoolBoxPositionY = 0.35f * worldSize.y;
+        _spoolBoxPositionY = 0.36f * worldSize.y;
 
         // piecePortsContainer.localPosition = piecePortsContainer.localPosition.ChangeY(0.3042f * worldSize.y);
 
         Vector3 piecePortPosition = piecePorts[0].transform.position;
 
-        piecePortPosition.y = 0.25f * worldSize.y;
+        piecePortPosition.y = 0.23f * worldSize.y;
 
         for (int i = 0; i < piecePorts.Count; i++)
         {

@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Data;
+using NamPhuThuy.UI;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
@@ -12,17 +14,8 @@ using UnityEngine.UI;
 public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
-    [SerializeField] private RectTransform loadingContent;
-    [SerializeField] private RectTransform progressFillRT;
-    [SerializeField] private RectTransform loadingTextRT;
-    [SerializeField] private Image fadeBackground;
     [SerializeField] private Image blackBackground;
-    [SerializeField] private Slider progressBar;
-    [SerializeField] private Image progressBarFill;
-    // [SerializeField] private Image progressFill;
-    [SerializeField] private TMP_Text loadingText;
-    [SerializeField] private SkeletonGraphic loadingSpine;
-    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private Image mainBackground;
 
     [Header("LOADING LEVEL IN PROGRESS")]
     [SerializeField] private RectTransform loadLevelInProgressContainer;
@@ -38,7 +31,6 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private float blackScreenStartDelay;
     [SerializeField] private float fadeOutDuration;
 
-    private Vector2 _canvasSize;
     private List<Tween> _tweens;
     private bool _isFirstTimeOpenApp;
     private bool _isFirstTimeEnterScene;
@@ -53,11 +45,6 @@ public class SceneTransition : MonoBehaviour
         YarnLevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
 
         _tweens = new List<Tween>();
-
-        _canvasSize = canvas.sizeDelta;
-
-        // progressBar.value = 0;
-        // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
         _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
@@ -133,6 +120,9 @@ public class SceneTransition : MonoBehaviour
         // {
         //     LoadingLevelInProgress();
         // }
+
+        mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
+        mainBackground.FitImageToRectTransform();
 
         if (_waitForLevelLoadedCoroutine != null)
         {

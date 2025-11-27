@@ -16642,9 +16642,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blackOverlay: {fileID: 2054005456}
+  mainBackground: {fileID: 3930867204640054022}
   fakeLoadingContainer: {fileID: 9222338981355846545}
   fakeLoadingCanvasGroup: {fileID: 1851912121381256380}
-  rotatingLoadingIcon: {fileID: 3727499024939282277}
+  rotatingLoadingIcon: {fileID: 0}
   blackBackgroundToPassPolicy: {fileID: 1822806540}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
 --- !u!4 &690175076
@@ -56623,6 +56624,7 @@ GameObject:
   - component: {fileID: 1851912121381256380}
   - component: {fileID: 6950316872371985824}
   - component: {fileID: 3930867204640054022}
+  - component: {fileID: 9222338981355846546}
   m_Layer: 5
   m_Name: Fake Loading
   m_TagString: Untagged
@@ -56888,7 +56890,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -60, y: 360}
+  m_AnchoredPosition: {x: 0, y: 360}
   m_SizeDelta: {x: 480, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3477701470474012150
@@ -56914,7 +56916,7 @@ MonoBehaviour:
   m_text: Loading
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 01e014f8413104a45889577f3d82c1a5, type: 2}
-  m_sharedMaterial: {fileID: 7829428503920298276, guid: 01e014f8413104a45889577f3d82c1a5, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 830e09460118fd044b529319322f157a, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -61888,25 +61890,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &3727499024939282277
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889724179914882473}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
-  m_ConstrainProportionsScale: 1
-  m_Children: []
-  m_Father: {fileID: 9222338981355846545}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 260, y: 360}
-  m_SizeDelta: {x: 208, y: 204}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &3930867204640054022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62004,6 +61987,10 @@ PrefabInstance:
     - target: {fileID: 9027319128342033710, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
       propertyPath: m_Name
       value: Menu BG Control
+      objectReference: {fileID: 0}
+    - target: {fileID: 9027319128342033710, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -71867,36 +71854,6 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
---- !u!114 &5377212702326057109
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889724179914882473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 17b48d057e5fb364786f15686a37e614, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1001 &6117777691521586346
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -72182,50 +72139,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1308493889902360261}
   m_CullTransparentMesh: 1
---- !u!1 &7889724179914882473
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3727499024939282277}
-  - component: {fileID: 8867083735224955330}
-  - component: {fileID: 5377212702326057109}
-  - component: {fileID: 8867083735224955331}
-  m_Layer: 5
-  m_Name: Loading Icon
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!222 &8867083735224955330
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889724179914882473}
-  m_CullTransparentMesh: 1
---- !u!114 &8867083735224955331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7889724179914882473}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 55572d8946830d843b3e418bb24e7d14, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: NamPhuThuy.AnimateWithScripts::NamPhuThuy.AnimateWithScripts.ObjClockwiseAnimAuto
-  startIn: 1
-  duration: 0.5
-  startAngle: {x: 0, y: 0, z: -10}
-  endAngle: {x: 0, y: 0, z: -10}
-  ease: 4
 --- !u!224 &9222338981355846545
 RectTransform:
   m_ObjectHideFlags: 0
@@ -72239,14 +72152,27 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 3420791956752323193}
-  - {fileID: 3727499024939282277}
   m_Father: {fileID: 865724760}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_SizeDelta: {x: 1267.2303, y: 2220}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &9222338981355846546
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1308493889902360261}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a272c02a8b4ec5441ba4ce71de674c48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.AnimateWithScripts.FitImageToScreen
+  canvas: {fileID: 865724760}
+  autoActiveOnEnable: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Data;
+using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +9,7 @@ using UnityEngine.UI;
 public class MenuScreenTransition : MonoBehaviour
 {
     [SerializeField] private Image blackOverlay;
+    [SerializeField] private Image mainBackground;
 
     [Header("LOADING LEVEL IN PROGRESS")]
     [SerializeField] private RectTransform fakeLoadingContainer;
@@ -24,6 +27,9 @@ public class MenuScreenTransition : MonoBehaviour
         _tweens = new List<Tween>();
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
+
+        mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
+        mainBackground.FitImageToRectTransform();
 
         if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
         {
@@ -103,8 +109,6 @@ public class MenuScreenTransition : MonoBehaviour
             StopCoroutine(_fakeLoadingCoroutine);
         }
 
-        // _fakeLoadingCoroutine = StartCoroutine(RotatingIcon());
-
         AdmobAdsMax.Instance.ShowMRec();
 
         float minWaitTime = 2;
@@ -141,8 +145,6 @@ public class MenuScreenTransition : MonoBehaviour
                     fakeLoadingContainer.gameObject.SetActive(false);
                 })
             );
-
-            StopCoroutine(_fakeLoadingCoroutine);
         }));
     }
 
