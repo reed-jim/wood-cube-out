@@ -637,11 +637,8 @@ public class Yarn2D : MonoBehaviour
         float length = direction.magnitude;
         Vector3 right = direction.normalized;
 
-        // Create a perpendicular vector for sine offset (upward by default)
-        Vector3 up = Vector3.Cross(right, Vector3.forward).normalized;
-
         _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector2.Distance(start, end), 11);
-        DebugLogger.Log(message:$"_currentAmplitude {_currentAmplitude} amplitudeMultiplier {amplitudeMultiplier} distance {Vector3.Distance(start, end)}", context:this);
+        // DebugLogger.Log(message:$"_currentAmplitude {_currentAmplitude} amplitudeMultiplier {amplitudeMultiplier} distance {Vector3.Distance(start, end)}", context:this);
         
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
 

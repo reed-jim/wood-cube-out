@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
 using Firebase.RemoteConfig;
+using NamPhuThuy.Common;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -16,32 +17,35 @@ public class SpoolBox : MonoBehaviour
 
     [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
 
-    [Header("CUSTOMIZE")]
-    [SerializeField] private bool isLocked;
+    [Header("CUSTOMIZE")] [SerializeField] private bool isLocked;
     [SerializeField] private float delayMoveInDuration;
     [SerializeField] private float closeBoxLidDuration;
     [SerializeField] private float scaleDownDuration;
     [SerializeField] private float delayMoveOutDuration;
     [SerializeField] private float moveOutDuration;
 
-    [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] protected GameSetting gameSetting;
+    [Header("SCRIPTABLE OBJECT")] [SerializeField]
+    protected GameSetting gameSetting;
 
     #region EVENT
+
     public static event Action<SpoolBox> spoolBoxCompletedEvent;
     public static event Action spawnNewSpoolBoxEvent;
     public static event Action<SpoolBox> setFactionForSpoolBoxEvent;
     public static event Action<SpoolBox> spoolBoxUnlockedEvent;
     public static event Action shakeCameraEvent;
     public static event Action<Color> playFullscreenEffectEvent;
+
     #endregion
 
     #region PRIVATE FIELD
+
     private List<Sequence> _sequences;
     private Vector3 _initialScale;
     private Vector3 _initialSize;
     private bool _isInTransition;
     private bool _isPlayBoxCompleteFx;
+
     #endregion
 
     public GameFaction Faction
@@ -95,9 +99,9 @@ public class SpoolBox : MonoBehaviour
 
         CommonUtil.StopAllSequences(_sequences);
     }
-    
 
     #endregion
+
     private void OnSpoolBoxCameraSet(Camera spoolBoxCamera)
     {
         Vector2 worldSize = CommonUtil.GetScreenSizeWorld(spoolBoxCamera);
@@ -120,103 +124,111 @@ public class SpoolBox : MonoBehaviour
 
     private async void OnSpoolBoxCompleted(int instanceId)
     {
-        if (instanceId == gameObject.GetInstanceID())
-        {
-            await Task.Delay((int)(delayMoveInDuration * 300));
+        DebugLogger.Log(context:this);
+        if (instanceId != gameObject.GetInstanceID()) return;
 
-            SoundManager.Instance.PlaySoundScrewBoxDone();
+        /*if (instanceId == gameObject.GetInstanceID())
+        {*/
+        await Task.Delay((int)(delayMoveInDuration * 300));
 
-            float initialPositionY = transform.localPosition.y;
-            float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
+        SoundManager.Instance.PlaySoundScrewBoxDone();
 
-            boxLid.gameObject.SetActive(true);
+        float initialPositionY = transform.localPosition.y;
+        float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
 
-            boxLid.localPosition = boxLid.localPosition.ChangeY(9);
+        boxLid.gameObject.SetActive(true);
 
-            // float hidePositionY = transform.position.y + 8;
+        boxLid.localPosition = boxLid.localPosition.ChangeY(9);
 
-            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-            // {
-            //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
-            // }
+        // float hidePositionY = transform.position.y + 8;
 
-            float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+        // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+        // {
+        //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+        // }
 
-            _sequences.Add(Tween.LocalPositionY(boxLid, 0.12f, duration: closeBoxLidDuration)
-                .OnComplete(() =>
+        float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+
+        _sequences.Add(Tween.LocalPositionY(boxLid, 0.12f, duration: closeBoxLidDuration)
+            .OnComplete(() =>
+            {
+                shakeCameraEvent?.Invoke();
+
+                if (GamePersistentVariable.IsVibrate)
                 {
-                    shakeCameraEvent?.Invoke();
+                    HapticFeedback.HeavyFeedback();
+                }
 
-                    if (GamePersistentVariable.IsVibrate)
+                // FX
+                if (_isPlayBoxCompleteFx)
+                {
+                    try
                     {
-                        HapticFeedback.HeavyFeedback();
-                    }
+                        ParticleSystem rippleFx =
+                            ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
 
-                    // FX
-                    if (_isPlayBoxCompleteFx)
-                    {
-                        try
+                        if (rippleFx != null)
                         {
-                            ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+                            Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
 
-                            if (rippleFx != null)
+                            ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                            rippleFxMain.startColor = factionColor;
+
+                            for (int i = 0; i < rippleFx.transform.childCount; i++)
                             {
-                                Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+                                ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
 
-                                ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+                                ParticleSystem.MainModule childFxMain = childFx.main;
 
-                                rippleFxMain.startColor = factionColor;
-
-                                for (int i = 0; i < rippleFx.transform.childCount; i++)
-                                {
-                                    ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
-
-                                    ParticleSystem.MainModule childFxMain = childFx.main;
-
-                                    childFxMain.startColor = factionColor;
-                                }
-
-                                rippleFx.gameObject.SetActive(true);
-                                rippleFx.transform.position = transform.position.ChangeZ(10); // -9
-
-                                // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-                                // {
-                                //     rippleFx.transform.localScale = 0.25f * Vector3.one;
-                                // }
-                                // else
-                                // {
-                                //     rippleFx.transform.localScale = 0.5f * Vector3.one;
-                                // }
-
-                                float initialScale = 0.5f;
-                                float BEST_ORTHOGRAPHIC_SIZE = 20;
-
-                                rippleFx.transform.localScale =
-                                    initialScale * (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) * Vector3.one;
-
-                                rippleFx.Play();
+                                childFxMain.startColor = factionColor;
                             }
-                        }
-                        catch (System.Exception e)
-                        {
 
-                        }
+                            rippleFx.gameObject.SetActive(true);
+                            rippleFx.transform.position = transform.position.ChangeZ(10); // -9
 
-                        playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
+                            // {
+                            //     rippleFx.transform.localScale = 0.25f * Vector3.one;
+                            // }
+                            // else
+                            // {
+                            //     rippleFx.transform.localScale = 0.5f * Vector3.one;
+                            // }
+
+                            float initialScale = 0.5f;
+                            float BEST_ORTHOGRAPHIC_SIZE = 20;
+
+                            rippleFx.transform.localScale =
+                                initialScale *
+                                (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) *
+                                Vector3.one;
+
+                            rippleFx.Play();
+                        }
                     }
-                })
-                .Chain
-                (
-                    Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
+                    catch (System.Exception e)
+                    {
+                    }
+
+                    playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
+                }
+            })
+            .Chain
+            (
+                Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
                     {
                         transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
                         transform.localPosition =
-                            transform.localPosition.ChangeY(initialBottomMostPositionY + newVal * 0.5f * _initialSize.y);
+                            transform.localPosition.ChangeY(initialBottomMostPositionY +
+                                                            newVal * 0.5f * _initialSize.y);
                     }
-                    ).OnComplete(() =>
-                    {
-                        Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration, duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
-                        Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration, duration: moveOutDuration, ease: Ease.InOutSine)
+                ).OnComplete(() =>
+                {
+                    Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration,
+                        duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration,
+                            duration: moveOutDuration, ease: Ease.InOutSine)
                         .OnComplete(() =>
                         {
                             spoolBoxCompletedEvent?.Invoke(this);
@@ -229,15 +241,15 @@ public class SpoolBox : MonoBehaviour
 
                             ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
                         });
-                    })
-                )
-            );
+                })
+            )
+        );
 
-            foreach (var spoolBoxSlot in spoolBoxSlots)
-            {
-                spoolBoxSlot.SmoothSetDissolveHeight(1, 0);
-            }
+        foreach (var spoolBoxSlot in spoolBoxSlots)
+        {
+            spoolBoxSlot.SmoothSetDissolveHeight(1, 0);
         }
+        /*}*/
     }
 
     public void Lock()
