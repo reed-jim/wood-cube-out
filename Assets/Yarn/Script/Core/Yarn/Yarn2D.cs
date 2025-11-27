@@ -52,6 +52,7 @@ public class Yarn2D : MonoBehaviour
 
     #region PRIVATE
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
+    private Transform _initialParent;
     private Vector3 _firstNodePosition;
     private float spoolSlotSizeY;
     private Vector3 _firstNodeLocalPosition;
@@ -75,7 +76,8 @@ public class Yarn2D : MonoBehaviour
     {
         yarnMaterialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock = new MaterialPropertyBlock();
-        // yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+
+        _initialParent = transform.parent;
 
         _initialRotation = transform.rotation;
     }
@@ -318,19 +320,11 @@ public class Yarn2D : MonoBehaviour
 
     private void ShowYarn(Action onCompleteAction)
     {
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1));
-        Vector3 lastNodeLocalPosition = new Vector3(0, 0.5f * modelSize.y, 0);
-
-        if (_dissolveAxis == DissolveAxis.X)
-        {
-            lastNodeLocalPosition = new Vector3(0.5f * modelSize.x, 0, 0);
-        }
-
-        lastNodeLocalPosition = GetFirstPointOnModel();
+        Vector3 lastNodePosition = GetFirstPointOnModel();
 
         for (int i = 0; i < segments.Count; i++)
         {
-            segments[i].posNow = lastNodeLocalPosition;
+            segments[i].posNow = lastNodePosition;
 
             UpdateLineRenderer();
         }
@@ -339,10 +333,10 @@ public class Yarn2D : MonoBehaviour
         {
             int index = i;
 
-            Vector3 endPosition = Vector3.Lerp(lastNodeLocalPosition, _firstNodeLocalPosition, 1 - ((float)index / (segmentCount - 1)));
+            Vector3 endPosition = Vector3.Lerp(lastNodePosition, _firstNodePosition, 1 - ((float)index / (segmentCount - 1)));
 
             Tween.Custom(
-                lastNodeLocalPosition,
+                lastNodePosition,
                 endPosition,
                 duration: 0.3f,
                 ease: Ease.InOutSine,
@@ -372,8 +366,7 @@ public class Yarn2D : MonoBehaviour
         lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
         lineRenderer.endWidth = lineRenderer.startWidth;
 
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
-        _currentAmplitude = amplitudeMultiplier * Vector3.Distance(_firstNodeLocalPosition, Vector3.zero);
+        transform.SetParent(_initialParent);
 
         ShowYarn(onCompleteAction: () =>
         {
@@ -395,18 +388,16 @@ public class Yarn2D : MonoBehaviour
 
                     Tween.Custom(0, 1, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
-                        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
-                        _firstNodeLocalPosition.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
+                        Vector3 endPos = _firstNodePosition;
+                        endPos.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
 
-                        segments[index].posNow = Vector3.Lerp(startPos, _firstNodeLocalPosition, newVal);
+                        segments[index].posNow = Vector3.Lerp(startPos, endPos, newVal);
 
-                        // UpdateRope();
                         UpdateLineRenderer();
 
                         if (index == segments.Count - 1)
                         {
                             UpdateRope();
-                            // UpdateLineRenderer();
                         }
                     })
                     .OnComplete(() =>
@@ -429,23 +420,13 @@ public class Yarn2D : MonoBehaviour
 
     private void UpdateYarnState(float dissolveHeight)
     {
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition).ChangeZ(segments[segmentCount - 1].posNow.z);
-
         if (dissolveHeight >= 0)
         {
             RopeSegment firstNode = segments[0];
             RopeSegment lastNode = segments[segmentCount - 1];
 
-            firstNode.posNow = _firstNodeLocalPosition;
-
-            if (_dissolveAxis == DissolveAxis.X)
-            {
-                lastNode.posNow = GetSpiralPositionXAxis(dissolveHeight, modelSize.x, 3, 0.5f * modelSize.y);
-            }
-            else
-            {
-                lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.x);
-            }
+            firstNode.posNow = _firstNodePosition;
+            lastNode.posNow = GetSpiralPositionYAxis(dissolveHeight, 3, 0.5f * modelSize.x);
 
             segments[segmentCount - 1] = lastNode;
 
@@ -464,7 +445,7 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _debugHitPoint;
     private bool _debugHasHit;
 
-    Vector3 GetSpiralPositionYAxis(float yRatio, float radius)
+    Vector3 GetSpiralPositionYAxis(float yRatio, int turn, float radius, bool isOnlyGetTopPoint = false)
     {
         if (piece == null)
         {
@@ -499,6 +480,11 @@ public class Yarn2D : MonoBehaviour
             }
         }
 
+        if (isOnlyGetTopPoint)
+        {
+            return pointOnTopSurface;
+        }
+
         hits = Physics.BoxCastAll(
             center: raycastBottomPoint,
             halfExtents: radius * Vector3.one,
@@ -525,10 +511,8 @@ public class Yarn2D : MonoBehaviour
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveBound(pointOnBottomSurface.y, pointOnTopSurface.y);
 
-        return currentPoint;
-
         // Calc surface
-        _currentAngle = yRatio * 2 * Mathf.PI;
+        _currentAngle = yRatio * turn * 2 * Mathf.PI;
 
         Vector3 raycastPoint = piece.transform.position + new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, 0, Mathf.Sin(_currentAngle) * 4 * radius);
         raycastPoint.y = currentPoint.y;
@@ -537,7 +521,7 @@ public class Yarn2D : MonoBehaviour
 
         hits = Physics.BoxCastAll(
             center: raycastPoint,
-            halfExtents: radius * Vector3.one,
+            halfExtents: new Vector3(radius, 0.1f * radius, radius),
             direction: transform.TransformVector(raycastDestination - raycastPoint),
             orientation: Quaternion.identity,
             maxDistance: 2 * distance
@@ -549,164 +533,17 @@ public class Yarn2D : MonoBehaviour
             {
                 if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
                 {
-                    Debug.Log("SAFERIO BoxCastAll 0");
                     return hits[i].point;
                 }
             }
         }
 
-        Debug.Log("SAFERIO BoxCastAll 1");
         return currentPoint;
-    }
-
-    // Vector3 GetSpiralPositionYAxis(float yRatio, float spiralHeight, float turns, float radius)
-    // {
-    //     if (piece == null)
-    //     {
-    //         return Vector3.zero;
-    //     }
-
-    //     #region Spiral around up axis in world space (orthonormal basis)
-    //     Vector3 localSpiralAxis = piece.transform.InverseTransformDirection(Vector3.up);
-    //     Vector3 localSpiralAxisX = Vector3.Cross(localSpiralAxis, Vector3.forward);
-
-    //     // If axisY is parallel to forward, use right instead
-    //     if (localSpiralAxisX.sqrMagnitude < 0.0001f)
-    //         localSpiralAxisX = Vector3.Cross(localSpiralAxis, Vector3.right);
-
-    //     localSpiralAxisX.Normalize();
-
-    //     Vector3 localSpiralAxisZ = Vector3.Cross(localSpiralAxis, localSpiralAxisX).normalized;
-    //     #endregion
-
-    //     float y = 0.9f * ((yRatio) - 0.5f) * spiralHeight;
-
-    //     // Total angle based on number of turns (in radians)
-    //     _currentAngle = yRatio * turns * 2 * Mathf.PI;
-
-    //     bool isXLargerThanZ = modelSize.x > modelSize.z;
-
-    //     radius = modelSize.x > modelSize.z ? 0.5f * modelSize.x : 0.5f * modelSize.z;
-
-    //     Vector3 raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, y, Mathf.Sin(_currentAngle) * 4 * radius);
-    //     raycastPoint.x = Vector3.Dot(raycastPoint, localSpiralAxisX.normalized);
-    //     raycastPoint.y = Vector3.Dot(raycastPoint, localSpiralAxis.normalized);
-    //     raycastPoint.z = Vector3.Dot(raycastPoint, localSpiralAxisZ.normalized);
-    //     Vector3 raycastDestination = new Vector3(0, y, 0);
-    //     raycastDestination.x = Vector3.Dot(raycastDestination, localSpiralAxisX.normalized);
-    //     raycastDestination.y = Vector3.Dot(raycastDestination, localSpiralAxis.normalized);
-    //     raycastDestination.z = Vector3.Dot(raycastDestination, localSpiralAxisZ.normalized);
-
-    //     Vector3 raycastPointWorld = transform.TransformPoint(raycastPoint);
-
-    //     Vector3 pointOnModel = isXLargerThanZ
-    //         ? new Vector3(raycastPoint.x, y, 0)
-    //         : new Vector3(0, y, raycastPoint.z);
-
-    //     RaycastHit hit;
-
-    //     RaycastHit[] hits = Physics.BoxCastAll(
-    //         center: raycastPointWorld,
-    //         halfExtents: new Vector3(1f * radius, 0.1f * radius, 1f * radius),
-    //         direction: transform.TransformVector(raycastDestination - raycastPoint),
-    //         orientation: piece.transform.rotation,
-    //         maxDistance: 8 * radius
-    //     );
-
-    //     if (hits.Length > 0)
-    //     {
-    //         for (int i = 0; i < hits.Length; i++)
-    //         {
-    //             if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
-    //             {
-    //                 return transform.InverseTransformPoint(hits[i].point);
-    //             }
-    //         }
-    //     }
-
-    //     return piece.transform.InverseTransformPoint(piece.PieceServiceLocator.pieceCollider.ClosestPoint(raycastPointWorld)).ChangeY(raycastPoint.y);
-    // }
-
-    Vector3 GetSpiralPositionXAxis(float xRatio, float spiralHeight, float turns, float radius)
-    {
-        if (piece == null)
-        {
-            return Vector3.zero;
-        }
-
-        float x = (xRatio - 0.5f) * spiralHeight;
-
-        // Total angle based on number of turns (in radians)
-        float angle = xRatio * turns * 2 * Mathf.PI;
-
-        bool isYLargerThanZ = modelSize.y > modelSize.z;
-
-        if (piece != null)
-        {
-            Vector3 worldPos;
-            Ray ray = new Ray();
-
-            if (isYLargerThanZ)
-            {
-                worldPos = transform.TransformPoint(new Vector3(x, 2 * modelSize.y, 0f));
-                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 2 * modelSize.y, 0)));
-            }
-            else
-            {
-                worldPos = transform.TransformPoint(new Vector3(x, 0, 2 * modelSize.z));
-                ray = new Ray(worldPos, -transform.TransformVector(new Vector3(0, 0, 2 * modelSize.z)));
-            }
-
-            RaycastHit hit;
-
-            if (piece.PieceServiceLocator.pieceCollider.Raycast(ray, out hit, Mathf.Infinity))
-            {
-                Vector3 closestPoint = hit.point;
-
-                if (isYLargerThanZ)
-                {
-                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).y);
-                }
-                else
-                {
-                    radius = Mathf.Abs(transform.InverseTransformPoint(closestPoint).z);
-                }
-            }
-            else
-            {
-                radius = _prevRadius;
-            }
-        }
-
-        float y = Mathf.Cos(angle) * radius;
-        float z = Mathf.Sin(angle) * radius;
-
-        // Position relative to parent
-        Vector3 localPos = new Vector3(x, y, z);
-
-        _prevRadius = radius;
-
-        return localPos;
     }
 
     Vector3 GetFirstPointOnModel()
     {
-        // Vector3 referencePoint = 0.5f * modelSize;
-
-        // if (piece == null)
-        // {
-        //     return referencePoint;
-        // }
-
-        // Vector3 referencePointWorld = piece.transform.TransformPoint(referencePoint);
-
-        // Vector3 pointOnModelWorld = piece.PieceServiceLocator.pieceCollider.ClosestPoint(referencePointWorld);
-
-        // Debug.Log("SAFERIO modelsize " + modelSize + "/" + piece.transform.InverseTransformPoint(pointOnModelWorld));
-
-        // return piece.transform.InverseTransformPoint(pointOnModelWorld);
-
-        return GetSpiralPositionYAxis(dissolveHeight, 0.5f * modelSize.x);
+        return GetSpiralPositionYAxis(dissolveHeight, 3, 0.5f * modelSize.x, isOnlyGetTopPoint: true);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)
@@ -729,10 +566,10 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        _firstNodeLocalPosition = transform.InverseTransformPoint(_firstNodePosition.AddZ(-1f));
-        _firstNodeLocalPosition.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
+        Vector3 position = _firstNodePosition;
+        position.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
 
-        Vector3 start = _firstNodeLocalPosition;
+        Vector3 start = position;
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
@@ -759,7 +596,7 @@ public class Yarn2D : MonoBehaviour
             segments[i].posNow = positions[i];
         }
 
-        segments[0].posNow = _firstNodeLocalPosition;
+        segments[0].posNow = position;
         segments[segmentCount - 1].posNow = end;
     }
 
