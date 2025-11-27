@@ -81,9 +81,6 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
             }
         }
 
-        int originalPieceIndex = 0;
-        int count = 0;
-
         Dictionary<BasePiece, Transform> generatedPieces = new Dictionary<BasePiece, Transform>();
 
         int totalInnerPieces = innerPieceFactions.Count;
@@ -95,57 +92,69 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         GameFaction currentInnerPieceFaction = GameFaction.None;
 
-        for (int i = 0; i < totalInnerPieces; i++)
+        // generate new pieces for each layer
+        for (int layer = 1; layer < 3; layer++)
         {
-            BasePiece generatedPiece = Instantiate(pieces[originalPieceIndex].gameObject, level).GetComponent<BasePiece>();
-
-            generatedPiece.gameObject.SetActive(false);
-
-            generatedPiece.gameObject.name = $"Generated Piece {originalPieceIndex} {count}";
-
-            generatedPieces.Add(generatedPiece, pieces[originalPieceIndex].transform);
-
-            GameFaction faction = innerPieceFactions.First();
-
-            // Debug.Log("SAFERIO " + otherInnerPieceFactionSameParent.Count + "/" + (innerPieceFactions.Any(item => !otherInnerPieceFactionSameParent.Contains(item))));
-
-            if (currentInnerPieceFaction == GameFaction.None)
+            if (innerPieceFactions.Count <= 0)
             {
-                currentInnerPieceFaction = pieces[originalPieceIndex].Faction;
+                break;
             }
 
-            Debug.Log("SAFERIO " + currentInnerPieceFaction + "/" + innerPieceFactions.Any(item => item != currentInnerPieceFaction));
-
-            if (innerPieceFactions.Any(item => item != currentInnerPieceFaction))
+            for (int i = 0; i < pieces.Length; i++)
             {
-                faction = innerPieceFactions.First(item => item != currentInnerPieceFaction);
-            }
-
-            currentInnerPieceFaction = faction;
-
-            innerPieceFactions.Remove(faction);
-
-            generatedPiece.Faction = faction;
-            generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
-            generatedPiece.Lock();
-
-            // Debug.Log($"SAFERIO {originalPieceIndex} {count} {faction} {generatedPiece.name} {1 - (count + 1) * 0.1f}");
-
-            count++;
-
-            if (count == 2)
-            {
-                if (originalPieceIndex < pieces.Length - 1)
+                if (innerPieceFactions.Count <= 0)
                 {
-                    originalPieceIndex++;
+                    break;
                 }
 
-                count = 0;
-                currentInnerPieceFaction = GameFaction.None;
+                currentInnerPieceFaction = pieces[i].Faction;
+
+                for (int j = 0; j < pieces[i].transform.childCount; j++)
+                {
+                    BasePiece childPiece = pieces[i].transform.GetComponent<BasePiece>();
+
+                    if (childPiece != null)
+                    {
+                        currentInnerPieceFaction = childPiece.Faction;
+                    }
+                }
+
+                BasePiece generatedPiece = Instantiate(pieces[i].gameObject, level).GetComponent<BasePiece>();
+
+                generatedPiece.gameObject.SetActive(false);
+
+                generatedPiece.gameObject.name = $"Generated Piece {i} {layer}";
+
+                generatedPieces.Add(generatedPiece, pieces[i].transform);
+
+                GameFaction faction = innerPieceFactions.First();
+
+                if (faction == currentInnerPieceFaction)
+                {
+                    if (innerPieceFactions.Any(item => item != currentInnerPieceFaction))
+                    {
+                        faction = innerPieceFactions.First(item => item != currentInnerPieceFaction);
+                    }
+                    else
+                    {
+                        Debug.Log("SAFERIO 0 NOTPASS");
+                    }
+                }
+
+                Debug.Log("SAFERIO CHECK " + currentInnerPieceFaction + "/" + faction + "/" + i);
+
+                currentInnerPieceFaction = faction;
+
+                innerPieceFactions.Remove(faction);
+
+                generatedPiece.Faction = faction;
+                generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
+                generatedPiece.Lock();
             }
         }
 
         float scaleOffset = 0.1f; // 0.001f
+
         // Make new generated pieces child of original pieces
         foreach (var piece in generatedPieces.Keys)
         {
