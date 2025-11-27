@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NamPhuThuy.AnimateWithScripts;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.Mathematics;
@@ -59,6 +60,9 @@ public class Yarn2D : MonoBehaviour
     private float _prevRadius;
     private float _currentAmplitude;
     private float _currentAngle;
+    
+    // NEW 
+    private Quaternion _initialRotation;
     #endregion
 
     private Action onDissolveCompleted;
@@ -72,6 +76,8 @@ public class Yarn2D : MonoBehaviour
         yarnMaterialPropertyBlock = new MaterialPropertyBlock();
         materialPropertyBlock = new MaterialPropertyBlock();
         // yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
+
+        _initialRotation = transform.rotation;
     }
 
     private void Reset()
@@ -81,7 +87,14 @@ public class Yarn2D : MonoBehaviour
         lerpDelta = 0.1f;
     }
 
+    private void LateUpdate()
+    {
+        transform.rotation = _initialRotation;
+    }
+
     #endregion
+
+    #region Rewind Methods
 
     /// <summary>
     /// From model to spool slot
@@ -110,7 +123,6 @@ public class Yarn2D : MonoBehaviour
 
         gameObject.SetActive(true);
 
-        onDissolveCompleted = onDissolveCompleteAction;
         onRewindYarnCompleted = onCompleteAction;
         onDissolveCompleted = onDissolveCompleteAction;
 
@@ -216,6 +228,8 @@ public class Yarn2D : MonoBehaviour
 
         PlayRewindAnimation();
     }
+
+    #endregion
 
     private void InitPiece(BasePiece selectedPiece)
     {
@@ -363,7 +377,7 @@ public class Yarn2D : MonoBehaviour
 
         ShowYarn(onCompleteAction: () =>
         {
-            Tween.Custom(1, 0, duration: 0.6f, ease: Ease.Linear, onValueChange: newVal =>
+            Tween.Custom(1, 0, duration: GamePlayConst.yarnAnimDuration, ease: Ease.Linear, onValueChange: newVal =>
             {
                 dissolveHeight = newVal;
 
