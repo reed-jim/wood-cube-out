@@ -523,7 +523,9 @@ public class Yarn2D : MonoBehaviour
         Vector3 currentPoint = pointOnTopSurface;
         currentPoint.y = pointOnBottomSurface.y + yRatio * Vector3.Distance(pointOnTopSurface, pointOnBottomSurface);
 
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveBound(pointOnBottomSurface.y, pointOnTopSurface.y);
 
+        return currentPoint;
 
         // Calc surface
         _currentAngle = yRatio * 2 * Mathf.PI;
