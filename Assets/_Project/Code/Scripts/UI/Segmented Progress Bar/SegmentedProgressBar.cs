@@ -36,6 +36,7 @@ namespace NamPhuThuy.UI
 
         public virtual void InitRewardProgressBar()
         {
+            DebugLogger.Log(context:this);
             int maxLevelRequired = 15;
 
             progressBarSegmentPool = new ProgressBarSegment[15];
@@ -71,27 +72,24 @@ namespace NamPhuThuy.UI
 
         public virtual void SetupRewardProgressBar(float currentProgress, float prevProgress)
         {
-            DebugLogger.Log();
             _currentRewardProgress = currentProgress;
-
             rewardProgressFill.fillAmount = prevProgress == 1 ? 0 : prevProgress;
 
-            DebugLogger.Log(message: $"_currentRewardProgress: {_currentRewardProgress}");
+            DebugLogger.Log(message: $"_currentRewardProgress: {_currentRewardProgress}", context:this);
 
             if (_currentRewardProgress < 1)
             {
-                DebugLogger.Log(message: $"Done 1");
+                DebugLogger.Log(message: $"Done 1", context:this);
                 rewardProgressTextTMP.color = Color.white;
 
                 rewardProgressText.TranslationName = "Only n levels left";
                 rewardProgressText.UpdateLocalization();
-                rewardProgressText
-                    .UpdateTranslationWithParameter(
+                rewardProgressText.UpdateTranslationWithParameter(
                         LocalizationConst.LEVEL, $"<color=#78EB66>{Mathf.RoundToInt((1 - _currentRewardProgress) * _numLevelRequiredForNextReward)}</color>");
             }
             else
             {
-                DebugLogger.Log(message: $"Done 2");
+                DebugLogger.Log(message: $"Done 2", context:this);
                 rewardProgressTextTMP.color = ColorHelper.GetColorFromHex("#78EB66");
 
                 rewardProgressText.TranslationName = "Reward Completed";
@@ -106,6 +104,7 @@ namespace NamPhuThuy.UI
             }
 
             int numSegment = _numLevelRequiredForNextReward - 2;
+           
 
             Vector2 segmentSize;
 
@@ -117,6 +116,9 @@ namespace NamPhuThuy.UI
             {
                 segmentSize = progressBarSegmentPrefab.InitialSize * 2.5f;
             }
+            
+            DebugLogger.Log(message:$"numSegment: {numSegment}", context:this);
+            DebugLogger.Log(message:$"segmentSize: {segmentSize}", context:this);
 
             rewardProgressBackground.sizeDelta = new Vector2((numSegment + 2) * segmentSize.x, rewardProgressBackground.sizeDelta.y);
             rewardProgressFillRT.sizeDelta = 1.01f * rewardProgressBackground.sizeDelta;
