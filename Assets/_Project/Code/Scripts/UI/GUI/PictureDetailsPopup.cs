@@ -212,7 +212,7 @@ namespace NamPhuThuy.UI
                 duration = 1f,
                 onComplete = null
             };
-            VFXManager.Ins.Play<PopupTextArgs>(args);
+            AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
 
         private void OnClickDisLike()
@@ -370,7 +370,7 @@ namespace NamPhuThuy.UI
                     duration = 1f,
                     onComplete = null
                 };
-                VFXManager.Ins.Play<PopupTextArgs>(args);
+                AnimationManager.Ins.Play<PopupTextArgs>(args);
             }
         }
 
@@ -462,7 +462,7 @@ namespace NamPhuThuy.UI
                 duration = 1f,
                 onComplete = null
             };
-            VFXManager.Ins.Play<PopupTextArgs>(args);
+            AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
         
         private void OnLikeStateChanged()

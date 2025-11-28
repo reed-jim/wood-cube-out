@@ -606,7 +606,7 @@ namespace NamPhuThuy.UI
                 duration = 1f,
                 onComplete = null
             };
-            VFXManager.Ins.Play<PopupTextArgs>(args);
+            AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
 
         #endregion
