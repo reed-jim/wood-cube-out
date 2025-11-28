@@ -200,7 +200,7 @@ namespace NamPhuThuy
 
             while (true)
             {
-                if (videoPlayer.clip != null)
+                if (!string.IsNullOrEmpty(videoPlayer.url))
                 {
                     videoPlayer.Play();
                 }

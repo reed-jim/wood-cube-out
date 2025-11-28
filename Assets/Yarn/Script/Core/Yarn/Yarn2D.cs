@@ -574,8 +574,6 @@ public class Yarn2D : MonoBehaviour
 
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
 
-        delayedAmplitude = 0;
-
         for (int i = 1; i < segmentCount - 1; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
