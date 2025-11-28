@@ -303,9 +303,7 @@ public class YarnLevelLoader : MonoBehaviour
 
                     _isSetLevelGradientBound = false;
 
-                    _mainCamera.orthographicSize = GameConstants.defaultCameraOrthographicSize;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, true);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
@@ -638,7 +636,7 @@ public class YarnLevelLoader : MonoBehaviour
             _pivotAdjust.transform.position = Vector3.zero;
             _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
-            Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+            Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, false);
 
             _pivotAdjust.transform.position = currentPosition;
             _pivotAdjust.transform.eulerAngles = currentRotation;
@@ -657,7 +655,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
     }
 
-    Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasePiece[] objects, Vector3 offset)
+    Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasePiece[] objects, Vector3 offset, bool isFirstTimeOnLevel)
     {
         if (objects.Length == 0)
         {
@@ -762,7 +760,7 @@ public class YarnLevelLoader : MonoBehaviour
         {
             SetLevelGradientMinMaxIn(newCenter, minY, maxY);
 
-            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
+            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ), isFirstTimeOnLevel);
         }
 
         return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
@@ -770,7 +768,7 @@ public class YarnLevelLoader : MonoBehaviour
     #endregion
 
     #region LEVEL SETUP
-    private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
+    private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isFirstTimeOnLevel)
     {
         float maxExpectedLevelSize = expectedLevelSize.x;
 
@@ -794,9 +792,12 @@ public class YarnLevelLoader : MonoBehaviour
             targetOrthographicSize *= maxExpectedLevelSize / expectedLevelSize.y;
         }
 
-        if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 4.5f)
+        if (!isFirstTimeOnLevel)
         {
-            return;
+            if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 4.5f)
+            {
+                return;
+            }
         }
 
         setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
