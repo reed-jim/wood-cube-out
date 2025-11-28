@@ -11,7 +11,7 @@ using UnityEditor;
 
 namespace NamPhuThuy.UI
 {
-    
+
     public class PausePopup : BasePopup
     {
         #region Private Serializable Fields
@@ -20,22 +20,26 @@ namespace NamPhuThuy.UI
         [SerializeField] private ButtonClicky continueButton;
         [SerializeField] private ButtonClicky replayButton;
         [SerializeField] private ButtonClicky homeButton;
-        
-        
+
+
         [Header("Audio Settings")]
         [SerializeField] private Button musicButton;
         [SerializeField] private Button sfxButton;
         [SerializeField] private Button vibrationButton;
-        
+
+        [SerializeField] private GameSetting gameSetting;
+
         #endregion
 
         #region Events
 
         public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
         public static event Action replayLevelEvent;
+        public static event Action<bool> enableBackgroundMusicEvent;
+        public static event Action<bool> enableGameSoundEvent;
 
         #endregion
-        
+
 
         #region Private Fields
 
@@ -46,11 +50,11 @@ namespace NamPhuThuy.UI
         protected override void MoreActionInAwake()
         {
             base.MoreActionInAwake();
-            
+
             continueButton.onClick.AddListener(OnClickContinue);
             replayButton.onClick.AddListener(OnClickReplay);
             homeButton.onClick.AddListener(OnClickHome);
-            
+
             // AUDIO SETTINGS
             musicButton.onClick.AddListener(OnClickMusic);
             sfxButton.onClick.AddListener(OnClickSound);
@@ -78,12 +82,12 @@ namespace NamPhuThuy.UI
         {
             SetStateForButton();
         }
-        
+
 
         #endregion
 
         #region Private Methods
-        
+
         private void SetStateForButton()
         {
             bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
@@ -92,15 +96,15 @@ namespace NamPhuThuy.UI
             {
                 musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
-            
+
+
             tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
             if (sfxSwitch != null)
             {
                 sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
-            
+
             tmp = DataManager.Ins.GameSetting.IsVibrate;
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
             if (vibrateSwitch != null)
@@ -108,11 +112,9 @@ namespace NamPhuThuy.UI
                 vibrateSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
         }
-        
+
         private void ActualReplay()
         {
-            
-            
             SaferioTracking.TrackLevelLose(DataManager.Ins.CurrentLevel.Value, DataManager.Ins.LevelObserver.Progress, DataManager.Ins.LevelBoosterObserver, GameEnum.EndLevelReason.Replay.ToString());
 
             // don't track loop level CostCenter
@@ -133,7 +135,7 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Button Events
-        
+
         private void OnClickContinue()
         {
             Hide();
@@ -162,7 +164,7 @@ namespace NamPhuThuy.UI
                 Addressables.LoadSceneAsync(GameConstants.MENU_SCENE);
             }
         }
-        
+
         private void OnClickReplay()
         {
             if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
@@ -185,38 +187,33 @@ namespace NamPhuThuy.UI
                 Hide();
             }
         }
-        
+
         private void OnClickMusic()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsTurnOnBackgroundMusic = !gameSetting.IsTurnOnBackgroundMusic;
+
+            enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);
+
             ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
-            musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            musicSwitch?.SetState(gameSetting.IsTurnOnBackgroundMusic ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         private void OnClickSound()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsTurnOnSound = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsTurnOnSound = !gameSetting.IsTurnOnSound;
+
+            enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
+
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
-            sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            sfxSwitch?.SetState(gameSetting.IsTurnOnSound ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         private void OnClickVibration()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsVibrate;
-            tmp = !tmp;
-            DataManager.Ins.GameSetting.IsVibrate = tmp;
-            DataManager.Ins.MarkDirty();
-            
+            gameSetting.IsVibrate = !gameSetting.IsVibrate;
+
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
-            vibrateSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            vibrateSwitch?.SetState(gameSetting.IsVibrate ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
         }
 
         #endregion
@@ -228,45 +225,9 @@ namespace NamPhuThuy.UI
 
         public void ResetValues()
         {
-            
+
         }
 
         #endregion
     }
-
-    /*#if UNITY_EDITOR
-    [CustomEditor(typeof(PausePopup))]
-    [CanEditMultipleObjects]
-    public class PausePopupEditor : Editor
-    {
-        private PausePopup script;
-        private Texture2D frogIcon;
-        
-        private void OnEnable()
-        {
-            frogIcon = Resources.Load<Texture2D>("frog"); // no extension needed
-        }
-        
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-            script = (PausePopup)target;
-
-            ButtonResetValues();
-        }
-
-        private void ButtonResetValues()
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(new GUIContent("Reset Values", frogIcon), GUILayout.Width(InspectorConst.BUTTON_WIDTH_MEDIUM)))
-            {
-                script.ResetValues();
-                EditorUtility.SetDirty(script); // Mark the object as dirty
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-        }
-    }
-    #endif*/
 }

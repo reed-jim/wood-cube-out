@@ -114,6 +114,13 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
+    public void SetDissolveBound(float minY, float maxY)
+    {
+        _propertyBlock.SetInt("_IsDissolve", 1);
+        _propertyBlock.SetFloat("_WorldMinY", minY);
+        _propertyBlock.SetFloat("_WorldMaxY", maxY);
+    }
+
     public void SetDissolveHeight(float value, DissolveAxis dissolveAxis)
     {
         if (dissolveAxis == DissolveAxis.X)
