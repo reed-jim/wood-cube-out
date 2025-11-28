@@ -11,11 +11,11 @@ using UnityEngine.Video;
 public class GameplayCamera : MonoBehaviour
 {
     [SerializeField] private Camera gameplayCamera;
-    
+
 
     [Header("Background")]
     [SerializeField] private Transform background;
-    
+
     private float _initialOrthographicSize;
     private float _targetOrthographicSize;
 
@@ -28,12 +28,13 @@ public class GameplayCamera : MonoBehaviour
             updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
         }
     }
-    
-    
+
+
     private Vector3 _initialBackgroundScale;
     private Vector3 _targetBackgroundScale;
 
     public static event Action<float> updateCameraZoomRatioEvent;
+    public static event Action<bool> enablePinchingEvent;
 
     #region Callbacks
 
@@ -46,7 +47,7 @@ public class GameplayCamera : MonoBehaviour
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
         MultiPhaseLevelManager.resetCameraEvent += Reset;
-        
+
         _initialOrthographicSize = gameplayCamera.orthographicSize;
         _targetOrthographicSize = gameplayCamera.orthographicSize;
 
@@ -65,7 +66,6 @@ public class GameplayCamera : MonoBehaviour
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
-        
     }
 
     private void Update()
@@ -76,7 +76,7 @@ public class GameplayCamera : MonoBehaviour
 
         updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);*/
     }
-    
+
 
     #endregion
 
@@ -95,13 +95,23 @@ public class GameplayCamera : MonoBehaviour
     {
         TargetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
-
     }
 
     private void SetInitialOrthographicSize(float orthographicSize)
     {
-        TargetOrthographicSize = orthographicSize;
-        _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
+        float _prevOrthographicSize = gameplayCamera.orthographicSize;
+
+        enablePinchingEvent?.Invoke(false);
+
+        Tween.Custom(_prevOrthographicSize, orthographicSize, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+        {
+            TargetOrthographicSize = newVal;
+            _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
+        })
+        .OnComplete(() =>
+        {
+            enablePinchingEvent?.Invoke(true);
+        });
     }
 
     private void Shake()

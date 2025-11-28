@@ -17,15 +17,16 @@ public class SpoolBox : MonoBehaviour
 
     [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
 
-    [Header("CUSTOMIZE")] [SerializeField] private bool isLocked;
+    [Header("CUSTOMIZE")]
+    [SerializeField] private bool isLocked;
     [SerializeField] private float delayMoveInDuration;
     [SerializeField] private float closeBoxLidDuration;
     [SerializeField] private float scaleDownDuration;
     [SerializeField] private float delayMoveOutDuration;
     [SerializeField] private float moveOutDuration;
 
-    [Header("SCRIPTABLE OBJECT")] [SerializeField]
-    protected GameSetting gameSetting;
+    [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] protected GameSetting gameSetting;
 
     #region EVENT
 
@@ -80,7 +81,6 @@ public class SpoolBox : MonoBehaviour
 
     private void Awake()
     {
-        ScrewBoxCameraManager.setCameraEvent += OnSpoolBoxCameraSet;
         SpoolBoxSlot.spoolBoxCompleteEvent += OnSpoolBoxCompleted;
         SpoolBoxUI.unlockSpoolBox += Unlock;
 
@@ -93,7 +93,6 @@ public class SpoolBox : MonoBehaviour
 
     private void OnDestroy()
     {
-        ScrewBoxCameraManager.setCameraEvent -= OnSpoolBoxCameraSet;
         SpoolBoxSlot.spoolBoxCompleteEvent -= OnSpoolBoxCompleted;
         SpoolBoxUI.unlockSpoolBox -= Unlock;
 
@@ -102,19 +101,16 @@ public class SpoolBox : MonoBehaviour
 
     #endregion
 
-    private void OnSpoolBoxCameraSet(Camera spoolBoxCamera)
+    public void SetSpoolSize(Vector2 worldSize)
     {
-        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(spoolBoxCamera);
+        transform.SetLossyScale(Vector3.one);
 
-        float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / spoolBoxSpriteRenderer.bounds.size.x;
-        float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / spoolBoxSpriteRenderer.bounds.size.y;
-
-        scaleWithWidth *= 1.05f;
-        scaleWithHeight *= 1.05f;
+        float scaleWithWidth = (0.19f * worldSize.x) / spoolBoxSpriteRenderer.bounds.size.x;
+        float scaleWithHeight = (0.12f * worldSize.y) / spoolBoxSpriteRenderer.bounds.size.y;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
-        transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
+        transform.SetLossyScale(finalScale * Vector3.one);
 
         _initialScale = transform.localScale;
         _initialSize = spoolBoxSpriteRenderer.bounds.size;

@@ -35,6 +35,7 @@ public class PinchGesture : MonoBehaviour
         YarnLevelLoader.startLevelEvent += OnLevelStarted;
         YarnLevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
+        GameplayCamera.enablePinchingEvent += EnablePinching;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
@@ -48,6 +49,7 @@ public class PinchGesture : MonoBehaviour
         YarnLevelLoader.startLevelEvent -= OnLevelStarted;
         YarnLevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
+        GameplayCamera.enablePinchingEvent -= EnablePinching;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
@@ -107,7 +109,7 @@ public class PinchGesture : MonoBehaviour
             }
         }
     }
-    
+
 
     #endregion
     private void OnLevelStarted()
@@ -152,7 +154,7 @@ public class PinchGesture : MonoBehaviour
         maxZoom = orthographicSize + 1.1f * zoomSlider.value * unit;
         minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
 
-        DebugLogger.Log(message:$"maxZoom: {maxZoom}, minZoom: {minZoom}", context:this);
+        DebugLogger.Log(message: $"maxZoom: {maxZoom}, minZoom: {minZoom}", context: this);
     }
 
     private void EnablePinching(bool isEnable)
