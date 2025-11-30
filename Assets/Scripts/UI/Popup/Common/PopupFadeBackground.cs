@@ -36,14 +36,8 @@ public class PopupFadeBackground : MonoBehaviour
     {
         fadeBackground.gameObject.SetActive(true);
 
-        // Set position in hierarchy to near last
-        /*var parent = transform.parent;
-        if (parent != null && parent.childCount >= 2)
-        {
-            int nearLastIndex = parent.childCount - 2;
-            transform.SetSiblingIndex(nearLastIndex);
-        }*/
-        
+        PlaceBeforeDeepestActivePopup(gameObject);
+
         CommonUtil.StopTween(_transitionTween);
 
         _transitionTween = Tween.Alpha(fadeBackground, 0.95f, duration: transitionDuration);
@@ -51,7 +45,8 @@ public class PopupFadeBackground : MonoBehaviour
 
     private void OnPopupClose()
     {
-        DebugLogger.Log();
+        PlaceBeforeDeepestActivePopup(gameObject);
+
         Transform popupContainer = transform.parent;
 
         int numActivePopup = 0;
@@ -66,7 +61,6 @@ public class PopupFadeBackground : MonoBehaviour
 
         if (numActivePopup > 1)
         {
-            DebugLogger.Log(message:$"numActivePopup: {numActivePopup}, skip disable");
             return;
         }
 
@@ -74,8 +68,39 @@ public class PopupFadeBackground : MonoBehaviour
 
         _transitionTween = Tween.Alpha(fadeBackground, 0, duration: transitionDuration).OnComplete(() =>
         {
-            DebugLogger.Log(message:$"Disable");
             fadeBackground.gameObject.SetActive(false);
         });
+    }
+
+    public void PlaceBeforeDeepestActivePopup(GameObject target)
+    {
+        if (target == null) return;
+        Transform parent = target.transform.parent;
+        if (parent == null) return;
+
+        int deepestIndex = -1;
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+
+            if (child.gameObject.activeInHierarchy &&
+                child.GetComponent<BasePopup>() != null)
+            {
+                deepestIndex = i;
+            }
+        }
+
+        if (deepestIndex < 0)
+        {
+            return;
+        }
+
+        int newIndex = Mathf.Max(0, deepestIndex);
+
+        if (target.transform.GetSiblingIndex() <= deepestIndex)
+            newIndex--;
+
+        target.transform.SetSiblingIndex(newIndex);
     }
 }

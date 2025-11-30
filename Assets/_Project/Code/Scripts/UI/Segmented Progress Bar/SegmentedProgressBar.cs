@@ -105,7 +105,6 @@ namespace NamPhuThuy.UI
 
             int numSegment = _numLevelRequiredForNextReward - 2;
            
-
             Vector2 segmentSize;
 
             if (numSegment < 4)
