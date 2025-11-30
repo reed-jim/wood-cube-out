@@ -20,11 +20,13 @@ namespace NamPhuThuy
 
         [Header("Components")]
         [SerializeField] private SpriteRenderer spriteRenderer;
-        [SerializeField] private SpriteRenderer blackOverlay;
-        [SerializeField] private TextMeshProUGUI blackOverlayText;
 
         [SerializeField] private VideoPlayer videoPlayer;
         [SerializeField] private Camera mainCamera;
+
+        [Header("Remote Assets Loading")]
+        [SerializeField] private SpriteRenderer remoteAssetsLoadingContainer;
+        [SerializeField] private SpriteAutoScaler remoteAssetsLoadingSpriteAutoScaler;
 
         [Header("Data")]
         [SerializeField] private PictureData currentPicData;
@@ -105,7 +107,6 @@ namespace NamPhuThuy
                         GamePersistentVariable.isUseVideoBackground)
                     {
                         // DebugLogger.Log(message:$"Use Video for BG");
-                        ShowBlackOverlay();
                         spriteRenderer.gameObject.SetActive(true);
                         ActiveVideo();
                     }
@@ -121,20 +122,6 @@ namespace NamPhuThuy
             {
                 DebugLogger.LogError(message: $"{e.Message}");
             }
-        }
-
-        private void ShowBlackOverlay()
-        {
-            Color color = blackOverlay.color;
-            color.a = 1f;
-            blackOverlay.color = color;
-
-            color = blackOverlayText.color;
-            color.a = 1f;
-            blackOverlayText.color = color;
-
-            blackOverlayText.gameObject.SetActive(true);
-            blackOverlay.gameObject.SetActive(true);
         }
 
         private void ActiveVideo()
@@ -167,48 +154,37 @@ namespace NamPhuThuy
 
             yield return null;
 
-            videoPlayer.url = $"file://{filePath}";
+            // Placeholder
+            PictureData currentPictureData = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
 
-            videoPlayer.isLooping = true;
-            videoPlayer.Prepare();
-            videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
+            remoteAssetsLoadingContainer.gameObject.SetActive(true);
+            remoteAssetsLoadingContainer.color = ColorUtil.WithAlpha(remoteAssetsLoadingContainer.color, 0);
+
+            remoteAssetsLoadingContainer.sprite = currentPictureData.mainImage;
+            remoteAssetsLoadingSpriteAutoScaler.ScaleSpriteToScreen();
+            remoteAssetsLoadingContainer.DOFade(1, duration: 0.3f).OnComplete(() =>
+            {
+                videoPlayer.url = $"file://{filePath}";
+                videoPlayer.isLooping = true;
+                videoPlayer.Prepare();
+                videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
+            });
         }
 
         private void OnVideoPreparedCompleted(VideoPlayer videoPlayer)
         {
             DebugLogger.Log(message: $"{gameObject.name}", context: this);
             spriteRenderer.gameObject.SetActive(false);
-            // Fade out the black overlay
-            blackOverlay.DOFade(0f, 1f).OnComplete(() =>
-            {
-                blackOverlay.gameObject.SetActive(false);
-            });
-
-            blackOverlayText.DOFade(0f, 1f).OnComplete(() =>
-            {
-                blackOverlayText.gameObject.SetActive(false);
-            });
 
             videoPlayer.Play();
             videoPlayer.isLooping = true;
             videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
-        }
 
-        private IEnumerator PeriodicallyRefreshVideo()
-        {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(4);
-
-            while (true)
+            remoteAssetsLoadingContainer.DOFade(0, duration: 0.3f).OnComplete(() =>
             {
-                if (!string.IsNullOrEmpty(videoPlayer.url))
-                {
-                    videoPlayer.Play();
-                }
-
-                yield return waitForSeconds;
-            }
+                remoteAssetsLoadingContainer.gameObject.SetActive(false);
+            });
         }
-
         #endregion
 
         #region Private Methods
@@ -223,6 +199,79 @@ namespace NamPhuThuy
             }
         }
 
+        #endregion
+
+        #region Refresh Video
+        private IEnumerator PeriodicallyRefreshVideo()
+        {
+            float checkInterval = 0.5f;
+
+            WaitForSeconds waitForSeconds = new WaitForSeconds(checkInterval);
+
+            float lastTime = 0;
+            float freezeTimer = 0;
+            float freezeThreshold = 2f;
+
+            while (true)
+            {
+                if (!string.IsNullOrEmpty(videoPlayer.url))
+                {
+                    if (videoPlayer.isPlaying)
+                    {
+                        // Video time not moving?
+                        if (Mathf.Approximately((float)videoPlayer.time, lastTime))
+                        {
+                            freezeTimer += checkInterval;
+
+                            if (freezeTimer >= freezeThreshold)
+                            {
+                                RefreshVideo();
+                                freezeTimer = 0f;
+                            }
+                        }
+                        else
+                        {
+                            // Video is advancing normally
+                            freezeTimer = 0f;
+                        }
+
+                        lastTime = (float)videoPlayer.time;
+                    }
+                }
+
+                yield return waitForSeconds;
+            }
+        }
+
+        void RefreshVideo()
+        {
+            // Placeholder
+            PictureData currentPictureData = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
+
+            remoteAssetsLoadingContainer.gameObject.SetActive(true);
+            remoteAssetsLoadingContainer.color = remoteAssetsLoadingContainer.color = ColorUtil.WithAlpha(remoteAssetsLoadingContainer.color, 0);
+
+            remoteAssetsLoadingContainer.sprite = currentPictureData.mainImage;
+            remoteAssetsLoadingSpriteAutoScaler.ScaleSpriteToScreen();
+            remoteAssetsLoadingContainer.DOFade(1, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                videoPlayer.Stop();
+                videoPlayer.Prepare();
+                videoPlayer.prepareCompleted += OnPrepared;
+            });
+        }
+
+        private void OnPrepared(VideoPlayer vp)
+        {
+            vp.prepareCompleted -= OnPrepared;
+            vp.Play();
+
+            remoteAssetsLoadingContainer.DOFade(0, duration: 0.3f).OnComplete(() =>
+            {
+                remoteAssetsLoadingContainer.gameObject.SetActive(false);
+            });
+        }
         #endregion
 
         #region Editor Methods
