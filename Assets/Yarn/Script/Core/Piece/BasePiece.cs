@@ -29,6 +29,9 @@ public class BasePiece : MonoBehaviour
     #region PRIVATE FIELD
 
     protected List<Tween> _tweens = new List<Tween>();
+    protected CoACD _coACD;
+    protected MeshCollider[] _coACDMeshCollider;
+    protected MeshCollider _replacedMeshCollider;
     protected int _numberBlockingObjects;
     protected bool _isMoving;
     protected bool _isRotating;
@@ -136,6 +139,8 @@ public class BasePiece : MonoBehaviour
 
         pieceServiceLocator = GetComponent<PieceServiceLocator>();
 
+        SetupReplacedMeshColliderWhenRewinding();
+
         AddScrewToList();
 
         MoreLogicInAwake();
@@ -239,6 +244,9 @@ public class BasePiece : MonoBehaviour
                     , onValueChange: newVal => { pieceServiceLocator.pieceMaterialPropertyBlock.SetColor(newVal); }
                 );
             });
+
+        // Disable CoACD on rewinding
+        ReplaceMeshColliderWhenRewinding();
 
         Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
@@ -390,5 +398,38 @@ public class BasePiece : MonoBehaviour
         IsLocked = false;
     }
 
+    #endregion
+
+    #region CoACD
+    private void SetupReplacedMeshColliderWhenRewinding()
+    {
+        _coACD = GetComponent<CoACD>();
+
+        if (_coACD != null)
+        {
+            _coACD.enabled = false;
+
+            _coACDMeshCollider = gameObject.GetComponents<MeshCollider>();
+
+            _replacedMeshCollider = gameObject.AddComponent<MeshCollider>();
+            _replacedMeshCollider.convex = true;
+            _replacedMeshCollider.enabled = false;
+        }
+    }
+
+    private void ReplaceMeshColliderWhenRewinding()
+    {
+        if (_coACD != null)
+        {
+            foreach (MeshCollider mc in _coACDMeshCollider)
+            {
+                mc.enabled = false;
+            }
+
+            _replacedMeshCollider.enabled = true;
+
+            pieceServiceLocator.pieceCollider = _replacedMeshCollider;
+        }
+    }
     #endregion
 }
