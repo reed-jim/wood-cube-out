@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CandyCoded.HapticFeedback;
 using NamPhuThuy.AnimateWithScripts;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -297,6 +298,13 @@ public class BasePiece : MonoBehaviour
                 InvokePieceLoosenedEvent();
             }
         );
+
+        SoundManager.Instance.PlaySoundLoosenScrew();
+
+        if (GamePersistentVariable.IsVibrate)
+        {
+            HapticFeedback.MediumFeedback();
+        }
 
         spoolBoxSlot.Fill(this);
 

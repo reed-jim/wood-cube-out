@@ -534,7 +534,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x5 Coin
+  m_text: x{value} Coin
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 01e014f8413104a45889577f3d82c1a5, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 22163427e4eb61347a441fb06f0f558d, type: 2}
@@ -561,7 +561,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.8
+  m_fontSize: 39.5
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1273,7 +1273,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 1651647983765838558}
   closeButton: {fileID: 0}
-  overlay: {fileID: 0}
   detectClickOutsideButton: {fileID: 0}
   route: 9
   isRouteActiveFromStart: 0
@@ -2247,7 +2246,7 @@ PrefabInstance:
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 2100000, guid: 22163427e4eb61347a441fb06f0f558d, type: 2}
+      objectReference: {fileID: 2100000, guid: 9049b73aeb102c3439c628df81bd10a4, type: 2}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
       value: 1801810542
@@ -2505,7 +2504,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9199668207888837299, guid: 8f325017683336d45b34bb66e99f4b4c, type: 3}
       propertyPath: m_text
-      value: Only 99 levels left
+      value: Only {level} levels left
       objectReference: {fileID: 0}
     - target: {fileID: 9199668207888837299, guid: 8f325017683336d45b34bb66e99f4b4c, type: 3}
       propertyPath: m_fontColor.a
