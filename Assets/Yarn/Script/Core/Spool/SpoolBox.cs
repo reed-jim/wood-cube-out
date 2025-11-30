@@ -14,6 +14,7 @@ public class SpoolBox : MonoBehaviour
     [SerializeField] private SpoolBoxSlot[] spoolBoxSlots;
     [SerializeField] private Transform boxLid;
     [SerializeField] private SpriteRenderer spoolBoxSpriteRenderer;
+    [SerializeField] private SpriteRenderer spoolBoxShadowSpriteRenderer;
 
     [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
 
@@ -251,6 +252,7 @@ public class SpoolBox : MonoBehaviour
     public void Lock()
     {
         spoolBoxSpriteRenderer.enabled = false;
+        spoolBoxShadowSpriteRenderer.enabled = false;
 
         spoolBoxServiceLocator.spoolBoxUI.Lock();
 
@@ -260,6 +262,7 @@ public class SpoolBox : MonoBehaviour
     public void Unlock()
     {
         spoolBoxSpriteRenderer.enabled = true;
+        spoolBoxShadowSpriteRenderer.enabled = true;
 
         // CLEAR SCREWS
         for (int i = 0; i < spoolBoxSlots.Length; i++)
@@ -293,6 +296,7 @@ public class SpoolBox : MonoBehaviour
     public void ResetVisually()
     {
         spoolBoxSpriteRenderer.enabled = true;
+        spoolBoxShadowSpriteRenderer.enabled = true;
 
         for (int i = 0; i < spoolBoxSlots.Length; i++)
         {
