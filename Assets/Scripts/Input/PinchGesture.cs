@@ -18,6 +18,7 @@ public class PinchGesture : MonoBehaviour
     public float delayToEnableSwipeGesture;
 
     private List<Tween> _tweens;
+    private Tween _autoZoomTween;
     private bool _isDisabled;
     private float _zoomPercent;
     private float _lastZoomPercent;
@@ -149,12 +150,20 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
-        float unit = 0.4f * orthographicSize; //0.8f * orthographicSize
+        float unit = 0.5f * orthographicSize;
 
-        maxZoom = orthographicSize + 1.1f * zoomSlider.value * unit;
-        minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
+        if (_autoZoomTween.isAlive)
+        {
+            _autoZoomTween.Stop();
+        }
 
-        DebugLogger.Log(message: $"maxZoom: {maxZoom}, minZoom: {minZoom}", context: this);
+        _autoZoomTween = Tween.Custom(zoomSlider.value, 0.5f, duration: 0.15f, onValueChange: newVal =>
+        {
+            zoomSlider.value = newVal;
+
+            maxZoom = orthographicSize + 1.0f * zoomSlider.value * unit;
+            minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
+        });
     }
 
     private void EnablePinching(bool isEnable)
