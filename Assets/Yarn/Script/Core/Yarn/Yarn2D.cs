@@ -63,6 +63,7 @@ public class Yarn2D : MonoBehaviour
     private float _prevRadius;
     private float _currentAmplitude;
     private float _currentAngle;
+    private float _endRewindingProgress;
 
     // NEW 
     private Quaternion _initialRotation;
@@ -155,7 +156,7 @@ public class Yarn2D : MonoBehaviour
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
         Reset();
-        
+
         _firstNodePosition = endSpool.transform.position;
         _lastNodePosition = startSpool.transform.position;
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
@@ -361,6 +362,8 @@ public class Yarn2D : MonoBehaviour
         lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
         lineRenderer.endWidth = lineRenderer.startWidth;
 
+        _endRewindingProgress = 0;
+
         transform.SetParent(_initialParent);
 
         SoundManager.Instance.PlaySoundLoosenScrew();
@@ -383,19 +386,16 @@ public class Yarn2D : MonoBehaviour
 
                     Vector3 startPos = segments[index].posNow;
 
-                    Tween.Custom(0, 1, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
+                    Tween.Custom(0, 1, duration: 0.6f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
-                        Vector3 endPos = _firstNodePosition;
-                        endPos.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
-
-                        segments[index].posNow = Vector3.Lerp(startPos, endPos, newVal);
-
-                        UpdateLineRenderer();
-
                         if (index == segments.Count - 1)
                         {
+                            _endRewindingProgress = newVal;
+
                             UpdateRope();
                         }
+
+                        UpdateLineRenderer();
                     })
                     .OnComplete(() =>
                     {
@@ -569,7 +569,7 @@ public class Yarn2D : MonoBehaviour
         Vector3 position = _firstNodePosition;
         position.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
-        Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.8f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.8f * _spoolSlotRadius);
+        Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.6f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.6f * _spoolSlotRadius);
 
         Vector3 start = spoolSlotPoint;
         Vector3 end = segments[segmentCount - 1].posNow;
@@ -577,33 +577,30 @@ public class Yarn2D : MonoBehaviour
         Vector3 direction = end - start;
 
         float length = direction.magnitude;
-        Vector3 right = direction.normalized;
+        Vector3 spiralAxis = direction.normalized;
 
-        _currentAmplitude = amplitudeMultiplier * Mathf.Min(Vector2.Distance(start, end), 11);
-        // DebugLogger.Log(message:$"_currentAmplitude {_currentAmplitude} amplitudeMultiplier {amplitudeMultiplier} distance {Vector3.Distance(start, end)}", context:this);
+        _currentAmplitude = (1 - _endRewindingProgress) * amplitudeMultiplier * Mathf.Min(Vector2.Distance(start, end), 11);
 
         float delayedAmplitude = _currentAmplitude * Mathf.Abs(1 - dissolveHeight);
 
-        for (int i = 1; i < segmentCount - 1; i++)
+        for (int i = 1; i < segmentCount; i++)
         {
             float t = i / (float)(segmentCount - 1); // 0 to 1
             float sine = Mathf.Sin(t * Mathf.PI * frequency + Time.time * waveSpeed) * delayedAmplitude;
 
-            Vector3 pointOnLine = start + right * (length * t);
+            Vector3 pointOnLine = start + spiralAxis * (length * t);
 
-            positions[i] = pointOnLine + Vector3.right * ((1 - t) * sine);
+            positions[i] = pointOnLine + Vector3.right * ((1 - 4 * Mathf.Pow((t - 0.5f), 2)) * sine);
 
-            segments[i].posNow = positions[i];
+            segments[i].posNow = Vector3.Lerp(positions[i], _firstNodePosition, _endRewindingProgress);
         }
 
         segments[0].posNow = spoolSlotPoint;
-        segments[segmentCount - 1].posNow = end;
+        segments[segmentCount - 1].posNow = Vector3.Lerp(end, segments[segmentCount - 1].posNow, _endRewindingProgress);
     }
 
     void UpdateLineRenderer()
     {
-        // transform.localRotation = Quaternion.identity;
-
         lineRenderer.positionCount = segmentCount;
 
         for (int i = 0; i < segmentCount; i++)
