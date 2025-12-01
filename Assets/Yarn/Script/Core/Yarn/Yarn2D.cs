@@ -51,9 +51,11 @@ public class Yarn2D : MonoBehaviour
     [SerializeField] private PieceMaterialContainer pieceMaterialContainer;
 
     #region PRIVATE
+    private Camera _mainCamera;
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
     private Transform _initialParent;
     private Vector3 _firstNodePosition;
+    private Transform _firstNodeTarget;
     private Vector3 _lastNodePosition;
     private float _spoolSlotRadius;
     private float spoolSlotSizeY;
@@ -109,9 +111,9 @@ public class Yarn2D : MonoBehaviour
     /// <param name="piece"></param>
     /// <param name="spool"></param>
     /// <param name="onCompleteAction"></param>
-    public void Rewind(Vector3 startPoint, GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
+    public void Rewind(GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
     {
-        InitializeRope(startPoint, faction);
+        InitializeRope(spool.transform.position, faction);
 
         InitPiece(piece);
 
@@ -123,7 +125,7 @@ public class Yarn2D : MonoBehaviour
 
         Reset();
 
-        _firstNodePosition = startPoint;
+        _firstNodeTarget = spool.transform;
         spoolSlotSizeY = spool.SpoolRenderer.bounds.size.y;
         _spoolSlotRadius = 0.5f * spool.SpoolRenderer.bounds.size.x;
 
@@ -157,7 +159,7 @@ public class Yarn2D : MonoBehaviour
 
         Reset();
 
-        _firstNodePosition = endSpool.transform.position;
+        _firstNodeTarget = endSpool.transform;
         _lastNodePosition = startSpool.transform.position;
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
@@ -173,17 +175,17 @@ public class Yarn2D : MonoBehaviour
     /// From outside box to spool
     /// </summary>
     /// <param name="faction"></param>
-    /// <param name="startSpool"></param>
+    /// <param name="outsideBox"></param>
     /// <param name="endSpool"></param>
     /// <param name="isReverseSpoolDissolve"></param>
     /// <param name="onCompleteAction"></param>
-    public void Rewind(GameFaction faction, Transform startSpool, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
+    public void Rewind(GameFaction faction, Transform outsideBox, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
         InitializeRope(endSpool.transform.position, faction);
 
-        InitStartNode(startSpool);
+        InitStartNode(outsideBox);
 
-        transform.position = Camera.main.ScreenToWorldPoint(startSpool.position);
+        transform.position = Camera.main.ScreenToWorldPoint(outsideBox.position);
 
         _dissolveAxis = DissolveAxis.Y;
         _isReverseSpoolDissolve = isReverseSpoolDissolve;
@@ -193,8 +195,8 @@ public class Yarn2D : MonoBehaviour
 
         Reset();
 
-        _firstNodePosition = endSpool.transform.position;
-        _lastNodePosition = startSpool.position;
+        _firstNodeTarget = endSpool.transform;
+        _lastNodePosition = _mainCamera.ScreenToWorldPoint(outsideBox.position);
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
@@ -228,6 +230,7 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodePosition = Camera.main.ScreenToWorldPoint(outsideBox.position);
+        _firstNodeTarget = outsideBox.transform;
         _lastNodePosition = startSpool.transform.position;
         spoolSlotSizeY = 0;
         _spoolSlotRadius = 0.5f * startSpool.SpoolRenderer.bounds.size.x;
@@ -328,7 +331,7 @@ public class Yarn2D : MonoBehaviour
         {
             int index = i;
 
-            Vector3 endPosition = Vector3.Lerp(lastNodePosition, _firstNodePosition, 1 - ((float)index / (segmentCount - 1)));
+            Vector3 endPosition = Vector3.Lerp(lastNodePosition, GetFirstNodePosition(), 1 - ((float)index / (segmentCount - 1)));
             endPosition.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
             Tween.Custom(
@@ -422,7 +425,7 @@ public class Yarn2D : MonoBehaviour
             RopeSegment firstNode = segments[0];
             RopeSegment lastNode = segments[segmentCount - 1];
 
-            firstNode.posNow = _firstNodePosition;
+            firstNode.posNow = GetFirstNodePosition();
             lastNode.posNow = GetSpiralPosition(dissolveHeight, 3);
 
             segments[segmentCount - 1] = lastNode;
@@ -566,7 +569,7 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        Vector3 position = _firstNodePosition;
+        Vector3 position = GetFirstNodePosition();
         position.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
         Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.6f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.6f * _spoolSlotRadius);
@@ -592,7 +595,7 @@ public class Yarn2D : MonoBehaviour
 
             positions[i] = pointOnLine + Vector3.right * ((1 - 4 * Mathf.Pow((t - 0.5f), 2)) * sine);
 
-            segments[i].posNow = Vector3.Lerp(positions[i], _firstNodePosition, _endRewindingProgress);
+            segments[i].posNow = Vector3.Lerp(positions[i], GetFirstNodePosition(), _endRewindingProgress);
         }
 
         segments[0].posNow = spoolSlotPoint;
@@ -608,6 +611,25 @@ public class Yarn2D : MonoBehaviour
             lineRenderer.SetPosition(i, segments[i].posNow);
         }
     }
+
+    #region Utils
+    private Vector3 GetFirstNodePosition()
+    {
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+        }
+
+        if (_firstNodeTarget is RectTransform)
+        {
+            return _mainCamera.ScreenToWorldPoint(_firstNodeTarget.position);
+        }
+        else
+        {
+            return _firstNodeTarget.position;
+        }
+    }
+    #endregion
 
     private class RopeSegment
     {

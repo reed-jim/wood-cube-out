@@ -245,7 +245,7 @@ public class BasePiece : MonoBehaviour
             // firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(0.3f);
         }
 
-        yarn2D.Rewind(spoolBoxSlot.transform.position, faction, this, spoolBoxSlot,
+        yarn2D.Rewind(faction, this, spoolBoxSlot,
             onDissolveCompleteAction: () =>
             {
                 if (innerPieces.Length > 1)
