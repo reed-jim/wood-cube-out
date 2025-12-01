@@ -43,7 +43,16 @@ namespace NamPhuThuy.Data
                 if (allPictureDatas[i] != null)
                 {
                     allPictureDatas[i].picId = i; // auto-increment, matches list index
+                    
+                    // Auto set video-name
                     allPictureDatas[i].videoName = $"Video {i}";
+                    string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{allPictureDatas[i].videoName}.mp4");
+
+                    // Validate if the video file exists in StreamingAssets/Videos
+                    if (!System.IO.File.Exists(filePath))
+                    {
+                        allPictureDatas[i].videoName = String.Empty;
+                    }
                 }
             }
         }

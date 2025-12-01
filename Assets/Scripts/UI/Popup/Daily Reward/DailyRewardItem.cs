@@ -35,7 +35,7 @@ public class DailyRewardItem : SaferioTweenBehaviour
     private Coroutine _animationCoroutine;
 
     #region EVENT
-    public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
+    public static event Action<int, int[], bool, ChestType> showClaimRewardPopupEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
     public static event Action refreshDailyRewardEvent;
     public static event Action claimDailyRewardEvent;
@@ -181,8 +181,9 @@ public class DailyRewardItem : SaferioTweenBehaviour
         // showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, false);
 
         bool isChest = _day == 7;
+        ChestType chestType = isChest ? ChestType.LEVEL_CHEST : ChestType.NONE;
 
-        showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false, isChest);
+        showClaimRewardPopupEvent?.Invoke(coinQuantity, boosterQuantites, false, chestType);
         claimDailyRewardEvent?.Invoke();
 
         GamePersistentVariable.currentReasonRewardedAd = ActionWatchVideo.DailyReward;
