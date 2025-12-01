@@ -55,6 +55,7 @@ public class Yarn2D : MonoBehaviour
     private Transform _initialParent;
     private Vector3 _firstNodePosition;
     private Vector3 _lastNodePosition;
+    private float _spoolSlotRadius;
     private float spoolSlotSizeY;
     private Vector3 _firstNodeLocalPosition;
     private float lerpDelta;
@@ -123,6 +124,7 @@ public class Yarn2D : MonoBehaviour
 
         _firstNodePosition = startPoint;
         spoolSlotSizeY = spool.SpoolRenderer.bounds.size.y;
+        _spoolSlotRadius = 0.5f * spool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
 
@@ -156,6 +158,7 @@ public class Yarn2D : MonoBehaviour
 
         _firstNodePosition = endSpool.transform.position;
         _lastNodePosition = startSpool.transform.position;
+        _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
 
@@ -191,6 +194,7 @@ public class Yarn2D : MonoBehaviour
 
         _firstNodePosition = endSpool.transform.position;
         _lastNodePosition = startSpool.position;
+        _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
 
@@ -225,6 +229,7 @@ public class Yarn2D : MonoBehaviour
         _firstNodePosition = Camera.main.ScreenToWorldPoint(outsideBox.position);
         _lastNodePosition = startSpool.transform.position;
         spoolSlotSizeY = 0;
+        _spoolSlotRadius = 0.5f * startSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
 
@@ -323,6 +328,7 @@ public class Yarn2D : MonoBehaviour
             int index = i;
 
             Vector3 endPosition = Vector3.Lerp(lastNodePosition, _firstNodePosition, 1 - ((float)index / (segmentCount - 1)));
+            endPosition.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
             Tween.Custom(
                 lastNodePosition,
@@ -378,7 +384,7 @@ public class Yarn2D : MonoBehaviour
                     Tween.Custom(0, 1, duration: 0.3f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
                         Vector3 endPos = _firstNodePosition;
-                        endPos.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
+                        endPos.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
                         segments[index].posNow = Vector3.Lerp(startPos, endPos, newVal);
 
@@ -550,7 +556,7 @@ public class Yarn2D : MonoBehaviour
             ropeStartPoint.y -= segmentLength;
         }
 
-        yarnMaterialPropertyBlock.SetColor("_BaseColor", pieceMaterialContainer.GetColor(faction));
+        yarnMaterialPropertyBlock.SetColor("_Color", pieceMaterialContainer.GetColor(faction));
         lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
     }
 
@@ -559,9 +565,11 @@ public class Yarn2D : MonoBehaviour
         Vector3[] positions = new Vector3[segmentCount];
 
         Vector3 position = _firstNodePosition;
-        position.y += (-0.5f + (1 - dissolveHeight)) * spoolSlotSizeY;
+        position.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
-        Vector3 start = position;
+        Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.8f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.8f * _spoolSlotRadius);
+
+        Vector3 start = spoolSlotPoint;
         Vector3 end = segments[segmentCount - 1].posNow;
 
         Vector3 direction = end - start;
@@ -586,7 +594,7 @@ public class Yarn2D : MonoBehaviour
             segments[i].posNow = positions[i];
         }
 
-        segments[0].posNow = position;
+        segments[0].posNow = spoolSlotPoint;
         segments[segmentCount - 1].posNow = end;
     }
 
