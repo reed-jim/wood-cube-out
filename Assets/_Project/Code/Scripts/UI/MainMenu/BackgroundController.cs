@@ -144,13 +144,22 @@ namespace NamPhuThuy
 
             string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
 
-            // In the build, If we check for file existence, it will always return false even if the file is there.
+            // Note: On some platforms (e.g. Android), StreamingAssets are packed inside the APK,
+            // so System.IO.File.Exists(filePath) will always return false even if the file exists.
+            // Use UnityWebRequest/WWW instead if you need to check existence there.
+
             /*if (!System.IO.File.Exists(filePath))
             {
                 DebugLogger.LogError($"Video file not found: {filePath}", context:this);
                 ActiveImage();
                 yield break;
             }*/
+
+            if (string.IsNullOrEmpty(currentPicData.videoName))
+            {
+                ActiveImage();
+                yield break;
+            }
 
             yield return null;
 

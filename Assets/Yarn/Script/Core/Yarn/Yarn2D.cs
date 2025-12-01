@@ -135,7 +135,7 @@ public class Yarn2D : MonoBehaviour
     }
 
     /// <summary>
-    /// From waiting line to spool
+    /// From waiting line to spool box
     /// </summary>
     /// <param name="faction"></param>
     /// <param name="startSpool"></param>
@@ -155,7 +155,7 @@ public class Yarn2D : MonoBehaviour
         spoolBoxSlot.SetColor(pieceMaterialContainer.GetColor(faction));
 
         Reset();
-
+        
         _firstNodePosition = endSpool.transform.position;
         _lastNodePosition = startSpool.transform.position;
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
@@ -363,6 +363,8 @@ public class Yarn2D : MonoBehaviour
 
         transform.SetParent(_initialParent);
 
+        SoundManager.Instance.PlaySoundLoosenScrew();
+        // Show the yarn-string
         ShowYarn(onCompleteAction: () =>
         {
             Tween.Custom(1, 0, duration: GamePlayConst.yarnAnimDuration, ease: Ease.Linear, onValueChange: newVal =>

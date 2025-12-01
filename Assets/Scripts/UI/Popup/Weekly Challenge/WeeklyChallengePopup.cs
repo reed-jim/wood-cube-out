@@ -19,7 +19,7 @@ public class WeeklyChallengePopup : BasePopup
 
     [SerializeField] private WeeklyChallengeDataContainer weeklyChallengeDataContainer;
 
-    public static event Action<int, int[], bool, bool> showClaimRewardPopupEvent;
+    public static event Action<int, int[], bool, ChestType> showClaimRewardPopupEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -142,7 +142,7 @@ public class WeeklyChallengePopup : BasePopup
 
         if (isAnyRewardLeft)
         {
-            showClaimRewardPopupEvent?.Invoke(totalCoinQuantity, totalBoosterQuantites, false, false);
+            showClaimRewardPopupEvent?.Invoke(totalCoinQuantity, totalBoosterQuantites, false, ChestType.NONE);
         }
 
         weeklyChallengeData = new WeeklyChallengeData();

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Lean.Localization;
+using NamPhuThuy.SpineAdapter;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
@@ -22,7 +23,7 @@ public class ClaimRewardPopup : BasePopup
 
     #region CHEST
     [SerializeField] private CanvasGroup chestCanvasGroup;
-    [SerializeField] private SkeletonGraphic chest;
+    [SerializeField] private SkeletonGraphic chestSkeGraphic;
     [SerializeField] private Button openChestButton;
 
     [SerializeField] private RectTransform[] chestResourceGroups;
@@ -120,7 +121,7 @@ public class ClaimRewardPopup : BasePopup
             chestRewardFXs[i].gameObject.SetActive(false);
         }
 
-        chest.AnimationState.SetAnimation(0, "idle", true);
+        chestSkeGraphic.AnimationState.SetAnimation(0, "idle", true);
     }
 
     private void Claim(int multiplier)
@@ -170,7 +171,7 @@ public class ClaimRewardPopup : BasePopup
 
     private void ShowClaimRewardPopup(DailyRewardData rewardData)
     {
-        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, true);
+        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, ChestType.NONE);
     }
 
     private void ShowClaimRewardPopup(DailyRewardData rewardData, int multiplier)
@@ -183,28 +184,37 @@ public class ClaimRewardPopup : BasePopup
             boosterQuantities[i] *= multiplier;
         }
 
-        ShowClaimRewardPopup(coinQuantity, boosterQuantities, false, true);
+        ShowClaimRewardPopup(coinQuantity, boosterQuantities, false, rewardData.chestType);
     }
 
     private void ShowClaimRewardPopupNoChest(DailyRewardData rewardData)
     {
-        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, false);
+        ShowClaimRewardPopup(rewardData.CoinQuantity, rewardData.BoosterQuantities, false, ChestType.NONE);
     }
 
-    private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, bool isChest)
+    private void ShowClaimRewardPopup(int coinQuantity, int[] boosterQuantities, bool isRemoveAd, ChestType chestType = ChestType.NONE)
     {
         showClaimRewardPopupEvent?.Invoke(true);
 
         Show(onCompletedAction: () =>
         {
-            if (isChest)
+            if (chestType != ChestType.NONE)
             {
                 SoundManager.Instance.PlaySoundChestAppear();
             }
         });
 
-        if (isChest)
+        if (chestType != ChestType.NONE)
         {
+            if (chestType == ChestType.LEVEL_CHEST)
+            {
+                SpineHelper.ChangeSkin(chestSkeGraphic, "1");
+            }
+            else if (chestType == ChestType.STAR_CHEST)
+            {
+                SpineHelper.ChangeSkin(chestSkeGraphic, "2");
+            }
+            
             rewardCanvasGroup.gameObject.SetActive(false);
             chestCanvasGroup.gameObject.SetActive(true);
 
@@ -279,7 +289,7 @@ public class ClaimRewardPopup : BasePopup
 
     private void OpenChest()
     {
-        chest.AnimationState.SetAnimation(0, "open", false);
+        chestSkeGraphic.AnimationState.SetAnimation(0, "open", false);
 
         SoundManager.Instance.PlaySoundOpenChest();
 
@@ -310,7 +320,7 @@ public class ClaimRewardPopup : BasePopup
 
         _tweens.Add(Tween.Delay(1.233f).OnComplete(() =>
         {
-            chest.AnimationState.SetAnimation(0, "idle_open", true);
+            chestSkeGraphic.AnimationState.SetAnimation(0, "idle_open", true);
 
             // Tween.Alpha(chestCanvasGroup, 0, duration: 0.3f).OnComplete(() =>
             // {
@@ -380,7 +390,7 @@ public class ClaimRewardPopup : BasePopup
 
             validResourceGroups[i].gameObject.SetActive(true);
 
-            validResourceGroups[i].localPosition = chest.rectTransform.localPosition + new Vector3(0, 0.02f * GamePersistentVariable.canvasSize.y);
+            validResourceGroups[i].localPosition = chestSkeGraphic.rectTransform.localPosition + new Vector3(0, 0.02f * GamePersistentVariable.canvasSize.y);
             validResourceGroups[i].localScale = Vector3.zero;
 
             float duration = 0.3f + 0.1f * i;
