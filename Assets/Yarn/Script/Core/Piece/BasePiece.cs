@@ -299,7 +299,7 @@ public class BasePiece : MonoBehaviour
             }
         );
 
-        SoundManager.Instance.PlaySoundLoosenScrew();
+        // SoundManager.Instance.PlaySoundLoosenScrew();
 
         if (GamePersistentVariable.IsVibrate)
         {
