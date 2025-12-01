@@ -810,7 +810,7 @@ public class PieceManager : MonoBehaviour
             {
                 BasePiece piece = _pieces[i];
 
-                if (piece.IsOutsideWithNoSpoolBox && !piece.IsMoving)
+                if (piece.IsOutsideWithNoSpoolBox && !piece.PieceServiceLocator.pieceProperty.IsRewinding)
                 {
                     GameFaction faction = piece.Faction;
 

@@ -95,7 +95,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ParticleSystem>(GameConstants.rewindPieceFx, rewindPieceFxPrefab, 5);
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
 
-        RegisterPool<Yarn2D>(GameConstants.yard2D, yarn2D.gameObject, 5);
+        RegisterPool<Yarn2D>(GameConstants.yard2D, yarn2D.gameObject, 20);
         RegisterPool<SpoolBox>(GameConstants.spoolBox, spoolBox, screwBoxContainer, 5);
         RegisterPool<SpoolBoxSlot>(GameConstants.spoolBoxSlot, spoolBoxSlot, 5);
     }

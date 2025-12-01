@@ -34,8 +34,6 @@ public class BasePiece : MonoBehaviour
     protected MeshCollider[] _coACDMeshCollider;
     protected MeshCollider _replacedMeshCollider;
     protected int _numberBlockingObjects;
-    protected bool _isMoving;
-    protected bool _isRotating;
     protected bool _isInteractable = true;
     protected bool _isDone;
     protected bool _isOutsideWithNoSpoolBox;
@@ -73,18 +71,6 @@ public class BasePiece : MonoBehaviour
     public int NumberBlockingObjects
     {
         get => _numberBlockingObjects;
-    }
-
-    public bool IsMoving
-    {
-        get => _isMoving;
-        set => _isMoving = value;
-    }
-
-    public bool IsRotating
-    {
-        get => _isRotating;
-        set => _isRotating = value;
     }
 
     public bool IsDone
@@ -293,6 +279,8 @@ public class BasePiece : MonoBehaviour
                 pieceServiceLocator.pieceMeshRenderer.enabled = false;
                 gameObject.SetActive(false);
 
+                pieceServiceLocator.pieceProperty.IsRewinding = false;
+
                 spoolBoxSlot.CompleteFill();
 
                 InvokePieceLoosenedEvent();
@@ -343,6 +331,8 @@ public class BasePiece : MonoBehaviour
                 {
                     pieceServiceLocator.pieceMeshRenderer.enabled = false;
                     gameObject.SetActive(false);
+
+                    pieceServiceLocator.pieceProperty.IsRewinding = false;
 
                     spoolBoxSlot.CompleteFill();
 
