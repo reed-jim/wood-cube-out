@@ -3,10 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NamPhuThuy.Common;
 using PrimeTween;
-using UnityEditor;
 using UnityEngine;
 using static GameEnum;
+using DebugLogger = NamPhuThuy.Common.DebugLogger;
 
 public class PieceManager : MonoBehaviour
 {
@@ -633,10 +634,6 @@ public class PieceManager : MonoBehaviour
             {
                 donePiece++;
             }
-            // else
-            // {
-            //     _pieces[i].CountBlockingObjects(isIncludeHiddenPiece: true);
-            // }
         }
 
         progress = (float)donePiece / _totalPiece;
@@ -682,10 +679,16 @@ public class PieceManager : MonoBehaviour
         }
 
         Dictionary<GameFaction, int> piecePortAvailableByFaction = pieceBoxManager.GetPiecePortAvailableByFaction();
+        DebugLogger.LogDictionary(piecePortAvailableByFaction, title:"piecePortAvailableByFaction");
+        
         Dictionary<GameFaction, int> remainingPieceByFaction = GetRemainingPieceByFaction();
+        DebugLogger.LogDictionary(remainingPieceByFaction, title:"remainingPieceByFaction");
+        
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
+        DebugLogger.LogDictionary(totalBlockObjectsByFaction, title:"totalBlockObjectsByFaction");
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
+        DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title:"shuffledDifficultyLevelByFaction");
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
 

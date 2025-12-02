@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.Common;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -254,10 +255,12 @@ public class SpoolManager : MonoBehaviour
 
     private void OnPieceSelected(int pieceId, GameFaction selectedFaction)
     {
+        DebugLogger.Log();
         SpoolBoxSlot spoolBoxSlot = CheckAvailableSpoolBoxes(selectedFaction);
 
         if (spoolBoxSlot != null)
         {
+            DebugLogger.Log(message:$"spoolBoxSlot found for faction {selectedFaction}");
             loosePieceEvent?.Invoke(pieceId, selectedFaction, spoolBoxSlot);
         }
 
@@ -358,15 +361,14 @@ public class SpoolManager : MonoBehaviour
             {
                 continue;
             }
+            
+            if (selectedFaction != spoolBox.Faction) continue;
 
-            if (selectedFaction == spoolBox.Faction)
+            foreach (var spoolBoxSlot in spoolBox.SpoolBoxSlots)
             {
-                foreach (var spoolBoxSlot in spoolBox.SpoolBoxSlots)
+                if (!spoolBoxSlot.IsFilled)
                 {
-                    if (!spoolBoxSlot.IsFilled)
-                    {
-                        return spoolBoxSlot;
-                    }
+                    return spoolBoxSlot;
                 }
             }
         }
