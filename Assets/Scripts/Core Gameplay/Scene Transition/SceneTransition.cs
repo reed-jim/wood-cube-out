@@ -24,6 +24,11 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private Image blackBackgroundToPassPolicy;
     private Coroutine _loadingLevelInProgressCoroutine;
 
+    [Header("Loading with progress bar")]
+    [SerializeField] private CanvasGroup progressBarCanvasGroup;
+    [SerializeField] private Image progressBar;
+    [SerializeField] private TMP_Text almostThereText;
+
     [SerializeField] private IntVariable currentLevel;
 
     [Header("CUSTOMIZE")]
@@ -124,39 +129,18 @@ public class SceneTransition : MonoBehaviour
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
         mainBackground.FitImageToRectTransform();
 
-        if (_waitForLevelLoadedCoroutine != null)
-        {
-            StopCoroutine(_waitForLevelLoadedCoroutine);
-        }
-
-        _waitForLevelLoadedCoroutine = StartCoroutine(WaitForLevelLoaded());
+        LoadingLevelInProgress();
     }
 
     private IEnumerator WaitForLevelLoaded()
     {
-        ShowBlackScreenImmediately();
+        // ShowBlackScreenImmediately();
 
         yield return new WaitUntil(() => _isLevelLoaded);
 
-        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
+        // BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
 
-        if (GamePersistentVariable.isLoadingLevelInProgress)
-        {
-            LoadingLevelInProgress();
-
-            GamePersistentVariable.isLoadingLevelInProgress = false;
-        }
-        else
-        {
-            if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
-            {
-                LoadingLevelInProgress();
-            }
-            else
-            {
-                loadLevelInProgressContainer.gameObject.SetActive(false);
-            }
-        }
+        LoadingLevelInProgress();
 
         _isLevelLoaded = false;
     }
@@ -169,27 +153,20 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        if (_isFirstTimeEnterScene)
-        {
-            loadLevelInProgressContainer.gameObject.SetActive(false);
+        // if (_isFirstTimeEnterScene)
+        // {
+        //     loadLevelInProgressContainer.gameObject.SetActive(false);
 
-            _isFirstTimeEnterScene = false;
+        //     _isFirstTimeEnterScene = false;
 
-            return;
-        }
-
-
+        //     return;
+        // }
 
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
-        loadLevelInProgressCanvasGroup.alpha = 1;
+        loadLevelInProgressCanvasGroup.alpha = 0;
 
-        if (_loadingLevelInProgressCoroutine != null)
-        {
-            StopCoroutine(_loadingLevelInProgressCoroutine);
-        }
-
-        _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
+        Tween.Alpha(loadLevelInProgressCanvasGroup, 1, duration: 0.3f);
 
         AdmobAdsMax.Instance.ShowMRec();
 
@@ -199,6 +176,20 @@ public class SceneTransition : MonoBehaviour
         {
             minWaitTime = 4.5f;
         }
+
+        progressBarCanvasGroup.alpha = 1;
+        progressBar.fillAmount = 0;
+        almostThereText.color = ColorUtil.WithAlpha(almostThereText.color, 0);
+
+        Tween.Custom(0, 1, duration: 0.5f * minWaitTime, onValueChange: newVal =>
+        {
+            progressBar.fillAmount = newVal;
+        })
+        .OnComplete(() =>
+        {
+            Tween.Alpha(progressBarCanvasGroup, 0, duration: 0.3f);
+            Tween.Alpha(almostThereText, 1, duration: 0.3f);
+        });
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
@@ -231,8 +222,6 @@ public class SceneTransition : MonoBehaviour
                     loadLevelInProgressContainer.gameObject.SetActive(false);
                 })
             );
-
-            StopCoroutine(_loadingLevelInProgressCoroutine);
         }));
     }
 

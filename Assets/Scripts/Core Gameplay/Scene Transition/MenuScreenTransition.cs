@@ -31,28 +31,15 @@ public class MenuScreenTransition : MonoBehaviour
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
         mainBackground.FitImageToRectTransform();
 
-        if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
-        {
-            if (GamePersistentVariable.hasAppJustLaunched)
-            {
-                fakeLoadingContainer.gameObject.SetActive(false);
-
-                // StartCoroutine(WaitForShowAdAfterLoading());
-
-                GamePersistentVariable.hasAppJustLaunched = false;
-            }
-            else
-            {
-                FakeLoadingForAds();
-            }
-        }
-        else
+        if (GamePersistentVariable.hasAppJustLaunched)
         {
             fakeLoadingContainer.gameObject.SetActive(false);
 
-            BlackScreenTransition();
-
-            GamePersistentVariable.isMenuLoading = false;
+            GamePersistentVariable.hasAppJustLaunched = false;
+        }
+        else
+        {
+            FakeLoadingForAds();
         }
     }
 

@@ -213,6 +213,8 @@ public class YarnLevelLoader : MonoBehaviour
         }
         //
 
+        showSceneTransitionEvent?.Invoke();
+
         _loadLevelHandle = Addressables.InstantiateAsync(levelPrefab, transform);
 
         _loadLevelHandle.Completed += (op) =>
@@ -352,8 +354,6 @@ public class YarnLevelLoader : MonoBehaviour
                 // GamePersistentVariable.isLevelLost = false;
             }
         };
-
-        showSceneTransitionEvent?.Invoke();
     }
 
     private async void GoLevel(int level)
