@@ -284,6 +284,7 @@ public class BasePiece : MonoBehaviour
                 spoolBoxSlot.CompleteFill();
 
                 InvokePieceLoosenedEvent();
+                pieceMovedCompletedEvent?.Invoke(this);
             }
         );
 
