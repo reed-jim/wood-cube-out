@@ -87,7 +87,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         foreach (var item in innerPieceFactions)
         {
-            Debug.Log("SAFERIO " + item);
+            // Debug.Log("SAFERIO " + item);
         }
 
         GameFaction currentInnerPieceFaction = GameFaction.None;

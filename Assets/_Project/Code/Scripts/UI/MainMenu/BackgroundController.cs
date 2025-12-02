@@ -13,7 +13,6 @@ using UnityEditor;
 
 namespace NamPhuThuy
 {
-
     public class BackgroundController : MonoBehaviour
     {
         #region Private Serializable Fields
@@ -23,6 +22,7 @@ namespace NamPhuThuy
 
         [SerializeField] private VideoPlayer videoPlayer;
         [SerializeField] private Camera mainCamera;
+        [SerializeField] private TextMeshProUGUI loadingText;
 
         [Header("Remote Assets Loading")]
         [SerializeField] private SpriteRenderer remoteAssetsLoadingContainer;
@@ -49,6 +49,9 @@ namespace NamPhuThuy
             // BACKGROUND
             PictureDetailsPopup.updateBackgroundEvent += SetupBackground;
             PictureNewPopup.updateBackgroundEvent += SetupBackground;
+            YarnLevelLoader.setTargetOrthographicSizeEvent += OnCameraOrthoSizeChanged;
+            GameplayCamera.updateCameraZoomRatioEvent += OnCameraOrthoSizeChanged;
+            
             // GameplayScreen.triggerUpdateBackgroundEvent += SetupBackground;
             SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -66,6 +69,8 @@ namespace NamPhuThuy
             // BACKGROUND
             PictureDetailsPopup.updateBackgroundEvent -= SetupBackground;
             PictureNewPopup.updateBackgroundEvent -= SetupBackground;
+            YarnLevelLoader.setTargetOrthographicSizeEvent -= OnCameraOrthoSizeChanged;
+            GameplayCamera.updateCameraZoomRatioEvent -= OnCameraOrthoSizeChanged;
             // GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
             SceneManager.sceneLoaded -= OnSceneLoaded;
         }
@@ -85,6 +90,11 @@ namespace NamPhuThuy
             _targetOrthoSize = orthographicSize;
             _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthoSize;
         }
+        
+        private void OnCameraOrthoSizeChanged(float newOrthoSize)
+        {
+            spriteRenderer.GetComponent<SpriteScreenFitter>().ScaleSpriteToScreen();
+        }
 
         #endregion
 
@@ -92,13 +102,12 @@ namespace NamPhuThuy
 
         public void SetupBackground()
         {
-            // DebugLogger.Log(message:$"{gameObject.name}", context:this);
+            DebugLogger.Log(message:$"{gameObject.name}", context:this);
             try
             {
                 currentPicData =
                     DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId];
-
-
+                
                 if (currentPicData != null)
                 {
                     spriteRenderer.sprite = currentPicData.mainImage;
@@ -106,13 +115,13 @@ namespace NamPhuThuy
                     if (!string.IsNullOrEmpty(currentPicData.videoName) &&
                         GamePersistentVariable.isUseVideoBackground)
                     {
-                        // DebugLogger.Log(message:$"Use Video for BG");
+                        DebugLogger.Log(message:$"Use Video for BG", context:this);
                         spriteRenderer.gameObject.SetActive(true);
                         ActiveVideo();
                     }
                     else
                     {
-                        // DebugLogger.Log(message:$"Use Image for BG");
+                        DebugLogger.Log(message:$"Use Image for BG", context:this);
                         videoPlayer.gameObject.SetActive(false);
                         ActiveImage();
                     }
@@ -120,7 +129,7 @@ namespace NamPhuThuy
             }
             catch (System.Exception e)
             {
-                DebugLogger.LogError(message: $"{e.Message}");
+                DebugLogger.LogError(message: $"{e.Message}", context:this);
             }
         }
 
@@ -136,6 +145,8 @@ namespace NamPhuThuy
         {
             // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             spriteRenderer.gameObject.SetActive(true);
+            spriteRenderer.GetComponent<SpriteScreenFitter>().ScaleSpriteToScreen();
+            loadingText.gameObject.SetActive(false);
         }
 
         private IEnumerator LoadVideoFromStreamingAssets(string videoName)
@@ -185,6 +196,8 @@ namespace NamPhuThuy
             DebugLogger.Log(message: $"{gameObject.name}", context: this);
             spriteRenderer.gameObject.SetActive(false);
 
+            loadingText.gameObject.SetActive(false);
+            
             videoPlayer.Play();
             videoPlayer.isLooping = true;
             videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;

@@ -34,6 +34,7 @@ public class GameplayCamera : MonoBehaviour
     private Vector3 _targetBackgroundScale;
 
     public static event Action<float> updateCameraZoomRatioEvent;
+    public static event Action<float> notifyUpdateBackgroundEvent; // For update background image-size only
     public static event Action<bool> enablePinchingEvent;
 
     #region Callbacks
@@ -111,6 +112,7 @@ public class GameplayCamera : MonoBehaviour
         .OnComplete(() =>
         {
             enablePinchingEvent?.Invoke(true);
+            notifyUpdateBackgroundEvent?.Invoke(orthographicSize);
         });
     }
 

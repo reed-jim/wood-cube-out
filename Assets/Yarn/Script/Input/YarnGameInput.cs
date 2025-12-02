@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -17,6 +18,8 @@ public class YarnGameInput : MonoBehaviour
     #region EVENT
     public static event Action mouseUpEvent;
     #endregion
+
+    #region MonoBehaviour Callbacks
 
     void Awake()
     {
@@ -79,6 +82,10 @@ public class YarnGameInput : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Interaction Methods
+
     private void SelectPiece()
     {
         if (IsClickedOnUI())
@@ -88,19 +95,13 @@ public class YarnGameInput : MonoBehaviour
 
         Ray ray = _mainCamera.ScreenPointToRay(Input.mousePosition);
 
-        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMask: LayerMask.GetMask("Default"));
+        Physics.Raycast(ray, out RaycastHit hit, maxDistance: 999, layerMask: LayerMask.GetMask(LayerConst.DEFAULT));
 
-        if (hit.collider != null)
-        {
-            BasePiece piece = hit.collider.GetComponent<BasePiece>();
-
-            if (piece != null)
-            {
-                piece.PullYarn();
-
-                return;
-            }
-        }
+        if (hit.collider == null) return;
+        BasePiece piece = hit.collider.GetComponent<BasePiece>();
+        if (piece == null) return;
+        
+        piece.PullYarn();
     }
 
     private void HoldPiece()
@@ -130,7 +131,7 @@ public class YarnGameInput : MonoBehaviour
             position = Input.mousePosition
         };
 
-        var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+        var raycastResults = new List<RaycastResult>();
         EventSystem.current.RaycastAll(pointerData, raycastResults);
 
         if (raycastResults.Count > 0)
@@ -142,4 +143,6 @@ public class YarnGameInput : MonoBehaviour
             return false;
         }
     }
+
+    #endregion
 }

@@ -174,6 +174,7 @@ public class BasePiece : MonoBehaviour
 
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
+        // DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId != gameObject.GetInstanceID()) return;
 
         if (!gameObject.activeInHierarchy)
@@ -183,6 +184,7 @@ public class BasePiece : MonoBehaviour
 
         if (pieceServiceLocator.pieceProperty.IsRewinding)
         {
+            DebugLogger.Log(message:$"is rewinding, return");
             return;
         }
 
@@ -190,6 +192,7 @@ public class BasePiece : MonoBehaviour
 
         if (!GamePersistentVariable.isLevelDirty)
         {
+            DebugLogger.Log(message:$"set level dirty");
             GamePersistentVariable.isLevelDirty = true;
         }
 
@@ -197,6 +200,7 @@ public class BasePiece : MonoBehaviour
 
         if (innerPieces.Length == 1)
         {
+            DebugLogger.Log(message:$"Only one inner piece, detach rigidbodies");
             for (int i = 0; i < transform.childCount; i++)
             {
                 Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
@@ -205,6 +209,7 @@ public class BasePiece : MonoBehaviour
 
                 if (rigidbody != null)
                 {
+                    DebugLogger.Log(message:$"Rigidbody found, detach it");
                     rigidbody.isKinematic = false;
                     currentChild.SetParent(transform.parent);
                 }
@@ -239,10 +244,10 @@ public class BasePiece : MonoBehaviour
 
         if (innerPieces.Length > 1)
         {
+            DebugLogger.Log(message:$"More than one inner piece, activate first inner piece");
             BasePiece firstInnerPiece = innerPieces[1];
 
             firstInnerPiece.gameObject.SetActive(true);
-            // firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(0.3f);
         }
 
         yarn2D.Rewind(faction, this, spoolBoxSlot,
@@ -267,11 +272,6 @@ public class BasePiece : MonoBehaviour
 
                     firstInnerPiece.transform.SetParent(transform.parent);
                     firstInnerPiece.Unlock();
-
-                    // Tween.Custom(0.3f, 1, duration: 0.3f, onValueChange: newVal =>
-                    // {
-                    //     firstInnerPiece.pieceServiceLocator.pieceMaterialPropertyBlock.SetAlpha(newVal);
-                    // });
                 }
             },
             onCompleteAction: () =>
@@ -368,11 +368,8 @@ public class BasePiece : MonoBehaviour
 
     public void PullYarn()
     {
+        DebugLogger.Log();
         selectPieceEvent?.Invoke(gameObject.GetInstanceID(), Faction);
-
-        // Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-        // yarn2D.Init(new Vector3(0, 6), _renderer);
     }
 
     public void InvokePieceLoosenedEvent()
