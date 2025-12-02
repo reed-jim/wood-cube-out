@@ -74,7 +74,7 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+            Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
