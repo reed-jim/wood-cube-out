@@ -16263,7 +16263,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &690175075
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -45451,6 +45451,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 149753641434731669, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2464599290076901897, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_Color.a
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 2892350074434471991, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
       propertyPath: currentCamera
       value: 
@@ -45495,10 +45503,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4646811013136587512, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646811013136587512, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646811013136587512, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646811013136587512, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.14
+      objectReference: {fileID: 0}
+    - target: {fileID: 4646811013136587512, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8087812922466341771, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
       propertyPath: mainCamera
       value: 
       objectReference: {fileID: 1713637883}
+    - target: {fileID: 8087812922466341771, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
+      propertyPath: loadingText
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 8273285306959582894, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
       propertyPath: m_TargetCamera
       value: 
@@ -45512,7 +45544,8 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 149753641434731669, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8a63aae182582aa4a9b880967f737fc8, type: 3}
