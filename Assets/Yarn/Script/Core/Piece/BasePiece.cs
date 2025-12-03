@@ -295,6 +295,7 @@ public class BasePiece : MonoBehaviour
             HapticFeedback.MediumFeedback();
         }
 
+        _spoolBoxSlot = spoolBoxSlot;
         spoolBoxSlot.Fill(this);
 
         if (!spoolBoxSlot.IsAlternative)
