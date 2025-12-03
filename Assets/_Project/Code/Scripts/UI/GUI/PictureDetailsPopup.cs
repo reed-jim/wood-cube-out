@@ -207,10 +207,10 @@ namespace NamPhuThuy.UI
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
                 // startParent = transform,
-                font = GUIManager.Instance.DefaultFont,
-                color = Color.white,
+                textFont = GUIManager.Instance.DefaultFont,
+                textColor = Color.white,
                 duration = 1f,
-                onComplete = null
+                OnComplete = null
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
@@ -366,9 +366,9 @@ namespace NamPhuThuy.UI
             {
                 var args = new PopupTextArgs {
                     message = _downloadedNoti,
-                    color = Color.white,
+                    textColor = Color.white,
                     duration = 1f,
-                    onComplete = null
+                    OnComplete = null
                 };
                 AnimationManager.Ins.Play<PopupTextArgs>(args);
             }
@@ -458,9 +458,9 @@ namespace NamPhuThuy.UI
             
             var args = new PopupTextArgs {
                 message = _downloadedNoti,
-                color = Color.white,
+                textColor = Color.white,
                 duration = 1f,
-                onComplete = null
+                OnComplete = null
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }

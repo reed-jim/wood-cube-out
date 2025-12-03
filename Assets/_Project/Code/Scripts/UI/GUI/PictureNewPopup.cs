@@ -9,8 +9,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using NamPhuThuy.AnimateWithScripts;
+using NamPhuThuy.Common;
 using Unity.VisualScripting;
 using UnityEngine.Video;
+using DebugLogger = NamPhuThuy.AnimateWithScripts.DebugLogger;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -374,8 +376,6 @@ namespace NamPhuThuy.UI
                     currentLevel.Value, "Coin",
                     downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
                 
-                
-                
                 ShowLoadingPopup();
                 StartCoroutine(IEDownLoadVideo());
                 // SetStateDownloadSwitches();
@@ -515,9 +515,11 @@ namespace NamPhuThuy.UI
             // Show Loading Popup
             
             SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
+            StartCoroutine(HandleLoaded());
 
-            void HandleLoaded()
+            IEnumerator HandleLoaded()
             {
+                yield return YieldHelper.WaitForSeconds(2f);
                 PlayVFXPopupText(_downloadedNoti);
             }
         }
@@ -601,10 +603,10 @@ namespace NamPhuThuy.UI
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
                 // startParent = transform,
-                font = GUIManager.Instance.DefaultFont,
-                color = Color.white,
+                textFont = GUIManager.Instance.DefaultFont,
+                textColor = Color.white,
                 duration = 1f,
-                onComplete = null
+                OnComplete = null
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
