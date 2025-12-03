@@ -601,9 +601,9 @@ namespace NamPhuThuy.UI
         {
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
-                // startParent = transform,
                 textFont = GUIManager.Instance.DefaultFont,
                 textColor = Color.white,
+                customScale = 0.9f,
                 duration = 1f,
                 OnComplete = null
             };

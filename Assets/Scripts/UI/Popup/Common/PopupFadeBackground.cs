@@ -14,25 +14,25 @@ public class PopupFadeBackground : MonoBehaviour
 
     void Awake()
     {
-        BasePopup.popupShowEvent += OnPopupShow;
-        BasePopup.popupHideEvent += OnPopupClose;
-        RevivePopup.OnPeekPicture += OnPopupClose;
-        RevivePopup.OnStopPeekPicture += OnPopupShow;
+        BasePopup.popupShowEvent += ShowPopup;
+        BasePopup.popupHideEvent += TryClosePopup;
+        RevivePopup.OnPeekPicture += ClosePopup;
+        RevivePopup.OnStopPeekPicture += ShowPopup;
 
         fadeBackground.gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
-        BasePopup.popupShowEvent -= OnPopupShow;
-        BasePopup.popupHideEvent -= OnPopupClose;
-        RevivePopup.OnPeekPicture -= OnPopupClose;
-        RevivePopup.OnStopPeekPicture -= OnPopupShow;
+        BasePopup.popupShowEvent -= ShowPopup;
+        BasePopup.popupHideEvent -= TryClosePopup;
+        RevivePopup.OnPeekPicture -= ClosePopup;
+        RevivePopup.OnStopPeekPicture -= ShowPopup;
 
         CommonUtil.StopTween(_transitionTween);
     }
 
-    private void OnPopupShow()
+    private void ShowPopup()
     {
         fadeBackground.gameObject.SetActive(true);
 
@@ -43,8 +43,9 @@ public class PopupFadeBackground : MonoBehaviour
         _transitionTween = Tween.Alpha(fadeBackground, 0.95f, duration: transitionDuration);
     }
 
-    private void OnPopupClose()
+    private void TryClosePopup()
     {
+        DebugLogger.Log();
         PlaceBeforeDeepestActivePopup(gameObject);
 
         Transform popupContainer = transform.parent;
@@ -61,19 +62,27 @@ public class PopupFadeBackground : MonoBehaviour
 
         if (numActivePopup > 1)
         {
+            DebugLogger.Log(message:$"numActivePopup = {numActivePopup}, keep fade background on");
             return;
         }
 
-        CommonUtil.StopTween(_transitionTween);
+        ClosePopup();
+    }
 
+    public void ClosePopup()
+    {
+        CommonUtil.StopTween(_transitionTween);
+        
         _transitionTween = Tween.Alpha(fadeBackground, 0, duration: transitionDuration).OnComplete(() =>
         {
             fadeBackground.gameObject.SetActive(false);
+            DebugLogger.Log(message:$"Turn off fade background");
         });
     }
 
     public void PlaceBeforeDeepestActivePopup(GameObject target)
     {
+        DebugLogger.Log();
         if (target == null) return;
         Transform parent = target.transform.parent;
         if (parent == null) return;
