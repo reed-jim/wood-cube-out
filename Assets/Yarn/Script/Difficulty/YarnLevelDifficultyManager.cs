@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.Common;
 using UnityEngine;
 using static GameEnum;
 
@@ -162,7 +163,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
             piece.transform.localPosition = Vector3.zero;
             piece.transform.localRotation = Quaternion.identity;
-            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndex() + 1) * scaleOffset;
+            piece.transform.localScale *= 1 - (piece.transform.GetSiblingIndexWithComponent<BasePiece>() + 1) * scaleOffset;
         }
 
         int EnsureDivisibleByThree(int value, int addedValue)
