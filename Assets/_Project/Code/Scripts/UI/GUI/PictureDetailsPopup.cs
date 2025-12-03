@@ -88,11 +88,14 @@ namespace NamPhuThuy.UI
         {
             base.MoreActionInAwake();
             likeStateChangeEvent += OnLikeStateChanged;
-
-            
         }
 
-        
+        protected override void MoreActionOnDestroy()
+        {
+            base.MoreActionOnDestroy();
+            likeStateChangeEvent -= OnLikeStateChanged;
+        }
+
 
         private void Start()
         {

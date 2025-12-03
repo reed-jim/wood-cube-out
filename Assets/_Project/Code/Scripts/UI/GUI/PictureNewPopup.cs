@@ -534,7 +534,6 @@ namespace NamPhuThuy.UI
         IEnumerator LoadVideoFromStreamingAssets(string videoName)
         {
             string filePath = System.IO.Path.Combine(Application.streamingAssetsPath, "Videos", $"{videoName}.mp4");
-
             yield return null;
 
             videoPlayer.url = $"file://{filePath}";

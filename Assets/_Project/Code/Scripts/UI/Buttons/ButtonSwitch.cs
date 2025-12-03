@@ -46,6 +46,13 @@ namespace NamPhuThuy.UI
         public void SetState(ButtonSwitchState state)
         {
             currentState = state;
+            
+            
+            if (onState == null)
+                Debug.LogWarning($"[ButtonSwitch] `onState` is null or destroyed on {name}", this);
+            if (offState == null)
+                Debug.LogWarning($"[ButtonSwitch] `offState` is null or destroyed on {name}", this);
+            
             switch (state)
             {
                 case ButtonSwitchState.ON:
@@ -53,6 +60,7 @@ namespace NamPhuThuy.UI
                     offState?.SetActive(false);
                     break;
                 case ButtonSwitchState.OFF:
+                    // a destroyed object is not null for C# ?. checks, so onState?.SetActive(false); still calls SetActive on a destroyed GameObject.
                     onState?.SetActive(false);
                     offState?.SetActive(true);
                     break;

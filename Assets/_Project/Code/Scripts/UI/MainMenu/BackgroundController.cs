@@ -146,7 +146,7 @@ namespace NamPhuThuy
             // DebugLogger.Log(message:$"{gameObject.name}", context:this);
             spriteRenderer.gameObject.SetActive(true);
             spriteRenderer.GetComponent<SpriteScreenFitter>().ScaleSpriteToScreen();
-            loadingText.gameObject.SetActive(false);
+            loadingText?.gameObject.SetActive(false);
         }
 
         private IEnumerator LoadVideoFromStreamingAssets(string videoName)
@@ -195,8 +195,7 @@ namespace NamPhuThuy
         {
             DebugLogger.Log(message: $"{gameObject.name}", context: this);
             spriteRenderer.gameObject.SetActive(false);
-
-            loadingText.gameObject.SetActive(false);
+            loadingText?.gameObject.SetActive(false);
             
             videoPlayer.Play();
             videoPlayer.isLooping = true;
