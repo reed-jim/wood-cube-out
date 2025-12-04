@@ -14,5 +14,13 @@ public class ObjectPartHolder : MonoBehaviour
             // dissolveObjectPartEvent?.Invoke(other.gameObject.GetInstanceID());
             other.gameObject.SetActive(false);
         }
+        
+        Rigidbody rb = other.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.isKinematic = true; 
+            rb.linearVelocity = Vector3.zero; 
+            rb.gameObject.SetActive(false);
+        }
     }
 }

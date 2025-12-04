@@ -1,11 +1,14 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using CandyCoded.HapticFeedback;
-using NamPhuThuy.AnimateWithScripts;
+using Dreamteck.Splines.Primitives;
+using NamPhuThuy.Common;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using static GameEnum;
+using DebugLogger = NamPhuThuy.AnimateWithScripts.DebugLogger;
 
 public class BasePiece : MonoBehaviour
 {
@@ -172,6 +175,8 @@ public class BasePiece : MonoBehaviour
         return 0;
     }
 
+    #region Loose
+
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
         // DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
@@ -198,22 +203,11 @@ public class BasePiece : MonoBehaviour
 
         BasePiece[] innerPieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(transform).ToArray();
 
+        // If there's only 1 BasePiece (this one), detach rigidbodies from children
         if (innerPieces.Length == 1)
         {
             DebugLogger.Log(message:$"Only one inner piece, detach rigidbodies");
-            for (int i = 0; i < transform.childCount; i++)
-            {
-                Rigidbody rigidbody = transform.GetChild(i).GetComponent<Rigidbody>();
-                Transform currentChild = transform.GetChild(i);
-                DebugLogger.Log(message: $"currentChild: {currentChild.name}");
-
-                if (rigidbody != null)
-                {
-                    DebugLogger.Log(message:$"Rigidbody found, detach it");
-                    rigidbody.isKinematic = false;
-                    currentChild.SetParent(transform.parent);
-                }
-            }
+            StartCoroutine(IE_DetachDecorObject());
         }
 
         // ParticleSystem fx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.rewindPieceFx);
@@ -265,10 +259,10 @@ public class BasePiece : MonoBehaviour
                     }
 
                     Tween.Scale(firstInnerPiece.transform, 1.05f, duration: 0.3f)
-                    .OnComplete(() =>
-                    {
-                        Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
-                    });
+                        .OnComplete(() =>
+                        {
+                            Tween.Scale(firstInnerPiece.transform, 1f, duration: 0.1f);
+                        });
 
                     firstInnerPiece.transform.SetParent(transform.parent);
                     firstInnerPiece.Unlock();
@@ -358,6 +352,33 @@ public class BasePiece : MonoBehaviour
     {
         // Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
     }
+
+    #region Private Methods
+
+    private IEnumerator IE_DetachDecorObject()
+    {
+        Rigidbody[] decorObjRigidbodies = GetComponentsInChildren<Rigidbody>();
+    
+        // Shuffle the array
+        for (int i = decorObjRigidbodies.Length - 1; i > 0; i--)
+        {
+            int randomIndex = UnityEngine.Random.Range(0, i + 1);
+            (decorObjRigidbodies[i], decorObjRigidbodies[randomIndex]) = (decorObjRigidbodies[randomIndex], decorObjRigidbodies[i]);
+        }
+    
+        foreach (Rigidbody rb in decorObjRigidbodies)
+        {
+            DebugLogger.Log(message:$"Detach rigidbody from: {rb.gameObject.name}");
+            rb.isKinematic = false;
+            rb.transform.SetParent(transform.parent);
+        
+            yield return YieldHelper.WaitForSeconds(0.2f); 
+        }
+    }
+
+    #endregion
+
+    #endregion
 
     public void ThrowOutside()
     {

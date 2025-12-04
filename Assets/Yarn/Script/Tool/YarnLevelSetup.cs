@@ -12,7 +12,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using static GameEnum;
 
-public class YarnGameTool : EditorWindow
+public class YarnLevelSetup : EditorWindow
 {
     private Material targetMaterial;
     private PieceMaterialContainer _pieceMaterialContainer;
@@ -29,6 +29,9 @@ public class YarnGameTool : EditorWindow
     #region EXTRACT FROM OTHER GAMES' LEVEL
 
     private string matchName;
+    private Vector2 _scrollPos;
+    private Vector2 _scrollPosInteractables;
+    private Vector2 _scrollPosDecors;
 
     #endregion
 
@@ -38,11 +41,10 @@ public class YarnGameTool : EditorWindow
 
     #endregion
 
-
-    [MenuItem("Saferio/Yarn Level Tool")]
+    [MenuItem("Saferio/Yarn Level Setup")]
     public static void ShowWindow()
     {
-        GetWindow<YarnGameTool>("Yarn Game Tool");
+        GetWindow<YarnLevelSetup>("Yarn Level Setup");
     }
 
     private CountryDataContainer countryDataContainer;
@@ -56,6 +58,7 @@ public class YarnGameTool : EditorWindow
         Rect areaRect = new Rect(padding, padding, position.width - 2 * padding, position.height - 2 * padding);
 
         GUILayout.BeginArea(areaRect);
+        _scrollPos = EditorGUILayout.BeginScrollView(_scrollPos, GUILayout.Height(800));
 
         if (_centeredButtonStyle == null)
         {
@@ -70,7 +73,7 @@ public class YarnGameTool : EditorWindow
         countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
         _pieceMaterialContainer = (PieceMaterialContainer)EditorGUILayout.ObjectField("pieceMaterialContainer", _pieceMaterialContainer, typeof(PieceMaterialContainer), true);
 
-        GUILayout.Button("Load Assets");
+        if (GUILayout.Button("Load Assets"))
         {
             _pieceMaterialContainer = Resources.Load<PieceMaterialContainer>("PieceMaterialContainer");
         }
@@ -98,14 +101,58 @@ public class YarnGameTool : EditorWindow
         SetupLevelButtons();
 
         GUILayout.Space(16);
-        GUILayout.Label("Util", centeredStyle);
+        GUILayout.Label("PIECES", centeredStyle);
+        
+        GUILayout.Label("Interactables", centeredStyle);
+        _scrollPosInteractables = EditorGUILayout.BeginScrollView(_scrollPosInteractables, GUILayout.Height(250));
+        for (int i = 0; i < interactablePieces.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"[{i}]", GUILayout.Width(30));
+            interactablePieces[i] = (Transform)EditorGUILayout.ObjectField(interactablePieces[i], typeof(GameObject), false);
+            if (GUILayout.Button("X", GUILayout.Width(20)))
+            {
+                interactablePieces.RemoveAt(i);
+                i--;
+            }
 
+            EditorGUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.EndScrollView();
+        
+        GUILayout.Label("Decors", centeredStyle);
+        _scrollPosDecors = EditorGUILayout.BeginScrollView(_scrollPosDecors, GUILayout.Height(250));
+        for (int i = 0; i < decorPieces.Count; i++)
+        {
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField($"[{i}]", GUILayout.Width(30));
+            decorPieces[i] = (Transform)EditorGUILayout.ObjectField(decorPieces[i], typeof(GameObject), false);
+            if (GUILayout.Button("X", GUILayout.Width(20)))
+            {
+                decorPieces.RemoveAt(i);
+                i--;
+            }
+
+            EditorGUILayout.EndHorizontal();
+        }
+
+        EditorGUILayout.EndScrollView();
+        
         EditorGUILayout.EndScrollView();
         GUILayout.EndArea();
     }
 
     private void SetupLevelButtons()
     {
+        if (GUILayout.Button(text: "Filter Interactable/Decor Pieces", GUILayout.Width(250)))
+        {
+            foreach (Transform transform in Selection.transforms)
+            {
+                FilterInteractablePieces(transform);
+            }
+        }
+        
         if (GUILayout.Button("Step 1:  Assign Materials", GUILayout.Width(250)))
             AssignMaterials();
 
@@ -138,12 +185,15 @@ public class YarnGameTool : EditorWindow
     #region YARN LEVEL SETUP
 
     List<Transform> interactablePieces = new List<Transform>();
+    List<Transform> decorPieces = new List<Transform>();
 
     private void FilterInteractablePieces(Transform level)
     {
+        DebugLogger.Log();
         Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
 
         interactablePieces.Clear();
+        decorPieces.Clear();
 
         foreach (var item in allChildren)
         {
@@ -162,7 +212,15 @@ public class YarnGameTool : EditorWindow
             }
             else // Decor
             {
-                item.AddComponent<Rigidbody>().isKinematic = true;
+                decorPieces.Add(item);
+                if (item.GetComponent<Rigidbody>() == null)
+                    item.AddComponent<Rigidbody>().isKinematic = true;
+                else
+                {
+                    item.GetComponent<Rigidbody>().isKinematic = true;
+                }
+                
+                item.gameObject.layer = LayerMask.NameToLayer(LayerConst.DECOR);
             }
         }
     }
@@ -248,10 +306,6 @@ public class YarnGameTool : EditorWindow
                 continue;
             }
 
-            Material currentMaterial = renderer.sharedMaterial;
-
-            Material match = _pieceMaterialContainer.materials.First(material => ShareCommonWord(material.name, currentMaterial.name));
-
             item.gameObject.layer = LayerMask.NameToLayer("Default");
 
             item.AddComponent<BasePiece>();
@@ -276,10 +330,40 @@ public class YarnGameTool : EditorWindow
         {
             PieceServiceLocator pieceServiceLocator = pieces[i].GetComponent<PieceServiceLocator>();
 
-            pieceServiceLocator.pieceProperty.Faction = CommonUtil.FindEnumFromString<GameFaction>(
-                pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
+            pieceServiceLocator.pieceProperty.Faction = CommonUtil.FindEnumFromString<GameFaction>(pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
         }
 
+        EditorUtility.SetDirty(level);
+    }
+
+    private void ChangeDecorLayer(Transform level)
+    {
+        
+        Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
+
+        decorPieces.Clear();
+
+        foreach (var item in allChildren)
+        {
+            Renderer renderer = item.GetComponent<Renderer>();
+            if (renderer == null)
+            {
+                DebugLogger.LogError(message: $"Renderere is null");
+                continue;
+            }
+
+            Material currentMaterial = renderer.sharedMaterial;
+
+            if (_pieceMaterialContainer.materials.Any(material => ShareCommonWord(material.name, currentMaterial.name)))
+            {
+            }
+            else // Decor
+            {
+                decorPieces.Add(item);
+                item.AddComponent<Rigidbody>().isKinematic = true;
+                item.gameObject.layer = LayerMask.NameToLayer(LayerConst.DECOR);
+            }
+        }
         EditorUtility.SetDirty(level);
     }
 
