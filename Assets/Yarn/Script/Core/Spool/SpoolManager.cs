@@ -699,6 +699,7 @@ public class SpoolManager : MonoBehaviour
                                 piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
 
                                 piece.InvokePieceLoosenedEvent();
+                                enableBoosterEvent?.Invoke(true);
                             }
                         );
 
@@ -736,6 +737,8 @@ public class SpoolManager : MonoBehaviour
         {
             return;
         }
+
+        enableBoosterEvent?.Invoke(false);
 
         bool isFound = false;
 
@@ -775,6 +778,7 @@ public class SpoolManager : MonoBehaviour
                             piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
 
                             piece.InvokePieceLoosenedEvent();
+                            enableBoosterEvent?.Invoke(true);
                         }
                     );
 
