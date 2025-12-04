@@ -3990,7 +3990,7 @@ GameObject:
   - component: {fileID: 917955725}
   - component: {fileID: 917955726}
   m_Layer: 0
-  m_Name: Input Manager
+  m_Name: Yarn Game Input
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9510,6 +9510,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2112259526}
+  - component: {fileID: 2112259527}
   m_Layer: 0
   m_Name: Input
   m_TagString: Untagged
@@ -9535,6 +9536,21 @@ Transform:
   - {fileID: 715133026}
   m_Father: {fileID: 161484072}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2112259527
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2112259525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 876cfdc4093c65c40929279bd9a8dabc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.InputManager
+  yarnGameInput: {fileID: 917955726}
+  swipeGesture: {fileID: 919401356}
+  pinchGesture: {fileID: 715133027}
 --- !u!1 &2125069617
 GameObject:
   m_ObjectHideFlags: 0

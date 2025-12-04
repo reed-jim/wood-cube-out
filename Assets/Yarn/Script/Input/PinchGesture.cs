@@ -24,9 +24,10 @@ public class PinchGesture : MonoBehaviour
     private float _lastZoomPercent;
     private bool _isZoomByPinching;
 
-    #region ACTION
+    #region EVENTS
     public static event Action<float> pinchGestureEvent;
     public static event Action<bool> enableSwipingEvent;
+    public event Action<bool> isPinchingEvent; 
     #endregion
 
     #region MonoBehaviour Callbacks
@@ -41,7 +42,24 @@ public class PinchGesture : MonoBehaviour
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
         zoomSlider.onValueChanged.AddListener(OnZoomSliderValueChanged);
+        
+        // Add event triggers for pointer down/up
+        UnityEngine.EventSystems.EventTrigger trigger = zoomSlider.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>();
+        if (trigger == null)
+        {
+            trigger = zoomSlider.gameObject.AddComponent<UnityEngine.EventSystems.EventTrigger>();
+        }
 
+        UnityEngine.EventSystems.EventTrigger.Entry pointerDownEntry = new UnityEngine.EventSystems.EventTrigger.Entry();
+        pointerDownEntry.eventID = UnityEngine.EventSystems.EventTriggerType.PointerDown;
+        pointerDownEntry.callback.AddListener((data) => { OnSliderPointerDown(); });
+        trigger.triggers.Add(pointerDownEntry);
+
+        UnityEngine.EventSystems.EventTrigger.Entry pointerUpEntry = new UnityEngine.EventSystems.EventTrigger.Entry();
+        pointerUpEntry.eventID = UnityEngine.EventSystems.EventTriggerType.PointerUp;
+        pointerUpEntry.callback.AddListener((data) => { OnSliderPointerUp(); });
+        trigger.triggers.Add(pointerUpEntry);
+        
         _tweens = new List<Tween>();
     }
 
@@ -66,6 +84,11 @@ public class PinchGesture : MonoBehaviour
 
         if (Input.touchCount == 2)
         {
+            if (!_isZoomByPinching)
+            {
+                isPinchingEvent?.Invoke(true);
+            }
+            
             Touch touch1 = Input.GetTouch(0);
             Touch touch2 = Input.GetTouch(1);
 
@@ -95,8 +118,7 @@ public class PinchGesture : MonoBehaviour
             // zoomSlider.value = _zoomPercent;
             // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
         }
-
-        if (_isZoomByPinching)
+        else if (_isZoomByPinching)
         {
             if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
             {
@@ -107,6 +129,7 @@ public class PinchGesture : MonoBehaviour
                 zoomSlider.interactable = true;
 
                 _isZoomByPinching = false;
+                isPinchingEvent?.Invoke(false); 
             }
         }
     }
@@ -118,11 +141,9 @@ public class PinchGesture : MonoBehaviour
         _isDisabled = false;
 
         zoomSlider.value = 0.0f;
-
-        // OnZoomSliderValueChanged(zoomSlider.value);
-
-        // pinchGestureEvent?.Invoke(maxZoom);
     }
+
+    #region Slider Interaction Methods
 
     private void OnZoomSliderValueChanged(float value)
     {
@@ -133,20 +154,47 @@ public class PinchGesture : MonoBehaviour
 
         pinchGestureEvent?.Invoke(maxZoom - value * (maxZoom - minZoom));
 
-        if (!_isZoomByPinching)
+        /*if (!_isZoomByPinching)
         {
+            DebugLogger.Log(message:$"active pinch disable swipe");
             enableSwipingEvent?.Invoke(false);
+            isPinchingEvent?.Invoke(true); 
         }
 
         CommonUtil.StopAllTweens(_tweens);
 
         _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
         {
+            DebugLogger.Log(message:$"active pinch enable swipe");
             enableSwipingEvent?.Invoke(true);
-        }));
+            isPinchingEvent?.Invoke(false); 
+        }));*/
 
         _lastZoomPercent = value;
     }
+    
+    private void OnSliderPointerDown()
+    {
+        if (_isDisabled) return;
+    
+        isPinchingEvent?.Invoke(true);
+        enableSwipingEvent?.Invoke(false);
+    }
+
+    private void OnSliderPointerUp()
+    {
+        if (_isDisabled) return;
+
+        CommonUtil.StopAllTweens(_tweens);
+
+        _tweens.Add(Tween.Delay(delayToEnableSwipeGesture).OnComplete(() =>
+        {
+            enableSwipingEvent?.Invoke(true);
+            isPinchingEvent?.Invoke(false);
+        }));
+    }
+
+    #endregion
 
     private void SetNewCameraOrthographicSize(float orthographicSize)
     {
