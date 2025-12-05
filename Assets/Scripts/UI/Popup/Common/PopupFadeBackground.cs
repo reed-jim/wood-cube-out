@@ -24,9 +24,9 @@ public class PopupFadeBackground : MonoBehaviour
 
     void OnDestroy()
     {
-        BasePopup.popupShowEvent -= ShowPopup;
-        BasePopup.popupHideEvent -= TryClosePopup;
-        RevivePopup.OnPeekPicture -= ClosePopup;
+        BasePopup.popupShowEvent -= this.ShowPopup;
+        BasePopup.popupHideEvent -= this.TryClosePopup;
+        RevivePopup.OnPeekPicture -= this.ClosePopup;
         RevivePopup.OnStopPeekPicture -= ShowPopup;
 
         CommonUtil.StopTween(_transitionTween);
@@ -36,7 +36,7 @@ public class PopupFadeBackground : MonoBehaviour
     {
         fadeBackground.gameObject.SetActive(true);
 
-        PlaceBeforeDeepestActivePopup(gameObject);
+        this.PlaceBeforeDeepestActivePopup(gameObject);
 
         CommonUtil.StopTween(_transitionTween);
 
@@ -45,7 +45,6 @@ public class PopupFadeBackground : MonoBehaviour
 
     private void TryClosePopup()
     {
-        DebugLogger.Log();
         PlaceBeforeDeepestActivePopup(gameObject);
 
         Transform popupContainer = transform.parent;
@@ -82,7 +81,6 @@ public class PopupFadeBackground : MonoBehaviour
 
     public void PlaceBeforeDeepestActivePopup(GameObject target)
     {
-        DebugLogger.Log();
         if (target == null) return;
         Transform parent = target.transform.parent;
         if (parent == null) return;
@@ -108,7 +106,9 @@ public class PopupFadeBackground : MonoBehaviour
         int newIndex = Mathf.Max(0, deepestIndex);
 
         if (target.transform.GetSiblingIndex() <= deepestIndex)
+        {
             newIndex--;
+        }
 
         target.transform.SetSiblingIndex(newIndex);
     }

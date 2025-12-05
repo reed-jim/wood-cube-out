@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 
@@ -8,6 +9,8 @@ public class AdsBreakScreen : SaferioTweenBehaviour
 
     [SerializeField] private RectTransform container;
     [SerializeField] private CanvasGroup canvasGroup;
+
+    #region MonoBehaviour Callback
 
     protected override void MoreActionInAwake()
     {
@@ -25,8 +28,11 @@ public class AdsBreakScreen : SaferioTweenBehaviour
         container.gameObject.SetActive(false);
     }
 
+    #endregion
+
     public void Show(Action onCompleteAction = null)
     {
+        DebugLogger.Log();
         container.gameObject.SetActive(true);
 
         canvasGroup.alpha = 0;
@@ -37,7 +43,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
                 AddTween(Tween.Delay(1).OnComplete(() =>
                 {
                     onCompleteAction?.Invoke();
-
+                    DebugLogger.Log(message: $"AdsBreakScreen onComplete");
                     // container.gameObject.SetActive(false);
                 }));
             })

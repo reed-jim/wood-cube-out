@@ -47,8 +47,10 @@ namespace NamPhuThuy
         private void Awake()
         {
             // BACKGROUND
-            PictureDetailsPopup.updateBackgroundEvent += SetupBackground;
-            PictureNewPopup.updateBackgroundEvent += SetupBackground;
+            PictureDetailsPopup.updateBackgroundEvent += this.SetupBackground;
+            PictureNewPopup.updateBackgroundEvent += this.SetupBackground;
+            YarnLevelLoader.startLevelEvent += this.SetupBackground;
+            
             YarnLevelLoader.setTargetOrthographicSizeEvent += OnCameraOrthoSizeChanged;
             GameplayCamera.updateCameraZoomRatioEvent += OnCameraOrthoSizeChanged;
             
@@ -67,8 +69,11 @@ namespace NamPhuThuy
         private void OnDestroy()
         {
             // BACKGROUND
-            PictureDetailsPopup.updateBackgroundEvent -= SetupBackground;
-            PictureNewPopup.updateBackgroundEvent -= SetupBackground;
+            PictureDetailsPopup.updateBackgroundEvent -= this.SetupBackground;
+            PictureNewPopup.updateBackgroundEvent -= this.SetupBackground;
+            YarnLevelLoader.startLevelEvent -= this.SetupBackground;
+            
+            
             YarnLevelLoader.setTargetOrthographicSizeEvent -= OnCameraOrthoSizeChanged;
             GameplayCamera.updateCameraZoomRatioEvent -= OnCameraOrthoSizeChanged;
             // GameplayScreen.triggerUpdateBackgroundEvent -= SetupBackground;
