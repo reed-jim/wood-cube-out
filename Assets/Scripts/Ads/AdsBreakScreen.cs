@@ -28,6 +28,16 @@ public class AdsBreakScreen : SaferioTweenBehaviour
         container.gameObject.SetActive(false);
     }
 
+    private void OnEnable()
+    {
+        DebugLogger.Log(message:$"");
+    }
+
+    private void OnDisable()
+    {
+        DebugLogger.Log(message:$"");
+    }
+
     #endregion
 
     public void Show(Action onCompleteAction = null)
@@ -44,7 +54,6 @@ public class AdsBreakScreen : SaferioTweenBehaviour
                 {
                     onCompleteAction?.Invoke();
                     DebugLogger.Log(message: $"AdsBreakScreen onComplete");
-                    // container.gameObject.SetActive(false);
                 }));
             })
         );
@@ -53,6 +62,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
     public void Hide()
     {
         // container.gameObject.SetActive(false);
+        DebugLogger.Log();
 
         if (!container.gameObject.activeInHierarchy)
         {

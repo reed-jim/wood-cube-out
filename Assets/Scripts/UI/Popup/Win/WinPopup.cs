@@ -244,12 +244,14 @@ public class WinPopup : BasePopup
 
     private async void OnClickContinue()
     {
+        DebugLogger.Log();
         // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
 
         if (!interactable) return;
 
         if (_isAlreadyWatchRewardedAd)
         {
+            DebugLogger.Log(message:$"Already watch rewarded ad, skip interstitial ad");
             OnInterstitialAdCompleted();
         }
         else
@@ -260,6 +262,7 @@ public class WinPopup : BasePopup
 
             if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
+                DebugLogger.Log(message:$"Call double interstitial ad, 1");
                 AdmobAdsMax.Instance.ShowDoubleInterstitialAds
                 (
                     OnInterstitialAdCompleted, isShowBreakAds: true
@@ -267,6 +270,7 @@ public class WinPopup : BasePopup
             }
             else
             {
+                DebugLogger.Log(message:$"Call interstitial ad, 2");
                 AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
@@ -282,6 +286,7 @@ public class WinPopup : BasePopup
 
     private void OnInterstitialAdCompleted()
     {
+        DebugLogger.Log();
         _tweens.Add(Tween.Delay(3f).OnComplete(() =>
         {
             HideImmediately();

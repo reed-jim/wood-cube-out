@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NamPhuThuy.AnimateWithScripts;
+using NamPhuThuy.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,7 +39,7 @@ namespace NamPhuThuy.UI
         private Coroutine _routine;
 
         #region MonoBehaviour Methods
-
+        
         protected override void MoreActionInAwake()
         {
             base.MoreActionInAwake();
@@ -61,7 +61,7 @@ namespace NamPhuThuy.UI
         /// </summary>
         public void Begin(float duration)
         {
-            Common.DebugLogger.Log();
+            DebugLogger.Log();
             StopLoading();
             _routine = StartCoroutine(RunLoading(duration));
         }
@@ -71,7 +71,7 @@ namespace NamPhuThuy.UI
         /// </summary>
         public void StopLoading()
         {
-            Common.DebugLogger.Log();
+            DebugLogger.Log();
             if (_routine != null)
             {
                 StopCoroutine(_routine);
@@ -85,8 +85,8 @@ namespace NamPhuThuy.UI
 
         private IEnumerator RunLoading(float duration)
         {
-            Common.DebugLogger.Log();
-            if (loadingSlider == null)
+            DebugLogger.Log();
+            if (this.loadingSlider == null)
             {
                 Debug.LogWarning("[GUIPopupLoading] No Slider assigned.");
                 OnLoadComplete?.Invoke();
@@ -95,8 +95,8 @@ namespace NamPhuThuy.UI
 
             if (duration <= 0f)
             {
-                loadingSlider.value = 1f;
-                _routine = null; // ensure cleared for zero-duration
+                this.loadingSlider.value = 1f;
+                this._routine = null; // ensure cleared for zero-duration
                 OnLoadComplete?.Invoke();
                 yield break;
             }
@@ -121,6 +121,7 @@ namespace NamPhuThuy.UI
 
         protected override void Show(Action onCompletedAction = null)
         {
+            DebugLogger.Log();
             base.Show(onCompletedAction);
             
             if (loadingSlider != null)
@@ -135,6 +136,7 @@ namespace NamPhuThuy.UI
 
         protected override void Hide(Action onCompletedAction = null)
         {
+            DebugLogger.Log();
             StopLoading();
             base.Hide(onCompletedAction);
         }

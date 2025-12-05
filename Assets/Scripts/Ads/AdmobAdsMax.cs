@@ -16,13 +16,8 @@ public class AdmobAdsMax : MonoBehaviour
     private int _loadBannerRetryTime;
     private bool _isBannerLoaded;
 
-
     private InterstitialAd _interstitialAdmob;
     #endregion
-
-
-
-
 
     public static AdmobAdsMax Instance;
 
@@ -608,7 +603,7 @@ public class AdmobAdsMax : MonoBehaviour
 
         void StartShowDoubleInter()
         {
-            DebugLogger.Log(message: $"");
+            DebugLogger.Log(message: $"Start Show DoubleInter");
             ShowInterstitial(
                 true,
                 actionWatchLog,
@@ -699,6 +694,7 @@ public class AdmobAdsMax : MonoBehaviour
                 {
                     AdsBreakScreen.Instance.Show(onCompleteAction: () =>
                     {
+                        DebugLogger.Log(message:$"show the interstitial admob ad");
                         _interstitialAdmob.Show();
                     });
                 }
@@ -870,14 +866,14 @@ public class AdmobAdsMax : MonoBehaviour
         UnityAction actionIniterClose = null, UnityAction actionIniterShow = null, string level = null,
         bool isInGame = true, bool isShowAdBreak = true)
     {
-        // Debug.Log("show inter ========" + countdownAds);
+        DebugLogger.Log();
 
         if (UserData.IsRemoveAds)
         {
             // Debug.Log("show inter ======== is RemoveAds ");
 
             //if (!isInGame)
-
+            DebugLogger.Log(message:$"Ads is Removed");
             actionIniterClose?.Invoke();
 
             return false;
@@ -886,6 +882,7 @@ public class AdmobAdsMax : MonoBehaviour
         if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
         {
             actionIniterClose?.Invoke();
+            DebugLogger.Log(message:$"Turn of inters on remote");
 
             return false;
         }
@@ -895,22 +892,28 @@ public class AdmobAdsMax : MonoBehaviour
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
             isShowImmediatly)
         {
+            DebugLogger.Log(message:$"isShowAdBreak: {isShowAdBreak}");
             if (isShowAdBreak)
             {
+                DebugLogger.Log(message: $"isShowAdBreak is true");
                 AdsBreakScreen.Instance.Show(() =>
                 {
+                    DebugLogger.Log(message: $"call the callback of show adbreak");
                     ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
                 });
             }
             else
             {
+                DebugLogger.Log(message: $"isShowAdBreak is false");
                 ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
             }
         }
         else
         {
             if (actionIniterClose != null)
+            {
                 actionIniterClose();
+            }
         }
 
         return true;
@@ -923,6 +926,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other", UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
+        DebugLogger.Log();
         actionIniterClose += () =>
         {
             DebugLogger.Log(message: $"actionIniterClose");
