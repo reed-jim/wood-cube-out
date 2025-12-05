@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -33,7 +34,7 @@ public class ReturnHomePopup : BasePopup
 
     private void ReturnHome()
     {
-        // avoid spamming
+        DebugLogger.Log();
         homeButton.interactable = false;
 
         if (GamePersistentVariable.livesData.CurrentLives > 0)

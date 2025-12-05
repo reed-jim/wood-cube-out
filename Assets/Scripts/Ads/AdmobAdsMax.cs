@@ -8,6 +8,7 @@ using GoogleMobileAds.Common;
 using Firebase.Analytics;
 using UnityEngine.SceneManagement;
 using AppsFlyerSDK;
+using NamPhuThuy.Common;
 
 public class AdmobAdsMax : MonoBehaviour
 {
@@ -573,23 +574,12 @@ public class AdmobAdsMax : MonoBehaviour
 
         if (isShowImmediatly)
         {
-            //     GameController.Instance.AdsController.ShowInterstitial(
-            //    isShowImmediatly, actionWatchLog, () =>
-            //    {
-            //        interOneFinished = true;
-            //        CheckAllAdsClosed();
-            //    }, null, isShowBreakAds
-            //    );
-
-            //     if (!isShowBreakAds)
-            //     {
-            //         _actionIniterAd?.Invoke();
-            //     }
         }
         else
         {
             if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
             {
+                DebugLogger.Log(message: $"isShowBreakAds: {isShowBreakAds}");
                 if (isShowBreakAds)
                 {
                     AdsBreakScreen.Instance.Show(() =>
@@ -618,6 +608,7 @@ public class AdmobAdsMax : MonoBehaviour
 
         void StartShowDoubleInter()
         {
+            DebugLogger.Log(message: $"");
             ShowInterstitial(
                 true,
                 actionWatchLog,
@@ -930,11 +921,11 @@ public class AdmobAdsMax : MonoBehaviour
         return MaxSdk.IsInterstitialReady(InterstitialAdUnitId);
     }
 
-    private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
-        UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
+    private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other", UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
     {
         actionIniterClose += () =>
         {
+            DebugLogger.Log(message: $"actionIniterClose");
             AdsBreakScreen.Instance.Hide();
 
             IsCooldownAdmobBanner = true;

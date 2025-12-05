@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class UserLivesUI : SaferioTweenBehaviour
 
     public static Action<ScreenRoute> switchRouteEvent;
     public static event Action<ResourceType, Vector3, int, int> collectLivesEvent;
+
+    #region MonoBehaviour Callbacks
 
     protected override void MoreActionInAwake()
     {
@@ -45,64 +48,34 @@ public class UserLivesUI : SaferioTweenBehaviour
         }
     }
 
+    #endregion
+
     private void UpdateLivesReplenishTime(string time)
     {
+        DebugLogger.Log(message:$"time: {time}");
         replenishLifeTimeText.text = time;
     }
-
+    //updateLivesNumberEvent
     private void UpdateLivesNumber(int lives)
     {
+        DebugLogger.Log();
         ActualUpdate();
-
-        // numLivesText.text = $"{lives}";
-
-        // if (lives == GameConstants.DEFAULT_LIVES)
-        // {
-        //     replenishLifeTimeText.text = $"Full";
-
-        //     if (openLivesShopPopupButton != null)
-        //     {
-        //         openLivesShopPopupButton.gameObject.SetActive(false);
-        //     }
-        // }
-        // else
-        // {
-        //     if (openLivesShopPopupButton != null)
-        //     {
-        //         openLivesShopPopupButton.gameObject.SetActive(true);
-        //     }
-        // }
 
         _numLives = lives;
 
-        // try
-        // {
-        //     Vector2 positionRelativeToCanvas = ((Vector2)liveIcon.position - 0.5f * GamePersistentVariable.canvasSize) / GamePersistentVariable.canvasScale;
-
-        //     RewardCollectingUI.Instance.CollectItem(
-        //         ResourceType.Live,
-        //         positionRelativeToCanvas,
-        //         onCompleteAction: () => ActualUpdate(),
-        //         totalValue: 1,
-        //         poolSize: 1,
-        //         itemSizeX: liveIcon.sizeDelta.x
-        //     );
-        // }
-        // catch (System.Exception)
-        // {
-        //     ActualUpdate();
-        // }
-
         void ActualUpdate()
         {
+            DebugLogger.Log(message: $"ActualUpdate lives = {lives}");
             numLivesText.text = $"{lives}";
 
+            DebugLogger.Log(message:$"Before check if");
             if (lives == GameConstants.DEFAULT_LIVES)
             {
                 replenishLifeTimeText.text = $"Full";
 
                 if (openLivesShopPopupButton != null)
                 {
+                    DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
                     openLivesShopPopupButton.gameObject.SetActive(false);
                 }
             }
@@ -110,6 +83,7 @@ public class UserLivesUI : SaferioTweenBehaviour
             {
                 if (openLivesShopPopupButton != null)
                 {
+                    DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
                     openLivesShopPopupButton.gameObject.SetActive(true);
                 }
             }

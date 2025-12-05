@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.UI;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class CoinContainerUI : MonoBehaviour
         CompensatePopup.updateCoinTextEvent += UpdateCoinText;
         LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
         BuyBoosterPopup.updateCoinTextEvent += UpdateCoinText;
+        GalleryPackElement.updateCoinTextEvent += this.UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -64,22 +66,21 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
         SaferioIAPManager.collectCoinEvent -= CollectCoin;
         ResourceEarnPopup.collectCoinEvent -= CollectCoin;
-        WinPopup.collectCoinEvent -= CollectCoin;
+        WinPopup.collectCoinEvent -= this.CollectCoin;
         BackupPopup.updateCoinTextEvent -= UpdateCoinText;
         CompensatePopup.updateCoinTextEvent -= UpdateCoinText;
-        LivesShopPopup.updateCoinTextEvent -= UpdateCoinText;
-        BuyBoosterPopup.updateCoinTextEvent -= UpdateCoinText;
-
-        CommonUtil.StopAllTweens(_tweens);
+        LivesShopPopup.updateCoinTextEvent -= this.UpdateCoinText;
+        BuyBoosterPopup.updateCoinTextEvent -= this.UpdateCoinText;
+        GalleryPackElement.updateCoinTextEvent -= this.UpdateCoinText;
+        CommonUtil.StopAllTweens(this._tweens);
     }
 
     // private void OnCoinPurchased()
     // {
     //     Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
 
-    //     collectCoinEvent?.Invoke(positionRelativeToCanvas);
+    // collectCoinEvent?.Invoke(positionRelativeToCanvas);
     // }
-
     private void UpdateCoinText()
     {
         userResourcesObserver.Load();

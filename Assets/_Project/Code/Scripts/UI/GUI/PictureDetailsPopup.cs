@@ -302,9 +302,9 @@ namespace NamPhuThuy.UI
         private void OnClickUseAsBackground()
         { 
             DebugLogger.Log();
-            DataManager.Ins.PlayerData.CurrentBackgroundId = currentPictureId;
+            DataManager.Ins.PlayerData.CurrentBackgroundId = this.currentPictureId;
 
-            PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
+            this.PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
             updateBackgroundEvent?.Invoke();
         }
 

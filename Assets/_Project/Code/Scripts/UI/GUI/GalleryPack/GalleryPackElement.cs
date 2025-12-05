@@ -244,22 +244,26 @@ namespace NamPhuThuy.UI
             {
                 Debug.Log($"GalleryPackElement.OnClickPlus() - Out of pictures");
              
-                PlayVFXPopupText(LocalizationConst.OUT_OF_PICTURES);
+                this.PlayVFXPopupText(LocalizationConst.OUT_OF_PICTURES);
                 return;
             }
 
-            if (PackQuantity < 20)
-                PackQuantity += 1;
+            if (this.PackQuantity < 20)
+            {
+                this.PackQuantity += 1;
+            }
             else
             {
-                PlayVFXPopupText(LocalizationConst.CANT_INCREASE_MORE);
+                this.PlayVFXPopupText(message: LocalizationConst.CANT_INCREASE_MORE);
             }
         }
 
         private void OnClickMinus()
         {
-            if (PackQuantity > 1)
-                PackQuantity -= 1;
+            if (this.PackQuantity > 1)
+            {
+                this.PackQuantity -= 1;
+            }
             else
             {
                 PlayVFXPopupText(LocalizationConst.CANT_DECREASE_MORE);
@@ -268,22 +272,20 @@ namespace NamPhuThuy.UI
 
         private void OnClickBuy()
         {
-            
-            bool isEnoughCoin = DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= TotalPrice;
-            
-            DebugLogger.Log(message:$"playerCoint: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}, totalPrice: {TotalPrice}, isEnoughCoin: {isEnoughCoin}");
+            bool isEnoughCoin = DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= this.TotalPrice;
+            DebugLogger.Log(message: $"playerCoin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}, totalPrice: {this.TotalPrice}, isEnoughCoin: {isEnoughCoin}");
 
 
             if (!isEnoughCoin)
             {
-                DebugLogger.Log(message:$"Not enough coin");
+                DebugLogger.Log(message: $"Not enough coin");
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
                 openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
                 return;
             }
 
-            List<PictureData> lockedPictures = TakeAListOfLockPictures();
-            int picNumTake = Mathf.Min(PackQuantity, lockedPictures.Count);
+            List<PictureData> lockedPictures = this.TakeAListOfLockPictures();
+            int picNumTake = Mathf.Min(this.PackQuantity, lockedPictures.Count);
 
             lockedPictures.FisherYatesShuffle();
             List<PictureData> picked = lockedPictures.GetRange(0, picNumTake);
@@ -294,16 +296,15 @@ namespace NamPhuThuy.UI
                 buyButton.interactable = false;
                 SetUnlockedAllPictureOfStyle();
             }
-            
             DebugLogger.Log(message:$"Buy successfully - picked.Count: {picked.Count}");
-            DataManager.Ins.UserResourcesObserver.ChangeCoin(-TotalPrice);
+            DataManager.Ins.UserResourcesObserver.ChangeCoin(-this.TotalPrice);
+
             SaferioTracking.TrackResourceSource(
                 DataManager.Ins.CurrentLevel.Value, "Gallery Pack", PackQuantity, TotalPrice, "buy_with_coin");
 
             updateCoinTextEvent?.Invoke();
-            
-            ShowLoadingPopup();
-            UnlockPictures(picked);
+            this.ShowLoadingPopup();
+            this.UnlockPictures(picked);
             PackQuantity = 1;
             
             GamePersistentVariable.picDataList_PictureGalleryPackResults = picked;

@@ -24,7 +24,7 @@ namespace NamPhuThuy.UI
 
         private void Awake()
         {
-            GalleryPackElement.updateCoinTextEvent += UpdateUI;
+            GalleryPackElement.updateCoinTextEvent += this.UpdateUI;
         }
 
         private void OnDestroy()

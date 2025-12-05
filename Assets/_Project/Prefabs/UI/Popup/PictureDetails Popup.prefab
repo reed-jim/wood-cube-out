@@ -659,12 +659,12 @@ GameObject:
   - component: {fileID: 177913230692372950}
   - component: {fileID: 155341201263891658}
   m_Layer: 5
-  m_Name: Image Coin
+  m_Name: Image Ads
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6952647368996872464
 RectTransform:
   m_ObjectHideFlags: 0
@@ -674,16 +674,16 @@ RectTransform:
   m_GameObject: {fileID: 6803568043953419987}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1.2, y: 1.2, z: 1.2}
+  m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4531689277137051403}
   m_Father: {fileID: 8594819869358006121}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -224, y: 13}
-  m_SizeDelta: {x: 127.2525, y: 137.541}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 59, y: 19.548872}
+  m_SizeDelta: {x: 96, y: 112}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &177913230692372950
 CanvasRenderer:
@@ -713,7 +713,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3881615954484961403, guid: 17c9825a54be6d64ea4e6adaa7f3dbb3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: dadb3ba9327edbe4eb44895466be7453, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1455,7 +1455,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7539426977600630931, guid: 5136ca86a6d3f814994be89b9f0d6a0a, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 9170787734401098099, guid: 5136ca86a6d3f814994be89b9f0d6a0a, type: 3}
