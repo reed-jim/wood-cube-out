@@ -1,7 +1,6 @@
 using System;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using PrimeTween;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,6 +22,8 @@ public class GameVariableInitializer : MonoBehaviour
 
     public static event Action currentLevelFetchedEvent;
     public static event Action gameSettingLoadedEvent;
+
+    #region MonoBehaviour Callbacks
 
     private void Awake()
     {
@@ -48,7 +49,7 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.isPassedStepOneTutorial = true;
         }
 
-        GamePersistentVariable.chestQueue = new System.Collections.Generic.Queue<string>();
+        GamePersistentVariable.chestQueue = new Queue<string>();
 
         GamePersistentVariable.currentLevel = currentLevel.Value;
         GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
@@ -111,7 +112,9 @@ public class GameVariableInitializer : MonoBehaviour
         Debug.Log("SAFERIO Remove Later");
         GamePersistentVariable.livesConfig = new LivesConfig()
         {
-            isActive = true
+            isActive = true,
+            maxLive = 5,
+            secondReplenishLive = 20 * 60,
         };
 
         currentLevelFetchedEvent?.Invoke();
@@ -121,6 +124,8 @@ public class GameVariableInitializer : MonoBehaviour
     {
         ScriptableObjectInitializer.getCachedCanvasSizeEvent -= GetCachedCanvasSize;
     }
+
+    #endregion
 
     private async void LoadGameSetting()
     {

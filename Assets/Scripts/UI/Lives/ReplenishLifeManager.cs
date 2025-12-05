@@ -49,7 +49,6 @@ public class ReplenishLifeManager : MonoBehaviour
 
         StartCoroutine(Counting());
 
-        DebugLogger.Log(message: $"Trigger updateLivesNumberEvent");
         updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
     }
 
@@ -70,7 +69,6 @@ public class ReplenishLifeManager : MonoBehaviour
             return;
         }
 
-        DebugLogger.Log(message: $"Trigger updateLivesNumberEvent");
         updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
     }
 
@@ -84,7 +82,6 @@ public class ReplenishLifeManager : MonoBehaviour
 
     private IEnumerator Counting()
     {
-        DebugLogger.Log(message:$"_livesData.CurrentLives {_livesData.CurrentLives}, maxLives {MaxLives}");
         WaitForSeconds waitOneSecond = new WaitForSeconds(1);
         
         while (true)
@@ -123,16 +120,15 @@ public class ReplenishLifeManager : MonoBehaviour
 
         if (remainingTime <= 0)
         {
-            DebugLogger.Log(message:$"remainTime <= 0, totalLivesToReplenish: {totalLivesToReplenish}");
+            // DebugLogger.Log(message:$"remainTime <= 0, totalLivesToReplenish: {totalLivesToReplenish}");
             _livesData.CurrentLives += totalLivesToReplenish;
             _livesData.LastReplenishTime = DateTime.Now;
 
-            DebugLogger.Log(message: $"Trigger updateLivesNumberEvent");
             updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
         }
         else
         {
-            DebugLogger.Log(message: $"remainTime > 0, remainingTime: {remainingTime}");
+            // DebugLogger.Log(message: $"remainTime > 0, remainingTime: {remainingTime}");
             updateLivesReplenishTimeEvent?.Invoke(ConvertTimeFormat(remainingTime));
         }
 
@@ -148,16 +144,16 @@ public class ReplenishLifeManager : MonoBehaviour
 
     private void ChangeLivesNumber(int value)
     {
-        DebugLogger.Log(message: $"CurrentLives = {_livesData.CurrentLives}, value = {value}");
+        // DebugLogger.Log(message: $"CurrentLives = {_livesData.CurrentLives}, value = {value}");
         if (_livesData.CurrentLives == MaxLives)
         {
             _livesData.LastReplenishTime = DateTime.Now;
         }
-        DebugLogger.Log(message: $"CurrentLives 1 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
+        // DebugLogger.Log(message: $"CurrentLives 1 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
         _livesData.CurrentLives += value;
-        DebugLogger.Log(message: $"CurrentLives 2 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
+        // DebugLogger.Log(message: $"CurrentLives 2 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
         _livesData.CurrentLives = Math.Clamp(_livesData.CurrentLives, 0, MaxLives);
-        DebugLogger.Log(message: $"CurrentLives 3 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
+        // DebugLogger.Log(message: $"CurrentLives 3 = {_livesData.CurrentLives}, maxLives = {MaxLives}");
 
         DataUtility.Save(GameConstants.USER_LIVES_DATA, _livesData);
 
@@ -165,7 +161,6 @@ public class ReplenishLifeManager : MonoBehaviour
 
         UpdateRemainingReplenishLife();
 
-        DebugLogger.Log(message: $"Trigger updateLivesNumberEvent");
         updateLivesNumberEvent?.Invoke(_livesData.CurrentLives);
     }
 
