@@ -432,6 +432,8 @@ public class BasePiece : MonoBehaviour
             _replacedMeshCollider = gameObject.AddComponent<MeshCollider>();
             _replacedMeshCollider.convex = true;
             _replacedMeshCollider.enabled = false;
+
+            _replacedMeshCollider.sharedMesh = GetComponent<MeshFilter>().sharedMesh;
         }
     }
 
