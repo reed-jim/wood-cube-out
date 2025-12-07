@@ -26,6 +26,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject chestAppearSoundPrefab;
     [SerializeField] private GameObject openChestSoundPrefab;
     [SerializeField] private GameObject rewardItemSoundPrefab;
+    [SerializeField] private GameObject coinSoundPrefab;
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
     [SerializeField] private GameObject looseScrewFxPrefab;
     [SerializeField] private GameObject boxCompletedFxPrefab;
@@ -87,6 +88,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.CHEST_APPEAR_SOUND, chestAppearSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.OPEN_CHEST_SOUND, openChestSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.REWARD_ITEM_SOUND, rewardItemSoundPrefab, 1);
+        RegisterPool<AudioSource>(GameConstants.COIN_SOUND, coinSoundPrefab, 15);
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX, looseScrewFxPrefab, 5);

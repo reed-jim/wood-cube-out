@@ -59,6 +59,7 @@ public class WinPopup : BasePopup
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<int> collectCoinEvent;
+    public static event Action showSceneTransitionEvent;
 
 
     #region Override Methods
@@ -251,7 +252,7 @@ public class WinPopup : BasePopup
 
         if (_isAlreadyWatchRewardedAd)
         {
-            DebugLogger.Log(message:$"Already watch rewarded ad, skip interstitial ad");
+            DebugLogger.Log(message: $"Already watch rewarded ad, skip interstitial ad");
             OnInterstitialAdCompleted();
         }
         else
@@ -262,7 +263,7 @@ public class WinPopup : BasePopup
 
             if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
-                DebugLogger.Log(message:$"Call double interstitial ad, 1");
+                DebugLogger.Log(message: $"Call double interstitial ad, 1");
                 AdmobAdsMax.Instance.ShowDoubleInterstitialAds
                 (
                     OnInterstitialAdCompleted, isShowBreakAds: true
@@ -270,7 +271,7 @@ public class WinPopup : BasePopup
             }
             else
             {
-                DebugLogger.Log(message:$"Call interstitial ad, 2");
+                DebugLogger.Log(message: $"Call interstitial ad, 2");
                 AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
@@ -297,6 +298,12 @@ public class WinPopup : BasePopup
         if (!isBackHome)
         {
             collectCoinEvent?.Invoke(_currentCollectedCoin);
+
+            // wait for collect coin animation
+            Tween.Delay(2f).OnComplete(() =>
+            {
+                showSceneTransitionEvent?.Invoke();
+            });
 
             Tween.Delay(2.5f).OnComplete(() =>
             {

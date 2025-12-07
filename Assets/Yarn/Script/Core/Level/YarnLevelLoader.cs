@@ -50,7 +50,6 @@ public class YarnLevelLoader : MonoBehaviour
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
-    public static event Action showSceneTransitionEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
     public static event Action<bool> enableSwipingEvent;
@@ -171,7 +170,6 @@ public class YarnLevelLoader : MonoBehaviour
 
         // if (isLoopLevel)
         // {
-        //     showSceneTransitionEvent?.Invoke();
         //     setIsLevelLoadedEvent?.Invoke();
         //     switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
 
@@ -212,8 +210,6 @@ public class YarnLevelLoader : MonoBehaviour
             Addressables.Release(_loadLevelHandle);
         }
         //
-
-        showSceneTransitionEvent?.Invoke();
 
         _loadLevelHandle = Addressables.InstantiateAsync(levelPrefab, transform);
 

@@ -45,7 +45,7 @@ public class SceneTransition : MonoBehaviour
 
     private void Awake()
     {
-        YarnLevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
+        WinPopup.showSceneTransitionEvent += TransitionOnLevelStarted;
         PieceManager.levelSetupCompletedEvent += SetIsLevelLoaded;
         YarnLevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
 
@@ -68,76 +68,31 @@ public class SceneTransition : MonoBehaviour
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
+    void Start()
+    {
+        TransitionOnLevelStarted();
+    }
+
     private void OnDestroy()
     {
-        YarnLevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
+        WinPopup.showSceneTransitionEvent -= TransitionOnLevelStarted;
         PieceManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
         YarnLevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
 
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void BlackScreenTransition(float delay, Action onCompletedAction)
-    {
-        if (_isFirstTimeOpenApp)
-        {
-            _isFirstTimeOpenApp = false;
-
-            return;
-        }
-
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
-
-        blackBackground.gameObject.SetActive(true);
-
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
-        {
-            blackBackground.gameObject.SetActive(false);
-
-            onCompletedAction?.Invoke();
-        }));
-    }
-
-    private void ShowBlackScreenImmediately()
-    {
-        blackBackground.gameObject.SetActive(true);
-
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
-    }
-
     private void TransitionOnLevelStarted()
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     _isFirstTimeEnterScene = false;
-
-        //     return;
-        // }
-
-        // if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
-        // {
-        //     LoadingLevelInProgress();
-        // }
-
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
         mainBackground.FitImageToRectTransform();
 
-        LoadingLevelInProgress();
-    }
+        if (_waitForLevelLoadedCoroutine != null)
+        {
+            StopCoroutine(_waitForLevelLoadedCoroutine);
+        }
 
-    private IEnumerator WaitForLevelLoaded()
-    {
-        // ShowBlackScreenImmediately();
-
-        yield return new WaitUntil(() => _isLevelLoaded);
-
-        // BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
-
-        LoadingLevelInProgress();
-
-        _isLevelLoaded = false;
+        _waitForLevelLoadedCoroutine = StartCoroutine(LoadingLevelInProgress());
     }
 
     private void SetIsLevelLoaded()
@@ -146,11 +101,10 @@ public class SceneTransition : MonoBehaviour
     }
 
     #region LOADING LEVEL IN PROGRESS
-    private void LoadingLevelInProgress()
+    private IEnumerator LoadingLevelInProgress()
     {
         if (_isFirstTimeEnterScene)
         {
-            // loadLevelInProgressContainer.gameObject.SetActive(false);
             loadLevelInProgressContainer.gameObject.SetActive(true);
 
             loadLevelInProgressCanvasGroup.alpha = 1;
@@ -175,7 +129,7 @@ public class SceneTransition : MonoBehaviour
 
             _isFirstTimeEnterScene = false;
 
-            return;
+            yield break;
         }
 
         blackBackground.gameObject.SetActive(false);
@@ -208,50 +162,39 @@ public class SceneTransition : MonoBehaviour
             Tween.Alpha(almostThereText, 1, duration: 0.3f);
         });
 
-        _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
+        yield return new WaitForSeconds(minWaitTime);
+
+        AdmobAdsMax.Instance.HideMRec();
+
+        // double inter
+        if (!_isFirstTimeEnterScene)
         {
-            AdmobAdsMax.Instance.HideMRec();
+            blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-            // double inter
-            if (!_isFirstTimeEnterScene)
-            {
-                blackBackgroundToPassPolicy.gameObject.SetActive(true);
-
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
-                    onDoubleInterClosed: () =>
-                    {
-                        blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                    },
-                    isShowBreakAds: true
-                );
-            }
-            else
-            {
-                _isFirstTimeEnterScene = false;
-            }
-
-            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
-            {
-                loadLevelInProgressCanvasGroup.alpha = newVal;
-            })
-            .OnComplete(() =>
+            AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
+                onDoubleInterClosed: () =>
                 {
-                    loadLevelInProgressContainer.gameObject.SetActive(false);
-                })
+                    blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                },
+                isShowBreakAds: true
             );
-        }));
-    }
-
-    private IEnumerator RotatingIcon()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
-
-        while (true)
-        {
-            rotatingLoadingIcon.eulerAngles -= new Vector3(0, 0, 8);
-
-            yield return waitForSeconds;
         }
+        else
+        {
+            _isFirstTimeEnterScene = false;
+        }
+
+        yield return new WaitUntil(() => _isLevelLoaded);
+
+        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        {
+            loadLevelInProgressCanvasGroup.alpha = newVal;
+        })
+        .OnComplete(() =>
+            {
+                loadLevelInProgressContainer.gameObject.SetActive(false);
+            })
+        );
     }
     #endregion
 }

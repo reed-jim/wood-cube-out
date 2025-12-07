@@ -76,6 +76,7 @@ public static class GameConstants
     public static string CHEST_APPEAR_SOUND = "Chest Appear Sound";
     public static string OPEN_CHEST_SOUND = "Open Chest Sound";
     public static string REWARD_ITEM_SOUND = "Reward Item Sound";
+    public static string COIN_SOUND = "Coin Sound";
     #endregion
 
     #region ANIMATION
