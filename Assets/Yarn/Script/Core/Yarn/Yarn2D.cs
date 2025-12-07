@@ -473,7 +473,7 @@ public class Yarn2D : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
                 {
                     pointOnTopSurface = hits[i].point;
 
@@ -499,7 +499,7 @@ public class Yarn2D : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
                 {
                     pointOnBottomSurface = hits[i].point;
 
@@ -534,7 +534,7 @@ public class Yarn2D : MonoBehaviour
         {
             for (int i = 0; i < hits.Length; i++)
             {
-                if (hits[i].collider == piece.PieceServiceLocator.pieceCollider)
+                if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
                 {
                     return hits[i].point;
                 }

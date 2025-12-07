@@ -9,6 +9,7 @@ public class PieceServiceLocator : MonoBehaviour
     [SerializeField] public MeshFilter pieceMeshFilter;
     [SerializeField] public MeshRenderer pieceMeshRenderer;
     [SerializeField] public Collider pieceCollider;
+    public Collider[] allColliders;
 
     void Awake()
     {

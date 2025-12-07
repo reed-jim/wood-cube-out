@@ -190,7 +190,7 @@ public class BasePiece : MonoBehaviour
 
         if (pieceServiceLocator.pieceProperty.IsRewinding)
         {
-            DebugLogger.Log(message:$"is rewinding, return");
+            DebugLogger.Log(message: $"is rewinding, return");
             return;
         }
 
@@ -198,7 +198,7 @@ public class BasePiece : MonoBehaviour
 
         if (!GamePersistentVariable.isLevelDirty)
         {
-            DebugLogger.Log(message:$"set level dirty");
+            DebugLogger.Log(message: $"set level dirty");
             GamePersistentVariable.isLevelDirty = true;
         }
 
@@ -207,7 +207,7 @@ public class BasePiece : MonoBehaviour
         // If there's only 1 BasePiece (this one), detach rigidbodies from children
         if (innerPieces.Length == 1)
         {
-            DebugLogger.Log(message:$"Only one inner piece, detach rigidbodies");
+            DebugLogger.Log(message: $"Only one inner piece, detach rigidbodies");
             StartCoroutine(IE_DetachDecorObject());
         }
 
@@ -239,7 +239,7 @@ public class BasePiece : MonoBehaviour
 
         if (innerPieces.Length > 1)
         {
-            DebugLogger.Log(message:$"More than one inner piece, activate first inner piece");
+            DebugLogger.Log(message: $"More than one inner piece, activate first inner piece");
             BasePiece firstInnerPiece = innerPieces[1];
 
             firstInnerPiece.gameObject.SetActive(true);
@@ -359,21 +359,21 @@ public class BasePiece : MonoBehaviour
     private IEnumerator IE_DetachDecorObject()
     {
         Rigidbody[] decorObjRigidbodies = GetComponentsInChildren<Rigidbody>();
-    
+
         // Shuffle the array
         for (int i = decorObjRigidbodies.Length - 1; i > 0; i--)
         {
             int randomIndex = UnityEngine.Random.Range(0, i + 1);
             (decorObjRigidbodies[i], decorObjRigidbodies[randomIndex]) = (decorObjRigidbodies[randomIndex], decorObjRigidbodies[i]);
         }
-    
+
         foreach (Rigidbody rb in decorObjRigidbodies)
         {
-            DebugLogger.Log(message:$"Detach rigidbody from: {rb.gameObject.name}");
+            DebugLogger.Log(message: $"Detach rigidbody from: {rb.gameObject.name}");
             rb.isKinematic = false;
             rb.transform.SetParent(transform.parent);
-        
-            yield return YieldHelper.WaitForSeconds(0.2f); 
+
+            yield return YieldHelper.WaitForSeconds(0.2f);
         }
     }
 
@@ -422,35 +422,38 @@ public class BasePiece : MonoBehaviour
     #region CoACD
     private void SetupReplacedMeshColliderWhenRewinding()
     {
-        _coACD = GetComponent<CoACD>();
+        pieceServiceLocator.allColliders = GetComponents<MeshCollider>();
 
-        if (_coACD != null)
-        {
-            _coACD.enabled = false;
+        // _coACD = GetComponent<CoACD>();
 
-            _coACDMeshCollider = gameObject.GetComponents<MeshCollider>();
+        // if (GetComponents<MeshCollider>().Length > 1)
+        // {
+        //     _coACD.enabled = false;
 
-            _replacedMeshCollider = gameObject.AddComponent<MeshCollider>();
-            _replacedMeshCollider.convex = true;
-            _replacedMeshCollider.enabled = false;
+        //     _coACDMeshCollider = gameObject.GetComponents<MeshCollider>();
 
-            _replacedMeshCollider.sharedMesh = GetComponent<MeshFilter>().sharedMesh;
-        }
+        //     _replacedMeshCollider = gameObject.AddComponent<MeshCollider>();
+        //     _replacedMeshCollider.convex = true;
+        //     _replacedMeshCollider.enabled = false;
+
+        //     _replacedMeshCollider.sharedMesh = GetComponent<MeshFilter>().sharedMesh;
+        // }
     }
 
     private void ReplaceMeshColliderWhenRewinding()
     {
-        if (_coACD != null)
-        {
-            foreach (MeshCollider mc in _coACDMeshCollider)
-            {
-                mc.enabled = false;
-            }
+        // if (_coACDMeshCollider.Length >= 0)
+        // {
+        //     foreach (MeshCollider mc in _coACDMeshCollider)
+        //     {
+        //         // mc.enabled = false;
+        //         Destroy(mc);
+        //     }
 
-            _replacedMeshCollider.enabled = true;
+        //     _replacedMeshCollider.enabled = true;
 
-            pieceServiceLocator.pieceCollider = _replacedMeshCollider;
-        }
+        //     pieceServiceLocator.pieceCollider = _replacedMeshCollider;
+        // }
     }
     #endregion
 }
