@@ -14,8 +14,8 @@ public class GameSettingManager : MonoBehaviour
     {
         SettingsPopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
         SettingsPopup.enableGameSoundEvent += EnableGameSound;
-        PausePopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
-        PausePopup.enableGameSoundEvent += EnableGameSound;
+        NamPhuThuy.UI.PausePopup.enableBackgroundMusicEvent += EnableBackgroundMusic;
+        NamPhuThuy.UI.PausePopup.enableGameSoundEvent += EnableGameSound;
 
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);
         EnableGameSound(gameSetting.IsTurnOnSound);
@@ -27,8 +27,8 @@ public class GameSettingManager : MonoBehaviour
     {
         SettingsPopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
         SettingsPopup.enableGameSoundEvent -= EnableGameSound;
-        PausePopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
-        PausePopup.enableGameSoundEvent -= EnableGameSound;
+        NamPhuThuy.UI.PausePopup.enableBackgroundMusicEvent -= EnableBackgroundMusic;
+        NamPhuThuy.UI.PausePopup.enableGameSoundEvent -= EnableGameSound;
     }
 
     private void EnableBackgroundMusic(bool isEnable)

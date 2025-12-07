@@ -66,10 +66,10 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Private Fields
-        
+
         private string _downloadedNoti = _videoDownloadedNoti;
-        private static readonly string _videoDownloadedNoti = "Video Downloaded"; 
-        private static readonly string _imageDownloadedNoti = "Image Downloaded"; 
+        private static readonly string _videoDownloadedNoti = "Video Downloaded";
+        private static readonly string _imageDownloadedNoti = "Image Downloaded";
 
         #endregion
 
@@ -113,7 +113,7 @@ namespace NamPhuThuy.UI
 
             videoDownloadButton.onClick.AddListener(OnClickVideoDownload);
             imageDownloadButton.onClick.AddListener(OnClickImageDownloadVer2);
-            
+
             useAsBackgroundButton.onClick.AddListener(OnClickUseAsBackground);
         }
 
@@ -127,7 +127,7 @@ namespace NamPhuThuy.UI
 
             videoDownloadButton.onClick.RemoveAllListeners();
             imageDownloadButton.onClick.RemoveAllListeners();
-            
+
             useAsBackgroundButton.onClick.RemoveAllListeners();
         }
 
@@ -167,7 +167,7 @@ namespace NamPhuThuy.UI
             {
                 ChangePicture(tmp);
                 currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
-                
+
                 SetStateReactButtons();
                 currentListId--;
             }
@@ -193,9 +193,9 @@ namespace NamPhuThuy.UI
             {
                 ChangePicture(tmp);
                 currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
-                
+
                 SetStateReactButtons();
-                
+
                 // SetStateDownloadSwitches();
                 currentListId++;
             }
@@ -207,7 +207,8 @@ namespace NamPhuThuy.UI
 
         private void PlayVFXPopupText(string message)
         {
-            var args = new PopupTextArgs {
+            var args = new PopupTextArgs
+            {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
                 // startParent = transform,
                 textFont = GUIManager.Instance.DefaultFont,
@@ -248,14 +249,14 @@ namespace NamPhuThuy.UI
                 SaferioTracking.TrackResourceSink(
                     DataManager.Ins.CurrentLevel.Value, "Coin",
                     downloadPrice, (int)DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
-                
+
                 ShowLoadingPopup();
                 StartCoroutine(IEDownLoadVideo());
                 // SetStateDownloadSwitches();
             }
             else
             {
-                DebugLogger.Log(message:$"Not enough coin");
+                DebugLogger.Log(message: $"Not enough coin");
                 openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureDetails);
             }
 
@@ -300,7 +301,7 @@ namespace NamPhuThuy.UI
         }
 
         private void OnClickUseAsBackground()
-        { 
+        {
             DebugLogger.Log();
             DataManager.Ins.PlayerData.CurrentBackgroundId = this.currentPictureId;
 
@@ -360,14 +361,15 @@ namespace NamPhuThuy.UI
         #endregion
 
         #region Private Methods
-        
+
         private void ShowLoadingPopup()
         {
             SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
 
             void HandleLoaded()
             {
-                var args = new PopupTextArgs {
+                var args = new PopupTextArgs
+                {
                     message = _downloadedNoti,
                     textColor = Color.white,
                     duration = 1f,
@@ -379,12 +381,10 @@ namespace NamPhuThuy.UI
 
         public void ChangePicture(int pictureID)
         {
-            Common.DebugLogger.Log();
             currentPictureId = pictureID;
-            pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[pictureID].mainImage;
 
-            // pictureImage.FitImageToRectTransform(GetComponent<RectTransform>());
-            pictureImage.FitImageToRectTransformNoStretch(GetComponent<RectTransform>());
+            pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[pictureID].mainImage;
+            pictureImage.FitImageToRectTransform();
         }
 
         private bool CheckValidatePictureData(int pictureID)
@@ -454,12 +454,13 @@ namespace NamPhuThuy.UI
 
             yield return null;
         }
-        
+
         private void ShowPermissionNotAllowedNotification()
         {
             _downloadedNoti = "Permission Denied";
-            
-            var args = new PopupTextArgs {
+
+            var args = new PopupTextArgs
+            {
                 message = _downloadedNoti,
                 textColor = Color.white,
                 duration = 1f,
@@ -467,7 +468,7 @@ namespace NamPhuThuy.UI
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
-        
+
         private void OnLikeStateChanged()
         {
             SetStateReactButtons();
@@ -480,7 +481,7 @@ namespace NamPhuThuy.UI
         protected override void Show(Action onCompletedAction = null)
         {
             base.Show(onCompletedAction);
-            
+
             currentPictureId = GamePersistentVariable.currentPictureId_PictureDetails;
             currentPictureIdList = GamePersistentVariable.picIdList_PictureDetails;
 
@@ -493,7 +494,7 @@ namespace NamPhuThuy.UI
                     break;
                 }
             }
-            
+
             if (videoDownloadPriceText != null)
             {
                 videoDownloadPriceText.text = $"{DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price}";
@@ -525,7 +526,7 @@ namespace NamPhuThuy.UI
             base.Hide(onCompletedAction);
         }
 
-        
+
         #endregion
 
         #region Public Methods
