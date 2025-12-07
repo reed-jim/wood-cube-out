@@ -30,6 +30,7 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent += UpdatePrice;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        ClaimRewardPopup.removeAdsEvent += OnAdsRemoved;
         SalePackIAPManager.updateSalePackVisibilityEvent += UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent += UpdateLifeTime;
 
@@ -44,6 +45,7 @@ public class IAPPackageUI : MonoBehaviour
     {
         SaferioIAPManager.updatePriceEvent -= UpdatePrice;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        ClaimRewardPopup.removeAdsEvent -= OnAdsRemoved;
         SalePackIAPManager.updateSalePackVisibilityEvent -= UpdateVisibility;
         SalePackIAPManager.updateDailyOfferLifeTimeEvent -= UpdateLifeTime;
     }

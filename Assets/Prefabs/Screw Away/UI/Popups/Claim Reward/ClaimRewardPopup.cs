@@ -48,6 +48,8 @@ public class ClaimRewardPopup : BasePopup
     [SerializeField] private DailyRewardData rewardData;
 
     public static event Action<bool> showClaimRewardPopupEvent;
+    public static event Action<int> collectCoinEvent;
+    public static event Action removeAdsEvent;
 
     protected override void RegisterMoreEvent()
     {
@@ -142,7 +144,27 @@ public class ClaimRewardPopup : BasePopup
 
         Hide(onCompletedAction: () =>
         {
-            InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
+            if (_coinQuantity > 0)
+            {
+                collectCoinEvent?.Invoke(_coinQuantity);
+
+                _coinQuantity = 0;
+            }
+
+            if (_isRemoveAds)
+            {
+                removeAdsEvent?.Invoke();
+
+                _isRemoveAds = false;
+
+                // AdmobAdsMax.Instance.HideBanner();
+                // AdmobAdsMax.Instance.DestroyBanner();
+            }
+
+            GamePersistentVariable.isChestOpenning = false;
+
+            // to show earn resource popup
+            // InvokeShowResourcesEarnPopupPopupEvent(coinQuantity, boosterQuantites, false);
         });
     }
 
@@ -214,7 +236,7 @@ public class ClaimRewardPopup : BasePopup
             {
                 SpineHelper.ChangeSkin(chestSkeGraphic, "2");
             }
-            
+
             rewardCanvasGroup.gameObject.SetActive(false);
             chestCanvasGroup.gameObject.SetActive(true);
 

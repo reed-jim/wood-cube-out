@@ -78,6 +78,7 @@ public class MenuScreen : MonoBehaviour
         BackupPopup.updateRemoveAdsStateEvent += UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent += OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        ClaimRewardPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent += OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded += OnSceneLoaded;
@@ -190,6 +191,7 @@ public class MenuScreen : MonoBehaviour
         BackupPopup.updateRemoveAdsStateEvent -= UpdateRemoveAdsState;
         BottomBarItem.switchRouteEvent -= OnScreenRouteSwitched;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        ClaimRewardPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.unlockScrewBoxesPurchasedCompletedEvent -= OnAllScrewBoxesUnlockedForever;
         SceneManager.sceneLoaded -= OnSceneLoaded;
