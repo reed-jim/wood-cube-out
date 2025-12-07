@@ -20,7 +20,8 @@ public class BasePiece : MonoBehaviour
 
     #endregion
 
-    [Header("CUSTOMIZE")][SerializeField] private int pieceDifficultyModifier;
+    [Header("CUSTOMIZE")]
+    [SerializeField] public int pieceDifficultyModifier;
 
     [Header("CUSTOMIZE - UNSCREW ANIMATION")]
     [SerializeField]

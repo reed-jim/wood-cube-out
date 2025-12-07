@@ -251,7 +251,8 @@ public class PieceManager : MonoBehaviour
 
             GameFaction faction = _pieces[i].Faction;
 
-
+            // manual difficulty adjustment
+            difficultyLevelByFactions[faction] += _pieces[i].pieceDifficultyModifier;
 
             int numCoveredPieces = 0;
 
@@ -279,8 +280,6 @@ public class PieceManager : MonoBehaviour
             numObstacleEachPieceEachFaction[faction].Add(numCoveredPieces);
 
             continue;
-
-
 
             // // Find closest obstacle
             // Transform obstaclePiece = null;
@@ -679,16 +678,16 @@ public class PieceManager : MonoBehaviour
         }
 
         Dictionary<GameFaction, int> piecePortAvailableByFaction = pieceBoxManager.GetPiecePortAvailableByFaction();
-        DebugLogger.LogDictionary(piecePortAvailableByFaction, title:"piecePortAvailableByFaction");
-        
+        DebugLogger.LogDictionary(piecePortAvailableByFaction, title: "piecePortAvailableByFaction");
+
         Dictionary<GameFaction, int> remainingPieceByFaction = GetRemainingPieceByFaction();
-        DebugLogger.LogDictionary(remainingPieceByFaction, title:"remainingPieceByFaction");
-        
+        DebugLogger.LogDictionary(remainingPieceByFaction, title: "remainingPieceByFaction");
+
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
-        DebugLogger.LogDictionary(totalBlockObjectsByFaction, title:"totalBlockObjectsByFaction");
+        DebugLogger.LogDictionary(totalBlockObjectsByFaction, title: "totalBlockObjectsByFaction");
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
-        DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title:"shuffledDifficultyLevelByFaction");
+        DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title: "shuffledDifficultyLevelByFaction");
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
 
