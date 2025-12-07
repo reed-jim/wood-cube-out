@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using NamPhuThuy.AnimateWithScripts;
+using NamPhuThuy.Data;
 using NamPhuThuy.UI;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -49,7 +50,8 @@ public class WinPopup : BasePopup
     [Header("WIN ANIM")]
     [SerializeField] private bool interactable = true;
     [SerializeField] private SegmentedProgressBar picRewardProgressBar;
-    private bool isRewardProgressCompleted;
+    [SerializeField] private SegmentedProgressBar coinRewardProgressBar;
+    private bool[] isRewardProgressCompleted;
 
 
     #region EVENT
@@ -69,11 +71,29 @@ public class WinPopup : BasePopup
         base.MoreActionInAwake();
 
         picRewardProgressBar.InitRewardProgressBar();
+        coinRewardProgressBar.InitRewardProgressBar();
     }
 
     protected override void Show(Action onCompletedAction = null)
     {
+        picRewardProgressBar.Reset();
+        coinRewardProgressBar.Reset();
+
+        // Coin Reward Progress
+        float progressPerLevel = 1f / DataManager.Ins.PlayerData.RequiredLevelForCoinRewardGift;
+
+        float prevCoinRewardProgress = DataManager.Ins.PlayerData.CurrentCoinRewardProgress;
+        float currentCoinRewardProgress = DataManager.Ins.PlayerData.CurrentCoinRewardProgress + progressPerLevel;
+
+        if (currentCoinRewardProgress > 1)
+        {
+            currentCoinRewardProgress = progressPerLevel;
+        }
+
         picRewardProgressBar.SetupRewardProgressBar();
+        coinRewardProgressBar.SetupRewardProgressBar(currentCoinRewardProgress, prevCoinRewardProgress);
+
+        DataManager.Ins.PlayerData.CurrentCoinRewardProgress = currentCoinRewardProgress;
 
         base.Show(onCompletedAction);
 
@@ -110,19 +130,24 @@ public class WinPopup : BasePopup
         coinText.text = $"{0}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
-        continueButton.transform.localScale = Vector3.zero;
 
-        continueButton.interactable = true;
+        continueButton.interactable = false;
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
+        continueButton.transform.localScale = Vector3.zero;
         x5CoinButton.transform.localScale = Vector3.one;
+
+        TweenHelper.DoPunch(continueButton.transform, 1, onCompleteAction: () =>
+        {
+            continueButton.interactable = true;
+        });
 
         // REMOTE CONFIG IS COLLECT COIN
         _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
         _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 5);
 
-        coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
+        // coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
 
         if (!_isCollectCoinRemoteConfig)
@@ -151,10 +176,7 @@ public class WinPopup : BasePopup
 
         #region NEW
 
-        picRewardProgressBar.Progress(() =>
-        {
-            EnableInteract();
-        });
+        RunRewardsProgress();
 
         #endregion
 
@@ -162,7 +184,8 @@ public class WinPopup : BasePopup
 
         int coinQuantity = GamePersistentVariable.isHardMode ? 30 : 10;
 
-        CollectCoin(coinQuantity);
+        // uncomment to grant free coin win level
+        // CollectCoin(coinQuantity);
 
         TrackLevelWin();
 
@@ -297,7 +320,10 @@ public class WinPopup : BasePopup
 
         if (!isBackHome)
         {
-            collectCoinEvent?.Invoke(_currentCollectedCoin);
+            if(_currentCollectedCoin > 0)
+            {
+                collectCoinEvent?.Invoke(_currentCollectedCoin);
+            }
 
             // wait for collect coin animation
             Tween.Delay(2f).OnComplete(() =>
@@ -574,6 +600,7 @@ public class WinPopup : BasePopup
     #endregion
 
     #region Progress
+
     private void EnableInteract()
     {
         interactable = true;
@@ -582,6 +609,56 @@ public class WinPopup : BasePopup
     private void DisableInteract()
     {
         interactable = false;
+    }
+
+    private void RunRewardsProgress()
+    {
+        isRewardProgressCompleted = new bool[2];
+
+        bool willCoinProgressComplete = coinRewardProgressBar.WillProgressCompleted();
+
+        coinRewardProgressBar.Progress(() =>
+        {
+            SetRewardProgressComplete(1);
+
+            if (willCoinProgressComplete)
+            {
+                picRewardProgressBar.Progress(() =>
+                {
+                    SetRewardProgressComplete(0);
+                });
+            }
+        });
+
+        if (!willCoinProgressComplete)
+        {
+            picRewardProgressBar.Progress(() =>
+            {
+                SetRewardProgressComplete(0);
+            });
+        }
+    }
+
+    private void SetRewardProgressComplete(int i)
+    {
+        isRewardProgressCompleted[i] = true;
+
+        bool isDone = true;
+
+        for (int j = 0; j < isRewardProgressCompleted.Length; j++)
+        {
+            if (!isRewardProgressCompleted[j])
+            {
+                isDone = false;
+
+                break;
+            }
+        }
+
+        if (isDone)
+        {
+            EnableInteract();
+        }
     }
 
     #endregion

@@ -111,7 +111,10 @@ public class SceneTransition : MonoBehaviour
             progressBarCanvasGroup.alpha = 0;
             almostThereText.color = Color.white;
 
-            Tween.Alpha(blackBackground, 0, duration: 0.3f)
+            blackBackground.gameObject.SetActive(true);
+            blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+
+            Tween.Alpha(blackBackground, 0, duration: 0.3f, startDelay: 0.7f)
             .OnComplete(() =>
                 {
                     blackBackground.gameObject.SetActive(false);
