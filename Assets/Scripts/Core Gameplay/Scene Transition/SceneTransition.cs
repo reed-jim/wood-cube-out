@@ -77,11 +77,6 @@ public class SceneTransition : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
     }
 
-    private void BlackScreenTransition()
-    {
-        BlackScreenTransition(blackScreenStartDelay, onCompletedAction: null);
-    }
-
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
         if (_isFirstTimeOpenApp)
@@ -153,15 +148,37 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     loadLevelInProgressContainer.gameObject.SetActive(false);
+        if (_isFirstTimeEnterScene)
+        {
+            // loadLevelInProgressContainer.gameObject.SetActive(false);
+            loadLevelInProgressContainer.gameObject.SetActive(true);
 
-        //     _isFirstTimeEnterScene = false;
+            loadLevelInProgressCanvasGroup.alpha = 1;
+            progressBarCanvasGroup.alpha = 0;
+            almostThereText.color = Color.white;
 
-        //     return;
-        // }
+            Tween.Alpha(blackBackground, 0, duration: 0.3f)
+            .OnComplete(() =>
+                {
+                    blackBackground.gameObject.SetActive(false);
+                });
 
+            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, startDelay: 1.7f, onValueChange: newVal =>
+            {
+                loadLevelInProgressCanvasGroup.alpha = newVal;
+            })
+            .OnComplete(() =>
+                {
+                    loadLevelInProgressContainer.gameObject.SetActive(false);
+                })
+            );
+
+            _isFirstTimeEnterScene = false;
+
+            return;
+        }
+
+        blackBackground.gameObject.SetActive(false);
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
         loadLevelInProgressCanvasGroup.alpha = 0;

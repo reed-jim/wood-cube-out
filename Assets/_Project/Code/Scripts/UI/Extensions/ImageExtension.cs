@@ -31,8 +31,8 @@ namespace NamPhuThuy.UI
             }
             else
             {
-                screenWidth = GamePersistentVariable.canvasSize.x;
-                screenHeight = GamePersistentVariable.canvasSize.y;
+                screenWidth = GamePersistentVariable.canvasSizeAfterCanvasScaler.x;
+                screenHeight = GamePersistentVariable.canvasSizeAfterCanvasScaler.y;
             }
 
             float screenAspect = screenWidth / screenHeight;
@@ -58,7 +58,7 @@ namespace NamPhuThuy.UI
             rt.sizeDelta = new Vector2(targetWidth, targetHeight);
             rt.localPosition = Vector2.zero + offset;
         }
-        
+
         public static void FitImageToRectTransformNoStretch(this Image image, RectTransform targetRect = null)
         {
             RectTransform rt = image.rectTransform;
@@ -84,7 +84,7 @@ namespace NamPhuThuy.UI
             float widthFactor = screenWidth / imageWidth;
             float heightFactor = screenHeight / imageHeight;
             float scaleFactor = Mathf.Min(widthFactor, heightFactor);
-            
+
             float screenAspect = screenWidth / screenHeight;
 
             float targetWidth = imageWidth * scaleFactor;

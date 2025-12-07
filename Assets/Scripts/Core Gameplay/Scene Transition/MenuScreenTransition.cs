@@ -27,7 +27,10 @@ public class MenuScreenTransition : MonoBehaviour
         _tweens = new List<Tween>();
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
+    }
 
+    void Start()
+    {
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
         mainBackground.FitImageToRectTransform();
 
