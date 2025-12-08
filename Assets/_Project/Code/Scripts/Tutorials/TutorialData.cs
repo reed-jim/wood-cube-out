@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Tutorial;
+using UnityEditor;
 using UnityEngine;
 
 namespace NamPhuThuy.Tutorial
@@ -7,27 +9,107 @@ namespace NamPhuThuy.Tutorial
     [CreateAssetMenu(fileName = "TutorialData", menuName = "Game/Tutorial Data", order = 1)]
     public class TutorialData : ScriptableObject
     {
-        public List<TutorialRecord> tutorialRecords = new();
+        public List<TutorialRecord> data = new List<TutorialRecord>();
+
+        private Dictionary<int, TutorialRecord> _dictData;
+
+        public Dictionary<int, TutorialRecord> DictData
+        {
+            get
+            {
+                if (_dictData == null)
+                {
+                    EnsureIndex();
+                }
+
+                return _dictData;
+            }
+        }
 
         public TutorialRecord GetForLevel(int levelId)
         {
-            return tutorialRecords.Find(record => record.levelId == levelId);
+            EnsureIndex();
+            return _dictData.GetValueOrDefault(levelId);
         }
+
+        #region Unity Callbacks
+
+        private void OnValidate()
+        {
+#if UNITY_EDITOR
+            // optional: ensure unique non\-negative levelId and keep dictionary in sync
+            bool changed = false;
+
+            // Auto\-assign level ids for entries with negative id
+            for (int i = 0; i < data.Count; i++)
+            {
+                var r = data[i];
+                if (r == null) continue;
+
+                if (r.LevelId < 0)
+                {
+                    // r.SetLevelId(i);
+                    changed = true;
+                }
+            }
+
+            if (changed)
+            {
+                EditorUtility.SetDirty(this);
+                _dictData = null; // force rebuild after edits
+            }
+#endif
+        }
+
+        #endregion
+
+        #region Private Methods
+
+        private void EnsureIndex()
+        {
+            if (_dictData != null) return;
+            BuildIndex();
+        }
+
+        private void BuildIndex()
+        {
+            if (data == null || data.Count == 0)
+            {
+                _dictData = new Dictionary<int, TutorialRecord>(0);
+                return;
+            }
+
+            _dictData = new Dictionary<int, TutorialRecord>(data.Count);
+            foreach (var r in data)
+            {
+                if (r == null) continue;
+                _dictData[r.LevelId] = r; // last one wins if duplicates
+            }
+        }
+
+        #endregion
     }
     
     [Serializable]
     public class TutorialRecord
     {
-        public int levelId;
-        public List<BoosterRule> rules = new();
+        [SerializeField] private int levelId;
+        [SerializeField] private List<BoosterRule> rules = new();
 
-        public bool isUnlockBooster;
+        [SerializeField] private bool isUnlockBooster;
 
-        public bool isUseTutorImage;
-        public Sprite tutorialImage;
+        [SerializeField] private bool isUseTutorImage;
+        [SerializeField] private Sprite tutorialImage;
 
         [Tooltip("Ordered steps that define the tutorial flow for this level")]
-        public List<TutorialStepData> steps = new();
+        [SerializeField] private List<TutorialStepData> steps = new();
+        
+        public int LevelId => levelId;
+        public List<BoosterRule> Rules => rules;
+        public bool IsUnlockBooster => isUnlockBooster;
+        public bool IsUseTutorImage => isUseTutorImage; 
+        public Sprite TutorialImage => tutorialImage;
+        public List<TutorialStepData> Steps => steps;
     }
     
     /// <summary>

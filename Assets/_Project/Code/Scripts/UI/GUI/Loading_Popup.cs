@@ -22,6 +22,8 @@ namespace NamPhuThuy.UI
         [Header("Flags")]
         [SerializeField] private bool playOnShow = true;
         [SerializeField] private bool useUnscaledTime = true;
+        [SerializeField] private bool isPaused = false;
+        [SerializeField] private bool isDestroyed = false;
 
         [Header("Behavior")]
         [Tooltip("Default duration in seconds if none is provided to Show()/Begin().")]
@@ -33,7 +35,6 @@ namespace NamPhuThuy.UI
         /// <summary>
         /// Fired when the slider reaches the end (value = 1).
         /// </summary>
-        public event Action OnLoadComplete;
         #endregion
 
         private Coroutine _routine;
@@ -43,13 +44,16 @@ namespace NamPhuThuy.UI
         protected override void MoreActionInAwake()
         {
             base.MoreActionInAwake();
-            OnLoadComplete += Hide;
+            isDestroyed = false;
         }
 
         protected override void MoreActionOnDestroy()
         {
             base.MoreActionOnDestroy();
-            OnLoadComplete = null; // Clear all listeners
+            isDestroyed = true;
+        
+            // Proper cleanup
+            StopLoading();
         }
 
         #endregion
@@ -62,6 +66,9 @@ namespace NamPhuThuy.UI
         public void Begin(float duration)
         {
             DebugLogger.Log();
+            if (isDestroyed || this == null)
+                return;
+            
             StopLoading();
             _routine = StartCoroutine(RunLoading(duration));
         }
@@ -74,7 +81,18 @@ namespace NamPhuThuy.UI
             DebugLogger.Log();
             if (_routine != null)
             {
-                StopCoroutine(_routine);
+                // Safety check for Android lifecycle
+                if (this != null && !isDestroyed)
+                {
+                    try
+                    {
+                        StopCoroutine(_routine);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogWarning($"[Loading_Popup] Error stopping coroutine: {e.Message}");
+                    }
+                }
                 _routine = null;
             }
         }
@@ -89,30 +107,59 @@ namespace NamPhuThuy.UI
             if (this.loadingSlider == null)
             {
                 Debug.LogWarning("[GUIPopupLoading] No Slider assigned.");
-                OnLoadComplete?.Invoke();
+                Hide();
                 yield break;
             }
 
             if (duration <= 0f)
             {
+                DebugLogger.Log(message: $"duration < 0f");
                 this.loadingSlider.value = 1f;
                 this._routine = null; // ensure cleared for zero-duration
-                OnLoadComplete?.Invoke();
+                Hide();
                 yield break;
             }
 
             float t = 0f;
             while (t < duration)
             {
-                t += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+                // CRITICAL: Check if still valid (Android lifecycle)
+                if (isDestroyed || this == null || !gameObject.activeInHierarchy)
+                {
+                    _routine = null;
+                    yield break;
+                }
+
+                // Only accumulate time when not paused
+                if (!isPaused)
+                {
+                    t += useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
+                }
+            
                 float normalized = Mathf.Clamp01(t / duration);
-                loadingSlider.value = Mathf.Clamp01(progressCurve.Evaluate(normalized));
+            
+                // Safety check before setting value
+                if (loadingSlider != null)
+                {
+                    loadingSlider.value = Mathf.Clamp01(progressCurve.Evaluate(normalized));
+                }
+            
                 yield return null;
             }
 
-            loadingSlider.value = 1f;
+            DebugLogger.Log(message: $"About to end");
+            if (loadingSlider != null)
+            {
+                loadingSlider.value = 1f;
+            }
+        
             _routine = null;
-            OnLoadComplete?.Invoke();
+        
+            // Check before invoking
+            if (!isDestroyed && this != null)
+            {
+                Hide();
+            }
         }
 
         #endregion
@@ -137,8 +184,8 @@ namespace NamPhuThuy.UI
         protected override void Hide(Action onCompletedAction = null)
         {
             DebugLogger.Log();
-            StopLoading();
             base.Hide(onCompletedAction);
+            StopLoading();
         }
 
         #endregion

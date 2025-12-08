@@ -301,7 +301,6 @@ namespace NamPhuThuy.UI
                     currentLevel.Value, "Coin",
                     downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
                 
-                
                 ShowLoadingPopup();
 
                 currentPlayerPicData.isDownloadedImage = true;
@@ -324,7 +323,8 @@ namespace NamPhuThuy.UI
 
             void EarnReward()
             {
-                ShowLoadingPopup();
+                // ShowLoadingPopup();
+                PlayVFXPopupText(_downloadedNoti);
 
                 Texture2D texture = currentPicData.mainImage.texture;
 
@@ -514,15 +514,24 @@ namespace NamPhuThuy.UI
         {
             // Show Loading Popup
             
-            SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
             StartCoroutine(HandleLoaded());
 
             IEnumerator HandleLoaded()
             {
+                if (CanvasUpdateRegistry.IsRebuildingGraphics() 
+                    || CanvasUpdateRegistry.IsRebuildingLayout())
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+                
+                SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
                 yield return YieldHelper.WaitForSeconds(2f);
+                
                 PlayVFXPopupText(_downloadedNoti);
             }
         }
+        
+        
         
         private void ShowPermissionNotAllowedNotification()
         {

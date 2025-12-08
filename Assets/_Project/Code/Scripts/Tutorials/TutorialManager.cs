@@ -41,7 +41,7 @@ namespace NamPhuThuy.Tutorial
 
             var rule = data.GetForLevel(levelId);
             if (rule == null) return;
-            if (rule.steps == null || rule.steps.Count == 0) return;
+            if (rule.Steps == null || rule.Steps.Count == 0) return;
 
             if (_runningRoutine != null)
             {
@@ -55,9 +55,9 @@ namespace NamPhuThuy.Tutorial
         {
             MMEventManager.TriggerEvent(new ETutorialActivate(levelId));
 
-            for (int i = 0; i < rule.steps.Count; i++)
+            for (int i = 0; i < rule.Steps.Count; i++)
             {
-                var step = rule.steps[i];
+                var step = rule.Steps[i];
 
                 if (step.DelayBefore > 0f)
                 {

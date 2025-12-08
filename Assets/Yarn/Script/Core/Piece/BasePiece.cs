@@ -207,7 +207,7 @@ public class BasePiece : MonoBehaviour
         // If there's only 1 BasePiece (this one), detach rigidbodies from children
         if (innerPieces.Length == 1)
         {
-            DebugLogger.Log(message: $"Only one inner piece, detach rigidbodies");
+            // DebugLogger.Log(message: $"Only one inner piece, detach rigidbodies");
             StartCoroutine(IE_DetachDecorObject());
         }
 
