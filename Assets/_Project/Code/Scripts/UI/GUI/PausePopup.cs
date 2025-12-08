@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -11,7 +12,6 @@ using UnityEditor;
 
 namespace NamPhuThuy.UI
 {
-
     public class PausePopup : BasePopup
     {
         #region Private Serializable Fields
@@ -190,6 +190,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickMusic()
         {
+            DebugLogger.Log();
             gameSetting.IsTurnOnBackgroundMusic = !gameSetting.IsTurnOnBackgroundMusic;
 
             enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);
@@ -200,6 +201,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickSound()
         {
+            DebugLogger.Log();
             gameSetting.IsTurnOnSound = !gameSetting.IsTurnOnSound;
 
             enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
@@ -210,6 +212,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickVibration()
         {
+            DebugLogger.Log();
             gameSetting.IsVibrate = !gameSetting.IsVibrate;
 
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();

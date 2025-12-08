@@ -5,9 +5,11 @@ using UnityEngine;
 
 namespace NamPhuThuy.Tutorial
 {
-    public class TutorialManager : Singleton<TutorialManager>, MMEventListener<ELevelLoad>, MMEventListener<ELevelStart>
+    public class TutorialManager : Common.Singleton<TutorialManager>, MMEventListener<ELevelLoad>, MMEventListener<ELevelStart>
     {
+        [Header("Components")]
         [SerializeField] private TutorialData data;
+        [SerializeField] private TutorialHand tutorialHand;
 
         private int _currentLevelId = -1;
         private Coroutine _runningRoutine;
@@ -24,6 +26,8 @@ namespace NamPhuThuy.Tutorial
             MMEventManager.UnregisterAllCurrentEvents(this);
         }
 
+        #region Events Listen
+
         public void OnMMEvent(ELevelLoad e)
         {
             _currentLevelId = DataManager.Ins.PlayerData.CurrentLevelId;
@@ -34,6 +38,37 @@ namespace NamPhuThuy.Tutorial
         {
             // Optional: you can trigger here instead of On level load
         }
+
+        #endregion
+        
+        #region Hand Control
+
+        public void MoveHandToWorldPosition(Vector3 worldPosition)
+        {
+            if (tutorialHand == null) return;
+            tutorialHand.SetWorldPosition(worldPosition);
+        }
+
+        public void MoveHandToScreenPosition(Vector2 screenPosition)
+        {
+            if (tutorialHand == null) return;
+            tutorialHand.SetScreenPosition(screenPosition);
+        }
+
+        public void MoveHandToWorldObject(Transform targetTransform)
+        {
+            if (tutorialHand == null || targetTransform == null) return;
+            tutorialHand.SetWorldPosition(targetTransform.position);
+        }
+
+        public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
+        {
+            if (tutorialHand == null || Camera.main == null) return;
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+            tutorialHand.SetScreenPosition(screenPos);
+        }
+
+        #endregion
 
         private void TryStartTutorialForLevel(int levelId)
         {

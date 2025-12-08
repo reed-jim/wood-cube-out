@@ -163,6 +163,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickSound()
         {
+            DebugLogger.Log();
             gameSetting.IsTurnOnSound = !gameSetting.IsTurnOnSound;
 
             enableGameSoundEvent?.Invoke(gameSetting.IsTurnOnSound);
@@ -173,6 +174,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickVibration()
         {
+            DebugLogger.Log();
             gameSetting.IsVibrate = !gameSetting.IsVibrate;
 
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
@@ -181,6 +183,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickNotification()
         {
+            DebugLogger.Log();
             bool tmp = DataManager.Ins.PlayerSettingsData.notifyEnabled;
             tmp = !tmp;
             DataManager.Ins.PlayerSettingsData.notifyEnabled = tmp;

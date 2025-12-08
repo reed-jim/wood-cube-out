@@ -84,10 +84,10 @@ public class PinchGesture : MonoBehaviour
 
         if (Input.touchCount == 2)
         {
-            if (!_isZoomByPinching)
+            /*if (!_isZoomByPinching)
             {
                 isPinchingEvent?.Invoke(true);
-            }
+            }*/
             
             Touch touch1 = Input.GetTouch(0);
             Touch touch2 = Input.GetTouch(1);
@@ -118,8 +118,8 @@ public class PinchGesture : MonoBehaviour
             // zoomSlider.value = _zoomPercent;
             // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
         }
-        else if (_isZoomByPinching)
-        {
+        /*else if (_isZoomByPinching)
+        {*/
             if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
             {
                 zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
@@ -131,7 +131,7 @@ public class PinchGesture : MonoBehaviour
                 _isZoomByPinching = false;
                 isPinchingEvent?.Invoke(false); 
             }
-        }
+        /*}*/
     }
 
 

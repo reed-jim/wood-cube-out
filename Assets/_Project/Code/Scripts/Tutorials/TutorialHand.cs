@@ -33,6 +33,27 @@ namespace NamPhuThuy.Tutorial
         #endregion
 
         #region Public Methods
+        
+        
+        [SerializeField] private RectTransform rectTransform;
+
+        public void SetWorldPosition(Vector3 worldPos)
+        {
+            transform.position = worldPos;
+        }
+
+        public void SetScreenPosition(Vector2 screenPos)
+        {
+            if (rectTransform != null)
+            {
+                rectTransform.position = screenPos;
+            }
+            else
+            {
+                transform.position = screenPos;
+            }
+        }
+        
         #endregion
 
         #region Editor Methods

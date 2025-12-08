@@ -127,11 +127,12 @@ namespace NamPhuThuy.Tutorial
         /// 
         /// </summary>
         WAIT_FOR_BOARD_MOVE = 5,
+        HAND_POINT_AND_WAIT_FOR_TARGET_CLICK = 6,
         
         /// <summary>
         /// For special custom steps handled in code
         /// </summary>
-        CUSTOM = 6,
+        CUSTOM = 999,
     }
 
     [Serializable]
