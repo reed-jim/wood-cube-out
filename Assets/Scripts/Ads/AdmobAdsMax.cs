@@ -882,7 +882,7 @@ public class AdmobAdsMax : MonoBehaviour
         if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
         {
             actionIniterClose?.Invoke();
-            DebugLogger.Log(message:$"Turn of inters on remote");
+            DebugLogger.Log(message:$"Turn off inters on remote");
 
             return false;
         }

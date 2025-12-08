@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 
 public class BootLoader : MonoBehaviour
 {
-    void Start()
+    private void Start()
     {
         StartCoroutine(LoadMainScene());
     }
