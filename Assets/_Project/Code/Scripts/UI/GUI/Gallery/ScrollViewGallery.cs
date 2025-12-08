@@ -45,9 +45,6 @@ namespace NamPhuThuy.UI
             //GET REFERENCES
             _contentGridLayoutGroup = _content.GetComponent<GridLayoutGroup>();
             scrollRect = GetComponent<ScrollRect>();
-
-            // UpdateContentSizeDelta();
-            InitContent();
         }
 
         private void OnEnable()
@@ -356,13 +353,13 @@ namespace NamPhuThuy.UI
 
         public void InitContent()
         {
+            if (elementList.Count > 0) return;
+            
             foreach (PlayerPictureData p in DataManager.Ins.PlayerGalleryData.playerPictures)
             {
                 AddElement(p);
             }
         }
-
-
 
         #endregion
 

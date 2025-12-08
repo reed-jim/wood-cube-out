@@ -233,11 +233,15 @@ namespace NamPhuThuy.UI
 
         private IEnumerator IEInit()
         {
+            scrollViewGallery.InitContent();
+            
             yield return YieldHelper.GetRealtime(0.1f);
             _normalSwitch.SetState(ButtonSwitch.ButtonSwitchState.ON);
             _specialSwitch.SetState(ButtonSwitch.ButtonSwitchState.OFF);
 
+            
             currentFilterChoice.Rarity = PictureData.PictureRarity.NORMAL;
+            currentFilterChoice.Kind = FilterKind.All;
 
             // NEW
             ScrollTheViewToTop();
