@@ -688,18 +688,23 @@ public class AdmobAdsMax : MonoBehaviour
         {
             _actionInterAdmobClosed = onAdClosed;
 
+            Debug.Log("SAFERIO _interstitialAdmob 0 " + _interstitialAdmob);
+
             if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
             {
+                Debug.Log("SAFERIO _interstitialAdmob 1 " + _interstitialAdmob.CanShowAd());
+
                 if (isShowAdBreak)
                 {
                     AdsBreakScreen.Instance.Show(onCompleteAction: () =>
                     {
-                        DebugLogger.Log(message:$"show the interstitial admob ad");
+                        DebugLogger.Log(message: $"show the interstitial admob ad");
                         _interstitialAdmob.Show();
                     });
                 }
                 else
                 {
+                    Debug.Log("SAFERIO _interstitialAdmob 2");
                     _interstitialAdmob.Show();
                 }
             }
@@ -873,7 +878,7 @@ public class AdmobAdsMax : MonoBehaviour
             // Debug.Log("show inter ======== is RemoveAds ");
 
             //if (!isInGame)
-            DebugLogger.Log(message:$"Ads is Removed");
+            DebugLogger.Log(message: $"Ads is Removed");
             actionIniterClose?.Invoke();
 
             return false;
@@ -882,7 +887,9 @@ public class AdmobAdsMax : MonoBehaviour
         if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
         {
             actionIniterClose?.Invoke();
-            DebugLogger.Log(message:$"Turn off inters on remote");
+
+            AdsBreakScreen.Instance.Hide();
+            DebugLogger.Log(message: $"Turn off inters on remote");
 
             return false;
         }
@@ -892,7 +899,7 @@ public class AdmobAdsMax : MonoBehaviour
                 .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
             isShowImmediatly)
         {
-            DebugLogger.Log(message:$"isShowAdBreak: {isShowAdBreak}");
+            DebugLogger.Log(message: $"isShowAdBreak: {isShowAdBreak}");
             if (isShowAdBreak)
             {
                 DebugLogger.Log(message: $"isShowAdBreak is true");
@@ -934,6 +941,8 @@ public class AdmobAdsMax : MonoBehaviour
 
             IsCooldownAdmobBanner = true;
         };
+
+        Debug.Log("SAFERIO ShowInterstitialHandle " + IsLoadedInterstitial());
 
         if (IsLoadedInterstitial())
         {

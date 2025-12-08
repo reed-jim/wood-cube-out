@@ -572,7 +572,7 @@ public class Yarn2D : MonoBehaviour
         Vector3 position = GetFirstNodePosition();
         position.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
-        Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.6f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.6f * _spoolSlotRadius);
+        Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.3f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.3f * _spoolSlotRadius);
 
         Vector3 start = spoolSlotPoint;
         Vector3 end = segments[segmentCount - 1].posNow;

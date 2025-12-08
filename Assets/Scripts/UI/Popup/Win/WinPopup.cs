@@ -320,18 +320,24 @@ public class WinPopup : BasePopup
 
         if (!isBackHome)
         {
-            if(_currentCollectedCoin > 0)
+            float delayTime = 2;
+
+            if (_currentCollectedCoin > 0)
             {
                 collectCoinEvent?.Invoke(_currentCollectedCoin);
             }
+            else
+            {
+                delayTime = 0;
+            }
 
             // wait for collect coin animation
-            Tween.Delay(2f).OnComplete(() =>
+            Tween.Delay(delayTime).OnComplete(() =>
             {
                 showSceneTransitionEvent?.Invoke();
             });
 
-            Tween.Delay(2.5f).OnComplete(() =>
+            Tween.Delay(delayTime + 0.5f).OnComplete(() =>
             {
                 goLevelEvent?.Invoke(currentLevel.Value);
             });
