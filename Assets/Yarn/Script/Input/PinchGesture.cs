@@ -44,6 +44,7 @@ public class PinchGesture : MonoBehaviour
         zoomSlider.onValueChanged.AddListener(OnZoomSliderValueChanged);
         
         // Add event triggers for pointer down/up
+        
         UnityEngine.EventSystems.EventTrigger trigger = zoomSlider.gameObject.GetComponent<UnityEngine.EventSystems.EventTrigger>();
         if (trigger == null)
         {
@@ -118,8 +119,9 @@ public class PinchGesture : MonoBehaviour
             // zoomSlider.value = _zoomPercent;
             // updateZoomSliderEvent?.Invoke(targetOrthographicSize / maxZoom);
         }
-        /*else if (_isZoomByPinching)
-        {*/
+        
+        if (_isZoomByPinching)
+        {
             if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
             {
                 zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
@@ -131,7 +133,7 @@ public class PinchGesture : MonoBehaviour
                 _isZoomByPinching = false;
                 isPinchingEvent?.Invoke(false); 
             }
-        /*}*/
+        }
     }
 
 

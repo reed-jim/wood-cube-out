@@ -13,7 +13,7 @@ public class YarnGameInput : MonoBehaviour
     [SerializeField] private float timeToConfirmSelectObjectPart;
     [SerializeField] private float afterHoldTimer;
 
-    private float afterHoldDelay = 1f;
+    private float afterHoldDelay = 0.3f;
 
     private Camera _mainCamera;
     private List<Vector3> twoTouchPoints;
@@ -118,7 +118,7 @@ public class YarnGameInput : MonoBehaviour
     {
         if (afterHoldTimer > 0f)
         {
-            DebugLogger.Log(message:$"Prevent click after holding piece", context:this);
+            DebugLogger.Log(message:$"Prevent click after holding piece", context: this);
             PlayVFXPopupText(LocalizationConst.CLICK_TOO_FAST);
             return;
         }

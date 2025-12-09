@@ -21,6 +21,8 @@ public class RotateObject : MonoBehaviour
     private float _smoothRotateX;
     private float _smoothRotateY;
 
+    #region MonoBehaviour Callbacks
+
     void Awake()
     {
         BasePiece.selectPieceEvent += OnPieceSelected;
@@ -44,6 +46,8 @@ public class RotateObject : MonoBehaviour
         SwipeGesture.swipeGestureEvent -= Rotate;
     }
 
+    #endregion
+
     public void AssignDummyClone(Transform clone)
     {
         cloneToCalculateRotation = clone;
@@ -63,8 +67,11 @@ public class RotateObject : MonoBehaviour
 
             if (!_isAutoRotating)
             {
-                _pitch = Mathf.Lerp(_pitch, 0, 0.25f);
-                _yaw = Mathf.Lerp(_yaw, 0, 0.25f);
+                /*_pitch = Mathf.Lerp(_pitch, 0, 0.5f);
+                _yaw = Mathf.Lerp(_yaw, 0, 0.5f);*/
+
+                _pitch = 0f;
+                _yaw = 0f;
             }
             else
             {
