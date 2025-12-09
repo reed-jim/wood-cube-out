@@ -48,7 +48,6 @@ namespace NamPhuThuy.UI
         private void Start()
         {
             versionText.text = $"Version {Application.version}";
-
         }
 
         void OnEnable()
@@ -153,6 +152,7 @@ namespace NamPhuThuy.UI
 
         private void OnClickMusic()
         {
+            DebugLogger.Log();
             gameSetting.IsTurnOnBackgroundMusic = !gameSetting.IsTurnOnBackgroundMusic;
 
             enableBackgroundMusicEvent?.Invoke(gameSetting.IsTurnOnBackgroundMusic);

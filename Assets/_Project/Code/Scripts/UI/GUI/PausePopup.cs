@@ -90,7 +90,9 @@ namespace NamPhuThuy.UI
 
         private void SetStateForButton()
         {
-            bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
+            DebugLogger.Log();
+            // FIRST WAY: AUTO TURN TO -> TRUE
+            /*bool tmp = DataManager.Ins.GameSetting.IsTurnOnBackgroundMusic;
             ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
             if (musicSwitch != null)
             {
@@ -100,12 +102,34 @@ namespace NamPhuThuy.UI
 
             tmp = DataManager.Ins.GameSetting.IsTurnOnSound;
             ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
-            if (sfxSwitch != null)
+            if (sfxSwitch != null) 
             {
                 sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
             }
 
             tmp = DataManager.Ins.GameSetting.IsVibrate;
+            ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
+            if (vibrateSwitch != null)
+            {
+                vibrateSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            }*/
+            
+            // SECOND WAY: WORKS
+            bool tmp = gameSetting.IsTurnOnBackgroundMusic;
+            ButtonSwitchFade musicSwitch = musicButton.GetComponent<ButtonSwitchFade>();
+            if (musicSwitch != null)
+            {
+                musicSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            }
+
+            tmp = gameSetting.IsTurnOnSound;
+            ButtonSwitchFade sfxSwitch = sfxButton.GetComponent<ButtonSwitchFade>();
+            if (sfxSwitch != null)
+            {
+                sfxSwitch?.SetState(tmp ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);
+            }
+
+            tmp = gameSetting.IsVibrate;
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
             if (vibrateSwitch != null)
             {
