@@ -53,7 +53,6 @@ public class WinPopup : BasePopup
     [SerializeField] private SegmentedProgressBar coinRewardProgressBar;
     private bool[] isRewardProgressCompleted;
 
-
     #region EVENT
     private bool _isCoinChallengeClaimable;
     #endregion
@@ -62,7 +61,6 @@ public class WinPopup : BasePopup
     public static event Action nextLevelEvent;
     public static event Action<int> collectCoinEvent;
     public static event Action showSceneTransitionEvent;
-
 
     #region Override Methods
 
@@ -214,55 +212,20 @@ public class WinPopup : BasePopup
         // GameLeaderboardManager.Instance.AddPlayerScoreToLeaderboard();
     }
 
-    private void CollectCoin(int numCoin, Action onCompletedAction = null)
+    private void CollectCoin(int numCoin)
     {
-        DebugLogger.Log(message:$"numCoin: {numCoin}");
-        coinText.text = $"{_currentCollectedCoin}";
-        DebugLogger.Log(message: $"_currentCollectedCoin: {_currentCollectedCoin}");
+        coinText.text = $"{(int)numCoin}";
 
-        int deltaCoin = (int)(numCoin / 10f);
+        userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
 
-        _tweens.Add(Tween.Custom(_currentCollectedCoin, numCoin, duration: timeCollectCoin, onValueChange: newVal =>
-        {
-            coinText.text = $"{(int)newVal}";
-            multiplyCoinText.text = $"{_multiplierCoinWinLevel * (int)newVal}";
-        })
-        .OnComplete(() =>
-            {
-                if (_isCollectCoinRemoteConfig)
-                {
-                    userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
+        userResourcesObserver.Save();
 
-                    userResourcesObserver.Save();
+        _currentCollectedCoin += numCoin;
 
-                    _currentCollectedCoin += numCoin;
-
-                    SaferioTracking.TrackResourceSource(
-                        currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
-                }
-
-                _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: timeCollectCoin));
-
-                onCompletedAction?.Invoke();
-            })
+        SaferioTracking.TrackResourceSource
+        (
+            currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level"
         );
-
-        _tweens.Add(Tween.Custom(0, 3, duration: timeCollectCoin, onValueChange: newVal =>
-        {
-            starText.text = $"{(int)newVal}";
-        }));
-
-        CoinChallengeData coinChallengeData = DataUtility.Load(GameConstants.COIN_CHALLENGE_DATA, new CoinChallengeData());
-
-        bool isUnlocked = currentLevel.Value >= 30;
-
-        if (isUnlocked && !coinChallengeData.IsCompleted())
-        {
-            _tweens.Add(Tween.Custom(0, GamePersistentVariable.coinChallengeItemGainedInLevel, duration: timeCollectCoin, onValueChange: newVal =>
-            {
-                goldPassKeyText.text = $"{(int)newVal}";
-            }));
-        }
     }
 
     #region Button Events
@@ -311,7 +274,13 @@ public class WinPopup : BasePopup
 
     private void OnInterstitialAdCompleted()
     {
-        DebugLogger.Log();
+        PlayCollectCoinAnimationAndNextLevel();
+
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
+    }
+
+    private void PlayCollectCoinAnimationAndNextLevel()
+    {
         _tweens.Add(Tween.Delay(3f).OnComplete(() =>
         {
             HideImmediately();
@@ -344,8 +313,6 @@ public class WinPopup : BasePopup
             });
         }
 
-        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
-
         AdsDurationObserver.duration = 0;
         GamePersistentVariable.isAutoTestingLevel = false;
     }
@@ -353,6 +320,11 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
+        if (!interactable)
+        {
+            return;
+        }
+
         AdmobAdsMax.Instance.ShowVideoReward(
             OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
@@ -362,19 +334,9 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        _tweens.Add(Tween.Scale(x5CoinButton.transform, 1.1f, duration: 0.15f)
-            .OnComplete(() => _tweens.Add(Tween.Scale(x5CoinButton.transform, 0, duration: 0.3f)))
-        );
-
-        continueButton.transform.localScale = Vector3.zero;
-
-        _tweens.Add(Tween.Scale(continueButton.transform, 1.1f, duration: 0.3f)
-            .OnComplete(() => _tweens.Add(Tween.Scale(continueButton.transform, 1, duration: 0.15f)
-            .OnComplete(() => continueButton.interactable = true)
-            ))
-        );
-
         CollectCoin(_multiplierCoinWinLevel * 10);
+
+        PlayCollectCoinAnimationAndNextLevel();
 
         SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, "multiply_coin_win_level");
 
@@ -385,14 +347,7 @@ public class WinPopup : BasePopup
     {
         InvokeShowAdNotLoadedPopupEvent();
     }
-
-    private void OnMultiplyCoinTextTranslated()
-    {
-        // localizedMultiplyCoinText.UpdateTranslationWithParameter(GameConstants.VALUE_PARAMETER, $"{_multiplierCoinWinLevel}");
-    }
     #endregion
-
-
 
     private async void TrackLevelWin()
     {
@@ -602,7 +557,6 @@ public class WinPopup : BasePopup
             starGroup.localPosition = coinGroup.localPosition.ChangeX(140);
         }
     }
-
 
     #endregion
 
