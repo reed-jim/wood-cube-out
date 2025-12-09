@@ -10,6 +10,7 @@ public static class LocalizationConst
     public const string CANT_INCREASE_MORE = "Can't increase more"; 
     public const string CANT_DECREASE_MORE = "Can't decrease more"; 
     public const string BUY_SUCCESS = "Buy success";
+    public const string CLICK_TOO_FAST = "Click too fast";
     
     
     public const string DOWNLOAD_FAILED = "Download failed";

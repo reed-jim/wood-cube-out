@@ -1,19 +1,27 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using DebugLogger = NamPhuThuy.Common.DebugLogger;
 
 public class YarnGameInput : MonoBehaviour
 {
+    [Header("Stats")]
     [SerializeField] private float maxSwipeDistance;
     [SerializeField] private float timeToConfirmSelectObjectPart;
+    [SerializeField] private float afterHoldTimer;
+
+    private float afterHoldDelay = 1f;
 
     private Camera _mainCamera;
     private List<Vector3> twoTouchPoints;
     private BasePiece _selectingPiece;
     private float _timeHold;
     private bool _isHoldingPiece;
+    
+    
 
     #region EVENT
     public static event Action mouseUpEvent;
@@ -21,15 +29,16 @@ public class YarnGameInput : MonoBehaviour
 
     #region MonoBehaviour Callbacks
 
-    void Awake()
+    private void Awake()
     {
         _mainCamera = Camera.main;
 
         twoTouchPoints = new List<Vector3>();
     }
 
-    void Update()
+    private void Update()
     {
+        afterHoldTimer -= Time.deltaTime;
         if (Input.touchCount > 1)
         {
             return;
@@ -60,6 +69,7 @@ public class YarnGameInput : MonoBehaviour
             if (_isHoldingPiece)
             {
                 _selectingPiece.PieceServiceLocator.pieceMaterialPropertyBlock.ReleasePiece();
+                afterHoldTimer = afterHoldDelay;
             }
             else
             {
@@ -84,10 +94,35 @@ public class YarnGameInput : MonoBehaviour
 
     #endregion
 
+    #region Private Methods
+
+    private void PlayVFXPopupText(string message)
+    {
+        var args = new PopupTextArgs
+        {
+            message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+            // startParent = transform,
+            textFont = GUIManager.Instance.DefaultFont,
+            textColor = Color.white,
+            duration = 1f,
+            OnComplete = null,
+        };
+        AnimationManager.Ins.Play<PopupTextArgs>(args);
+    }
+
+    #endregion
+
     #region Interaction Methods
 
     private void SelectPiece()
     {
+        if (afterHoldTimer > 0f)
+        {
+            DebugLogger.Log(message:$"Prevent click after holding piece", context:this);
+            PlayVFXPopupText(LocalizationConst.CLICK_TOO_FAST);
+            return;
+        }
+        
         if (IsClickedOnUI())
         {
             return;

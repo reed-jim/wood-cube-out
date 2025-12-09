@@ -90,19 +90,10 @@ namespace NamPhuThuy.UI
                 });
             });
 
-            DataManager.Ins.RewardDatas.TryApplyRewards(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL, 1);
+            // DataManager.Ins.RewardDatas.TryApplyRewards(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL, 1);
 
             DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
             collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
-
-            /*VFXManager.Ins.PlayAt
-            (
-                VFXType.COIN_FLY,
-                amount: DataManager.Ins.RewardDatas.GetCoinAmount(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL),
-                initialParent: VFXManager.Ins.transform
-            );*/
-            
-            
 
             DOVirtual.DelayedCall(2.5f, () =>
             {
