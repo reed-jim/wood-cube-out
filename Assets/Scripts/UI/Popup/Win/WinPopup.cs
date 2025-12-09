@@ -216,6 +216,7 @@ public class WinPopup : BasePopup
 
     private void CollectCoin(int numCoin, Action onCompletedAction = null)
     {
+        DebugLogger.Log(message:$"numCoin: {numCoin}");
         coinText.text = $"{_currentCollectedCoin}";
         DebugLogger.Log(message: $"_currentCollectedCoin: {_currentCollectedCoin}");
 

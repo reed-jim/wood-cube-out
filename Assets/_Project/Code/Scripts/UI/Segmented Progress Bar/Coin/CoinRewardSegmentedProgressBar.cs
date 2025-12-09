@@ -24,6 +24,7 @@ namespace NamPhuThuy.UI
         #endregion
 
         private Action onHandleRewardProgressCompleted;
+        public static event Action<int> collectCoinEvent;
 
         public override void InitRewardProgressBar()
         {
@@ -90,6 +91,9 @@ namespace NamPhuThuy.UI
             });
 
             DataManager.Ins.RewardDatas.TryApplyRewards(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL, 1);
+
+            DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
+            collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
 
             /*VFXManager.Ins.PlayAt
             (

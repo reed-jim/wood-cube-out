@@ -38,6 +38,9 @@ public class CoinContainerUI : MonoBehaviour
         ResourceEarnPopup.collectCoinEvent += CollectCoin;
         ClaimRewardPopup.collectCoinEvent += CollectCoin;
         WinPopup.collectCoinEvent += CollectCoin;
+        CoinRewardSegmentedProgressBar.collectCoinEvent += CollectCoin;
+        
+        
         BackupPopup.updateCoinTextEvent += UpdateCoinText;
         CompensatePopup.updateCoinTextEvent += UpdateCoinText;
         LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
@@ -69,6 +72,8 @@ public class CoinContainerUI : MonoBehaviour
         ResourceEarnPopup.collectCoinEvent -= CollectCoin;
         ClaimRewardPopup.collectCoinEvent -= CollectCoin;
         WinPopup.collectCoinEvent -= this.CollectCoin;
+        CoinRewardSegmentedProgressBar.collectCoinEvent -= CollectCoin;
+        
         BackupPopup.updateCoinTextEvent -= UpdateCoinText;
         CompensatePopup.updateCoinTextEvent -= UpdateCoinText;
         LivesShopPopup.updateCoinTextEvent -= this.UpdateCoinText;
