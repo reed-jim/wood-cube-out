@@ -11,10 +11,10 @@ namespace NamPhuThuy.Tutorial
     public struct ETutorialStepStarted
     {
         public readonly int LevelId;
-        public readonly TutorialStepData Step;
+        public readonly TutorialStepRecord Step;
         public readonly int StepIndex;
 
-        public ETutorialStepStarted(int levelId, TutorialStepData step, int stepIndex)
+        public ETutorialStepStarted(int levelId, TutorialStepRecord step, int stepIndex)
         {
             LevelId = levelId;
             Step = step;
@@ -25,10 +25,10 @@ namespace NamPhuThuy.Tutorial
     public struct ETutorialStepCompleted
     {
         public readonly int LevelId;
-        public readonly TutorialStepData Step;
+        public readonly TutorialStepRecord Step;
         public readonly int StepIndex;
 
-        public ETutorialStepCompleted(int levelId, TutorialStepData step, int stepIndex)
+        public ETutorialStepCompleted(int levelId, TutorialStepRecord step, int stepIndex)
         {
             LevelId = levelId;
             Step = step;

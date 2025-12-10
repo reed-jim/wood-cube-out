@@ -353,7 +353,7 @@ namespace NamPhuThuy.UI
 
         public void InitContent()
         {
-            if (elementList.Count > 0) return;
+            // if (elementList.Count > 0) return;
             
             foreach (PlayerPictureData p in DataManager.Ins.PlayerGalleryData.playerPictures)
             {

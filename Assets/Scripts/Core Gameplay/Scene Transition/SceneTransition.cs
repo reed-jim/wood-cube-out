@@ -191,10 +191,11 @@ public class SceneTransition : MonoBehaviour
         }
 
         yield return new WaitUntil(() => _isLevelLoaded);
+        FadeOut();
 
-        void FadeOut(float startDelay = 0f)
+        void FadeOut(float _startDelay = 0f)
         {
-            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, startDelay: 1.7f, onValueChange: newVal =>
+            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, startDelay: _startDelay, onValueChange: newVal =>
                 {
                     loadLevelInProgressCanvasGroup.alpha = newVal;
                 })

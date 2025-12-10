@@ -102,14 +102,14 @@ namespace NamPhuThuy.Tutorial
         [SerializeField] private Sprite tutorialImage;
 
         [Tooltip("Ordered steps that define the tutorial flow for this level")]
-        [SerializeField] private List<TutorialStepData> steps = new();
+        [SerializeField] private List<TutorialStepRecord> steps = new();
         
         public int LevelId => levelId;
         public List<BoosterRule> Rules => rules;
         public bool IsUnlockBooster => isUnlockBooster;
         public bool IsUseTutorImage => isUseTutorImage; 
         public Sprite TutorialImage => tutorialImage;
-        public List<TutorialStepData> Steps => steps;
+        public List<TutorialStepRecord> Steps => steps;
     }
     
     /// <summary>
@@ -126,7 +126,7 @@ namespace NamPhuThuy.Tutorial
         /// <summary>
         /// 
         /// </summary>
-        WAIT_FOR_BOARD_MOVE = 5,
+        HAND_POINT_AND_WAIT_FOR_TARGET_HOLD = 5,
         HAND_POINT_AND_WAIT_FOR_TARGET_CLICK = 6,
         
         /// <summary>
@@ -136,7 +136,7 @@ namespace NamPhuThuy.Tutorial
     }
 
     [Serializable]
-    public class TutorialStepData
+    public class TutorialStepRecord
     {
         [SerializeField] private string id; 
         [SerializeField] private TutorialStepType type;

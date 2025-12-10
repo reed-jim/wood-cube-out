@@ -14,7 +14,7 @@ namespace NamPhuThuy.Tutorial
         private Coroutine _runningRoutine;
         private int _currentLevelId = -1;
         private int _currentStepIndex = -1;
-        private TutorialStepData _currentStepData;
+        private TutorialStepRecord _currentStepRecord;
 
         private void Awake()
         {
@@ -46,7 +46,7 @@ namespace NamPhuThuy.Tutorial
 
             _currentLevelId = e.LevelId;
             _currentStepIndex = e.StepIndex;
-            _currentStepData = e.Step;
+            _currentStepRecord = e.Step;
 
             _runningRoutine = StartCoroutine(HandleHandPointAndWait());
         }
@@ -64,17 +64,17 @@ namespace NamPhuThuy.Tutorial
 
             _currentLevelId = -1;
             _currentStepIndex = -1;
-            _currentStepData = null;
+            _currentStepRecord = null;
         }
 
         private IEnumerator HandleHandPointAndWait()
         {
             // 1\) find target transform from tag / id
-            Transform target = ResolveTargetTransform(_currentStepData.TargetTagOrId);
+            Transform target = ResolveTargetTransform(_currentStepRecord.TargetTagOrId);
             if (target == null || tutorialHand == null)
             {
                 // cannot handle this step, auto\-complete to avoid blocking
-                TutorialManager.Ins.CompleteStep(_currentLevelId, _currentStepIndex, _currentStepData);
+                TutorialManager.Ins.CompleteStep(_currentLevelId, _currentStepIndex, _currentStepRecord);
                 yield break;
             }
 
@@ -106,7 +106,7 @@ namespace NamPhuThuy.Tutorial
             }
 
             // 4\) signal tutorial manager to complete this step
-            TutorialManager.Ins.CompleteStep(_currentLevelId, _currentStepIndex, _currentStepData);
+            TutorialManager.Ins.CompleteStep(_currentLevelId, _currentStepIndex, _currentStepRecord);
 
             _runningRoutine = null;
         }

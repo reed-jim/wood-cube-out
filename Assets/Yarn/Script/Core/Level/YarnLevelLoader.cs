@@ -73,7 +73,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent += Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent += Replay;
-        SceneTransition.LevelLoadingCompleted += TryActiveTutorial;
+        // SceneTransition.LevelLoadingCompleted += TryActiveTutorial;
 
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
@@ -107,7 +107,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent -= Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent -= Replay;
-        SceneTransition.LevelLoadingCompleted -= TryActiveTutorial;
+        // SceneTransition.LevelLoadingCompleted -= TryActiveTutorial;
 
         LosePopup.replayLevelEvent -= Replay;
         ReplayPopup.replayLevelEvent -= Replay;
@@ -210,11 +210,11 @@ public class YarnLevelLoader : MonoBehaviour
 
             GameObject level = op.Result;
             TryLoadLevelTutorial(level.transform, nextLevelId);
-            if (tutorialAdapter.IsTutorialLevel)
+            /*if (tutorialAdapter.IsTutorialLevel)
             {
                 DebugLogger.Log(message: $"This is tut-level -> stop rotate");
                 level.GetComponent<RotateObject>().DisableAutoRotatingForever();
-            }
+            }*/
 
             _currentLevelContainer = level.transform;
 
@@ -250,6 +250,7 @@ public class YarnLevelLoader : MonoBehaviour
 
         void TryLoadLevelTutorial(Transform levelTransform, int levelId)
         {
+            return;
             DebugLogger.Log();
             tutorialAdapter.ResetState();
             tutorialAdapter.InitData(levelTransform, levelId);

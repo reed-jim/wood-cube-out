@@ -8,31 +8,33 @@ namespace NamPhuThuy.Tutorial
 {
     public class TutorialManager : Common.Singleton<TutorialManager>
     {
+        [Header("Flags")] 
+        [SerializeField] private bool isEnable;
+        
         [Header("Components")]
         [SerializeField] private TutorialData data;
         public TutorialData Data => data;
         [SerializeField] private TutorialHand _tutorialHand;
-        public TutorialHand TutorialHand => _tutorialHand;
+        public TutorialHand TutorialHand
+        {
+            get
+            {
+                   
+                return _tutorialHand;
+            }
+            
+        }
 
         private int _currentLevelId = -1;
         private Coroutine _runningRoutine;
 
         public bool IsTutorialRunning => _runningRoutine != null;
 
-        private void OnEnable()
-        {
-            MMEventManager.RegisterAllCurrentEvents(this);
-        }
-
-        private void OnDisable()
-        {
-            MMEventManager.UnregisterAllCurrentEvents(this);
-        }
-        
         #region Hand Control
 
         public void MoveHandToWorldPosition(Vector3 worldPosition)
         {
+            if (!isEnable) return;
             DebugLogger.Log();
             if (_tutorialHand == null)
             {
@@ -44,6 +46,7 @@ namespace NamPhuThuy.Tutorial
 
         public void MoveHandToScreenPosition(Vector2 screenPosition)
         {
+            if (!isEnable) return;
             DebugLogger.Log();
             if (_tutorialHand == null)
             {
@@ -55,6 +58,7 @@ namespace NamPhuThuy.Tutorial
 
         public void MoveHandToWorldObject(Transform targetTransform)
         {
+            if (!isEnable) return;
             DebugLogger.Log();
             if (_tutorialHand == null || targetTransform == null)
             {
@@ -66,6 +70,7 @@ namespace NamPhuThuy.Tutorial
 
         public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
         {
+            if (!isEnable) return;
             DebugLogger.Log();
             if (_tutorialHand == null || Camera.main == null)
             {
@@ -80,6 +85,7 @@ namespace NamPhuThuy.Tutorial
 
         private void TryStartTutorialForLevel(int levelId)
         {
+            if (!isEnable) return;
             if (!data) return;
 
             var rule = data.GetTutRecord(levelId);
@@ -96,6 +102,7 @@ namespace NamPhuThuy.Tutorial
 
         private IEnumerator RunTutorialRoutine(int levelId, TutorialRecord rule)
         {
+            if (!isEnable) yield break;
             MMEventManager.TriggerEvent(new ETutorialActivate(levelId));
 
             for (int i = 0; i < rule.Steps.Count; i++)
@@ -135,10 +142,11 @@ namespace NamPhuThuy.Tutorial
         }
 
         // Public API for other modules to progress tutorial
-        public void CompleteStep(int levelId, int stepIndex, TutorialStepData stepData)
+        public void CompleteStep(int levelId, int stepIndex, TutorialStepRecord stepRecord)
         {
+            if (!isEnable) return;
             if (!IsTutorialRunning) return;
-            MMEventManager.TriggerEvent(new ETutorialStepCompleted(levelId, stepData, stepIndex));
+            MMEventManager.TriggerEvent(new ETutorialStepCompleted(levelId, stepRecord, stepIndex));
         }
     }
 }
