@@ -13,9 +13,30 @@ MonoBehaviour:
   m_Name: TutorialData
   m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.Tutorial.TutorialData
   data:
-  - levelId: 0
-    rules: []
+  - levelId: 1
+    rules:
+    - type: 0
+      lockOverride: 2
+      grantAmount: 0
+    - type: 0
+      lockOverride: 2
+      grantAmount: 0
+    - type: 0
+      lockOverride: 2
+      grantAmount: 0
     isUnlockBooster: 0
     isUseTutorImage: 0
     tutorialImage: {fileID: 0}
-    steps: []
+    steps:
+    - id: 
+      type: 1
+      message: 
+      targetTagOrId: 
+      delayBefore: 0
+      autoCompleteAfter: 0
+    - id: 
+      type: 6
+      message: 
+      targetTagOrId: 
+      delayBefore: 0
+      autoCompleteAfter: 0

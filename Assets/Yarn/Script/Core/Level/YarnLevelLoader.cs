@@ -2,30 +2,34 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Firebase.RemoteConfig;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
-using Saferio.Util.SaferioTween;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
+using DebugLogger = NamPhuThuy.Common.DebugLogger;
 
 public class YarnLevelLoader : MonoBehaviour
 {
-    [Header("Clone to calculate level rotation")]
-    [SerializeField] private Transform cloneToCalculateRotation;
+    [Header("Clone to calculate level rotation")] [SerializeField]
+    private Transform cloneToCalculateRotation;
 
-    [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private IntVariable currentLevel;
+    [Header("SCRIPTABLE OBJECT")] [SerializeField]
+    private IntVariable currentLevel;
+
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
-    [Header("Textured Material Level")]
-    [SerializeField] private Material texturedMaterial;
+    [Header("Textured Material Level")] [SerializeField]
+    private Material texturedMaterial;
+
+    [Header("Components")] [SerializeField]
+    private TutorialAdapter tutorialAdapter;
 
     #region PRIVATE FIELD
+
     private Camera _mainCamera;
     private List<Tween> _tweens;
     private List<Tween> _autoCenterLevelTweens;
@@ -39,13 +43,17 @@ public class YarnLevelLoader : MonoBehaviour
     private bool _isNewLoopLevel;
     private int _nextLevel;
     private bool _isLoopLevel;
+
     #endregion
 
     #region Memory Management
+
     AsyncOperationHandle<GameObject> _loadLevelHandle;
+
     #endregion
 
     #region EVENT
+
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
@@ -56,12 +64,16 @@ public class YarnLevelLoader : MonoBehaviour
     public static event Action<float> setTargetOrthographicSizeEvent;
     public static event Action<bool> showLoadLevelErrorEvent;
     public static event Action resetCameraEvent;
+
     #endregion
+
+    #region MonoBehaviour Callbacks
 
     private void Awake()
     {
         PausePopup.replayLevelEvent += Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent += Replay;
+        SceneTransition.LevelLoadingCompleted += TryActiveTutorial;
 
         LosePopup.replayLevelEvent += Replay;
         ReplayPopup.replayLevelEvent += Replay;
@@ -95,6 +107,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         PausePopup.replayLevelEvent -= Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent -= Replay;
+        SceneTransition.LevelLoadingCompleted -= TryActiveTutorial;
 
         LosePopup.replayLevelEvent -= Replay;
         ReplayPopup.replayLevelEvent -= Replay;
@@ -112,23 +125,13 @@ public class YarnLevelLoader : MonoBehaviour
         CommonUtil.StopAllTweens(_autoCenterLevelTweens);
     }
 
+    #endregion
+
     #region LEVEL
+
     private async void LoadLevel()
     {
-        // // NO INTERNET
-        // if (Application.internetReachability == NetworkReachability.NotReachable)
-        // {
-        //     showLoadLevelErrorEvent?.Invoke(true);
-
-        //     return;
-        // }
-        // else
-        // {
-        //     showLoadLevelErrorEvent?.Invoke(false);
-        // }
-        // //
-
-        int nextLevel = 1;
+        int nextLevelId = 1;
 
         bool isLoopLevel = false;
 
@@ -136,11 +139,11 @@ public class YarnLevelLoader : MonoBehaviour
         {
             if (currentLevel.Value <= _maxLevel)
             {
-                nextLevel = currentLevel.Value;
+                nextLevelId = currentLevel.Value;
             }
             else
             {
-                nextLevel = GetLoopLevel();
+                nextLevelId = GetLoopLevel();
 
                 await UserData.SetIsLoopLevel(true);
                 await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
@@ -152,11 +155,11 @@ public class YarnLevelLoader : MonoBehaviour
         {
             if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
             {
-                nextLevel = GetLoopLevel();
+                nextLevelId = GetLoopLevel();
             }
             else
             {
-                nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+                nextLevelId = currentLevel.Value - UserData.NumLevelLoop;
             }
 
             isLoopLevel = true;
@@ -177,30 +180,15 @@ public class YarnLevelLoader : MonoBehaviour
         // }
         // // NOT LOOP
 
-        nextLevel = Mathf.Clamp(nextLevel, 1, _maxLevel);
+        nextLevelId = Mathf.Clamp(nextLevelId, 1, _maxLevel);
 
-        GamePersistentVariable.levelPrefab = nextLevel;
+        GamePersistentVariable.levelPrefab = nextLevelId;
 
         setLevelNumberEvent?.Invoke();
 
-        nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
+        nextLevelId = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevelId);
 
-        string levelPrefab = $"Level {nextLevel}";
-
-        // // REMOTE LEVELS
-        // if (nextLevel > 10)
-        // {
-        //     if (!GamePersistentVariable.isRemoteLevelsDownloaded)
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(true);
-
-        //         return;
-        //     }
-        //     else
-        //     {
-        //         showLoadLevelErrorEvent?.Invoke(false);
-        //     }
-        // }
+        string levelPrefab = $"Level {nextLevelId}";
 
         // Memory Management
         Resources.UnloadUnusedAssets();
@@ -209,147 +197,123 @@ public class YarnLevelLoader : MonoBehaviour
         {
             Addressables.Release(_loadLevelHandle);
         }
-        //
 
         _loadLevelHandle = Addressables.InstantiateAsync(levelPrefab, transform);
 
         _loadLevelHandle.Completed += (op) =>
         {
-            if (op.Status == AsyncOperationStatus.Succeeded)
+            if (op.Status != AsyncOperationStatus.Succeeded)
             {
-                GameObject level = op.Result;
+                DebugLogger.LogWarning(message: $"The status is not Succeeded");
+                return;
+            }
 
-                _currentLevelContainer = level.transform;
+            GameObject level = op.Result;
+            TryLoadLevelTutorial(level.transform, nextLevelId);
+            if (tutorialAdapter.IsTutorialLevel)
+            {
+                DebugLogger.Log(message: $"This is tut-level -> stop rotate");
+                level.GetComponent<RotateObject>().DisableAutoRotatingForever();
+            }
 
-                _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
+            _currentLevelContainer = level.transform;
 
-                YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(level.transform, _pieces);
+            _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
+            YarnLevelDifficultyManager.Instance.GenerateAddionalFaction(level.transform, _pieces);
+            
+            _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
+            setLevelScrewNumberEvent?.Invoke(_pieces.Length);
 
-                _pieces = TransformUtil.GetComponentsArrayFromAllChildren<BasePiece>(level.transform);
+            _isNotAutoCenterLevel = false;
 
-                setLevelScrewNumberEvent?.Invoke(_pieces.Length);
+            level.transform.position = Vector3.zero;
 
-                // // AUTO CENTER LEVEL
-                // _isNotAutoCenterLevel = false;
-
-                // foreach (BasicObjectPart obj in pieces)
-                // {
-                //     MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-
-                //     if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
-                //     {
-                //         _isNotAutoCenterLevel = true;
-
-                //         break;
-                //     }
-                // }
-
-                _isNotAutoCenterLevel = false;
-
-                level.transform.position = Vector3.zero;
-
-                if (!_isNotAutoCenterLevel)
-                {
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform pivotAdjust = level.transform.GetChild(i);
-
-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
-                        {
-                            _pivotAdjust = pivotAdjust;
-
-                            _pivotAdjust.transform.position = Vector3.zero;
-                        }
-                    }
-
-                    foreach (BasePiece piece in _pieces)
-                    {
-                        if (_pivotAdjust == null)
-                        {
-                            _pivotAdjust = new GameObject().transform;
-                            _pivotAdjust.name = "Pivot Adjust";
-                            _pivotAdjust.SetParent(_currentLevelContainer);
-
-                            _pivotAdjust.transform.localPosition = Vector3.zero;
-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                            _pivotAdjust.transform.localScale = Vector3.one;
-                        }
-
-                        if (!piece.transform.IsChildOf(_pivotAdjust))
-                        {
-                            piece.transform.SetParent(_pivotAdjust);
-                        }
-                    }
-
-                    // Decor
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform child = level.transform.GetChild(i);
-
-                        CheckCreatePivotAdjust();
-
-                        if (child.GetComponent<BasePiece>() == null)
-                        {
-                            if (!child.transform.IsChildOf(_pivotAdjust))
-                            {
-                                child.transform.SetParent(_pivotAdjust);
-                            }
-                        }
-                    }
-
-                    GamePersistentVariable.levelOffset = new Vector3(0, 0.3f, 0);
-
-                    _isSetLevelGradientBound = false;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, true);
-
-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                }
-                //
-
-                void CheckCreatePivotAdjust()
-                {
-                    if (_pivotAdjust == null)
-                    {
-                        _pivotAdjust = new GameObject().transform;
-                        _pivotAdjust.name = "Pivot Adjust";
-                        _pivotAdjust.SetParent(_currentLevelContainer);
-
-                        _pivotAdjust.transform.localPosition = Vector3.zero;
-                        _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                        _pivotAdjust.transform.localScale = Vector3.one;
-                    }
-                }
-
-                // texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
-
-                // if (isLoopLevel)
-                // {
-                //     RandomizeLevelModelColor(level);
-                // }
-                // else
-                // {
-                //     SaferioTracking.TrackLevelStart(currentLevel.Value);
-                // }
-
-                // _nextLevel = nextLevel;
-                // _isLoopLevel = isLoopLevel;
-
-                // _tweens.Add(Tween.Delay(3).OnComplete(() =>
-                // {
-                //     ShowSuggestion(nextLevel, isLoopLevel);
-                // }));
-                // // SuggestHardMode();
-
-                // #region EVENT ITEMS
-                // GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
-
-                // CoinChallengeGameplayUI.Instance.SetNumber();
-                // #endregion
-
-                // GamePersistentVariable.isLevelLost = false;
+            if (!_isNotAutoCenterLevel)
+            {
+                DragLevelIntoCenter(level);
             }
         };
+
+        void CheckCreatePivotAdjust()
+        {
+            if (_pivotAdjust == null)
+            {
+                _pivotAdjust = new GameObject().transform;
+                _pivotAdjust.name = "Pivot Adjust";
+                _pivotAdjust.SetParent(_currentLevelContainer);
+
+                _pivotAdjust.transform.localPosition = Vector3.zero;
+                _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                _pivotAdjust.transform.localScale = Vector3.one;
+            }
+        }
+
+        void TryLoadLevelTutorial(Transform levelTransform, int levelId)
+        {
+            DebugLogger.Log();
+            tutorialAdapter.ResetState();
+            tutorialAdapter.InitData(levelTransform, levelId);
+            
+        }
+
+        void DragLevelIntoCenter(GameObject level)
+        {
+            for (int i = 0; i < level.transform.childCount; i++)
+            {
+                Transform pivotAdjust = level.transform.GetChild(i);
+
+                if (pivotAdjust.name.Contains("Pivot Adjust"))
+                {
+                    _pivotAdjust = pivotAdjust;
+
+                    _pivotAdjust.transform.position = Vector3.zero;
+                }
+            }
+
+            foreach (BasePiece piece in _pieces)
+            {
+                if (_pivotAdjust == null)
+                {
+                    _pivotAdjust = new GameObject().transform;
+                    _pivotAdjust.name = "Pivot Adjust";
+                    _pivotAdjust.SetParent(_currentLevelContainer);
+
+                    _pivotAdjust.transform.localPosition = Vector3.zero;
+                    _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+                    _pivotAdjust.transform.localScale = Vector3.one;
+                }
+
+                if (!piece.transform.IsChildOf(_pivotAdjust))
+                {
+                    piece.transform.SetParent(_pivotAdjust);
+                }
+            }
+
+            // Decor
+            for (int i = 0; i < level.transform.childCount; i++)
+            {
+                Transform child = level.transform.GetChild(i);
+
+                CheckCreatePivotAdjust();
+
+                if (child.GetComponent<BasePiece>() == null)
+                {
+                    if (!child.transform.IsChildOf(_pivotAdjust))
+                    {
+                        child.transform.SetParent(_pivotAdjust);
+                    }
+                }
+            }
+
+            GamePersistentVariable.levelOffset = new Vector3(0, 0.3f, 0);
+
+            _isSetLevelGradientBound = false;
+
+            Vector3 center =
+                GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, true);
+
+            _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+        }
     }
 
     private async void GoLevel(int level)
@@ -390,12 +354,15 @@ public class YarnLevelLoader : MonoBehaviour
 
         GoLevel(currentLevel.Value);
     }
+
     #endregion
 
     #region ASSIGN SCREW FACTION
+
     private void AutoAssignScrewFactionMultiPhaseLevel(GameObject level)
     {
-        MultiPhaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<MultiPhaseScrew>(level.transform).ToArray();
+        MultiPhaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<MultiPhaseScrew>(level.transform)
+            .ToArray();
 
         Dictionary<int, List<GameFaction>> remainingFactionForScrewsByPhase = new Dictionary<int, List<GameFaction>>();
 
@@ -409,7 +376,8 @@ public class YarnLevelLoader : MonoBehaviour
             {
                 currentFactionByPhase.Add(phase, 0);
 
-                remainingFactionForScrewsByPhase.Add(phase, new List<GameFaction>() { GameConstants.SCREW_FACTION[currentFactionByPhase[phase]] });
+                remainingFactionForScrewsByPhase.Add(phase,
+                    new List<GameFaction>() { GameConstants.SCREW_FACTION[currentFactionByPhase[phase]] });
             }
             else
             {
@@ -456,7 +424,8 @@ public class YarnLevelLoader : MonoBehaviour
 
         for (int i = 0; i < numTripleScrews; i++)
         {
-            GameFaction randomFaction = GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
+            GameFaction randomFaction =
+                GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
 
             factionPool.Add(randomFaction);
         }
@@ -510,12 +479,14 @@ public class YarnLevelLoader : MonoBehaviour
 
         List<BaseScrew> shuffledScrews = new List<BaseScrew>();
 
-        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
+        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration
+            .RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
         // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
         //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
 
-        int numNoBlockedScrewsToGetSameFaction = (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
+        int numNoBlockedScrewsToGetSameFaction =
+            (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
         int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
 
         // EASY SCREWS
@@ -617,9 +588,11 @@ public class YarnLevelLoader : MonoBehaviour
 
         setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
+
     #endregion
 
     #region AUTO CENTER LEVEL
+
     private async void OnPieceCompleted()
     {
         await Task.Delay(500);
@@ -632,7 +605,8 @@ public class YarnLevelLoader : MonoBehaviour
             _pivotAdjust.transform.position = Vector3.zero;
             _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
-            Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, false);
+            Vector3 center =
+                GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, false);
 
             _pivotAdjust.transform.position = currentPosition;
             _pivotAdjust.transform.eulerAngles = currentRotation;
@@ -643,11 +617,11 @@ public class YarnLevelLoader : MonoBehaviour
 
             CommonUtil.StopAllTweens(_autoCenterLevelTweens);
 
-            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f, ease: Ease.InOutSine));
+            _autoCenterLevelTweens.Add(Tween.LocalPosition(_pivotAdjust, newCenter, duration: 0.3f,
+                ease: Ease.InOutSine));
         }
         catch (System.Exception e)
         {
-
         }
     }
 
@@ -761,9 +735,11 @@ public class YarnLevelLoader : MonoBehaviour
 
         return new Vector3((minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2) + offset;
     }
+
     #endregion
 
     #region LEVEL SETUP
+
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isFirstTimeOnLevel)
     {
         float maxExpectedLevelSize = expectedLevelSize.x;
@@ -846,9 +822,25 @@ public class YarnLevelLoader : MonoBehaviour
         //     }
         // }
     }
+
+    #endregion
+
+    #region Tutorial
+
+    private void TryActiveTutorial()
+    {
+        DebugLogger.Log();
+        if (tutorialAdapter.IsTutorialLevel)
+        {
+            DebugLogger.Log(message: $"Active tutorial");
+            tutorialAdapter.ActiveCurrentTut();
+        }
+    }
+
     #endregion
 
     #region BOOSTER SUGGESTION
+
     private void ShowSuggestion(int nextLevel, bool isLoopLevel)
     {
         int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
@@ -895,8 +887,10 @@ public class YarnLevelLoader : MonoBehaviour
         //     return false;
         // }
 
-        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, false);
-        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+        bool remoteConfigIsShowBoosterSuggestion =
+            RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_BOOSTER_SUGGESTION, false);
+        int numLevelShowBoosterSuggestion =
+            RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
         if (!remoteConfigIsShowBoosterSuggestion)
         {
@@ -913,8 +907,10 @@ public class YarnLevelLoader : MonoBehaviour
 
     private bool IsShowDoubleScrewBoxesSuggestion(int level)
     {
-        bool remoteConfigIsShowBoosterSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
-        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 1);
+        bool remoteConfigIsShowBoosterSuggestion =
+            RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION, false);
+        int numLevelShowBoosterSuggestion =
+            RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 1);
 
         if (!remoteConfigIsShowBoosterSuggestion)
         {
@@ -948,9 +944,11 @@ public class YarnLevelLoader : MonoBehaviour
             return false;
         }
 
-        bool remoteConfigIsShowIAPSuggestion = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_IAP_SUGGESTION, true);
+        bool remoteConfigIsShowIAPSuggestion =
+            RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_IAP_SUGGESTION, true);
         int minLevelShow = RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_LEVEL_SHOW_IAP_SUGGESTION, 10);
-        int numLevelShowBoosterSuggestion = RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
+        int numLevelShowBoosterSuggestion =
+            RemoteConfigController.GetIntConfig(FirebaseConfig.LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION, 2);
 
         if (!remoteConfigIsShowIAPSuggestion)
         {
@@ -969,10 +967,7 @@ public class YarnLevelLoader : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
-        {
-            switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest);
-        }));
+        _tweens.Add(Tween.Delay(3).OnComplete(() => { switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest); }));
     }
 
     private void DelayShowDoubleScrewBoxesSuggestion()
@@ -993,29 +988,27 @@ public class YarnLevelLoader : MonoBehaviour
 
         switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
 
-        _tweens.Add(Tween.Delay(1).OnComplete(() =>
-        {
-            switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion);
-        }));
+        _tweens.Add(Tween.Delay(1).OnComplete(() => { switchRouteEvent?.Invoke(ScreenRoute.IAPSuggestion); }));
     }
+
     #endregion
 
     #region HARD MODE
+
     private void SuggestHardMode()
     {
-        _tweens.Add(Tween.Delay(3).OnComplete(() =>
-        {
-            switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty);
-        }));
+        _tweens.Add(Tween.Delay(3).OnComplete(() => { switchRouteEvent?.Invoke(ScreenRoute.ChooseDifficulty); }));
     }
 
     private void OnHardModeSuggestionClosed()
     {
         ShowSuggestion(_nextLevel, _isLoopLevel);
     }
+
     #endregion
 
     #region UTIL
+
     private int GetLoopLevel()
     {
         int currentLoopLevel = DataUtility.Load(GameConstants.CURRENT_LEVEL_LOOP, -1);
@@ -1038,7 +1031,8 @@ public class YarnLevelLoader : MonoBehaviour
 
     private void RandomizeLevelModelColor(GameObject level)
     {
-        BasicObjectPart[] objectParts = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
+        BasicObjectPart[] objectParts =
+            TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform).ToArray();
         Renderer[] objectPartRenderers = new Renderer[objectParts.Length];
 
         // MATERIALS
@@ -1067,7 +1061,8 @@ public class YarnLevelLoader : MonoBehaviour
         {
             for (int i = 0; i < objectParts.Length; i++)
             {
-                objectPartRenderers[i].sharedMaterial.SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
+                objectPartRenderers[i].sharedMaterial
+                    .SetVector("_MainTextureOffset", new Vector2(randomTilingX, randomTilingY));
             }
 
             return;
@@ -1120,5 +1115,6 @@ public class YarnLevelLoader : MonoBehaviour
             list[n] = value;
         }
     }
+
     #endregion
 }

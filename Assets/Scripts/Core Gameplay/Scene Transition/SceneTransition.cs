@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using NamPhuThuy.UI;
 using PrimeTween;
@@ -42,6 +43,13 @@ public class SceneTransition : MonoBehaviour
     private bool _isLevelLoaded;
     private Coroutine _waitForLevelLoadedCoroutine;
 
+    #region Events
+
+    public static event Action LevelLoadingCompleted;
+
+    #endregion
+
+    #region MonoBehaviour Callbacks
 
     private void Awake()
     {
@@ -82,6 +90,8 @@ public class SceneTransition : MonoBehaviour
         CommonUtil.StopAllTweens(_tweens);
     }
 
+    #endregion
+
     private void TransitionOnLevelStarted()
     {
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
@@ -103,6 +113,7 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private IEnumerator LoadingLevelInProgress()
     {
+        DebugLogger.Log();
         if (_isFirstTimeEnterScene)
         {
             loadLevelInProgressContainer.gameObject.SetActive(true);
@@ -120,15 +131,7 @@ public class SceneTransition : MonoBehaviour
                     blackBackground.gameObject.SetActive(false);
                 });
 
-            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, startDelay: 1.7f, onValueChange: newVal =>
-            {
-                loadLevelInProgressCanvasGroup.alpha = newVal;
-            })
-            .OnComplete(() =>
-                {
-                    loadLevelInProgressContainer.gameObject.SetActive(false);
-                })
-            );
+            FadeOut( 1.7f);
 
             _isFirstTimeEnterScene = false;
 
@@ -189,15 +192,20 @@ public class SceneTransition : MonoBehaviour
 
         yield return new WaitUntil(() => _isLevelLoaded);
 
-        _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        void FadeOut(float startDelay = 0f)
         {
-            loadLevelInProgressCanvasGroup.alpha = newVal;
-        })
-        .OnComplete(() =>
-            {
-                loadLevelInProgressContainer.gameObject.SetActive(false);
-            })
-        );
+            _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, startDelay: 1.7f, onValueChange: newVal =>
+                {
+                    loadLevelInProgressCanvasGroup.alpha = newVal;
+                })
+                .OnComplete(() =>
+                {
+                    DebugLogger.Log(message: $"About to invoke LevelLoadingCompleted");
+                    LevelLoadingCompleted?.Invoke();
+                    loadLevelInProgressContainer.gameObject.SetActive(false);
+                })
+            );
+        }
     }
     #endregion
 }

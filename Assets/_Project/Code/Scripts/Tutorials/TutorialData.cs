@@ -26,7 +26,7 @@ namespace NamPhuThuy.Tutorial
             }
         }
 
-        public TutorialRecord GetForLevel(int levelId)
+        public TutorialRecord GetTutRecord(int levelId)
         {
             EnsureIndex();
             return _dictData.GetValueOrDefault(levelId);

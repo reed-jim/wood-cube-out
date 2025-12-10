@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using Spine.Unity;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -14,8 +15,27 @@ namespace NamPhuThuy.Tutorial
         [SerializeField] private Vector3 pivotOffset;
         
         [Header("Animation Names")]
-        [SerializeField] private string animIdle = "Idle";
-        [SerializeField] private string animClick = "Click";
+        private string _animAction = "action";
+        private string _animAction2 = "action2";
+        private string _animBegin1 = "begin1";
+        private string _animBegin2 = "begin2";
+        private string _animEnd1 = "end1";
+        private string _animEnd2 = "end2";
+        
+        /// <summary>
+        /// The hand move except finger
+        /// </summary>
+        public string AnimAction => _animAction;
+        
+        /// <summary>
+        /// Finger move
+        /// </summary>
+        public string AnimAction2 => _animAction2;
+        public string AnimBegin1 => _animBegin1;
+        public string AnimBegin2 => _animBegin2;
+        public string AnimEnd1 => _animEnd1;
+        public string AnimEnd2 => _animEnd2;
+        
         
         #region Private Serializable Fields
 
@@ -29,21 +49,23 @@ namespace NamPhuThuy.Tutorial
 
         #endregion
 
-        #region Private Methods
-        #endregion
+        
 
         #region Public Methods
         
         
-        [SerializeField] private RectTransform rectTransform;
+
+        private RectTransform rectTransform;
 
         public void SetWorldPosition(Vector3 worldPos)
         {
+            DebugLogger.Log();
             transform.position = worldPos;
         }
 
         public void SetScreenPosition(Vector2 screenPos)
         {
+            DebugLogger.Log();
             if (rectTransform != null)
             {
                 rectTransform.position = screenPos;
@@ -51,6 +73,32 @@ namespace NamPhuThuy.Tutorial
             else
             {
                 transform.position = screenPos;
+            }
+        }
+
+        public void EnableHand()
+        {
+            DebugLogger.Log();
+            handSkeGraphic.gameObject.SetActive(true);
+        }
+
+        public void DisableHand()
+        {
+            DebugLogger.Log();
+            handSkeGraphic.gameObject.SetActive(false);
+        }
+        
+        #endregion
+        
+        #region Private Methods
+        
+        public void PlayAnimation(string animName, bool loop = true)
+        {
+            DebugLogger.Log(message: $"PlayAnimation: {animName}, loop: {loop}");
+            if (handSkeGraphic != null)
+            {
+                DebugLogger.Log(message: $"Play Animation: {animName}, loop: {loop}");
+                handSkeGraphic.AnimationState.SetAnimation(0, animName, loop);
             }
         }
         

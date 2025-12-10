@@ -20,11 +20,11 @@ RenderSettings:
   m_FogDensity: 0.01
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
-  m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
+  m_AmbientSkyColor: {r: 0.83303666, g: 0.8572446, b: 0.9056604, a: 1}
   m_AmbientEquatorColor: {r: 0.114, g: 0.125, b: 0.133, a: 1}
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
-  m_AmbientIntensity: 1.78
-  m_AmbientMode: 0
+  m_AmbientIntensity: 3
+  m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
   m_HaloStrength: 0.5
@@ -2577,6 +2577,7 @@ GameObject:
   m_Component:
   - component: {fileID: 598095787}
   - component: {fileID: 598095788}
+  - component: {fileID: 598095789}
   m_Layer: 0
   m_Name: Level Loader
   m_TagString: Untagged
@@ -2617,6 +2618,28 @@ MonoBehaviour:
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
   texturedMaterial: {fileID: 2100000, guid: 72965e0c84f67b442a7b11fa3475c345, type: 2}
+  tutorialAdapter: {fileID: 598095789}
+--- !u!114 &598095789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 598095786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 98f806590b4a0d04f993251ded7693f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.GamePlay.TutorialAdapter
+  levelId: 0
+  pieceList: []
+  tutorialRecord:
+    levelId: 0
+    rules: []
+    isUnlockBooster: 0
+    isUseTutorImage: 0
+    tutorialImage: {fileID: 0}
+    steps: []
 --- !u!1 &602326779
 GameObject:
   m_ObjectHideFlags: 0
@@ -3785,68 +3808,6 @@ MonoBehaviour:
   maxZoom: 16
   changeThreshold: 0.04
   delayToEnableSwipeGesture: 0.3
---- !u!1001 &725601824
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1760381762}
-    m_Modifications:
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -540
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -960
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8663730333676125890, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-      propertyPath: m_Name
-      value: Tutorial Manager
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
---- !u!4 &725601825 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2037128798055299490, guid: 935cfc7f27ee71b448235a9ee632eb7a, type: 3}
-  m_PrefabInstance: {fileID: 725601824}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &760435212
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8631,7 +8592,6 @@ RectTransform:
   - {fileID: 1245723997}
   - {fileID: 1008063633}
   - {fileID: 240009999}
-  - {fileID: 725601825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

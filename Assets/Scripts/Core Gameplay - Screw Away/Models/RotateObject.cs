@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using UnityEngine;
 using static GameEnum;
 
@@ -20,6 +21,9 @@ public class RotateObject : MonoBehaviour
 
     private float _smoothRotateX;
     private float _smoothRotateY;
+    
+    private Coroutine _rotateCoroutine;
+    private Coroutine _autoRotateCoroutine;
 
     #region MonoBehaviour Callbacks
 
@@ -34,10 +38,10 @@ public class RotateObject : MonoBehaviour
         {
             _remainingTimeToAutoRotate = 2;
 
-            StartCoroutine(AutoRotating());
+            _autoRotateCoroutine = StartCoroutine(AutoRotating());
         }
 
-        StartCoroutine(Rotating());
+        _rotateCoroutine = StartCoroutine(Rotating());
     }
 
     void OnDestroy()
@@ -93,6 +97,10 @@ public class RotateObject : MonoBehaviour
         _remainingTimeToAutoRotate = 10;
     }
 
+    
+
+    #region Mechanics
+
     private IEnumerator AutoRotating()
     {
         float timePerCycle = 0.3f;
@@ -120,13 +128,26 @@ public class RotateObject : MonoBehaviour
         }
     }
 
-    private void DisableAutoRotating()
+    public void DisableAutoRotatingForever()
     {
-        _isAutoRotating = false;
+        DebugLogger.Log();
+        StopCoroutine(_rotateCoroutine);
+        StopCoroutine(_autoRotateCoroutine);
     }
 
+    private void DisableAutoRotating()
+    {
+        DebugLogger.Log();
+        _isAutoRotating = false;
+    }
+    
+    
     private void OnPieceSelected(int pieceInstanceId, GameFaction faction)
     {
         DisableAutoRotating();
     }
+
+    #endregion
+
+   
 }

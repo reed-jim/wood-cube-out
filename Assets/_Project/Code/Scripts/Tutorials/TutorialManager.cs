@@ -1,15 +1,18 @@
 using System.Collections;
 using MoreMountains.Tools;
+using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using UnityEngine;
 
 namespace NamPhuThuy.Tutorial
 {
-    public class TutorialManager : Common.Singleton<TutorialManager>, MMEventListener<ELevelLoad>, MMEventListener<ELevelStart>
+    public class TutorialManager : Common.Singleton<TutorialManager>
     {
         [Header("Components")]
         [SerializeField] private TutorialData data;
-        [SerializeField] private TutorialHand tutorialHand;
+        public TutorialData Data => data;
+        [SerializeField] private TutorialHand _tutorialHand;
+        public TutorialHand TutorialHand => _tutorialHand;
 
         private int _currentLevelId = -1;
         private Coroutine _runningRoutine;
@@ -25,47 +28,52 @@ namespace NamPhuThuy.Tutorial
         {
             MMEventManager.UnregisterAllCurrentEvents(this);
         }
-
-        #region Events Listen
-
-        public void OnMMEvent(ELevelLoad e)
-        {
-            _currentLevelId = DataManager.Ins.PlayerData.CurrentLevelId;
-            TryStartTutorialForLevel(_currentLevelId);
-        }
-
-        public void OnMMEvent(ELevelStart e)
-        {
-            // Optional: you can trigger here instead of On level load
-        }
-
-        #endregion
         
         #region Hand Control
 
         public void MoveHandToWorldPosition(Vector3 worldPosition)
         {
-            if (tutorialHand == null) return;
-            tutorialHand.SetWorldPosition(worldPosition);
+            DebugLogger.Log();
+            if (_tutorialHand == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
+            _tutorialHand.SetWorldPosition(worldPosition);
         }
 
         public void MoveHandToScreenPosition(Vector2 screenPosition)
         {
-            if (tutorialHand == null) return;
-            tutorialHand.SetScreenPosition(screenPosition);
+            DebugLogger.Log();
+            if (_tutorialHand == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
+            _tutorialHand.SetScreenPosition(screenPosition);
         }
 
         public void MoveHandToWorldObject(Transform targetTransform)
         {
-            if (tutorialHand == null || targetTransform == null) return;
-            tutorialHand.SetWorldPosition(targetTransform.position);
+            DebugLogger.Log();
+            if (_tutorialHand == null || targetTransform == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
+            _tutorialHand.SetWorldPosition(targetTransform.position);
         }
 
         public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
         {
-            if (tutorialHand == null || Camera.main == null) return;
+            DebugLogger.Log();
+            if (_tutorialHand == null || Camera.main == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
             Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-            tutorialHand.SetScreenPosition(screenPos);
+            _tutorialHand.SetScreenPosition(screenPos);
         }
 
         #endregion
@@ -74,7 +82,7 @@ namespace NamPhuThuy.Tutorial
         {
             if (!data) return;
 
-            var rule = data.GetForLevel(levelId);
+            var rule = data.GetTutRecord(levelId);
             if (rule == null) return;
             if (rule.Steps == null || rule.Steps.Count == 0) return;
 
