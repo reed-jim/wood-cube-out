@@ -55,9 +55,8 @@ public class Yarn2D : MonoBehaviour
     private Camera _mainCamera;
     private MaterialPropertyBlock yarnMaterialPropertyBlock;
     private Transform _initialParent;
-    private Vector3 _firstNodePosition;
     private Transform _firstNodeTarget;
-    private Vector3 _lastNodePosition;
+    private Transform _lastNodeTarget;
     private float _spoolSlotRadius;
     private float spoolSlotSizeY;
     private Vector3 _firstNodeLocalPosition;
@@ -163,7 +162,7 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodeTarget = endSpool.transform;
-        _lastNodePosition = startSpool.transform.position;
+        _lastNodeTarget = startSpool.transform;
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
@@ -200,7 +199,7 @@ public class Yarn2D : MonoBehaviour
         Reset();
 
         _firstNodeTarget = endSpool.transform;
-        _lastNodePosition = _mainCamera.ScreenToWorldPoint(outsideBox.position);
+        _lastNodeTarget = outsideBox.transform;
         _spoolSlotRadius = 0.5f * endSpool.SpoolRenderer.bounds.size.x;
 
         gameObject.SetActive(true);
@@ -234,9 +233,8 @@ public class Yarn2D : MonoBehaviour
 
         Reset();
 
-        _firstNodePosition = Camera.main.ScreenToWorldPoint(outsideBox.position);
         _firstNodeTarget = outsideBox.transform;
-        _lastNodePosition = startSpool.transform.position;
+        _lastNodeTarget = startSpool.transform;
         spoolSlotSizeY = 0;
         _spoolSlotRadius = 0.5f * startSpool.SpoolRenderer.bounds.size.x;
 
@@ -490,7 +488,7 @@ public class Yarn2D : MonoBehaviour
     {
         if (piece == null)
         {
-            return _lastNodePosition;
+            return GetLastNodePosition();
         }
 
         float radius = Mathf.Max(new float[3] { modelSize.x, modelSize.y, modelSize.z });
@@ -834,6 +832,23 @@ public class Yarn2D : MonoBehaviour
         else
         {
             return _firstNodeTarget.position;
+        }
+    }
+
+    private Vector3 GetLastNodePosition()
+    {
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+        }
+
+        if (_lastNodeTarget is RectTransform)
+        {
+            return _mainCamera.ScreenToWorldPoint(_lastNodeTarget.position);
+        }
+        else
+        {
+            return _lastNodeTarget.position;
         }
     }
     #endregion

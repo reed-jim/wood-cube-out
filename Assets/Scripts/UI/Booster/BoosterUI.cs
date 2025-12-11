@@ -123,7 +123,7 @@ public class BoosterUI : MonoBehaviour
 
     private void CheckTutAvailable(bool isTutAvailable)
     {
-        DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+        DebugLogger.Log(message: $"isTutAvailable: {isTutAvailable}", context: this);
         if (isTutAvailable)
         {
             addMoreScrewPortButton.gameObject.SetActive(false);
@@ -156,12 +156,12 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context:this);
+        DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context: this);
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
             {
-                DebugLogger.Log(message:$"Check 1");
+                DebugLogger.Log(message: $"Check 1");
                 showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
             }
 
@@ -187,7 +187,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 0))
         {
-            DebugLogger.Log(message:$"Check 1 {BoosterType.AddSpoolSlot}");
+            DebugLogger.Log(message: $"Check 1 {BoosterType.AddSpoolSlot}");
             showBuyBoosterPopupEvent?.Invoke(BoosterType.AddSpoolSlot);
 
             return;
@@ -241,7 +241,7 @@ public class BoosterUI : MonoBehaviour
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.MagicPick);
-            
+
             return;
         }
 
@@ -315,8 +315,12 @@ public class BoosterUI : MonoBehaviour
     {
         if (screwBoxesObserver.NumScrewInScrewPorts == 0)
         {
-            // shakeScrewPortsEvent?.Invoke();
-            showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+            Debug.Log("SAFERIO remove GamePersistentVariable.isAutoTestingLevel before final build");
+            
+            if (!GamePersistentVariable.isAutoTestingLevel)
+            {
+                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+            }
 
             return;
         }
