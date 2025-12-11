@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class StarChestPopup : BasePopup
 {
     [SerializeField] private CanvasGroup popupCanvasGroup;
-    [SerializeField] private Slider progressSlider;
+    [SerializeField] private Image progressFill;
     [SerializeField] private TMP_Text progressText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
 
@@ -69,7 +69,7 @@ public class StarChestPopup : BasePopup
 
         float progress = (float)starCollected / requireGemForEachLevel;
 
-        progressSlider.value = progress;
+        progressFill.fillAmount = progress;
         progressText.text = $"{Mathf.RoundToInt(progress * requireGemForEachLevel)}/{requireGemForEachLevel}";
     }
 
@@ -81,7 +81,7 @@ public class StarChestPopup : BasePopup
     private void AnimateProgress()
     {
         return;
-        
+
         int starCollected = Mathf.Min(_data.starCollected, requireGemForEachLevel);
 
         float progress = (float)starCollected / requireGemForEachLevel;
