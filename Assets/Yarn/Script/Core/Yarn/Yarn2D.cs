@@ -430,7 +430,7 @@ public class Yarn2D : MonoBehaviour
             RopeSegment lastNode = segments[segmentCount - 1];
 
             firstNode.posNow = GetFirstNodePosition();
-            lastNode.posNow = GetSpiralPosition(dissolveHeight, 3);
+            lastNode.posNow = GetSpiralPosition(dissolveHeight, 4);
 
             segments[segmentCount - 1] = lastNode;
 
@@ -445,7 +445,7 @@ public class Yarn2D : MonoBehaviour
 
     private void ToggleGameObject(bool isActive)
     {
-        NamPhuThuy.Common.DebugLogger.Log(message:$"Turn off the Yarn2D");
+        NamPhuThuy.Common.DebugLogger.Log(message: $"Turn off the Yarn2D");
         gameObject.SetActive(isActive);
     }
 
@@ -497,8 +497,8 @@ public class Yarn2D : MonoBehaviour
 
         float distance = 6 * radius;
 
-        Vector3 raycastTopPoint = piece.transform.position + distance * Vector3.up;
-        Vector3 raycastBottomPoint = piece.transform.position - distance * Vector3.up;
+        Vector3 raycastTopPoint = new Vector3();
+        Vector3 raycastBottomPoint = new Vector3();
         Vector3 pointOnTopSurface = new Vector3();
         Vector3 pointOnBottomSurface = new Vector3();
 
@@ -534,24 +534,22 @@ public class Yarn2D : MonoBehaviour
 
         if (rewindAxis == DissolveAxis.X)
         {
-            raycastTopPoint = new Vector3(-0.5f * modelSize.x, 0, 0);
-            raycastBottomPoint = new Vector3(0.5f * modelSize.x, 0, 0);
+            raycastTopPoint = new Vector3(-distance, 0, 0);
+            raycastBottomPoint = new Vector3(distance, 0, 0);
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
-            raycastTopPoint = new Vector3(0, -0.5f * modelSize.y, 0);
-            raycastBottomPoint = new Vector3(0, 0.5f * modelSize.y, 0);
+            raycastTopPoint = new Vector3(0, -distance, 0);
+            raycastBottomPoint = new Vector3(0, distance, 0);
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
-            raycastTopPoint = new Vector3(0, 0, -0.5f * modelSize.z);
-            raycastBottomPoint = new Vector3(0, 0, 0.5f * modelSize.z);
+            raycastTopPoint = new Vector3(0, 0, -distance);
+            raycastBottomPoint = new Vector3(0, 0, distance);
         }
 
         raycastTopPoint = piece.transform.TransformPoint(raycastTopPoint);
         raycastBottomPoint = piece.transform.TransformPoint(raycastBottomPoint);
-
-        Debug.Log("Check rewind axis " + raycastTopPoint + "/" + raycastBottomPoint);
 
         if (rewindAxisWorld == DissolveAxis.X)
         {
@@ -598,7 +596,7 @@ public class Yarn2D : MonoBehaviour
 
         if (isOnlyGetTopPoint)
         {
-            return pointOnTopSurface;
+            return Vector3.Lerp(pointOnTopSurface, piece.transform.position, 0.2f);
         }
 
         hits = Physics.BoxCastAll(
@@ -622,11 +620,9 @@ public class Yarn2D : MonoBehaviour
             }
         }
 
-        float topToBottomDistance = Mathf.Abs(pointOnTopSurface.y - pointOnBottomSurface.y);
-
         Vector3 currentPoint = pointOnTopSurface;
 
-        topToBottomDistance = GetDistanceOneDirection(pointOnTopSurface, pointOnBottomSurface);
+        float topToBottomDistance = GetDistanceOneDirection(pointOnTopSurface, pointOnBottomSurface);
 
         float minXWorld = piece.transform.position.x - 0.5f * modelSizeWorld.x;
         float maxXWorld = piece.transform.position.x + 0.5f * modelSizeWorld.x;
@@ -674,8 +670,6 @@ public class Yarn2D : MonoBehaviour
             piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, minYWorld, maxYWorld);
         }
 
-        return currentPoint;
-
         float GetDistanceOneDirection(Vector3 pointA, Vector3 pointB)
         {
             float xDistance = Mathf.Abs(pointA.x - pointB.x);
@@ -696,47 +690,41 @@ public class Yarn2D : MonoBehaviour
 
         Debug.Log("rewindAxis " + rewindAxis + "/" + rewindAxisWorld + "/" + topToBottomDistance);
 
-        // currentPoint.y = pointOnTopSurface.y - (1 - yRatio) * topToBottomDistance;
-
-        // piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, pointOnBottomSurface.y, pointOnTopSurface.y);
-
         // Calc surface
         _currentAngle = yRatio * turn * 2 * Mathf.PI;
+        Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
-        Vector3 raycastPoint = piece.transform.position + new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, 0, Mathf.Sin(_currentAngle) * 4 * radius);
-        raycastPoint.y = currentPoint.y;
-        Vector3 raycastDestination = piece.transform.position.ChangeX(currentPoint.x);
-        Vector3 halfExtents = new Vector3(0.1f * topToBottomDistance, radius, radius);
+        Vector3 raycastPoint = new Vector3();
+        Vector3 raycastDestination = new Vector3();
+        Vector3 halfExtents = new Vector3();
 
-        raycastPoint = piece.transform.position + new Vector3(0, Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius);
-
-        if (rewindAxis == DissolveAxis.Y)
+        if (rewindAxis == DissolveAxis.X)
         {
-            raycastPoint = piece.transform.position + new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, 0, Mathf.Sin(_currentAngle) * 4 * radius);
-            raycastDestination = piece.transform.position.ChangeY(currentPoint.y);
-            halfExtents = new Vector3(radius, 0.1f * topToBottomDistance, radius);
+            raycastPoint = new Vector3(currentPointPieceSpace.x, Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius);
+            raycastPoint = piece.transform.TransformPoint(raycastPoint);
+            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeX(currentPointPieceSpace.x));
+            halfExtents = ToWorldHalfExtents(new Vector3(0.02f, radius, radius));
+        }
+        else if (rewindAxis == DissolveAxis.Y)
+        {
+            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, currentPointPieceSpace.y, Mathf.Sin(_currentAngle) * 4 * radius);
+            raycastPoint = piece.transform.TransformPoint(raycastPoint);
+            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeY(currentPointPieceSpace.y));
+            halfExtents = ToWorldHalfExtents(new Vector3(radius, 0.02f, radius));
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
-            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius, currentPoint.z);
+            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius, currentPointPieceSpace.z);
             raycastPoint = piece.transform.TransformPoint(raycastPoint);
-            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeZ(currentPoint.z));
-            // raycastDestination = currentPoint;
-            halfExtents = ToWorldHalfExtents(new Vector3(radius, radius, 0.01f));
-
-            Debug.Log("SAERIO halfExtents " + halfExtents);
+            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeZ(currentPointPieceSpace.z));
+            halfExtents = ToWorldHalfExtents(new Vector3(radius, radius, 0.02f));
         }
-
-        Vector3 previewPos = raycastPoint;
-
-        debugSphere.transform.position = new Vector3(Mathf.Cos(_currentAngle) * 0.5f * radius, Mathf.Sin(_currentAngle) * 0.5f * radius, currentPoint.z);
-        debugSphere.transform.position = piece.transform.TransformPoint(debugSphere.transform.position);
 
         hits = Physics.BoxCastAll(
             center: raycastPoint,
             halfExtents: halfExtents,
             direction: raycastDestination - raycastPoint,
-            orientation: piece.transform.rotation,
+            orientation: Quaternion.identity,
             maxDistance: 2 * distance
         );
 
@@ -767,7 +755,7 @@ public class Yarn2D : MonoBehaviour
 
     Vector3 GetFirstPointOnModel()
     {
-        return GetSpiralPosition(dissolveHeight, 3, isOnlyGetTopPoint: true);
+        return GetSpiralPosition(dissolveHeight, 4, isOnlyGetTopPoint: true);
     }
 
     void InitializeRope(Vector3 startPoint, GameFaction faction)

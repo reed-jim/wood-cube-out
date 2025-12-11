@@ -16,6 +16,6 @@ namespace NamPhuThuy.GamePlay
         public static readonly float spoolBoxZOffset = -10f;
         
         // ANIMATION
-        public static readonly float yarnAnimDuration = 1f;
+        public static readonly float yarnAnimDuration = 0.65f;
     }
 }
