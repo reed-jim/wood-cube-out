@@ -268,14 +268,7 @@ public class SpoolBox : MonoBehaviour
         // CLEAR SCREWS
         for (int i = 0; i < spoolBoxSlots.Length; i++)
         {
-            if (spoolBoxSlots[i].IsFilled)
-            {
-                spoolBoxSlots[i].IsFilled = false;
-
-                Destroy(spoolBoxSlots[i].Piece.gameObject);
-
-                spoolBoxSlots[i].Piece = null;
-            }
+            spoolBoxSlots[i].Reset();
         }
 
         isLocked = false;
@@ -302,8 +295,7 @@ public class SpoolBox : MonoBehaviour
 
         for (int i = 0; i < spoolBoxSlots.Length; i++)
         {
-            spoolBoxSlots[i].Reset();
-            spoolBoxSlots[i].SetDissolveHeight(0);
+            spoolBoxSlots[i].ResetVisually();
         }
 
         spoolBoxServiceLocator.spoolBoxUI.HideUnlockBoxButton();

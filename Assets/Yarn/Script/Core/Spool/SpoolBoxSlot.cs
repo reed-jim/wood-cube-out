@@ -53,18 +53,7 @@ public class SpoolBoxSlot : MonoBehaviour
         spoolRenderer = GetComponent<Renderer>();
         yarnSpoolMaterialPropertyBlock = new MaterialPropertyBlock();
 
-        // Bounds bounds = spoolMeshFilter.sharedMesh.bounds;
-
-        // float minY = bounds.center.y - bounds.extents.y;
-        // float maxY = bounds.center.y + bounds.extents.y;
-
-        // yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMinY", minY);
-        // yarnSpoolMaterialPropertyBlock.SetFloat("_WorldMaxY", maxY);
-        // yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", 0);
-
-        // spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-
-        Reset();
+        ResetVisually();
     }
 
     public void Fill(BasePiece piece)
@@ -76,14 +65,27 @@ public class SpoolBoxSlot : MonoBehaviour
 
     public void CompleteFill()
     {
-        // DebugLogger.Log(message:$"sibling index: {transform.GetSiblingIndex()}", context:this);
         if (transform.GetSiblingIndex() == 4)
         {
             spoolBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());
         }
     }
 
-    public void Reset()
+    public void Reset(bool isDestroyPiece = false)
+    {
+        _isFilled = false;
+
+        if (isDestroyPiece && _piece != null)
+        {
+            Destroy(_piece.gameObject);
+        }
+
+        _piece = null;
+
+        ResetVisually();
+    }
+
+    public void ResetVisually()
     {
         yarnSpoolMaterialPropertyBlock.SetFloat("_Fill", 0);
 
@@ -102,15 +104,13 @@ public class SpoolBoxSlot : MonoBehaviour
     {
         yarnSpoolMaterialPropertyBlock.SetColor("_Color", color);
 
-        Reset();
+        ResetVisually();
 
         // spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
     }
 
     public void SetDissolveHeight(float value)
     {
-        yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", value);
-
         UpdateState(value);
     }
 

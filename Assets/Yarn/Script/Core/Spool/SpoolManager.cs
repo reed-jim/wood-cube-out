@@ -122,12 +122,7 @@ public class SpoolManager : MonoBehaviour
                 {
                     for (int j = 0; j < spoolBoxs[i].SpoolBoxSlots.Length; j++)
                     {
-                        if (spoolBoxs[i].SpoolBoxSlots[j].Piece != null)
-                        {
-                            spoolBoxs[i].SpoolBoxSlots[j].IsFilled = false;
-
-                            Destroy(spoolBoxs[i].SpoolBoxSlots[j].Piece.gameObject);
-                        }
+                        spoolBoxs[i].SpoolBoxSlots[j].Reset();
                     }
 
                     ObjectPoolingEverything.ReturnToPool(GameConstants.spoolBox, spoolBoxs[i].gameObject, spoolBoxs[i].transform.parent);
@@ -145,16 +140,7 @@ public class SpoolManager : MonoBehaviour
         // RESET SCREW PORTS
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            if (piecePorts[i].IsFilled)
-            {
-                piecePorts[i].IsFilled = false;
-
-                Destroy(piecePorts[i].Piece.gameObject);
-
-                piecePorts[i].Piece = null;
-
-                piecePorts[i].Reset();
-            }
+            piecePorts[i].Reset(isDestroyPiece: true);
         }
 
         GamePersistentVariable.numHolesAdded = 0;
@@ -360,8 +346,10 @@ public class SpoolManager : MonoBehaviour
             {
                 continue;
             }
-            
-            if (selectedFaction != spoolBox.Faction) continue;
+
+            if (spoolBox)
+
+                if (selectedFaction != spoolBox.Faction) continue;
 
             foreach (var spoolBoxSlot in spoolBox.SpoolBoxSlots)
             {
@@ -446,9 +434,9 @@ public class SpoolManager : MonoBehaviour
         DebugLogger.Log();
         if (isLocked)
         {
-            DebugLogger.Log(message:$"Its locked");
+            DebugLogger.Log(message: $"Its locked");
             SpawnAdsSpoolBox();
-            
+
             return;
         }
 
@@ -534,17 +522,7 @@ public class SpoolManager : MonoBehaviour
             {
                 SpoolBoxSlot spoolBoxSlot = spoolBox.SpoolBoxSlots[i];
 
-                if (spoolBoxSlot.IsFilled)
-                {
-                    if (spoolBoxSlot.Piece != null)
-                    {
-                        spoolBoxSlot.Piece.gameObject.SetActive(false);
-
-                        spoolBoxSlot.Piece = null;
-                    }
-
-                    spoolBoxSlot.IsFilled = false;
-                }
+                spoolBoxSlot.Reset();
             }
         }
     }
@@ -591,7 +569,7 @@ public class SpoolManager : MonoBehaviour
             {
                 continue;
             }
-            
+
             int index = i;
             SpoolBox spoolBox = ObjectPoolingEverything.GetFromPool<SpoolBox>(GameConstants.spoolBox);
 
@@ -683,8 +661,6 @@ public class SpoolManager : MonoBehaviour
 
                         spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
 
-                        piecePorts[piecePortIndex].IsFilled = false;
-
                         piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
 
                         Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
@@ -692,6 +668,7 @@ public class SpoolManager : MonoBehaviour
                         yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
                             onCompleteAction: () =>
                             {
+                                piecePorts[piecePortIndex].IsFilled = false;
                                 spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
                                 piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
@@ -762,8 +739,6 @@ public class SpoolManager : MonoBehaviour
 
                     spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
 
-                    piece.SpoolBoxSlot.IsFilled = false;
-
                     piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
 
                     Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
@@ -771,6 +746,7 @@ public class SpoolManager : MonoBehaviour
                     yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
                         onCompleteAction: () =>
                         {
+                            piece.SpoolBoxSlot.IsFilled = false;
                             spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
                             piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
@@ -903,27 +879,29 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            if (piecePorts[i].IsFilled)
+            int index = i;
+
+            if (piecePorts[index].IsFilled)
             {
-                if (piecePorts[i].Piece.PieceServiceLocator.pieceProperty.IsRewinding)
+                if (piecePorts[index].Piece.PieceServiceLocator.pieceProperty.IsRewinding)
                 {
                     continue;
                 }
 
-                piecePorts[i].IsFilled = false;
-
-                piecePorts[i].Piece.ThrowOutside();
+                piecePorts[index].Piece.ThrowOutside();
 
                 Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                BasePiece cachePiece = piecePorts[i].Piece;
+                BasePiece cachePiece = piecePorts[index].Piece;
 
                 cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = true;
 
-                yarn2D.Rewind(piecePorts[i].Piece.Faction, piecePorts[i], outsideSpoolSlot,
+                yarn2D.Rewind(piecePorts[index].Piece.Faction, piecePorts[index], outsideSpoolSlot,
                     onCompleteAction: () =>
                     {
                         cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = false;
+
+                        piecePorts[index].IsFilled = false;
 
                         // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
@@ -931,7 +909,7 @@ public class SpoolManager : MonoBehaviour
                     }
                 );
 
-                piecePorts[i].Piece = null;
+                piecePorts[index].Piece = null;
 
                 numPieceCleared++;
             }

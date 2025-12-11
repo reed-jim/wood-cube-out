@@ -688,8 +688,6 @@ public class Yarn2D : MonoBehaviour
             return xDistance;
         }
 
-        Debug.Log("rewindAxis " + rewindAxis + "/" + rewindAxisWorld + "/" + topToBottomDistance);
-
         // Calc surface
         _currentAngle = yRatio * turn * 2 * Mathf.PI;
         Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);

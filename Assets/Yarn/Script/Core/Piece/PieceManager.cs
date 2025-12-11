@@ -479,6 +479,11 @@ public class PieceManager : MonoBehaviour
 
             for (int i = 0; i < _pieces.Count; i++)
             {
+                if (_pieces[i] == null)
+                {
+                    continue;
+                }
+
                 if (!_pieces[i].gameObject.activeSelf)
                 {
                     continue;
