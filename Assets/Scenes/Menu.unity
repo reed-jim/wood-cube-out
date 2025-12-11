@@ -10009,12 +10009,12 @@ RectTransform:
   - {fileID: 182404060}
   - {fileID: 1741808122}
   - {fileID: 1612138323}
-  - {fileID: 786987216}
   - {fileID: 1562024922}
   - {fileID: 1054046503}
   - {fileID: 2040297770}
   - {fileID: 753918906}
   - {fileID: 889476905}
+  - {fileID: 786987216}
   - {fileID: 2105430913}
   - {fileID: 1661830518}
   - {fileID: 41495382}
@@ -10566,6 +10566,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 515026714}
     m_Modifications:
+    - target: {fileID: 13343311880507284, guid: 3cb75dca27966a741bf4e839004e9bc5, type: 3}
+      propertyPath: m_text
+      value: Chest Level
+      objectReference: {fileID: 0}
+    - target: {fileID: 13343311880507284, guid: 3cb75dca27966a741bf4e839004e9bc5, type: 3}
+      propertyPath: m_fontSize
+      value: 28.55
+      objectReference: {fileID: 0}
     - target: {fileID: 1201571853830643065, guid: 3cb75dca27966a741bf4e839004e9bc5, type: 3}
       propertyPath: initialSkinName
       value: 1
@@ -19156,11 +19164,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_text
-      value: Surprise
+      value: Remove Ads
       objectReference: {fileID: 0}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_fontSize
-      value: 34.1
+      value: 26.9
       objectReference: {fileID: 0}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
@@ -27823,7 +27831,7 @@ MonoBehaviour:
   initialFlipX: 0
   initialFlipY: 0
   startingAnimation: animation
-  startingLoop: 0
+  startingLoop: 1
   timeScale: 1
   freeze: 0
   updateWhenInvisible: 3
