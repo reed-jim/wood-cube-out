@@ -266,11 +266,16 @@ public static class CommonUtil
     #region ENUM
     public static TEnum FindEnumFromString<TEnum>(string searchString) where TEnum : Enum
     {
-        searchString = RemoveAllSpaces(searchString);
+        // searchString = RemoveAllSpaces(searchString);
+        if (string.IsNullOrEmpty(searchString))
+            return default;
 
+        string normalizedSearch = Normalize(searchString);
         foreach (TEnum enumValue in Enum.GetValues(typeof(TEnum)))
         {
-            if (enumValue.ToString().IndexOf(searchString, StringComparison.OrdinalIgnoreCase) >= 0)
+            string normalizedEnumName = Normalize(enumValue.ToString());
+            
+            if (normalizedEnumName.IndexOf(normalizedSearch, StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 return enumValue;  // Return the first match found
             }
@@ -281,6 +286,19 @@ public static class CommonUtil
         string RemoveAllSpaces(string input)
         {
             return input.Replace(" ", string.Empty);
+        }
+        
+        string Normalize(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+                return string.Empty;
+
+            // remove spaces, underscores, and dashes, and lowercase
+            input = input.Replace(" ", string.Empty)
+                .Replace("_", string.Empty)
+                .Replace("-", string.Empty);
+
+            return input.ToLowerInvariant();
         }
     }
     #endregion

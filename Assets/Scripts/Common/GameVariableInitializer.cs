@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NUnit.Framework.Constraints;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,7 +53,13 @@ public class GameVariableInitializer : MonoBehaviour
         GamePersistentVariable.chestQueue = new Queue<string>();
 
         GamePersistentVariable.currentLevel = currentLevel.Value;
-        GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig();
+        GamePersistentVariable.doubleInterAdsConfig = new DoubleInterAdsConfig()
+        { 
+            isEnable = true,
+            isEnableMrec = true,
+            isEnableDoubleInter = true, 
+            isEnableInterPopupInteract = true,
+        };
         
         #region Picture Reward Config
         
@@ -66,6 +73,7 @@ public class GameVariableInitializer : MonoBehaviour
         RemoteGalleryRewardConfig galleryRewardConfig = new RemoteGalleryRewardConfig(items);
 
         GamePersistentVariable.galleryRewardConfig = galleryRewardConfig;
+        GamePersistentVariable.remoteConfigIsShowMREC = true;
 
         #endregion
         
