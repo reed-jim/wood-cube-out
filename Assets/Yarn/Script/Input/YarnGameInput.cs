@@ -8,6 +8,9 @@ using DebugLogger = NamPhuThuy.Common.DebugLogger;
 
 public class YarnGameInput : MonoBehaviour
 {
+    [Header("Flags")] 
+    [SerializeField] private bool isTutAvailable;
+    
     [Header("Stats")]
     [SerializeField] private float maxSwipeDistance;
     [SerializeField] private float timeToConfirmSelectObjectPart;
@@ -25,6 +28,8 @@ public class YarnGameInput : MonoBehaviour
 
     #region EVENT
     public static event Action mouseUpEvent;
+    public static event Action PieceSelectedEvent;
+    public static event Action<GameEnum.GameFaction> PieceSelectedWithFactionEvent;
     #endregion
 
     #region MonoBehaviour Callbacks
@@ -34,6 +39,12 @@ public class YarnGameInput : MonoBehaviour
         _mainCamera = Camera.main;
 
         twoTouchPoints = new List<Vector3>();
+        YarnLevelLoader.isTutAvailableEvent += CheckTutorialAvailable;
+    }
+
+    private void OnDestroy()
+    {
+        YarnLevelLoader.isTutAvailableEvent -= CheckTutorialAvailable;
     }
 
     private void Update()
@@ -96,6 +107,16 @@ public class YarnGameInput : MonoBehaviour
 
     #region Private Methods
 
+    private void CheckTutorialAvailable(bool isTutAvailable)
+    {
+        this.isTutAvailable = isTutAvailable;
+        
+        /*if (EventSystem.current != null)
+        {
+            EventSystem.current.enabled = !isTutAvailable;
+        }*/
+    }
+
     private void PlayVFXPopupText(string message)
     {
         var args = new PopupTextArgs
@@ -137,6 +158,7 @@ public class YarnGameInput : MonoBehaviour
         if (piece == null) return;
         
         piece.PullYarn();
+        PieceSelectedWithFactionEvent?.Invoke(piece.Faction);
     }
 
     private void HoldPiece()
@@ -161,6 +183,8 @@ public class YarnGameInput : MonoBehaviour
 
     private bool IsClickedOnUI()
     {
+     
+        
         PointerEventData pointerData = new PointerEventData(EventSystem.current)
         {
             position = Input.mousePosition

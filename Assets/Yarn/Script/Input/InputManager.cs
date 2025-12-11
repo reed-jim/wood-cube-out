@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -28,11 +29,13 @@ namespace NamPhuThuy
         private void Awake()
         {
             pinchGesture.isPinchingEvent += OnPinchingStateChanged;
+            YarnLevelLoader.isTutAvailableEvent += CheckTutAvailable;
         }
 
         private void OnDestroy()
         {
-            pinchGesture.isPinchingEvent += OnPinchingStateChanged;
+            pinchGesture.isPinchingEvent -= OnPinchingStateChanged;
+            YarnLevelLoader.isTutAvailableEvent -= CheckTutAvailable;
         }
 
        
@@ -49,6 +52,16 @@ namespace NamPhuThuy
         #endregion
 
         #region Public Methods
+        #endregion
+
+        #region Events Listen
+
+        private void CheckTutAvailable(bool isTutAvailable)
+        {
+            DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+            pinchGesture.ToggleSlider(!isTutAvailable);
+        }
+
         #endregion
 
         #region Editor Methods

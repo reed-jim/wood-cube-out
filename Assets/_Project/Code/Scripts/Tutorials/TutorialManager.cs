@@ -10,6 +10,7 @@ namespace NamPhuThuy.Tutorial
     {
         [Header("Flags")] 
         [SerializeField] private bool isEnable;
+        public bool IsEnable => isEnable;
         
         [Header("Components")]
         [SerializeField] private TutorialData data;
@@ -29,59 +30,6 @@ namespace NamPhuThuy.Tutorial
         private Coroutine _runningRoutine;
 
         public bool IsTutorialRunning => _runningRoutine != null;
-
-        #region Hand Control
-
-        public void MoveHandToWorldPosition(Vector3 worldPosition)
-        {
-            if (!isEnable) return;
-            DebugLogger.Log();
-            if (_tutorialHand == null)
-            {
-                DebugLogger.Log(message: $"Return");
-                return;
-            }
-            _tutorialHand.SetWorldPosition(worldPosition);
-        }
-
-        public void MoveHandToScreenPosition(Vector2 screenPosition)
-        {
-            if (!isEnable) return;
-            DebugLogger.Log();
-            if (_tutorialHand == null)
-            {
-                DebugLogger.Log(message: $"Return");
-                return;
-            }
-            _tutorialHand.SetScreenPosition(screenPosition);
-        }
-
-        public void MoveHandToWorldObject(Transform targetTransform)
-        {
-            if (!isEnable) return;
-            DebugLogger.Log();
-            if (_tutorialHand == null || targetTransform == null)
-            {
-                DebugLogger.Log(message: $"Return");
-                return;
-            }
-            _tutorialHand.SetWorldPosition(targetTransform.position);
-        }
-
-        public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
-        {
-            if (!isEnable) return;
-            DebugLogger.Log();
-            if (_tutorialHand == null || Camera.main == null)
-            {
-                DebugLogger.Log(message: $"Return");
-                return;
-            }
-            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
-            _tutorialHand.SetScreenPosition(screenPos);
-        }
-
-        #endregion
 
         private void TryStartTutorialForLevel(int levelId)
         {

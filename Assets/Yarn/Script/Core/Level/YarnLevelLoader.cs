@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using NamPhuThuy.Common;
 using NamPhuThuy.GamePlay;
+using NamPhuThuy.Tutorial;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -57,13 +60,10 @@ public class YarnLevelLoader : MonoBehaviour
     public static event Action startLevelEvent;
     public static event Action setLevelNumberEvent;
     public static event Action<int> setLevelScrewNumberEvent;
-    public static event Action<int> setMultiPhaseLevelScrewNumberEvent;
-    public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action setIsLevelLoadedEvent;
-    public static event Action<bool> enableSwipingEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
-    public static event Action<bool> showLoadLevelErrorEvent;
-    public static event Action resetCameraEvent;
+    public static event Action<bool> isTutAvailableEvent;
+    public static event Action<ScreenRoute> switchRouteEvent;
 
     #endregion
 
@@ -87,8 +87,6 @@ public class YarnLevelLoader : MonoBehaviour
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
 
-        resetCameraEvent?.Invoke();
-
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
 
@@ -103,7 +101,7 @@ public class YarnLevelLoader : MonoBehaviour
         GamePersistentVariable.hasPlayerReachedGameplay = true;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         PausePopup.replayLevelEvent -= Replay;
         NamPhuThuy.UI.PausePopup.replayLevelEvent -= Replay;
@@ -209,12 +207,18 @@ public class YarnLevelLoader : MonoBehaviour
             }
 
             GameObject level = op.Result;
-            TryLoadLevelTutorial(level.transform, nextLevelId);
-            /*if (tutorialAdapter.IsTutorialLevel)
+            TryTutorialData(level.transform, nextLevelId);
+            if (tutorialAdapter.IsTutorialLevel && TutorialManager.Ins.IsEnable)
             {
                 DebugLogger.Log(message: $"This is tut-level -> stop rotate");
+                isTutAvailableEvent?.Invoke(true);
                 level.GetComponent<RotateObject>().DisableAutoRotatingForever();
-            }*/
+                TryActiveTutorial();
+            }
+            else
+            {
+                isTutAvailableEvent?.Invoke(false);
+            }
 
             _currentLevelContainer = level.transform;
 
@@ -248,14 +252,7 @@ public class YarnLevelLoader : MonoBehaviour
             }
         }
 
-        void TryLoadLevelTutorial(Transform levelTransform, int levelId)
-        {
-            return;
-            DebugLogger.Log();
-            tutorialAdapter.ResetState();
-            tutorialAdapter.InitData(levelTransform, levelId);
-            
-        }
+        
 
         void DragLevelIntoCenter(GameObject level)
         {
@@ -307,7 +304,6 @@ public class YarnLevelLoader : MonoBehaviour
             }
 
             GamePersistentVariable.levelOffset = new Vector3(0, 0.3f, 0);
-
             _isSetLevelGradientBound = false;
 
             Vector3 center =
@@ -327,9 +323,7 @@ public class YarnLevelLoader : MonoBehaviour
         }
 
         currentLevel.Value = level;
-
         currentLevel.Save();
-
         levelBoosterObserver.Reset();
 
         startLevelEvent?.Invoke();
@@ -354,240 +348,6 @@ public class YarnLevelLoader : MonoBehaviour
         GamePersistentVariable.isPreventLoadLevelData = true;
 
         GoLevel(currentLevel.Value);
-    }
-
-    #endregion
-
-    #region ASSIGN SCREW FACTION
-
-    private void AutoAssignScrewFactionMultiPhaseLevel(GameObject level)
-    {
-        MultiPhaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<MultiPhaseScrew>(level.transform)
-            .ToArray();
-
-        Dictionary<int, List<GameFaction>> remainingFactionForScrewsByPhase = new Dictionary<int, List<GameFaction>>();
-
-        Dictionary<int, int> currentFactionByPhase = new Dictionary<int, int>();
-
-        for (int i = 0; i < screws.Length; i++)
-        {
-            int phase = screws[i].Phase;
-
-            if (!remainingFactionForScrewsByPhase.ContainsKey(phase))
-            {
-                currentFactionByPhase.Add(phase, 0);
-
-                remainingFactionForScrewsByPhase.Add(phase,
-                    new List<GameFaction>() { GameConstants.SCREW_FACTION[currentFactionByPhase[phase]] });
-            }
-            else
-            {
-                remainingFactionForScrewsByPhase[phase].Add(GameConstants.SCREW_FACTION[currentFactionByPhase[phase]]);
-
-                if (i > 0 && (i + 1) % 3 == 0)
-                {
-                    currentFactionByPhase[phase]++;
-
-                    if (currentFactionByPhase[phase] >= GameConstants.SCREW_FACTION.Length)
-                    {
-                        currentFactionByPhase[phase] = 0;
-                    }
-                }
-            }
-        }
-
-        for (int i = 0; i < screws.Length; i++)
-        {
-            int phase = screws[i].Phase;
-
-            int randomIndex = UnityEngine.Random.Range(0, remainingFactionForScrewsByPhase[phase].Count);
-
-            screws[i].ScrewId = i;
-            screws[i].Faction = remainingFactionForScrewsByPhase[phase][randomIndex];
-
-            screws[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-            remainingFactionForScrewsByPhase[phase].RemoveAt(randomIndex);
-        }
-
-        setMultiPhaseLevelScrewNumberEvent?.Invoke(screws.Length);
-    }
-
-    private void AutoAssignScrewFactionLevelManualGroup(GameObject level)
-    {
-        BasePiece[] pieces = TransformUtil.GetComponentsFromAllChildren<BasePiece>(level.transform).ToArray();
-
-        int numScrew = pieces.Length;
-
-        int numTripleScrews = numScrew / 3;
-
-        List<GameFaction> factionPool = new List<GameFaction>();
-
-        for (int i = 0; i < numTripleScrews; i++)
-        {
-            GameFaction randomFaction =
-                GameConstants.SCREW_FACTION[UnityEngine.Random.Range(0, GameConstants.SCREW_FACTION.Length)];
-
-            factionPool.Add(randomFaction);
-        }
-
-        ScrewFactionGroupManual[] screwFactionGroups = new ScrewFactionGroupManual[numScrew];
-
-        for (int i = 0; i < numScrew; i++)
-        {
-            screwFactionGroups[i] = pieces[i].GetComponent<ScrewFactionGroupManual>();
-        }
-
-        // screwFactionGroups = screwFactionGroups.OrderBy(item => item.Group).ToArray();
-
-        for (int i = 0; i < numScrew; i++)
-        {
-            pieces[i].PieceId = i;
-            pieces[i].Faction = factionPool[screwFactionGroups[i].Group];
-
-            pieces[i].PieceServiceLocator.pieceProperty.SetColorByFaction();
-        }
-
-        setLevelScrewNumberEvent?.Invoke(numScrew);
-    }
-
-    private void AutoAssignScrewFaction(GameObject level)
-    {
-        BaseScrew[] screws = TransformUtil.GetComponentsFromAllChildren<BaseScrew>(level.transform).ToArray();
-
-        int numScrew = screws.Length;
-
-        List<BaseScrew> noBlockedScrews = new List<BaseScrew>();
-        List<BaseScrew> blockedScrews = new List<BaseScrew>();
-
-        for (int i = 0; i < screws.Length; i++)
-        {
-            int numBlockedObject = screws[i].CountBlockingObjects(isIncludeHiddenScrew: true);
-
-            if (numBlockedObject == 0)
-            {
-                noBlockedScrews.Add(screws[i]);
-            }
-            else
-            {
-                blockedScrews.Add(screws[i]);
-            }
-        }
-
-        // SHUFFLE SCREW LISTS
-        ShuffleList(noBlockedScrews);
-        ShuffleList(blockedScrews);
-
-        List<BaseScrew> shuffledScrews = new List<BaseScrew>();
-
-        float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame = _currentLevelDifficultyConfiguration
-            .RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
-        // float ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame =
-        //     levelDataContainer.LevelsData[currentLevel.Value].LevelDifficultyConfiguration.RatioGeneratingSameFactionForTripleNoBlockedScrewStartGame;
-
-        int numNoBlockedScrewsToGetSameFaction =
-            (int)(ratioGeneratingSameFactionForTripleNoBlockedScrewStartGame * noBlockedScrews.Count);
-        int numRemainingScrews = numScrew - numNoBlockedScrewsToGetSameFaction;
-
-        // EASY SCREWS
-        for (int i = 0; i < numNoBlockedScrewsToGetSameFaction; i++)
-        {
-            BaseScrew nextScrew = noBlockedScrews.First();
-
-            shuffledScrews.Add(nextScrew);
-
-            noBlockedScrews.Remove(nextScrew);
-        }
-
-        // REMAINING SCREWS
-        int currentIndex = 0;
-
-        for (int i = 0; i < numRemainingScrews; i++)
-        {
-            BaseScrew nextScrew;
-
-            if (currentIndex % (GameConstants.NUMBER_SLOT_PER_SCREW_BOX - 1) == 0)
-            {
-                if (noBlockedScrews.Count > 0)
-                {
-                    nextScrew = noBlockedScrews.First();
-
-                    noBlockedScrews.Remove(nextScrew);
-                }
-                else
-                {
-                    nextScrew = blockedScrews.First();
-
-                    blockedScrews.Remove(nextScrew);
-                }
-            }
-            else
-            {
-                if (blockedScrews.Count > 0)
-                {
-                    nextScrew = blockedScrews.First();
-
-                    blockedScrews.Remove(nextScrew);
-                }
-                else
-                {
-                    nextScrew = noBlockedScrews.First();
-
-                    noBlockedScrews.Remove(nextScrew);
-                }
-            }
-
-            shuffledScrews.Add(nextScrew);
-
-            currentIndex++;
-        }
-
-        int currentFaction = 0;
-
-        List<GameFaction> remainingFactionForBlockedScrews = new List<GameFaction>();
-
-        for (int i = 0; i < shuffledScrews.Count; i++)
-        {
-            remainingFactionForBlockedScrews.Add(GameConstants.SCREW_FACTION[currentFaction]);
-
-            if (i > 0 && (i + 1) % 3 == 0)
-            {
-                currentFaction++;
-
-                if (currentFaction >= GameConstants.SCREW_FACTION.Length)
-                {
-                    currentFaction = 0;
-                }
-            }
-        }
-
-        for (int i = 0; i < shuffledScrews.Count; i++)
-        {
-            GameFaction nextFaction = remainingFactionForBlockedScrews.First();
-
-            shuffledScrews[i].ScrewId = i;
-            shuffledScrews[i].Faction = nextFaction;
-
-            shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-            remainingFactionForBlockedScrews.Remove(nextFaction);
-        }
-
-        // RAMDOMIZE
-        // for (int i = 0; i < shuffledScrews.Count; i++)
-        // {
-        //     int randomIndex = UnityEngine.Random.Range(0, remainingFactionForBlockedScrews.Count);
-
-        //     shuffledScrews[i].ScrewId = i;
-        //     shuffledScrews[i].Faction = remainingFactionForBlockedScrews[randomIndex];
-
-        //     shuffledScrews[i].ScrewServiceLocator.screwFaction.SetColorByFaction();
-
-        //     remainingFactionForBlockedScrews.RemoveAt(randomIndex);
-        // }
-
-        setLevelScrewNumberEvent?.Invoke(shuffledScrews.Count);
     }
 
     #endregion
@@ -827,15 +587,29 @@ public class YarnLevelLoader : MonoBehaviour
     #endregion
 
     #region Tutorial
+    
+    void TryTutorialData(Transform levelTransform, int levelId)
+    {
+        DebugLogger.Log();
+        tutorialAdapter.ResetState();
+        tutorialAdapter.InitData(levelTransform, levelId);
+    }
 
     private void TryActiveTutorial()
     {
         DebugLogger.Log();
         if (tutorialAdapter.IsTutorialLevel)
         {
-            DebugLogger.Log(message: $"Active tutorial");
-            tutorialAdapter.ActiveCurrentTut();
+            StartCoroutine(IE_ActiveTutorial());
         }
+    }
+    
+    private IEnumerator IE_ActiveTutorial()
+    {
+        DebugLogger.Log();
+        yield return YieldHelper.WaitForSeconds(1f);
+        DebugLogger.Log(message: $"Active tutorial");
+        tutorialAdapter.ActiveCurrentTut();
     }
 
     #endregion
@@ -962,13 +736,6 @@ public class YarnLevelLoader : MonoBehaviour
         }
 
         return true;
-    }
-
-    private void DelayShowBoosterSuggest()
-    {
-        CommonUtil.StopAllTweens(_tweens);
-
-        _tweens.Add(Tween.Delay(3).OnComplete(() => { switchRouteEvent?.Invoke(ScreenRoute.BoosterSuggest); }));
     }
 
     private void DelayShowDoubleScrewBoxesSuggestion()

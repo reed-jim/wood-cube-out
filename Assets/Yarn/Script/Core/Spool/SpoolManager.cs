@@ -13,6 +13,7 @@ public class SpoolManager : MonoBehaviour
     public static SpoolManager Instance;
 
     [SerializeField] private SpoolBox[] spoolBoxs;
+    public SpoolBox[] SpoolBoxes => spoolBoxs;
     [SerializeField] private List<SpoolBoxSlot> piecePorts;
     [SerializeField] public Transform outsideSpoolSlot;
     [SerializeField] private Transform piecePortsContainer;

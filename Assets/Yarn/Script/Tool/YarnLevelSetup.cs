@@ -70,18 +70,15 @@ public class YarnLevelSetup : EditorWindow
             };
         }
 
-        countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer", countryDataContainer, typeof(CountryDataContainer), true);
-        _pieceMaterialContainer = (PieceMaterialContainer)EditorGUILayout.ObjectField("pieceMaterialContainer", _pieceMaterialContainer, typeof(PieceMaterialContainer), true);
+        countryDataContainer = (CountryDataContainer)EditorGUILayout.ObjectField("countryDataContainer",
+            countryDataContainer, typeof(CountryDataContainer), true);
+        _pieceMaterialContainer = (PieceMaterialContainer)EditorGUILayout.ObjectField("pieceMaterialContainer",
+            _pieceMaterialContainer, typeof(PieceMaterialContainer), true);
 
         if (GUILayout.Button("Load Assets"))
         {
             _pieceMaterialContainer = Resources.Load<PieceMaterialContainer>("PieceMaterialContainer");
         }
-
-        /*SerializedObject so = new SerializedObject(this);
-       SerializedProperty listProp = so.FindProperty(nameof(interactablePieces));
-       EditorGUILayout.PropertyField(listProp, new GUIContent("Interactable Pieces"), true);
-       so.ApplyModifiedProperties();*/
 
         matchName = EditorGUILayout.TextField("Match Name", matchName);
 
@@ -102,14 +99,15 @@ public class YarnLevelSetup : EditorWindow
 
         GUILayout.Space(16);
         GUILayout.Label("PIECES", centeredStyle);
-        
+
         GUILayout.Label("Interactables", centeredStyle);
         _scrollPosInteractables = EditorGUILayout.BeginScrollView(_scrollPosInteractables, GUILayout.Height(250));
         for (int i = 0; i < interactablePieces.Count; i++)
         {
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField($"[{i}]", GUILayout.Width(30));
-            interactablePieces[i] = (Transform)EditorGUILayout.ObjectField(interactablePieces[i], typeof(GameObject), false);
+            interactablePieces[i] =
+                (Transform)EditorGUILayout.ObjectField(interactablePieces[i], typeof(GameObject), false);
             if (GUILayout.Button("X", GUILayout.Width(20)))
             {
                 interactablePieces.RemoveAt(i);
@@ -120,7 +118,7 @@ public class YarnLevelSetup : EditorWindow
         }
 
         EditorGUILayout.EndScrollView();
-        
+
         GUILayout.Label("Decors", centeredStyle);
         _scrollPosDecors = EditorGUILayout.BeginScrollView(_scrollPosDecors, GUILayout.Height(250));
         for (int i = 0; i < decorPieces.Count; i++)
@@ -138,8 +136,11 @@ public class YarnLevelSetup : EditorWindow
         }
 
         EditorGUILayout.EndScrollView();
-        
+
+        RemapFactionInfo();
         EditorGUILayout.EndScrollView();
+
+
         GUILayout.EndArea();
     }
 
@@ -152,7 +153,7 @@ public class YarnLevelSetup : EditorWindow
                 FilterInteractablePieces(transform);
             }
         }
-        
+
         if (GUILayout.Button("Step 1:  Assign Materials", GUILayout.Width(250)))
             AssignMaterials();
 
@@ -178,6 +179,146 @@ public class YarnLevelSetup : EditorWindow
         {
             CheckFactionsYarnLevel();
         }
+    }
+
+    private void RemapFactionInfo()
+    {
+// Faction Remap Tool UI
+        GUILayout.Space(16);
+        GUILayout.Label("Faction Remap Tool", EditorStyles.boldLabel);
+
+        // Draw editable list
+        if (factionRemapConfig != null)
+        {
+            for (int i = 0; i < factionRemapConfig.Count; i++)
+            {
+                EditorGUILayout.BeginHorizontal();
+
+                factionRemapConfig[i].fromFaction =
+                    (GameFaction)EditorGUILayout.EnumPopup("From", factionRemapConfig[i].fromFaction);
+                factionRemapConfig[i].toFaction =
+                    (GameFaction)EditorGUILayout.EnumPopup("To", factionRemapConfig[i].toFaction);
+
+                if (GUILayout.Button("X", GUILayout.Width(20)))
+                {
+                    factionRemapConfig.RemoveAt(i);
+                    i--;
+                }
+
+                EditorGUILayout.EndHorizontal();
+            }
+        }
+
+        if (GUILayout.Button("Add Remap Entry", GUILayout.Width(150)))
+        {
+            factionRemapConfig.Add(new FactionRemapEntry());
+        }
+
+        GUILayout.Space(4);
+        if (GUILayout.Button("Apply Faction Remap To Selected Levels", GUILayout.Width(300)))
+        {
+            ApplyFactionRemapToSelectedLevels();
+        }
+    }
+
+    #endregion
+
+    #region Piece's faction remap
+
+    [System.Serializable]
+    private class FactionRemapEntry
+    {
+        public GameFaction fromFaction;
+        public GameFaction toFaction;
+    }
+
+    [SerializeField] private List<FactionRemapEntry> factionRemapConfig = new List<FactionRemapEntry>
+    {
+        // Example default "set\-first\-config"
+        new FactionRemapEntry { fromFaction = GameFaction.YarnMagenta, toFaction = GameFaction.YarnPink },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnCyan, toFaction = GameFaction.YarnSky },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnTeal, toFaction = GameFaction.YarnSky },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnWhite, toFaction = GameFaction.YarnSnow },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnGray, toFaction = GameFaction.YarnSnow },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnDarkBrown, toFaction = GameFaction.YarnBrown },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnYellow, toFaction = GameFaction.YarnLime },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnGreen, toFaction = GameFaction.YarnForest },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnRed, toFaction = GameFaction.YarnCrimson },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnCream, toFaction = GameFaction.YarnLightBrown },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnLightGreen, toFaction = GameFaction.YarnLightBrown },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnLightCyan, toFaction = GameFaction.YarnSky },
+        
+        
+        // Add more defaults as needed
+    };
+
+    private void ApplyFactionRemapToSelectedLevels()
+    {
+        foreach (Transform level in Selection.transforms)
+        {
+            ApplyFactionRemapToLevel(level);
+        }
+    }
+
+    private void ApplyFactionRemapToLevel(Transform level)
+    {
+        if (level == null)
+        {
+            DebugLogger.LogError(message: "No level selected. Please select a level root Transform.");
+            return;
+        }
+
+        if (factionRemapConfig == null || factionRemapConfig.Count == 0)
+        {
+            DebugLogger.LogError(message: "Faction remap config is empty.");
+            return;
+        }
+
+        // Get all PieceProperty under level
+        PieceProperty[] pieceProps =
+            TransformUtil.GetComponentsFromAllChildren<PieceProperty>(level.transform).ToArray();
+
+        if (pieceProps.Length == 0)
+        {
+            DebugLogger.Log(message: $"No PieceProperty found under level: {level.name}");
+            return;
+        }
+
+        int changedCount = 0;
+
+        foreach (var pieceProp in pieceProps)
+        {
+            GameFaction oldFaction = pieceProp.Faction;
+            GameFaction newFaction = GetRemappedFaction(oldFaction);
+
+            if (!Equals(oldFaction, newFaction))
+            {
+                pieceProp.Faction = newFaction;
+                pieceProp.SetColorByFaction();
+                changedCount++;
+
+                EditorUtility.SetDirty(pieceProp.gameObject);
+            }
+        }
+
+        EditorUtility.SetDirty(level);
+        DebugLogger.Log(
+            message: $"Applied faction remap to {changedCount} PieceProperty component(s) under level {level.name}.");
+    }
+
+    private GameFaction GetRemappedFaction(GameFaction original)
+    {
+        if (factionRemapConfig == null) return original;
+
+        foreach (var entry in factionRemapConfig)
+        {
+            if (entry != null && entry.fromFaction.Equals(original))
+            {
+                return entry.toFaction;
+            }
+        }
+
+        return original; // no mapping -> keep
     }
 
     #endregion
@@ -219,7 +360,7 @@ public class YarnLevelSetup : EditorWindow
                 {
                     item.GetComponent<Rigidbody>().isKinematic = true;
                 }
-                
+
                 item.gameObject.layer = LayerMask.NameToLayer(LayerConst.DECOR);
             }
         }
@@ -241,7 +382,9 @@ public class YarnLevelSetup : EditorWindow
 
             Material currentMaterial = renderer.sharedMaterial;
 
-            Material match = _pieceMaterialContainer.materials.First(material => ShareCommonWord(material.name, currentMaterial.name));
+            Material match =
+                _pieceMaterialContainer.materials.First(material =>
+                    ShareCommonWord(material.name, currentMaterial.name));
             renderer.material = match;
         }
 
@@ -291,7 +434,6 @@ public class YarnLevelSetup : EditorWindow
     private void AssignComponentsForPieces()
     {
         Transform level = Selection.activeTransform;
-
         level.AddComponent<RotateObject>();
 
         Material noDepthWriteMaterial =
@@ -330,7 +472,13 @@ public class YarnLevelSetup : EditorWindow
         {
             PieceServiceLocator pieceServiceLocator = pieces[i].GetComponent<PieceServiceLocator>();
 
-            pieceServiceLocator.pieceProperty.Faction = CommonUtil.FindEnumFromString<GameFaction>(pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
+            DebugLogger.Log(message: $"Material's name: {pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name}");
+            DebugLogger.Log(
+                message:
+                $"Faction: {CommonUtil.FindEnumFromString<GameFaction>(pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name)}");
+
+            pieceServiceLocator.pieceProperty.Faction =
+                CommonUtil.FindEnumFromString<GameFaction>(pieceServiceLocator.pieceMeshRenderer.sharedMaterial.name);
         }
 
         EditorUtility.SetDirty(level);
@@ -338,7 +486,6 @@ public class YarnLevelSetup : EditorWindow
 
     private void ChangeDecorLayer(Transform level)
     {
-        
         Transform[] allChildren = TransformUtil.GetComponentsFromAllChildren<Transform>(level.transform).ToArray();
 
         decorPieces.Clear();
@@ -364,6 +511,7 @@ public class YarnLevelSetup : EditorWindow
                 item.gameObject.layer = LayerMask.NameToLayer(LayerConst.DECOR);
             }
         }
+
         EditorUtility.SetDirty(level);
     }
 
@@ -530,13 +678,6 @@ public class YarnLevelSetup : EditorWindow
         return null;
     }
 
-    public List<T> GetComponentsFromAllChildren<T>(Transform parent) where T : Component
-    {
-        List<T> components = new List<T>();
-        GetComponentsFromAllChildrenRecursive<T>(parent, components);
-        return components;
-    }
-
     private void GetComponentsFromAllChildrenRecursive<T>(Transform parent, List<T> components) where T : Component
     {
         T component = parent.GetComponent<T>();
@@ -549,11 +690,6 @@ public class YarnLevelSetup : EditorWindow
         {
             GetComponentsFromAllChildrenRecursive<T>(child, components);
         }
-    }
-
-    private int RandomWithoutZero(int maxValue)
-    {
-        return UnityEngine.Random.Range(1, maxValue) * (UnityEngine.Random.Range(0, 2) * 2 - 1);
     }
 
     #endregion
@@ -664,10 +800,6 @@ public class YarnLevelSetup : EditorWindow
     #endregion
 
     #region YARN
-
-
-
-
 
     #endregion
 }
