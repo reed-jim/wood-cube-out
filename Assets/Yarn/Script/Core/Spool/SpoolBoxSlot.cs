@@ -111,8 +111,6 @@ public class SpoolBoxSlot : MonoBehaviour
     {
         yarnSpoolMaterialPropertyBlock.SetFloat("_DissolveRatioY", value);
 
-        // spoolRenderer.SetPropertyBlock(yarnSpoolMaterialPropertyBlock);
-
         UpdateState(value);
     }
 

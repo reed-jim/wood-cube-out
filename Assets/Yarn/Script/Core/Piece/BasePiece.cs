@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CandyCoded.HapticFeedback;
 using Dreamteck.Splines.Primitives;
 using NamPhuThuy.Common;
+using NamPhuThuy.Data;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -30,6 +31,7 @@ public class BasePiece : MonoBehaviour
     [SerializeField] private float durationDelay = 0.1f;
     [SerializeField] private float durationMoveToPiecePort = 0.3f;
     [SerializeField] private float durationTightenPiecePort = 0.3f;
+    [SerializeField] private GameSetting gameSetting;
 
     #region PRIVATE FIELD
 
@@ -180,7 +182,7 @@ public class BasePiece : MonoBehaviour
 
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
-        // DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
+        DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId != gameObject.GetInstanceID()) return;
 
         if (!gameObject.activeInHierarchy)
@@ -285,7 +287,7 @@ public class BasePiece : MonoBehaviour
 
         // SoundManager.Instance.PlaySoundLoosenScrew();
 
-        if (GamePersistentVariable.IsVibrate)
+        if (DataManager.Ins.GameSetting.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }
@@ -305,6 +307,7 @@ public class BasePiece : MonoBehaviour
 
     public void LooseFromOutside(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
+        DebugLogger.Log(message: $"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId == gameObject.GetInstanceID())
         {
             if (!gameObject.activeInHierarchy)
@@ -351,7 +354,7 @@ public class BasePiece : MonoBehaviour
 
     public virtual void LooseWithoutCheckingObstacles(int screwId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
-        // Loose(screwId, faction, screwBoxSlot, isCheckObstacles: false);
+        DebugLogger.Log(message: $"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
     }
 
     #region Private Methods

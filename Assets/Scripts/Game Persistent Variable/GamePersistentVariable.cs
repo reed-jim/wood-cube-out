@@ -101,7 +101,7 @@ public static class GamePersistentVariable
     #endregion
 
     #region SETTING
-    public static bool IsVibrate;
+    public static bool IsVibrate ;
     #endregion
 
     #region SOUND

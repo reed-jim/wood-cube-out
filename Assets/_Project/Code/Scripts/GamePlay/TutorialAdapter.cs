@@ -219,6 +219,11 @@ namespace NamPhuThuy.GamePlay
 
         private void OnPieceSelected(GameEnum.GameFaction faction)
         {
+            if (!isTutorialLevel)
+            {
+                DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                return;
+            }
             DebugLogger.Log();
             if (currentStepRecord.Type == TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_CLICK && faction == targetFaction)
             {
@@ -228,6 +233,12 @@ namespace NamPhuThuy.GamePlay
         
         private void OnPieceMoveCompleted(BasePiece obj)
         {
+            DebugLogger.Log();
+            if (!isTutorialLevel)
+            {
+                DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                return;
+            }
             switch (currentStepRecord.Type)
             {
                 case TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_CLICK:
@@ -238,6 +249,7 @@ namespace NamPhuThuy.GamePlay
 
         private void OnSpoolBoxSpawned(SpoolBox spoolBox)
         {
+            
             DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
             switch (currentStepRecord.Type)
             {
