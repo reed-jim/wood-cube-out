@@ -170,7 +170,7 @@ public class BasePiece : MonoBehaviour
 
     public void Select()
     {
-        selectPieceEvent?.Invoke(pieceId, Faction);
+        selectPieceEvent?.Invoke(gameObject.GetInstanceID(), Faction);
     }
 
     public virtual int CountBlockingObjects(bool isIncludeHiddenPiece)
@@ -182,17 +182,15 @@ public class BasePiece : MonoBehaviour
 
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
-        DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId != gameObject.GetInstanceID()) return;
-
+        
         if (!gameObject.activeInHierarchy)
         {
             gameObject.SetActive(true);
         }
-
+        
         if (pieceServiceLocator.pieceProperty.IsRewinding)
         {
-            DebugLogger.Log(message: $"is rewinding, return");
             return;
         }
 
@@ -200,7 +198,6 @@ public class BasePiece : MonoBehaviour
 
         if (!GamePersistentVariable.isLevelDirty)
         {
-            DebugLogger.Log(message: $"set level dirty");
             GamePersistentVariable.isLevelDirty = true;
         }
 
@@ -246,7 +243,7 @@ public class BasePiece : MonoBehaviour
 
             firstInnerPiece.gameObject.SetActive(true);
         }
-
+        
         yarn2D.Rewind(faction, this, spoolBoxSlot,
             onDissolveCompleteAction: () =>
             {

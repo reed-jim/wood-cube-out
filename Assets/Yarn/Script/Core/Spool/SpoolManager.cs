@@ -256,12 +256,10 @@ public class SpoolManager : MonoBehaviour
 
     private void OnPieceSelected(int pieceId, GameFaction selectedFaction)
     {
-        DebugLogger.Log();
         SpoolBoxSlot spoolBoxSlot = CheckAvailableSpoolBoxes(selectedFaction);
 
         if (spoolBoxSlot != null)
         {
-            DebugLogger.Log(message:$"spoolBoxSlot found for faction {selectedFaction}");
             loosePieceEvent?.Invoke(pieceId, selectedFaction, spoolBoxSlot);
         }
 
