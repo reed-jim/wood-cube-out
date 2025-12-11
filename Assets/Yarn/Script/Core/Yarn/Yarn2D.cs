@@ -445,6 +445,33 @@ public class Yarn2D : MonoBehaviour
     private Vector3 _debugHitPoint;
     private bool _debugHasHit;
 
+    private DissolveAxis GetDominantScreenAxis(Transform model, Renderer rend, Camera cam = null)
+    {
+        Bounds bounds = rend.bounds;
+
+        // Transform object-space axes to world space
+        Vector3 worldX = model.transform.TransformDirection(Vector3.right) * bounds.size.x;
+        Vector3 worldY = model.transform.TransformDirection(Vector3.up) * bounds.size.y;
+        Vector3 worldZ = model.transform.TransformDirection(Vector3.forward) * bounds.size.z;
+
+        // Project endpoints to screen space
+        Vector3 centerScreen = cam.WorldToScreenPoint(bounds.center);
+        Vector3 screenX = cam.WorldToScreenPoint(bounds.center + worldX) - centerScreen;
+        Vector3 screenY = cam.WorldToScreenPoint(bounds.center + worldY) - centerScreen;
+        Vector3 screenZ = cam.WorldToScreenPoint(bounds.center + worldZ) - centerScreen;
+
+        // Compare magnitudes
+        float lenX = screenX.magnitude;
+        float lenY = screenY.magnitude;
+        float lenZ = screenZ.magnitude;
+
+        Debug.Log($"Screen-space lengths: X={lenX}, Y={lenY}, Z={lenZ}");
+
+        if (lenX >= lenY && lenX >= lenZ) return DissolveAxis.X;
+        if (lenY >= lenX && lenY >= lenZ) return DissolveAxis.Y;
+        return DissolveAxis.Z;
+    }
+
     Vector3 GetSpiralPosition(float yRatio, int turn, bool isOnlyGetTopPoint = false)
     {
         if (piece == null)
@@ -460,6 +487,74 @@ public class Yarn2D : MonoBehaviour
         Vector3 raycastBottomPoint = piece.transform.position - distance * Vector3.up;
         Vector3 pointOnTopSurface = new Vector3();
         Vector3 pointOnBottomSurface = new Vector3();
+
+        #region Check rewind axis
+        DissolveAxis rewindAxisWorld = DissolveAxis.X;
+        DissolveAxis rewindAxis = DissolveAxis.X;
+
+        Vector3 modelSizeWorld = piece.PieceServiceLocator.pieceMeshRenderer.bounds.size;
+
+        Vector3 worldAxis = Vector3.right;
+
+        if (modelSizeWorld.y > modelSizeWorld.x)
+        {
+            worldAxis = Vector3.up;
+            rewindAxisWorld = DissolveAxis.Y;
+        }
+
+        float absDotRight = Mathf.Abs(Vector3.Dot(piece.transform.right, worldAxis));
+        float absDotUp = Mathf.Abs(Vector3.Dot(piece.transform.up, worldAxis));
+        float absDotForward = Mathf.Abs(Vector3.Dot(piece.transform.forward, worldAxis));
+
+        rewindAxis = DissolveAxis.X;
+
+        if (absDotUp > absDotRight && absDotUp > absDotForward)
+        {
+            rewindAxis = DissolveAxis.Y;
+        }
+
+        if (absDotForward > absDotRight && absDotForward > absDotUp)
+        {
+            rewindAxis = DissolveAxis.Z;
+        }
+
+        if (rewindAxis == DissolveAxis.X)
+        {
+            raycastTopPoint = piece.transform.position + distance * piece.transform.right;
+            raycastBottomPoint = piece.transform.position - distance * piece.transform.right;
+        }
+        else if (rewindAxis == DissolveAxis.Y)
+        {
+            raycastTopPoint = piece.transform.position + distance * piece.transform.up;
+            raycastBottomPoint = piece.transform.position - distance * piece.transform.up;
+        }
+        else if (rewindAxis == DissolveAxis.Z)
+        {
+            raycastTopPoint = piece.transform.position + distance * piece.transform.forward;
+            raycastBottomPoint = piece.transform.position - distance * piece.transform.forward;
+        }
+
+        if (rewindAxisWorld == DissolveAxis.X)
+        {
+            if (raycastTopPoint.x > raycastBottomPoint.x)
+            {
+                Vector3 temp = raycastTopPoint;
+                raycastTopPoint = raycastBottomPoint;
+                raycastBottomPoint = temp;
+            }
+        }
+
+        if (rewindAxisWorld == DissolveAxis.Y)
+        {
+            if (raycastTopPoint.y < raycastBottomPoint.y)
+            {
+                Vector3 temp = raycastTopPoint;
+                raycastTopPoint = raycastBottomPoint;
+                raycastBottomPoint = temp;
+            }
+        }
+
+        #endregion
 
         RaycastHit[] hits = Physics.BoxCastAll(
             center: raycastTopPoint,
@@ -511,9 +606,80 @@ public class Yarn2D : MonoBehaviour
         float topToBottomDistance = Mathf.Abs(pointOnTopSurface.y - pointOnBottomSurface.y);
 
         Vector3 currentPoint = pointOnTopSurface;
+
+        topToBottomDistance = GetDistanceOneDirection(pointOnTopSurface, pointOnBottomSurface);
+
+        float minXWorld = piece.transform.position.x - 0.5f * modelSizeWorld.x;
+        float maxXWorld = piece.transform.position.x + 0.5f * modelSizeWorld.x;
+        float minYWorld = piece.transform.position.y - 0.5f * modelSizeWorld.y;
+        float maxYWorld = piece.transform.position.y + 0.5f * modelSizeWorld.y;
+
+        Vector3 moveVector = Vector3.zero;
+
+        if (rewindAxis == DissolveAxis.X)
+        {
+            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.right;
+        }
+        else if (rewindAxis == DissolveAxis.Y)
+        {
+            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.up;
+        }
+        else if (rewindAxis == DissolveAxis.Z)
+        {
+            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.forward;
+        }
+
+        if (moveVector.x < 0)
+        {
+            moveVector.x *= -1;
+        }
+
+        if (moveVector.y > 0)
+        {
+            moveVector.y *= -1;
+        }
+
+        currentPoint += moveVector;
+
+        bool isReverseDissolve = false;
+
+        if (rewindAxisWorld == DissolveAxis.X)
+        {
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, minXWorld, maxXWorld);
+        }
+
+        if (rewindAxisWorld == DissolveAxis.Y)
+        {
+            isReverseDissolve = true;
+
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, minYWorld, maxYWorld);
+        }
+
+        float GetDistanceOneDirection(Vector3 pointA, Vector3 pointB)
+        {
+            float xDistance = Mathf.Abs(pointA.x - pointB.x);
+            float yDistance = Mathf.Abs(pointA.y - pointB.y);
+            float zDistance = Mathf.Abs(pointA.z - pointB.z);
+
+            if (yDistance > xDistance && yDistance > zDistance)
+            {
+                return yDistance;
+            }
+            else if (zDistance > xDistance && zDistance > yDistance)
+            {
+                return zDistance;
+            }
+
+            return xDistance;
+        }
+
+        Debug.Log("rewindAxis " + rewindAxis + "/" + rewindAxisWorld + "/" + topToBottomDistance);
+
+        return currentPoint;
+
         currentPoint.y = pointOnTopSurface.y - (1 - yRatio) * topToBottomDistance;
 
-        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveBound(pointOnBottomSurface.y, pointOnTopSurface.y);
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, pointOnBottomSurface.y, pointOnTopSurface.y);
 
         // Calc surface
         _currentAngle = yRatio * turn * 2 * Mathf.PI;
@@ -542,6 +708,13 @@ public class Yarn2D : MonoBehaviour
         }
 
         return currentPoint;
+
+        void Swap(ref Vector3 x, ref Vector3 y)
+        {
+            Vector3 temp = x;
+            x = y;
+            y = temp;
+        }
     }
 
     Vector3 GetFirstPointOnModel()
