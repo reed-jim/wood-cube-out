@@ -145,6 +145,16 @@ public class PinchGesture : MonoBehaviour
         zoomSlider.value = 0.0f;
     }
 
+    #region Public Methods
+
+    public void ToggleSlider(bool isActive)
+    {
+        DebugLogger.Log(message:$"isActive: {isActive}", context:this);
+        zoomSlider.gameObject.SetActive(isActive);
+    }
+
+    #endregion
+
     #region Slider Interaction Methods
 
     private void OnZoomSliderValueChanged(float value)

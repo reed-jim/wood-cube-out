@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy.Common;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -39,6 +40,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         YarnLevelLoader.setLevelNumberEvent += SetLevelText;
         PieceManager.updateRemainingPieceEvent += UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
+        YarnLevelLoader.isTutAvailableEvent += CheckTutAvailable;
 
         pauseButton.onClick.AddListener(Pause);
         openShopButton.onClick.AddListener(OpenShop);
@@ -56,12 +58,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
         triggerUpdateBackgroundEvent?.Invoke();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         YarnLevelLoader.startLevelEvent -= OnLevelStarted;
         YarnLevelLoader.setLevelNumberEvent -= SetLevelText;
         PieceManager.updateRemainingPieceEvent -= UpdateRemainingScrew;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
+        YarnLevelLoader.isTutAvailableEvent -= CheckTutAvailable;
     }
 
     #endregion
@@ -129,6 +132,25 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         return currentLevel.Value;
     }
+
+    #region Events Listen
+
+    private void CheckTutAvailable(bool isTutAvailable)
+    {
+        DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+        if (isTutAvailable)
+        {
+            pauseButton.gameObject.SetActive(false);
+            openShopButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            pauseButton.gameObject.SetActive(true);
+            openShopButton.gameObject.SetActive(true);
+        }
+    }
+
+    #endregion
 
     #region HARD MODE
     public void SwitchToHardMode()

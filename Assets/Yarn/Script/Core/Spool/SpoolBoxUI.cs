@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using NamPhuThuy.AnimateWithScripts;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -10,6 +11,9 @@ using static GameEnum;
 
 public class SpoolBoxUI : MonoBehaviour
 {
+    [Header("Flags")] 
+    [SerializeField] private bool isTutorial;
+    
     [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
     [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
     [SerializeField] private RectTransform unlockByAdsButtonRT;
@@ -33,9 +37,12 @@ public class SpoolBoxUI : MonoBehaviour
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
     #endregion
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         ScrewBoxCameraManager.setCameraEvent += OnCameraSet;
+        YarnLevelLoader.isTutAvailableEvent += CheckTutAvailable;
 
         unlockByAdsButton.gameObject.SetActive(false);
 
@@ -47,7 +54,39 @@ public class SpoolBoxUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewBoxCameraManager.setCameraEvent -= OnCameraSet;
+        YarnLevelLoader.isTutAvailableEvent -= CheckTutAvailable;
+        
+        unlockByAdsButton.onClick.RemoveAllListeners();
     }
+
+    #endregion
+
+    #region Events Listen
+
+    private void CheckTutAvailable(bool isTutAvailable)
+    {
+        this.isTutorial = isTutAvailable;
+    }
+
+    #endregion
+
+    #region Private Methods
+
+    private void PlayVFXPopupText(string message)
+    {
+        var args = new PopupTextArgs
+        {
+            message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+            // startParent = transform,
+            textFont = GUIManager.Instance.DefaultFont,
+            textColor = Color.white,
+            duration = 1f,
+            OnComplete = null,
+        };
+        AnimationManager.Ins.Play<PopupTextArgs>(args);
+    }
+
+    #endregion
 
     private async void SetupUI()
     {
@@ -66,6 +105,12 @@ public class SpoolBoxUI : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
+        if (isTutorial)
+        {
+            PlayVFXPopupText(LocalizationConst.CANT_CLICK);
+            return;
+        }
+        
         showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockSpoolBox);
     }
 

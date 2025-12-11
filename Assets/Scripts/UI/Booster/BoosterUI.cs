@@ -53,10 +53,13 @@ public class BoosterUI : MonoBehaviour
     private Vector2 _initialbreakObjectButtonPosition;
     private Vector2 _initialClearAllScrewPortsButtonPosition;
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
         YarnLevelLoader.startLevelEvent += Reset;
+        YarnLevelLoader.isTutAvailableEvent += CheckTutAvailable;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         SpoolManager.enableBoosterEvent += EnableBooster;
         PieceManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
@@ -81,10 +84,11 @@ public class BoosterUI : MonoBehaviour
         _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
         YarnLevelLoader.startLevelEvent -= Reset;
+        YarnLevelLoader.isTutAvailableEvent -= CheckTutAvailable;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         SpoolManager.enableBoosterEvent -= EnableBooster;
         PieceManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
@@ -96,8 +100,6 @@ public class BoosterUI : MonoBehaviour
         breakObjectButton.onClick.RemoveAllListeners();
         clearAllScrewPortsButton.onClick.RemoveAllListeners();
         disableBreakObjectModeEarlyButton.onClick.RemoveAllListeners();
-
-        
     }
 
     private void Reset()
@@ -116,6 +118,29 @@ public class BoosterUI : MonoBehaviour
         _isEnable = true;
         _isPreventShowWarningPopup = false;
     }
+
+    #region Events Listen
+
+    private void CheckTutAvailable(bool isTutAvailable)
+    {
+        DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+        if (isTutAvailable)
+        {
+            addMoreScrewPortButton.gameObject.SetActive(false);
+            breakObjectButton.gameObject.SetActive(false);
+            clearAllScrewPortsButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            addMoreScrewPortButton.gameObject.SetActive(true);
+            breakObjectButton.gameObject.SetActive(true);
+            clearAllScrewPortsButton.gameObject.SetActive(true);
+        }
+    }
+
+    #endregion
+
+    #endregion
 
     private void OnRevived(BoosterType boosterType)
     {

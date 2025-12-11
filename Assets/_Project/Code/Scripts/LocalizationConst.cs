@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class LocalizationConst
 {
+    public const string CANT_CLICK = "Can't click";
     public const string PACK_NUMS = "packNums";
     public const string LEVEL = "level";
     public const string BACKGROUND_UPDATED = "Background Updated";

@@ -11,8 +11,14 @@ namespace NamPhuThuy.Tutorial
 {
     public class TutorialHand : MonoBehaviour
     {
+        [Header("Flags")] 
+        [SerializeField] private bool isFollowing = false;
+        
+        [Header("Components")]
         [SerializeField] private SkeletonGraphic handSkeGraphic;
         [SerializeField] private Vector3 pivotOffset;
+        [SerializeField] private Transform currentTarget;
+        
         
         [Header("Animation Names")]
         private string _animAction = "action";
@@ -87,7 +93,46 @@ namespace NamPhuThuy.Tutorial
             DebugLogger.Log();
             handSkeGraphic.gameObject.SetActive(false);
         }
-        
+
+        public void FollowTransform(Transform tartget)
+        {
+            isFollowing = true;
+            currentTarget = tartget;
+        }
+
+        public void UnfollowTransform(Transform tartget)
+        {
+            isFollowing = false;
+            currentTarget = null;
+        }
+
+        #endregion
+
+        #region Hand Control
+
+        public void MoveHandToWorldObject(Transform targetTransform)
+        {
+            DebugLogger.Log();
+            if (targetTransform == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
+            SetWorldPosition(targetTransform.position);
+        }
+
+        public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
+        {
+            DebugLogger.Log();
+            if (Camera.main == null)
+            {
+                DebugLogger.Log(message: $"Return");
+                return;
+            }
+            Vector3 screenPos = Camera.main.WorldToScreenPoint(worldPosition);
+            SetScreenPosition(screenPos);
+        }
+
         #endregion
         
         #region Private Methods
