@@ -445,10 +445,12 @@ public class SpoolManager : MonoBehaviour
 
     public void SpawnSpoolBox(GameFaction faction, bool isLocked = false)
     {
+        DebugLogger.Log();
         if (isLocked)
         {
+            DebugLogger.Log(message:$"Its locked");
             SpawnAdsSpoolBox();
-
+            
             return;
         }
 
@@ -560,30 +562,26 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < spoolBoxs.Length; i++)
         {
-            if (spoolBoxs[i] == null)
-            {
-                SpoolBox spoolBox = ObjectPoolingEverything.GetFromPool<SpoolBox>(GameConstants.spoolBox);
+            if (spoolBoxs[i] != null) continue;
+            SpoolBox spoolBox = ObjectPoolingEverything.GetFromPool<SpoolBox>(GameConstants.spoolBox);
 
-                spoolBox.transform.position = new Vector3(10, _spoolBoxPositionY, spoolBox.transform.position.z);
+            spoolBox.transform.position = new Vector3(10, _spoolBoxPositionY, spoolBox.transform.position.z);
+            spoolBox.ResetVisually();
+            spoolBox.Lock();
 
-                spoolBox.Lock();
+            int index = i;
 
-                int index = i;
+            destination = GetSpoolBoxNextPosition(spoolBox, index);
 
-                destination = GetSpoolBoxNextPosition(spoolBox, index);
-                // destination.x = (-(maxSpoolBox - 1) / 2f + index) * _spoolBoxDistance;
-                // destination.z = -0.001f * index;
-
-                _tweens.Add(Tween.LocalPosition(spoolBox.transform, destination, duration: 0.4f)
+            _tweens.Add(Tween.LocalPosition(spoolBox.transform, destination, duration: 0.4f)
                 .OnComplete(() =>
                 {
                     spoolBox.SpoolBoxServiceLocator.spoolBoxUI.SetUnlockByAdsButtonPosition();
                 }));
 
-                spoolBoxs[i] = spoolBox;
+            spoolBoxs[i] = spoolBox;
 
-                break;
-            }
+            break;
         }
     }
 
@@ -591,38 +589,39 @@ public class SpoolManager : MonoBehaviour
     {
         for (int i = 0; i < spoolBoxs.Length; i++)
         {
-            if (spoolBoxs[i] == null)
+            if (spoolBoxs[i] != null)
             {
-                int index = i;
+                continue;
+            }
+            
+            int index = i;
+            SpoolBox spoolBox = ObjectPoolingEverything.GetFromPool<SpoolBox>(GameConstants.spoolBox);
 
-                SpoolBox spoolBox = ObjectPoolingEverything.GetFromPool<SpoolBox>(GameConstants.spoolBox);
+            spoolBox.transform.position = new Vector3(10, _spoolBoxPositionY, spoolBox.transform.position.z);
+            spoolBox.ResetVisually();
+            spoolBox.Lock();
 
-                spoolBox.transform.position = new Vector3(10, _spoolBoxPositionY, spoolBox.transform.position.z);
+            Vector3 destination = GetSpoolBoxNextPosition(spoolBox, index);
 
-                spoolBox.Lock();
+            // destination.x = (-(maxSpoolBox - 1) / 2f + index) * _spoolBoxDistance;
+            // destination.z = -0.001f * index;
 
-                Vector3 destination = GetSpoolBoxNextPosition(spoolBox, index);
+            if (_isSpawnSpoolBoxFirstTimeInLevel)
+            {
+                spoolBox.transform.localPosition = destination;
 
-                // destination.x = (-(maxSpoolBox - 1) / 2f + index) * _spoolBoxDistance;
-                // destination.z = -0.001f * index;
-
-                if (_isSpawnSpoolBoxFirstTimeInLevel)
-                {
-                    spoolBox.transform.localPosition = destination;
-
-                    spoolBox.SpoolBoxServiceLocator.spoolBoxUI.SetUnlockByAdsButtonPosition();
-                }
-                else
-                {
-                    _tweens.Add(Tween.LocalPosition(spoolBox.transform, destination, duration: 0.4f)
+                spoolBox.SpoolBoxServiceLocator.spoolBoxUI.SetUnlockByAdsButtonPosition();
+            }
+            else
+            {
+                _tweens.Add(Tween.LocalPosition(spoolBox.transform, destination, duration: 0.4f)
                     .OnComplete(() =>
                     {
                         spoolBox.SpoolBoxServiceLocator.spoolBoxUI.SetUnlockByAdsButtonPosition();
                     }));
-                }
-
-                spoolBoxs[i] = spoolBox;
             }
+
+            spoolBoxs[i] = spoolBox;
         }
 
         _isSpawnSpoolBoxFirstTimeInLevel = false;

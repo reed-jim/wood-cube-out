@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using CandyCoded.HapticFeedback;
 using Firebase.RemoteConfig;
 using NamPhuThuy.Common;
+using NamPhuThuy.Data;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -151,7 +152,7 @@ public class SpoolBox : MonoBehaviour
             {
                 shakeCameraEvent?.Invoke();
 
-                if (GamePersistentVariable.IsVibrate)
+                if (DataManager.Ins.GameSetting.IsVibrate)
                 {
                     HapticFeedback.HeavyFeedback();
                 }
@@ -295,6 +296,7 @@ public class SpoolBox : MonoBehaviour
 
     public void ResetVisually()
     {
+        DebugLogger.Log(context: this);
         spoolBoxSpriteRenderer.enabled = true;
         spoolBoxShadowSpriteRenderer.enabled = true;
 

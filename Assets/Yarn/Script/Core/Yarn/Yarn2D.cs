@@ -114,6 +114,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
     {
+        DebugLogger.Log();
         InitializeRope(spool.transform.position, faction);
 
         InitPiece(piece);
@@ -147,6 +148,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
     {
+        DebugLogger.Log();
         InitializeRope(endSpool.transform.position, faction);
 
         InitStartSpool(startSpool);
@@ -182,6 +184,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, Transform outsideBox, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
+        DebugLogger.Log();
         InitializeRope(endSpool.transform.position, faction);
 
         InitStartNode(outsideBox);
@@ -219,6 +222,7 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, Transform outsideBox, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
+        DebugLogger.Log();
         InitializeRope(Camera.main.ScreenToWorldPoint(outsideBox.position), faction);
 
         InitStartNode(startSpool.transform);
@@ -362,6 +366,7 @@ public class Yarn2D : MonoBehaviour
 
     private void PlayRewindAnimation()
     {
+        DebugLogger.Log();
         lineRenderer.startWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
         lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
         lineRenderer.endWidth = lineRenderer.startWidth;
@@ -388,8 +393,6 @@ public class Yarn2D : MonoBehaviour
                 {
                     int index = i;
 
-                    Vector3 startPos = segments[index].posNow;
-
                     Tween.Custom(0, 1, duration: 0.6f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
                         if (index == segments.Count - 1)
@@ -405,7 +408,7 @@ public class Yarn2D : MonoBehaviour
                     {
                         if (index == segments.Count - 1)
                         {
-                            gameObject.SetActive(false);
+                            ToggleGameObject(false);
 
                             piece = null;
                             startSpoolBoxSlot = null;
@@ -437,6 +440,16 @@ public class Yarn2D : MonoBehaviour
 
         UpdateLineRenderer();
     }
+
+    #region Private Methods
+
+    private void ToggleGameObject(bool isActive)
+    {
+        NamPhuThuy.Common.DebugLogger.Log(message:$"Turn off the Yarn2D");
+        gameObject.SetActive(isActive);
+    }
+
+    #endregion
 
     // NEW
     [Header("Debug")]
