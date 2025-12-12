@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 // original code taken from https://github.com/AyazDyshin/Red-Black-Tree/tree/main
 
