@@ -262,6 +262,7 @@ public class SpoolBox : MonoBehaviour
 
     public void Unlock()
     {
+        DebugLogger.Log(context: this);
         spoolBoxSpriteRenderer.enabled = true;
         spoolBoxShadowSpriteRenderer.enabled = true;
 
@@ -288,6 +289,7 @@ public class SpoolBox : MonoBehaviour
 
     private void Unlock(int instanceId)
     {
+        DebugLogger.Log(message: $"instanceID {instanceId}", context: this);
         if (instanceId == gameObject.GetInstanceID())
         {
             Unlock();
@@ -311,6 +313,7 @@ public class SpoolBox : MonoBehaviour
 
     public void InvokeSpoolBoxUnlockedEvent()
     {
+        DebugLogger.Log(message: $"About to invoke spoolBoxUnlockEvent", context: this);
         spoolBoxUnlockedEvent?.Invoke(this);
     }
 }

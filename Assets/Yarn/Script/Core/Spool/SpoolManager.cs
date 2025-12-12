@@ -303,6 +303,7 @@ public class SpoolManager : MonoBehaviour
 
     private void OnSpoolBoxUnlocked(SpoolBox spoolBox)
     {
+        DebugLogger.Log(context: spoolBox);
         MoveFromPiecePortToSpoolBox(spoolBox);
 
         spoolBoxSpawnedEvent?.Invoke(spoolBox);
@@ -327,6 +328,7 @@ public class SpoolManager : MonoBehaviour
 
     private void OnRewardedAdUnlockSpoolBoxCompleted()
     {
+        DebugLogger.Log(context: this);
         for (int i = 0; i < spoolBoxs.Length; i++)
         {
             if (spoolBoxs[i] == null)
@@ -655,6 +657,7 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveFromPiecePortToSpoolBox(SpoolBox spoolBox)
     {
+        DebugLogger.Log(context: spoolBox);
         // avoid too fast action
         enableBoosterEvent?.Invoke(false);
 
@@ -666,55 +669,62 @@ public class SpoolManager : MonoBehaviour
 
             if (piece == null)
             {
+                DebugLogger.Log(message: $"The piece is null", context: spoolBox);
                 continue;
             }
 
             if (piece.IsDone || piece.PieceServiceLocator.pieceProperty.IsRewinding)
             {
+                DebugLogger.Log(message: $"the piece is done or rewinding", context: spoolBox);
                 continue;
             }
 
-            if (piecePorts[i].IsFilled && piece.Faction == spoolBox.Faction)
+            if (!piecePorts[i].IsFilled || piece.Faction != spoolBox.Faction)
             {
-                for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
+                DebugLogger.Log(message: $"the piecePort is not filled or the faction is not matched", context: spoolBox);
+                continue;
+            }
+            
+            for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
+            {
+                if (spoolBox.SpoolBoxSlots[k].IsFilled)
                 {
-                    if (!spoolBox.SpoolBoxSlots[k].IsFilled)
-                    {
-                        int piecePortIndex = i;
-                        int spoolBoxSlotIndex = k;
-
-                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
-
-                        piecePorts[piecePortIndex].IsFilled = false;
-
-                        piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                        yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                            onCompleteAction: () =>
-                            {
-                                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                                piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                                piece.InvokePieceLoosenedEvent();
-                                enableBoosterEvent?.Invoke(true);
-                            }
-                        );
-
-                        piece.IsDone = true;
-
-                        piecePorts[i].SmoothSetDissolveHeight(1, 0);
-
-                        if (!isFound)
-                        {
-                            isFound = true;
-                        }
-
-                        break;
-                    }
+                    continue;
                 }
+
+                int piecePortIndex = i;
+                int spoolBoxSlotIndex = k;
+
+                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
+
+                piecePorts[piecePortIndex].IsFilled = false;
+
+                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
+
+                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+                yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                    onCompleteAction: () =>
+                    {
+                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+
+                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
+
+                        piece.InvokePieceLoosenedEvent();
+                        enableBoosterEvent?.Invoke(true);
+                    }
+                );
+
+                piece.IsDone = true;
+
+                piecePorts[i].SmoothSetDissolveHeight(1, 0);
+
+                if (!isFound)
+                {
+                    isFound = true;
+                }
+
+                break;
             }
         }
 
@@ -728,13 +738,16 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveSinglePieceFromHoleToSpoolBox(BasePiece piece)
     {
+        DebugLogger.Log(message: $"", context: piece);
         if (!piece.SpoolBoxSlot.IsAlternative)
         {
+            DebugLogger.Log(message: $"return (is not alternative)", context: piece);
             return;
         }
 
         if (piece.IsDone || piece.PieceServiceLocator.pieceProperty.IsRewinding)
         {
+            DebugLogger.Log(message: $"piece is done or rewinding", context: piece);
             return;
         }
 
@@ -748,48 +761,53 @@ public class SpoolManager : MonoBehaviour
 
             if (spoolBox == null)
             {
+                DebugLogger.Log(message: $"spoolBox is null", context: spoolBox);
                 continue;
             }
 
             if (spoolBox.Faction != piece.Faction || spoolBox.IsLocked || spoolBox.IsInTransition)
             {
+                DebugLogger.Log(message: $"spoolBox is not matched faction", context: spoolBox);
                 continue;
             }
 
             for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
             {
-                if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                if (spoolBox.SpoolBoxSlots[k].IsFilled)
                 {
-                    int spoolBoxSlotIndex = k;
-
-                    spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
-
-                    piece.SpoolBoxSlot.IsFilled = false;
-
-                    piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                    Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                    yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                        onCompleteAction: () =>
-                        {
-                            spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                            piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                            piece.InvokePieceLoosenedEvent();
-                            enableBoosterEvent?.Invoke(true);
-                        }
-                    );
-
-                    piece.IsDone = true;
-
-                    piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
-
-                    isFound = true;
-
-                    break;
+                    DebugLogger.Log(message: $"spoolBox is filled", context: spoolBox);
+                    continue;
                 }
+                
+                int spoolBoxSlotIndex = k;
+
+                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
+
+                piece.SpoolBoxSlot.IsFilled = false;
+
+                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
+
+                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+                yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                    onCompleteAction: () =>
+                    {
+                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+
+                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
+
+                        piece.InvokePieceLoosenedEvent();
+                        enableBoosterEvent?.Invoke(true);
+                    }
+                );
+
+                piece.IsDone = true;
+
+                piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
+
+                isFound = true;
+
+                break;
             }
 
             if (isFound)
