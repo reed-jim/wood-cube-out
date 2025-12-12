@@ -471,7 +471,7 @@ public class PieceManager : MonoBehaviour
 
     private IEnumerator AutoTesting()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.05f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.1f);
 
         while (true)
         {
@@ -479,6 +479,16 @@ public class PieceManager : MonoBehaviour
 
             for (int i = 0; i < _pieces.Count; i++)
             {
+                if (_pieces[i] == null)
+                {
+                    continue;
+                }
+
+                if (!_pieces[i].gameObject.activeSelf)
+                {
+                    continue;
+                }
+
                 if (_pieces[i].IsDone)
                 {
                     continue;

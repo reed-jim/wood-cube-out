@@ -170,7 +170,7 @@ public class BasePiece : MonoBehaviour
 
     public void Select()
     {
-        selectPieceEvent?.Invoke(pieceId, Faction);
+        selectPieceEvent?.Invoke(gameObject.GetInstanceID(), Faction);
     }
 
     public virtual int CountBlockingObjects(bool isIncludeHiddenPiece)
@@ -182,7 +182,6 @@ public class BasePiece : MonoBehaviour
 
     public virtual void Loose(int pieceId, GameFaction faction, SpoolBoxSlot spoolBoxSlot)
     {
-        DebugLogger.Log(message:$"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId != gameObject.GetInstanceID()) return;
 
         if (!gameObject.activeInHierarchy)
@@ -192,7 +191,6 @@ public class BasePiece : MonoBehaviour
 
         if (pieceServiceLocator.pieceProperty.IsRewinding)
         {
-            DebugLogger.Log(message: $"is rewinding, return");
             return;
         }
 
@@ -200,7 +198,6 @@ public class BasePiece : MonoBehaviour
 
         if (!GamePersistentVariable.isLevelDirty)
         {
-            DebugLogger.Log(message: $"set level dirty");
             GamePersistentVariable.isLevelDirty = true;
         }
 
@@ -239,21 +236,22 @@ public class BasePiece : MonoBehaviour
 
         Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
+        BasePiece firstInnerPiece = null;
+
         if (innerPieces.Length > 1)
         {
-            DebugLogger.Log(message: $"More than one inner piece, activate first inner piece");
-            BasePiece firstInnerPiece = innerPieces[1];
+            firstInnerPiece = innerPieces[1];
 
             firstInnerPiece.gameObject.SetActive(true);
+
+            firstInnerPiece.pieceServiceLocator.pieceProperty.IsRewinding = true;
         }
 
         yarn2D.Rewind(faction, this, spoolBoxSlot,
             onDissolveCompleteAction: () =>
             {
-                if (innerPieces.Length > 1)
+                if (firstInnerPiece != null)
                 {
-                    BasePiece firstInnerPiece = innerPieces[1];
-
                     for (int i = 2; i < innerPieces.Length; i++)
                     {
                         Transform innerPieceTrans = innerPieces[i].transform;
@@ -273,10 +271,15 @@ public class BasePiece : MonoBehaviour
             },
             onCompleteAction: () =>
             {
-                pieceServiceLocator.pieceMeshRenderer.enabled = false;
                 gameObject.SetActive(false);
 
+                pieceServiceLocator.pieceMeshRenderer.enabled = false;
                 pieceServiceLocator.pieceProperty.IsRewinding = false;
+
+                if (firstInnerPiece != null)
+                {
+                    firstInnerPiece.pieceServiceLocator.pieceProperty.IsRewinding = false;
+                }
 
                 spoolBoxSlot.CompleteFill();
 
@@ -310,11 +313,6 @@ public class BasePiece : MonoBehaviour
         DebugLogger.Log(message: $"pieceId: {pieceId}, gameObjectId: {gameObject.GetInstanceID()}");
         if (pieceId == gameObject.GetInstanceID())
         {
-            if (!gameObject.activeInHierarchy)
-            {
-                gameObject.SetActive(true);
-            }
-
             if (pieceServiceLocator.pieceProperty.IsRewinding)
             {
                 return;
@@ -330,6 +328,7 @@ public class BasePiece : MonoBehaviour
                 onCompleteAction: () =>
                 {
                     pieceServiceLocator.pieceMeshRenderer.enabled = false;
+                    
                     gameObject.SetActive(false);
 
                     pieceServiceLocator.pieceProperty.IsRewinding = false;
