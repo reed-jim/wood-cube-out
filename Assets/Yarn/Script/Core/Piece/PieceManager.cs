@@ -518,6 +518,8 @@ public class PieceManager : MonoBehaviour
 
             yield return waitForSeconds;
         }
+
+        GamePersistentVariable.isAutoTestingLevel = false;
     }
     #endregion
 
