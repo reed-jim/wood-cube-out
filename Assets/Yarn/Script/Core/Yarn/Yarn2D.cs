@@ -774,8 +774,10 @@ public class Yarn2D : MonoBehaviour
     {
         Vector3[] positions = new Vector3[segmentCount];
 
-        Vector3 position = GetFirstNodePosition();
-        position.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
+        Vector3 firstNodePosition = GetFirstNodePosition();
+        firstNodePosition.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
+
+        Vector3 position = firstNodePosition;
 
         Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.3f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.3f * _spoolSlotRadius);
 
@@ -800,7 +802,7 @@ public class Yarn2D : MonoBehaviour
 
             positions[i] = pointOnLine + Vector3.right * ((1 - 4 * Mathf.Pow((t - 0.5f), 2)) * sine);
 
-            segments[i].posNow = Vector3.Lerp(positions[i], GetFirstNodePosition(), _endRewindingProgress);
+            segments[i].posNow = Vector3.Lerp(positions[i], firstNodePosition, _endRewindingProgress);
         }
 
         segments[0].posNow = spoolSlotPoint;
