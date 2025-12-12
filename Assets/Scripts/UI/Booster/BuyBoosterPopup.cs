@@ -1,5 +1,6 @@
 using System;
 using Lean.Localization;
+using NamPhuThuy.Common;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -133,6 +134,7 @@ public class BuyBoosterPopup : BasePopup
 
                 Hide(onCompletedAction: () =>
                 {
+                    DebugLogger.Log(message: $"About to invoke unlockSpoolBoxEvent from BuyBoosterPopup", context: this);
                     unlockSpoolBoxEvent?.Invoke();
                 });
 

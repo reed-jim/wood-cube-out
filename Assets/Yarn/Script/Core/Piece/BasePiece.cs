@@ -400,6 +400,7 @@ public class BasePiece : MonoBehaviour
 
     public void InvokePieceLoosenedEvent()
     {
+        DebugLogger.Log(message: $"", context: this);
         pieceLoosenedEvent?.Invoke();
     }
 

@@ -594,19 +594,22 @@ public class PieceManager : MonoBehaviour
 
     private void AssignFactionForNewAdsSpoolBox(SpoolBox pieceBox)
     {
+        DebugLogger.Log(context: this);
         AssignFactionForNewSpoolBox(pieceBox, _currentLevelDifficultyConfiguration.AdsScrewBoxDifficultyLevelModifier);
     }
 
     private async Task AssignFactionForNewSpoolBox(SpoolBox pieceBox, int difficultyLevelModifier)
     {
+        DebugLogger.Log(context: this);
         GameFaction faction = await GetFactionForNewSpoolBox(difficultyLevelModifier);
 
         if (faction == GameFaction.None)
         {
             return;
         }
-
+        DebugLogger.Log(message: $"res-faction: {faction}", context: this);
         pieceBox.Faction = faction;
+        
     }
 
     private async Task<GameFaction[]> GetSortedFactionsByBlockedObject()
@@ -636,6 +639,7 @@ public class PieceManager : MonoBehaviour
 
     private async Task<GameFaction> GetFactionForNewSpoolBox(int difficultyLevelModifier = 0)
     {
+        DebugLogger.Log(context: this);
         float progress;
         int donePiece = 0;
 

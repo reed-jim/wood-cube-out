@@ -125,6 +125,8 @@ public class SpoolBoxUI : MonoBehaviour
 
     public void Unlock()
     {
+        DebugLogger.Log(context: this);
+        
         SpoolBox spoolBox = spoolBoxServiceLocator.spoolBox;
 
         spoolBox.IsInTransition = true;
