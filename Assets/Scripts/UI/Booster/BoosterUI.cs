@@ -386,7 +386,12 @@ public class BoosterUI : MonoBehaviour
         }
         else
         {
-            showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+            Debug.Log("SAFERIO remove GamePersistentVariable.isAutoTestingLevel before final build");
+            
+            if (!GamePersistentVariable.isAutoTestingLevel)
+            {
+                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+            }
         }
     }
 }
