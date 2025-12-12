@@ -701,40 +701,6 @@ public class SpoolManager : MonoBehaviour
                         break;
                     }
                 }
-
-                int piecePortIndex = i;
-                int spoolBoxSlotIndex = k;
-
-                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
-
-                piecePorts[piecePortIndex].IsFilled = false;
-
-                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                    onCompleteAction: () =>
-                    {
-                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                        piece.InvokePieceLoosenedEvent();
-                        enableBoosterEvent?.Invoke(true);
-                    }
-                );
-
-                piece.IsDone = true;
-
-                piecePorts[i].SmoothSetDissolveHeight(1, 0);
-
-                if (!isFound)
-                {
-                    isFound = true;
-                }
-
-                break;
             }
         }
 
@@ -814,36 +780,6 @@ public class SpoolManager : MonoBehaviour
 
                     break;
                 }
-                
-                int spoolBoxSlotIndex = k;
-
-                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
-
-                piece.SpoolBoxSlot.IsFilled = false;
-
-                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                    onCompleteAction: () =>
-                    {
-                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                        piece.InvokePieceLoosenedEvent();
-                        enableBoosterEvent?.Invoke(true);
-                    }
-                );
-
-                piece.IsDone = true;
-
-                piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
-
-                isFound = true;
-
-                break;
             }
 
             if (isFound)
