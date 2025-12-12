@@ -29,7 +29,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _DissolveMap:
-        m_Texture: {fileID: 2800000, guid: 66cffd667e8d6574186db99b3950cb80, type: 3}
+        m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTexture:
@@ -62,13 +62,16 @@ Material:
     - _DarkColorMultiplier: 0.5
     - _DarkThreshold: 0.4
     - _DiffusePower: 2
-    - _DissolveEdgeWidth: 0.5
+    - _DissolveAxis: 0
+    - _DissolveEdgeWidth: 0.05
     - _DissolveHeight: 0
+    - _DissolveRatio: 0
     - _DissolveRatioX: 1
     - _DissolveRatioY: 1
     - _DissolveStrength: 0.2
     - _GradientColorTwoMultiplier: 0
     - _IsDissolve: 0
+    - _IsReverseDissolve: 0
     - _Metallic: 0
     - _NoiseStrength: 0
     - _NormalMapRotation: 0
