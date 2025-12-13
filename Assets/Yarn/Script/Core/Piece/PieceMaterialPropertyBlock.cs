@@ -141,9 +141,14 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
-    public void SetOutlineWidth(float value)
+    public void SetDissolveEdgeColor()
     {
-        _propertyBlock.SetFloat(outlineWidthReference, value);
+        Color color = _renderer.material.GetColor("_Color");
+        float luminance = 0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b;
+
+        float multiplier = Mathf.Lerp(16, 4, Mathf.Clamp01(luminance));
+
+        _propertyBlock.SetColor("_DissolveEdgeColor", multiplier * color);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }
