@@ -336,7 +336,7 @@ public class Yarn2D : MonoBehaviour
             Tween.Custom(
                 lastNodePosition,
                 endPosition,
-                duration: 0.3f,
+                duration: 0.2f,
                 ease: Ease.InOutSine,
                 onValueChange: newVal =>
                 {
@@ -501,8 +501,8 @@ public class Yarn2D : MonoBehaviour
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
-            raycastTopPoint = new Vector3(0, -distance, 0);
-            raycastBottomPoint = new Vector3(0, distance, 0);
+            raycastTopPoint = new Vector3(0, distance, 0);
+            raycastBottomPoint = new Vector3(0, -distance, 0);
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
@@ -513,25 +513,25 @@ public class Yarn2D : MonoBehaviour
         raycastTopPoint = piece.transform.TransformPoint(raycastTopPoint);
         raycastBottomPoint = piece.transform.TransformPoint(raycastBottomPoint);
 
-        if (rewindAxisWorld == DissolveAxis.X)
-        {
-            if (raycastTopPoint.x > raycastBottomPoint.x)
-            {
-                Vector3 temp = raycastTopPoint;
-                raycastTopPoint = raycastBottomPoint;
-                raycastBottomPoint = temp;
-            }
-        }
+        // if (rewindAxisWorld == DissolveAxis.X)
+        // {
+        //     if (raycastTopPoint.x > raycastBottomPoint.x)
+        //     {
+        //         Vector3 temp = raycastTopPoint;
+        //         raycastTopPoint = raycastBottomPoint;
+        //         raycastBottomPoint = temp;
+        //     }
+        // }
 
-        if (rewindAxisWorld == DissolveAxis.Y)
-        {
-            if (raycastTopPoint.y < raycastBottomPoint.y)
-            {
-                Vector3 temp = raycastTopPoint;
-                raycastTopPoint = raycastBottomPoint;
-                raycastBottomPoint = temp;
-            }
-        }
+        // if (rewindAxisWorld == DissolveAxis.Y)
+        // {
+        //     if (raycastTopPoint.y < raycastBottomPoint.y)
+        //     {
+        //         Vector3 temp = raycastTopPoint;
+        //         raycastTopPoint = raycastBottomPoint;
+        //         raycastBottomPoint = temp;
+        //     }
+        // }
 
         #endregion
 
@@ -554,11 +554,6 @@ public class Yarn2D : MonoBehaviour
                     break;
                 }
             }
-        }
-
-        if (isOnlyGetTopPoint)
-        {
-            return pointOnTopSurface;
         }
 
         hits = Physics.BoxCastAll(
@@ -603,15 +598,15 @@ public class Yarn2D : MonoBehaviour
 
         if (rewindAxis == DissolveAxis.X)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.x, 0.5f * modelSize.x);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, -0.5f * modelSize.x, 0.5f * modelSize.x);
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.y, 0.5f * modelSize.y);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, true, -0.5f * modelSize.y, 0.5f * modelSize.y);
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.z, 0.5f * modelSize.z);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, -0.5f * modelSize.z, 0.5f * modelSize.z);
         }
 
         // Calc surface
