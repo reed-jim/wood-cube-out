@@ -227,5 +227,9 @@ public static class GameConstants
 
     #region MEDAL TOURNAMENT
     public static string MEDAL_TOURNAMENT_DATA = "MEDAL_TOURNAMENT_DATA";
+    #endregion
+
+    #region Layer
+    public static string pieceLayer = "Default";
     #endregion 
 }

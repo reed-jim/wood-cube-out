@@ -113,7 +113,6 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, BasePiece piece, SpoolBoxSlot spool, Action onDissolveCompleteAction = null, Action onCompleteAction = null)
     {
-        DebugLogger.Log();
         InitializeRope(spool.transform.position, faction);
 
         InitPiece(piece);
@@ -147,7 +146,6 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, SpoolBoxSlot endSpool, Action onCompleteAction = null)
     {
-        DebugLogger.Log();
         InitializeRope(endSpool.transform.position, faction);
 
         InitStartSpool(startSpool);
@@ -183,7 +181,6 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, Transform outsideBox, SpoolBoxSlot endSpool, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
-        DebugLogger.Log();
         InitializeRope(endSpool.transform.position, faction);
 
         InitStartNode(outsideBox);
@@ -221,7 +218,6 @@ public class Yarn2D : MonoBehaviour
     /// <param name="onCompleteAction"></param>
     public void Rewind(GameFaction faction, SpoolBoxSlot startSpool, Transform outsideBox, bool isReverseSpoolDissolve = true, Action onCompleteAction = null)
     {
-        DebugLogger.Log();
         InitializeRope(Camera.main.ScreenToWorldPoint(outsideBox.position), faction);
 
         InitStartNode(startSpool.transform);
@@ -259,6 +255,7 @@ public class Yarn2D : MonoBehaviour
         _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveEdgeColor();
 
         velocity.x = velocityMultuplier.x * modelSize.x;
 
@@ -364,7 +361,6 @@ public class Yarn2D : MonoBehaviour
 
     private void PlayRewindAnimation()
     {
-        DebugLogger.Log();
         lineRenderer.startWidth = widthMultiplier * 1 / Camera.main.orthographicSize;
         lineRenderer.startWidth = Mathf.Min(lineRenderer.startWidth, 0.1f);
         lineRenderer.endWidth = lineRenderer.startWidth;
@@ -387,15 +383,20 @@ public class Yarn2D : MonoBehaviour
             {
                 onDissolveCompleted?.Invoke();
 
+                Color startYarnColor = yarnMaterialPropertyBlock.GetColor("_Color");
+
                 for (int i = 0; i < segments.Count; i++)
                 {
                     int index = i;
 
-                    Tween.Custom(0, 1, duration: 0.6f, ease: Ease.InOutSine, onValueChange: newVal =>
+                    Tween.Custom(0, 1f, duration: 0.6f, ease: Ease.InOutSine, onValueChange: newVal =>
                     {
                         if (index == segments.Count - 1)
                         {
                             _endRewindingProgress = newVal;
+
+                            yarnMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(startYarnColor, (1 - newVal)));
+                            lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
 
                             UpdateRope();
                         }
@@ -443,46 +444,10 @@ public class Yarn2D : MonoBehaviour
 
     private void ToggleGameObject(bool isActive)
     {
-        NamPhuThuy.Common.DebugLogger.Log(message: $"Turn off the Yarn2D");
         gameObject.SetActive(isActive);
     }
 
     #endregion
-
-    // NEW
-    [Header("Debug")]
-    [SerializeField] private bool debugRaycast = true;
-    private Vector3 _debugRayOrigin;
-    private Vector3 _debugRayDirection;
-    private Vector3 _debugHitPoint;
-    private bool _debugHasHit;
-
-    private DissolveAxis GetDominantScreenAxis(Transform model, Renderer rend, Camera cam = null)
-    {
-        Bounds bounds = rend.bounds;
-
-        // Transform object-space axes to world space
-        Vector3 worldX = model.transform.TransformDirection(Vector3.right) * bounds.size.x;
-        Vector3 worldY = model.transform.TransformDirection(Vector3.up) * bounds.size.y;
-        Vector3 worldZ = model.transform.TransformDirection(Vector3.forward) * bounds.size.z;
-
-        // Project endpoints to screen space
-        Vector3 centerScreen = cam.WorldToScreenPoint(bounds.center);
-        Vector3 screenX = cam.WorldToScreenPoint(bounds.center + worldX) - centerScreen;
-        Vector3 screenY = cam.WorldToScreenPoint(bounds.center + worldY) - centerScreen;
-        Vector3 screenZ = cam.WorldToScreenPoint(bounds.center + worldZ) - centerScreen;
-
-        // Compare magnitudes
-        float lenX = screenX.magnitude;
-        float lenY = screenY.magnitude;
-        float lenZ = screenZ.magnitude;
-
-        Debug.Log($"Screen-space lengths: X={lenX}, Y={lenY}, Z={lenZ}");
-
-        if (lenX >= lenY && lenX >= lenZ) return DissolveAxis.X;
-        if (lenY >= lenX && lenY >= lenZ) return DissolveAxis.Y;
-        return DissolveAxis.Z;
-    }
 
     Vector3 GetSpiralPosition(float yRatio, int turn, bool isOnlyGetTopPoint = false)
     {
@@ -576,7 +541,8 @@ public class Yarn2D : MonoBehaviour
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastTopPoint,
             orientation: Quaternion.identity,
-            maxDistance: 2 * distance
+            maxDistance: 2 * distance,
+            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
 
         if (hits.Length > 0)
@@ -586,7 +552,6 @@ public class Yarn2D : MonoBehaviour
                 if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
                 {
                     pointOnTopSurface = hits[i].point;
-
                     break;
                 }
             }
@@ -602,7 +567,8 @@ public class Yarn2D : MonoBehaviour
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastBottomPoint,
             orientation: Quaternion.identity,
-            maxDistance: 2 * distance
+            maxDistance: 2 * distance,
+            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
 
         if (hits.Length > 0)
@@ -612,7 +578,6 @@ public class Yarn2D : MonoBehaviour
                 if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
                 {
                     pointOnBottomSurface = hits[i].point;
-
                     break;
                 }
             }
@@ -721,7 +686,8 @@ public class Yarn2D : MonoBehaviour
             halfExtents: halfExtents,
             direction: raycastDestination - raycastPoint,
             orientation: Quaternion.identity,
-            maxDistance: 2 * distance
+            maxDistance: 2 * distance,
+            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
 
         if (hits.Length > 0)
