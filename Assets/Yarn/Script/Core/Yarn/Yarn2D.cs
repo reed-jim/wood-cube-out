@@ -332,7 +332,6 @@ public class Yarn2D : MonoBehaviour
             int index = i;
 
             Vector3 endPosition = Vector3.Lerp(lastNodePosition, GetFirstNodePosition(), 1 - ((float)index / (segmentCount - 1)));
-            endPosition.y += (0.8f * (-0.5f + (1 - dissolveHeight))) * spoolSlotSizeY;
 
             Tween.Custom(
                 lastNodePosition,
@@ -540,7 +539,7 @@ public class Yarn2D : MonoBehaviour
             center: raycastTopPoint,
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastTopPoint,
-            orientation: Quaternion.identity,
+            orientation: piece.transform.rotation,
             maxDistance: 2 * distance,
             layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
@@ -559,14 +558,14 @@ public class Yarn2D : MonoBehaviour
 
         if (isOnlyGetTopPoint)
         {
-            return Vector3.Lerp(pointOnTopSurface, piece.transform.position, 0.2f);
+            return pointOnTopSurface;
         }
 
         hits = Physics.BoxCastAll(
             center: raycastBottomPoint,
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastBottomPoint,
-            orientation: Quaternion.identity,
+            orientation: piece.transform.rotation,
             maxDistance: 2 * distance,
             layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
@@ -583,77 +582,52 @@ public class Yarn2D : MonoBehaviour
             }
         }
 
-        Vector3 currentPoint = pointOnTopSurface;
+        Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, 1 - yRatio);
+        Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
-        float topToBottomDistance = GetDistanceOneDirection(pointOnTopSurface, pointOnBottomSurface);
+        // float minXWorld = piece.transform.position.x - 0.5f * modelSizeWorld.x;
+        // float maxXWorld = piece.transform.position.x + 0.5f * modelSizeWorld.x;
+        // float minYWorld = piece.transform.position.y - 0.5f * modelSizeWorld.y;
+        // float maxYWorld = piece.transform.position.y + 0.5f * modelSizeWorld.y;
 
-        float minXWorld = piece.transform.position.x - 0.5f * modelSizeWorld.x;
-        float maxXWorld = piece.transform.position.x + 0.5f * modelSizeWorld.x;
-        float minYWorld = piece.transform.position.y - 0.5f * modelSizeWorld.y;
-        float maxYWorld = piece.transform.position.y + 0.5f * modelSizeWorld.y;
+        // float minXWorld = -0.5f * modelSize.x;
+        // float maxXWorld = 0.5f * modelSize.x;
+        // float minYWorld = -0.5f * modelSize.y;
+        // float maxYWorld = 0.5f * modelSize.y;
+        // float minYWorld = -0.5f * modelSize.y;
+        // float maxYWorld = 0.5f * modelSize.y;
 
-        Vector3 moveVector = Vector3.zero;
-
-        if (rewindAxis == DissolveAxis.X)
-        {
-            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.right;
-        }
-        else if (rewindAxis == DissolveAxis.Y)
-        {
-            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.up;
-        }
-        else if (rewindAxis == DissolveAxis.Z)
-        {
-            moveVector = (1 - yRatio) * topToBottomDistance * piece.transform.forward;
-        }
-
-        if (moveVector.x < 0)
-        {
-            moveVector.x *= -1;
-        }
-
-        if (moveVector.y > 0)
-        {
-            moveVector.y *= -1;
-        }
-
-        currentPoint += moveVector;
+        Vector3 pieceMin = -0.5f * modelSize;
+        Vector3 pieceMax = 0.5f * modelSize;
+        Vector3 pieceMinWorld = piece.transform.TransformPoint(pieceMin);
+        Vector3 pieceMaxWorld = piece.transform.TransformPoint(pieceMax);
 
         bool isReverseDissolve = false;
 
         if (rewindAxisWorld == DissolveAxis.X)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, minXWorld, maxXWorld);
+            isReverseDissolve = pieceMinWorld.x > pieceMaxWorld.x;
+        }
+        else if (rewindAxisWorld == DissolveAxis.Y)
+        {
+            isReverseDissolve = pieceMinWorld.y < pieceMaxWorld.y;
         }
 
-        if (rewindAxisWorld == DissolveAxis.Y)
+        if (rewindAxis == DissolveAxis.X)
         {
-            isReverseDissolve = true;
-
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxisWorld, isReverseDissolve, minYWorld, maxYWorld);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.x, 0.5f * modelSize.x);
         }
-
-        float GetDistanceOneDirection(Vector3 pointA, Vector3 pointB)
+        else if (rewindAxis == DissolveAxis.Y)
         {
-            float xDistance = Mathf.Abs(pointA.x - pointB.x);
-            float yDistance = Mathf.Abs(pointA.y - pointB.y);
-            float zDistance = Mathf.Abs(pointA.z - pointB.z);
-
-            if (yDistance > xDistance && yDistance > zDistance)
-            {
-                return yDistance;
-            }
-            else if (zDistance > xDistance && zDistance > yDistance)
-            {
-                return zDistance;
-            }
-
-            return xDistance;
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.y, 0.5f * modelSize.y);
+        }
+        else if (rewindAxis == DissolveAxis.Z)
+        {
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, isReverseDissolve, -0.5f * modelSize.z, 0.5f * modelSize.z);
         }
 
         // Calc surface
         _currentAngle = yRatio * turn * 2 * Mathf.PI;
-        Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
         Vector3 raycastPoint = new Vector3();
         Vector3 raycastDestination = new Vector3();
@@ -661,34 +635,47 @@ public class Yarn2D : MonoBehaviour
 
         if (rewindAxis == DissolveAxis.X)
         {
-            raycastPoint = new Vector3(currentPointPieceSpace.x, Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius);
+            raycastPoint = new Vector3(currentPointPieceSpace.x, Mathf.Cos(_currentAngle) * distance, Mathf.Sin(_currentAngle) * distance);
             raycastPoint = piece.transform.TransformPoint(raycastPoint);
-            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeX(currentPointPieceSpace.x));
-            halfExtents = ToWorldHalfExtents(new Vector3(0.02f, radius, radius));
+            raycastDestination = piece.transform.TransformPoint(
+                new Vector3(currentPointPieceSpace.x, 0, 0)
+            );
+            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
-            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, currentPointPieceSpace.y, Mathf.Sin(_currentAngle) * 4 * radius);
+            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * distance, currentPointPieceSpace.y, Mathf.Sin(_currentAngle) * distance);
             raycastPoint = piece.transform.TransformPoint(raycastPoint);
-            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeY(currentPointPieceSpace.y));
-            halfExtents = ToWorldHalfExtents(new Vector3(radius, 0.02f, radius));
+            raycastDestination = piece.transform.TransformPoint(
+                new Vector3(0, currentPointPieceSpace.y, 0)
+            );
+            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
-            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * 4 * radius, Mathf.Sin(_currentAngle) * 4 * radius, currentPointPieceSpace.z);
+            raycastPoint = new Vector3(Mathf.Cos(_currentAngle) * distance, Mathf.Sin(_currentAngle) * distance, currentPointPieceSpace.z);
             raycastPoint = piece.transform.TransformPoint(raycastPoint);
-            raycastDestination = piece.transform.TransformPoint(Vector3.zero.ChangeZ(currentPointPieceSpace.z));
-            halfExtents = ToWorldHalfExtents(new Vector3(radius, radius, 0.02f));
+            raycastDestination = piece.transform.TransformPoint(
+                new Vector3(0, 0, currentPointPieceSpace.z)
+            );
+            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
         }
 
-        hits = Physics.BoxCastAll(
-            center: raycastPoint,
-            halfExtents: halfExtents,
+        hits = Physics.RaycastAll(
+            origin: raycastPoint,
             direction: raycastDestination - raycastPoint,
-            orientation: Quaternion.identity,
             maxDistance: 2 * distance,
             layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
         );
+
+        // hits = Physics.BoxCastAll(
+        //     center: raycastPoint,
+        //     halfExtents: halfExtents,
+        //     direction: raycastDestination - raycastPoint,
+        //     orientation: piece.transform.rotation,
+        //     maxDistance: 2 * distance,
+        //     layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
+        // );
 
         if (hits.Length > 0)
         {
@@ -710,6 +697,19 @@ public class Yarn2D : MonoBehaviour
             result.x = Math.Abs(result.x);
             result.y = Math.Abs(result.y);
             result.z = Math.Abs(result.z);
+
+            if (result.x < result.y && result.x < result.z)
+            {
+                result.x = 0.01f;
+            }
+            else if (result.y < result.x && result.y < result.z)
+            {
+                result.y = 0.01f;
+            }
+            else if (result.z < result.x && result.z < result.y)
+            {
+                result.z = 0.01f;
+            }
 
             return result;
         }
