@@ -46,6 +46,26 @@ public class PieceProperty : MonoBehaviour
     {
         get => pieceServiceLocator.pieceMeshFilter.mesh.bounds.size;
     }
+
+    public float MaxBoundSize
+    {
+        get
+        {
+            float max = MeshBoundSize.x;
+
+            if (MeshBoundSize.y > MeshBoundSize.x)
+            {
+                max = MeshBoundSize.y;
+            }
+
+            if (MeshBoundSize.z > MeshBoundSize.y)
+            {
+                max = MeshBoundSize.z;
+            }
+
+            return max;
+        }
+    }
     #endregion
 
     void Awake()

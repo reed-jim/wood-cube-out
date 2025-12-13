@@ -585,18 +585,6 @@ public class Yarn2D : MonoBehaviour
         Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, 1 - yRatio);
         Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
-        // float minXWorld = piece.transform.position.x - 0.5f * modelSizeWorld.x;
-        // float maxXWorld = piece.transform.position.x + 0.5f * modelSizeWorld.x;
-        // float minYWorld = piece.transform.position.y - 0.5f * modelSizeWorld.y;
-        // float maxYWorld = piece.transform.position.y + 0.5f * modelSizeWorld.y;
-
-        // float minXWorld = -0.5f * modelSize.x;
-        // float maxXWorld = 0.5f * modelSize.x;
-        // float minYWorld = -0.5f * modelSize.y;
-        // float maxYWorld = 0.5f * modelSize.y;
-        // float minYWorld = -0.5f * modelSize.y;
-        // float maxYWorld = 0.5f * modelSize.y;
-
         Vector3 pieceMin = -0.5f * modelSize;
         Vector3 pieceMax = 0.5f * modelSize;
         Vector3 pieceMinWorld = piece.transform.TransformPoint(pieceMin);

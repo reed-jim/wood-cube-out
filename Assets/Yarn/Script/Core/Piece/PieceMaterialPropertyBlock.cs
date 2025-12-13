@@ -148,7 +148,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
 
         float multiplier = Mathf.Lerp(16, 4, Mathf.Clamp01(luminance));
 
-        _propertyBlock.SetColor("_DissolveEdgeColor", multiplier * color);
+        _propertyBlock.SetColor("_DissolveEdgeColor", 1.3f * color);
 
         _renderer.SetPropertyBlock(_propertyBlock);
     }

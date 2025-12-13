@@ -22,7 +22,6 @@ public class WinPopup : BasePopup
     [SerializeField] private Button x5CoinButton;
     [SerializeField] private RectTransform coinContainer;
     [SerializeField] private TMP_Text coinText;
-    [SerializeField] private TextMeshProUGUI multiplyCoinText;
     [SerializeField] private TMP_Text starText;
     [SerializeField] private TMP_Text goldPassKeyText;
     [SerializeField] private RectTransform coinGroup;
@@ -125,7 +124,7 @@ public class WinPopup : BasePopup
     {
         AdmobAdsMax.Instance.ShowBannerCollap();
 
-        coinText.text = $"{0}";
+        coinText.text = $"{DataConst.COIN_REWARDED_WIN_LEVEL}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
 
@@ -214,8 +213,6 @@ public class WinPopup : BasePopup
 
     private void CollectCoin(int numCoin)
     {
-        coinText.text = $"{(int)numCoin}";
-
         userResourcesObserver.UserResources.CoinQuantity += numCoin - _currentCollectedCoin;
 
         userResourcesObserver.Save();
@@ -288,24 +285,31 @@ public class WinPopup : BasePopup
 
         bool isBackHome = HandleSuggestFeature();
 
-        if (!isBackHome)
+        float delayTime = 2;
+
+        if (_currentCollectedCoin > 0)
         {
-            float delayTime = 2;
+            collectCoinEvent?.Invoke(_currentCollectedCoin);
+        }
+        else
+        {
+            delayTime = 0;
+        }
 
-            if (_currentCollectedCoin > 0)
-            {
-                collectCoinEvent?.Invoke(_currentCollectedCoin);
-            }
-            else
-            {
-                delayTime = 0;
-            }
-
-            // wait for collect coin animation
+        // wait for collect coin animation
+        if (isBackHome)
+        {
             Tween.Delay(delayTime).OnComplete(() =>
             {
-                showSceneTransitionEvent?.Invoke();
+                OnClickHome();
             });
+        }
+        else
+        {
+            Tween.Delay(delayTime).OnComplete(() =>
+        {
+            showSceneTransitionEvent?.Invoke();
+        });
 
             Tween.Delay(delayTime + 0.5f).OnComplete(() =>
             {
@@ -334,7 +338,7 @@ public class WinPopup : BasePopup
         x5CoinButton.interactable = false;
         continueButton.interactable = false;
 
-        CollectCoin(_multiplierCoinWinLevel * 10);
+        CollectCoin(DataConst.COIN_REWARDED_WIN_LEVEL);
 
         PlayCollectCoinAnimationAndNextLevel();
 
@@ -498,8 +502,6 @@ public class WinPopup : BasePopup
     {
         if (currentLevel.Value == 30 && !DataUtility.Load("Is Coin Challenge Suggested", false))
         {
-            OnClickHome();
-
             return true;
         }
 
@@ -507,22 +509,16 @@ public class WinPopup : BasePopup
 
         if (starLevelData.starCollected >= GameConstants.REQUIRE_STAR)
         {
-            OnClickHome();
-
             return true;
         }
 
         if (currentLevel.Value % 10 == 0 && currentLevel.Value > 0)
         {
-            OnClickHome();
-
             return true;
         }
 
         if (_isCoinChallengeClaimable)
         {
-            OnClickHome();
-
             return true;
         }
 
