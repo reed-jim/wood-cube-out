@@ -131,7 +131,7 @@ public class SceneTransition : MonoBehaviour
                     blackBackground.gameObject.SetActive(false);
                 });
 
-            FadeOut( 1.7f);
+            FadeOut(1.7f);
 
             _isFirstTimeEnterScene = false;
 
@@ -156,8 +156,11 @@ public class SceneTransition : MonoBehaviour
         }
 
         progressBarCanvasGroup.alpha = 1;
-        
+
         almostThereText.color = ColorUtil.WithAlpha(almostThereText.color, 0);
+
+        // wait for the whole screen to show
+        yield return new WaitForSeconds(0.3f);
 
         Tween.Custom(0, 1, duration: 0.5f * minWaitTime, onValueChange: newVal =>
         {
