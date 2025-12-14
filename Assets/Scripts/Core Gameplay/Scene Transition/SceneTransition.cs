@@ -141,6 +141,7 @@ public class SceneTransition : MonoBehaviour
         blackBackground.gameObject.SetActive(false);
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
+        progressBar.fillAmount = 0;
         loadLevelInProgressCanvasGroup.alpha = 0;
 
         Tween.Alpha(loadLevelInProgressCanvasGroup, 1, duration: 0.3f);
@@ -155,7 +156,7 @@ public class SceneTransition : MonoBehaviour
         }
 
         progressBarCanvasGroup.alpha = 1;
-        progressBar.fillAmount = 0;
+        
         almostThereText.color = ColorUtil.WithAlpha(almostThereText.color, 0);
 
         Tween.Custom(0, 1, duration: 0.5f * minWaitTime, onValueChange: newVal =>

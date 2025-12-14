@@ -56,6 +56,6 @@ public class UMPManager : MonoBehaviour
 
     private void HandleConsentComplete()
     {
-        SceneManager.LoadScene("Bootstrap");
+        SceneManager.LoadScene("Loading");
     }
 }
