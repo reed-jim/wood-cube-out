@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using System.Globalization;
@@ -63,3 +64,4 @@ public class HexColorImporter : EditorWindow
         AssetDatabase.Refresh();
     }
 }
+#endif

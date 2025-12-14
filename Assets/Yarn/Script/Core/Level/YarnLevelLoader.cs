@@ -252,8 +252,6 @@ public class YarnLevelLoader : MonoBehaviour
             }
         }
 
-        
-
         void DragLevelIntoCenter(GameObject level)
         {
             for (int i = 0; i < level.transform.childCount; i++)

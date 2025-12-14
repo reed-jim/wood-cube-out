@@ -47,6 +47,22 @@ public class PieceProperty : MonoBehaviour
         get => pieceServiceLocator.pieceMeshFilter.mesh.bounds.size;
     }
 
+    public Vector3 MeshMin
+    {
+        get
+        {
+            return pieceServiceLocator.pieceMeshFilter.mesh.bounds.min;
+        }
+    }
+
+    public Vector3 MeshMax
+    {
+        get
+        {
+            return pieceServiceLocator.pieceMeshFilter.mesh.bounds.max;
+        }
+    }
+
     public float MaxBoundSize
     {
         get

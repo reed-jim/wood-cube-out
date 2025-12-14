@@ -231,5 +231,6 @@ public static class GameConstants
 
     #region Layer
     public static string pieceLayer = "Default";
+    public static string pieceCheckSurfaceLayer = "Check Piece Surface";
     #endregion 
 }

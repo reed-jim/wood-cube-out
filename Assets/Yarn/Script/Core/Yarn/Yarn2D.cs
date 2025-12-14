@@ -259,6 +259,8 @@ public class Yarn2D : MonoBehaviour
 
         velocity.x = velocityMultuplier.x * modelSize.x;
 
+        piece.gameObject.layer = LayerMask.NameToLayer(GameConstants.pieceCheckSurfaceLayer);
+
         RopeSegment lastNode = segments[segmentCount - 1];
 
         lastNode.posNow = -0.35f * new Vector3(0, modelSize.y);
@@ -513,35 +515,15 @@ public class Yarn2D : MonoBehaviour
         raycastTopPoint = piece.transform.TransformPoint(raycastTopPoint);
         raycastBottomPoint = piece.transform.TransformPoint(raycastBottomPoint);
 
-        // if (rewindAxisWorld == DissolveAxis.X)
-        // {
-        //     if (raycastTopPoint.x > raycastBottomPoint.x)
-        //     {
-        //         Vector3 temp = raycastTopPoint;
-        //         raycastTopPoint = raycastBottomPoint;
-        //         raycastBottomPoint = temp;
-        //     }
-        // }
-
-        // if (rewindAxisWorld == DissolveAxis.Y)
-        // {
-        //     if (raycastTopPoint.y < raycastBottomPoint.y)
-        //     {
-        //         Vector3 temp = raycastTopPoint;
-        //         raycastTopPoint = raycastBottomPoint;
-        //         raycastBottomPoint = temp;
-        //     }
-        // }
-
         #endregion
 
         RaycastHit[] hits = Physics.BoxCastAll(
             center: raycastTopPoint,
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastTopPoint,
-            orientation: piece.transform.rotation,
+            orientation: Quaternion.identity,
             maxDistance: 2 * distance,
-            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
+            layerMask: LayerMask.GetMask(GameConstants.pieceCheckSurfaceLayer)
         );
 
         if (hits.Length > 0)
@@ -560,9 +542,9 @@ public class Yarn2D : MonoBehaviour
             center: raycastBottomPoint,
             halfExtents: radius * Vector3.one,
             direction: piece.transform.position - raycastBottomPoint,
-            orientation: piece.transform.rotation,
+            orientation: Quaternion.identity,
             maxDistance: 2 * distance,
-            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
+            layerMask: LayerMask.GetMask(GameConstants.pieceCheckSurfaceLayer)
         );
 
         if (hits.Length > 0)
@@ -596,17 +578,20 @@ public class Yarn2D : MonoBehaviour
             isReverseDissolve = pieceMinWorld.y < pieceMaxWorld.y;
         }
 
+        Vector3 meshMin = piece.PieceServiceLocator.pieceProperty.MeshMin;
+        Vector3 meshMax = piece.PieceServiceLocator.pieceProperty.MeshMax;
+
         if (rewindAxis == DissolveAxis.X)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, -0.5f * modelSize.x, 0.5f * modelSize.x);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, meshMin.x, meshMax.x);
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, true, -0.5f * modelSize.y, 0.5f * modelSize.y);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, true, meshMin.y, meshMax.y);
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
-            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, -0.5f * modelSize.z, 0.5f * modelSize.z);
+            piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolve(rewindAxis, false, meshMin.z, meshMax.z);
         }
 
         // Calc surface
@@ -648,7 +633,7 @@ public class Yarn2D : MonoBehaviour
             origin: raycastPoint,
             direction: raycastDestination - raycastPoint,
             maxDistance: 2 * distance,
-            layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
+            layerMask: LayerMask.GetMask(GameConstants.pieceCheckSurfaceLayer)
         );
 
         // hits = Physics.BoxCastAll(
@@ -657,7 +642,7 @@ public class Yarn2D : MonoBehaviour
         //     direction: raycastDestination - raycastPoint,
         //     orientation: piece.transform.rotation,
         //     maxDistance: 2 * distance,
-        //     layerMask: LayerMask.GetMask(GameConstants.pieceLayer)
+        //     layerMask: LayerMask.GetMask(GameConstants.pieceCheckSurfaceLayer)
         // );
 
         if (hits.Length > 0)
