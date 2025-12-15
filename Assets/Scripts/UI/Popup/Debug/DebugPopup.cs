@@ -60,8 +60,6 @@ public class DebugPopup : BasePopup
         showPictureNewButton.onClick.AddListener(OnClickShowPictureNew);
     }
 
-    
-
     protected override void MoreActionInAwake()
     {
         if (UserData.IsRemoveAds)

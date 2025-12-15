@@ -141,7 +141,7 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
-    public void SetDissolveEdgeColor(Vector3 modelSize)
+    public float SetDissolveEdgeColor(Vector3 modelSize)
     {
         Color color = _renderer.material.GetColor("_Color");
         float luminance = 0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b;
@@ -165,6 +165,8 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         });
 
         _renderer.SetPropertyBlock(_propertyBlock);
+
+        return targetWidthRatio;
     }
 
     public void SetZTest(UnityEngine.Rendering.CompareFunction compareFunction)
