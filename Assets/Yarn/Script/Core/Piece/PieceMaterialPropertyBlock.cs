@@ -141,16 +141,32 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
-    public void SetDissolveEdgeColor()
+    public float SetDissolveEdgeColor(Vector3 modelSize)
     {
         Color color = _renderer.material.GetColor("_Color");
         float luminance = 0.2126f * color.r + 0.7152f * color.g + 0.0722f * color.b;
 
         float multiplier = Mathf.Lerp(64, 2, Mathf.Clamp01(luminance));
 
-        _propertyBlock.SetColor("_DissolveEdgeColor", multiplier * color);
+        _propertyBlock.SetColor("_DissolveEdgeColor", 1.6f * color);
+
+        // Width
+        float maxSize = Mathf.Max(new float[3] { modelSize.x, modelSize.y, modelSize.z });
+
+        float targetWidthRatio = 0.025f * (1 - ((maxSize - 10) / 10));
+        targetWidthRatio = Mathf.Max(targetWidthRatio, 0.025f);
+
+        _propertyBlock.SetFloat("_DissolveEdgeWidth", 0);
+
+        Tween.Custom(0, targetWidthRatio, duration: 0.2f, startDelay: 0.2f, onValueChange: newVal =>
+        {
+            _propertyBlock.SetFloat("_DissolveEdgeWidth", newVal);
+            _renderer.SetPropertyBlock(_propertyBlock);
+        });
 
         _renderer.SetPropertyBlock(_propertyBlock);
+
+        return targetWidthRatio;
     }
 
     public void SetZTest(UnityEngine.Rendering.CompareFunction compareFunction)

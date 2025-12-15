@@ -66,6 +66,7 @@ public class Yarn2D : MonoBehaviour
     private float _currentAmplitude;
     private float _currentAngle;
     private float _endRewindingProgress;
+    private float _dissolveEdgeRatio;
 
     // NEW 
     private Quaternion _initialRotation;
@@ -255,7 +256,7 @@ public class Yarn2D : MonoBehaviour
         _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
-        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveEdgeColor();
+        _dissolveEdgeRatio = piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveEdgeColor(modelSize);
 
         velocity.x = velocityMultuplier.x * modelSize.x;
 
@@ -329,6 +330,14 @@ public class Yarn2D : MonoBehaviour
             UpdateLineRenderer();
         }
 
+        Color startYarnColor = yarnMaterialPropertyBlock.GetColor("_Color");
+
+        Tween.Custom(0, 1, duration: 0.2f, onValueChange: newVal =>
+        {
+            yarnMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(startYarnColor, newVal));
+            lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
+        });
+
         for (int i = 0; i < segments.Count; i++)
         {
             int index = i;
@@ -346,6 +355,8 @@ public class Yarn2D : MonoBehaviour
 
                     if (index == segments.Count - 1)
                     {
+
+
                         UpdateLineRenderer();
                     }
                 }
@@ -371,6 +382,7 @@ public class Yarn2D : MonoBehaviour
         transform.SetParent(_initialParent);
 
         SoundManager.Instance.PlaySoundLoosenScrew();
+
         // Show the yarn-string
         ShowYarn(onCompleteAction: () =>
         {
@@ -484,6 +496,7 @@ public class Yarn2D : MonoBehaviour
         float absDotUp = Mathf.Abs(Vector3.Dot(piece.transform.up, worldAxis));
         float absDotForward = Mathf.Abs(Vector3.Dot(piece.transform.forward, worldAxis));
 
+        // Get rewind axis
         rewindAxis = DissolveAxis.X;
 
         if (absDotUp > absDotRight && absDotUp > absDotForward)
@@ -495,6 +508,7 @@ public class Yarn2D : MonoBehaviour
         {
             rewindAxis = DissolveAxis.Z;
         }
+        //
 
         if (rewindAxis == DissolveAxis.X)
         {
@@ -559,7 +573,17 @@ public class Yarn2D : MonoBehaviour
             }
         }
 
-        Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, 1 - yRatio);
+        // if (rewindAxisWorld == DissolveAxis.X)
+        // {
+        //     if (pointOnTopSurface.x > pointOnBottomSurface.x)
+        //     {
+        //         Vector3 cache = pointOnTopSurface;
+        //         pointOnTopSurface = pointOnBottomSurface;
+        //         pointOnBottomSurface = cache;
+        //     }
+        // }
+
+        Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, 1 - (yRatio - _dissolveEdgeRatio));
         Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
         Vector3 pieceMin = -0.5f * modelSize;
@@ -608,7 +632,7 @@ public class Yarn2D : MonoBehaviour
             raycastDestination = piece.transform.TransformPoint(
                 new Vector3(currentPointPieceSpace.x, 0, 0)
             );
-            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
+            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, radius, 0.01f));
         }
         else if (rewindAxis == DissolveAxis.Y)
         {
@@ -617,7 +641,7 @@ public class Yarn2D : MonoBehaviour
             raycastDestination = piece.transform.TransformPoint(
                 new Vector3(0, currentPointPieceSpace.y, 0)
             );
-            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
+            halfExtents = ToWorldHalfExtents(new Vector3(radius, 0.01f, 0.01f));
         }
         else if (rewindAxis == DissolveAxis.Z)
         {
@@ -626,7 +650,7 @@ public class Yarn2D : MonoBehaviour
             raycastDestination = piece.transform.TransformPoint(
                 new Vector3(0, 0, currentPointPieceSpace.z)
             );
-            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, 0.01f, 0.01f));
+            halfExtents = ToWorldHalfExtents(new Vector3(0.01f, radius, 0.01f));
         }
 
         hits = Physics.RaycastAll(
@@ -640,13 +664,14 @@ public class Yarn2D : MonoBehaviour
         //     center: raycastPoint,
         //     halfExtents: halfExtents,
         //     direction: raycastDestination - raycastPoint,
-        //     orientation: piece.transform.rotation,
+        //     orientation: Quaternion.identity,
         //     maxDistance: 2 * distance,
         //     layerMask: LayerMask.GetMask(GameConstants.pieceCheckSurfaceLayer)
         // );
 
         if (hits.Length > 0)
         {
+            return hits[0].point;
             for (int i = 0; i < hits.Length; i++)
             {
                 if (piece.PieceServiceLocator.allColliders.Contains(hits[i].collider))
