@@ -428,9 +428,6 @@ PrefabInstance:
       addedObject: {fileID: 6179563916854079135}
     - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 3522666598524920307}
-    - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 5185101300696542238}
     - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
       insertIndex: -1
@@ -441,6 +438,12 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 7229891469661089256}
+    - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 9042429088327648251}
+    - targetCorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8594665603690809635}
     - targetCorrespondingSourceObject: {fileID: -3012790096374396431, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
       insertIndex: -1
       addedObject: {fileID: 6723453524012978689}
@@ -886,6 +889,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &4404374279987230650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -993,6 +997,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &1672998359352453877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1090,6 +1095,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &8064453318224459204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1197,6 +1203,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &2179387904482349499
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1299,6 +1306,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &1345186799577232924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1406,6 +1414,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &9102533133755873335
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1646,6 +1655,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &5844537208368396245
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1797,6 +1807,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &3874252715444621827
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1894,6 +1905,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &3097284583276656879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2021,6 +2033,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &2468219587704280206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2177,6 +2190,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &7700055922918333643
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2244,28 +2258,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5682915049507022867, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
   m_PrefabInstance: {fileID: 8100402715045757976}
   m_PrefabAsset: {fileID: 0}
---- !u!64 &3522666598524920307
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4519270387611069451}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 2928190792141927857, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
 --- !u!114 &5185101300696542238
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2284,6 +2276,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &7499035811830722590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2334,8 +2327,61 @@ MonoBehaviour:
   pieceMaterialPropertyBlock: {fileID: 3778670797821418910}
   pieceMeshFilter: {fileID: 4730905251296085090}
   pieceMeshRenderer: {fileID: 4393838373771539648}
-  pieceCollider: {fileID: 3522666598524920307}
+  pieceCollider: {fileID: 0}
   allColliders: []
+--- !u!114 &9042429088327648251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4519270387611069451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0921f9e6d5955b04e8be53a1c3f70933, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NewAssembly::CoACD
+  target: {fileID: 4730905251296085090}
+  isTrigger: 0
+  hideColliders: 1
+  physicMaterial: {fileID: 0}
+  parameters:
+    threshold: 0.22699999809265137
+    preprocessMode: 0
+    preprocessResolution: 50
+    sampleResolution: 2000
+    mctsNodes: 20
+    mctsIteration: 150
+    mctsMaxDepth: 3
+    pca: 0
+    merge: 1
+    maxConvexHull: -1
+    seed: 0
+  _colliderData: {fileID: 11400000, guid: ebaff9a3bef72c542834f8d71e59a79f, type: 2}
+  _colliders:
+  - {fileID: 8594665603690809635}
+--- !u!64 &8594665603690809635
+MeshCollider:
+  m_ObjectHideFlags: 2
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4519270387611069451}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4335596589162636795, guid: ebaff9a3bef72c542834f8d71e59a79f, type: 2}
 --- !u!33 &4730905251296085090 stripped
 MeshFilter:
   m_CorrespondingSourceObject: {fileID: 3588775283880165498, guid: ef65711999b95de4493c7a6996273d1d, type: 3}
@@ -2386,6 +2432,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &4431859086379585710
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2488,6 +2535,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &4553197840794507593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2644,6 +2692,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &4917744056340765942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2918,6 +2967,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &1442953607501768765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3015,6 +3065,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &8092337398410910942
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3166,6 +3217,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &5576852020701468129
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3327,6 +3379,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &4673824301081843756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3424,6 +3477,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &7743524299224447701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3585,6 +3639,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &7030658197026904187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3810,6 +3865,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &3258726823625704553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3981,6 +4037,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &5221175603917059044
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4098,6 +4155,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &8933016575623078322
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4195,6 +4253,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &1054514058330257353
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4307,6 +4366,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &2759315369516643143
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4419,6 +4479,7 @@ MonoBehaviour:
   durationDelay: 0.1
   durationMoveToPiecePort: 0.3
   durationTightenPiecePort: 0.3
+  gameSetting: {fileID: 0}
 --- !u!114 &796125377973965231
 MonoBehaviour:
   m_ObjectHideFlags: 0
