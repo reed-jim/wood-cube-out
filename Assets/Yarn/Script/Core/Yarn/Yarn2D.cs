@@ -255,7 +255,7 @@ public class Yarn2D : MonoBehaviour
         _dissolveAxis = DissolveAxis.Y;
 
         piece.PieceServiceLocator.pieceMaterialPropertyBlock.ResetDissolveRatio();
-        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveEdgeColor();
+        piece.PieceServiceLocator.pieceMaterialPropertyBlock.SetDissolveEdgeColor(modelSize);
 
         velocity.x = velocityMultuplier.x * modelSize.x;
 
@@ -371,6 +371,7 @@ public class Yarn2D : MonoBehaviour
         transform.SetParent(_initialParent);
 
         SoundManager.Instance.PlaySoundLoosenScrew();
+
         // Show the yarn-string
         ShowYarn(onCompleteAction: () =>
         {
