@@ -19,7 +19,6 @@ public class LivesShopPopup : BasePopup
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action runPendingReplayCommandEvent;
     public static event Action runPendingReturnHomeCommandEvent;
-    public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<float> updateCoinTextEvent;
     public static event Action lackCoinReplenishLiveEvent;
     public static event Action startGameEvent;
@@ -75,7 +74,8 @@ public class LivesShopPopup : BasePopup
             Hide(onCompletedAction: () =>
             {
                 // In Gameplay
-                openIAPShopPopupEvent?.Invoke(ScreenRoute.LivesShop);
+                // openIAPShopPopupEvent?.Invoke(ScreenRoute.LivesShop);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
 
                 // In Menu
                 lackCoinReplenishLiveEvent?.Invoke();

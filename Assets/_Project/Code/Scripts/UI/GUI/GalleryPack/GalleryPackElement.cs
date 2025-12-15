@@ -281,6 +281,7 @@ namespace NamPhuThuy.UI
                 DebugLogger.Log(message: $"Not enough coin");
                 // GUIManager.Ins.ShowGUI(GUIManager.Ins.GUINotEnoughCoin);
                 openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
+                
                 return;
             }
 

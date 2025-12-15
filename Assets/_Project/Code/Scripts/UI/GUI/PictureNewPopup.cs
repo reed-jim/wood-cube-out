@@ -75,7 +75,7 @@ namespace NamPhuThuy.UI
         private RectTransform _imageToCalulateSizeForVideoRT;
         private bool _isVideoPrepareCompleted;
         public static event Action likeStateChangeEvent;
-        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
+        
         public static event Action updateBackgroundEvent;
         #endregion
 
@@ -309,7 +309,8 @@ namespace NamPhuThuy.UI
             else
             {
                 // SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin, false);
-                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+                // openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
             }
         }
         
@@ -383,8 +384,8 @@ namespace NamPhuThuy.UI
             else
             {
                 DebugLogger.Log(message:$"4");
-                // SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin, false);
-                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+                // openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
             }
 
             IEnumerator IEDownLoadVideo()

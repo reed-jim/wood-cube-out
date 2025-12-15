@@ -191,7 +191,7 @@ public class RevivePopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
-                openIAPShopPopupEvent?.Invoke(ScreenRoute.Revive);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
 
                 reviveByDiamondButton.interactable = true;
             });

@@ -43,7 +43,6 @@ public class BuyBoosterPopup : BasePopup
 
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockSpoolBoxEvent;
-    public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<float> updateCoinTextEvent;
     public static event Action<BoosterType> updateBoosterQuantityEvent;
@@ -175,7 +174,8 @@ public class BuyBoosterPopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
-                openIAPShopPopupEvent?.Invoke(ScreenRoute.Booster);
+                // openIAPShopPopupEvent?.Invoke(ScreenRoute.Booster);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
             });
         }
     }

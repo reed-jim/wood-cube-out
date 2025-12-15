@@ -75,7 +75,6 @@ namespace NamPhuThuy.UI
 
         #region Events
         public static event Action likeStateChangeEvent;
-        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
         public static event Action updateBackgroundEvent;
 
         #endregion
@@ -257,7 +256,8 @@ namespace NamPhuThuy.UI
             else
             {
                 DebugLogger.Log(message: $"Not enough coin");
-                openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureDetails);
+                // openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureDetails);
+                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
             }
 
             IEnumerator IEDownLoadVideo()
@@ -364,7 +364,7 @@ namespace NamPhuThuy.UI
 
         private void ShowLoadingPopup()
         {
-            SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
+            /*SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
 
             void HandleLoaded()
             {
@@ -376,6 +376,22 @@ namespace NamPhuThuy.UI
                     OnComplete = null
                 };
                 AnimationManager.Ins.Play<PopupTextArgs>(args);
+            }*/
+            
+            StartCoroutine(HandleLoaded());
+
+            IEnumerator HandleLoaded()
+            {
+                if (CanvasUpdateRegistry.IsRebuildingGraphics() 
+                    || CanvasUpdateRegistry.IsRebuildingLayout())
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+                
+                SwitchRoute(GameEnum.ScreenRoute.Popup_Loading, false);
+                yield return YieldHelper.WaitForSeconds(2f);
+                
+                PlayVFXPopupText(_downloadedNoti);
             }
         }
 
@@ -436,23 +452,6 @@ namespace NamPhuThuy.UI
                 videoDownloadButton.EnableButton();
                 videoCompleteTick.gameObject.SetActive(false);
             }
-        }
-
-        private IEnumerator IEShowLoadingPopup()
-        {
-            // Show Loading Popup
-            /*
-            GUIManager.Ins.ShowGUI(GUIManager.Ins.GUIPopupLoading, 0f, 2f, "DOWNLOADING...");
-            GUIManager.Ins.GUIPopupLoading.OnLoadComplete += HandleLoaded;
-            */
-
-            void HandleLoaded()
-            {
-                /*GUIManager.Ins.GUIPopupLoading.OnLoadComplete -= HandleLoaded;
-                GUIManager.Ins.GUIPopupLoading.Hide();*/
-            }
-
-            yield return null;
         }
 
         private void ShowPermissionNotAllowedNotification()

@@ -26,27 +26,17 @@ public class IAPShopPopup : BasePopup
 
     protected override void RegisterMoreEvent()
     {
-        BuyBoosterPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
-        PictureNewPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
-        PictureDetailsPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
-        GalleryPackElement.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
-        GalleryPackPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
         
-        RevivePopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
-        LivesShopPopup.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
+        GalleryPackElement.openIAPShopPopupEvent += ShowAndScrollToCoinPack;
+        
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
     }
 
     protected override void UnregisterMoreEvent()
     {
-        BuyBoosterPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
-        PictureNewPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
-        PictureDetailsPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
-        GalleryPackElement.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
-        GalleryPackPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
         
-        RevivePopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
-        LivesShopPopup.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        GalleryPackElement.openIAPShopPopupEvent -= ShowAndScrollToCoinPack;
+        
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }
 
@@ -77,13 +67,6 @@ public class IAPShopPopup : BasePopup
         _prevRoute = prevRoute;
     }
 
-    protected override void Hide()
-    {
-        base.Hide(onCompletedAction: () =>
-        {
-            switchRouteEvent?.Invoke(_prevRoute);
-        });
-    }
 
     private void OnResourcesEarnPopupShown(bool isShow)
     {

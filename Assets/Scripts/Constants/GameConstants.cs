@@ -162,7 +162,7 @@ public static class GameConstants
 
     #region LOCALIZE
     public static string TIPS = "Tips";
-    public static string NO_SCREW_TO_BE_CLEARED = "No screw to be cleared";
+    public static string NO_SLOT_TO_BE_CLEARED = "No slot to be cleared";
     public static string SCREW = "Screw";
     public static string SCREWS = "Screws";
     public static string WARNING = "Warning";

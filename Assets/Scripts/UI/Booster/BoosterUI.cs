@@ -319,7 +319,7 @@ public class BoosterUI : MonoBehaviour
             
             if (!GamePersistentVariable.isAutoTestingLevel)
             {
-                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SLOT_TO_BE_CLEARED);
             }
 
             return;
@@ -390,7 +390,7 @@ public class BoosterUI : MonoBehaviour
             
             if (!GamePersistentVariable.isAutoTestingLevel)
             {
-                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
+                showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SLOT_TO_BE_CLEARED);
             }
         }
     }

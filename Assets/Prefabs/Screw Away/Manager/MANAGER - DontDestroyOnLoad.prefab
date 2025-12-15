@@ -6427,6 +6427,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Paquete de galer\xEDa"
     Object: {fileID: 0}
+--- !u!1 &3881369773567951989
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5022551882091012218}
+  - component: {fileID: 2318032270909858061}
+  m_Layer: 0
+  m_Name: No slot to be cleared
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5022551882091012218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3881369773567951989}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9194798559304759569}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2318032270909858061
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3881369773567951989}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: 0
+  entries:
+  - Language: English
+    Text: No slot to be cleared
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Aucun emplacement \xE0 lib\xE9rer"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Kein Slot muss gel\xF6scht werden"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Nessuno slot da liberare
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AF\u30EA\u30A2\u3059\u308B\u30B9\u30ED\u30C3\u30C8\u304C\u3042\u308A\u307E\u305B\u3093"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBE44\uC6B8 \uC2AC\uB86F \uC5C6\uC74C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Nenhum slot a ser limpo
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0435\u0442 \u0441\u043B\u043E\u0442\u0430, \u043A\u043E\u0442\u043E\u0440\u044B\u0439
+      \u043D\u0443\u0436\u043D\u043E \u043E\u0447\u0438\u0441\u0442\u0438\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: No hay espacio para borrar
+    Object: {fileID: 0}
 --- !u!1 &3940197230121762536
 GameObject:
   m_ObjectHideFlags: 0
@@ -7016,6 +7090,7 @@ Transform:
   - {fileID: 846080783612132214}
   - {fileID: 6004714118316365655}
   - {fileID: 5278296634371235652}
+  - {fileID: 5022551882091012218}
   - {fileID: 1976048752158581381}
   - {fileID: 3828845797989449394}
   - {fileID: 1152835480700646257}

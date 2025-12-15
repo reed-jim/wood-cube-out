@@ -34,7 +34,6 @@ namespace NamPhuThuy.UI
         
         public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
         public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
-        public static event Action<GameEnum.ScreenRoute> openIAPShopPopupEvent;
  
         #endregion
 
@@ -63,8 +62,8 @@ namespace NamPhuThuy.UI
 
         private void OnClickShop()
         {
-            openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
-            // SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+            // openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.GalleryPack);
+            SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
         }
        
         #endregion
