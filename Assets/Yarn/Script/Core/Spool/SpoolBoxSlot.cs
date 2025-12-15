@@ -16,7 +16,7 @@ public class SpoolBoxSlot : MonoBehaviour
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isAlternative;
 
-    private BasePiece _piece;
+    [SerializeField] private BasePiece _piece;
     private MaterialPropertyBlock yarnSpoolMaterialPropertyBlock;
     private bool _isFilled;
     private int _currentPhase;
