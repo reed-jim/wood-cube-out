@@ -92,7 +92,10 @@ namespace NamPhuThuy.UI
 
             // DataManager.Ins.RewardDatas.TryApplyRewards(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL, 1);
 
+            DebugLogger.Log(message: $"about to get some coins, current coin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}", context: this);
             DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
+            
+            DebugLogger.Log(message: $"got some coins, new coin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}", context: this);
             collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
 
             DOVirtual.DelayedCall(2.5f, () =>
