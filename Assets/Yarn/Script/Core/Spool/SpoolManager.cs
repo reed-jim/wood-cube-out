@@ -287,7 +287,6 @@ public class SpoolManager : MonoBehaviour
 
     private void OnSpoolBoxUnlocked(SpoolBox spoolBox)
     {
-        DebugLogger.Log(context: spoolBox);
         MoveFromPiecePortToSpoolBox(spoolBox);
 
         spoolBoxSpawnedEvent?.Invoke(spoolBox);
@@ -312,7 +311,6 @@ public class SpoolManager : MonoBehaviour
 
     private void OnRewardedAdUnlockSpoolBoxCompleted()
     {
-        DebugLogger.Log(context: this);
         for (int i = 0; i < spoolBoxs.Length; i++)
         {
             if (spoolBoxs[i] == null)
@@ -633,7 +631,6 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveFromPiecePortToSpoolBox(SpoolBox spoolBox)
     {
-        DebugLogger.Log(context: spoolBox);
         // avoid too fast action
         enableBoosterEvent?.Invoke(false);
 
@@ -645,41 +642,17 @@ public class SpoolManager : MonoBehaviour
 
             if (piece == null)
             {
-                DebugLogger.Log(message: $"The piece is null", context: piece);
                 continue;
             }
 
             if (piece.IsDone)
             {
-                DebugLogger.Log(message: $"the piece is done", context: piece);
                 continue;
             }
 
-            if (piece.PieceServiceLocator.pieceProperty.IsRewinding)
+            if (piecePorts[i].IsFilled && piece.Faction == spoolBox.Faction)
             {
-                DebugLogger.Log(message: $"the piece is rewinding", context: piece);
-                continue;
-            }
-
-            if (!piecePorts[i].IsFilled)
-            {
-                DebugLogger.Log(message: $"the piecePort is not filled", context: piece);
-                continue;
-            }
-
-            if (piece.Faction != spoolBox.Faction)
-            {
-                DebugLogger.Log(message: $"The faction is not matched: piece {piece.Faction}, spoolBox {spoolBox.Faction}", context: piece);
-                continue;
-            }
-            else
-            {
-                DebugLogger.Log(message: $"The faction is matched: piece {piece.Faction}, spoolBox {spoolBox.Faction}", context: piece);
-            }
-            
-            for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
-            {
-                if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
                 {
                     int piecePortIndex = i;
                     int spoolBoxSlotIndex = k;
@@ -727,20 +700,15 @@ public class SpoolManager : MonoBehaviour
 
     private void MoveSinglePieceFromHoleToSpoolBox(BasePiece piece)
     {
-        DebugLogger.Log(message: $"", context: piece);
         if (!piece.SpoolBoxSlot.IsAlternative)
         {
-            DebugLogger.Log(message: $"return (is not alternative)", context: piece);
             return;
         }
 
         if (piece.IsDone || piece.PieceServiceLocator.pieceProperty.IsRewinding)
         {
-            DebugLogger.Log(message: $"piece is done or rewinding", context: piece);
             return;
         }
-
-        enableBoosterEvent?.Invoke(false);
 
         bool isFound = false;
 
@@ -750,19 +718,17 @@ public class SpoolManager : MonoBehaviour
 
             if (spoolBox == null)
             {
-                DebugLogger.Log(message: $"spoolBox is null", context: spoolBox);
                 continue;
             }
 
             if (spoolBox.Faction != piece.Faction || spoolBox.IsLocked || spoolBox.IsInTransition)
             {
-                DebugLogger.Log(message: $"spoolBox is not matched faction", context: spoolBox);
                 continue;
             }
 
             for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
             {
-                if (spoolBox.SpoolBoxSlots[k].IsFilled)
+                if (!spoolBox.SpoolBoxSlots[k].IsFilled)
                 {
                     int spoolBoxSlotIndex = k;
 
