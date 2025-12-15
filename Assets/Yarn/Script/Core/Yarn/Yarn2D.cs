@@ -59,14 +59,12 @@ public class Yarn2D : MonoBehaviour
     private Transform _lastNodeTarget;
     private float _spoolSlotRadius;
     private float spoolSlotSizeY;
-    private Vector3 _firstNodeLocalPosition;
-    private float lerpDelta;
     private bool _isReverseSpoolDissolve;
-    private float _prevRadius;
     private float _currentAmplitude;
     private float _currentAngle;
     private float _endRewindingProgress;
     private float _dissolveEdgeRatio;
+    private Vector3 _lastSegmentPosition;
 
     // NEW 
     private Quaternion _initialRotation;
@@ -92,7 +90,6 @@ public class Yarn2D : MonoBehaviour
     {
         step = 0;
         dissolveHeight = 1;
-        lerpDelta = 0.1f;
     }
 
     private void LateUpdate()
@@ -408,7 +405,10 @@ public class Yarn2D : MonoBehaviour
                         {
                             _endRewindingProgress = newVal;
 
-                            yarnMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(startYarnColor, (1 - newVal)));
+                            float currentAlpha = 1 - 0.5f * newVal * newVal;
+                            currentAlpha = Mathf.Clamp01(currentAlpha);
+
+                            yarnMaterialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(startYarnColor, currentAlpha));
                             lineRenderer.SetPropertyBlock(yarnMaterialPropertyBlock);
 
                             UpdateRope();
@@ -445,6 +445,8 @@ public class Yarn2D : MonoBehaviour
             lastNode.posNow = GetSpiralPosition(dissolveHeight, 4);
 
             segments[segmentCount - 1] = lastNode;
+
+            _lastSegmentPosition = lastNode.posNow;
 
             UpdatePiece();
             UpdateRope();
@@ -583,7 +585,9 @@ public class Yarn2D : MonoBehaviour
         //     }
         // }
 
-        Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, 1 - (yRatio - _dissolveEdgeRatio));
+        float rewindProgress = Mathf.Clamp(1 - (yRatio - _dissolveEdgeRatio), 0.05f, 0.95f);
+
+        Vector3 currentPoint = Vector3.Lerp(pointOnTopSurface, pointOnBottomSurface, rewindProgress);
         Vector3 currentPointPieceSpace = piece.transform.InverseTransformPoint(currentPoint);
 
         Vector3 pieceMin = -0.5f * modelSize;
@@ -741,7 +745,7 @@ public class Yarn2D : MonoBehaviour
         Vector3 spoolSlotPoint = position + new Vector3(Mathf.Cos(_currentAngle) * 0.3f * _spoolSlotRadius, 0, Mathf.Sin(_currentAngle) * 0.3f * _spoolSlotRadius);
 
         Vector3 start = spoolSlotPoint;
-        Vector3 end = segments[segmentCount - 1].posNow;
+        Vector3 end = _lastSegmentPosition;
 
         Vector3 direction = end - start;
 
@@ -765,7 +769,7 @@ public class Yarn2D : MonoBehaviour
         }
 
         segments[0].posNow = spoolSlotPoint;
-        segments[segmentCount - 1].posNow = Vector3.Lerp(end, segments[segmentCount - 1].posNow, _endRewindingProgress);
+        segments[segmentCount - 1].posNow = Vector3.Lerp(end, segments[segmentCount - 1].posNow, Mathf.Clamp01(2 * _endRewindingProgress));
     }
 
     void UpdateLineRenderer()

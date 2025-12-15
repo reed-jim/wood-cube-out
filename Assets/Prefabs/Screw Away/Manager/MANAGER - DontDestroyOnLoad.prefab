@@ -9065,6 +9065,7 @@ Transform:
   - {fileID: 6290877600859702337}
   - {fileID: 4030666148548028246}
   - {fileID: 2075640613499597820}
+  - {fileID: 3610099190144717221}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -13032,6 +13033,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: Descarga fallida
+    Object: {fileID: 0}
+--- !u!1 &7949021796608293134
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3610099190144717221}
+  - component: {fileID: 8283239781096245544}
+  m_Layer: 0
+  m_Name: Almost there
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3610099190144717221
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949021796608293134}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8283239781096245544
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7949021796608293134}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Almost there!
+    Object: {fileID: 0}
+  - Language: French
+    Text: J'y suis presque !
+    Object: {fileID: 0}
+  - Language: German
+    Text: Fast geschafft!
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Ci siamo quasi!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3082\u3046\u3059\u3050\u305D\u3053\u3067\u3059\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC70\uC758 \uB2E4 \uC654\uC5B4\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Quase l\xE1!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043E\u0447\u0442\u0438 \u0442\u0430\u043C!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Casi llegamos!"
     Object: {fileID: 0}
 --- !u!1 &7956452825202792978
 GameObject:
