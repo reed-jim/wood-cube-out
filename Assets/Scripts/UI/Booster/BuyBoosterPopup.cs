@@ -110,18 +110,7 @@ public class BuyBoosterPopup : BasePopup
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {
-            if (_boosterType == BoosterType.MagicPick)
-            {
-                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
-
-                updateBoosterQuantityEvent?.Invoke(_boosterType);
-
-                _isBoughtBreakObjectBoosterByCoin = true;
-
-                SaferioTracking.TrackResourceSource(
-                    currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
-            }
-            else if (_boosterType == BoosterType.UnlockSpoolBox)
+            if (_boosterType == BoosterType.UnlockSpoolBox)
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
