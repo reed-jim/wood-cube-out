@@ -77,6 +77,7 @@ namespace NamPhuThuy.UI
         public static event Action likeStateChangeEvent;
         
         public static event Action updateBackgroundEvent;
+        public static event Action updateCoinTextEvent;
         #endregion
 
         #region Private Fields
@@ -373,9 +374,12 @@ namespace NamPhuThuy.UI
                 GamePersistentVariable.spendCoinReason = "DownloadVideo";
 
                 userResourcesObserver.ChangeCoin(-downloadPrice);
+                updateCoinTextEvent?.Invoke();
+                
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
+                
                 
                 ShowLoadingPopup();
                 StartCoroutine(IEDownLoadVideo());
