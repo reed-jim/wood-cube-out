@@ -11,7 +11,9 @@ public class UserResourcesManager : MonoBehaviour
     public static event Action<float> updateCoinTextEvent;
     #endregion
 
-    void Awake()
+    #region MonoBehaviour Callbacks
+    
+    private void Awake()
     {
         if (Instance != null && Instance != this)
         {
@@ -27,10 +29,12 @@ public class UserResourcesManager : MonoBehaviour
         RewardCollectingUI.addCoinEvent += AddCoin;
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
         RewardCollectingUI.addCoinEvent -= AddCoin;
     }
+    
+    #endregion
 
     private void AddCoin(float value)
     {

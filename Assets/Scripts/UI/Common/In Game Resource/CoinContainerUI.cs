@@ -30,6 +30,8 @@ public class CoinContainerUI : MonoBehaviour
     public static event Action goToIAPShopEvent;
     #endregion
 
+    #region MonoBehaviour Callbacks
+
     private void Awake()
     {
         // SaferioIAPManager.iapProductPurchasedCompletedEvent += OnCoinPurchased;
@@ -46,6 +48,8 @@ public class CoinContainerUI : MonoBehaviour
         LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
         BuyBoosterPopup.updateCoinTextEvent += UpdateCoinText;
         GalleryPackElement.updateCoinTextEvent += this.UpdateCoinText;
+        PictureNewPopup.updateCoinTextEvent += UpdateCoinText;
+        PictureDetailsPopup.updateCoinTextEvent += UpdateCoinText;
 
         // testCollectCoinButton.onClick.AddListener(OnCoinPurchased);
         addButton.onClick.AddListener(ShowIAPShop);
@@ -79,15 +83,16 @@ public class CoinContainerUI : MonoBehaviour
         LivesShopPopup.updateCoinTextEvent -= this.UpdateCoinText;
         BuyBoosterPopup.updateCoinTextEvent -= this.UpdateCoinText;
         GalleryPackElement.updateCoinTextEvent -= this.UpdateCoinText;
+        PictureNewPopup.updateCoinTextEvent -= UpdateCoinText;
+        PictureDetailsPopup.updateCoinTextEvent -= UpdateCoinText;
         CommonUtil.StopAllTweens(this._tweens);
     }
 
-    // private void OnCoinPurchased()
-    // {
-    //     Vector2 positionRelativeToCanvas = ((Vector2)iconRT.position - 0.5f * canvasSize.Value) / canvasScale.Value.x;
+    #endregion
 
-    // collectCoinEvent?.Invoke(positionRelativeToCanvas);
-    // }
+
+    #region Update Coin Text
+
     private void UpdateCoinText()
     {
         userResourcesObserver.Load();
@@ -107,11 +112,13 @@ public class CoinContainerUI : MonoBehaviour
         if (!_isInTransition && isPlayAnimation)
         {
             _tweens.Add(Tween.Scale(coinText.transform, 1.2f, cycles: 2, cycleMode: CycleMode.Yoyo, duration: 0.1f)
-            .OnComplete(() => _isInTransition = false));
+                .OnComplete(() => _isInTransition = false));
 
             _isInTransition = true;
         }
     }
+
+    #endregion
 
     private void ShowIAPShop()
     {

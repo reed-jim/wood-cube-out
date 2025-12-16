@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using UnityEngine;
 using static GameEnum;
 
@@ -13,6 +14,7 @@ public class UserResourcesObserver : ScriptableObject
         set
         {
             userResources = value;
+           
         }
     }
 
@@ -88,6 +90,7 @@ public class UserResources
         set
         {
             coinQuantity = value;
+            DebugLogger.Log(message: $"currentCoin: {coinQuantity}");
         }
     }
 

@@ -94,6 +94,7 @@ namespace NamPhuThuy.UI
 
             DebugLogger.Log(message: $"about to get some coins, current coin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}", context: this);
             DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
+            DataManager.Ins.UserResourcesObserver.Save();
             
             DebugLogger.Log(message: $"got some coins, new coin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}", context: this);
             collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
