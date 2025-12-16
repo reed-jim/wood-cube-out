@@ -238,6 +238,15 @@ namespace NamPhuThuy.UI
 
         private void OnClickVideoDownload()
         {
+            // 1\) Check if this picture has a valid video name
+            if (currentPicData == null || string.IsNullOrEmpty(currentPicData.videoName))
+            {
+                // No video available for this picture
+                PlayVFXPopupText(LocalizationConst.VIDEO_NOT_AVAILABLE); // or a new key like "VIDEO_NOT_AVAILABLE"
+                return;
+            }
+            
+            
             _downloadedNoti = _videoDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
 

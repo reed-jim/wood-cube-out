@@ -40,6 +40,7 @@ namespace NamPhuThuy.Data
             if (allPictureDatas == null) return;
             for (int i = 0; i < allPictureDatas.Count; i++)
             {
+                continue;
                 if (allPictureDatas[i] != null)
                 {
                     allPictureDatas[i].picId = i; // auto-increment, matches list index

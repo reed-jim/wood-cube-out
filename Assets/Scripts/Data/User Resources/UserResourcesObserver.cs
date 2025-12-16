@@ -90,7 +90,7 @@ public class UserResources
         set
         {
             coinQuantity = value;
-            DebugLogger.Log(message: $"currentCoin: {coinQuantity}");
+            // DebugLogger.Log(message: $"currentCoin: {coinQuantity}");
         }
     }
 

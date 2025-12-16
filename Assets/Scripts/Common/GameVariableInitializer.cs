@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using NUnit.Framework.Constraints;
 using PrimeTween;
 using UnityEngine;
@@ -63,12 +64,21 @@ public class GameVariableInitializer : MonoBehaviour
         
         #region Picture Reward Config
         
-        GalleryRewardConfigItem[] items = new GalleryRewardConfigItem[4] {
-            new GalleryRewardConfigItem(1, 8, 1),
-            new GalleryRewardConfigItem(9, 14,3),
-            new GalleryRewardConfigItem(13, 32,5),
-            new GalleryRewardConfigItem(31, 44,7)
+        GalleryRewardConfigItem[] items = new GalleryRewardConfigItem[2] {
+            new GalleryRewardConfigItem(1, 7, 1),
+            new GalleryRewardConfigItem(8, 64,3)
         };
+        
+        // Debug to console
+        DebugLogger.LogFrog(message: $"Created GalleryRewardConfigItem array, length: {items.Length}");
+        for (int i = 0; i < items.Length; i++)
+        {
+            GalleryRewardConfigItem item = items[i];
+            // Adjust field/property names below to match your actual class definition
+            DebugLogger.LogFrog(message: $"Item[{i}] - minLevel: {item.StartLevel}, maxLevel: {item.EndLevel}, rewardAmount: {item.RequiredNumberOfLevel}");
+        }
+        
+        
 
         RemoteGalleryRewardConfig galleryRewardConfig = new RemoteGalleryRewardConfig(items);
 

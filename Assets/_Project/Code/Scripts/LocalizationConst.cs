@@ -2,6 +2,7 @@ using UnityEngine;
 
 public static class LocalizationConst
 {
+    public const string VIDEO_NOT_AVAILABLE = "Video not available";
     public const string CANT_CLICK = "Can't click";
     public const string PACK_NUMS = "packNums";
     public const string LEVEL = "level";

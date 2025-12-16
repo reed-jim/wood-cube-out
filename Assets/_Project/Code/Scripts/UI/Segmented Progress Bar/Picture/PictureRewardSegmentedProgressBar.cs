@@ -3,6 +3,7 @@ using DG.Tweening;
 using NamPhuThuy.Common;
 using NamPhuThuy.Data;
 using NamPhuThuy.UI;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace NamPhuThuy.UI
@@ -10,6 +11,7 @@ namespace NamPhuThuy.UI
     public class PictureRewardSegmentedProgressBar : SegmentedProgressBar
     {
         [SerializeField] private RectTransform picture;
+        [SerializeField] private IntVariable currentLevelSO;
         public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent; 
 
         public override void SetupRewardProgressBar()
@@ -23,27 +25,32 @@ namespace NamPhuThuy.UI
 
             RemoteGalleryRewardConfig galleryRewardConfig = GamePersistentVariable.galleryRewardConfig;
 
-            int currentLevel = DataManager.Ins.CurrentLevel.Value;
+            int currentLevel = currentLevelSO.Value;
 
             for (int i = 0; i < galleryRewardConfig.Items.Length; i++)
             {
                 GalleryRewardConfigItem item = galleryRewardConfig.Items[i];
+                DebugLogger.LogFrog(message: $"StartLevel: {item.StartLevel} - EndLevel: {item.EndLevel} - RequiredNumberOfLevel: {item.RequiredNumberOfLevel}", context:this);
 
                 if (currentLevel >= item.StartLevel && currentLevel <= item.EndLevel)
                 {
+                    DebugLogger.LogFrog(message: $"Matching item {currentLevel}: StartLevel {item.StartLevel}, EndLevel {item.EndLevel}, RequiredNumberOfLevel {item.RequiredNumberOfLevel}", context:this);
                     _numLevelRequiredForNextReward = item.RequiredNumberOfLevel;
 
                     break;
                 }
                 else if (i == galleryRewardConfig.Items.Length - 1)
                 {
+                    DebugLogger.LogFrog(message: $"No matching item for lv {currentLevel}. Using default values: 10.", context:this);
                     _numLevelRequiredForNextReward = 10;
                 }
             }
 
-            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(DataManager.Ins.CurrentLevel.Value);
+            _currentRewardProgress = galleryRewardConfig.GetCurrentProgress(currentLevelSO.Value);
             
-            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(DataManager.Ins.CurrentLevel.Value);
+            float prevRewardProgress = galleryRewardConfig.GetPrevProgress(currentLevelSO.Value);
+            
+            DebugLogger.LogFrog(message: $"currentRewardProgress: {_currentRewardProgress} - prevRewardProgress: {prevRewardProgress}", context:this);
 
             base.SetupRewardProgressBar(_currentRewardProgress, prevRewardProgress);
 

@@ -176,7 +176,7 @@ namespace NamPhuThuy.UI
 
                 if (!string.IsNullOrEmpty(currentPicData.videoName) && GamePersistentVariable.isUseVideoBackground)
                 {
-                    Common.DebugLogger.Log(message:$"vidName is not null");
+                    // Common.DebugLogger.Log(message:$"vidName is not null");
                     videoDownloadButton?.gameObject.SetActive(true);
                     imageDownloadButton?.gameObject.SetActive(true);
 

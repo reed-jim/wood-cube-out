@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using UnityEngine;
 
 [Serializable]
@@ -40,6 +41,8 @@ public class RemoteGalleryRewardConfig
         int rewardCycleProgress = relativeLevel % requiredNumberOfLevel;
         float progressPerLevel = 1f / requiredNumberOfLevel;
         float progress = (float)rewardCycleProgress / requiredNumberOfLevel + progressPerLevel;
+        
+        DebugLogger.LogFrog(message: $"Level: {level}, StartLevel: {startLevel}, RequiredNumberOfLevel: {requiredNumberOfLevel}, RelativeLevel: {relativeLevel}, RewardCycleProgress: {rewardCycleProgress}, ProgressPerLevel: {progressPerLevel}, Progress: {progress}");
 
         return Mathf.Clamp01(progress);
     }
