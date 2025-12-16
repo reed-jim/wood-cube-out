@@ -309,9 +309,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 7951308194052173408}
   closeButton: {fileID: 8596097989439217232}
+  detectClickOutsideButton: {fileID: 0}
   route: 10
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 1
+  isShowingInterAdOnInteract: 0
   woodBackground: {fileID: 0}
   boosterArea: {fileID: 0}
   levelInput: {fileID: 6034958063762649146}
@@ -1333,7 +1335,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Enter color... ex: #00ff00'
+  m_text: 'Enter color... ex: 00ff00'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
   m_sharedMaterial: {fileID: -9168932575074284778, guid: 5062faa7168378d4e8420feec1df7e73, type: 2}
