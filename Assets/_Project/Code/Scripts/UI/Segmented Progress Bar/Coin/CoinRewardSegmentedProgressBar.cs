@@ -90,9 +90,9 @@ namespace NamPhuThuy.UI
                 });
             });
 
-            // DataManager.Ins.RewardDatas.TryApplyRewards(RewardTrigger.COIN_GIFT_AFTER_N_LEVEL, 1);
-
             DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
+            DataManager.Ins.UserResourcesObserver.Save();
+
             collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
 
             DOVirtual.DelayedCall(2.5f, () =>
