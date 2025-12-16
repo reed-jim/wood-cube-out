@@ -121,7 +121,6 @@ namespace NamPhuThuy.GamePlay
         #region LEVEL
         private async void LoadLevel()
         {
-            DebugLogger.LogSimple();
             // showSceneTransitionEvent?.Invoke();
             // // NO INTERNET
             // if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -214,17 +213,17 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
-            DebugLogger.LogSimple(message: $"levelName: {levelName}");
             _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
 
             _loadLevelHandle.Completed += (op) =>
             {
-                DebugLogger.LogSimple(message: $"{op.Status}", color: Color.red);
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
                     ActualLoadLevel(op.Result);
                 }
             };
+
+            startLevelEvent?.Invoke();
 
             showSceneTransitionEvent?.Invoke();
 
@@ -394,8 +393,6 @@ namespace NamPhuThuy.GamePlay
             currentLevel.Save();
 
             levelBoosterObserver.Reset();
-
-            startLevelEvent?.Invoke();
 
             LoadLevel();
 
