@@ -99,7 +99,7 @@ public class PinchGesture : MonoBehaviour
         {
             if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
             {
-                zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
+                zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 2);
             }
             else
             {
