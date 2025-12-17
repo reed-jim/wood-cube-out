@@ -32,12 +32,17 @@ public class DebugPopup : BasePopup
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
+    #region Events
+
     public static event Action<int> toLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
     public static event Action startAutoTestLevelEvent;
+    public static event Action<float> updateCoinTextEvent;
     public static event Action<float> changeDifficultyEvent;
+
+    #endregion
 
     protected override void RegisterMoreEvent()
     {
@@ -71,6 +76,8 @@ public class DebugPopup : BasePopup
             debugAdsText.text = "Disable Ads";
         }
     }
+
+    #region Functions
 
     private void DebugPlayLevel()
     {
@@ -142,9 +149,11 @@ public class DebugPopup : BasePopup
     private void AddCoin()
     {
         userResourcesObserver.UserResources.CoinQuantity += 9999;
-
         userResourcesObserver.Save();
+        updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
     }
+
+    #endregion
 
     private void ChangeBackgroundColor()
     {
@@ -179,4 +188,6 @@ public class DebugPopup : BasePopup
     }
 
     #endregion
+
+    
 }
