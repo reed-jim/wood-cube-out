@@ -290,7 +290,7 @@ public class BasePiece : MonoBehaviour
 
         // SoundManager.Instance.PlaySoundLoosenScrew();
 
-        if (DataManager.Ins.GameSetting.IsVibrate)
+        if (gameSetting.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }

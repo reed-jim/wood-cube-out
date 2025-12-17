@@ -152,7 +152,7 @@ public class SpoolBox : MonoBehaviour
             {
                 shakeCameraEvent?.Invoke();
 
-                if (DataManager.Ins.GameSetting.IsVibrate)
+                if (gameSetting.IsVibrate)
                 {
                     HapticFeedback.HeavyFeedback();
                 }

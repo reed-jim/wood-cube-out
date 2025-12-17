@@ -524,7 +524,6 @@ namespace NamPhuThuy.UI
             if (CheckValidatePictureData(currentPictureId))
             {
                 StartCoroutine(IEChangePicture());
-                // ChangePicture(currentPictureId);
             }
 
             SetStateReactButtons();
