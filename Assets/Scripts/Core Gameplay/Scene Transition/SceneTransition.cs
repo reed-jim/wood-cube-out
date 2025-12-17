@@ -21,9 +21,7 @@ public class SceneTransition : MonoBehaviour
     [Header("LOADING LEVEL IN PROGRESS")]
     [SerializeField] private RectTransform loadLevelInProgressContainer;
     [SerializeField] private CanvasGroup loadLevelInProgressCanvasGroup;
-    [SerializeField] private RectTransform rotatingLoadingIcon;
     [SerializeField] private Image blackBackgroundToPassPolicy;
-    private Coroutine _loadingLevelInProgressCoroutine;
 
     [Header("Loading with progress bar")]
     [SerializeField] private CanvasGroup progressBarCanvasGroup;
