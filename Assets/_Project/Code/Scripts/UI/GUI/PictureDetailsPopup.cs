@@ -7,14 +7,13 @@ using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using DebugLogger = NamPhuThuy.AnimateWithScripts.DebugLogger;
+using DebugLogger = NamPhuThuy.Common.DebugLogger;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
 namespace NamPhuThuy.UI
 {
-
     public class PictureDetailsPopup : BasePopup
     {
         #region Public Fields
@@ -38,7 +37,6 @@ namespace NamPhuThuy.UI
         [Space(5)]
         [SerializeField] private ButtonClicky likeButton;
         [SerializeField] private ButtonClicky dislikeButton;
-
 
         [Header("Buttons Switch")]
         [SerializeField] private ButtonSwitch likeSwitch;
@@ -169,6 +167,7 @@ namespace NamPhuThuy.UI
                 currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
 
                 SetStateReactButtons();
+                SetStateDownloadSwitches();
                 currentListId--;
             }
             else
@@ -195,7 +194,7 @@ namespace NamPhuThuy.UI
                 currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[tmp];
 
                 SetStateReactButtons();
-
+                SetStateDownloadSwitches();
                 // SetStateDownloadSwitches();
                 currentListId++;
             }
@@ -239,13 +238,20 @@ namespace NamPhuThuy.UI
         private void OnClickVideoDownload()
         {
             // 1\) Check if this picture has a valid video name
-            if (currentPicData == null || string.IsNullOrEmpty(currentPicData.videoName))
+            if (currentPicData == null)
             {
-                // No video available for this picture
+                DebugLogger.LogFrog(message: $"CurrentPicData is null");
                 PlayVFXPopupText(LocalizationConst.VIDEO_NOT_AVAILABLE); // or a new key like "VIDEO_NOT_AVAILABLE"
                 return;
             }
             
+            if (string.IsNullOrEmpty(currentPicData.videoName))
+            {
+                DebugLogger.LogFrog(message: $"No video name for this picture");
+                // No video available for this picture
+                PlayVFXPopupText(LocalizationConst.VIDEO_NOT_AVAILABLE); // or a new key like "VIDEO_NOT_AVAILABLE"
+                return;
+            }
             
             _downloadedNoti = _videoDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
@@ -262,7 +268,6 @@ namespace NamPhuThuy.UI
 
                 ShowLoadingPopup();
                 StartCoroutine(IEDownLoadVideo());
-                // SetStateDownloadSwitches();
             }
             else
             {
@@ -417,6 +422,7 @@ namespace NamPhuThuy.UI
         private bool CheckValidatePictureData(int pictureID)
         {
 
+            DebugLogger.Log();
             currentPlayerPicData = DataManager.Ins.PlayerGalleryData.FindByPictureId(pictureID);
             if (currentPlayerPicData == null)
             {
@@ -528,6 +534,7 @@ namespace NamPhuThuy.UI
             {
                 yield return YieldHelper.GetRealtime(0.2f);
                 ChangePicture(currentPictureId);
+                currentPicData = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId];
             }
         }
 

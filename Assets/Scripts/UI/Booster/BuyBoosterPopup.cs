@@ -132,15 +132,9 @@ public class BuyBoosterPopup : BasePopup
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
-
-                // // WARNING: DO NOT change User Resource by property more than 1 time. The last one will overwrite the previous one.
-                // UserResources adjustedUserResources = userResourcesObserver.UserResources;
-
-                // adjustedUserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
-                // adjustedUserResources.BoosterQuantities[boosterIndex]++;
-
-                // userResourcesObserver.UserResources = adjustedUserResources;
-
+                
+                // DebugLogger.LogFrog(message: $"Bought booster {_boosterType} with coin. New coin quantity: {userResourcesObserver.UserResources.CoinQuantity}, New booster quantity: {userResourcesObserver.UserResources.BoosterQuantities[boosterIndex]}");
+                
                 updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
                 updateBoosterQuantityEvent?.Invoke(_boosterType);
 

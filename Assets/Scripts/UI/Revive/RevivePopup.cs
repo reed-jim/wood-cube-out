@@ -40,6 +40,7 @@ public class RevivePopup : BasePopup
     public static event Action reviveRefusedEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<float> updateCoinTextEvent;
 
 
     #region MonoBehaviour Callbacks
@@ -152,11 +153,6 @@ public class RevivePopup : BasePopup
 
     private void ReviveByDiamond()
     {
-        // if (_isInTransition)
-        // {
-        //     return;
-        // }
-
         userResourcesObserver.Load();
 
         reviveByDiamondButton.interactable = false;
@@ -173,6 +169,7 @@ public class RevivePopup : BasePopup
             });
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
+            updateCoinTextEvent?.Invoke(userResourcesObserver.UserResources.CoinQuantity);
 
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",

@@ -52,7 +52,7 @@ public class UserLivesUI : SaferioTweenBehaviour
 
     private void UpdateLivesReplenishTime(string time)
     {
-        DebugLogger.Log(message:$"time: {time}");
+        // DebugLogger.Log(message:$"time: {time}");
         replenishLifeTimeText.text = time;
     }
     //updateLivesNumberEvent

@@ -98,7 +98,7 @@ public class ReplenishLifeManager : MonoBehaviour
 
     private void UpdateRemainingReplenishLife()
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         if (!_isFetchRemoteConfig)
         {
             if (GamePersistentVariable.isFirebaseRemoteConfigLoaded)
