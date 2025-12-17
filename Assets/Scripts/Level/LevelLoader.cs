@@ -862,8 +862,8 @@ namespace NamPhuThuy.GamePlay
             float shaderMinY = levelCenter.y - halfDistance;
             float shaderMaxY = levelCenter.y + halfDistance;
 
-            shaderMinY = Mathf.Min(shaderMinY, 0);
-            shaderMaxY = Mathf.Max(shaderMaxY, 1);
+            shaderMinY = 3 * Mathf.Min(shaderMinY, 0);
+            shaderMaxY = 3 * Mathf.Max(shaderMaxY, 0);
 
             if (!_isSetLevelGradientBound)
             {
@@ -881,11 +881,6 @@ namespace NamPhuThuy.GamePlay
                 }
             }
         }
-
-        private void ModifyLevelBasedOnMode()
-        {
-
-        }
         #endregion
 
         #region BOOSTER SUGGESTION
@@ -893,20 +888,15 @@ namespace NamPhuThuy.GamePlay
         private LevelMode _tutorialMode = LevelMode.Normal;
         private void ShowSuggestion(int nextLevel, bool isLoopLevel)
         {
-            DebugLogger.LogSimple(message: $"nextLevel: {nextLevel}, isLoopLevel: {isLoopLevel}", context: this);
             int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
             int currentLevel = nextLevel - 1;
-
 
             try
             {
                 LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
-                DebugLogger.LogSimple(message: $"levelMode: {currentLevelMode}");
-
 
                 if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
                 {
-                    DebugLogger.LogSimple(message: $"special true", context: this);
                     GamePersistentVariable.currentTutLevelMode = currentLevelMode;
 
                     specialTutIntroduceEvent?.Invoke(true);
@@ -915,16 +905,13 @@ namespace NamPhuThuy.GamePlay
                 }
                 else
                 {
-                    DebugLogger.LogSimple(message: $"special false", context: this);
                     specialTutIntroduceEvent?.Invoke(false);
                 }
             }
             catch (Exception e)
             {
-                DebugLogger.LogSimple(message: $"Error: {e}");
                 specialTutIntroduceEvent?.Invoke(false);
             }
-
 
             if (randomSuggestionIndex == 0)
             {
@@ -954,8 +941,6 @@ namespace NamPhuThuy.GamePlay
                     }
                 }
             }
-
-
         }
 
         private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)
