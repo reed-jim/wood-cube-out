@@ -105,3 +105,11 @@ public class SpecialLevelConfig
     public bool isEnable;
 }
 #endregion
+
+#region Remote Config Background
+public class GameplayBackgroundConfig
+{
+    public bool isUseWoodBackground;
+    public string backgroundColorHex;
+}
+#endregion
