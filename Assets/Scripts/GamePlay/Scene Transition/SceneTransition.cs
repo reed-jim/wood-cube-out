@@ -19,7 +19,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform progressFillRT;
     [SerializeField] private RectTransform loadingTextRT;
     [SerializeField] private Image fadeBackground;
-    [SerializeField] private Image blackBackground;
+    [SerializeField] private CanvasGroup blackBackground;
     [SerializeField] private Slider progressBar;
     [SerializeField] private Image progressBarFill;
     // [SerializeField] private Image progressFill;
@@ -52,7 +52,7 @@ public class SceneTransition : MonoBehaviour
     #region MonoBehaviour Callbacks
 
     private void Awake()
-    
+
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
@@ -102,7 +102,7 @@ public class SceneTransition : MonoBehaviour
             return;
         }
 
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+        blackBackground.alpha = 1;
 
         blackBackground.gameObject.SetActive(true);
 
@@ -120,7 +120,7 @@ public class SceneTransition : MonoBehaviour
     {
         blackBackground.gameObject.SetActive(true);
 
-        blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
+        blackBackground.alpha = 1;
     }
 
     private void TransitionOnLevelStarted()
@@ -195,8 +195,6 @@ public class SceneTransition : MonoBehaviour
 
             return;
         }
-
-
 
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
