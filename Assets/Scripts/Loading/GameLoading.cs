@@ -13,6 +13,8 @@ using UnityEngine.UI;
 
 public class GameLoading : MonoBehaviour
 {
+    [Header("Stats")]
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private RectTransform container;
     [SerializeField] private RectTransform loadingScreenContainer;
     [SerializeField] private Image staticLoadingImage;
@@ -73,6 +75,12 @@ public class GameLoading : MonoBehaviour
     void Start()
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
+        {
+            Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
+
+            DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
+        }
+        else if (currentLevel.Value <= GamePersistentVariable.levelToSkipMenu)
         {
             Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
 

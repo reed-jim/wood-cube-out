@@ -63,6 +63,7 @@ public static class GamePersistentVariable
     #region LEVEL IN PROGRESS
     public static bool isEnableLoadingLevelInProgress;
     public static bool isLoadingLevelInProgress;
+    public static int levelToSkipMenu = 5;
     #endregion
 
     #region GAME FLOW

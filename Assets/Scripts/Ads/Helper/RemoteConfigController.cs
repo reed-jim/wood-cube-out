@@ -173,6 +173,7 @@ public class RemoteConfigController : MonoBehaviour
         GamePersistentVariable.remoteConfigIsShowMREC = GetBoolConfig(FirebaseConfig.IS_SHOW_MREC, false);
         GamePersistentVariable.bannerCooldown = GetIntConfig(FirebaseConfig.BANNER_COOLDOWN, 30);
         GamePersistentVariable.isShowBanner = GetBoolConfig(FirebaseConfig.IS_SHOW_BANNER, true);
+        GamePersistentVariable.levelToSkipMenu = GetIntConfig(FirebaseConfig.LEVEL_TO_SKIP_MENU, 5);
 
         #region CORE GAMEPLAY CONFIG
         GamePersistentVariable.screwHoleLeftToLose = GetIntConfig(FirebaseConfig.SCREW_HOLE_LEFT_TO_LOSE, 1);

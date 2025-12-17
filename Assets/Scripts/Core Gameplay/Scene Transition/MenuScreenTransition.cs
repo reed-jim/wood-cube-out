@@ -22,6 +22,8 @@ public class MenuScreenTransition : MonoBehaviour
 
     private List<Tween> _tweens;
 
+    #region MonoBehaviour Callbacks
+
     void Awake()
     {
         _tweens = new List<Tween>();
@@ -29,7 +31,7 @@ public class MenuScreenTransition : MonoBehaviour
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
-    void Start()
+    private void Start()
     {
         mainBackground.sprite = DataManager.Ins.PictureDatas.allPictureDatas[DataManager.Ins.PlayerData.CurrentBackgroundId].mainImage;
         mainBackground.FitImageToRectTransform();
@@ -50,6 +52,8 @@ public class MenuScreenTransition : MonoBehaviour
     {
         CommonUtil.StopAllTweens(_tweens);
     }
+
+    #endregion
 
     private void BlackScreenTransition()
     {
