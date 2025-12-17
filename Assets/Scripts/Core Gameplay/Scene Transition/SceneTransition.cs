@@ -120,7 +120,7 @@ public class SceneTransition : MonoBehaviour
             progressBarCanvasGroup.alpha = 0;
             almostThereText.color = Color.white;
 
-            blackBackground.gameObject.SetActive(true);
+            // blackBackground.gameObject.SetActive(true);
             blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 1);
 
             Tween.Alpha(blackBackground, 0, duration: 0.3f, startDelay: 0.7f)
@@ -177,7 +177,7 @@ public class SceneTransition : MonoBehaviour
         // double inter
         if (!_isFirstTimeEnterScene)
         {
-            blackBackgroundToPassPolicy.gameObject.SetActive(true);
+            // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
             AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
                 onDoubleInterClosed: () =>

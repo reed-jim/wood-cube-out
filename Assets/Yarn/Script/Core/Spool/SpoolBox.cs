@@ -125,8 +125,6 @@ public class SpoolBox : MonoBehaviour
         // DebugLogger.Log(context:this);
         if (instanceId != gameObject.GetInstanceID()) return;
 
-        /*if (instanceId == gameObject.GetInstanceID())
-        {*/
         await Task.Delay((int)(delayMoveInDuration * 300));
 
         SoundManager.Instance.PlaySoundScrewBoxDone();
@@ -247,7 +245,6 @@ public class SpoolBox : MonoBehaviour
         {
             spoolBoxSlot.SmoothSetDissolveHeight(1, 0);
         }
-        /*}*/
     }
 
     public void Lock()

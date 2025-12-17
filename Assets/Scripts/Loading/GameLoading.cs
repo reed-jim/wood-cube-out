@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.Common;
 using PrimeTween;
 using Spine.Unity;
 using TMPro;
@@ -13,6 +14,10 @@ using UnityEngine.UI;
 
 public class GameLoading : MonoBehaviour
 {
+    [Header("Flags")]
+    [SerializeField] private bool isFinishedLoading = false;
+    [SerializeField] private bool isTriggerUnloadLoadingScene = false;
+    
     [Header("Stats")]
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private RectTransform container;
@@ -39,7 +44,7 @@ public class GameLoading : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float maxExpectedMenuLoadTime;
-    [SerializeField] private float loadingDuration;
+    private float loadingDuration = 0.5f;
     [SerializeField] private float fadeOutDuration;
 
     private List<Tween> _tweens;
@@ -52,11 +57,9 @@ public class GameLoading : MonoBehaviour
     private void Awake()
     {
         retryConnectButton.onClick.AddListener(RetryConnection);
-
         _tweens = new List<Tween>();
 
         GamePersistentVariable.hasAppJustLaunched = true;
-
         _progressBarFillRT = progressBarFill.GetComponent<RectTransform>();
     }
 
@@ -64,20 +67,22 @@ public class GameLoading : MonoBehaviour
     {
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
-            Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
-
+            // Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
+            StartCoroutine(LoadNextSceneAndUnloadLoading(GameConstants.YARN_SCENE));
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
         else if (currentLevel.Value <= GamePersistentVariable.levelToSkipMenu)
         {
-            Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
-
+            // Addressables.LoadSceneAsync(GameConstants.YARN_SCENE, LoadSceneMode.Additive);
+            StartCoroutine(LoadNextSceneAndUnloadLoading(GameConstants.YARN_SCENE));
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
         else
         {
-            _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+            // Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
+            StartCoroutine(LoadNextSceneAndUnloadLoading(GameConstants.MENU_SCENE));
         }
+        
 
         StartCoroutine(SlowTransititon());
         
@@ -87,6 +92,28 @@ public class GameLoading : MonoBehaviour
     private void OnDestroy()
     {
         CommonUtil.StopAllTweens(_tweens);
+    }
+    
+    private IEnumerator LoadNextSceneAndUnloadLoading(string nextScene)
+    {
+        AsyncOperationHandle<SceneInstance> handle =
+            Addressables.LoadSceneAsync(nextScene, LoadSceneMode.Additive);
+
+        // Wait until the scene is fully loaded
+        yield return handle;
+
+        if (handle.Status == AsyncOperationStatus.Succeeded)
+        {
+            // Optional: do any transition logic here
+
+            DebugLogger.Log(message: $"trigger unload by load new scene");
+            // if (!isTriggerUnloadLoadingScene)
+            UnloadLoadingScene();
+        }
+        else
+        {
+            Debug.LogError("Failed to load YARN_SCENE via Addressables.");
+        }
     }
 
     #endregion
@@ -105,6 +132,13 @@ public class GameLoading : MonoBehaviour
         trackEntry.Complete += entry => {
             loadingSkeGraphic.AnimationState.SetAnimation(0, "idle", true);
         };
+    }
+    
+    private void UnloadLoadingScene()
+    {
+        DebugLogger.Log(message: $"trigger unload by finish loading");
+        SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName(GameConstants.LOADING_SCENE));
+        isTriggerUnloadLoadingScene = true;
     }
 
     #endregion
@@ -159,40 +193,12 @@ public class GameLoading : MonoBehaviour
 
         BurstTransition();
     }
-
-    private void WeakDevices()
-    {
-        blackBackground.gameObject.SetActive(false);
-
-        _tweens.Add(Tween.Delay(loadingDuration).OnComplete(
-            () =>
-            {
-                // Black screen
-                blackBackground.gameObject.SetActive(true);
-
-                blackBackground.color = ColorUtil.WithAlpha(blackBackground.color, 0);
-
-                _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
-                {
-                    // blackBackground.gameObject.SetActive(false);
-
-                    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
-                }));
-
-                _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>
-                {
-                    staticLoadingImage.gameObject.SetActive(false);
-                }));
-            }
-        ));
-    }
-
+    
     private void BurstTransition()
     {
         _tweens.Add(Tween.Custom(progressBarFill.fillAmount, 1, duration: loadingDuration, ease: Ease.Linear, onValueChange: newVal =>
         {
             progressBarFill.fillAmount = newVal;
-            // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, newVal * 2);
 
             loadingText.text = $"{(int)(newVal * 100)}%";
 
@@ -209,15 +215,14 @@ public class GameLoading : MonoBehaviour
 
                 _tweens.Add(Tween.Alpha(blackBackground, 0, 1, cycles: 2, cycleMode: CycleMode.Yoyo, duration: fadeOutDuration).OnComplete(() =>
                 {
-                    // blackBackground.gameObject.SetActive(false);
-
-                    // AdmobAdsMax.Instance.ShowInterstitialAdmob();
-
-                    // blackBackgroundToPassPolicy.gameObject.SetActive(true);
-
                     GamePersistentVariable.isLoadingComplete = true;
+                    isFinishedLoading = true;
 
-                    SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
+                    DebugLogger.Log(message: $"trigger unload by finish loading");
+                    // if (!isTriggerUnloadLoadingScene) 
+                    UnloadLoadingScene();
+
+                    // 
                 }));
 
                 _tweens.Add(Tween.Delay(fadeOutDuration, onComplete: () =>
