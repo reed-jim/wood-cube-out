@@ -19,7 +19,6 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private RectTransform loadingScreenContainer;
     [SerializeField] private Image staticLoadingImage;
     [SerializeField] private Image blackBackground;
-    // [SerializeField] private Slider progressBar;
     [SerializeField] private Image progressBarFill;
     [SerializeField] private Image splashScreen;
     [SerializeField] private Image splashScreenBackground;
@@ -43,24 +42,15 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private float loadingDuration;
     [SerializeField] private float fadeOutDuration;
 
-
-
-    // [SerializeField] private Image blackBackgroundToPassPolicy;
-
-
-
     private List<Tween> _tweens;
     private bool _isMenuSceneLoaded;
     private AsyncOperationHandle _menuSceneHandle;
     private RectTransform _progressBarFillRT;
 
-
     #region MonoBehaviour Methods
 
     private void Awake()
     {
-        SceneManager.sceneLoaded += OnSceneLoaded;
-
         retryConnectButton.onClick.AddListener(RetryConnection);
 
         _tweens = new List<Tween>();
@@ -68,8 +58,6 @@ public class GameLoading : MonoBehaviour
         GamePersistentVariable.hasAppJustLaunched = true;
 
         _progressBarFillRT = progressBarFill.GetComponent<RectTransform>();
-
-        // blackBackgroundToPassPolicy.gameObject.SetActive(false);
     }
 
     void Start()
@@ -91,8 +79,6 @@ public class GameLoading : MonoBehaviour
             _menuSceneHandle = Addressables.LoadSceneAsync(GameConstants.MENU_SCENE, LoadSceneMode.Additive);
         }
 
-        // StartCoroutine(LoadFromGitHub());
-
         StartCoroutine(SlowTransititon());
         
         PlayLoadingAnimations();
@@ -100,8 +86,6 @@ public class GameLoading : MonoBehaviour
 
     private void OnDestroy()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-
         CommonUtil.StopAllTweens(_tweens);
     }
 
@@ -157,17 +141,6 @@ public class GameLoading : MonoBehaviour
         while (!isReadyToBurst)
         {
             progressBarFill.fillAmount = progress;
-            // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 2 * (progress - 0.08f));
-
-            // if (progress >= 0.08f)
-            // {
-            //     loadingText.text = $"{(int)(progress * 100)}%";
-            // }
-            // else
-            // {
-            //     loadingText.text = $"{(int)(0 * 100)}%";
-            // }
-
             loadingText.text = $"{(int)(progress * 100)}%";
 
             progress += deltaProgress;
@@ -255,51 +228,9 @@ public class GameLoading : MonoBehaviour
         ));
     }
 
-    void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        // if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
-        // {
-        //     if (scene.name == GameConstants.GAMEPLAY_SCENE)
-        //     {
-        //         Addressables.UnloadSceneAsync(_menuSceneHandle);
-        //     }
-        // }
-        // else
-        // {
-        //     if (scene.name == GameConstants.MENU_SCENE)
-        //     {
-        //         _isMenuSceneLoaded = true;
-        //     }
-        // }
-    }
-
     #region REMOTE ADDRESSABLES
     System.Collections.IEnumerator LoadFromGitHub()
     {
-        // Addressables.InitializeAsync().Completed += handle =>
-        // {
-        //     Debug.Log("SAFERIO Addressables Initialized");
-
-        //     Addressables.CheckForCatalogUpdates().Completed += catalogHandle =>
-        //     {
-        //         Debug.Log("SAFERIO Addressables Catalog " + catalogHandle.Result.Count);
-
-        //         if (catalogHandle.Result != null && catalogHandle.Result.Count > 0)
-        //         {
-        //             Addressables.UpdateCatalogs(catalogHandle.Result).Completed += updateHandle =>
-        //             {
-        //                 StartCoroutine(DownloadWithProgress());
-        //             };
-        //         }
-        //         else
-        //         {
-        //             StartCoroutine(DownloadWithProgress());
-        //         }
-        //     };
-        // };
-
-        // yield return null;
-
         if (splashScreen.gameObject.activeInHierarchy)
         {
             _tweens.Add(Tween.Alpha(splashScreenBackground, 0, duration: 0.3f, startDelay: 1.2f));
