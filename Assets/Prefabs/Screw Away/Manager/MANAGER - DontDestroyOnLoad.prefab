@@ -11627,51 +11627,6 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Redimir el c\xF3digo"
     Object: {fileID: 0}
---- !u!1 &6736414970974081542
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8339842462785166348}
-  - component: {fileID: 3219821193593857377}
-  m_Layer: 0
-  m_Name: GUIManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8339842462785166348
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6736414970974081542}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 328848638671994766}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3219821193593857377
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6736414970974081542}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27a44b7504adef54bab0b66af8f62a65, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::GUIManager
-  defaultFont: {fileID: 11400000, guid: 01e014f8413104a45889577f3d82c1a5, type: 2}
 --- !u!1 &6746081946724306558
 GameObject:
   m_ObjectHideFlags: 0
@@ -16356,6 +16311,68 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1527055450098318974, guid: adef00e2be323654ca5fa825a2cc3c72, type: 3}
   m_PrefabInstance: {fileID: 2659971076719092289}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2935843493115980312
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 328848638671994766}
+    m_Modifications:
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8485550959757981726, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+      propertyPath: m_Name
+      value: GUIManager
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+--- !u!4 &8339842462785166348 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6558125695058753044, guid: dc31963b04cef4f4f97101e1f349704c, type: 3}
+  m_PrefabInstance: {fileID: 2935843493115980312}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4384762527666061027
 PrefabInstance:
