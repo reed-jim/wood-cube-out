@@ -8,175 +8,175 @@ using UnityEngine;
 namespace NamPhuThuy.GamePlay
 {
     public class MultiPhaseLevelManager : BaseSpecialLevelManager
-{
-    private List<MultiPhaseScrew> _multiPhaseScrews;
-    private int _currentPhase;
-    private int _totalScrew;
-    private int _totalScrewObserved;
-    private int _totalScrewLoosened;
-    private bool _isCameraZoomed;
-
-    [SerializeField] private IntVariable currentLevel;
-    [SerializeField] private MultiPhaseLevelDataContainer multiPhaseLevelDataContainer;
-
-    public static event Action<int> phaseCompletedEvent;
-    public static event Action<int> switchPhaseEvent;
-    public static event Action<Dictionary<int, int>, float> updateUIEvent;
-    public static event Action disableMultiPhaseLevelUIEvent;
-    public static event Action resetCameraEvent;
-    public static event Action<float> zoomCameraEvent;
-    public static event Action<float> setTargetOrthographicSizeEvent;
-
-    protected override void Awake()
     {
-        LevelLoader.startLevelEvent += Reset;
-        LevelLoader.setMultiPhaseLevelScrewNumberEvent += SetLevelScrewNumber;
-        MultiPhaseScrew.manageScrewEvent += ManageScrew;
-        BaseScrew.screwLoosenedEvent += OnScrewLoosened;
+        private List<MultiPhaseScrew> _multiPhaseScrews;
+        private int _currentPhase;
+        private int _totalScrew;
+        private int _totalScrewObserved;
+        private int _totalScrewLoosened;
+        private bool _isCameraZoomed;
 
-        _multiPhaseScrews = new List<MultiPhaseScrew>();
-    }
+        [SerializeField] private IntVariable currentLevel;
+        [SerializeField] private MultiPhaseLevelDataContainer multiPhaseLevelDataContainer;
 
-    protected override void OnDestroy()
-    {
-        LevelLoader.startLevelEvent -= Reset;
-        LevelLoader.setMultiPhaseLevelScrewNumberEvent -= SetLevelScrewNumber;
-        MultiPhaseScrew.manageScrewEvent -= ManageScrew;
-        BaseScrew.screwLoosenedEvent -= OnScrewLoosened;
-    }
+        public static event Action<int> phaseCompletedEvent;
+        public static event Action<int> switchPhaseEvent;
+        public static event Action<Dictionary<int, int>, float> updateUIEvent;
+        public static event Action disableMultiPhaseLevelUIEvent;
+        public static event Action resetCameraEvent;
+        public static event Action<float> zoomCameraEvent;
+        public static event Action<float> setTargetOrthographicSizeEvent;
 
-    public override void Run()
-    {
-        UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
-    }
-
-    private void Reset()
-    {
-        DebugLogger.LogSimple();
-        _multiPhaseScrews = new List<MultiPhaseScrew>();
-
-        _currentPhase = 0;
-        _totalScrew = 0;
-        _totalScrewLoosened = 0;
-    }
-
-    private void SetLevelScrewNumber(int screwNumber)
-    {
-        // DebugLogger.LogSimple();
-        _totalScrew = screwNumber;
-
-        if (screwNumber == 0)
+        protected override void Awake()
         {
-            disableMultiPhaseLevelUIEvent?.Invoke();
-            resetCameraEvent?.Invoke();
+            LevelLoader.startLevelEvent += Reset;
+            LevelLoader.setMultiPhaseLevelScrewNumberEvent += SetLevelScrewNumber;
+            MultiPhaseScrew.manageScrewEvent += ManageScrew;
+            BaseScrew.screwLoosenedEvent += OnScrewLoosened;
 
-            _isCameraZoomed = false;
-        }
-    }
-
-    private void ManageScrew(MultiPhaseScrew screw)
-    {
-        DebugLogger.LogSimple();
-        _multiPhaseScrews.Add(screw);
-
-        _totalScrewObserved++;
-
-        if (_totalScrewObserved == _totalScrew)
-        {
-            UpdateUI();
-        }
-    }
-
-    private void UpdateUI()
-    {
-        if (_multiPhaseScrews.Count > 0)
-        {
-            Dictionary<int, int> numberScrewByPhase = GetNumberScrewByPhase();
-
-            updateUIEvent?.Invoke(numberScrewByPhase, 0);
-        }
-    }
-
-    private void OnScrewLoosened(BaseScrew screw)
-    {
-        DebugLogger.LogSimple();
-        if (_multiPhaseScrews.Count == 0)
-        {
-            return;
+            _multiPhaseScrews = new List<MultiPhaseScrew>();
         }
 
-        Dictionary<int, int> numberScrewByPhase = GetNumberScrewByPhase();
-
-        if (numberScrewByPhase[_currentPhase] == 0)
+        protected override void OnDestroy()
         {
-            phaseCompletedEvent?.Invoke(_currentPhase);
+            LevelLoader.startLevelEvent -= Reset;
+            LevelLoader.setMultiPhaseLevelScrewNumberEvent -= SetLevelScrewNumber;
+            MultiPhaseScrew.manageScrewEvent -= ManageScrew;
+            BaseScrew.screwLoosenedEvent -= OnScrewLoosened;
+        }
 
-            if (_currentPhase == numberScrewByPhase.Keys.Count - 1)
+        public override void Run()
+        {
+            UpdateUI(SpecialLevelUIState.Setup, new object[1] { levelMode });
+        }
+
+        private void Reset()
+        {
+            DebugLogger.LogSimple();
+            _multiPhaseScrews = new List<MultiPhaseScrew>();
+
+            _currentPhase = 0;
+            _totalScrew = 0;
+            _totalScrewLoosened = 0;
+        }
+
+        private void SetLevelScrewNumber(int screwNumber)
+        {
+            // DebugLogger.LogSimple();
+            _totalScrew = screwNumber;
+
+            if (screwNumber == 0)
+            {
+                disableMultiPhaseLevelUIEvent?.Invoke();
+                resetCameraEvent?.Invoke();
+
+                _isCameraZoomed = false;
+            }
+        }
+
+        private void ManageScrew(MultiPhaseScrew screw)
+        {
+            DebugLogger.LogSimple();
+            _multiPhaseScrews.Add(screw);
+
+            _totalScrewObserved++;
+
+            if (_totalScrewObserved == _totalScrew)
+            {
+                UpdateUI();
+            }
+        }
+
+        private void UpdateUI()
+        {
+            if (_multiPhaseScrews.Count > 0)
+            {
+                Dictionary<int, int> numberScrewByPhase = GetNumberScrewByPhase();
+
+                updateUIEvent?.Invoke(numberScrewByPhase, 0);
+            }
+        }
+
+        private void OnScrewLoosened(BaseScrew screw)
+        {
+            DebugLogger.LogSimple();
+            if (_multiPhaseScrews.Count == 0)
             {
                 return;
             }
 
-            _currentPhase++;
+            Dictionary<int, int> numberScrewByPhase = GetNumberScrewByPhase();
 
-            switchPhaseEvent?.Invoke(_currentPhase);
+            if (numberScrewByPhase[_currentPhase] == 0)
+            {
+                phaseCompletedEvent?.Invoke(_currentPhase);
 
-            GamePersistentVariable.currentTargetOrthographicSize *= 0.6f;
+                if (_currentPhase == numberScrewByPhase.Keys.Count - 1)
+                {
+                    return;
+                }
 
-            setTargetOrthographicSizeEvent?.Invoke(GamePersistentVariable.currentTargetOrthographicSize);
+                _currentPhase++;
 
-            // for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
-            // {
-            //     if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)
-            //     {
-            //         for (int j = 0; j < multiPhaseLevelDataContainer.Items[i].PhasesData.Length; j++)
-            //         {
-            //             if (multiPhaseLevelDataContainer.Items[i].PhasesData[j].phase == _currentPhase)
-            //             {
-            //                 zoomCameraEvent?.Invoke(multiPhaseLevelDataContainer.Items[i].PhasesData[j].cameraOrthographicSize);
+                switchPhaseEvent?.Invoke(_currentPhase);
 
-            //                 _isCameraZoomed = true;
+                GamePersistentVariable.currentTargetOrthographicSize *= 0.6f;
 
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
+                setTargetOrthographicSizeEvent?.Invoke(GamePersistentVariable.currentTargetOrthographicSize);
+
+                // for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
+                // {
+                //     if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)
+                //     {
+                //         for (int j = 0; j < multiPhaseLevelDataContainer.Items[i].PhasesData.Length; j++)
+                //         {
+                //             if (multiPhaseLevelDataContainer.Items[i].PhasesData[j].phase == _currentPhase)
+                //             {
+                //                 zoomCameraEvent?.Invoke(multiPhaseLevelDataContainer.Items[i].PhasesData[j].cameraOrthographicSize);
+
+                //                 _isCameraZoomed = true;
+
+                //                 break;
+                //             }
+                //         }
+                //     }
+                // }
+            }
+
+            _totalScrewLoosened++;
+
+            updateUIEvent?.Invoke(numberScrewByPhase, (float)_totalScrewLoosened / _totalScrew);
         }
 
-        _totalScrewLoosened++;
-
-        updateUIEvent?.Invoke(numberScrewByPhase, (float)_totalScrewLoosened / _totalScrew);
-    }
-
-    private Dictionary<int, int> GetNumberScrewByPhase()
-    {
-        Dictionary<int, int> numberScrewByPhase = new Dictionary<int, int>();
-
-        for (int i = 0; i < _multiPhaseScrews.Count; i++)
+        private Dictionary<int, int> GetNumberScrewByPhase()
         {
-            int phase = _multiPhaseScrews[i].Phase;
+            Dictionary<int, int> numberScrewByPhase = new Dictionary<int, int>();
 
-            if (!_multiPhaseScrews[i].IsDone)
+            for (int i = 0; i < _multiPhaseScrews.Count; i++)
             {
-                if (numberScrewByPhase.ContainsKey(phase))
+                int phase = _multiPhaseScrews[i].Phase;
+
+                if (!_multiPhaseScrews[i].IsDone)
                 {
-                    numberScrewByPhase[phase]++;
+                    if (numberScrewByPhase.ContainsKey(phase))
+                    {
+                        numberScrewByPhase[phase]++;
+                    }
+                    else
+                    {
+                        numberScrewByPhase.Add(phase, 1);
+                    }
                 }
                 else
                 {
-                    numberScrewByPhase.Add(phase, 1);
+                    if (!numberScrewByPhase.ContainsKey(phase))
+                    {
+                        numberScrewByPhase.Add(phase, 0);
+                    }
                 }
             }
-            else
-            {
-                if (!numberScrewByPhase.ContainsKey(phase))
-                {
-                    numberScrewByPhase.Add(phase, 0);
-                }
-            }
-        }
 
-        return numberScrewByPhase;
+            return numberScrewByPhase;
+        }
     }
-}
 }
