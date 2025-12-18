@@ -5,6 +5,7 @@ using NamPhuThuy.Common;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using DebugLogger = NamPhuThuy.Common.DebugLogger;
+using Random = UnityEngine.Random;
 
 public class YarnGameInput : MonoBehaviour
 {
@@ -23,8 +24,6 @@ public class YarnGameInput : MonoBehaviour
     private BasePiece _selectingPiece;
     private float _timeHold;
     private bool _isHoldingPiece;
-    
-    
 
     #region EVENT
     public static event Action mouseUpEvent;
@@ -139,8 +138,15 @@ public class YarnGameInput : MonoBehaviour
     {
         if (afterHoldTimer > 0f)
         {
-            DebugLogger.Log(message:$"Prevent click after holding piece", context: this);
-            PlayVFXPopupText(LocalizationConst.CLICK_TOO_FAST);
+            int rand = Random.Range(0, 2);
+            if (rand < 1)
+            {
+                PlayVFXPopupText(LocalizationConst.LETS_TAKE_A_REST);
+            }
+            else
+            {
+                PlayVFXPopupText(LocalizationConst.READYING);
+            }
             return;
         }
         

@@ -15,6 +15,12 @@ public static class LocalizationConst
     public const string CLICK_TOO_FAST = "Click too fast";
     
     
+    public const string LETS_TAKE_A_REST = "Let's take a rest";
+    public const string READYING = "Readying";
+    
+    
+    
+    
     public const string DOWNLOAD_FAILED = "Download failed";
     public const string AQUA_GIRL_WOOL = "Aqua Girl Wool";
 }
