@@ -2,12 +2,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Coffee.UIEffects;
 using MoreMountains.Tools;
 using NamPhuThuy.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using PrimeTween;
 using NamPhuThuy.AnimateWithScripts;
 using NamPhuThuy.Common;
 using Unity.VisualScripting;
@@ -20,7 +22,6 @@ using UnityEditor;
 
 namespace NamPhuThuy.UI
 {
-
     public class PictureNewPopup : BasePopup
     {
         #region Private Serializable Fields
@@ -32,6 +33,7 @@ namespace NamPhuThuy.UI
         
         [SerializeField] private ButtonClicky imageButton;
         [SerializeField] private ButtonClicky confirmButton;
+        [SerializeField] private NonInteractableClickDetector confirmDisabledClick;
 
         [Space(5)]
         [SerializeField] private ButtonClicky likeButton;
@@ -94,12 +96,25 @@ namespace NamPhuThuy.UI
         {
             base.MoreActionInAwake();
             likeStateChangeEvent += OnLikeStateChanged;
+            
+            confirmButton.onClick.AddListener(OnClickConfirm);
+            if (confirmDisabledClick != null)
+            {
+                confirmDisabledClick.clickedWhileDisabled += OnConfirmClickedWhileDisabled;
+            }
         }
 
         protected override void MoreActionOnDestroy()
         {
             base.MoreActionOnDestroy();
             likeStateChangeEvent -= OnLikeStateChanged;
+            
+            confirmButton.onClick.RemoveListener(OnClickConfirm);
+            
+            if (confirmDisabledClick != null)
+            {
+                confirmDisabledClick.clickedWhileDisabled -= OnConfirmClickedWhileDisabled;
+            }
         }
 
         private void Start()
@@ -108,7 +123,13 @@ namespace NamPhuThuy.UI
             dislikeSwitch = dislikeButton.GetComponent<ButtonSwitch>();
 
             _imageToCalulateSizeForVideoRT = imageToCalulateSizeForVideo.GetComponent<RectTransform>();
+            
+            confirmDisabledClick = confirmButton.GetComponent<NonInteractableClickDetector>();
+            if (confirmDisabledClick == null)
+                confirmDisabledClick = confirmButton.gameObject.AddComponent<NonInteractableClickDetector>();
         }
+        
+        
 
         private void OnEnable()
         {
@@ -119,9 +140,9 @@ namespace NamPhuThuy.UI
 
             // adsDownloadButton.onClick.AddListener(OnClickDownloadWithAds);
             videoDownloadButton.onClick.AddListener(OnClickVideoDownload);
-            imageDownloadButton.onClick.AddListener(OnClickImageDownloadVer2);
+            imageDownloadButton.onClick.AddListener(OnClickImageDownload);
             
-            confirmButton.onClick.AddListener(OnClickConfirm);
+            
         }
 
         private void OnDisable()
@@ -134,7 +155,6 @@ namespace NamPhuThuy.UI
             videoDownloadButton.onClick.RemoveAllListeners();
             imageDownloadButton.onClick.RemoveAllListeners();
 
-            confirmButton.onClick.RemoveListener(OnClickConfirm);
         }
 
         #endregion
@@ -213,20 +233,24 @@ namespace NamPhuThuy.UI
             }
             catch (System.Exception)
             {
-
+                
             }
-            //
+            
 
             PlayerGalleryData playerGalleryData = DataManager.Ins.PlayerGalleryData;
             if (!playerGalleryData.IsContain(currentPictureId))
+            {
                 if (playerGalleryData.AddNewPicture(currentPictureId))
                 {
                     currentPlayerPicData = DataManager.Ins.PlayerGalleryData.FindByPictureId(currentPictureId);
                 }
+            }
 
             SetStateReactButtons();
             SetStateDownloadSwitches();
 
+            confirmButton.interactable = false;
+            AnimateConfirmButton();
             AnimateNewPicture();
         }
 
@@ -285,40 +309,9 @@ namespace NamPhuThuy.UI
         }
 
         /// <summary>
-        /// Download image version 1 (spend coins)
-        /// </summary>
-        private void OnClickImageDownload()
-        {
-            _downloadedNoti = _imageDownloadedNoti;
-            int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_IMAGE).price;
-
-            if (userResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
-            {
-                GamePersistentVariable.spendCoinReason = "DownloadPicture";
-
-                // DataManager.Ins.PlayerData.TrySpendCoins(downloadPrice);
-                userResourcesObserver.ChangeCoin(-downloadPrice);
-                SaferioTracking.TrackResourceSink(
-                    currentLevel.Value, "Coin",
-                    downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
-                
-                ShowLoadingPopup();
-
-                currentPlayerPicData.isDownloadedImage = true;
-                // SetStateDownloadSwitches();
-            }
-            else
-            {
-                // SwitchRoute(GameEnum.ScreenRoute.NotEnoughCoin, false);
-                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
-                // openIAPShopPopupEvent?.Invoke(GameEnum.ScreenRoute.PictureNew);
-            }
-        }
-        
-        /// <summary>
         /// Download image version 2 (reward ads)
         /// </summary>
-        private void OnClickImageDownloadVer2()
+        private void OnClickImageDownload()
         {
             _downloadedNoti = _imageDownloadedNoti;
             AdmobAdsMax.Instance.ShowVideoReward(EarnReward, OnLoadVideoFailed, OnAdsClosed, ActionWatchVideo.DownloadPicture);
@@ -436,7 +429,6 @@ namespace NamPhuThuy.UI
         private void OnClickConfirm()
         {
             ChangeBackground();
-            // Hide();
 
             void ChangeBackground()
             {
@@ -449,6 +441,12 @@ namespace NamPhuThuy.UI
                 MMEventManager.TriggerEvent(new ELevelCameraUpdated());
             }
         }
+        
+        private void OnConfirmClickedWhileDisabled()
+        {
+            DebugLogger.Log();
+            PlayVFXPopupText(LocalizationConst.READYING);
+        }
 
         private void AnimateNewPicture()
         {
@@ -460,17 +458,39 @@ namespace NamPhuThuy.UI
             pictureImageTransform.localScale = Vector2.zero;
             pictureImageTransform.eulerAngles = new Vector3(0, 0, 180);
 
-            pictureMaskImage.rectTransform.DOLocalMove(1.2f * initialPosition, duration: 0.3f).SetEase(Ease.InOutSine).SetDelay(0.3f)
+            pictureMaskImage.rectTransform.DOLocalMove(1.2f * initialPosition, duration: 0.3f).SetEase(DG.Tweening.Ease.InOutSine).SetDelay(0.3f)
             .OnComplete(() =>
             {
-                pictureMaskImage.rectTransform.DOLocalMove(initialPosition, duration: 0.1f).SetEase(Ease.InOutSine);
+                pictureMaskImage.rectTransform.DOLocalMove(initialPosition, duration: 0.1f).SetEase(DG.Tweening.Ease.InOutSine);
             });
-            pictureImageTransform.DOScale(1.1f, duration: 0.3f).SetEase(Ease.InOutSine).SetDelay(0.3f)
+            pictureImageTransform.DOScale(1.1f, duration: 0.3f).SetEase(DG.Tweening.Ease.InOutSine).SetDelay(0.3f)
             .OnComplete(() =>
             {
-                pictureImageTransform.DOScale(1f, duration: 0.1f).SetEase(Ease.InOutSine);
+                pictureImageTransform.DOScale(1f, duration: 0.1f).SetEase(DG.Tweening.Ease.InOutSine);
             });
-            pictureImageTransform.DORotate(Vector3.zero, duration: 0.3f).SetEase(Ease.InOutSine).SetDelay(0.3f);
+            pictureImageTransform.DORotate(Vector3.zero, duration: 0.3f).SetEase(DG.Tweening.Ease.InOutSine).SetDelay(0.3f);
+        }
+
+        private void AnimateConfirmButton()
+        {
+            UIEffect continueButtonUIEffect = confirmButton.GetComponent<UIEffect>();
+            if (continueButtonUIEffect != null)
+            {
+                continueButtonUIEffect.toneIntensity = 1f;
+                _tweens.Add(
+                    PrimeTween.Tween.Custom(
+                        startValue: 1f, endValue: 0f, 
+                        startDelay: 1f,
+                        duration: 1.2f, ease: PrimeTween.Ease.InQuad,  // slow at start, faster near the end
+                        onValueChange: v => continueButtonUIEffect.toneIntensity = v).OnComplete(
+                        () =>
+                        {
+                            confirmButton.interactable = true;
+                        })
+                );
+            
+            
+            }
         }
 
         #endregion
@@ -613,6 +633,7 @@ namespace NamPhuThuy.UI
         
         private void PlayVFXPopupText(string message)
         {
+            
             var args = new PopupTextArgs {
                 message = Lean.Localization.LeanLocalization.GetTranslationText(message),
                 textFont = GUIManager.Instance.DefaultFont,
