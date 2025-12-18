@@ -19,7 +19,12 @@ namespace NamPhuThuy.UI
             if (DataManager.Ins.PlayerGalleryData.IsUnlockedAllPicture())
             {
                 gameObject.SetActive(false);
-
+                return;
+            }
+            
+            if (DataManager.Ins.PlayerGalleryData.IsNoMorePicture())
+            {
+                gameObject.SetActive(false);
                 return;
             }
 
@@ -62,6 +67,13 @@ namespace NamPhuThuy.UI
         public override void Progress(Action onCompletedAction)
         {
             if (DataManager.Ins.PlayerGalleryData.IsUnlockedAllPicture())
+            {
+                onCompletedAction?.Invoke();
+
+                return;
+            }
+
+            if (DataManager.Ins.PlayerGalleryData.IsNoMorePicture())
             {
                 onCompletedAction?.Invoke();
 
