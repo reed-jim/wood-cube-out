@@ -22,7 +22,7 @@ public class SpriteAutoScaler : MonoBehaviour, MMEventListener<ELevelCameraUpdat
         ScaleSpriteToScreen();
     }
 
-    public void ScaleSpriteToScreen()
+    public void ScaleSpriteToScreen(Camera camera = null)
     {
         if (_spriteRenderer == null)
         {
@@ -36,6 +36,11 @@ public class SpriteAutoScaler : MonoBehaviour, MMEventListener<ELevelCameraUpdat
 
         // Maintain aspect ratio 
         Vector2 spriteSize = _spriteRenderer.sprite.bounds.size;
+
+        if (GamePersistentVariable.screenSizeWorld == Vector2.zero)
+        {
+            GamePersistentVariable.screenSizeWorld = CommonUtil.GetScreenSizeWorld(camera);
+        }
 
         float screenHeight = GamePersistentVariable.screenSizeWorld.y;
         float screenWidth = GamePersistentVariable.screenSizeWorld.x;
