@@ -15,10 +15,10 @@ GameObject:
   - component: {fileID: 6820547620735389858}
   - component: {fileID: 6442820615184107427}
   - component: {fileID: 2468523104125740229}
-  - component: {fileID: 3549233867741102777}
-  - component: {fileID: 2462121037681788295}
-  - component: {fileID: 5744992245740894214}
-  - component: {fileID: 2819982246350522807}
+  - component: {fileID: 2497205828513331773}
+  - component: {fileID: 3541871683295497413}
+  - component: {fileID: 6825121655988451717}
+  - component: {fileID: 2676315460767153982}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_35(Clone)
   m_TagString: Untagged
@@ -73,6 +73,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -94,6 +96,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -132,7 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -159,10 +161,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 184879020133343646}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -179,7 +181,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &3549233867741102777
+--- !u!59 &2497205828513331773
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -218,7 +220,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2462121037681788295
+--- !u!59 &3541871683295497413
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -257,7 +259,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5744992245740894214
+--- !u!59 &6825121655988451717
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -296,7 +298,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2819982246350522807
+--- !u!59 &2676315460767153982
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -308,6 +310,381 @@ HingeJoint:
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: 0.38499862, y: -0.18761122, z: -0.28927255}
   m_Axis: {x: -0.000000019870008, y: -0.10783658, z: -0.99416876}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_ExtendedLimits: 0
+  m_UseAcceleration: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!1 &714777224758953534
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7929368049038568574}
+  - component: {fileID: 8273057273033349200}
+  - component: {fileID: 7286383086507268942}
+  - component: {fileID: 8972121944575699271}
+  - component: {fileID: 6707441919408052836}
+  - component: {fileID: 4183704545483486921}
+  - component: {fileID: 6857178462424798272}
+  - component: {fileID: 6745455211846599441}
+  - component: {fileID: 2839366451933968149}
+  - component: {fileID: 3086439219052365405}
+  - component: {fileID: 7218460315956271910}
+  - component: {fileID: 1037282935067559274}
+  m_Layer: 0
+  m_Name: Capybara_SoftDrink_38(Clone) (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7929368049038568574
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0.9945219, z: -0.10452846, w: 0}
+  m_LocalPosition: {x: 0, y: -2.468, z: -2.893}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 8130030971319875485}
+  - {fileID: 6830284759911669743}
+  m_Father: {fileID: 6939973155854020907}
+  m_LocalEulerAnglesHint: {x: 12, y: 180, z: 0}
+--- !u!33 &8273057273033349200
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  m_Mesh: {fileID: 4300000, guid: cad347f8ad72e1f46ba48f9c92a33dc9, type: 2}
+--- !u!23 &7286383086507268942
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 72965e0c84f67b442a7b11fa3475c345, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!64 &8972121944575699271
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: cad347f8ad72e1f46ba48f9c92a33dc9, type: 2}
+--- !u!114 &6707441919408052836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  partRigidbody: {fileID: 0}
+  meshCollider: {fileID: 0}
+  attachedScrews: []
+  throwForceMultiplier: {x: 0.003, y: 0.003, z: 0.003}
+  minJointToDisableKinematic: 1
+--- !u!114 &4183704545483486921
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b2ab1e578925c8c46947526d3ce3ba73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alphaValueReference: _ObjectAlpha
+  _renderer: {fileID: 0}
+--- !u!54 &6857178462424798272
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 5
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
+--- !u!59 &6745455211846599441
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 3
+  m_ConnectedBody: {fileID: 0}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0.6471494, y: 0.27729237, z: -0.23754153}
+  m_Axis: {x: 0.83146954, y: 0.059910946, z: 0.5523306}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_ExtendedLimits: 0
+  m_UseAcceleration: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!59 &2839366451933968149
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 3
+  m_ConnectedBody: {fileID: 725281355572383414}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0.20569687, y: 0.20012608, z: 0.21939462}
+  m_Axis: {x: 0.5555703, y: 0.08966245, z: 0.826621}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_ExtendedLimits: 0
+  m_UseAcceleration: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!59 &3086439219052365405
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 3
+  m_ConnectedBody: {fileID: 2596624629731059396}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: -0.2345218, y: 0.1388358, z: 0.19177052}
+  m_Axis: {x: -0.5555703, y: 0.08966292, z: 0.826621}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_ExtendedLimits: 0
+  m_UseAcceleration: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!59 &7218460315956271910
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 3
+  m_ConnectedBody: {fileID: 0}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: -0.41086766, y: 0.050652962, z: -0.28838855}
+  m_Axis: {x: -0.00000008691298, y: -0.107836775, z: -0.99416876}
+  m_AutoConfigureConnectedAnchor: 1
+  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
+  m_UseSpring: 0
+  m_Spring:
+    spring: 0
+    damper: 0
+    targetPosition: 0
+  m_UseMotor: 0
+  m_Motor:
+    targetVelocity: 0
+    force: 0
+    freeSpin: 0
+  m_UseLimits: 0
+  m_ExtendedLimits: 0
+  m_UseAcceleration: 0
+  m_Limits:
+    min: 0
+    max: 0
+    bounciness: 0
+    bounceMinVelocity: 0.2
+    contactDistance: 0
+  m_BreakForce: Infinity
+  m_BreakTorque: Infinity
+  m_EnableCollision: 0
+  m_EnablePreprocessing: 1
+  m_MassScale: 1
+  m_ConnectedMassScale: 1
+--- !u!59 &1037282935067559274
+HingeJoint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714777224758953534}
+  serializedVersion: 3
+  m_ConnectedBody: {fileID: 0}
+  m_ConnectedArticulationBody: {fileID: 0}
+  m_Anchor: {x: 0.42207184, y: 0.0521575, z: -0.2885518}
+  m_Axis: {x: -0.00000008691298, y: -0.107836775, z: -0.99416876}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   m_UseSpring: 0
@@ -350,8 +727,8 @@ GameObject:
   - component: {fileID: 8769143340972295498}
   - component: {fileID: 1514052637946985255}
   - component: {fileID: 5998799430705316859}
-  - component: {fileID: 321786823485492723}
-  - component: {fileID: 4832320180690764994}
+  - component: {fileID: 8580065701922662110}
+  - component: {fileID: 1882453479537617401}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_1(Clone)
   m_TagString: Untagged
@@ -404,6 +781,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -425,6 +804,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -463,7 +843,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -490,10 +869,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 936176607902751511}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -510,7 +889,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &321786823485492723
+--- !u!59 &8580065701922662110
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -549,7 +928,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &4832320180690764994
+--- !u!59 &1882453479537617401
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -603,20 +982,20 @@ GameObject:
   - component: {fileID: 8634819905015856336}
   - component: {fileID: 4417131167125278719}
   - component: {fileID: 7030735263342892838}
-  - component: {fileID: 5390220319452876890}
-  - component: {fileID: 1196769468690499688}
-  - component: {fileID: 1619727587974641981}
-  - component: {fileID: 1463226960448499714}
-  - component: {fileID: 5088094434292689425}
-  - component: {fileID: 9000579619389184581}
-  - component: {fileID: 2934422929541772799}
-  - component: {fileID: 5698640320483105464}
-  - component: {fileID: 2600012889684862530}
-  - component: {fileID: 9220190081645653915}
-  - component: {fileID: 6793669740974945118}
-  - component: {fileID: 5377104267443002472}
-  - component: {fileID: 8376231905323428883}
-  - component: {fileID: 6433857232629694029}
+  - component: {fileID: 6861161372256309290}
+  - component: {fileID: 6231042456328768218}
+  - component: {fileID: 6872678190030686944}
+  - component: {fileID: 170526172146827885}
+  - component: {fileID: 3549316876868003238}
+  - component: {fileID: 1517755700868080993}
+  - component: {fileID: 165085983748635689}
+  - component: {fileID: 5623174853269608689}
+  - component: {fileID: 2382688818119354404}
+  - component: {fileID: 2628693940078634904}
+  - component: {fileID: 2320826788126370304}
+  - component: {fileID: 1156151967588481192}
+  - component: {fileID: 5736288119054859263}
+  - component: {fileID: 4188053064528225345}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_25(Clone)
   m_TagString: Untagged
@@ -681,6 +1060,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -702,6 +1083,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -740,7 +1122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -767,10 +1148,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1271983178254778050}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -787,7 +1168,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &5390220319452876890
+--- !u!59 &6861161372256309290
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -826,7 +1207,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1196769468690499688
+--- !u!59 &6231042456328768218
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -865,7 +1246,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1619727587974641981
+--- !u!59 &6872678190030686944
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -904,7 +1285,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1463226960448499714
+--- !u!59 &170526172146827885
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -943,7 +1324,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5088094434292689425
+--- !u!59 &3549316876868003238
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -982,7 +1363,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &9000579619389184581
+--- !u!59 &1517755700868080993
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1021,7 +1402,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2934422929541772799
+--- !u!59 &165085983748635689
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1060,7 +1441,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5698640320483105464
+--- !u!59 &5623174853269608689
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1099,7 +1480,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2600012889684862530
+--- !u!59 &2382688818119354404
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1138,7 +1519,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &9220190081645653915
+--- !u!59 &2628693940078634904
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1177,7 +1558,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6793669740974945118
+--- !u!59 &2320826788126370304
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1216,7 +1597,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5377104267443002472
+--- !u!59 &1156151967588481192
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1255,7 +1636,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8376231905323428883
+--- !u!59 &5736288119054859263
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1294,7 +1675,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6433857232629694029
+--- !u!59 &4188053064528225345
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1348,8 +1729,8 @@ GameObject:
   - component: {fileID: 6745320917815086848}
   - component: {fileID: 5230317826884953477}
   - component: {fileID: 1834040084585944284}
-  - component: {fileID: 26002682969837420}
-  - component: {fileID: 248368974993739985}
+  - component: {fileID: 808884605806032011}
+  - component: {fileID: 92418569748127972}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_12(Clone)
   m_TagString: Untagged
@@ -1402,6 +1783,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1423,6 +1806,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -1461,7 +1845,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -1488,10 +1871,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1319054511641089504}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1508,7 +1891,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &26002682969837420
+--- !u!59 &808884605806032011
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1547,7 +1930,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &248368974993739985
+--- !u!59 &92418569748127972
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1601,8 +1984,8 @@ GameObject:
   - component: {fileID: 2864357068976965392}
   - component: {fileID: 3137091370754966019}
   - component: {fileID: 3152997696805865500}
-  - component: {fileID: 2235724547012405775}
-  - component: {fileID: 7200669978906802890}
+  - component: {fileID: 4224956632765272364}
+  - component: {fileID: 3689064427475216730}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_36(Clone)
   m_TagString: Untagged
@@ -1655,6 +2038,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1676,6 +2061,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -1714,7 +2100,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -1741,10 +2126,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1410681043838090759}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1761,7 +2146,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &2235724547012405775
+--- !u!59 &4224956632765272364
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1800,7 +2185,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &7200669978906802890
+--- !u!59 &3689064427475216730
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1854,8 +2239,8 @@ GameObject:
   - component: {fileID: 6487819263701364926}
   - component: {fileID: 1919365929336347174}
   - component: {fileID: 3234930602691019740}
-  - component: {fileID: 4647201835751254491}
-  - component: {fileID: 5241223622179100175}
+  - component: {fileID: 6936156854391941674}
+  - component: {fileID: 6067321411898406417}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_22(Clone)
   m_TagString: Untagged
@@ -1908,6 +2293,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1929,6 +2316,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -1967,7 +2355,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -1994,10 +2381,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1465606780151018294}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2014,7 +2401,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &4647201835751254491
+--- !u!59 &6936156854391941674
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2053,7 +2440,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5241223622179100175
+--- !u!59 &6067321411898406417
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2107,8 +2494,8 @@ GameObject:
   - component: {fileID: 2097723569179957331}
   - component: {fileID: 628992653091589391}
   - component: {fileID: 4385492906104609880}
-  - component: {fileID: 1228409737997450242}
-  - component: {fileID: 5010649091788313698}
+  - component: {fileID: 2983974048888675755}
+  - component: {fileID: 5808885083303930013}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_10(Clone)
   m_TagString: Untagged
@@ -2161,6 +2548,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2182,6 +2571,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -2220,7 +2610,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -2247,10 +2636,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1753327532666946626}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2267,7 +2656,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &1228409737997450242
+--- !u!59 &2983974048888675755
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2306,7 +2695,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5010649091788313698
+--- !u!59 &5808885083303930013
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2360,8 +2749,8 @@ GameObject:
   - component: {fileID: 4861670417633969962}
   - component: {fileID: 2006148784945698350}
   - component: {fileID: 6792959879318277552}
-  - component: {fileID: 5414162988231566109}
-  - component: {fileID: 1610702195102839842}
+  - component: {fileID: 5572046091328104600}
+  - component: {fileID: 3910706454322787965}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_5(Clone)
   m_TagString: Untagged
@@ -2414,6 +2803,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2435,6 +2826,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -2473,7 +2865,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -2500,10 +2891,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2135330516183688514}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2520,7 +2911,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &5414162988231566109
+--- !u!59 &5572046091328104600
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2559,7 +2950,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1610702195102839842
+--- !u!59 &3910706454322787965
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2613,8 +3004,8 @@ GameObject:
   - component: {fileID: 1633696143680054065}
   - component: {fileID: 1318154770365619672}
   - component: {fileID: 7535683385676785173}
-  - component: {fileID: 5128673524996441006}
-  - component: {fileID: 4981331039762800690}
+  - component: {fileID: 2727037080551787766}
+  - component: {fileID: 6508322532671574138}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_27(Clone)
   m_TagString: Untagged
@@ -2667,6 +3058,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2688,6 +3081,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -2726,7 +3120,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -2753,10 +3146,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2711325577657847860}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -2773,7 +3166,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &5128673524996441006
+--- !u!59 &2727037080551787766
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2812,7 +3205,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &4981331039762800690
+--- !u!59 &6508322532671574138
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2866,9 +3259,9 @@ GameObject:
   - component: {fileID: 7107043620529045976}
   - component: {fileID: 6068306696374566349}
   - component: {fileID: 7573403190354196265}
-  - component: {fileID: 2311633145025321532}
-  - component: {fileID: 1739952426939192028}
-  - component: {fileID: 8776041395943208729}
+  - component: {fileID: 4549238990212260314}
+  - component: {fileID: 8360577094999657663}
+  - component: {fileID: 8508134630841099255}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_26(Clone)
   m_TagString: Untagged
@@ -2922,6 +3315,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2943,6 +3338,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -2981,7 +3377,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -3008,10 +3403,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2822878982613772241}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3028,7 +3423,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &2311633145025321532
+--- !u!59 &4549238990212260314
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3067,7 +3462,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1739952426939192028
+--- !u!59 &8360577094999657663
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3106,7 +3501,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8776041395943208729
+--- !u!59 &8508134630841099255
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3160,7 +3555,7 @@ GameObject:
   - component: {fileID: 8077228703219621148}
   - component: {fileID: 4045541246921631897}
   - component: {fileID: 4789973814730753248}
-  - component: {fileID: 58106397256279755}
+  - component: {fileID: 3359164586888980462}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_4(Clone)
   m_TagString: Untagged
@@ -3212,6 +3607,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3233,6 +3630,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -3271,7 +3669,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -3298,10 +3695,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3304821967455076079}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3318,7 +3715,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &58106397256279755
+--- !u!59 &3359164586888980462
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3372,10 +3769,10 @@ GameObject:
   - component: {fileID: 571705837846035699}
   - component: {fileID: 3405792733511891452}
   - component: {fileID: 3809604980335885831}
-  - component: {fileID: 7277581418054959735}
-  - component: {fileID: 2977901638510227758}
-  - component: {fileID: 2764019659347009146}
-  - component: {fileID: 8032998359194783858}
+  - component: {fileID: 7748641272746166913}
+  - component: {fileID: 5961015586838888708}
+  - component: {fileID: 4944584797612562685}
+  - component: {fileID: 1989413961856623203}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_32(Clone)
   m_TagString: Untagged
@@ -3430,6 +3827,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -3451,6 +3850,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -3489,7 +3889,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -3516,10 +3915,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3531613562454684820}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -3536,7 +3935,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &7277581418054959735
+--- !u!59 &7748641272746166913
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3575,7 +3974,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2977901638510227758
+--- !u!59 &5961015586838888708
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3614,7 +4013,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2764019659347009146
+--- !u!59 &4944584797612562685
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3653,7 +4052,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8032998359194783858
+--- !u!59 &1989413961856623203
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3665,259 +4064,6 @@ HingeJoint:
   m_ConnectedArticulationBody: {fileID: 0}
   m_Anchor: {x: -0.29890534, y: -0.017567173, z: 0.061525106}
   m_Axis: {x: -0.5555703, y: 0.08966298, z: 0.8266209}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
---- !u!1 &3663647017251758685
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1046134172649642603}
-  - component: {fileID: 5290466123496957586}
-  - component: {fileID: 7566941256590773554}
-  - component: {fileID: 6214681005626635665}
-  - component: {fileID: 5559989401656214619}
-  - component: {fileID: 4527729333358275576}
-  - component: {fileID: 8981530154426124485}
-  - component: {fileID: 5025127893058586203}
-  - component: {fileID: 4905202968101380926}
-  m_Layer: 0
-  m_Name: Capybara_SoftDrink_37(Clone)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1046134172649642603
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -2.4682643, z: -2.8831627}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 4852134211109879819}
-  - {fileID: 7844046572457499017}
-  m_Father: {fileID: 6939973155854020907}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &5290466123496957586
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  m_Mesh: {fileID: 4300000, guid: 199fdf1088d9b234b927f3f4a92399c7, type: 2}
---- !u!23 &7566941256590773554
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RayTracingAccelStructBuildFlagsOverride: 0
-  m_RayTracingAccelStructBuildFlags: 1
-  m_SmallMeshCulling: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 2100000, guid: 72965e0c84f67b442a7b11fa3475c345, type: 2}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 0
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &6214681005626635665
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4300000, guid: 199fdf1088d9b234b927f3f4a92399c7, type: 2}
---- !u!114 &5559989401656214619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
-  partRigidbody: {fileID: 0}
-  meshCollider: {fileID: 0}
-  attachedScrews: []
-  throwForceMultiplier: {x: 0.003, y: 0.003, z: 0.003}
-  minJointToDisableKinematic: 1
---- !u!114 &4527729333358275576
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b2ab1e578925c8c46947526d3ce3ba73, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alphaValueReference: _ObjectAlpha
-  _renderer: {fileID: 0}
---- !u!54 &8981530154426124485
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
---- !u!59 &5025127893058586203
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 4149264139678873888}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: -0.49809933, y: 0.13086438, z: -0.052453995}
-  m_Axis: {x: -0.83146966, y: -0.059910677, z: -0.5523304}
-  m_AutoConfigureConnectedAnchor: 1
-  m_ConnectedAnchor: {x: 0, y: 0, z: 0}
-  m_UseSpring: 0
-  m_Spring:
-    spring: 0
-    damper: 0
-    targetPosition: 0
-  m_UseMotor: 0
-  m_Motor:
-    targetVelocity: 0
-    force: 0
-    freeSpin: 0
-  m_UseLimits: 0
-  m_ExtendedLimits: 0
-  m_UseAcceleration: 0
-  m_Limits:
-    min: 0
-    max: 0
-    bounciness: 0
-    bounceMinVelocity: 0.2
-    contactDistance: 0
-  m_BreakForce: Infinity
-  m_BreakTorque: Infinity
-  m_EnableCollision: 0
-  m_EnablePreprocessing: 1
-  m_MassScale: 1
-  m_ConnectedMassScale: 1
---- !u!59 &4905202968101380926
-HingeJoint:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3663647017251758685}
-  serializedVersion: 3
-  m_ConnectedBody: {fileID: 1592230651574739106}
-  m_ConnectedArticulationBody: {fileID: 0}
-  m_Anchor: {x: 0.5362495, y: 0.112142324, z: 0.0070078373}
-  m_Axis: {x: 0.83146966, y: -0.059910677, z: -0.5523304}
   m_AutoConfigureConnectedAnchor: 1
   m_ConnectedAnchor: {x: 0, y: 0, z: 0}
   m_UseSpring: 0
@@ -3960,9 +4106,9 @@ GameObject:
   - component: {fileID: 8602913836337248833}
   - component: {fileID: 5066197204557237701}
   - component: {fileID: 7618739159610450722}
-  - component: {fileID: 2105502162147716254}
-  - component: {fileID: 6535616192283622338}
-  - component: {fileID: 7297990432513801931}
+  - component: {fileID: 287716662413968109}
+  - component: {fileID: 1779142104168267205}
+  - component: {fileID: 3569517676514670492}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_30(Clone)
   m_TagString: Untagged
@@ -4016,6 +4162,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4037,6 +4185,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4075,7 +4224,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -4102,10 +4250,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4874395482504522736}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4122,7 +4270,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &2105502162147716254
+--- !u!59 &287716662413968109
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4161,7 +4309,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6535616192283622338
+--- !u!59 &1779142104168267205
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4200,7 +4348,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &7297990432513801931
+--- !u!59 &3569517676514670492
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4254,7 +4402,7 @@ GameObject:
   - component: {fileID: 703022912543349438}
   - component: {fileID: 1698754774715888067}
   - component: {fileID: 2281623497480766362}
-  - component: {fileID: 3464534896889164470}
+  - component: {fileID: 5917463894407652308}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_3(Clone)
   m_TagString: Untagged
@@ -4306,6 +4454,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4327,6 +4477,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4365,7 +4516,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -4392,10 +4542,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4977688436028953602}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4412,7 +4562,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &3464534896889164470
+--- !u!59 &5917463894407652308
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4466,9 +4616,9 @@ GameObject:
   - component: {fileID: 4982287471371697839}
   - component: {fileID: 1918665406446507530}
   - component: {fileID: 7671837515808343093}
-  - component: {fileID: 2275863160883207507}
-  - component: {fileID: 5857811368945941388}
-  - component: {fileID: 6561346107670292082}
+  - component: {fileID: 414291157596769249}
+  - component: {fileID: 2998051196076207716}
+  - component: {fileID: 5446787992053055810}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_28(Clone)
   m_TagString: Untagged
@@ -4522,6 +4672,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4543,6 +4695,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4581,7 +4734,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -4608,10 +4760,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4993945287071029833}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4628,7 +4780,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &2275863160883207507
+--- !u!59 &414291157596769249
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4667,7 +4819,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5857811368945941388
+--- !u!59 &2998051196076207716
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4706,7 +4858,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6561346107670292082
+--- !u!59 &5446787992053055810
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4760,9 +4912,9 @@ GameObject:
   - component: {fileID: 7358037073891602987}
   - component: {fileID: 270419525225874193}
   - component: {fileID: 2020926702181996640}
-  - component: {fileID: 6381867632443636182}
-  - component: {fileID: 3199765002232435808}
-  - component: {fileID: 6742733510080893194}
+  - component: {fileID: 2160623448703887426}
+  - component: {fileID: 8318355918273827264}
+  - component: {fileID: 7667114589456496878}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_34(Clone)
   m_TagString: Untagged
@@ -4816,6 +4968,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -4837,6 +4991,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -4875,7 +5030,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -4902,10 +5056,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5299949612875949722}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -4922,7 +5076,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &6381867632443636182
+--- !u!59 &2160623448703887426
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -4961,7 +5115,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3199765002232435808
+--- !u!59 &8318355918273827264
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5000,7 +5154,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6742733510080893194
+--- !u!59 &7667114589456496878
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5054,8 +5208,8 @@ GameObject:
   - component: {fileID: 8608042259379730888}
   - component: {fileID: 1480603969843221845}
   - component: {fileID: 1396854237742095194}
-  - component: {fileID: 3883556692788385584}
-  - component: {fileID: 4000467503538669185}
+  - component: {fileID: 7509602071238563323}
+  - component: {fileID: 8398438813590359241}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_8(Clone)
   m_TagString: Untagged
@@ -5108,6 +5262,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5129,6 +5285,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -5167,7 +5324,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -5194,10 +5350,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5618247802997976034}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5214,7 +5370,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &3883556692788385584
+--- !u!59 &7509602071238563323
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5253,7 +5409,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &4000467503538669185
+--- !u!59 &8398438813590359241
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5307,7 +5463,7 @@ GameObject:
   - component: {fileID: 6496889831218866048}
   - component: {fileID: 2526424665081142041}
   - component: {fileID: 9185731737889155024}
-  - component: {fileID: 1464150883312424560}
+  - component: {fileID: 347602528921319787}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_20(Clone)
   m_TagString: Untagged
@@ -5359,6 +5515,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5380,6 +5538,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -5418,7 +5577,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -5445,10 +5603,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5709901709117071260}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5465,7 +5623,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &1464150883312424560
+--- !u!59 &347602528921319787
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5519,8 +5677,8 @@ GameObject:
   - component: {fileID: 1367902712204838206}
   - component: {fileID: 3974090814406706415}
   - component: {fileID: 995279524923916102}
-  - component: {fileID: 654017316630046430}
-  - component: {fileID: 8248817274058468326}
+  - component: {fileID: 722950209025636206}
+  - component: {fileID: 4220173613787383041}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_33(Clone)
   m_TagString: Untagged
@@ -5573,6 +5731,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5594,6 +5754,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -5632,7 +5793,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -5659,10 +5819,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5802727192985053860}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5679,7 +5839,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &654017316630046430
+--- !u!59 &722950209025636206
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5718,7 +5878,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8248817274058468326
+--- !u!59 &4220173613787383041
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5772,7 +5932,7 @@ GameObject:
   - component: {fileID: 1323137534574812959}
   - component: {fileID: 4589835053558958695}
   - component: {fileID: 4538284782073225361}
-  - component: {fileID: 6675376814055417227}
+  - component: {fileID: 2198020138620734141}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_16(Clone)
   m_TagString: Untagged
@@ -5824,6 +5984,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5845,6 +6007,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -5883,7 +6046,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -5910,10 +6072,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5847124194100157504}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -5930,7 +6092,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &6675376814055417227
+--- !u!59 &2198020138620734141
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -5984,7 +6146,7 @@ GameObject:
   - component: {fileID: 436263706961193399}
   - component: {fileID: 4477292378918832510}
   - component: {fileID: 53416519938988859}
-  - component: {fileID: 4771334537014547140}
+  - component: {fileID: 6628624267825260128}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_15(Clone)
   m_TagString: Untagged
@@ -6036,6 +6198,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6057,6 +6221,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -6095,7 +6260,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -6122,10 +6286,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5855085534479523340}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6142,7 +6306,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &4771334537014547140
+--- !u!59 &6628624267825260128
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6196,8 +6360,8 @@ GameObject:
   - component: {fileID: 5277284628754682371}
   - component: {fileID: 1086147783138384988}
   - component: {fileID: 6911111916706688799}
-  - component: {fileID: 8418416892892456066}
-  - component: {fileID: 1697202550668095439}
+  - component: {fileID: 8753301772275123536}
+  - component: {fileID: 4660507060763221692}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_29(Clone)
   m_TagString: Untagged
@@ -6250,6 +6414,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6271,6 +6437,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -6309,7 +6476,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -6336,10 +6502,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6038303692806074775}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6356,7 +6522,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &8418416892892456066
+--- !u!59 &8753301772275123536
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6395,7 +6561,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &1697202550668095439
+--- !u!59 &4660507060763221692
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6449,10 +6615,10 @@ GameObject:
   - component: {fileID: 5300527144692847608}
   - component: {fileID: 1708306989678068596}
   - component: {fileID: 4945525639426303586}
-  - component: {fileID: 8356907722225613745}
-  - component: {fileID: 4177542727297162984}
-  - component: {fileID: 2904211094967785041}
-  - component: {fileID: 8729899597970125756}
+  - component: {fileID: 848116811007263514}
+  - component: {fileID: 2464856352328710830}
+  - component: {fileID: 2729523499031451740}
+  - component: {fileID: 2343617390226997933}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_38(Clone)
   m_TagString: Untagged
@@ -6507,6 +6673,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6528,6 +6696,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -6566,7 +6735,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -6593,10 +6761,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6064854503338629219}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6613,7 +6781,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &8356907722225613745
+--- !u!59 &848116811007263514
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6652,7 +6820,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &4177542727297162984
+--- !u!59 &2464856352328710830
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6691,7 +6859,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2904211094967785041
+--- !u!59 &2729523499031451740
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6730,7 +6898,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8729899597970125756
+--- !u!59 &2343617390226997933
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6784,8 +6952,8 @@ GameObject:
   - component: {fileID: 7743537015394398977}
   - component: {fileID: 8756229618745127485}
   - component: {fileID: 4767273471874371913}
-  - component: {fileID: 5619279898702538974}
-  - component: {fileID: 229736699127378248}
+  - component: {fileID: 7426194298358956015}
+  - component: {fileID: 3309856591603364186}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_23(Clone)
   m_TagString: Untagged
@@ -6838,6 +7006,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -6859,6 +7029,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -6897,7 +7068,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -6924,10 +7094,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6277981893726455282}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -6944,7 +7114,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &5619279898702538974
+--- !u!59 &7426194298358956015
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -6983,7 +7153,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &229736699127378248
+--- !u!59 &3309856591603364186
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7088,8 +7258,8 @@ Transform:
   - {fileID: 5821389500140975585}
   - {fileID: 5237929143668967385}
   - {fileID: 3708382987906459200}
-  - {fileID: 1046134172649642603}
   - {fileID: 912475660493942142}
+  - {fileID: 7929368049038568574}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2472909578830370413
@@ -7107,6 +7277,8 @@ MonoBehaviour:
   rotateSpeedMultiplier: 0
   isDisableAutoRotatingAtStart: 0
   cloneToCalculateRotation: {fileID: 0}
+  enableKeyboardRotation: 0
+  keyboardRotateSpeed: 120
 --- !u!1 &6478439707095311453
 GameObject:
   m_ObjectHideFlags: 0
@@ -7122,8 +7294,8 @@ GameObject:
   - component: {fileID: 8482431111950778495}
   - component: {fileID: 4845609870782986696}
   - component: {fileID: 6083064527124778943}
-  - component: {fileID: 7081241914185697584}
-  - component: {fileID: 8290859973412244332}
+  - component: {fileID: 1754639111280679483}
+  - component: {fileID: 736539462177548265}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_14(Clone)
   m_TagString: Untagged
@@ -7176,6 +7348,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7197,6 +7371,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -7235,7 +7410,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -7262,10 +7436,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6478439707095311453}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -7282,7 +7456,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &7081241914185697584
+--- !u!59 &1754639111280679483
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7321,7 +7495,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8290859973412244332
+--- !u!59 &736539462177548265
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7375,8 +7549,8 @@ GameObject:
   - component: {fileID: 2694333737472472230}
   - component: {fileID: 2728384188954964336}
   - component: {fileID: 6701706157062123964}
-  - component: {fileID: 1058795054521501310}
-  - component: {fileID: 5676726347198668695}
+  - component: {fileID: 3759977946434846192}
+  - component: {fileID: 9125555445139255972}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_6(Clone)
   m_TagString: Untagged
@@ -7429,6 +7603,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7450,6 +7626,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -7488,7 +7665,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -7515,10 +7691,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6532728427726339853}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -7535,7 +7711,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &1058795054521501310
+--- !u!59 &3759977946434846192
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7574,7 +7750,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5676726347198668695
+--- !u!59 &9125555445139255972
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7628,20 +7804,20 @@ GameObject:
   - component: {fileID: 3776966534822213863}
   - component: {fileID: 6358772558129863396}
   - component: {fileID: 7566234429889932647}
-  - component: {fileID: 1673712890046602656}
-  - component: {fileID: 8721406223733462872}
-  - component: {fileID: 7293368594922722371}
-  - component: {fileID: 6965161659659668410}
-  - component: {fileID: 20257159602029120}
-  - component: {fileID: 3166469922031559617}
-  - component: {fileID: 3557936190582341299}
-  - component: {fileID: 8214643750476286749}
-  - component: {fileID: 8968617722378782807}
-  - component: {fileID: 895898343368057144}
-  - component: {fileID: 2603069658496022900}
-  - component: {fileID: 7683885544230047996}
-  - component: {fileID: 6729373211776848009}
-  - component: {fileID: 3965911548645677351}
+  - component: {fileID: 4517986534739301614}
+  - component: {fileID: 4458237881901874043}
+  - component: {fileID: 4323633117998876451}
+  - component: {fileID: 205039922006063418}
+  - component: {fileID: 4234258605228116640}
+  - component: {fileID: 3625313979292431489}
+  - component: {fileID: 2072946249186364115}
+  - component: {fileID: 4190035147608361661}
+  - component: {fileID: 7046151765330904714}
+  - component: {fileID: 6578723666917422951}
+  - component: {fileID: 7805423091742432228}
+  - component: {fileID: 5266767835157020027}
+  - component: {fileID: 8621692235261099267}
+  - component: {fileID: 8508539965014938840}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_24(Clone)
   m_TagString: Untagged
@@ -7706,6 +7882,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -7727,6 +7905,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -7765,7 +7944,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -7792,10 +7970,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6602665776276177630}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -7812,7 +7990,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &1673712890046602656
+--- !u!59 &4517986534739301614
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7851,7 +8029,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8721406223733462872
+--- !u!59 &4458237881901874043
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7890,7 +8068,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &7293368594922722371
+--- !u!59 &4323633117998876451
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7929,7 +8107,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6965161659659668410
+--- !u!59 &205039922006063418
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -7968,7 +8146,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &20257159602029120
+--- !u!59 &4234258605228116640
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8007,7 +8185,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3166469922031559617
+--- !u!59 &3625313979292431489
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8046,7 +8224,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3557936190582341299
+--- !u!59 &2072946249186364115
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8085,7 +8263,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8214643750476286749
+--- !u!59 &4190035147608361661
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8124,7 +8302,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &8968617722378782807
+--- !u!59 &7046151765330904714
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8163,7 +8341,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &895898343368057144
+--- !u!59 &6578723666917422951
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8202,7 +8380,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2603069658496022900
+--- !u!59 &7805423091742432228
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8241,7 +8419,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &7683885544230047996
+--- !u!59 &5266767835157020027
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8280,7 +8458,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &6729373211776848009
+--- !u!59 &8621692235261099267
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8319,7 +8497,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3965911548645677351
+--- !u!59 &8508539965014938840
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8373,8 +8551,8 @@ GameObject:
   - component: {fileID: 536946187028378128}
   - component: {fileID: 5956713364224423363}
   - component: {fileID: 4390607994780742666}
-  - component: {fileID: 3210932817957275696}
-  - component: {fileID: 3102132736323329185}
+  - component: {fileID: 5972298178374452919}
+  - component: {fileID: 3855907691860333129}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_13(Clone)
   m_TagString: Untagged
@@ -8427,6 +8605,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8448,6 +8628,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -8486,7 +8667,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -8513,10 +8693,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6806732560201955147}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -8533,7 +8713,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &3210932817957275696
+--- !u!59 &5972298178374452919
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8572,7 +8752,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3102132736323329185
+--- !u!59 &3855907691860333129
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8626,7 +8806,7 @@ GameObject:
   - component: {fileID: 7852700808503423321}
   - component: {fileID: 9142547904489219344}
   - component: {fileID: 214461016719367191}
-  - component: {fileID: 4724432130192847239}
+  - component: {fileID: 4090125104517530441}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_7(Clone)
   m_TagString: Untagged
@@ -8678,6 +8858,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8699,6 +8881,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -8737,7 +8920,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -8764,10 +8946,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6851565050237947125}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -8784,7 +8966,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &4724432130192847239
+--- !u!59 &4090125104517530441
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8838,7 +9020,7 @@ GameObject:
   - component: {fileID: 1798988280219374069}
   - component: {fileID: 7358900961452509195}
   - component: {fileID: 5922182262166420586}
-  - component: {fileID: 4501338707418831644}
+  - component: {fileID: 2979777869127873996}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_2(Clone)
   m_TagString: Untagged
@@ -8890,6 +9072,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -8911,6 +9095,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -8949,7 +9134,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -8976,10 +9160,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7051109446040076344}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -8996,7 +9180,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &4501338707418831644
+--- !u!59 &2979777869127873996
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9050,7 +9234,7 @@ GameObject:
   - component: {fileID: 2915255834338700600}
   - component: {fileID: 9097668732975715645}
   - component: {fileID: 6433963084396702762}
-  - component: {fileID: 1317350250957879644}
+  - component: {fileID: 2612815280265898640}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_21(Clone)
   m_TagString: Untagged
@@ -9102,6 +9286,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9123,6 +9309,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -9161,7 +9348,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -9188,10 +9374,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7327635834303078774}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -9208,7 +9394,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &1317350250957879644
+--- !u!59 &2612815280265898640
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9262,8 +9448,8 @@ GameObject:
   - component: {fileID: 3904486526914518306}
   - component: {fileID: 3751747404865124528}
   - component: {fileID: 6030680253874855972}
-  - component: {fileID: 6864295117193702213}
-  - component: {fileID: 5678898913818888623}
+  - component: {fileID: 8410114207236300976}
+  - component: {fileID: 1127514663832811493}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_9(Clone)
   m_TagString: Untagged
@@ -9316,6 +9502,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9337,6 +9525,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -9375,7 +9564,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -9402,10 +9590,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7663561557745305713}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -9422,7 +9610,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &6864295117193702213
+--- !u!59 &8410114207236300976
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9461,7 +9649,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5678898913818888623
+--- !u!59 &1127514663832811493
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9515,8 +9703,8 @@ GameObject:
   - component: {fileID: 1713636479983612996}
   - component: {fileID: 4165241718639557294}
   - component: {fileID: 306295255768553969}
-  - component: {fileID: 990799349805722846}
-  - component: {fileID: 5893625325969626777}
+  - component: {fileID: 7933036477018254306}
+  - component: {fileID: 4090106091220791415}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_19(Clone)
   m_TagString: Untagged
@@ -9569,6 +9757,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9590,6 +9780,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -9628,7 +9819,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -9655,10 +9845,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8166754626391436999}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -9675,7 +9865,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &990799349805722846
+--- !u!59 &7933036477018254306
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9714,7 +9904,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5893625325969626777
+--- !u!59 &4090106091220791415
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9768,8 +9958,8 @@ GameObject:
   - component: {fileID: 5490079597390311538}
   - component: {fileID: 46924849673377590}
   - component: {fileID: 4242414881080389845}
-  - component: {fileID: 6507846711204865214}
-  - component: {fileID: 2071311942881009357}
+  - component: {fileID: 4307757791207701300}
+  - component: {fileID: 75785511597019065}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_11(Clone)
   m_TagString: Untagged
@@ -9822,6 +10012,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -9843,6 +10035,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -9881,7 +10074,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -9908,10 +10100,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8318398049693734468}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -9928,7 +10120,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &6507846711204865214
+--- !u!59 &4307757791207701300
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -9967,7 +10159,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2071311942881009357
+--- !u!59 &75785511597019065
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10021,8 +10213,8 @@ GameObject:
   - component: {fileID: 8066304992712762809}
   - component: {fileID: 7820079428241725199}
   - component: {fileID: 6199662985589776566}
-  - component: {fileID: 810008903731909952}
-  - component: {fileID: 3718461710729877735}
+  - component: {fileID: 3913276824802496080}
+  - component: {fileID: 1200060111431824207}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_31(Clone)
   m_TagString: Untagged
@@ -10075,6 +10267,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10096,6 +10290,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -10134,7 +10329,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -10161,10 +10355,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8695495265537470304}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -10181,7 +10375,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &810008903731909952
+--- !u!59 &3913276824802496080
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10220,7 +10414,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &3718461710729877735
+--- !u!59 &1200060111431824207
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10274,8 +10468,8 @@ GameObject:
   - component: {fileID: 5156792888665232018}
   - component: {fileID: 8378265655652707146}
   - component: {fileID: 866185945919307479}
-  - component: {fileID: 7241876460009745729}
-  - component: {fileID: 5136859112061301131}
+  - component: {fileID: 470963751979309301}
+  - component: {fileID: 4454899184885674238}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_18(Clone)
   m_TagString: Untagged
@@ -10328,6 +10522,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10349,6 +10545,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -10387,7 +10584,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -10414,10 +10610,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8901295545110002241}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -10434,7 +10630,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &7241876460009745729
+--- !u!59 &470963751979309301
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10473,7 +10669,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &5136859112061301131
+--- !u!59 &4454899184885674238
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10527,8 +10723,8 @@ GameObject:
   - component: {fileID: 5216133255007932758}
   - component: {fileID: 4794689364815480314}
   - component: {fileID: 4465181204304230252}
-  - component: {fileID: 4940829168082271127}
-  - component: {fileID: 2491327673030203957}
+  - component: {fileID: 1457860909128616196}
+  - component: {fileID: 5615524233688548267}
   m_Layer: 0
   m_Name: Capybara_SoftDrink_17(Clone)
   m_TagString: Untagged
@@ -10581,6 +10777,8 @@ MeshRenderer:
   m_RayTracingAccelStructBuildFlagsOverride: 0
   m_RayTracingAccelStructBuildFlags: 1
   m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -10602,6 +10800,7 @@ MeshRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
@@ -10640,7 +10839,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 431076ef134a85847a3be8e2673db5c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelCenter: {fileID: 0}
   partRigidbody: {fileID: 0}
   meshCollider: {fileID: 0}
   attachedScrews: []
@@ -10667,10 +10865,10 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8948771797903309032}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -10687,7 +10885,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!59 &4940829168082271127
+--- !u!59 &1457860909128616196
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10726,7 +10924,7 @@ HingeJoint:
   m_EnablePreprocessing: 1
   m_MassScale: 1
   m_ConnectedMassScale: 1
---- !u!59 &2491327673030203957
+--- !u!59 &5615524233688548267
 HingeJoint:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10780,7 +10978,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5010649091788313698}
+      objectReference: {fileID: 5808885083303930013}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -10863,7 +11061,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3210932817957275696}
+      objectReference: {fileID: 5972298178374452919}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -10946,7 +11144,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1464150883312424560}
+      objectReference: {fileID: 347602528921319787}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11029,7 +11227,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2600012889684862530}
+      objectReference: {fileID: 2382688818119354404}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11097,89 +11295,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 578209305235003845}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &663560235356399872
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1046134172649642603}
-    m_Modifications:
-    - target: {fileID: 4340868010685783976, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_Name
-      value: Screw 3D
-      objectReference: {fileID: 0}
-    - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: joint
-      value: 
-      objectReference: {fileID: 5025127893058586203}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -0.49809933
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.13086438
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -0.052453995
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.034001462
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.88100237
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0.00000006322027
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0.47188842
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
---- !u!54 &4149264139678873888 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 3503894264527278112, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 663560235356399872}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &4852134211109879819 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 663560235356399872}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &691378399618042527
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11195,7 +11310,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1058795054521501310}
+      objectReference: {fileID: 3759977946434846192}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11278,7 +11393,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6742733510080893194}
+      objectReference: {fileID: 7667114589456496878}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11361,7 +11476,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2275863160883207507}
+      objectReference: {fileID: 414291157596769249}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11444,7 +11559,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6675376814055417227}
+      objectReference: {fileID: 2198020138620734141}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11527,7 +11642,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6864295117193702213}
+      objectReference: {fileID: 8410114207236300976}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11610,7 +11725,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2235724547012405775}
+      objectReference: {fileID: 4224956632765272364}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11693,7 +11808,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3166469922031559617}
+      objectReference: {fileID: 3625313979292431489}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11776,7 +11891,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5088094434292689425}
+      objectReference: {fileID: 3549316876868003238}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11844,6 +11959,89 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 1427279657163911360}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1488797100694779620
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7929368049038568574}
+    m_Modifications:
+    - target: {fileID: 4340868010685783976, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_Name
+      value: Screw 3D
+      objectReference: {fileID: 0}
+    - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: joint
+      value: 
+      objectReference: {fileID: 3086439219052365405}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -0.2345218
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.1388358
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.19177052
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.9555832
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.04292664
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.29128477
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.013085073
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+--- !u!54 &2596624629731059396 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3503894264527278112, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+  m_PrefabInstance: {fileID: 1488797100694779620}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &6830284759911669743 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+  m_PrefabInstance: {fileID: 1488797100694779620}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1504894076064935073
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -11859,7 +12057,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5676726347198668695}
+      objectReference: {fileID: 9125555445139255972}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -11942,7 +12140,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2603069658496022900}
+      objectReference: {fileID: 7805423091742432228}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12025,7 +12223,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1196769468690499688}
+      objectReference: {fileID: 6231042456328768218}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12108,7 +12306,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2071311942881009357}
+      objectReference: {fileID: 75785511597019065}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12191,7 +12389,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8968617722378782807}
+      objectReference: {fileID: 7046151765330904714}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12274,7 +12472,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2311633145025321532}
+      objectReference: {fileID: 4549238990212260314}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12357,7 +12555,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1610702195102839842}
+      objectReference: {fileID: 3910706454322787965}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12440,7 +12638,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3102132736323329185}
+      objectReference: {fileID: 3855907691860333129}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12523,7 +12721,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8376231905323428883}
+      objectReference: {fileID: 5736288119054859263}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12606,7 +12804,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6535616192283622338}
+      objectReference: {fileID: 1779142104168267205}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12689,7 +12887,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5619279898702538974}
+      objectReference: {fileID: 7426194298358956015}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12772,7 +12970,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5241223622179100175}
+      objectReference: {fileID: 6067321411898406417}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12855,7 +13053,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1673712890046602656}
+      objectReference: {fileID: 4517986534739301614}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -12938,7 +13136,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5698640320483105464}
+      objectReference: {fileID: 5623174853269608689}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13006,89 +13204,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 2750249333624508486}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2790235139944525954
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1046134172649642603}
-    m_Modifications:
-    - target: {fileID: 4340868010685783976, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_Name
-      value: Screw 3D
-      objectReference: {fileID: 0}
-    - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: joint
-      value: 
-      objectReference: {fileID: 4905202968101380926}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0.5362495
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.112142324
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0.0070078373
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: -0.034001462
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0.88100237
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0.00000006322027
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.47188842
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
---- !u!54 &1592230651574739106 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 3503894264527278112, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 2790235139944525954}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &7844046572457499017 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
-  m_PrefabInstance: {fileID: 2790235139944525954}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &2916233840950016898
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13104,7 +13219,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1463226960448499714}
+      objectReference: {fileID: 170526172146827885}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13187,7 +13302,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5857811368945941388}
+      objectReference: {fileID: 2998051196076207716}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13270,7 +13385,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8418416892892456066}
+      objectReference: {fileID: 8753301772275123536}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13353,7 +13468,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5136859112061301131}
+      objectReference: {fileID: 4454899184885674238}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13436,7 +13551,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4981331039762800690}
+      objectReference: {fileID: 6508322532671574138}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13519,7 +13634,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7293368594922722371}
+      objectReference: {fileID: 4323633117998876451}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13602,7 +13717,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8214643750476286749}
+      objectReference: {fileID: 4190035147608361661}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13685,7 +13800,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7241876460009745729}
+      objectReference: {fileID: 470963751979309301}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13768,7 +13883,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2819982246350522807}
+      objectReference: {fileID: 2676315460767153982}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13851,7 +13966,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3965911548645677351}
+      objectReference: {fileID: 8508539965014938840}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -13934,7 +14049,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 895898343368057144}
+      objectReference: {fileID: 6578723666917422951}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14017,7 +14132,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6381867632443636182}
+      objectReference: {fileID: 2160623448703887426}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14100,7 +14215,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4177542727297162984}
+      objectReference: {fileID: 2464856352328710830}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14168,6 +14283,89 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
   m_PrefabInstance: {fileID: 4187839632204807357}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &4229129399774371478
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7929368049038568574}
+    m_Modifications:
+    - target: {fileID: 4340868010685783976, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_Name
+      value: Screw 3D (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: joint
+      value: 
+      objectReference: {fileID: 2839366451933968149}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.20569687
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.20012608
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.21939462
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: -0.9555832
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.042926412
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.29128477
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.013085004
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+--- !u!54 &725281355572383414 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 3503894264527278112, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+  m_PrefabInstance: {fileID: 4229129399774371478}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &8130030971319875485 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
+  m_PrefabInstance: {fileID: 4229129399774371478}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4260594649779094747
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14183,7 +14381,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8356907722225613745}
+      objectReference: {fileID: 848116811007263514}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14266,7 +14464,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1317350250957879644}
+      objectReference: {fileID: 2612815280265898640}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14349,7 +14547,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1619727587974641981}
+      objectReference: {fileID: 6872678190030686944}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14432,7 +14630,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1228409737997450242}
+      objectReference: {fileID: 2983974048888675755}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14515,7 +14713,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6433857232629694029}
+      objectReference: {fileID: 4188053064528225345}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14598,7 +14796,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8248817274058468326}
+      objectReference: {fileID: 4220173613787383041}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14681,7 +14879,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 9220190081645653915}
+      objectReference: {fileID: 2628693940078634904}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14764,7 +14962,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 990799349805722846}
+      objectReference: {fileID: 7933036477018254306}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14847,7 +15045,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4647201835751254491}
+      objectReference: {fileID: 6936156854391941674}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -14930,7 +15128,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4000467503538669185}
+      objectReference: {fileID: 8398438813590359241}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15013,7 +15211,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2977901638510227758}
+      objectReference: {fileID: 5961015586838888708}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15096,7 +15294,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 26002682969837420}
+      objectReference: {fileID: 808884605806032011}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15179,7 +15377,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 810008903731909952}
+      objectReference: {fileID: 3913276824802496080}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15262,7 +15460,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2105502162147716254}
+      objectReference: {fileID: 287716662413968109}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15345,7 +15543,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5678898913818888623}
+      objectReference: {fileID: 1127514663832811493}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15428,7 +15626,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3883556692788385584}
+      objectReference: {fileID: 7509602071238563323}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15511,7 +15709,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2764019659347009146}
+      objectReference: {fileID: 4944584797612562685}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15594,7 +15792,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2462121037681788295}
+      objectReference: {fileID: 3541871683295497413}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15677,7 +15875,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6561346107670292082}
+      objectReference: {fileID: 5446787992053055810}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15760,7 +15958,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 321786823485492723}
+      objectReference: {fileID: 8580065701922662110}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15843,7 +16041,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2904211094967785041}
+      objectReference: {fileID: 2729523499031451740}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -15926,7 +16124,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5414162988231566109}
+      objectReference: {fileID: 5572046091328104600}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16009,7 +16207,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2491327673030203957}
+      objectReference: {fileID: 5615524233688548267}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16092,7 +16290,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7200669978906802890}
+      objectReference: {fileID: 3689064427475216730}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16175,7 +16373,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5390220319452876890}
+      objectReference: {fileID: 6861161372256309290}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16258,7 +16456,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4832320180690764994}
+      objectReference: {fileID: 1882453479537617401}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16341,7 +16539,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 248368974993739985}
+      objectReference: {fileID: 92418569748127972}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16424,7 +16622,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8721406223733462872}
+      objectReference: {fileID: 4458237881901874043}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16507,7 +16705,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8729899597970125756}
+      objectReference: {fileID: 2343617390226997933}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16590,7 +16788,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 58106397256279755}
+      objectReference: {fileID: 3359164586888980462}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16673,7 +16871,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3718461710729877735}
+      objectReference: {fileID: 1200060111431824207}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16756,7 +16954,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4724432130192847239}
+      objectReference: {fileID: 4090125104517530441}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16839,7 +17037,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 654017316630046430}
+      objectReference: {fileID: 722950209025636206}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -16922,7 +17120,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4501338707418831644}
+      objectReference: {fileID: 2979777869127873996}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17005,7 +17203,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7297990432513801931}
+      objectReference: {fileID: 3569517676514670492}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17088,7 +17286,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1697202550668095439}
+      objectReference: {fileID: 4660507060763221692}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17171,7 +17369,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5744992245740894214}
+      objectReference: {fileID: 6825121655988451717}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17254,7 +17452,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7683885544230047996}
+      objectReference: {fileID: 5266767835157020027}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17337,7 +17535,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5377104267443002472}
+      objectReference: {fileID: 1156151967588481192}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17420,7 +17618,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3557936190582341299}
+      objectReference: {fileID: 2072946249186364115}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17503,7 +17701,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7081241914185697584}
+      objectReference: {fileID: 1754639111280679483}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17586,7 +17784,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 2934422929541772799}
+      objectReference: {fileID: 165085983748635689}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17669,7 +17867,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6793669740974945118}
+      objectReference: {fileID: 2320826788126370304}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17752,7 +17950,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5128673524996441006}
+      objectReference: {fileID: 2727037080551787766}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17835,7 +18033,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 5893625325969626777}
+      objectReference: {fileID: 4090106091220791415}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -17918,7 +18116,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4771334537014547140}
+      objectReference: {fileID: 6628624267825260128}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18001,7 +18199,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 9000579619389184581}
+      objectReference: {fileID: 1517755700868080993}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18084,7 +18282,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6729373211776848009}
+      objectReference: {fileID: 8621692235261099267}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18167,7 +18365,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 4940829168082271127}
+      objectReference: {fileID: 1457860909128616196}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18250,7 +18448,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3199765002232435808}
+      objectReference: {fileID: 8318355918273827264}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18333,7 +18531,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 7277581418054959735}
+      objectReference: {fileID: 7748641272746166913}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18416,7 +18614,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 1739952426939192028}
+      objectReference: {fileID: 8360577094999657663}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18499,7 +18697,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6507846711204865214}
+      objectReference: {fileID: 4307757791207701300}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18582,7 +18780,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8032998359194783858}
+      objectReference: {fileID: 1989413961856623203}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18665,7 +18863,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 20257159602029120}
+      objectReference: {fileID: 4234258605228116640}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18748,7 +18946,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 6965161659659668410}
+      objectReference: {fileID: 205039922006063418}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18831,7 +19029,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8776041395943208729}
+      objectReference: {fileID: 8508134630841099255}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18914,7 +19112,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3464534896889164470}
+      objectReference: {fileID: 5917463894407652308}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -18997,7 +19195,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 8290859973412244332}
+      objectReference: {fileID: 736539462177548265}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -19080,7 +19278,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 229736699127378248}
+      objectReference: {fileID: 3309856591603364186}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
@@ -19163,7 +19361,7 @@ PrefabInstance:
     - target: {fileID: 5186568290948194950, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: joint
       value: 
-      objectReference: {fileID: 3549233867741102777}
+      objectReference: {fileID: 2497205828513331773}
     - target: {fileID: 5360214704487115019, guid: ddb6aaceec1f7aa40a991433bc29f32b, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.5
