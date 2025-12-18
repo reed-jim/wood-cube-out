@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using NamPhuThuy.GamePlay;
 using UnityEditor;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace NamPhuThuy.Data
         public LevelMode mode;
         public float weight = 1f;
     }
-    
+
     [CreateAssetMenu(menuName = "WoodCube/LevelDataContainer")]
     public class LevelDataContainer : ScriptableObject
     {
@@ -38,11 +39,11 @@ namespace NamPhuThuy.Data
         [SerializeField] private int randomizeRangeEnd = 0;
         [Tooltip("List of LevelMode choices and their relative weights used for weighted random selection.")]
         [SerializeField] private List<LevelModeProbability> randomizeOptions = new List<LevelModeProbability>();
-        
+
         public int RandomizeRangeStart => randomizeRangeStart;
         public int RandomizeRangeEnd => randomizeRangeEnd;
         public List<LevelModeProbability> RandomizeOptions => randomizeOptions;
-        
+
         #region Callbacks
 
         private void OnValidate()
@@ -52,7 +53,7 @@ namespace NamPhuThuy.Data
 
             bool hasChanges = false;
             var tutorialSeen = new Dictionary<LevelMode, int>();
-            
+
             for (int i = 0; i < levelsData.Length; i++)
             {
                 if (levelsData[i] != null)
@@ -65,7 +66,7 @@ namespace NamPhuThuy.Data
                         hasChanges = true;
                     }
                 }
-                
+
                 if (levelsData[i].isHasTutorial)
                 {
                     var mode = levelsData[i].levelMode;
@@ -169,9 +170,6 @@ namespace NamPhuThuy.Data
 
         #endregion
     }
-    
-    
-    
 
     [Serializable]
     public class LevelData
@@ -180,5 +178,4 @@ namespace NamPhuThuy.Data
         public bool isHasTutorial;
         public LevelMode levelMode;
     }
-
 }

@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
+using System.Text;
+
 #if UNITY_EDITOR
 using System.IO;
 using UnityEditor;
@@ -18,7 +20,7 @@ namespace NamPhuThuy.Data
         private string _levelPrefabsFolderPath = "Assets/Prefabs/Levels";
         private LevelMode _defaultLevelMode = LevelMode.Normal;
         private DefaultAsset _folderAsset;
-        
+
         #endregion
 
         #region Flags
@@ -26,10 +28,10 @@ namespace NamPhuThuy.Data
         private bool _onlyNumberedLevels = true;
 
         #endregion
-        
-        
+
+
         #region Callbacks
-        
+
         private void OnEnable()
         {
             // Try to load the folder asset for the current path
@@ -37,7 +39,7 @@ namespace NamPhuThuy.Data
             {
                 _folderAsset = AssetDatabase.LoadAssetAtPath<DefaultAsset>(_levelPrefabsFolderPath);
             }
-            
+
             randomizeRangeStartProp = serializedObject.FindProperty("randomizeRangeStart");
             randomizeRangeEndProp = serializedObject.FindProperty("randomizeRangeEnd");
             randomizeOptionsProp = serializedObject.FindProperty("randomizeOptions");
@@ -56,9 +58,9 @@ namespace NamPhuThuy.Data
             // Drag and drop folder field
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.LabelField("Level Prefabs Folder", GUILayout.Width(150));
-            
+
             DefaultAsset newFolderAsset = EditorGUILayout.ObjectField(_folderAsset, typeof(DefaultAsset), false) as DefaultAsset;
-            
+
             if (newFolderAsset != _folderAsset)
             {
                 _folderAsset = newFolderAsset;
@@ -104,7 +106,7 @@ namespace NamPhuThuy.Data
 
             // Buttons
             EditorGUILayout.BeginHorizontal();
-            
+
             if (GUILayout.Button("Add All Level Prefabs"))
             {
                 AddAllLevelPrefabs(container);
@@ -121,7 +123,7 @@ namespace NamPhuThuy.Data
 
             if (GUILayout.Button("Clear All Levels"))
             {
-                if (EditorUtility.DisplayDialog("Clear Levels", 
+                if (EditorUtility.DisplayDialog("Clear Levels",
                         "Are you sure you want to clear all level data?", "Yes", "No"))
                 {
                     ClearAllLevels(container);
@@ -131,6 +133,11 @@ namespace NamPhuThuy.Data
             if (GUILayout.Button("Sort by Name"))
             {
                 SortLevelsByName(container);
+            }
+
+            if (GUILayout.Button("Export"))
+            {
+                ExportLevelsToTxt();
             }
 
             EditorGUILayout.EndHorizontal();
@@ -146,7 +153,7 @@ namespace NamPhuThuy.Data
             {
                 var prefabs = GetLevelPrefabsInFolder();
                 EditorGUILayout.LabelField($"Prefabs found in folder: {prefabs.Length}");
-                
+
                 if (_onlyNumberedLevels)
                 {
                     var numberedPrefabs = FilterNumberedPrefabs(prefabs);
@@ -160,16 +167,16 @@ namespace NamPhuThuy.Data
         #endregion
 
         #region Level Distribution
-        
+
         private SerializedProperty randomizeRangeStartProp;
         private SerializedProperty randomizeRangeEndProp;
         private SerializedProperty randomizeOptionsProp;
         private SerializedProperty levelsDataProp;
-        
+
         private void DrawLevelDistributionGUI(LevelDataContainer container)
         {
             serializedObject.Update();
-            
+
             using (new EditorGUI.DisabledScope(randomizeOptionsProp.arraySize == 0 || levelsDataProp.arraySize == 0))
             {
                 if (GUILayout.Button("Randomize LevelModes In Range"))
@@ -180,7 +187,7 @@ namespace NamPhuThuy.Data
 
             serializedObject.ApplyModifiedProperties();
         }
-        
+
         private void ApplyRandomizeFromEditor()
         {
             var container = target as LevelDataContainer;
@@ -197,23 +204,23 @@ namespace NamPhuThuy.Data
         }
 
         #endregion
-        
+
         #region Level Management
-        
-         private void AddAllLevelPrefabs(LevelDataContainer container)
+
+        private void AddAllLevelPrefabs(LevelDataContainer container)
         {
             GameObject[] levelPrefabs = GetLevelPrefabsInFolder();
-            
+
             if (_onlyNumberedLevels)
             {
                 levelPrefabs = FilterNumberedPrefabs(levelPrefabs);
             }
-            
+
             levelPrefabs = SortPrefabsByNumber(levelPrefabs);
 
             if (levelPrefabs.Length == 0)
             {
-                EditorUtility.DisplayDialog("No Prefabs Found", 
+                EditorUtility.DisplayDialog("No Prefabs Found",
                     $"No GameObjects found in folder: {_levelPrefabsFolderPath}", "OK");
                 return;
             }
@@ -231,7 +238,7 @@ namespace NamPhuThuy.Data
             for (int i = 0; i < levelPrefabs.Length; i++)
             {
                 SerializedProperty levelDataProperty = levelsDataProperty.GetArrayElementAtIndex(currentLength + i);
-                
+
                 SerializedProperty levelIdProperty = levelDataProperty.FindPropertyRelative("levelId");
                 SerializedProperty levelPrefabProperty = levelDataProperty.FindPropertyRelative("levelPrefab");
                 SerializedProperty levelModeProperty = levelDataProperty.FindPropertyRelative("levelMode");
@@ -256,17 +263,17 @@ namespace NamPhuThuy.Data
 
             if (levelPrefabs.Length == 0)
             {
-                EditorUtility.DisplayDialog("No Prefabs Found", 
+                EditorUtility.DisplayDialog("No Prefabs Found",
                     $"No GameObjects found in folder: {_levelPrefabsFolderPath}", "OK");
                 return;
             }
-            
+
             // Sort by level number for proper ordering
             levelPrefabs = SortPrefabsByNumber(levelPrefabs);
 
             if (levelPrefabs.Length == 0)
             {
-                string message = _onlyNumberedLevels 
+                string message = _onlyNumberedLevels
                     ? $"No numbered level prefabs found in folder: {_levelPrefabsFolderPath}"
                     : $"No GameObjects found in folder: {_levelPrefabsFolderPath}";
                 EditorUtility.DisplayDialog("No Prefabs Found", message, "OK");
@@ -284,7 +291,7 @@ namespace NamPhuThuy.Data
             for (int i = 0; i < levelPrefabs.Length; i++)
             {
                 SerializedProperty levelDataProperty = levelsDataProperty.GetArrayElementAtIndex(i);
-                
+
                 SerializedProperty levelIdProperty = levelDataProperty.FindPropertyRelative("levelId");
                 SerializedProperty levelPrefabProperty = levelDataProperty.FindPropertyRelative("levelPrefab");
                 SerializedProperty levelModeProperty = levelDataProperty.FindPropertyRelative("levelMode");
@@ -302,7 +309,7 @@ namespace NamPhuThuy.Data
 
             DebugLogger.Log($"Replaced all levels with {levelPrefabs.Length} level prefabs from folder.");
         }
-        
+
         private void ClearAllLevels(LevelDataContainer container)
         {
             SerializedProperty levelsDataProperty = serializedObject.FindProperty("levelsData");
@@ -314,9 +321,9 @@ namespace NamPhuThuy.Data
             serializedObject.ApplyModifiedProperties();
             EditorUtility.SetDirty(container);
 
-            DebugLogger.LogSimple(message:"Cleared all level data.");
+            DebugLogger.LogSimple(message: "Cleared all level data.");
         }
-        
+
         #endregion
 
         #region Filtering and Sorting
@@ -338,7 +345,7 @@ namespace NamPhuThuy.Data
 
             return numberedPrefabs.ToArray();
         }
-        
+
         /// <summary>
         /// Check if a string contains any numbers
         /// </summary>
@@ -346,7 +353,7 @@ namespace NamPhuThuy.Data
         {
             return Regex.IsMatch(text, @"\d");
         }
-        
+
         /// <summary>
         /// Extract number from prefab name for sorting
         /// </summary>
@@ -359,20 +366,20 @@ namespace NamPhuThuy.Data
             }
             return 0; // Default to 0 if no number found
         }
-        
+
         /// <summary>
         /// Sort prefabs by the number in their names
         /// </summary>
         private GameObject[] SortPrefabsByNumber(GameObject[] prefabs)
         {
-            return prefabs.OrderBy(prefab => 
+            return prefabs.OrderBy(prefab =>
             {
                 if (prefab == null) return int.MaxValue;
                 return ExtractNumberFromName(prefab.name);
             }).ToArray();
         }
-        
-        
+
+
 
         private void SortLevelsByName(LevelDataContainer container)
         {
@@ -394,7 +401,7 @@ namespace NamPhuThuy.Data
             }
 
             // Sort by prefab name (handle null cases)
-            levelDataList.Sort((a, b) => 
+            levelDataList.Sort((a, b) =>
             {
                 string nameA = a.prefab != null ? a.prefab.name : "";
                 string nameB = b.prefab != null ? b.prefab.name : "";
@@ -439,7 +446,7 @@ namespace NamPhuThuy.Data
             }
 
             // Sort by name for consistent ordering
-            System.Array.Sort(levelPrefabs, (a, b) => 
+            System.Array.Sort(levelPrefabs, (a, b) =>
             {
                 if (a == null && b == null) return 0;
                 if (a == null) return 1;
@@ -449,7 +456,38 @@ namespace NamPhuThuy.Data
 
             return levelPrefabs;
         }
-        
+
+        #endregion
+
+        #region Export
+        public void ExportLevelsToTxt()
+        {
+            LevelDataContainer levelDataContainer = target as LevelDataContainer;
+
+            string path = EditorUtility.SaveFilePanel(
+                "Export Level Data",
+                Application.dataPath,
+                "LevelData",
+                "txt"
+            );
+
+            if (string.IsNullOrEmpty(path))
+                return;
+
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var level in levelDataContainer.LevelsData)
+            {
+                sb.AppendLine($"level {level.levelId + 1}");
+                sb.AppendLine($"mode: {level.levelMode}");
+                sb.AppendLine(); // empty line between levels
+            }
+
+            File.WriteAllText(path, sb.ToString());
+
+            Debug.Log($"Level data exported to: {path}");
+            AssetDatabase.Refresh();
+        }
         #endregion
     }
 }
