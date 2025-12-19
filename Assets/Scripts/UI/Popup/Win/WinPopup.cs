@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Coffee.UIEffects;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using NamPhuThuy.AnimateWithScripts;
@@ -120,6 +121,20 @@ public class WinPopup : BasePopup
 
     #endregion
 
+    #region Private Methods
+
+    private void PlayVFXPopupText(string message)
+    {
+        var args = new PopupTextArgs {
+            message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+            textFont = GUIManager.Instance.DefaultFont,
+            customScale = 0.9f,
+        };
+        AnimationManager.Ins.Play<PopupTextArgs>(args);
+    }
+
+    #endregion
+    
     private async void OnLevelWinAsync()
     {
         AdmobAdsMax.Instance.ShowBannerCollap();
@@ -128,17 +143,37 @@ public class WinPopup : BasePopup
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
 
+        // Button Effects
         continueButton.interactable = false;
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
-        continueButton.transform.localScale = Vector3.zero;
+        continueButton.transform.localScale = Vector3.one;
         x5CoinButton.transform.localScale = Vector3.one;
-
-        TweenHelper.DoPunch(continueButton.transform, 1, onCompleteAction: () =>
+        
+        TweenHelper.DoPunch(x5CoinButton.transform, 1, onCompleteAction: () =>
         {
             continueButton.interactable = true;
         });
+        
+        UIEffect continueButtonUIEffect = continueButton.GetComponent<UIEffect>();
+        if (continueButtonUIEffect != null)
+        {
+            continueButtonUIEffect.toneIntensity = 1f;
+            _tweens.Add(
+                Tween.Custom(
+                    startValue: 1f, endValue: 0f, 
+                    startDelay: 1.5f,
+                    duration: 1.5f, ease: Ease.InQuad,  // slow at start, faster near the end
+                    onValueChange: v => continueButtonUIEffect.toneIntensity = v).OnComplete(
+                    () =>
+                    {
+                        continueButton.interactable = true;
+                    })
+            );
+            
+            
+        }
 
         // REMOTE CONFIG IS COLLECT COIN
         _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
@@ -232,7 +267,11 @@ public class WinPopup : BasePopup
         DebugLogger.Log();
         // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
 
-        if (!interactable) return;
+        if (!interactable)
+        {
+            PlayVFXPopupText(LocalizationConst.READYING);
+            return;
+        }
 
         if (_isAlreadyWatchRewardedAd)
         {

@@ -116,6 +116,8 @@ namespace NamPhuThuy
                 if (currentPicData != null)
                 {
                     spriteRenderer.sprite = currentPicData.mainImage;
+                    remoteAssetsLoadingContainer.sprite = currentPicData.mainImage;
+                    
 
                     if (!string.IsNullOrEmpty(currentPicData.videoName) &&
                         GamePersistentVariable.isUseVideoBackground)
@@ -128,6 +130,14 @@ namespace NamPhuThuy
                     {
                         DebugLogger.Log(message: $"Use Image for BG", context: this);
                         videoPlayer.gameObject.SetActive(false);
+                        if (remoteAssetsLoadingContainer.gameObject.activeSelf)
+                        {
+                            remoteAssetsLoadingContainer.DOFade(0, duration: 0.3f).OnComplete(() =>
+                            {
+                                remoteAssetsLoadingContainer.gameObject.SetActive(false);
+                            });
+                        }
+                        
                         ActiveImage();
                     }
                 }

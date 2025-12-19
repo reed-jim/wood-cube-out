@@ -431,46 +431,19 @@ public class YarnLevelLoader : MonoBehaviour
             }
 
             MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-            MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
+            var size = obj.PieceServiceLocator.pieceProperty.BoundSize;
+            var half = 0.5f * size;
 
-            Vector3 objectPosition = obj.transform.position + meshFilter.mesh.bounds.center * pieceLossyScale;
+            var p = obj.transform.position + (meshFilter.mesh.bounds.center * pieceLossyScale);
 
-            float boundXMin = objectPosition.x - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.x;
-            float boundXMax = objectPosition.x + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.x;
-            float boundYMin = objectPosition.y - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.y;
-            float boundYMax = objectPosition.y + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.y;
-            float boundZMin = objectPosition.z - 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.z;
-            float boundZMax = objectPosition.z + 0.5f * obj.PieceServiceLocator.pieceProperty.BoundSize.z;
+            minX = Mathf.Min(minX, p.x - half.x);
+            maxX = Mathf.Max(maxX, p.x + half.x);
 
-            if (boundXMin < minX)
-            {
-                minX = boundXMin;
-            }
+            minY = Mathf.Min(minY, p.y - half.y);
+            maxY = Mathf.Max(maxY, p.y + half.y);
 
-            if (boundXMax > maxX)
-            {
-                maxX = boundXMax;
-            }
-
-            if (boundYMin < minY)
-            {
-                minY = boundYMin;
-            }
-
-            if (boundYMax > maxY)
-            {
-                maxY = boundYMax;
-            }
-
-            if (boundZMin < minZ)
-            {
-                minZ = boundZMin;
-            }
-
-            if (boundZMax > maxZ)
-            {
-                maxZ = boundZMax;
-            }
+            minZ = Mathf.Min(minZ, p.z - half.z);
+            maxZ = Mathf.Max(maxZ, p.z + half.z);
         }
 
         if (!isValid)
@@ -501,6 +474,8 @@ public class YarnLevelLoader : MonoBehaviour
 
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isFirstTimeOnLevel)
     {
+        DebugLogger.Log(message: $"expectedLevelSize: {expectedLevelSize}");
+        
         float maxExpectedLevelSize = expectedLevelSize.x;
 
         if (expectedLevelSize.y > maxExpectedLevelSize)
@@ -508,10 +483,10 @@ public class YarnLevelLoader : MonoBehaviour
             maxExpectedLevelSize = expectedLevelSize.y;
         }
 
-        if (expectedLevelSize.z > maxExpectedLevelSize)
+        /*if (expectedLevelSize.z > maxExpectedLevelSize)
         {
             maxExpectedLevelSize = 1f * expectedLevelSize.z;
-        }
+        }*/
 
         // the higher targetOrthographicSize, the smaller model
         float targetOrthographicSize;

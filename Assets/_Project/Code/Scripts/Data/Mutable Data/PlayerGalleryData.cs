@@ -180,6 +180,11 @@ namespace NamPhuThuy.Data
             return isUnlockedAllSexyPics && isUnlockedAllUniformPics && isUnlockedAllAnimePics;
         }
 
+        public bool IsNoMorePicture()
+        {
+            return playerPictures.Count == DataManager.Ins.PictureDatas.allPictureDatas.Count;
+        }
+
         #endregion
 
 

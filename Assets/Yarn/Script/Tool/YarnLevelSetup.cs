@@ -138,6 +138,7 @@ public class YarnLevelSetup : EditorWindow
         EditorGUILayout.EndScrollView();
 
         RemapFactionInfo();
+        GUILayout.Space(16);
         EditorGUILayout.EndScrollView();
 
 
@@ -341,7 +342,7 @@ public class YarnLevelSetup : EditorWindow
             Renderer renderer = item.GetComponent<Renderer>();
             if (renderer == null)
             {
-                DebugLogger.LogError(message: $"Renderere is null");
+                DebugLogger.LogError(message: $"Renderer is null");
                 continue;
             }
 
