@@ -86,8 +86,8 @@ namespace NamPhuThuy.UI
 
         private string _downloadedNoti = _videoDownloadedNoti;
         private static readonly string _videoDownloadedNoti = "Video Downloaded"; 
-        private static readonly string _imageDownloadedNoti = "Image Downloaded"; 
-
+        private static readonly string _imageDownloadedNoti = "Image Downloaded";
+        private bool isChangeToImage = false;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -173,6 +173,7 @@ namespace NamPhuThuy.UI
             currentPictureId = GamePersistentVariable.currentPictureId_PictureNew;
 
             imageButton.isUseClickyFX = false; // Turn off the ClickyFX 
+            isChangeToImage = false;
             
             if (videoDownloadPriceText != null)
             {
@@ -196,39 +197,11 @@ namespace NamPhuThuy.UI
 
                 if (!string.IsNullOrEmpty(currentPicData.videoName) && GamePersistentVariable.isUseVideoBackground)
                 {
-                    // Common.DebugLogger.Log(message:$"vidName is not null");
-                    videoDownloadButton?.gameObject.SetActive(true);
-                    imageDownloadButton?.gameObject.SetActive(true);
-
-                    pictureImageContainer.gameObject.SetActive(false);
-                    videoContainer.gameObject.SetActive(true);
-
-                    // videoFrame.sizeDelta = new Vector2(0.9f * GamePersistentVariable.canvasSize.x, 0.5f * GamePersistentVariable.canvasSize.y);
-
-                    imageToCalulateSizeForVideo.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
-                    imageToCalulateSizeForVideo.FitImageToRectTransform(videoFrame);
-
-                    videoDisplay.sizeDelta = _imageToCalulateSizeForVideoRT.sizeDelta;
-                    videoDisplay.localPosition = _imageToCalulateSizeForVideoRT.localPosition;
-
-                    StartCoroutine(LoadVideoFromStreamingAssets(currentPicData.videoName));
-
-                    videoPlaceholder.gameObject.SetActive(true);
-                    videoPlaceholder.color = Color.white;
-                    videoPlaceholderRT.sizeDelta = _imageToCalulateSizeForVideoRT.sizeDelta;
+                    ActiveVideo();
                 }
                 else
                 {
-                    DebugLogger.Log(message:$"vidName is null");
-                    videoDownloadButton?.gameObject.SetActive(false);
-                    imageDownloadButton?.gameObject.SetActive(true);
-
-                    pictureImageContainer.gameObject.SetActive(true);
-                    videoContainer.gameObject.SetActive(false);
-                    videoPlaceholder.gameObject.SetActive(false);
-
-                    pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
-                    pictureImage.FitImageToRectTransform(pictureMaskImage.rectTransform);
+                    ActiveImage();
                 }
             }
             catch (System.Exception)
@@ -252,6 +225,52 @@ namespace NamPhuThuy.UI
             confirmButton.interactable = false;
             AnimateConfirmButton();
             AnimateNewPicture();
+        }
+
+        private void ActiveVideo()
+        {
+          
+            // Common.DebugLogger.Log(message:$"vidName is not null");
+            videoDownloadButton?.gameObject.SetActive(true);
+            imageDownloadButton?.gameObject.SetActive(true);
+
+            pictureImageContainer.gameObject.SetActive(false);
+            videoContainer.gameObject.SetActive(true);
+
+            imageToCalulateSizeForVideo.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
+            imageToCalulateSizeForVideo.FitImageToRectTransform(videoFrame);
+
+            videoDisplay.sizeDelta = _imageToCalulateSizeForVideoRT.sizeDelta;
+            videoDisplay.localPosition = _imageToCalulateSizeForVideoRT.localPosition;
+
+            StartCoroutine(LoadVideoFromStreamingAssets(currentPicData.videoName));
+
+            videoPlaceholder.gameObject.SetActive(true);
+            videoPlaceholder.color = Color.white;
+            videoPlaceholderRT.sizeDelta = _imageToCalulateSizeForVideoRT.sizeDelta;
+        }
+        
+        private void ActiveImage()
+        {
+            if (isChangeToImage)
+            {
+                return;
+            }
+
+            isChangeToImage = true;
+            
+            DebugLogger.Log(message:$"vidName is null");
+            videoDownloadButton?.gameObject.SetActive(false);
+            imageDownloadButton?.gameObject.SetActive(true);
+
+            pictureImageContainer.gameObject.SetActive(true);
+            videoContainer.gameObject.SetActive(false);
+            videoPlaceholder.gameObject.SetActive(false);
+
+            pictureImage.sprite = DataManager.Ins.PictureDatas.allPictureDatas[currentPictureId].mainImage;
+            pictureImage.FitImageToRectTransform(pictureMaskImage.rectTransform);
+            
+           
         }
 
         #endregion
@@ -437,7 +456,6 @@ namespace NamPhuThuy.UI
                 updateBackgroundEvent?.Invoke();
                 
                 PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
-                
                 MMEventManager.TriggerEvent(new ELevelCameraUpdated());
             }
         }
@@ -488,9 +506,16 @@ namespace NamPhuThuy.UI
                             confirmButton.interactable = true;
                         })
                 );
-            
-            
             }
+            
+            /*PrimeTween.Tween.Custom(duration: 1f).OnComplete(() =>
+            {
+                TweenHelper.DoPunch(confirmButton.transform, 1, onCompleteAction: () =>
+                {
+                    confirmButton.interactable = true;
+                });
+            });*/
+          
         }
 
         #endregion
@@ -572,6 +597,13 @@ namespace NamPhuThuy.UI
 
             videoPlayer.url = $"file://{filePath}";
             videoPlayer.isLooping = true;
+            
+            videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
+            videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
+            
+            videoPlayer.errorReceived -= OnVideoError;
+            videoPlayer.errorReceived += OnVideoError;
+            
             videoPlayer.Prepare();
 
             _isVideoPrepareCompleted = false;
@@ -582,15 +614,17 @@ namespace NamPhuThuy.UI
                 OnVideoPreparedCompleted(videoPlayer);
             });
 
-            videoPlayer.prepareCompleted += OnVideoPreparedCompleted;
+            
         }
-
+        
         private void OnVideoPreparedCompleted(VideoPlayer preparedVideoPlayer)
         {
+            
             if (_isVideoPrepareCompleted)
             {
                 return;
             }
+            isChangeToImage = true; // prevent change to image
 
             _isVideoPrepareCompleted = true;
 
@@ -601,6 +635,12 @@ namespace NamPhuThuy.UI
 
             videoPlayer.Play();
             videoPlayer.prepareCompleted -= OnVideoPreparedCompleted;
+        }
+        
+        private void OnVideoError(VideoPlayer source, string message)
+        {
+            DebugLogger.LogError($"Video Error: {message}");
+            ActiveImage();
         }
         
         private void OnLikeStateChanged()
