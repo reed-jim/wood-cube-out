@@ -130,7 +130,7 @@ public class SpoolBox : MonoBehaviour
         SoundManager.Instance.PlaySoundScrewBoxDone();
 
         float initialPositionY = transform.localPosition.y;
-        float initialBottomMostPositionY = initialPositionY - 0.5f * _initialSize.y;
+        float initialBottomMostPositionY = initialPositionY - (0.5f * _initialSize.y);
 
         boxLid.gameObject.SetActive(true);
 
@@ -143,7 +143,7 @@ public class SpoolBox : MonoBehaviour
         //     hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
         // }
 
-        float hidePositionY = transform.position.y + 8 + 60 / GamePersistentVariable.currentTargetOrthographicSize;
+        float hidePositionY = transform.position.y + 8 + (60 / GamePersistentVariable.currentTargetOrthographicSize);
 
         _sequences.Add(Tween.LocalPositionY(boxLid, 0.12f, duration: closeBoxLidDuration)
             .OnComplete(() =>
@@ -158,54 +158,7 @@ public class SpoolBox : MonoBehaviour
                 // FX
                 if (_isPlayBoxCompleteFx)
                 {
-                    try
-                    {
-                        ParticleSystem rippleFx =
-                            ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
-
-                        if (rippleFx != null)
-                        {
-                            Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
-
-                            ParticleSystem.MainModule rippleFxMain = rippleFx.main;
-
-                            rippleFxMain.startColor = factionColor;
-
-                            for (int i = 0; i < rippleFx.transform.childCount; i++)
-                            {
-                                ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
-
-                                ParticleSystem.MainModule childFxMain = childFx.main;
-
-                                childFxMain.startColor = factionColor;
-                            }
-
-                            rippleFx.gameObject.SetActive(true);
-                            rippleFx.transform.position = transform.position.ChangeZ(10); // -9
-
-                            // if (GamePersistentVariable.currentTargetOrthographicSize < 10)
-                            // {
-                            //     rippleFx.transform.localScale = 0.25f * Vector3.one;
-                            // }
-                            // else
-                            // {
-                            //     rippleFx.transform.localScale = 0.5f * Vector3.one;
-                            // }
-
-                            float initialScale = 0.5f;
-                            float BEST_ORTHOGRAPHIC_SIZE = 20;
-
-                            rippleFx.transform.localScale =
-                                initialScale *
-                                (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) *
-                                Vector3.one;
-
-                            rippleFx.Play();
-                        }
-                    }
-                    catch (System.Exception e)
-                    {
-                    }
+                    TryPlayVFX();
 
                     playFullscreenEffectEvent?.Invoke(FactionUtility.GetColorForFaction(Faction));
                 }
@@ -214,29 +167,11 @@ public class SpoolBox : MonoBehaviour
             (
                 Tween.Custom(1, 0.6f, duration: scaleDownDuration, onValueChange: newVal =>
                     {
-                        transform.localScale = transform.localScale.ChangeY(newVal * _initialScale.y);
-                        transform.localPosition =
-                            transform.localPosition.ChangeY(initialBottomMostPositionY +
-                                                            newVal * 0.5f * _initialSize.y);
+                        AdjustScale(newVal);
                     }
                 ).OnComplete(() =>
                 {
-                    Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration,
-                        duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
-                    Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration,
-                            duration: moveOutDuration, ease: Ease.InOutSine)
-                        .OnComplete(() =>
-                        {
-                            spoolBoxCompletedEvent?.Invoke(this);
-                            spawnNewSpoolBoxEvent?.Invoke();
-
-                            transform.position = transform.position.ChangeY(initialPositionY);
-                            transform.localScale = _initialScale;
-
-                            boxLid.gameObject.SetActive(false);
-
-                            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
-                        });
+                   StartMoveOut();
                 })
             )
         );
@@ -244,6 +179,77 @@ public class SpoolBox : MonoBehaviour
         foreach (var spoolBoxSlot in spoolBoxSlots)
         {
             spoolBoxSlot.SmoothSetDissolveHeight(1, 0);
+        }
+        
+        void AdjustScale(float t)
+        {
+            transform.localScale = transform.localScale.ChangeY(t * _initialScale.y);
+            transform.localPosition = transform.localPosition.ChangeY(initialBottomMostPositionY + (t * 0.5f * _initialSize.y));
+        }
+        
+        void FinishAndPool()
+        {
+            spoolBoxCompletedEvent?.Invoke(this);
+            spawnNewSpoolBoxEvent?.Invoke();
+
+            transform.position = transform.position.ChangeY(initialPositionY);
+            transform.localScale = _initialScale;
+
+            boxLid.gameObject.SetActive(false);
+            ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX, gameObject, transform.parent);
+        }
+        
+        void StartMoveOut()
+        {
+            Tween.Scale(transform, _initialScale, startDelay: delayMoveOutDuration,
+                duration: 0.5f * moveOutDuration, ease: Ease.InOutSine);
+
+            Tween.LocalPositionY(transform, hidePositionY, startDelay: delayMoveOutDuration,
+                    duration: moveOutDuration, ease: Ease.InOutSine)
+                .OnComplete(FinishAndPool);
+        }
+
+        void TryPlayVFX()
+        {
+            try
+            {
+                ParticleSystem rippleFx =
+                    ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
+
+                if (rippleFx != null)
+                {
+                    Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
+
+                    ParticleSystem.MainModule rippleFxMain = rippleFx.main;
+
+                    rippleFxMain.startColor = factionColor;
+
+                    for (int i = 0; i < rippleFx.transform.childCount; i++)
+                    {
+                        ParticleSystem childFx = rippleFx.transform.GetChild(i).GetComponent<ParticleSystem>();
+
+                        ParticleSystem.MainModule childFxMain = childFx.main;
+
+                        childFxMain.startColor = factionColor;
+                    }
+
+                    rippleFx.gameObject.SetActive(true);
+                    rippleFx.transform.position = transform.position.ChangeZ(10); // -9
+
+                    float initialScale = 0.5f;
+                    float BEST_ORTHOGRAPHIC_SIZE = 20;
+
+                    rippleFx.transform.localScale =
+                        initialScale *
+                        (GamePersistentVariable.currentTargetOrthographicSize / BEST_ORTHOGRAPHIC_SIZE) *
+                        Vector3.one;
+
+                    rippleFx.Play();
+                }
+            }
+            catch (System.Exception e)
+            {
+            }
         }
     }
 

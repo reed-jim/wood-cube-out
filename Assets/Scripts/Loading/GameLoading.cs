@@ -22,7 +22,6 @@ public class GameLoading : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private RectTransform container;
     [SerializeField] private RectTransform loadingScreenContainer;
-    [SerializeField] private Image staticLoadingImage;
     [SerializeField] private Image blackBackground;
     [SerializeField] private Image progressBarFill;
     [SerializeField] private Image splashScreen;
@@ -44,7 +43,7 @@ public class GameLoading : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float maxExpectedMenuLoadTime;
-    private float loadingDuration = 0.5f;
+    private float loadingDuration = 3.2f;
     [SerializeField] private float fadeOutDuration;
 
     private List<Tween> _tweens;
@@ -108,7 +107,7 @@ public class GameLoading : MonoBehaviour
 
             DebugLogger.Log(message: $"trigger unload by load new scene");
             // if (!isTriggerUnloadLoadingScene)
-            UnloadLoadingScene();
+            // UnloadLoadingScene();
         }
         else
         {

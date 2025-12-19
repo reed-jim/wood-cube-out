@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using NamPhuThuy.Common;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -9,7 +11,6 @@ using UnityEditor;
 
 namespace NamPhuThuy.AddressablesAdapter
 {
-    
     public class AddressablesAssetLoad : MonoBehaviour
     {
         #region Private Serializable Fields
@@ -17,10 +18,17 @@ namespace NamPhuThuy.AddressablesAdapter
         [SerializeField] private string levelKey;
         [SerializeField] private string pictureKey;
         
+        
+        [Header("UI")]
+        [SerializeField] private GameObject noInternetPopup;
         #endregion
 
         #region Private Fields
 
+        private static bool HasInternet() =>
+            Application.internetReachability != NetworkReachability.NotReachable;
+
+        
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -29,55 +37,100 @@ namespace NamPhuThuy.AddressablesAdapter
         private async void Start()
         {
             DebugLogger.LogFrog(message: $"Pre-loading levels {levelKey} 31 to 60...");
-            // Initialize Addressables and load the level prefab once
-            var managerInit = await AddressablesManager.InitializeAsync();
-            if (managerInit.Succeeded)
-            {
-                DebugLogger.LogFrog(message: $"AddressablesManager initialized successfully.");
-            }
-            else
-            {
-                DebugLogger.LogFrog(message: $"AddressablesManager failed to initialize.");
-            }
+            using var cts = new CancellationTokenSource();
 
-            for (int i = 31; i <= 60; i++)
+            try
             {
-                string key = $"{levelKey} {i}";
-                var loadResult = await AddressablesManager.LoadAssetAsync<GameObject>(key);
-                
-                if (!loadResult.Succeeded)
-                {
-                    DebugLogger.LogError($"Failed to pre-load level {key}");
-                    return;
-                }
-                
+                await WaitForInternetAsync(cts.Token);
+                await PreloadLevelsWithRetry(cts.Token);
             }
-            
-            /*for (int i = 0; i <= 69; i++)
+            catch (TaskCanceledException)
             {
-                string key = $"{pictureKey} {i}";
-                var loadResult = await AddressablesManager.LoadAssetAsync<GameObject>(key);
-                
-                if (!loadResult.Succeeded)
-                {
-                    DebugLogger.LogError($"Failed to pre-load level {key}");
-                    return;
-                }
-                
-            }*/
-            
-            /*// Later, when starting the level:
-            var instantiateResult = await AddressablesManager.InstantiateAsync(levelKey, transform);
-            if (!instantiateResult.Succeeded)
-            {
-                DebugLogger.LogError($"Failed to instantiate level {levelKey}");
-            }*/
+                // ignore
+            }
         }
 
         #endregion
 
         #region Private Methods
+        
+        // Wait until internet is reachable, showing the popup while offline.
+        private async Task WaitForInternetAsync(CancellationToken ct)
+        {
+            while (!HasInternet())
+            {
+                ShowNoInternetPopup(true);
+                await Task.Delay(500, ct); // poll
+            }
 
+            ShowNoInternetPopup(false);
+        }
+        
+        private async Task PreloadLevelsWithRetry(CancellationToken ct)
+        {
+            DebugLogger.LogFrog(message: $"Pre-loading levels {levelKey} 31 to 60...");
+
+            await WaitForInternetAsync(ct);
+
+            var managerInit = await AddressablesManager.InitializeAsync();
+            if (!managerInit.Succeeded)
+            {
+                DebugLogger.LogFrog(message: $"AddressablesManager failed to initialize.");
+                return;
+            }
+
+            for (int i = 31; i <= 60; i++)
+            {
+                await WaitForInternetAsync(ct);
+
+                string key = $"{levelKey} {i}";
+                var loadResult = await AddressablesManager.LoadAssetAsync<GameObject>(key);
+
+                if (!loadResult.Succeeded)
+                {
+                    DebugLogger.LogError($"Failed to pre-load level {key}");
+                    return;
+                }
+            }
+        }
+
+        private void ShowNoInternetPopup(bool show)
+        {
+            if (noInternetPopup != null)
+            {
+                noInternetPopup.SetActive(show);
+            }
+        }
+        
+        private async Task PreloadLevels()
+        {
+            DebugLogger.LogFrog(message: $"Pre-loading levels {levelKey} 31 to 60...");
+
+            var managerInit = await AddressablesManager.InitializeAsync();
+            if (!managerInit.Succeeded)
+            {
+                DebugLogger.LogFrog(message: $"AddressablesManager failed to initialize.");
+                return;
+            }
+
+            for (int i = 31; i <= 60; i++)
+            {
+                if (!HasInternet())
+                {
+                    ShowNoInternetPopup(true);
+                    return;
+                }
+
+                string key = $"{levelKey} {i}";
+                var loadResult = await AddressablesManager.LoadAssetAsync<GameObject>(key);
+
+                if (!loadResult.Succeeded)
+                {
+                    DebugLogger.LogError($"Failed to pre-load level {key}");
+                    return;
+                }
+            }
+        }
         
         #endregion
 

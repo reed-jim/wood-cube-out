@@ -576,15 +576,13 @@ public class PieceManager : MonoBehaviour
 
         if (faction == GameFaction.None)
         {
+            DebugLogger.Log(message: $"Cant find valid faction", context: this);
             return;
         }
 
         spawnSpoolBoxEvent?.Invoke(faction);
 
         _totalSpoolBoxesSpawned++;
-        // _remainingSpawnSpoolBoxCommands--;
-
-        // _isHandlingSpawningSpoolBox = false;
     }
 
     private void OnSpoolBoxUnlocked(SpoolBox pieceBox)
@@ -706,26 +704,9 @@ public class PieceManager : MonoBehaviour
         DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title: "shuffledDifficultyLevelByFaction");
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
-
         GameFaction nextFaction = GameFaction.None;
 
         bool isFound = false;
-
-        // // DEBUG
-        // Debug.Log("SAFERIO --------------------------------------- " + difficultyLevel);
-
-        // for (int i = 0; i < factionSortedByDifficulty.Length; i++)
-        // {
-        //     GameFaction faction = factionSortedByDifficulty[i];
-
-        //     string debugString = $"SAFERIO {faction} Remaining: {remainingPieceByFaction[faction]}";
-
-        //     debugString += $" Available: {piecePortAvailableByFaction[faction]}";
-        //     debugString += $" <color=#FF6060>Difficulty: {totalBlockObjectsByFaction[faction]}</color>";
-
-        //     Debug.Log(debugString);
-        // }
-
         for (int i = difficultyLevel; i >= 0; i--)
         {
             GameFaction faction = factionSortedByDifficulty[i];

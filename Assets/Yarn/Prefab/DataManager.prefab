@@ -1,0 +1,89 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1438183168898384123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1432819016584453558}
+  - component: {fileID: 2711135982661518968}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1432819016584453558
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438183168898384123}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2711135982661518968
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1438183168898384123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c94d0856787119b468265f9a12c3b7ee, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.Data.DataManager
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
+  userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
+  boosterDataObserver: {fileID: 11400000, guid: 08938125d62ca854e8a5ab1cb58d04bb, type: 2}
+  levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
+  levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
+  gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+  removeAdsPackIAP: {fileID: 11400000, guid: 45e528370db32404f928ca2fe09470b2, type: 2}
+  levelDataContainer: {fileID: 11400000, guid: 2c2244a646c4f2648bbeba465edb6b6f, type: 2}
+  cachedPlayerData:
+    currentLevelId: 0
+    isLoopLevel: 0
+    numLevelLoop: 0
+    currentLevelLoop: 0
+    isCurrentLevelLoopRandomized: 0
+    isTutorialBoosterDone: 
+    currentCoinRewardProgress: 0
+    requiredLevelForCoinRewardGift: 0
+    isAllowPersonalizedAds: 0
+    currentBackgroundId: 0
+    coin: 0
+    isRemoveAds: 0
+    boosters: []
+    grantedLevelRewardIds: 
+    lastFreeFortuneSpinTs: 0
+  cachedPlayerSettingsData:
+    musicVolume: 0
+    sfxVolume: 0
+    musicEnabled: 0
+    sfxEnabled: 0
+    vibrationEnabled: 0
+    notifyEnabled: 0
+  cachedPlayerGalleryData:
+    playerPictures: []
+    isUnlockedAllAnimePics: 0
+    isUnlockedAllUniformPics: 0
+    isUnlockedAllSexyPics: 0
+    currentProgressPictureId: 0
+    unlockNewPictureProgress: 0
+  pictureDatas: {fileID: 11400000, guid: d37d12b4b7941f4458202d267226255e, type: 2}
+  galleryPackData: {fileID: 11400000, guid: 09f4ddaebb8d91a49b9aca35201f1294, type: 2}
+  rewardDatas: {fileID: 0}
+  resourceData: {fileID: 0}
+  serviceData: {fileID: 11400000, guid: 5ab3bf34aca11fd459c84795191e6507, type: 2}
