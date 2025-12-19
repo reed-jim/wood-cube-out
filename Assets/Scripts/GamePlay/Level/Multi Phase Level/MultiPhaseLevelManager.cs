@@ -120,10 +120,6 @@ namespace NamPhuThuy.GamePlay
 
                 switchPhaseEvent?.Invoke(_currentPhase);
 
-                GamePersistentVariable.currentTargetOrthographicSize *= 0.6f;
-
-                setTargetOrthographicSizeEvent?.Invoke(GamePersistentVariable.currentTargetOrthographicSize);
-
                 // for (int i = 0; i < multiPhaseLevelDataContainer.Items.Length; i++)
                 // {
                 //     if (multiPhaseLevelDataContainer.Items[i].Level == currentLevel.Value)

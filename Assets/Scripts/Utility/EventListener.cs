@@ -138,7 +138,6 @@ namespace NamPhuThuy
             LevelLoader.switchRouteEvent += (route) => DebugLogger.LogWithFrame($"LevelLoader.switchRouteEvent: {route}", Color.yellow);
             LevelLoader.setIsLevelLoadedEvent += () => DebugLogger.LogWithFrame("LevelLoader.setIsLevelLoadedEvent", Color.yellow);
             LevelLoader.enableSwipingEvent += (enabled) => DebugLogger.LogWithFrame($"LevelLoader.enableSwipingEvent: {enabled}", Color.yellow);
-            LevelLoader.setTargetOrthographicSizeEvent += (size) => DebugLogger.LogWithFrame($"LevelLoader.setTargetOrthographicSizeEvent: {size}", Color.yellow);
             LevelLoader.showLoadLevelErrorEvent += (show) => DebugLogger.LogWithFrame($"LevelLoader.showLoadLevelErrorEvent: {show}", Color.yellow);
         }
         public static void LoadLevelErrorSceneSubscribe()

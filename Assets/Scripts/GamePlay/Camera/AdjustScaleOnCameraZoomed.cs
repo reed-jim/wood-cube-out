@@ -15,6 +15,6 @@ public class AdjustScaleOnCameraZoomed : MonoBehaviour
 
     private void OnCameraZoomed(float ratio)
     {
-        transform.localScale = ratio * Vector3.one / Mathf.Cos(30 * Mathf.Deg2Rad);
+        transform.localScale = ratio * Vector3.one;
     }
 }

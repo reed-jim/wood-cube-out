@@ -34,6 +34,7 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private float tutorialDelay = 0.2f;
 
         #region PRIVATE FIELD
+        private Camera _mainCamera;
         private List<Tween> _tweens;
         private List<Tween> _autoCenterLevelTweens;
         private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -62,7 +63,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<ScreenRoute> switchRouteEvent;
         public static event Action setIsLevelLoadedEvent;
         public static event Action<bool> enableSwipingEvent;
-        public static event Action<float> setTargetOrthographicSizeEvent;
+        public static event Action<float, bool> setTargetOrthographicSizeEvent;
         public static event Action<bool> showLoadLevelErrorEvent;
 
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
@@ -89,8 +90,12 @@ namespace NamPhuThuy.GamePlay
 
             currentLevel.Load();
 
+            _mainCamera = Camera.main;
+
             _maxLevel = levelDataContainer.MaxLevel;
+
             GoLevel(currentLevel.Value);
+
             GamePersistentVariable.hasPlayerReachedGameplay = true;
         }
 
@@ -172,7 +177,8 @@ namespace NamPhuThuy.GamePlay
             }
 
             // NOT LOOP
-            if (GamePersistentVariable.isDisableLoopLevel)
+            // if (GamePersistentVariable.isDisableLoopLevel)
+            if (true)
             {
                 if (currentLevel.Value > _maxLevel)
                 {
@@ -317,7 +323,7 @@ namespace NamPhuThuy.GamePlay
 
                     _isSetLevelGradientBound = false;
 
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset, isLevelDirty: false);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
@@ -679,7 +685,7 @@ namespace NamPhuThuy.GamePlay
                 _pivotAdjust.transform.position = Vector3.zero;
                 _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
-                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, isLevelDirty: true);
 
                 _pivotAdjust.transform.position = currentPosition;
                 _pivotAdjust.transform.eulerAngles = currentRotation;
@@ -696,7 +702,7 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
+        Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset, bool isLevelDirty)
         {
             if (objects.Length == 0)
             {
@@ -730,6 +736,11 @@ namespace NamPhuThuy.GamePlay
                     continue;
                 }
 
+                if (!obj.gameObject.activeSelf)
+                {
+                    continue;
+                }
+
                 MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
 
@@ -741,7 +752,6 @@ namespace NamPhuThuy.GamePlay
                 float boundYMax = objectPosition.y + 0.5f * obj.BoundSize.y;
                 float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
                 float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
-
 
                 minX = Mathf.Min(boundXMin, minX);
                 minY = Mathf.Min(boundYMin, minY);
@@ -762,9 +772,9 @@ namespace NamPhuThuy.GamePlay
             if (!_isSetLevelGradientBound)
             {
                 SetLevelGradientMinMaxIn(newCenter, minY, maxY);
-
-                SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
             }
+
+            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ), isLevelDirty);
 
             // float halfDistance = (maxY - minY) / 2;
             // float shaderMinY = newCenter.y - halfDistance;
@@ -791,7 +801,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region LEVEL SETUP
-        private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
+        private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isLevelDirty)
         {
             float maxExpectedLevelSize = expectedLevelSize.x;
 
@@ -817,21 +827,32 @@ namespace NamPhuThuy.GamePlay
                 targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
             }
 
-            try
+            if (!isLevelDirty)
             {
-                ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
-
-                if (manualLevelZoomMultiplier != null)
+                try
                 {
-                    targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+                    ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
+
+                    if (manualLevelZoomMultiplier != null)
+                    {
+                        targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+                    }
+                }
+                catch (System.Exception)
+                {
+
                 }
             }
-            catch (System.Exception)
-            {
 
+            if (isLevelDirty)
+            {
+                if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 4.5f)
+                {
+                    return;
+                }
             }
 
-            setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
+            setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize, isLevelDirty);
 
             GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
         }
