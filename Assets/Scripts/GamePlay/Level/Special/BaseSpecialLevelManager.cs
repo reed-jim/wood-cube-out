@@ -120,7 +120,7 @@ namespace NamPhuThuy.GamePlay
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
-            int remaningTime = 25;
+            int remaningTime = 12;
 
             if (_isFirstTime)
             {

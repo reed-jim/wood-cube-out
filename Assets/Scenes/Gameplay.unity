@@ -724,6 +724,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f511f336a2fd964195cb30c0047b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 142216310}
   isScrewPort: 1
 --- !u!1001 &162805391
 PrefabInstance:
@@ -2114,7 +2115,7 @@ MonoBehaviour:
   layerMaskCheck:
     serializedVersion: 2
     m_Bits: 64
-  maxSwipeDistance: 4
+  maxSwipeDistance: 16
   timeToConfirmSelectObjectPart: 0.4
   _inputMode: 0
   isSelectObjectPart: 0
@@ -5051,6 +5052,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f511f336a2fd964195cb30c0047b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1127697633}
   isScrewPort: 1
 --- !u!1 &1143994666
 GameObject:
@@ -7231,6 +7233,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f511f336a2fd964195cb30c0047b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1530301213}
   isScrewPort: 1
 --- !u!1 &1542035412
 GameObject:
@@ -7602,6 +7605,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f511f336a2fd964195cb30c0047b386, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spriteRenderer: {fileID: 1563981918}
   isScrewPort: 1
 --- !u!224 &1573065567 stripped
 RectTransform:
@@ -8220,7 +8224,7 @@ Transform:
   m_GameObject: {fileID: 1689949961}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -36, z: 0}
+  m_LocalPosition: {x: 0, y: -100, z: 0}
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -10153,6 +10157,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5934856494608675380, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
+      propertyPath: spriteRenderer
+      value: 
+      objectReference: {fileID: 5307772356768035582}
     - target: {fileID: 6647344396257724342, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
       propertyPath: m_Sprite
       value: 
@@ -10162,6 +10170,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
+--- !u!212 &5307772356768035582 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 6647344396257724342, guid: a8f542764ca926e4394f230d1143fc91, type: 3}
+  m_PrefabInstance: {fileID: 5307772356768035581}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5629798744558496233
 PrefabInstance:
   m_ObjectHideFlags: 0
