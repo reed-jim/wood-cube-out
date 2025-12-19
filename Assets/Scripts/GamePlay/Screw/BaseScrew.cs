@@ -344,7 +344,7 @@ namespace NamPhuThuy.GamePlay
                     {
                         preFinalLocalPosition = new Vector3(0, 0.3f, -4f);
                         finalLocalPosition = new Vector3(0, -0.05f, 0.2f);
-                        _localRotationOnScrewSlot = new Vector3(-20f, 180 + 0f, 0);
+                        _localRotationOnScrewSlot = new Vector3(-15f, 180 + 0f, 0);
                     }
 
                     float durationMultiplier = Vector3.Distance(finalLocalPosition, transform.localPosition) / 10f;

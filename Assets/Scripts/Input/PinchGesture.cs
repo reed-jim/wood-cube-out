@@ -146,7 +146,7 @@ public class PinchGesture : MonoBehaviour
 
     private void SetNewCameraOrthographicSize(float orthographicSize, bool isLevelDirty)
     {
-        float unit = 0.75f * orthographicSize;
+        float unit = 0.6f * orthographicSize;
 
         if (_autoZoomTween.isAlive)
         {

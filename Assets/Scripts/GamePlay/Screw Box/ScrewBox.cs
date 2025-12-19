@@ -77,7 +77,6 @@ public class ScrewBox : MonoBehaviour
 
     protected virtual void Awake()
     {
-        ScrewBoxCameraManager.setCameraEvent += OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent += OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox += Unlock;
 
@@ -91,7 +90,6 @@ public class ScrewBox : MonoBehaviour
 
     protected virtual void OnDestroy()
     {
-        ScrewBoxCameraManager.setCameraEvent -= OnScrewBoxCameraSet;
         ScrewBoxSlot.screwBoxCompleteEvent -= OnScrewBoxCompleted;
         ScrewBoxUI.unlockScrewBox -= Unlock;
 
@@ -99,21 +97,16 @@ public class ScrewBox : MonoBehaviour
     }
     #endregion
 
-   
-
-    private void OnScrewBoxCameraSet(Camera screwBoxCamera)
+    public void SetSize(Vector2 worldSize)
     {
-        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(screwBoxCamera);
+        transform.SetLossyScale(Vector3.one);
 
-        float scaleWithWidth = (0.18f * worldSize.x) * transform.localScale.x / screwBoxSpriteRenderer.bounds.size.x;
-        float scaleWithHeight = (0.11f * worldSize.y) * transform.localScale.y / screwBoxSpriteRenderer.bounds.size.y;
-
-        scaleWithWidth *= 1.05f;
-        scaleWithHeight *= 1.05f;
+        float scaleWithWidth = (0.19f * worldSize.x) / screwBoxSpriteRenderer.bounds.size.x;
+        float scaleWithHeight = (0.12f * worldSize.y) / screwBoxSpriteRenderer.bounds.size.y;
 
         float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
 
-        transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
+        transform.SetLossyScale(finalScale * Vector3.one);
 
         _initialScale = transform.localScale;
         _initialSize = screwBoxSpriteRenderer.bounds.size;
@@ -123,9 +116,8 @@ public class ScrewBox : MonoBehaviour
 
     private async void OnScrewBoxCompleted(int instanceId)
     {
-        DebugLogger.LogSimple(message:$"instanceId: {instanceId}");
         if (instanceId != gameObject.GetInstanceID()) return;
-        
+
         await Task.Delay((int)(delayMoveInDuration * 300));
 
         SoundManager.Instance.PlaySoundScrewBoxDone();
@@ -155,7 +147,7 @@ public class ScrewBox : MonoBehaviour
                     try
                     {
                         ParticleSystem rippleFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.BOX_COMPLETED_FX);
-                        
+
                         if (rippleFx != null)
                         {
                             Color factionColor = 1.3f * FactionUtility.GetColorForFaction(Faction);
