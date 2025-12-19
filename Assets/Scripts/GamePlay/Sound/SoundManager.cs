@@ -295,6 +295,18 @@ public class SoundManager : MonoBehaviour
         sound.Play();
     }
 
+    public void PlaySoundCollectCoin()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.collectCoinSound);
+
+        sound.Play();
+    }
+
     private void FadeOutBackgroundMusic()
     {
         _tweens.Add(Tween.Custom(0.5f, 0, duration: 0.3f, onValueChange: newVal =>
