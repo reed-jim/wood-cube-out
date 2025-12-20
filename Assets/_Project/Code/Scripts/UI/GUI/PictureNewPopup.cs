@@ -223,6 +223,7 @@ namespace NamPhuThuy.UI
             SetStateDownloadSwitches();
 
             confirmButton.interactable = false;
+            confirmButton.transform.localScale = Vector3.zero;
             AnimateConfirmButton();
             AnimateNewPicture();
         }
@@ -491,7 +492,7 @@ namespace NamPhuThuy.UI
 
         private void AnimateConfirmButton()
         {
-            UIEffect continueButtonUIEffect = confirmButton.GetComponent<UIEffect>();
+            /*UIEffect continueButtonUIEffect = confirmButton.GetComponent<UIEffect>();
             if (continueButtonUIEffect != null)
             {
                 continueButtonUIEffect.toneIntensity = 1f;
@@ -506,16 +507,17 @@ namespace NamPhuThuy.UI
                             confirmButton.interactable = true;
                         })
                 );
-            }
-            
-            /*PrimeTween.Tween.Custom(duration: 1f).OnComplete(() =>
+            }*/
+
+            TweenHelper.Wait1Second(() =>
             {
-                TweenHelper.DoPunch(confirmButton.transform, 1, onCompleteAction: () =>
+                TweenHelper.DoPunch(confirmButton.transform, 1, 
+                    onCompleteAction: () =>
                 {
                     confirmButton.interactable = true;
                 });
-            });*/
-          
+            });
+
         }
 
         #endregion

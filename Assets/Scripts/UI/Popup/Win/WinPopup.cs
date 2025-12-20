@@ -145,18 +145,28 @@ public class WinPopup : BasePopup
 
         // Button Effects
         continueButton.interactable = false;
+        continueButton.gameObject.SetActive(false);
         returnHomeButton.interactable = true;
         x5CoinButton.interactable = true;
 
-        continueButton.transform.localScale = Vector3.one;
+        continueButton.transform.localScale = Vector3.zero;
         x5CoinButton.transform.localScale = Vector3.one;
         
-        TweenHelper.DoPunch(x5CoinButton.transform, 1, onCompleteAction: () =>
+        TweenHelper.DoPunch(x5CoinButton.transform, 1);
+        
+        
+        TweenHelper.Wait1Second(() =>
         {
-            continueButton.interactable = true;
+            continueButton.gameObject.SetActive(true);
+            TweenHelper.DoPunch(continueButton.transform, 1, onCompleteAction: () =>
+            {
+                continueButton.interactable = true;
+            });
         });
         
-        UIEffect continueButtonUIEffect = continueButton.GetComponent<UIEffect>();
+
+        
+        /*UIEffect continueButtonUIEffect = continueButton.GetComponent<UIEffect>();
         if (continueButtonUIEffect != null)
         {
             continueButtonUIEffect.toneIntensity = 1f;
@@ -171,9 +181,7 @@ public class WinPopup : BasePopup
                         continueButton.interactable = true;
                     })
             );
-            
-            
-        }
+        }*/
 
         // REMOTE CONFIG IS COLLECT COIN
         _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
