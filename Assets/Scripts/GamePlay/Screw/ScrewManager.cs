@@ -236,26 +236,20 @@ namespace NamPhuThuy.GamePlay
             // Find the number of obstacles for each screw in each faction.
             for (int i = 0; i < _screws.Count; i++)
             {
+                if (_screws[i] == null)
+                {
+                    continue;
+                }
+
+                if (_screws[i].IsDone || _screws[i].IsLocked)
+                {
+                    continue;
+                }
+
                 if (i > 0 && i % 16 == 0)
                 {
                     await Task.Delay(20);
                 }
-
-                if (_screws[i] == null) { continue; }
-                if (_screws[i].IsDone || _screws[i].IsLocked) { continue; }
-
-                /*// ------------
-
-                var screw = _screws[i];
-                var obstacleCount = CalculateScrewObstacleCount(screw);
-
-                // Record obstacle data
-                numObstacleEachScrewEachFaction[screw.Faction].Add(obstacleCount);
-
-                // Add tutorial difficulty modifier
-                difficultyLevelByFactions[screw.Faction] += screw.ScrewDifficultyModifier;
-
-                // ------------*/
 
                 GameFaction faction = _screws[i].Faction;
 

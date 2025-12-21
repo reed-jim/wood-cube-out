@@ -153,7 +153,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
 
         GamePersistentVariable.isStarChestClaimable = false;
 
-        while (!GamePersistentVariable.isLoadingComplete && GamePersistentVariable.isMenuLoading)
+        while (!GamePersistentVariable.isLoadingComplete || GamePersistentVariable.isMenuLoading)
         {
             yield return waitForSeconds;
         }
