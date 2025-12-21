@@ -457,10 +457,10 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
-        
+
         if (screwBox == null)
         {
-            DebugLogger.LogError(content:$"ScrewBoxManager.SpawnScrewBox(): The ScrewBox is null");
+            DebugLogger.LogError(content: $"ScrewBoxManager.SpawnScrewBox(): The ScrewBox is null");
         }
 
         screwBox.Faction = faction;
@@ -645,6 +645,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         lockedScrewBox.transform.position = refScrewBox.transform.position;
         lockedScrewBox.transform.localScale = refScrewBox.transform.localScale;
+        lockedScrewBox.SetSize(CommonUtil.GetScreenSizeWorld(Camera.main));
 
         int index = screwBoxs
             .Select((value, idx) => new { value, idx })
