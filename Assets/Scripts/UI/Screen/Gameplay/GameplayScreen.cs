@@ -4,6 +4,7 @@ using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewBoxManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
+        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
@@ -51,6 +54,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
         // debugPrevLevelButton.onClick.AddListener(PrevLevel);
+
+        if (UserData.IsRemoveAds)
+        {
+            noAdsButton.gameObject.SetActive(false);
+        }
 
         if (!gameSetting.IsDebug)
         {
@@ -69,6 +77,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewBoxManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
+        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
     }
 
     #endregion
@@ -181,6 +191,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         return currentLevel.Value;
     }
+
+    #region Remove Ads
+    private void OnAdsRemoved()
+    {
+        SaferioTween.ScaleDownWithPunch(noAdsButton.transform);
+    }
+    #endregion
 
     #region HARD MODE
     public void SwitchToHardMode()
