@@ -222,7 +222,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
-        while (GamePersistentVariable.isMenuLoading)
+        while (!GamePersistentVariable.isLoadingComplete && GamePersistentVariable.isMenuLoading)
         {
             yield return waitForSeconds;
         }
