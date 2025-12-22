@@ -419,7 +419,7 @@ public class PieceManager : MonoBehaviour
 
     private async void CheckWin()
     {
-        DebugLogger.Log(context: this);
+        // DebugLogger.Log(context: this);
         if (_pieces == null)
         {
             DebugLogger.Log(message: $"_pieces is null", context: this);
@@ -443,13 +443,13 @@ public class PieceManager : MonoBehaviour
         {
             if (_pieces[i] == null)
             {
-                DebugLogger.Log(message: $"The piece is null", context: this);
+                // DebugLogger.Log(message: $"The piece is null", context: this);
                 continue;
             }
             
             if (_pieces[i].IsDone)
             {
-                DebugLogger.Log(message: $"The piece is done", context: this);
+                // DebugLogger.Log(message: $"The piece is done", context: this);
                 continue;
             }
 
@@ -457,7 +457,7 @@ public class PieceManager : MonoBehaviour
         }
 
         int remainingPiece = remainingPieceByFaction.Sum(item => item.Value);
-        DebugLogger.Log(message: $"remainingPiece: {remainingPiece}", context: this);
+        // DebugLogger.Log(message: $"remainingPiece: {remainingPiece}", context: this);
         updateRemainingPieceEvent?.Invoke(remainingPiece, _totalPiece);
 
         if (remainingPiece == 0)
@@ -474,7 +474,7 @@ public class PieceManager : MonoBehaviour
 
         if (levelObserver != null && _totalPiece > 0)
         {
-            DebugLogger.Log(message: $"Update level observer progress: {1 - ((float)remainingPiece / _totalPiece)}", context: this);
+            // DebugLogger.Log(message: $"Update level observer progress: {1 - ((float)remainingPiece / _totalPiece)}", context: this);
             levelObserver.Progress = 1 - ((float)remainingPiece / _totalPiece);    
         }
         

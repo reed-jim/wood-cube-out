@@ -12,6 +12,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
     public void GenerateAddionalFaction(Transform level, BasePiece[] pieces)
     {
+        DebugLogger.Log();
         GameFaction[] currentFactions = pieces.Select(item => item.Faction).ToArray();
 
         Dictionary<GameFaction, int> finalFactions = new Dictionary<GameFaction, int>();
@@ -45,7 +46,11 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         // add new factions
         int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
-        numFactionsToAdd -= numFactionsToAdd % 3; // + 42
+        // numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
+        DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
+        DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
+
+        numFactionsToAdd -= numFactionsToAdd % 3;
 
         if (pieces.Length <= 3)
         {
@@ -84,13 +89,14 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         Dictionary<BasePiece, Transform> generatedPieces = new Dictionary<BasePiece, Transform>();
 
         int totalInnerPieces = innerPieceFactions.Count;
-
+        DebugLogger.Log(message: $"innerPieceFactions.Count before expand: {innerPieceFactions.Count}", context: this);
 
         GameFaction currentInnerPieceFaction = GameFaction.None;
 
         // generate new pieces for each layer
-        for (int layer = 1; layer < 3; layer++)
+        for (int layer = 1; layer < 30; layer++)
         {
+            DebugLogger.Log(message: $"innerPieceFactions.Count = {innerPieceFactions.Count}", context: this);
             if (innerPieceFactions.Count <= 0)
             {
                 break;
@@ -103,9 +109,18 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                     break;
                 }
 
+                var rootPiece = pieces[i];
+                if (rootPiece == null)
+                {
+                    DebugLogger.Log(message: $"rootPiece is null at index {i}", context: this);
+                    continue;
+                }
+
                 currentInnerPieceFaction = pieces[i].Faction;
 
-                for (int j = 0; j < pieces[i].transform.childCount; j++)
+                int _childCount = rootPiece.transform.childCount;
+
+                for (int j = 0; j < _childCount; j++)
                 {
                     BasePiece childPiece = pieces[i].transform.GetComponent<BasePiece>();
 
@@ -115,7 +130,9 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                     }
                 }
 
+              
                 BasePiece generatedPiece = Instantiate(pieces[i].gameObject, level).GetComponent<BasePiece>();
+                // DebugLogger.Log(message: $"Generated new piece for layer {layer} at index {i}", context: generatedPiece);
 
                 generatedPiece.gameObject.SetActive(false);
 
@@ -263,6 +280,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
     [SerializeField]
     private List<LevelTargetPieces> manualExtraPiecesByLevel = new List<LevelTargetPieces>()
     {
+        new LevelTargetPieces { levelIndex = 1, targetPieces = -1 }, // Buffer
         new LevelTargetPieces { levelIndex = 1, targetPieces = 9 },
         new LevelTargetPieces { levelIndex = 2, targetPieces = 18 },
         new LevelTargetPieces { levelIndex = 3, targetPieces = 39 },
@@ -346,7 +364,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 manualExtraPiecesByLevel[i] = new LevelTargetPieces
                 {
                     levelIndex = levelIndex,
-                    targetPieces = extraPiecesToAdd
+                    targetPieces = extraPiecesToAdd,
                 };
                 return;
             }
@@ -355,84 +373,17 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         manualExtraPiecesByLevel.Add(new LevelTargetPieces
         {
             levelIndex = levelIndex,
-            targetPieces = extraPiecesToAdd
+            targetPieces = extraPiecesToAdd,
         });
     }
 
-    /// <summary>
-    /// Instantiates extra pieces for the given levelIndex.
-    /// \- Uses existing pieces as templates (randomly).
-    /// \- Parents generated pieces under the chosen template piece so they behave like inner layers.
-    /// Returns number of pieces actually created.
-    /// </summary>
-    public int ApplyManualAddPieces(int levelIndex, Transform levelRoot, BasePiece[] pieces)
+    private int AdjustNumToAddPieces(int origianlPieces, int numToAddPieces)
     {
-        if (levelRoot == null || pieces == null || pieces.Length == 0)
-        {
-            return 0;
-        }
+        int currentTarget = manualExtraPiecesByLevel[currentLevelId.Value].targetPieces;
+        DebugLogger.Log(message: $"currentTarget: {currentTarget}", context: this);
+        int newNumToAdd = Mathf.Max(currentTarget - origianlPieces, numToAddPieces);
 
-        int extra = GetManualExtraPieces(levelIndex);
-        if (extra <= 0)
-        {
-            return 0;
-        }
-
-        // safety: ignore null templates
-        var templates = pieces.Where(p => p != null).ToArray();
-        if (templates.Length == 0)
-        {
-            return 0;
-        }
-
-        int created = 0;
-
-        for (int i = 0; i < extra; i++)
-        {
-            var template = templates[Random.Range(0, templates.Length)];
-            if (template == null)
-            {
-                continue;
-            }
-
-            // Instantiate a copy and make it a child "inner piece" of the template.
-            var go = Instantiate(template.gameObject, levelRoot);
-            var generatedPiece = go.GetComponent<BasePiece>();
-            if (generatedPiece == null)
-            {
-                Destroy(go);
-                continue;
-            }
-
-            generatedPiece.gameObject.SetActive(false);
-            generatedPiece.gameObject.name = $"Manual Generated Piece {levelIndex} {created}";
-
-            generatedPiece.transform.SetParent(template.transform, worldPositionStays: false);
-            generatedPiece.transform.localPosition = Vector3.zero;
-            generatedPiece.transform.localRotation = Quaternion.identity;
-
-            // Slight scale down to avoid overlap stacking issues.
-            const float scaleOffset = 0.1f;
-            float factor = 1f - ((generatedPiece.transform.GetSiblingIndexWithComponent<BasePiece>() + 1) *
-                                 scaleOffset);
-            generatedPiece.transform.localScale *= Mathf.Clamp(factor, 0.1f, 1f);
-
-            // Optional: keep same faction as template (manual add count only).
-            generatedPiece.Faction = template.Faction;
-
-            // Guard service locator chain.
-            var locator = generatedPiece.PieceServiceLocator;
-            if (locator != null && locator.pieceMaterialPropertyBlock != null)
-            {
-                locator.pieceMaterialPropertyBlock.SetColor(generatedPiece.Faction);
-            }
-
-            generatedPiece.Lock();
-
-            created++;
-        }
-
-        return created;
+        return newNumToAdd;
     }
 
     #endregion

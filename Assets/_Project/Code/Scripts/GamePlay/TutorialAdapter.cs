@@ -233,7 +233,7 @@ namespace NamPhuThuy.GamePlay
         
         private void OnPieceMoveCompleted(BasePiece obj)
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             if (!isTutorialLevel)
             {
                 DebugLogger.Log(message:$"This is not Tut-level", context: this);

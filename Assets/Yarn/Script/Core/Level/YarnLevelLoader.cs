@@ -474,7 +474,7 @@ public class YarnLevelLoader : MonoBehaviour
 
     private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isFirstTimeOnLevel)
     {
-        DebugLogger.Log(message: $"expectedLevelSize: {expectedLevelSize}");
+        // DebugLogger.Log(message: $"expectedLevelSize: {expectedLevelSize}");
         
         float maxExpectedLevelSize = expectedLevelSize.x;
 

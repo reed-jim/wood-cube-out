@@ -3658,8 +3658,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d39974667f753884fa4f42afb5ff39b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::YarnLevelDifficultyManager
-  currentLevelId: {fileID: 0}
+  currentLevelId: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   manualExtraPiecesByLevel:
+  - levelIndex: 1
+    targetPieces: 0
   - levelIndex: 1
     targetPieces: 9
   - levelIndex: 2
@@ -7508,7 +7510,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   pauseButton: {fileID: 73885834}
   openShopButton: {fileID: 4344045627601419187}
-  skipLevelButton: {fileID: 0}
   openDebugPopupButton: {fileID: 1960388864}
   debugNextLevelButton: {fileID: 0}
   debugPrevLevelButton: {fileID: 0}
