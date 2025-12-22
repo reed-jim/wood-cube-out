@@ -509,7 +509,7 @@ public class PieceManager : MonoBehaviour
                     continue;
                 }
 
-                if (!_pieces[i].gameObject.activeSelf)
+                if (!_pieces[i].gameObject.activeInHierarchy)
                 {
                     continue;
                 }
