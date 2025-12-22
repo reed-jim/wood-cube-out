@@ -230,7 +230,5 @@ namespace NamPhuThuy.GamePlay
         }
 
         #endregion
-
-
     }
 }
