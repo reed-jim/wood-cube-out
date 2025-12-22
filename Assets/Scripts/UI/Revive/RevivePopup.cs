@@ -73,7 +73,7 @@ public class RevivePopup : BasePopup
     {
         GameStateLose.showRevivePopupEvent += ShowRevivePopup;
 
-        reviveByDiamondButton.onClick.AddListener(ReviveByDiamond);
+        reviveByDiamondButton.onClick.AddListener(ReviveByCoin);
         reviveByAdsButton.onClick.AddListener(ReviveByAds);
     }
 
@@ -97,6 +97,7 @@ public class RevivePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
+        GamePersistentVariable.isReviveState = true;
 
         SetupRewardedAdsButton();
 
@@ -124,7 +125,7 @@ public class RevivePopup : BasePopup
     {
         if (GamePersistentVariable.isAutoTestingLevel)
         {
-            Show(onCompletedAction: () => ReviveByDiamond());
+            Show(onCompletedAction: () => ReviveByCoin());
         }
         else
         {
@@ -151,7 +152,7 @@ public class RevivePopup : BasePopup
         // SetupRewardedAdsButton();
     }
 
-    private void ReviveByDiamond()
+    private void ReviveByCoin()
     {
         userResourcesObserver.Load();
 

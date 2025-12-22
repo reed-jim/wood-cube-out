@@ -1,4 +1,6 @@
 using System;
+using NamPhuThuy.Common;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameStateWin : BaseGameState
@@ -16,18 +18,24 @@ public class GameStateWin : BaseGameState
 
     public override bool CanTransitionTo()
     {
-        if (_gameStateMachine.CurrentState == GameState.Lose || _gameStateMachine.CurrentState == GameState.Win)
+        if (_gameStateMachine.CurrentState == GameState.Lose)
         {
+            DebugLogger.Log(message: $"Cannot transition to Win state from Lose state.");
             return false;
         }
-        else
+
+        if (_gameStateMachine.CurrentState == GameState.Win)
         {
-            return true;
+            DebugLogger.Log(message: $"Cannot transition to Win state from Lose state.");
+            return false;
         }
+        
+        return true;
     }
 
     public override void Enter()
     {
+        DebugLogger.Log(message: $"");
         winLevelEvent?.Invoke();
     }
 

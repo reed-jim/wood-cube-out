@@ -294,7 +294,6 @@ public class SpoolBox : MonoBehaviour
 
     public void ResetVisually()
     {
-        DebugLogger.Log(context: this);
         spoolBoxSpriteRenderer.enabled = true;
         spoolBoxShadowSpriteRenderer.enabled = true;
 

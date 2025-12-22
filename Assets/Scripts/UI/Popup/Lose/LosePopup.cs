@@ -37,6 +37,7 @@ public class LosePopup : BasePopup
         // GameStateLose.loseLevelEvent += OnLevelLose;
         GameStateLose.loseLevelEvent += OnLevelLose;
         RevivePopup.reviveRefusedEvent += OnLevelLose;
+        IAPShopPopup.reviveRefusedEvent += OnLevelLose;
         GameplayScreen.skipLevelEvent += SkipLevel;
         Application.quitting += OnAppClosed;
 
@@ -57,6 +58,7 @@ public class LosePopup : BasePopup
         // GameStateLose.loseLevelEvent -= OnLevelLose;
         GameStateLose.loseLevelEvent -= OnLevelLose;
         RevivePopup.reviveRefusedEvent -= OnLevelLose;
+        IAPShopPopup.reviveRefusedEvent -= OnLevelLose;
         GameplayScreen.skipLevelEvent -= SkipLevel;
         Application.quitting -= OnAppClosed;
     }

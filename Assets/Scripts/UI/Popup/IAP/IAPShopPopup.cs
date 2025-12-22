@@ -22,6 +22,7 @@ public class IAPShopPopup : BasePopup
     #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action reviveRefusedEvent;
     public static event Action fetchLocalizedPriceIAPEvent;
 
     protected override void RegisterMoreEvent()
@@ -47,6 +48,16 @@ public class IAPShopPopup : BasePopup
         fetchLocalizedPriceIAPEvent?.Invoke();
 
         GamePersistentVariable.IAPLocation = "IAP Shop Gameplay";
+    }
+
+    protected override void Hide()
+    {
+        base.Hide();
+        if (GamePersistentVariable.isReviveState)
+        {
+            // reviveRefusedEvent?.Invoke();
+            SwitchRoute(ScreenRoute.Revive, false);
+        }
     }
 
     private void ShowAndScrollToCoinPack(ScreenRoute prevRoute)

@@ -12,7 +12,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
 {
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button openShopButton;
-    [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
@@ -44,7 +43,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         openShopButton.onClick.AddListener(OpenShop);
-        skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
         // debugPrevLevelButton.onClick.AddListener(PrevLevel);
@@ -54,7 +52,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
             openDebugPopupButton.gameObject.SetActive(false);
         }
 
-        skipLevelButton.gameObject.SetActive(false);
         triggerUpdateBackgroundEvent?.Invoke();
     }
 
@@ -103,14 +100,14 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
-        if (GamePersistentVariable.isAllowedSkipLevel)
+        /*if (GamePersistentVariable.isAllowedSkipLevel)
         {
             skipLevelButton.gameObject.SetActive(true);
         }
         else
         {
             skipLevelButton.gameObject.SetActive(false);
-        }
+        }*/
     }
 
     private void OnLevelTextTranslated()

@@ -19,7 +19,7 @@ public class PieceManager : MonoBehaviour
     [SerializeField] private LevelObserver levelObserver;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private float delayShowPopupWin;
+    private readonly float _delayShowPopupWin  = 1.8f;
 
     #region PRIVATE FIELD
     private List<Tween> _tweens;
@@ -419,6 +419,19 @@ public class PieceManager : MonoBehaviour
 
     private async void CheckWin()
     {
+        DebugLogger.Log(context: this);
+        if (_pieces == null)
+        {
+            DebugLogger.Log(message: $"_pieces is null", context: this);
+            return;
+        }
+
+        if (GameConstants.SCREW_FACTION == null)
+        {
+            DebugLogger.Log(message: $"GameConstants.SCREW_FACTION is null", context: this);
+            return;
+        }
+        
         Dictionary<GameFaction, int> remainingPieceByFaction = new Dictionary<GameFaction, int>();
 
         for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
@@ -428,8 +441,15 @@ public class PieceManager : MonoBehaviour
 
         for (int i = 0; i < _pieces.Count; i++)
         {
+            if (_pieces[i] == null)
+            {
+                DebugLogger.Log(message: $"The piece is null", context: this);
+                continue;
+            }
+            
             if (_pieces[i].IsDone)
             {
+                DebugLogger.Log(message: $"The piece is done", context: this);
                 continue;
             }
 
@@ -437,7 +457,7 @@ public class PieceManager : MonoBehaviour
         }
 
         int remainingPiece = remainingPieceByFaction.Sum(item => item.Value);
-
+        DebugLogger.Log(message: $"remainingPiece: {remainingPiece}", context: this);
         updateRemainingPieceEvent?.Invoke(remainingPiece, _totalPiece);
 
         if (remainingPiece == 0)
@@ -447,12 +467,17 @@ public class PieceManager : MonoBehaviour
             updateOutsidePieceNumberEvent?.Invoke();
             enableBoosterEvent?.Invoke(false);
 
-            await Task.Delay((int)(delayShowPopupWin * 1000));
+            await Task.Delay((int)(_delayShowPopupWin * 1000));
 
             winLevelEvent?.Invoke();
         }
 
-        levelObserver.Progress = 1 - (float)remainingPiece / _totalPiece;
+        if (levelObserver != null && _totalPiece > 0)
+        {
+            DebugLogger.Log(message: $"Update level observer progress: {1 - ((float)remainingPiece / _totalPiece)}", context: this);
+            levelObserver.Progress = 1 - ((float)remainingPiece / _totalPiece);    
+        }
+        
     }
     #endregion
 
@@ -692,16 +717,16 @@ public class PieceManager : MonoBehaviour
         }
 
         Dictionary<GameFaction, int> piecePortAvailableByFaction = pieceBoxManager.GetPiecePortAvailableByFaction();
-        DebugLogger.LogDictionary(piecePortAvailableByFaction, title: "piecePortAvailableByFaction");
+        // DebugLogger.LogDictionary(piecePortAvailableByFaction, title: "piecePortAvailableByFaction");
 
         Dictionary<GameFaction, int> remainingPieceByFaction = GetRemainingPieceByFaction();
-        DebugLogger.LogDictionary(remainingPieceByFaction, title: "remainingPieceByFaction");
+        // DebugLogger.LogDictionary(remainingPieceByFaction, title: "remainingPieceByFaction");
 
         Dictionary<GameFaction, int> totalBlockObjectsByFaction = await GetDifficultyLevelByFaction(difficultyLevel);
-        DebugLogger.LogDictionary(totalBlockObjectsByFaction, title: "totalBlockObjectsByFaction");
+        // DebugLogger.LogDictionary(totalBlockObjectsByFaction, title: "totalBlockObjectsByFaction");
 
         Dictionary<GameFaction, int> shuffledDifficultyLevelByFaction = ShuffleUtil.ShuffleItemsWithSameValue(totalBlockObjectsByFaction);
-        DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title: "shuffledDifficultyLevelByFaction");
+        // DebugLogger.LogDictionary(shuffledDifficultyLevelByFaction, title: "shuffledDifficultyLevelByFaction");
 
         GameFaction[] factionSortedByDifficulty = shuffledDifficultyLevelByFaction.OrderBy(item => item.Value).Select(item => item.Key).ToArray();
         GameFaction nextFaction = GameFaction.None;

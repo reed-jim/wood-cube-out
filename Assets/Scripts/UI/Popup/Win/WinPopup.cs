@@ -137,7 +137,11 @@ public class WinPopup : BasePopup
     
     private async void OnLevelWinAsync()
     {
-        AdmobAdsMax.Instance.ShowBannerCollap();
+        DebugLogger.Log(message: $"");
+        if (AdmobAdsMax.Instance != null)
+        {
+            AdmobAdsMax.Instance.ShowBannerCollap();
+        }
 
         coinText.text = $"{DataConst.COIN_REWARDED_WIN_LEVEL}";
         starText.text = $"{0}";
@@ -154,7 +158,6 @@ public class WinPopup : BasePopup
         
         TweenHelper.DoPunch(x5CoinButton.transform, 1);
         
-        
         TweenHelper.Wait1Second(() =>
         {
             continueButton.gameObject.SetActive(true);
@@ -163,8 +166,6 @@ public class WinPopup : BasePopup
                 continueButton.interactable = true;
             });
         });
-        
-
         
         /*UIEffect continueButtonUIEffect = continueButton.GetComponent<UIEffect>();
         if (continueButtonUIEffect != null)

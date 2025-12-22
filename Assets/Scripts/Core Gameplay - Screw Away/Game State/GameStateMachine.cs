@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -10,6 +11,7 @@ public class GameStateMachine : MonoBehaviour
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
 
     [SerializeField] private float delayToEnableInputAfterRevived;
+    [SerializeField] private GameState currentStateVar;
 
     public GameState CurrentState
     {
@@ -51,8 +53,10 @@ public class GameStateMachine : MonoBehaviour
 
     public void ChangeState(BaseGameState newState)
     {
+        DebugLogger.Log(message: $"currentState: {currentState}, newState: {newState}", context: this);
         if (!newState.CanTransitionTo())
         {
+            DebugLogger.Log(message: $"Cannot transition to state: {newState.GameState}", context: this);
             return;
         }
 
@@ -78,6 +82,7 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterWinState()
     {
+        DebugLogger.Log(context: this);
         ChangeState(new GameStateWin(this));
     }
 
@@ -90,6 +95,7 @@ public class GameStateMachine : MonoBehaviour
 
     private void OnRevived(BoosterType boosterType)
     {
+        GamePersistentVariable.isReviveState = false;
         EnterPlayingState();
     }
 }
