@@ -129,7 +129,6 @@ namespace NamPhuThuy.GamePlay
 
         private void OnLevelStart()
         {
-            // DebugLogger.LogSimple();
             _screws = new List<BaseScrew>();
 
             _totalScrewObserved = 0;
@@ -137,8 +136,6 @@ namespace NamPhuThuy.GamePlay
             currentLevelDifficultyConfig = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
             currentLevelDifficultyConfig.ScrewPortFactionDifficultyModifier =
                 RemoteConfigController.GetIntConfig(FirebaseConfig.SCREW_PORT_FACTION_DIFFICULTY_MODIFIER, 0);
-
-            ScrewBoxManager.TotalScrewBoxesSpawned = 0;
 
             _remainingSpawnScrewBoxCommands = 0;
             _isHandlingSpawningScrewBox = false;
@@ -158,9 +155,7 @@ namespace NamPhuThuy.GamePlay
         #region SCREW
         private void SetLevelScrewNumber(int screwNumber)
         {
-            // DebugLogger.LogSimple();
             _totalScrew = screwNumber;
-            ScrewBoxManager.TotalScrewBoxes = _totalScrew / GameConstants.NUMBER_SLOT_PER_SCREW_BOX;
 
             updateRemainingScrewEvent?.Invoke(_totalScrew, _totalScrew);
         }
@@ -549,7 +544,6 @@ namespace NamPhuThuy.GamePlay
         #region MANAGE SCREW BOX
         public async void SpawnFirstScrewBoxes()
         {
-            // DebugLogger.LogSimple();
             GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
             // Spawn 2 default screw boxes
@@ -557,21 +551,15 @@ namespace NamPhuThuy.GamePlay
             {
                 GameFaction faction = sortedFactionByBlockedObject[i];
 
-                // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
                 spawnScrewBoxEvent?.Invoke(faction);
             }
 
-            ScrewBoxManager.TotalScrewBoxesSpawned += GameConstants.DEFAULT_INITIAL_NUMBER_SCREW_BOXES;
-
-            // DebugLogger.LogSimple(message: $"Trigger spawnAdsScrewBoxesEvent");
             spawnAdsScrewBoxesEvent?.Invoke();
         }
 
         private async void SpawnFirstScrewBoxesNewPhase(int phase)
         {
-            // DebugLogger.LogSimple();
             await Task.Delay(2000);
-            // DebugLogger.LogSimple(message: $"Continue after 2 secs");
 
             GameFaction[] sortedFactionByBlockedObject = await GetSortedFactionsByBlockedObject();
 
@@ -589,15 +577,13 @@ namespace NamPhuThuy.GamePlay
             {
                 GameFaction faction = sortedFactionByBlockedObject[i];
 
-                // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
                 spawnScrewBoxEvent?.Invoke(faction);
             }
         }
 
         private async void SpawnNewScrewBox()
         {
-            // DebugLogger.LogSimple(); 
-            if (ScrewBoxManager.TotalScrewBoxesSpawned >= ScrewBoxManager.TotalScrewBoxes)
+            if (GetRemainingScrew() < GameConstants.NUMBER_SLOT_PER_SCREW_BOX)
             {
                 return;
             }
@@ -611,14 +597,11 @@ namespace NamPhuThuy.GamePlay
 
             // DebugLogger.LogSimple(message: $"Trigger spawnScrewBoxEvent");
             spawnScrewBoxEvent?.Invoke(faction);
-
-            ScrewBoxManager.TotalScrewBoxesSpawned++;
         }
 
         private void OnScrewBoxUnlocked(ScrewBox screwBox)
         {
-            // DebugLogger.LogSimple();
-            ScrewBoxManager.TotalScrewBoxesSpawned++;
+
         }
 
         private void AssignFactionForNewAdsScrewBox(ScrewBox screwBox)
@@ -969,22 +952,26 @@ namespace NamPhuThuy.GamePlay
 
         private void OnRustyScrewManagerInit(RustyScrewSpecialLevelManager obj)
         {
-            // DebugLogger.LogSimple(message:$"{obj}");
             _rustyScrewSpecialLevelManager = obj;
         }
 
         private void OnLockScrewColorManagerInit(LockScrewColorLevelManager obj)
         {
-            // DebugLogger.LogSimple(message:$"{obj}");
             _lockScrewColorLevelManager = obj;
         }
 
         private void OnLockScrewBoxInit(LockScrewBoxManager obj)
         {
-            // DebugLogger.LogSimple(message:$"{obj}");
             _lockScrewBoxManager = obj;
         }
 
+        #endregion
+
+        #region Util
+        private int GetRemainingScrew()
+        {
+            return _screws.Count(item => !item.IsDone);
+        }
         #endregion
     }
 }

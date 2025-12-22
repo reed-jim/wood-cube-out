@@ -41,13 +41,6 @@ public class ScrewBoxManager : MonoBehaviour
     private bool _isCheckingLose;
     #endregion
 
-    #region PUBLIC FIELDS
-
-    public static int TotalScrewBoxes;
-    public static int TotalScrewBoxesSpawned;
-
-    #endregion
-
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingVisibilityEvent;
@@ -57,7 +50,6 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
-    // public static event Action<ScrewBox[]> s
     #endregion
 
     #region LIFE CYCLE

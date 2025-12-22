@@ -846,7 +846,7 @@ namespace NamPhuThuy.GamePlay
 
             if (isLevelDirty)
             {
-                if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 4.5f)
+                if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 6f)
                 {
                     return;
                 }
