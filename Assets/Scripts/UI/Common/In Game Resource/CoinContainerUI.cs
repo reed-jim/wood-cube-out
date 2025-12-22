@@ -99,7 +99,7 @@ public class CoinContainerUI : MonoBehaviour
 
     #region Update Coin Text
 
-    private void UpdateCoinText()
+    public void UpdateCoinText()
     {
         userResourcesObserver.Load();
 

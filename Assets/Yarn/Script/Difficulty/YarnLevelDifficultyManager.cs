@@ -46,7 +46,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         // add new factions
         int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
-        // numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
+        numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
         DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
         DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
 
@@ -303,7 +303,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         new LevelTargetPieces { levelIndex = 20, targetPieces = 57 },
         new LevelTargetPieces { levelIndex = 21, targetPieces = 72 },
         new LevelTargetPieces { levelIndex = 22, targetPieces = 114 },
-        new LevelTargetPieces { levelIndex = 23, targetPieces = 60 },
+        new LevelTargetPieces { levelIndex = 23, targetPieces = 144 },
         new LevelTargetPieces { levelIndex = 24, targetPieces = 60 },
         new LevelTargetPieces { levelIndex = 25, targetPieces = 72 },
         new LevelTargetPieces { levelIndex = 26, targetPieces = 54 },

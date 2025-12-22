@@ -63,12 +63,12 @@ namespace NamPhuThuy.UI
 
         #endregion
 
-        #region Private Fields
+        #region ✦ Private Fields
 
         private string _downloadedNoti = _videoDownloadedNoti;
         private static readonly string _videoDownloadedNoti = "Video Downloaded";
         private static readonly string _imageDownloadedNoti = "Image Downloaded";
-
+        
         #endregion
 
         #region Events
@@ -235,7 +235,22 @@ namespace NamPhuThuy.UI
             SetStateReactButtons();
         }
 
-        private void OnClickVideoDownload()
+       
+
+        private void OnClickUseAsBackground()
+        {
+            DebugLogger.Log();
+            DataManager.Ins.PlayerData.CurrentBackgroundId = this.currentPictureId;
+
+            this.PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
+            updateBackgroundEvent?.Invoke();
+        }
+
+        #endregion
+
+        #region Download Feature
+
+         private void OnClickVideoDownload()
         {
             // 1\) Check if this picture has a valid video name
             if (currentPicData == null)
@@ -315,20 +330,7 @@ namespace NamPhuThuy.UI
                 }
             }
         }
-
-        private void OnClickUseAsBackground()
-        {
-            DebugLogger.Log();
-            DataManager.Ins.PlayerData.CurrentBackgroundId = this.currentPictureId;
-
-            this.PlayVFXPopupText(LocalizationConst.BACKGROUND_UPDATED);
-            updateBackgroundEvent?.Invoke();
-        }
-
-        #endregion
-
-        #region Download Feature
-
+        
         /// <summary>
         /// Download image version 2 (reward ads)
         /// </summary>
@@ -339,8 +341,8 @@ namespace NamPhuThuy.UI
 
             void EarnReward()
             {
-                ShowLoadingPopup();
-
+                // ShowLoadingPopup();
+                PlayVFXPopupText(_downloadedNoti);
                 Texture2D texture = currentPicData.mainImage.texture;
 
                 // Save to gallery with callback

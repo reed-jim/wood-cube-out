@@ -27,10 +27,11 @@ namespace NamPhuThuy.UI
         
         [SerializeField] private ScrollViewGalleryPack scrollViewGallery;
 
+        [Header("Components")] 
+        [SerializeField] private CoinContainerUI coinContainerUI;
         #endregion
 
         #region Private Fields
-        
         
         public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
         public static event Action<GameEnum.ScreenRoute, bool> switchRouteHideEvent;
@@ -70,10 +71,18 @@ namespace NamPhuThuy.UI
 
         #region Public Methods
 
+       
+
+        #endregion
+
+        #region Override Methods
+
         protected override void Show(Action onCompletedAction = null)
         {
             base.Show(onCompletedAction);
+            coinContainerUI.UpdateCoinText();
             scrollRect.LockVerticalScrollALittle();
+            
         }
 
         #endregion
