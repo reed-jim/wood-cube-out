@@ -392,6 +392,7 @@ public class Yarn2D : MonoBehaviour
             .OnComplete(() =>
             {
                 onDissolveCompleted?.Invoke();
+                onDissolveCompleted = null;
 
                 Color startYarnColor = yarnMaterialPropertyBlock.GetColor("_Color");
 
