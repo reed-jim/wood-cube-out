@@ -120,11 +120,11 @@ public class YarnGameInput : MonoBehaviour
     {
         var args = new PopupTextArgs
         {
-            message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+            Message = Lean.Localization.LeanLocalization.GetTranslationText(message),
             // startParent = transform,
-            textFont = GUIManager.Instance.DefaultFont,
-            textColor = Color.white,
-            duration = 1f,
+            TextFont = GUIManager.Instance.DefaultFont,
+            TextColor = Color.white,
+            Duration = 1f,
             OnComplete = null,
         };
         AnimationManager.Ins.Play<PopupTextArgs>(args);
@@ -162,6 +162,19 @@ public class YarnGameInput : MonoBehaviour
         if (hit.collider == null) return;
         BasePiece piece = hit.collider.GetComponent<BasePiece>();
         if (piece == null) return;
+        
+        var fxArgs = new SimpleParticleArgs
+        {
+            fromWorld = true,
+            worldPosition = hit.point,         // or: piece.transform.position
+            
+            worldCamera = _mainCamera,         // already cached in Awake
+            customParent = null,               // keep default (AnimationManager's canvas/root)
+            customColor = piece.PieceServiceLocator.pieceMeshRenderer.material.color,
+            ignoreTimeScale = false,
+            OnComplete = null,
+        };
+        AnimationManager.Ins.Play(fxArgs);
         
         piece.PullYarn();
         PieceSelectedWithFactionEvent?.Invoke(piece.Faction);

@@ -677,9 +677,9 @@ namespace NamPhuThuy.UI
         {
             
             var args = new PopupTextArgs {
-                message = Lean.Localization.LeanLocalization.GetTranslationText(message),
-                textFont = GUIManager.Instance.DefaultFont,
-                customScale = 0.9f,
+                Message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+                TextFont = GUIManager.Instance.DefaultFont,
+                CustomScale = 0.9f,
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }

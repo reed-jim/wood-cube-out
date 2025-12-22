@@ -199,10 +199,10 @@ namespace NamPhuThuy.UI
         private void PlayVFXPopupText(string message)
         {
             var args = new PopupTextArgs {
-                message = Lean.Localization.LeanLocalization.GetTranslationText(message),
-                textFont = GUIManager.Instance.DefaultFont,
-                textColor = Color.white,
-                duration = 1f,
+                Message = Lean.Localization.LeanLocalization.GetTranslationText(message),
+                TextFont = GUIManager.Instance.DefaultFont,
+                TextColor = Color.white,
+                Duration = 1f,
                 OnComplete = null
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
@@ -216,9 +216,9 @@ namespace NamPhuThuy.UI
             void HandleLoaded()
             {
                 var args = new PopupTextArgs {
-                    message = LocalizationConst.BUY_SUCCESS,
-                    textColor = Color.white,
-                    duration = 1f,
+                    Message = LocalizationConst.BUY_SUCCESS,
+                    TextColor = Color.white,
+                    Duration = 1f,
                     OnComplete = null
                 };
                 AnimationManager.Ins.Play<PopupTextArgs>(args);
