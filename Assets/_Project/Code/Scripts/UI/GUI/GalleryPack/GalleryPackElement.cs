@@ -203,7 +203,7 @@ namespace NamPhuThuy.UI
                 TextFont = GUIManager.Instance.DefaultFont,
                 TextColor = Color.white,
                 Duration = 1f,
-                OnComplete = null
+                OnComplete = null,
             };
             AnimationManager.Ins.Play<PopupTextArgs>(args);
         }
@@ -219,7 +219,7 @@ namespace NamPhuThuy.UI
                     Message = LocalizationConst.BUY_SUCCESS,
                     TextColor = Color.white,
                     Duration = 1f,
-                    OnComplete = null
+                    OnComplete = null,
                 };
                 AnimationManager.Ins.Play<PopupTextArgs>(args);
             }

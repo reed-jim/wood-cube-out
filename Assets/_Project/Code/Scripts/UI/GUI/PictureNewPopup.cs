@@ -340,7 +340,6 @@ namespace NamPhuThuy.UI
             {
                 // ShowLoadingPopup();
                 PlayVFXPopupText(_downloadedNoti);
-
                 Texture2D texture = currentPicData.mainImage.texture;
 
                 // Save to gallery with callback

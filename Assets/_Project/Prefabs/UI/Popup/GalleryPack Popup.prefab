@@ -880,7 +880,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3680259924023507963
 RectTransform:
   m_ObjectHideFlags: 0
@@ -926,6 +926,7 @@ MonoBehaviour:
   galleryButton: {fileID: 6253389691883563692}
   scrollRect: {fileID: 4070741886720164167}
   scrollViewGallery: {fileID: 5481930760327463879}
+  coinContainerUI: {fileID: 1598969660291978036}
 --- !u!114 &7606328408033806127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1403,6 +1404,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6923766836772425453, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
       insertIndex: -1
       addedObject: {fileID: 273785878528217566}
+    - targetCorrespondingSourceObject: {fileID: 6923766836772425453, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1598969660291978036}
   m_SourcePrefab: {fileID: 100100000, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}
 --- !u!114 &1846300408674798759 stripped
 MonoBehaviour:
@@ -1432,13 +1436,32 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6784013315209708754}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0ea6172170916e40b5500f9f5213e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.UI.CoinPanel
   coinText: {fileID: 1846300408674798759}
   coinImage: {fileID: 7575972782332751938}
+--- !u!114 &1598969660291978036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6784013315209708754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ad2dabe95e3ef164ab999733429ba777, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CoinContainerUI
+  container: {fileID: 2308272235697671803}
+  iconRT: {fileID: 7575972782332751938}
+  canvasSize: {fileID: 11400000, guid: cff3c506c9f63d645a923fa57c7a07c1, type: 2}
+  canvasScale: {fileID: 11400000, guid: 868c53afb89f6fb4eb2dc813d4847328, type: 2}
+  coinText: {fileID: 1846300408674798759}
+  addButton: {fileID: 0}
+  userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
 --- !u!224 &7575972782332751938 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6273728069753879165, guid: ea7c55ad5c3331744a69a57ae38627ef, type: 3}

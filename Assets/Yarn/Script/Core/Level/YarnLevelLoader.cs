@@ -25,8 +25,8 @@ public class YarnLevelLoader : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
-    [Header("Textured Material Level")] [SerializeField]
-    private Material texturedMaterial;
+    [Header("Textured Material Level")] 
+    [SerializeField] private Material texturedMaterial;
 
     [Header("Components")] [SerializeField]
     private TutorialAdapter tutorialAdapter;
