@@ -129,7 +129,7 @@ public static class GamePersistentVariable
     #endregion
 
     #region LIVES SYSTEM
-    public static LivesConfig livesConfig;
+    public static LivesConfig livesConfig = new LivesConfig();
     #endregion
 
     #region IAP

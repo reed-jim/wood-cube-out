@@ -88,7 +88,14 @@ public class GameVariableInitializer : MonoBehaviour
         #endregion
         
         
-        GamePersistentVariable.livesConfig = new LivesConfig();
+        Debug.Log("SAFERIO Remove Later");
+        GamePersistentVariable.livesConfig = new LivesConfig()
+        {
+            isActive = true,
+            maxLive = 10,
+            secondReplenishLive = 20 * 60,
+        };
+        
         GamePersistentVariable.dailyRewardConfig = new DailyRewardConfig();
 
         GamePersistentVariable.isUseVideoBackground = true;
@@ -127,13 +134,7 @@ public class GameVariableInitializer : MonoBehaviour
             GamePersistentVariable.goldPassData = savedGoldPassData;
         }
 
-        Debug.Log("SAFERIO Remove Later");
-        GamePersistentVariable.livesConfig = new LivesConfig()
-        {
-            isActive = true,
-            maxLive = 5,
-            secondReplenishLive = 20 * 60,
-        };
+        
 
         currentLevelFetchedEvent?.Invoke();
     }

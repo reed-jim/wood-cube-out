@@ -8,7 +8,7 @@ using static GameEnum;
 
 public class ReplenishLifeManager : MonoBehaviour
 {
-    private int MaxLives = 5;
+    private int MaxLives = 10;
     private int ReplenishTime = 1800;
 
     private LivesData _livesData;
@@ -33,7 +33,7 @@ public class ReplenishLifeManager : MonoBehaviour
     private void Start()
     {
         DebugLogger.Log();
-        this.MaxLives = 5;
+        this.MaxLives = GamePersistentVariable.livesConfig.maxLive;
         this.ReplenishTime = 60 * 20;
         LivesData defaultLivesData = new LivesData()
         {

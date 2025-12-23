@@ -126,7 +126,6 @@ public static class GameConstants
 
     #region LIVES
     public static string USER_LIVES_DATA = "USER_LIVES_DATA";
-    public static int DEFAULT_LIVES = 5;
     #endregion
 
     #region TRACKING

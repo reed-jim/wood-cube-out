@@ -13,6 +13,7 @@ public class UserLivesUI : SaferioTweenBehaviour
     [SerializeField] private TextMeshProUGUI replenishLifeTimeText;
     [SerializeField] private Button openLivesShopPopupButton;
     [SerializeField] private RectTransform liveIcon;
+    [SerializeField] private Image addIcon;
 
     private int _numLives;
 
@@ -69,14 +70,14 @@ public class UserLivesUI : SaferioTweenBehaviour
             numLivesText.text = $"{lives}";
 
             // DebugLogger.Log(message:$"Before check if");
-            if (lives == GameConstants.DEFAULT_LIVES)
+            if (lives == GamePersistentVariable.livesConfig.maxLive)
             {
                 replenishLifeTimeText.text = $"Full";
 
                 if (openLivesShopPopupButton != null)
                 {
                     DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
-                    openLivesShopPopupButton.gameObject.SetActive(false);
+                    addIcon.gameObject.SetActive(false);
                 }
             }
             else
@@ -84,7 +85,7 @@ public class UserLivesUI : SaferioTweenBehaviour
                 if (openLivesShopPopupButton != null)
                 {
                     DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
-                    openLivesShopPopupButton.gameObject.SetActive(true);
+                    addIcon.gameObject.SetActive(true);
                 }
             }
 
