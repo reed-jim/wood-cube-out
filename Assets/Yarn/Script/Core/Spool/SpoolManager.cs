@@ -858,6 +858,8 @@ public class SpoolManager : MonoBehaviour
     {
         SpoolBoxSlot addedSpoolBoxSlot = ObjectPoolingEverything.GetFromPool<SpoolBoxSlot>(GameConstants.spoolBoxSlot);
 
+        addedSpoolBoxSlot.IsAlternative = true;
+
         piecePorts.Add(addedSpoolBoxSlot);
 
         addedSpoolBoxSlot.transform.SetParent(piecePorts[0].transform.parent);
