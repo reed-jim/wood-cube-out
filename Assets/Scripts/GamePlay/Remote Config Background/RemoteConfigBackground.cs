@@ -1,3 +1,4 @@
+using NamPhuThuy.GamePlay;
 using UnityEngine;
 
 public class RemoteConfigBackground : MonoBehaviour
@@ -9,6 +10,7 @@ public class RemoteConfigBackground : MonoBehaviour
     void Awake()
     {
         RemoteConfigController.remoteConfigReadyEvent += UpdateBackground;
+        LevelLoader.startLevelCompletedEvent += UpdateBackground;
 
         ChangeBackgroundColor(GamePersistentVariable.gameplayBackgroundConfig);
     }
@@ -16,6 +18,7 @@ public class RemoteConfigBackground : MonoBehaviour
     void OnDestroy()
     {
         RemoteConfigController.remoteConfigReadyEvent -= UpdateBackground;
+        LevelLoader.startLevelCompletedEvent -= UpdateBackground;
     }
 
     private void ChangeBackgroundColor(GameplayBackgroundConfig gameplayBackgroundConfig)
@@ -54,6 +57,11 @@ public class RemoteConfigBackground : MonoBehaviour
 
     private void UpdateBackground()
     {
+        if (GamePersistentVariable.gameplayBackgroundConfig.isAvoidUpdateBackgroundEachLevel)
+        {
+            return;
+        }
+
         ChangeBackgroundColor(GamePersistentVariable.gameplayBackgroundConfig);
     }
 }
