@@ -110,6 +110,8 @@ public class SpecialLevelConfig
 public class GameplayBackgroundConfig
 {
     public bool isUseWoodBackground;
+    public bool isUseRandomBackground;
     public string backgroundColorHex;
+    public string[] backgroundColorHexPool;
 }
 #endregion

@@ -30,7 +30,24 @@ public class RemoteConfigBackground : MonoBehaviour
             woodBackground.gameObject.SetActive(false);
             gradientBackground.gameObject.SetActive(true);
 
-            gradientBackground.color = ColorUtil.HexToColor(gameplayBackgroundConfig.backgroundColorHex);
+            if (gameplayBackgroundConfig.isUseRandomBackground)
+            {
+                try
+                {
+                    string randomHex = gameplayBackgroundConfig.backgroundColorHexPool[Random.Range(0, gameplayBackgroundConfig.backgroundColorHexPool.Length)];
+
+                    gradientBackground.color = ColorUtil.HexToColor(randomHex);
+                }
+                catch (System.Exception)
+                {
+                    gradientBackground.color = ColorUtil.HexToColor(gameplayBackgroundConfig.backgroundColorHex);
+                }
+            }
+            else
+            {
+                gradientBackground.color = ColorUtil.HexToColor(gameplayBackgroundConfig.backgroundColorHex);
+            }
+
             gradientBackgroundAutoScaler.ScaleSpriteToScreen();
         }
     }
