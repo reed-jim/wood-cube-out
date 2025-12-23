@@ -10,11 +10,14 @@ namespace NamPhuThuy.GamePlay
         protected override void Awake()
         {
             base.Awake();
+
             RustyScrewSpecialLevelManager.rustyBreakALayer += OnRustyLayerBreak;
         }
-        
-        protected void OnDestroy()
+
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
+
             RustyScrewSpecialLevelManager.rustyBreakALayer -= OnRustyLayerBreak;
         }
 
@@ -28,10 +31,10 @@ namespace NamPhuThuy.GamePlay
         }
 
         #endregion
-        
+
         protected override void AddScrewToList()
         {
-            
+
         }
 
         protected override bool IsValidToLoose()

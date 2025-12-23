@@ -23,12 +23,6 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private SpecialLevelTaskRecord currentRecord;
         #endregion
 
-        #region Private Fields
-
-        private Coroutine _createNewTaskCo;
-
-        #endregion
-
         public GameFaction LockedScrewFaction => _specialLevelTaskRecord?.requiredComponents?
             .Where(component => component.componentType == GameComponentType.Screw)
             .FirstOrDefault()?.faction ?? GameFaction.None;
@@ -42,10 +36,8 @@ namespace NamPhuThuy.GamePlay
         {
             base.Awake();
 
-            DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent += OnScewBoxLockSpawned;
-
 
             StartCoroutine(IETriggerInitEvent());
             IEnumerator IETriggerInitEvent()
@@ -59,7 +51,6 @@ namespace NamPhuThuy.GamePlay
         {
             base.OnDestroy();
 
-            // DebugLogger.LogSimple();
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             ScrewBoxManager.screwBoxLockSpawnedEvent -= OnScewBoxLockSpawned;
         }
@@ -78,28 +69,18 @@ namespace NamPhuThuy.GamePlay
             // ScrewBoxLocked screwBoxLocked = CommonUtil.ReplaceAndCopy<ScrewBox, ScrewBoxLocked>(screwBoxes[1].gameObject);
         }
 
-        private void LockBox(int id)
-        {
-
-        }
-
-        private IEnumerator IECreateNewTask()
-        {
-            yield return null;
-        }
         #endregion
 
         #region Override Methods
 
         public override bool IsFactionLocked(GameEnum.GameFaction faction)
         {
-            DebugLogger.LogSimple();
             return base.IsFactionLocked(faction);
         }
 
         protected override void OnScrewLoosed(BaseScrew screw)
         {
-            DebugLogger.LogSimple();
+
         }
 
         protected override void Reset()
@@ -118,34 +99,7 @@ namespace NamPhuThuy.GamePlay
 
         #endregion
 
-        #region Public Methods
-
-
-
-        #endregion
-
         #region Event Methods
-
-        private void OnLevelLoaded()
-        {
-
-        }
-
-        private void OnReplayLevel()
-        {
-            DebugLogger.LogSimple();
-            // LockBoxes(screwBoxes[lockedBoxIndex]);
-
-            foreach (ScrewBoxLocked screwBox in lockedScrewBoxes)
-            {
-                DebugLogger.LogSimple(message: $"Return to pool {screwBox.gameObject.name}");
-                ObjectPoolingEverything.ReturnToPool(GameConstants.SCREW_BOX_LOCKED, screwBox.gameObject);
-            }
-            lockedScrewBoxes.Clear();
-
-            DebugLogger.LogSimple(message: $"Reset screwBoxCount");
-            screwBoxCount = 0;
-        }
 
         private void OnScewBoxLockSpawned(ScrewBoxLocked screwBoxLocked)
         {
@@ -162,50 +116,5 @@ namespace NamPhuThuy.GamePlay
             screwBoxCount++;
         }
         #endregion
-
-        #region Editor Methods
-
-        public void ResetValues()
-        {
-
-        }
-
-        #endregion
     }
-
-#if UNITY_EDITOR
-    [CustomEditor(typeof(LockScrewBoxManager))]
-    [CanEditMultipleObjects]
-    public class LockScrewBoxManagerEditor : Editor
-    {
-        private LockScrewBoxManager script;
-        private Texture2D frogIcon;
-
-        private void OnEnable()
-        {
-            frogIcon = Resources.Load<Texture2D>("frog"); // no extension needed
-        }
-
-        public override void OnInspectorGUI()
-        {
-            DrawDefaultInspector();
-            script = (LockScrewBoxManager)target;
-
-            ButtonResetValues();
-        }
-
-        private void ButtonResetValues()
-        {
-            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace();
-            if (GUILayout.Button(new GUIContent("Reset Values", frogIcon), GUILayout.Width(InspectorConst.BUTTON_WIDTH_MEDIUM)))
-            {
-                script.ResetValues();
-                EditorUtility.SetDirty(script); // Mark the object as dirty
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.EndHorizontal();
-        }
-    }
-#endif
 }
