@@ -17,6 +17,7 @@ public class BasePopup : MonoBehaviour
 
     [Header("CUSTOMIZE")]
     [SerializeField] protected ScreenRoute route;
+    [SerializeField] protected ScreenRoute prevRoute = ScreenRoute.None;
     [SerializeField] private bool isRouteActiveFromStart;
     [SerializeField] protected bool isAbleToHideOnClickOutside;
     [SerializeField] protected bool isShowingInterAdOnInteract;
@@ -34,6 +35,7 @@ public class BasePopup : MonoBehaviour
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
+    public static event Action<ScreenRoute, ScreenRoute, bool> switchRouteKeepPrevEvent;
     public static event Action<ScreenRoute, bool> switchPopupRouteHideEvent;
     public static event Action<ScreenRoute, object[]> switchPopupRouteParamsEvent;
     public static event Action<string, string> showNotificationEvent;
@@ -54,6 +56,9 @@ public class BasePopup : MonoBehaviour
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
         RevivePopup.switchRouteEvent += OnRouteSwitched;
+        RevivePopup.switchRouteKeepPrevEvent += OnRouteSwitched;
+        
+        
         GalleryPackPopup.switchRouteHideEvent += OnRouteHideSwitched;
         GalleryPackElement.switchRouteHideEvent += OnRouteHideSwitched;
         
@@ -116,6 +121,8 @@ public class BasePopup : MonoBehaviour
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
         RevivePopup.switchRouteEvent -= OnRouteSwitched;
+        RevivePopup.switchRouteKeepPrevEvent -= OnRouteSwitched;
+        
         GalleryPackPopup.switchRouteHideEvent -= OnRouteHideSwitched;
         GalleryPackElement.switchRouteHideEvent -= OnRouteHideSwitched;
         
@@ -184,6 +191,23 @@ public class BasePopup : MonoBehaviour
     private void OnRouteSwitched(ScreenRoute route, params object[] parameters)
     {
         OnRouteSwitched(route);
+    }
+    
+    private void OnRouteSwitched(ScreenRoute route, ScreenRoute _prevRoute, bool isHideOthers = true)
+    {
+       
+        if (route == this.route)
+        {
+            DebugLogger.Log(message: $"route: {route}, _prevRoute: {_prevRoute}", context: this);
+            
+            Show();
+            this.prevRoute = _prevRoute;
+        }
+        else
+        {
+            if (isHideOthers)
+                Hide();
+        }
     }
 
     // private void OnRouteSwitchedWithoutAd(ScreenRoute route)
@@ -400,6 +424,11 @@ public class BasePopup : MonoBehaviour
     protected void SwitchRoute(ScreenRoute route, params object[] parameters)
     {
         switchPopupRouteParamsEvent?.Invoke(route, parameters);
+    }
+
+    protected void SwitchRoute(ScreenRoute route, ScreenRoute prevRoute, bool isHideOthers = true)
+    {
+        switchRouteKeepPrevEvent?.Invoke(route, prevRoute, isHideOthers);
     }
 
     protected void ShowNotification(string title, string description)

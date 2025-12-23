@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using DG.Tweening;
+using NamPhuThuy.Common;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -97,6 +98,7 @@ public class RevivePopup : BasePopup
     protected override void Show(Action onCompletedAction = null)
     {
         base.Show(onCompletedAction);
+        DebugLogger.Log(context: this);
         GamePersistentVariable.isReviveState = true;
 
         SetupRewardedAdsButton();
@@ -123,6 +125,7 @@ public class RevivePopup : BasePopup
 
     private void ShowRevivePopup(BoosterType boosterType)
     {
+        DebugLogger.Log();
         if (GamePersistentVariable.isAutoTestingLevel)
         {
             Show(onCompletedAction: () => ReviveByCoin());
@@ -189,8 +192,9 @@ public class RevivePopup : BasePopup
         {
             Hide(onCompletedAction: () =>
             {
-                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
-
+                // SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+                SwitchRoute(ScreenRoute.IAPShopPopup, ScreenRoute.Revive);
+    
                 reviveByDiamondButton.interactable = true;
             });
         }

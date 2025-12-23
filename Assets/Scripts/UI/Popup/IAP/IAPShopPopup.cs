@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
@@ -16,10 +17,6 @@ public class IAPShopPopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float scrollToCoinPackDuration;
-
-    #region PRIVATE FIELD
-    private ScreenRoute _prevRoute;
-    #endregion
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action reviveRefusedEvent;
@@ -53,10 +50,17 @@ public class IAPShopPopup : BasePopup
     protected override void Hide()
     {
         base.Hide();
-        if (GamePersistentVariable.isReviveState)
+        /*if (GamePersistentVariable.isReviveState)
         {
             // reviveRefusedEvent?.Invoke();
             SwitchRoute(ScreenRoute.Revive, false);
+        }*/
+        
+        DebugLogger.Log(message: $"route to switch back: {prevRoute}", context: this);
+        if (prevRoute != ScreenRoute.None)
+        {
+            SwitchRoute(prevRoute, false);
+            prevRoute = ScreenRoute.None;
         }
     }
 
@@ -75,7 +79,7 @@ public class IAPShopPopup : BasePopup
             }));
         });
 
-        _prevRoute = prevRoute;
+        this.prevRoute = prevRoute;
     }
 
 

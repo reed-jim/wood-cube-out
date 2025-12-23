@@ -71,7 +71,7 @@ namespace NamPhuThuy.Tutorial
 
         public void SetScreenPosition(Vector2 screenPos)
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             if (rectTransform != null)
             {
                 rectTransform.position = screenPos;
@@ -84,13 +84,13 @@ namespace NamPhuThuy.Tutorial
 
         public void EnableHand()
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             handSkeGraphic.gameObject.SetActive(true);
         }
 
         public void DisableHand()
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             handSkeGraphic.gameObject.SetActive(false);
         }
 
@@ -123,7 +123,7 @@ namespace NamPhuThuy.Tutorial
 
         public void MoveHandToScreenPointFromWorld(Vector3 worldPosition)
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             if (Camera.main == null)
             {
                 DebugLogger.Log(message: $"Return");

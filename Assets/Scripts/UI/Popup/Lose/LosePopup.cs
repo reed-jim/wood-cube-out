@@ -10,7 +10,6 @@ using static GameEnum;
 public class LosePopup : BasePopup
 {
     [SerializeField] private Button replayButton;
-    [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button returnHomeButton;
     [SerializeField] private Image levelProgressFill;
     [SerializeField] private TMP_Text progressText;
@@ -23,10 +22,6 @@ public class LosePopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionDuration;
-
-    #region PRIVATE FIELD
-    private bool _isAllowedSkipLevel;
-    #endregion
 
     public static event Action replayLevelEvent;
     public static event Action skipLevelEvent;
@@ -42,15 +37,7 @@ public class LosePopup : BasePopup
         Application.quitting += OnAppClosed;
 
         replayButton.onClick.AddListener(Replay);
-        skipLevelButton.onClick.AddListener(SkipLevel);
         returnHomeButton.onClick.AddListener(ReturnHome);
-
-        _isAllowedSkipLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_SKIP_LEVEL_BUTTON, true);
-
-        if (!_isAllowedSkipLevel)
-        {
-            skipLevelButton.gameObject.SetActive(false);
-        }
     }
 
     protected override void UnregisterMoreEvent()
@@ -112,26 +99,6 @@ public class LosePopup : BasePopup
 
             DataUtility.Save($"Time Lose Level {currentLevel.Value}", timeLoseLevel);
         }
-
-        #region SKIP LEVEL
-        GamePersistentVariable.isAllowedSkipLevel = false;
-
-        if (!_isAllowedSkipLevel)
-        {
-            return;
-        }
-
-        if (timeLoseLevel >= RemoteConfigController.GetIntConfig(FirebaseConfig.MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP, 2))
-        {
-            skipLevelButton.gameObject.SetActive(true);
-
-            GamePersistentVariable.isAllowedSkipLevel = true;
-        }
-        else
-        {
-            skipLevelButton.gameObject.SetActive(false);
-        }
-        #endregion
 
         GamePersistentVariable.isLevelLost = true;
     }

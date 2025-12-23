@@ -107,7 +107,7 @@ namespace NamPhuThuy
 
         public void SetupBackground()
         {
-            DebugLogger.Log(message: $"{gameObject.name}", context: this);
+            // DebugLogger.Log(message: $"{gameObject.name}", context: this);
             try
             {
                 currentPicData =
@@ -122,13 +122,13 @@ namespace NamPhuThuy
                     if (!string.IsNullOrEmpty(currentPicData.videoName) &&
                         GamePersistentVariable.isUseVideoBackground)
                     {
-                        DebugLogger.Log(message: $"Use Video for BG", context: this);
+                        // DebugLogger.Log(message: $"Use Video for BG", context: this);
                         spriteRenderer.gameObject.SetActive(false);
                         ActiveVideo();
                     }
                     else
                     {
-                        DebugLogger.Log(message: $"Use Image for BG", context: this);
+                        // DebugLogger.Log(message: $"Use Image for BG", context: this);
                         videoPlayer.gameObject.SetActive(false);
                         if (remoteAssetsLoadingContainer.gameObject.activeSelf)
                         {

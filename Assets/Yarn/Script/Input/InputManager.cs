@@ -58,7 +58,7 @@ namespace NamPhuThuy
 
         private void CheckTutAvailable(bool isTutAvailable)
         {
-            DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+            // DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
             pinchGesture.ToggleSlider(!isTutAvailable);
         }
 

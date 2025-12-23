@@ -70,13 +70,13 @@ public class GameVariableInitializer : MonoBehaviour
         };
         
         // Debug to console
-        DebugLogger.LogFrog(message: $"Created GalleryRewardConfigItem array, length: {items.Length}");
+        /*DebugLogger.LogFrog(message: $"Created GalleryRewardConfigItem array, length: {items.Length}");
         for (int i = 0; i < items.Length; i++)
         {
             GalleryRewardConfigItem item = items[i];
             // Adjust field/property names below to match your actual class definition
             DebugLogger.LogFrog(message: $"Item[{i}] - minLevel: {item.StartLevel}, maxLevel: {item.EndLevel}, rewardAmount: {item.RequiredNumberOfLevel}");
-        }
+        }*/
         
         
 

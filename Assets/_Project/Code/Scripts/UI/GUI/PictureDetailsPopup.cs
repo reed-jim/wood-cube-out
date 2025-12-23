@@ -60,6 +60,7 @@ namespace NamPhuThuy.UI
 
         [SerializeField] private PlayerPictureData currentPlayerPicData;
         [SerializeField] private PictureData currentPicData;
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
 
         #endregion
 
@@ -271,7 +272,7 @@ namespace NamPhuThuy.UI
             _downloadedNoti = _videoDownloadedNoti;
             int downloadPrice = DataManager.Ins.ServiceData.GetService(ServiceType.DOWNLOAD_VIDEO).price;
 
-            if (DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
+            if (userResourcesObserver.UserResources.CoinQuantity >= downloadPrice)
             {
                 GamePersistentVariable.spendCoinReason = "DownloadVideo";
 

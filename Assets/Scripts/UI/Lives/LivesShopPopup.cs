@@ -75,7 +75,8 @@ public class LivesShopPopup : BasePopup
             {
                 // In Gameplay
                 // openIAPShopPopupEvent?.Invoke(ScreenRoute.LivesShop);
-                SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+                // SwitchRoute(GameEnum.ScreenRoute.IAPShopPopup, false);
+                SwitchRoute(ScreenRoute.IAPShopPopup, ScreenRoute.LivesShop);
 
                 // In Menu
                 lackCoinReplenishLiveEvent?.Invoke();

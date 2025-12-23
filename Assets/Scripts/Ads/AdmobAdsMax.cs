@@ -603,7 +603,7 @@ public class AdmobAdsMax : MonoBehaviour
 
         void StartShowDoubleInter()
         {
-            DebugLogger.Log(message: $"Start Show DoubleInter");
+            // DebugLogger.Log(message: $"Start Show DoubleInter");
             ShowInterstitial(
                 true,
                 actionWatchLog,

@@ -371,7 +371,7 @@ public class BasePiece : MonoBehaviour
 
         foreach (Rigidbody rb in decorObjRigidbodies)
         {
-            DebugLogger.Log(message: $"Detach rigidbody from: {rb.gameObject.name}");
+            // DebugLogger.Log(message: $"Detach rigidbody from: {rb.gameObject.name}");
             rb.isKinematic = false;
             rb.transform.SetParent(transform.parent);
 
@@ -394,13 +394,13 @@ public class BasePiece : MonoBehaviour
 
     public void PullYarn()
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         selectPieceEvent?.Invoke(gameObject.GetInstanceID(), Faction);
     }
 
     public void InvokePieceLoosenedEvent()
     {
-        DebugLogger.Log(message: $"", context: this);
+        // DebugLogger.Log(message: $"", context: this);
         pieceLoosenedEvent?.Invoke();
     }
 

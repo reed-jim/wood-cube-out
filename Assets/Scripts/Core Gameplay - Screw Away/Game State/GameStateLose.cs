@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using UnityEngine;
 using static GameEnum;
 
@@ -30,6 +31,7 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
+        DebugLogger.Log();
         if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
         {
             // loseLevelEvent?.Invoke();

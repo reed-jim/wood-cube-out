@@ -12,7 +12,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
     public void GenerateAddionalFaction(Transform level, BasePiece[] pieces)
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         GameFaction[] currentFactions = pieces.Select(item => item.Faction).ToArray();
 
         Dictionary<GameFaction, int> finalFactions = new Dictionary<GameFaction, int>();
@@ -46,9 +46,9 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         // add new factions
         int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
-        numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
-        DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
-        DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
+        // numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
+        // DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
+        // DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
 
         numFactionsToAdd -= numFactionsToAdd % 3;
 
@@ -96,7 +96,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         // generate new pieces for each layer
         for (int layer = 1; layer < 30; layer++)
         {
-            DebugLogger.Log(message: $"innerPieceFactions.Count = {innerPieceFactions.Count}", context: this);
+            // DebugLogger.Log(message: $"innerPieceFactions.Count = {innerPieceFactions.Count}", context: this);
             if (innerPieceFactions.Count <= 0)
             {
                 break;
@@ -154,7 +154,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                     }
                 }
 
-                Debug.Log("SAFERIO CHECK " + currentInnerPieceFaction + "/" + faction + "/" + i);
+                // Debug.Log("SAFERIO CHECK " + currentInnerPieceFaction + "/" + faction + "/" + i);
 
                 currentInnerPieceFaction = faction;
 
@@ -303,7 +303,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
         new LevelTargetPieces { levelIndex = 20, targetPieces = 57 },
         new LevelTargetPieces { levelIndex = 21, targetPieces = 72 },
         new LevelTargetPieces { levelIndex = 22, targetPieces = 114 },
-        new LevelTargetPieces { levelIndex = 23, targetPieces = 144 },
+        new LevelTargetPieces { levelIndex = 23, targetPieces = 72 },
         new LevelTargetPieces { levelIndex = 24, targetPieces = 60 },
         new LevelTargetPieces { levelIndex = 25, targetPieces = 72 },
         new LevelTargetPieces { levelIndex = 26, targetPieces = 54 },

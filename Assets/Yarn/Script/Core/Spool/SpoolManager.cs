@@ -431,7 +431,7 @@ public class SpoolManager : MonoBehaviour
 
     public void SpawnSpoolBox(GameFaction faction, bool isLocked = false)
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         if (isLocked)
         {
             DebugLogger.Log(message: $"Its locked");

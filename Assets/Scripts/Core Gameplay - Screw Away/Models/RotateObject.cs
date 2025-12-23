@@ -137,7 +137,7 @@ public class RotateObject : MonoBehaviour
 
     private void DisableAutoRotating()
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         _isAutoRotating = false;
     }
     

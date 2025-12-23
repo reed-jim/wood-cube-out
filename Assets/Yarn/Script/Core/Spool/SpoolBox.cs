@@ -285,7 +285,7 @@ public class SpoolBox : MonoBehaviour
 
     private void Unlock(int instanceId)
     {
-        DebugLogger.Log(message: $"instanceID {instanceId}", context: this);
+        // DebugLogger.Log(message: $"instanceID {instanceId}", context: this);
         if (instanceId == gameObject.GetInstanceID())
         {
             Unlock();

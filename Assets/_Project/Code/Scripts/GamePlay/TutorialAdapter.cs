@@ -66,7 +66,7 @@ namespace NamPhuThuy.GamePlay
         
         public void ResetState()
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             pieceList.Clear();
             factionList.Clear();
             _basePieceByFaction.Clear();
@@ -155,7 +155,7 @@ namespace NamPhuThuy.GamePlay
         
         private IEnumerator RunTutorialSequence()
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             
             while (_currentStepIndex < tutorialRecord.Steps.Count)
             {
@@ -221,10 +221,10 @@ namespace NamPhuThuy.GamePlay
         {
             if (!isTutorialLevel)
             {
-                DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                // DebugLogger.Log(message:$"This is not Tut-level", context: this);
                 return;
             }
-            DebugLogger.Log();
+            // DebugLogger.Log();
             if (currentStepRecord.Type == TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_CLICK && faction == targetFaction)
             {
                 _isCurrentStepCompleted = true;
@@ -236,7 +236,7 @@ namespace NamPhuThuy.GamePlay
             // DebugLogger.Log();
             if (!isTutorialLevel)
             {
-                DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                // DebugLogger.Log(message:$"This is not Tut-level", context: this);
                 return;
             }
             switch (currentStepRecord.Type)
@@ -250,7 +250,12 @@ namespace NamPhuThuy.GamePlay
         private void OnSpoolBoxSpawned(SpoolBox spoolBox)
         {
             
-            DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
+            // DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
+            if (!isTutorialLevel)
+            {
+                // DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                return;
+            }
             switch (currentStepRecord.Type)
             {
                 case TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_CLICK:

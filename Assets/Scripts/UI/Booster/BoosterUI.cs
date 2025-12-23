@@ -123,7 +123,7 @@ public class BoosterUI : MonoBehaviour
 
     private void CheckTutAvailable(bool isTutAvailable)
     {
-        DebugLogger.Log(message: $"isTutAvailable: {isTutAvailable}", context: this);
+        // DebugLogger.Log(message: $"isTutAvailable: {isTutAvailable}", context: this);
         if (isTutAvailable)
         {
             addMoreScrewPortButton.gameObject.SetActive(false);

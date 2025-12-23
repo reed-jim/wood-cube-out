@@ -20,6 +20,7 @@ namespace NamPhuThuy.UI
         public int currentPackId;
         public int packPrice;
         public int packQuantity;
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
 
         public int PackQuantity
         {

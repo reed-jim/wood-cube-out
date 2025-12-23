@@ -168,8 +168,10 @@ namespace NamPhuThuy.UI
 
         private void OnClickReplay()
         {
+            DebugLogger.Log();
             if (GamePersistentVariable.isLevelDirty && GamePersistentVariable.livesConfig.isActive)
             {
+                DebugLogger.Log(message: $"About to open Replay Popup");
                 switchRouteEvent?.Invoke(GameEnum.ScreenRoute.Replay);
             }
             else

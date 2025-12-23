@@ -58,17 +58,17 @@ public class UserLivesUI : SaferioTweenBehaviour
     //updateLivesNumberEvent
     private void UpdateLivesNumber(int lives)
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         ActualUpdate();
 
         _numLives = lives;
 
         void ActualUpdate()
         {
-            DebugLogger.Log(message: $"ActualUpdate lives = {lives}");
+            // DebugLogger.Log(message: $"ActualUpdate lives = {lives}");
             numLivesText.text = $"{lives}";
 
-            DebugLogger.Log(message:$"Before check if");
+            // DebugLogger.Log(message:$"Before check if");
             if (lives == GameConstants.DEFAULT_LIVES)
             {
                 replenishLifeTimeText.text = $"Full";

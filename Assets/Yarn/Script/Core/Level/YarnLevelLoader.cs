@@ -563,7 +563,7 @@ public class YarnLevelLoader : MonoBehaviour
     
     void TryTutorialData(Transform levelTransform, int levelId)
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         tutorialAdapter.ResetState();
         tutorialAdapter.InitData(levelTransform, levelId);
     }

@@ -94,8 +94,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private void SkipLevel()
     {
         skipLevelEvent?.Invoke();
-
-        GamePersistentVariable.isAllowedSkipLevel = false;
     }
 
     private void OnLevelStarted()
@@ -134,7 +132,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void CheckTutAvailable(bool isTutAvailable)
     {
-        DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
+        // DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
         if (isTutAvailable)
         {
             pauseButton.gameObject.SetActive(false);

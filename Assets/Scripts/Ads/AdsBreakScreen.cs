@@ -30,12 +30,12 @@ public class AdsBreakScreen : SaferioTweenBehaviour
 
     private void OnEnable()
     {
-        DebugLogger.Log(message:$"");
+        // DebugLogger.Log(message:$"");
     }
 
     private void OnDisable()
     {
-        DebugLogger.Log(message:$"");
+        // DebugLogger.Log(message:$"");
     }
 
     #endregion

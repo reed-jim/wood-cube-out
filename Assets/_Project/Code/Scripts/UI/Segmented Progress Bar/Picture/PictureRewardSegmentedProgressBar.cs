@@ -35,18 +35,18 @@ namespace NamPhuThuy.UI
             for (int i = 0; i < galleryRewardConfig.Items.Length; i++)
             {
                 GalleryRewardConfigItem item = galleryRewardConfig.Items[i];
-                DebugLogger.LogFrog(message: $"StartLevel: {item.StartLevel} - EndLevel: {item.EndLevel} - RequiredNumberOfLevel: {item.RequiredNumberOfLevel}", context:this);
+                // DebugLogger.LogFrog(message: $"StartLevel: {item.StartLevel} - EndLevel: {item.EndLevel} - RequiredNumberOfLevel: {item.RequiredNumberOfLevel}", context:this);
 
                 if (currentLevel >= item.StartLevel && currentLevel <= item.EndLevel)
                 {
-                    DebugLogger.LogFrog(message: $"Matching item {currentLevel}: StartLevel {item.StartLevel}, EndLevel {item.EndLevel}, RequiredNumberOfLevel {item.RequiredNumberOfLevel}", context:this);
+                    // DebugLogger.LogFrog(message: $"Matching item {currentLevel}: StartLevel {item.StartLevel}, EndLevel {item.EndLevel}, RequiredNumberOfLevel {item.RequiredNumberOfLevel}", context:this);
                     _numLevelRequiredForNextReward = item.RequiredNumberOfLevel;
 
                     break;
                 }
                 else if (i == galleryRewardConfig.Items.Length - 1)
                 {
-                    DebugLogger.LogFrog(message: $"No matching item for lv {currentLevel}. Using default values: 10.", context:this);
+                    // DebugLogger.LogFrog(message: $"No matching item for lv {currentLevel}. Using default values: 10.", context:this);
                     _numLevelRequiredForNextReward = 10;
                 }
             }
@@ -55,7 +55,7 @@ namespace NamPhuThuy.UI
             
             float prevRewardProgress = galleryRewardConfig.GetPrevProgress(currentLevelSO.Value);
             
-            DebugLogger.LogFrog(message: $"currentRewardProgress: {_currentRewardProgress} - prevRewardProgress: {prevRewardProgress}", context:this);
+            // DebugLogger.LogFrog(message: $"currentRewardProgress: {_currentRewardProgress} - prevRewardProgress: {prevRewardProgress}", context:this);
 
             base.SetupRewardProgressBar(_currentRewardProgress, prevRewardProgress);
 
