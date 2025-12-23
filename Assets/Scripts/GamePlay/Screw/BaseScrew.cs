@@ -182,7 +182,7 @@ namespace NamPhuThuy.GamePlay
             transform.localEulerAngles = transform.localEulerAngles.ChangeZ(0);
         }
 
-        void OnDestroy()
+        protected virtual void OnDestroy()
         {
             ScrewBoxManager.looseScrewEvent -= Loose;
             ScrewBoxManager.looseScrewWithoutCheckingObstaclesEvent -= LooseWithoutCheckingObstacles;

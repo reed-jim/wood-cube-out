@@ -87,6 +87,7 @@ namespace NamPhuThuy.GamePlay
             ScrewBoxManager.screwBoxSpawnedEvent += OnScrewBoxSpawned;
             BasicObjectPart.pieceCompleteEvent += OnPieceCompleted;
             DebugPopup.startAutoTestLevelEvent += StartAutoTesting;
+
             LockScrewColorLevelManager.switchToLockedScrewsEvent += SwitchToLockedScrews;
             LockScrewColorLevelManager.lockScrewColorManagerInitEvent += OnLockScrewColorManagerInit;
 
@@ -103,9 +104,6 @@ namespace NamPhuThuy.GamePlay
             _isReducedDifficultyAfterRewardedAds = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD, true);
         }
 
-
-
-
         void OnDestroy()
         {
             LevelLoader.startLevelEvent -= OnLevelStart;
@@ -120,8 +118,14 @@ namespace NamPhuThuy.GamePlay
             ScrewBoxManager.screwBoxSpawnedEvent -= OnScrewBoxSpawned;
             BasicObjectPart.pieceCompleteEvent -= OnPieceCompleted;
             DebugPopup.startAutoTestLevelEvent -= StartAutoTesting;
+
             LockScrewColorLevelManager.switchToLockedScrewsEvent -= SwitchToLockedScrews;
+            LockScrewColorLevelManager.lockScrewColorManagerInitEvent -= OnLockScrewColorManagerInit;
+
             RustyScrewSpecialLevelManager.switchToRustyScrewsEvent -= SwitchToRustyScrews;
+            RustyScrewSpecialLevelManager.rustyScrewManagerInitEvent -= OnRustyScrewManagerInit;
+
+            LockScrewBoxManager.lockScrewBoxManagerInitEvent -= OnLockScrewBoxInit;
 
             CommonUtil.StopAllTweens(_tweens);
         }
@@ -216,9 +220,6 @@ namespace NamPhuThuy.GamePlay
         {
             // RULE: The more difficulty point, the less chance to spawn for a faction
 
-            /*Dictionary<GameFaction, int> difficultyLevelByFactions = InitializeFactionDictionaries();
-            Dictionary<GameFaction, List<int>> numObstacleEachScrewEachFaction = InitializeObstacleTrackingDictionaries();*/
-
             Dictionary<GameFaction, int> difficultyLevelByFactions = new Dictionary<GameFaction, int>();
             Dictionary<GameFaction, List<int>> numObstacleEachScrewEachFaction = new Dictionary<GameFaction, List<int>>();
 
@@ -253,8 +254,8 @@ namespace NamPhuThuy.GamePlay
 
                 float screwRadius = _screws[i].transform.lossyScale.x * 0.45f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.x;
 
-                Vector3 pointOne = _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
-
+                Vector3 pointOne =
+                    _screws[i].transform.position + _screws[i].transform.lossyScale.z * 1f * 0.779f * _screws[i].MeshFilter.sharedMesh.bounds.size.z * _screws[i].transform.forward;
                 Vector3 pointTwo = pointOne + 10f * _screws[i].transform.forward;
 
                 Collider[] hits = new Collider[16];
@@ -266,7 +267,9 @@ namespace NamPhuThuy.GamePlay
                     if (hits[j] == null) { continue; }
 
                     if (hits[j].transform.GetInstanceID() == _screws[i].transform.parent.GetInstanceID())
-                    { continue; }
+                    {
+                        continue;
+                    }
 
                     IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
 
@@ -320,34 +323,6 @@ namespace NamPhuThuy.GamePlay
                     continue;
                 }
 
-                // if (_rustyScrewSpecialLevelManager != null && _rustyScrewSpecialLevelManager.IsFactionLocked(faction))
-                // {
-                //     difficultyLevelByFactions[faction] += 9900;
-
-                //     continue;
-                // }
-
-                // if (_lockScrewColorLevelManager != null && _lockScrewColorLevelManager.IsFactionLocked(faction))
-                // {
-                //     difficultyLevelByFactions[faction] += 9900;
-
-                //     continue;
-                // }
-
-                // if (_lockScrewBoxManager != null && _lockScrewBoxManager.IsFactionLocked(faction))
-                // {
-                //     float progressPercent = GetLevelCompletePercent();
-
-                //     if (progressPercent <= 40)
-                //         difficultyLevelByFactions[faction] += 9900;
-                //     else
-                //     {
-                //         difficultyLevelByFactions[faction] -= 999;
-                //     }
-
-                //     continue;
-                // }
-
                 numObstacleEachScrewEachFaction[faction] = numObstacleEachScrewEachFaction[faction].OrderBy(item => item).ToList();
 
                 int totalObstaclesOfThreeMostOpenedScrews = numObstacleEachScrewEachFaction[faction].Take(3).Sum();
@@ -380,37 +355,6 @@ namespace NamPhuThuy.GamePlay
             }
 
             return difficultyLevelByFactions;
-
-            Dictionary<GameFaction, int> InitializeFactionDictionaries()
-            {
-                var difficultyLevelByFactions = new Dictionary<GameFaction, int>();
-
-                for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
-                {
-                    difficultyLevelByFactions.Add(GameConstants.SCREW_FACTION[i], 0);
-                }
-
-                return difficultyLevelByFactions;
-            }
-
-            Dictionary<GameFaction, List<int>> InitializeObstacleTrackingDictionaries()
-            {
-                var numObstacleEachScrewEachFaction = new Dictionary<GameFaction, List<int>>();
-
-                for (int i = 0; i < GameConstants.SCREW_FACTION.Length; i++)
-                {
-                    numObstacleEachScrewEachFaction.Add(GameConstants.SCREW_FACTION[i], new List<int>());
-                }
-
-                return numObstacleEachScrewEachFaction;
-            }
-        }
-
-        private struct ScrewDetectionParameters
-        {
-            public Vector3 PointOne;
-            public Vector3 PointTwo;
-            public float Radius;
         }
 
         private void OnScrewLoosed(BaseScrew screw)
