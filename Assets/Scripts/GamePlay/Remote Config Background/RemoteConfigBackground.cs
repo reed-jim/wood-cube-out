@@ -1,4 +1,6 @@
+using System.Collections;
 using NamPhuThuy.GamePlay;
+using PrimeTween;
 using UnityEngine;
 
 public class RemoteConfigBackground : MonoBehaviour
@@ -51,7 +53,7 @@ public class RemoteConfigBackground : MonoBehaviour
                 gradientBackground.color = ColorUtil.HexToColor(gameplayBackgroundConfig.backgroundColorHex);
             }
 
-            gradientBackgroundAutoScaler.ScaleSpriteToScreen();
+            gradientBackgroundAutoScaler.ScaleSpriteToScreenUseLossyScale();
         }
     }
 

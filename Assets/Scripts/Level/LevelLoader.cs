@@ -55,6 +55,7 @@ namespace NamPhuThuy.GamePlay
 
         #region EVENT
         public static event Action startLevelEvent;
+        public static event Action startLevelCompletedEvent;
         public static event Action endCurrentLevelEvent;
         public static event Action setLevelNumberEvent;
         public static event Action<int> setLevelScrewNumberEvent;
@@ -177,8 +178,7 @@ namespace NamPhuThuy.GamePlay
             }
 
             // NOT LOOP
-            // if (GamePersistentVariable.isDisableLoopLevel)
-            if (true)
+            if (GamePersistentVariable.isDisableLoopLevel)
             {
                 if (currentLevel.Value > _maxLevel)
                 {
@@ -344,7 +344,6 @@ namespace NamPhuThuy.GamePlay
 
                 texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
 
-
                 if (isLoopLevel)
                 {
                     RandomizeLevelModelColor(level);
@@ -370,6 +369,8 @@ namespace NamPhuThuy.GamePlay
                 #endregion
 
                 GamePersistentVariable.isLevelLost = false;
+
+                startLevelCompletedEvent?.Invoke();
             }
 
             void SetIsLoopLevel(bool isLoop)
@@ -378,9 +379,6 @@ namespace NamPhuThuy.GamePlay
                 DebugLogger.LogSimple(message: $"isLoop: {isLoopLevel}", color: Color.red);
             }
         }
-
-
-
 
         private async void GoLevel(int level)
         {

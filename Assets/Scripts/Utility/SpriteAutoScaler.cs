@@ -3,6 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(SpriteRenderer))]
 public class SpriteAutoScaler : MonoBehaviour
 {
+    private Camera _mainCamera;
     private SpriteRenderer _spriteRenderer;
 
     void Start()
@@ -25,7 +26,12 @@ public class SpriteAutoScaler : MonoBehaviour
         // Maintain aspect ratio 
         Vector2 spriteSize = _spriteRenderer.sprite.bounds.size;
 
-        float screenHeight = Camera.main.orthographicSize * 2f;
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+        }
+
+        float screenHeight = _mainCamera.orthographicSize * 2f;
         float screenWidth = screenHeight * Screen.width / Screen.height;
 
         float scaleX = screenWidth / spriteSize.x;
@@ -36,8 +42,34 @@ public class SpriteAutoScaler : MonoBehaviour
         transform.localScale = new Vector3(finalScale, finalScale, 1f);
     }
 
-    // public void OnMMEvent(ELevelCameraUpdated eventType)
-    // {
-    //     ScaleSpriteToScreen();
-    // }
+    public void ScaleSpriteToScreenUseLossyScale()
+    {
+        if (_spriteRenderer == null)
+        {
+            _spriteRenderer = GetComponent<SpriteRenderer>();
+        }
+
+        if (_spriteRenderer.sprite == null)
+        {
+            return;
+        }
+
+        // Maintain aspect ratio 
+        Vector2 spriteSize = _spriteRenderer.sprite.bounds.size;
+
+        if (_mainCamera == null)
+        {
+            _mainCamera = Camera.main;
+        }
+
+        float screenHeight = _mainCamera.orthographicSize * 2f;
+        float screenWidth = screenHeight * Screen.width / Screen.height;
+
+        float scaleX = screenWidth / spriteSize.x;
+        float scaleY = screenHeight / spriteSize.y;
+
+        float finalScale = Mathf.Max(scaleX, scaleY);
+
+        TransformUtil.SetLossyScale(transform, new Vector3(finalScale, finalScale, 1f));
+    }
 }
