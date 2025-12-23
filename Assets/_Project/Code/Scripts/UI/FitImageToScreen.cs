@@ -41,7 +41,7 @@ namespace NamPhuThuy.AnimateWithScripts
         [ContextMenu("FitImage")]
         void FitImage()
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             Image image = GetComponent<Image>();
             if (image != null)
             {

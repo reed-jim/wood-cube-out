@@ -137,7 +137,7 @@ public class WinPopup : BasePopup
     
     private async void OnLevelWinAsync()
     {
-        DebugLogger.Log(message: $"");
+        // DebugLogger.Log(message: $"");
         if (AdmobAdsMax.Instance != null)
         {
             AdmobAdsMax.Instance.ShowBannerCollap();

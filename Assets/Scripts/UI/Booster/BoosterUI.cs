@@ -156,7 +156,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context: this);
+        // DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context: this);
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
@@ -315,8 +315,6 @@ public class BoosterUI : MonoBehaviour
     {
         if (screwBoxesObserver.NumScrewInScrewPorts == 0)
         {
-            Debug.Log("SAFERIO remove GamePersistentVariable.isAutoTestingLevel before final build");
-            
             if (!GamePersistentVariable.isAutoTestingLevel)
             {
                 showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SLOT_TO_BE_CLEARED);

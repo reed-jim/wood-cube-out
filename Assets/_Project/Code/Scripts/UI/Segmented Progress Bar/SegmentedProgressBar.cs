@@ -36,7 +36,7 @@ namespace NamPhuThuy.UI
 
         public virtual void InitRewardProgressBar()
         {
-            DebugLogger.Log(context:this);
+            // DebugLogger.Log(context:this);
             int maxLevelRequired = 15;
 
             progressBarSegmentPool = new ProgressBarSegment[15];

@@ -85,7 +85,7 @@ namespace NamPhuThuy.GamePlay
 
         public void InitData(Transform levelTransform, int levelId)
         {
-            DebugLogger.Log();
+            // DebugLogger.Log();
             if (levelTransform == null)
             {
                 return;

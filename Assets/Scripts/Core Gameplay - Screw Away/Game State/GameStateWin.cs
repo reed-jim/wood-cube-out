@@ -35,7 +35,7 @@ public class GameStateWin : BaseGameState
 
     public override void Enter()
     {
-        DebugLogger.Log(message: $"");
+        // DebugLogger.Log(message: $"");
         winLevelEvent?.Invoke();
     }
 

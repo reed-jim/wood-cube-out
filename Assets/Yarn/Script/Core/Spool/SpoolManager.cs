@@ -642,54 +642,71 @@ public class SpoolManager : MonoBehaviour
 
             if (piece == null)
             {
+                DebugLogger.Log(message:$"The piece is null", context: this);
                 continue;
             }
 
-            if (piece.IsDone || piece.PieceServiceLocator.pieceProperty.IsRewinding)
+            if (piece.IsDone)
             {
+                DebugLogger.Log(message:$"The piece is done", context: this);
                 continue;
             }
 
-            if (piecePorts[i].IsFilled && piece.Faction == spoolBox.Faction)
+            if (piece.PieceServiceLocator.pieceProperty.IsRewinding)
             {
-                for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
-                {
-                    if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                DebugLogger.Log(message:$"The piece is rewinding", context: this);
+                continue;
+            }
+
+            if (!piecePorts[i].IsFilled)
+            {
+                DebugLogger.Log(message:$"The piece port is not filled", context: this);
+                continue;
+            }
+
+            if (piece.Faction != spoolBox.Faction)
+            {
+                DebugLogger.Log(message:$"The piece {piece.Faction} not match spool box {spoolBox.Faction}", context: this);
+                continue;
+            }
+
+            for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
+            {
+                if (spoolBox.SpoolBoxSlots[k].IsFilled) continue;
+                    
+                int piecePortIndex = i;
+                int spoolBoxSlotIndex = k;
+
+                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
+
+                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
+
+                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+                yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                    onCompleteAction: () =>
                     {
-                        int piecePortIndex = i;
-                        int spoolBoxSlotIndex = k;
+                        piecePorts[piecePortIndex].IsFilled = false;
+                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
 
-                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piecePorts[piecePortIndex].Piece);
+                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
 
-                        piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                        Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                        yarn2D.Rewind(piece.Faction, piecePorts[i], spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                            onCompleteAction: () =>
-                            {
-                                piecePorts[piecePortIndex].IsFilled = false;
-                                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                                piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                                piece.InvokePieceLoosenedEvent();
-                                enableBoosterEvent?.Invoke(true);
-                            }
-                        );
-
-                        piece.IsDone = true;
-
-                        piecePorts[i].SmoothSetDissolveHeight(1, 0);
-
-                        if (!isFound)
-                        {
-                            isFound = true;
-                        }
-
-                        break;
+                        piece.InvokePieceLoosenedEvent();
+                        enableBoosterEvent?.Invoke(true);
                     }
+                );
+
+                DebugLogger.Log(message:$"The piece {piece.PieceId}, faction {piece.Faction} is Done", context: this);
+                piece.IsDone = true;
+
+                piecePorts[i].SmoothSetDissolveHeight(1, 0);
+
+                if (!isFound)
+                {
+                    isFound = true;
                 }
+
+                break;
             }
         }
 
@@ -705,11 +722,19 @@ public class SpoolManager : MonoBehaviour
     {
         if (!piece.SpoolBoxSlot.IsAlternative)
         {
+            DebugLogger.Log(message:$"The piece spool box slot is not alternative", context: this);
             return;
         }
 
-        if (piece.IsDone || piece.PieceServiceLocator.pieceProperty.IsRewinding)
+        if (piece.IsDone)
         {
+            DebugLogger.Log(message:$"The piece is done", context: this);
+            return;
+        }
+
+        if (piece.PieceServiceLocator.pieceProperty.IsRewinding)
+        {
+            DebugLogger.Log(message:$"The piece is rewinding", context: this);
             return;
         }
 
@@ -731,37 +756,41 @@ public class SpoolManager : MonoBehaviour
 
             for (int k = 0; k < spoolBox.SpoolBoxSlots.Length; k++)
             {
-                if (!spoolBox.SpoolBoxSlots[k].IsFilled)
+                if (spoolBox.SpoolBoxSlots[k].IsFilled)
                 {
-                    int spoolBoxSlotIndex = k;
-
-                    spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
-
-                    piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
-
-                    Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
-
-                    yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
-                        onCompleteAction: () =>
-                        {
-                            piece.SpoolBoxSlot.IsFilled = false;
-                            spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                            piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                            piece.InvokePieceLoosenedEvent();
-                            enableBoosterEvent?.Invoke(true);
-                        }
-                    );
-
-                    piece.IsDone = true;
-
-                    piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
-
-                    isFound = true;
-
-                    break;
+                    DebugLogger.Log(message:$"The spool box slot is filled", context: this);
+                    continue;
                 }
+                
+                int spoolBoxSlotIndex = k;
+
+                spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].Fill(piece);
+
+                piece.PieceServiceLocator.pieceProperty.IsRewinding = true;
+
+                Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
+
+                yarn2D.Rewind(piece.Faction, piece.SpoolBoxSlot, spoolBox.SpoolBoxSlots[spoolBoxSlotIndex],
+                    onCompleteAction: () =>
+                    {
+                        piece.SpoolBoxSlot.IsFilled = false;
+                        spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
+
+                        piece.PieceServiceLocator.pieceProperty.IsRewinding = false;
+
+                        piece.InvokePieceLoosenedEvent();
+                        enableBoosterEvent?.Invoke(true);
+                    }
+                );
+
+                DebugLogger.Log(message:$"The piece {piece.PieceId}, faction {piece.Faction} is Done", context: this);
+                piece.IsDone = true;
+
+                piece.SpoolBoxSlot.SmoothSetDissolveHeight(1, 0);
+
+                isFound = true;
+
+                break;
             }
 
             if (isFound)
@@ -877,40 +906,39 @@ public class SpoolManager : MonoBehaviour
 
         for (int i = 0; i < piecePorts.Count; i++)
         {
-            int index = i;
-
-            if (piecePorts[index].IsFilled)
+            var slot = piecePorts[i];
+            if (!slot.IsFilled)
             {
-                if (piecePorts[index].Piece.PieceServiceLocator.pieceProperty.IsRewinding)
-                {
-                    continue;
-                }
+                continue;
+            }
 
-                piecePorts[index].Piece.ThrowOutside();
+            var piece = slot.Piece;
+            if (piece != null && piece.PieceServiceLocator.pieceProperty.IsRewinding)
+            {
+                continue;
+            }
+                
+            if (piece != null)
+            {
+                piece.ThrowOutside();
 
                 Yarn2D yarn2D = ObjectPoolingEverything.GetFromPool<Yarn2D>(GameConstants.yard2D);
 
-                BasePiece cachePiece = piecePorts[index].Piece;
+                BasePiece cachePiece = piece;
 
                 cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = true;
 
-                yarn2D.Rewind(piecePorts[index].Piece.Faction, piecePorts[index], outsideSpoolSlot,
+                yarn2D.Rewind(piece.Faction, slot, outsideSpoolSlot,
                     onCompleteAction: () =>
                     {
                         cachePiece.PieceServiceLocator.pieceProperty.IsRewinding = false;
-
-                        piecePorts[index].IsFilled = false;
-
-                        // spoolBox.SpoolBoxSlots[spoolBoxSlotIndex].CompleteFill();
-
-                        // piece.InvokePieceLoosenedEvent();
+                        slot.IsFilled = false;
                     }
                 );
-
-                piecePorts[index].Piece = null;
-
-                numPieceCleared++;
             }
+
+            slot.Piece = null;
+            numPieceCleared++;
         }
 
         spoolBoxesObserver.NumScrewInScrewPorts = GetNumPiecesInPiecePorts();

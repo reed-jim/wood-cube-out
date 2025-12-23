@@ -82,7 +82,7 @@ public class GameStateMachine : MonoBehaviour
 
     private void EnterWinState()
     {
-        DebugLogger.Log(context: this);
+        // DebugLogger.Log(context: this);
         ChangeState(new GameStateWin(this));
     }
 

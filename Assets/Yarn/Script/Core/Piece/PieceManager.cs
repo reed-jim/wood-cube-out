@@ -278,78 +278,6 @@ public class PieceManager : MonoBehaviour
             }
 
             numObstacleEachPieceEachFaction[faction].Add(numCoveredPieces);
-
-            continue;
-
-            // // Find closest obstacle
-            // Transform obstaclePiece = null;
-
-            // float pieceRadius = _pieces[i].transform.lossyScale.x * 0.45f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.x;
-
-            // Vector3 pointOne =
-            //     _pieces[i].transform.position + _pieces[i].transform.lossyScale.z * 1f * 0.779f * _pieces[i].MeshFilter.sharedMesh.bounds.size.z * _pieces[i].transform.forward;
-            // Vector3 pointTwo = pointOne + 10f * _pieces[i].transform.forward;
-
-            // Collider[] hits = new Collider[16];
-
-            // Physics.OverlapCapsuleNonAlloc(pointOne, pointTwo, pieceRadius, hits, LayerMask.GetMask("Default"));
-
-            // if (hits != null)
-            // {
-            //     for (int j = 0; j < hits.Length; j++)
-            //     {
-            //         if (hits[j] == null)
-            //         {
-            //             continue;
-            //         }
-
-            //         if (hits[j].transform.GetInstanceID() == _pieces[i].transform.parent.GetInstanceID())
-            //         {
-            //             continue;
-            //         }
-
-            //         IObjectPart objectPart = hits[j].transform.GetComponent<IObjectPart>();
-
-            //         if (objectPart != null)
-            //         {
-            //             int instanceId = hits[j].transform.GetInstanceID();
-
-            //             if (obstaclesOfPieces.ContainsKey(instanceId))
-            //             {
-            //                 obstaclePiece = hits[j].transform;
-
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
-            // //
-
-            // if (obstaclePiece != null)
-            // {
-            //     int numPieceLeftToReachCurrentPiece = obstaclePiece.childCount;
-
-            //     if (obstaclesOfPieces.ContainsKey(obstaclePiece.GetInstanceID()))
-            //     {
-            //         foreach (var obstacle in obstaclesOfPieces[obstaclePiece.GetInstanceID()])
-            //         {
-            //             numPieceLeftToReachCurrentPiece += obstacle.childCount;
-            //         }
-
-            //         numObstacleEachPieceEachFaction[faction].Add(numPieceLeftToReachCurrentPiece);
-            //     }
-            //     else
-            //     {
-            //         numObstacleEachPieceEachFaction[faction].Add(0);
-            //     }
-            // }
-            // else
-            // {
-            //     numObstacleEachPieceEachFaction[faction].Add(0);
-            // }
-
-            // // FOR Tutorial
-            // difficultyLevelByFactions[faction] += _pieces[i].PieceDifficultyModifier;
         }
 
         List<GameFaction> factions = new List<GameFaction>(numObstacleEachPieceEachFaction.Keys);
@@ -592,8 +520,17 @@ public class PieceManager : MonoBehaviour
 
     private async void SpawnNewSpoolBox()
     {
+        int remainingNotDone = _pieces.Count(p => p != null && !p.IsDone);
+        DebugLogger.Log(message: $"remainingNotDone: {remainingNotDone}", context: this);
+        if (remainingNotDone < GamePersistentVariable.NumYarnPerBox)
+        {
+            DebugLogger.Log(message: $"Not enough remaining pieces to spawn new spool box", context: this);
+            return;
+        }
+        
         if (_totalSpoolBoxesSpawned >= _totalSpoolBoxes)
         {
+            DebugLogger.Log(message: $"All spool boxes have been spawned", context: this);
             return;
         }
 

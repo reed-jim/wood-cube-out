@@ -91,12 +91,12 @@ public static class UserData
     {
         get
         {
-            DebugLogger.Log(message:$"Get Data");
+            // DebugLogger.Log(message:$"Get Data");
             return DataUtility.Load(GameConstants.IS_REMOVE_ADS, false);
         }
         set
         {
-            DebugLogger.Log(message:$"Set IsRemoveAds: {value}");
+            // DebugLogger.Log(message:$"Set IsRemoveAds: {value}");
             DataUtility.SaveAsync(GameConstants.IS_REMOVE_ADS, value);
         }
     }

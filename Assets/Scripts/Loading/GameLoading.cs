@@ -135,7 +135,7 @@ public class GameLoading : MonoBehaviour
     
     private void UnloadLoadingScene()
     {
-        DebugLogger.Log(message: $"trigger unload by finish loading");
+        // DebugLogger.Log(message: $"trigger unload by finish loading");
         SceneManager.UnloadSceneAsync(SceneManager.GetSceneByName(GameConstants.LOADING_SCENE));
         isTriggerUnloadLoadingScene = true;
     }
@@ -217,7 +217,7 @@ public class GameLoading : MonoBehaviour
                     GamePersistentVariable.isLoadingComplete = true;
                     isFinishedLoading = true;
 
-                    DebugLogger.Log(message: $"trigger unload by finish loading");
+                    // DebugLogger.Log(message: $"trigger unload by finish loading");
                     // if (!isTriggerUnloadLoadingScene) 
                     UnloadLoadingScene();
 

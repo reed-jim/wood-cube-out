@@ -38,6 +38,7 @@ public static class GamePersistentVariable
 
     #region YARN
     public static int numSpoolBoxUnlocked;
+    public const int NumYarnPerBox = 3;
     public const float DefaultGamePlayCameraOrthoSize = 7.03f;
     #endregion
 
