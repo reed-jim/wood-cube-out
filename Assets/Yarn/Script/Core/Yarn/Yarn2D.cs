@@ -793,7 +793,7 @@ public class Yarn2D : MonoBehaviour
 
         if (_firstNodeTarget is RectTransform)
         {
-            return _mainCamera.ScreenToWorldPoint(_firstNodeTarget.position);
+            return _mainCamera.ScreenToWorldPoint(_firstNodeTarget.position).ChangeZ(0);
         }
         else
         {
@@ -810,7 +810,7 @@ public class Yarn2D : MonoBehaviour
 
         if (_lastNodeTarget is RectTransform)
         {
-            return _mainCamera.ScreenToWorldPoint(_lastNodeTarget.position);
+            return _mainCamera.ScreenToWorldPoint(_lastNodeTarget.position).ChangeZ(0);
         }
         else
         {
