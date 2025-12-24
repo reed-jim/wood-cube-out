@@ -831,10 +831,13 @@ public class PieceManager : MonoBehaviour
     #region MAGIC PICK
     private void MagicPick()
     {
+        DebugLogger.Log(context: this);
         GameFaction[] validFactions = SpoolManager.Instance.SpoolBoxs
             .Where(item => item != null)
             .Where(item => !item.IsLocked && !item.IsInTransition)
             .Select(item => item.Faction).ToArray();
+        
+        DebugLogger.LogList(validFactions, title: $"validFactions", context: this);
 
         BasePiece selectedPiece = _pieces.First(
             item => !item.IsDone &&
@@ -845,7 +848,12 @@ public class PieceManager : MonoBehaviour
 
         if (selectedPiece != null)
         {
+            DebugLogger.Log(message: $"Invoke magicPickPieceEvent", context: this);
             magicPickPieceEvent?.Invoke(selectedPiece.gameObject.GetInstanceID(), selectedPiece.Faction);
+        }
+        else
+        {
+            DebugLogger.Log(message: $"selectedPiece is null", context: this);
         }
     }
     #endregion

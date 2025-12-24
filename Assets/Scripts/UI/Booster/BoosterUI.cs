@@ -156,7 +156,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseBooster(BoosterType boosterType)
     {
-        // DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context: this);
+        DebugLogger.Log(message: $"{boosterType}, isEnable: {_isEnable}, _isPreventShowWarningPopup: {_isPreventShowWarningPopup}", context: this);
         if (!_isEnable)
         {
             if (!_isPreventShowWarningPopup)
@@ -200,6 +200,10 @@ public class BoosterUI : MonoBehaviour
         else
         {
             _isInTransition = true;
+            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            {
+                _isInTransition = false;
+            });
         }
 
         ConsumeBooster(BoosterType.AddSpoolSlot);
@@ -218,11 +222,6 @@ public class BoosterUI : MonoBehaviour
             Tween.LocalPositionX(breakModeButtonRT, -0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
             Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
         }
-
-        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
-        {
-            _isInTransition = false;
-        });
     }
 
     private void EnableBooster(bool isEnable)
@@ -238,6 +237,7 @@ public class BoosterUI : MonoBehaviour
 
     private void MagicPick()
     {
+        DebugLogger.Log(message: $"", context: this);
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.MagicPick);
@@ -247,21 +247,24 @@ public class BoosterUI : MonoBehaviour
 
         if (_isInTransition)
         {
+            DebugLogger.Log(message: $"_isInTransition {BoosterType.MagicPick}");
             return;
         }
         else
         {
             _isInTransition = true;
+            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            {
+                _isInTransition = false;
+            });
         }
+       
 
+        DebugLogger.Log(message: $"About to ConsumeBooster", context: this);
         ConsumeBooster(BoosterType.MagicPick);
 
+        DebugLogger.Log(message: $"Invoked MagicPick Event", context: this);
         magicPickPieceEvent?.Invoke();
-
-        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
-        {
-            _isInTransition = false;
-        });
     }
 
     private void EnableBreakObjectMode()
@@ -337,16 +340,15 @@ public class BoosterUI : MonoBehaviour
         else
         {
             _isInTransition = true;
+            Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+            {
+                _isInTransition = false;
+            });
         }
 
         clearAllScrewPortsEvent?.Invoke();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
-
-        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
-        {
-            _isInTransition = false;
-        });
     }
 
     private bool IsBoosterAvailable(int boosterIndex)
