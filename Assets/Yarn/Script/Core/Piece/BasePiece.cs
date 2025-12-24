@@ -290,6 +290,9 @@ public class BasePiece : MonoBehaviour
 
         // SoundManager.Instance.PlaySoundLoosenScrew();
 
+        
+          DebugLogger.Log(message: $"GamePersistentVariable.IsVibrate: {GamePersistentVariable.IsVibrate}", context: this);
+          DebugLogger.Log(message: $"gameSetting.IsVibrate: {gameSetting.IsVibrate}", context: this);
         if (gameSetting.IsVibrate)
         {
             HapticFeedback.MediumFeedback();

@@ -276,11 +276,11 @@ namespace NamPhuThuy.UI
             {
                 GamePersistentVariable.spendCoinReason = "DownloadVideo";
 
-                DataManager.Ins.UserResourcesObserver.ChangeCoin(-downloadPrice);
+                userResourcesObserver.ChangeCoin(-downloadPrice);
                 updateCoinTextEvent?.Invoke();
                 SaferioTracking.TrackResourceSink(
                     DataManager.Ins.CurrentLevel.Value, "Coin",
-                    downloadPrice, (int)DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
+                    downloadPrice, (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Image_{currentPictureId}");
 
                 ShowLoadingPopup();
                 StartCoroutine(IEDownLoadVideo());

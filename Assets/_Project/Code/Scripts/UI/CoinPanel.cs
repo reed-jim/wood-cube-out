@@ -17,7 +17,8 @@ namespace NamPhuThuy.UI
         public TextMeshProUGUI CoinText => coinText;
 
         [SerializeField] private RectTransform coinImage;
-
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
+        
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -72,7 +73,7 @@ namespace NamPhuThuy.UI
                     currentValue = x;
                     coinText.text = currentValue.ToString();
                 },
-                (int)DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity,
+                (int)userResourcesObserver.UserResources.CoinQuantity,
                 0.3f
             )
             .SetEase(Ease.Linear);

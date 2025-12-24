@@ -273,8 +273,8 @@ namespace NamPhuThuy.UI
 
         private void OnClickBuy()
         {
-            bool isEnoughCoin = DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity >= this.TotalPrice;
-            DebugLogger.Log(message: $"playerCoin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}, totalPrice: {this.TotalPrice}, isEnoughCoin: {isEnoughCoin}");
+            bool isEnoughCoin = userResourcesObserver.UserResources.CoinQuantity >= this.TotalPrice;
+            DebugLogger.Log(message: $"playerCoin: {userResourcesObserver.UserResources.CoinQuantity}, totalPrice: {this.TotalPrice}, isEnoughCoin: {isEnoughCoin}");
 
 
             if (!isEnoughCoin)
@@ -299,7 +299,7 @@ namespace NamPhuThuy.UI
                 SetUnlockedAllPictureOfStyle();
             }
             DebugLogger.Log(message:$"Buy successfully - picked.Count: {picked.Count}");
-            DataManager.Ins.UserResourcesObserver.ChangeCoin(-this.TotalPrice);
+            userResourcesObserver.ChangeCoin(-this.TotalPrice);
 
             SaferioTracking.TrackResourceSource(
                 DataManager.Ins.CurrentLevel.Value, "Gallery Pack", PackQuantity, TotalPrice, "buy_with_coin");

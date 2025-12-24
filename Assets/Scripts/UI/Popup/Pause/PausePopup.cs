@@ -1,4 +1,5 @@
 using System;
+using NamPhuThuy.Common;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.UI;
@@ -130,8 +131,10 @@ public class PausePopup : BasePopup
     private void EnableVibration(bool isTurnOn)
     {
         gameSetting.IsVibrate = isTurnOn;
-
         GamePersistentVariable.IsVibrate = isTurnOn;
+        
+        DebugLogger.Log(message: $"GamePersistentVariable.IsVibrate: {GamePersistentVariable.IsVibrate}", context: this);
+        DebugLogger.Log(message: $"gameSetting.IsVibrate: {gameSetting.IsVibrate}", context: this);
     }
 
     private void OnGameSettingLoaded()

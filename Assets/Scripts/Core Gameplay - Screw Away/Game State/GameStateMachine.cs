@@ -53,7 +53,7 @@ public class GameStateMachine : MonoBehaviour
 
     public void ChangeState(BaseGameState newState)
     {
-        DebugLogger.Log(message: $"currentState: {currentState}, newState: {newState}", context: this);
+        // DebugLogger.Log(message: $"currentState: {currentState}, newState: {newState}", context: this);
         if (!newState.CanTransitionTo())
         {
             DebugLogger.Log(message: $"Cannot transition to state: {newState.GameState}", context: this);

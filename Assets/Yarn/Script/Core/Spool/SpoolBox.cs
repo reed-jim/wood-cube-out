@@ -90,7 +90,7 @@ public class SpoolBox : MonoBehaviour
 
         boxLid.gameObject.SetActive(false);
 
-        gameSetting.LoadAsync();
+        // gameSetting.LoadAsync();
     }
 
     private void OnDestroy()
@@ -150,7 +150,10 @@ public class SpoolBox : MonoBehaviour
             {
                 shakeCameraEvent?.Invoke();
 
-                if (gameSetting.IsVibrate)
+                
+                DebugLogger.Log(message: $"GamePersistentVariable.IsVibrate: {GamePersistentVariable.IsVibrate}", context: this);
+                DebugLogger.Log(message: $"gameSetting.IsVibrate: {gameSetting.IsVibrate}", context: this);
+                if (GamePersistentVariable.IsVibrate)
                 {
                     HapticFeedback.HeavyFeedback();
                 }

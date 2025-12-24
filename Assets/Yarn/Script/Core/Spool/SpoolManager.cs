@@ -859,11 +859,8 @@ public class SpoolManager : MonoBehaviour
         SpoolBoxSlot addedSpoolBoxSlot = ObjectPoolingEverything.GetFromPool<SpoolBoxSlot>(GameConstants.spoolBoxSlot);
 
         addedSpoolBoxSlot.IsAlternative = true;
-
         piecePorts.Add(addedSpoolBoxSlot);
-
         addedSpoolBoxSlot.transform.SetParent(piecePorts[0].transform.parent);
-
         addedSpoolBoxSlot.transform.localRotation = Quaternion.Euler(Vector3.zero);
         addedSpoolBoxSlot.transform.localScale = piecePorts[0].transform.localScale;
 
@@ -871,7 +868,6 @@ public class SpoolManager : MonoBehaviour
 
         // addedSpoolBoxSlot.transform.position = position + new Vector3(10, 0, 0);
         addedSpoolBoxSlot.transform.localScale = Vector3.zero;
-
 
         float targetScale = 1f;
         if (piecePorts[0] != null)

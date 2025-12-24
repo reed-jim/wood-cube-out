@@ -216,7 +216,12 @@ namespace NamPhuThuy.UI
         private void OnClickVibration()
         {
             DebugLogger.Log();
-            gameSetting.IsVibrate = !gameSetting.IsVibrate;
+            bool isVibrate = gameSetting.IsVibrate;
+            gameSetting.IsVibrate = !isVibrate;
+            GamePersistentVariable.IsVibrate = !isVibrate;
+        
+            DebugLogger.Log(message: $"GamePersistentVariable.IsVibrate: {GamePersistentVariable.IsVibrate}", context: this);
+            DebugLogger.Log(message: $"gameSetting.IsVibrate: {gameSetting.IsVibrate}", context: this);
 
             ButtonSwitchFade vibrateSwitch = vibrationButton.GetComponent<ButtonSwitchFade>();
             vibrateSwitch?.SetState(gameSetting.IsVibrate ? ButtonSwitchFade.State.ON : ButtonSwitchFade.State.OFF);

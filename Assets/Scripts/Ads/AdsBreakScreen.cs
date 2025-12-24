@@ -42,7 +42,7 @@ public class AdsBreakScreen : SaferioTweenBehaviour
 
     public void Show(Action onCompleteAction = null)
     {
-        DebugLogger.Log();
+        // DebugLogger.Log();
         container.gameObject.SetActive(true);
 
         canvasGroup.alpha = 0;

@@ -20,6 +20,8 @@ namespace NamPhuThuy.UI
         [SerializeField] private float giftFlyDuration = 1f;
         [SerializeField] private float pathCurveHeight = 200f;
 
+        [SerializeField] private UserResourcesObserver userResourcesObserver;
+         
         private Vector3 _giftInitialScale;
         #endregion
 
@@ -90,10 +92,9 @@ namespace NamPhuThuy.UI
                 });
             });
 
-            DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity += DataConst.COIN_AFTER_N_LEVEL;
-            DataManager.Ins.UserResourcesObserver.Save();
+            userResourcesObserver.ChangeCoin(DataConst.COIN_AFTER_N_LEVEL);
             
-            DebugLogger.Log(message: $"got some coins, new coin: {DataManager.Ins.UserResourcesObserver.UserResources.CoinQuantity}", context: this);
+            DebugLogger.Log(message: $"got some coins, new coin: {userResourcesObserver.UserResources.CoinQuantity}", context: this);
             collectCoinEvent?.Invoke(DataConst.COIN_AFTER_N_LEVEL);
 
             DOVirtual.DelayedCall(2.5f, () =>

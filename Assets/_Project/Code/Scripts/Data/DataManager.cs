@@ -32,8 +32,6 @@ JSON for:
         [Header("Progress Data")]
         [SerializeField] private IntVariable currentLevel;
         public IntVariable CurrentLevel => currentLevel;
-        [SerializeField] private UserResourcesObserver userResourcesObserver;
-        public UserResourcesObserver UserResourcesObserver => userResourcesObserver;
         [SerializeField] private BoosterDataObserver boosterDataObserver;
         public BoosterDataObserver BoosterDataObserver => boosterDataObserver;
         

@@ -49,11 +49,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6923766836772425453}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ade5e59ecf2d2bc4e923a9e68462b8b6, type: 3}
+  m_Script: {fileID: 11500000, guid: e0ea6172170916e40b5500f9f5213e9a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   coinText: {fileID: 2858907370196780696}
   coinImage: {fileID: 6273728069753879165}
+  userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
 --- !u!222 &8507236278571046838
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -350,6 +351,10 @@ PrefabInstance:
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_HorizontalAlignment
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
+      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
+      value: 1801810542
       objectReference: {fileID: 0}
     - target: {fileID: 7165542200267775454, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_Name
