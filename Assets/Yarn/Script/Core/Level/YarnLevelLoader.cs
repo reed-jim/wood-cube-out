@@ -212,7 +212,7 @@ public class YarnLevelLoader : MonoBehaviour
             {
                 DebugLogger.Log(message: $"This is tut-level -> stop rotate");
                 isTutAvailableEvent?.Invoke(true);
-                level.GetComponent<RotateObject>().DisableAutoRotatingForever();
+                // level.GetComponent<RotateObject>().DisableAutoRotatingForever();
                 TryActiveTutorial();
             }
             else

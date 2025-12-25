@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using MoreMountains.Tools;
@@ -32,6 +33,12 @@ namespace NamPhuThuy.PuzzleTutorial
 
         #endregion
 
+        #region Events
+
+        public static event Action<GameEnum.ScreenRoute> switchRouteEvent;
+
+        #endregion
+
         #region MonoBehaviour Callbacks
 
         private void Awake()
@@ -42,8 +49,6 @@ namespace NamPhuThuy.PuzzleTutorial
             
             MMEventManager.RegisterAllCurrentEvents(this);
         }
-
-      
 
         private void OnDestroy()
         {
@@ -183,6 +188,12 @@ namespace NamPhuThuy.PuzzleTutorial
                 case TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_HOLD:
                     
                     break;
+                case TutorialStepType.SHOW_GUI:
+                    switchRouteEvent?.Invoke(GameEnum.ScreenRoute.Tutorial);
+                    
+                    
+                    break;
+                    
             }
         }
 

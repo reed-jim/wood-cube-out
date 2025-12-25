@@ -1,16 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using NamPhuThuy.PuzzleTutorial;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace NamPhuThuy
+namespace NamPhuThuy.UI
 {
     
-    public class TutorialPopup : MonoBehaviour
+    public class TutorialPopup : BasePopup
     {
         #region Private Serializable Fields
+        
+        [Header("UGUI Elements")]
+        [SerializeField] private Image boosterImage;
+        [SerializeField] private TextMeshProUGUI titleText;
+        [SerializeField] private TextMeshProUGUI descriptionText;
+        [SerializeField] private Button confirmButton;
+        [SerializeField] private Button closeButton;
+
+        [Header("Components")] 
+        [SerializeField] private IntVariable currentLLevelId; 
 
         #endregion
 
@@ -20,22 +34,49 @@ namespace NamPhuThuy
 
         #region MonoBehaviour Callbacks
 
-        void Start()
+        protected override void MoreActionInAwake()
         {
+            base.MoreActionInAwake();
             
+            confirmButton.onClick.AddListener(OnClickConfirm);
+            closeButton.onClick.AddListener(OnClickClose);
         }
 
-        void Update()
+        protected override void MoreActionOnDestroy()
         {
-            
+            base.MoreActionOnDestroy();
         }
 
         #endregion
 
-        #region Private Methods
+        #region Button Methods
+        
+        private void OnClickConfirm()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void OnClickClose()
+        {
+            throw new NotImplementedException();
+        }
+        
         #endregion
 
-        #region Public Methods
+        #region Override Methods
+
+        protected override void Show(Action onCompletedAction = null)
+        {
+            base.Show(onCompletedAction);
+            // GameEnum.BoosterType boosterType = TutorialManager.Ins.Data.GetTutRecord(currentLLevelId.Value).
+            
+        }
+
+        protected override void Hide(Action onCompletedAction = null)
+        {
+            base.Hide(onCompletedAction);
+        }
+
         #endregion
 
         #region Editor Methods

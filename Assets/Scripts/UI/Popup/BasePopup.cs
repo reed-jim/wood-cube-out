@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using NamPhuThuy.Common;
+using NamPhuThuy.PuzzleTutorial;
 using NamPhuThuy.UI;
 using PrimeTween;
 using UnityEngine;
@@ -52,6 +53,7 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
+        TutorialAdapter.switchRouteEvent += OnRouteSwitched;
         SettingPopup.switchRouteEvent += OnRouteSwitched;
         IAPShopPopup.switchRouteEvent += OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
@@ -117,6 +119,8 @@ public class BasePopup : MonoBehaviour
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
+        TutorialAdapter.switchRouteEvent -= OnRouteSwitched;
+        
         SettingPopup.switchRouteEvent -= OnRouteSwitched;
         IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
         BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
