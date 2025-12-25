@@ -30,8 +30,6 @@ MonoBehaviour:
       lockOverride: 2
       grantAmount: 0
     isUnlockBooster: 0
-    isUseTutorImage: 0
-    tutorialImage: {fileID: 0}
     description: 
     steps:
     - id: 
@@ -52,30 +50,53 @@ MonoBehaviour:
       targetTagOrId: 
       delayBefore: 0
       autoCompleteAfter: 0
-  - levelId: 2
+  - levelId: 3
+    type: 2
+    tutName: Give More Spool Slot
+    rules:
+    - type: 99
+      nativeType: 1
+      lockOverride: 1
+      grantAmount: 2
+    - type: 99
+      nativeType: 2
+      lockOverride: 1
+      grantAmount: 0
+    - type: 99
+      nativeType: 3
+      lockOverride: 1
+      grantAmount: 0
+    isUnlockBooster: 0
+    description: 
+    steps:
+    - id: 
+      type: 3
+      message: Add a position to the reserve
+      targetTagOrId: 
+      delayBefore: 0
+      autoCompleteAfter: 0
+  - levelId: 5
     type: 2
     tutName: 
     rules:
     - type: 99
       nativeType: 1
-      lockOverride: 2
-      grantAmount: 0
+      lockOverride: 1
+      grantAmount: 2
     - type: 99
       nativeType: 2
-      lockOverride: 2
+      lockOverride: 1
       grantAmount: 0
     - type: 99
       nativeType: 3
-      lockOverride: 2
+      lockOverride: 1
       grantAmount: 0
     isUnlockBooster: 0
-    isUseTutorImage: 0
-    tutorialImage: {fileID: 0}
     description: 
     steps:
     - id: 
       type: 3
-      message: 
+      message: Add a position to the reserve
       targetTagOrId: 
       delayBefore: 0
       autoCompleteAfter: 0

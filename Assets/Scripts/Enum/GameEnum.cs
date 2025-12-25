@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Random = System.Random;
+
+#region WoolAquaGirl
 
 public class GameEnum : MonoBehaviour
 {
@@ -77,6 +80,7 @@ public class GameEnum : MonoBehaviour
         NotEnoughCoin = 67,
         Popup_Loading = 68,
         GalleryPackResults = 69,
+        Tutorial = 70,
         
         None = 9999,
     }
@@ -143,10 +147,11 @@ public class GameEnum : MonoBehaviour
 
     public enum BoosterType
     {
-        AddSpoolSlot,
-        MagicPick,
-        ClearAlternativeSpools,
-        UnlockSpoolBox
+        AddSpoolSlot = 0,
+        MagicPick = 1,
+        ClearAlternativeSpools = 2,
+        UnlockSpoolBox = 3,
+        None = 99,
     }
 
 
@@ -181,7 +186,7 @@ public class GameEnum : MonoBehaviour
     {
         Array enumValues = Enum.GetValues(typeof(T));
 
-        System.Random random = new System.Random();
+        Random random = new Random();
 
         return (T)enumValues.GetValue(random.Next(enumValues.Length));
     }
@@ -208,3 +213,5 @@ public class GameEnum : MonoBehaviour
         return new List<T>((T[])Enum.GetValues(typeof(T)));
     }
 }
+
+#endregion
