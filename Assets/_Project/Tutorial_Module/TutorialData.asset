@@ -30,6 +30,7 @@ MonoBehaviour:
       lockOverride: 2
       grantAmount: 0
     isUnlockBooster: 0
+    unlockedBoosterType: 0
     description: 
     steps:
     - id: 
@@ -60,18 +61,19 @@ MonoBehaviour:
       grantAmount: 2
     - type: 99
       nativeType: 2
-      lockOverride: 1
+      lockOverride: 2
       grantAmount: 0
     - type: 99
       nativeType: 3
-      lockOverride: 1
+      lockOverride: 2
       grantAmount: 0
     isUnlockBooster: 0
-    description: 
+    unlockedBoosterType: 0
+    description: Add a position to the reserve
     steps:
     - id: 
       type: 3
-      message: Add a position to the reserve
+      message: 
       targetTagOrId: 
       delayBefore: 0
       autoCompleteAfter: 0
@@ -82,7 +84,33 @@ MonoBehaviour:
     - type: 99
       nativeType: 1
       lockOverride: 1
+      grantAmount: 0
+    - type: 99
+      nativeType: 2
+      lockOverride: 1
       grantAmount: 2
+    - type: 99
+      nativeType: 3
+      lockOverride: 2
+      grantAmount: 0
+    isUnlockBooster: 0
+    unlockedBoosterType: 1
+    description: Magic Pick
+    steps:
+    - id: 
+      type: 3
+      message: 
+      targetTagOrId: 
+      delayBefore: 0
+      autoCompleteAfter: 0
+  - levelId: 7
+    type: 2
+    tutName: 
+    rules:
+    - type: 99
+      nativeType: 1
+      lockOverride: 1
+      grantAmount: 0
     - type: 99
       nativeType: 2
       lockOverride: 1
@@ -90,13 +118,14 @@ MonoBehaviour:
     - type: 99
       nativeType: 3
       lockOverride: 1
-      grantAmount: 0
+      grantAmount: 2
     isUnlockBooster: 0
-    description: 
+    unlockedBoosterType: 2
+    description: Clear Alternative Spools
     steps:
     - id: 
       type: 3
-      message: Add a position to the reserve
+      message: 
       targetTagOrId: 
       delayBefore: 0
       autoCompleteAfter: 0

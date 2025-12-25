@@ -212,7 +212,11 @@ public class YarnLevelLoader : MonoBehaviour
             {
                 DebugLogger.Log(message: $"This is tut-level -> stop rotate");
                 isTutAvailableEvent?.Invoke(true);
-                // level.GetComponent<RotateObject>().DisableAutoRotatingForever();
+                if (tutorialAdapter.TutorialRecord.TutType == TutorialRecord.Type.HAND_CLICK)
+                {
+                    level.GetComponent<RotateObject>().DisableAutoRotatingForever();
+                }
+
                 TryActiveTutorial();
             }
             else
@@ -562,7 +566,7 @@ public class YarnLevelLoader : MonoBehaviour
 
     #region Tutorial
     
-    void TryTutorialData(Transform levelTransform, int levelId)
+    private void TryTutorialData(Transform levelTransform, int levelId)
     {
         DebugLogger.Log(message: $"level-id: {levelId}", context: levelTransform);
         tutorialAdapter.ResetState();

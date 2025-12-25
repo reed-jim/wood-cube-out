@@ -82,7 +82,7 @@ namespace NamPhuThuy
         
         public Sprite GetGamePlaySprite(GameEnum.BoosterType type)
         {
-            var data = GetBoosterData(type);
+            var data = GetBoosterRecord(type);
             if (data == null) return null;
             return data.gameplaySprite;  
         }
@@ -91,7 +91,7 @@ namespace NamPhuThuy
         /// Finds booster info by its type.
         /// Returns null if not found.
         /// </summary>
-        public BoosterRecord GetBoosterData(GameEnum.BoosterType type)
+        public BoosterRecord GetBoosterRecord(GameEnum.BoosterType type)
         {
             BuildIndex();
             return _dataDict.TryGetValue(type, out var data) ? data : null;

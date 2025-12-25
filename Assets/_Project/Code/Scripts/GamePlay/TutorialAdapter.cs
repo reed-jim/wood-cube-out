@@ -23,7 +23,7 @@ namespace NamPhuThuy.PuzzleTutorial
         [Header("Components")]
         [SerializeField] private List<BasePiece> pieceList;
         [SerializeField] private List<GameEnum.GameFaction> factionList;
-
+        
 
         #endregion
 
@@ -191,7 +191,6 @@ namespace NamPhuThuy.PuzzleTutorial
                 case TutorialStepType.SHOW_GUI:
                     switchRouteEvent?.Invoke(GameEnum.ScreenRoute.Tutorial);
                     
-                    
                     break;
                     
             }
@@ -270,8 +269,15 @@ namespace NamPhuThuy.PuzzleTutorial
         {
             DebugLogger.Log(message:$"faction count: {factionList.Count}");
             
-            targetFaction = factionList[Random.Range(0, factionList.Count)];
-            piecesOfFaction = _basePieceByFaction[targetFaction];
+            try
+            {
+                targetFaction = factionList[Random.Range(0, factionList.Count)];
+                piecesOfFaction = _basePieceByFaction[targetFaction];
+            }
+            catch (Exception e)
+            {
+                DebugLogger.LogError(message:$"error: {e}");
+            }
             
         }
 

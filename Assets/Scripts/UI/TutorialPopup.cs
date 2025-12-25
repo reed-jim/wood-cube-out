@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Lean.Localization;
 using NamPhuThuy.PuzzleTutorial;
 using TMPro;
 using UnityEngine;
@@ -21,11 +22,12 @@ namespace NamPhuThuy.UI
         [SerializeField] private TextMeshProUGUI titleText;
         [SerializeField] private TextMeshProUGUI descriptionText;
         [SerializeField] private Button confirmButton;
-        [SerializeField] private Button closeButton;
 
         [Header("Components")] 
         [SerializeField] private IntVariable currentLLevelId; 
-
+        [SerializeField] private BoosterData boosterData;
+        [SerializeField] private TutorialRecord tutorialRecord;
+        
         #endregion
 
         #region Private Fields
@@ -39,7 +41,7 @@ namespace NamPhuThuy.UI
             base.MoreActionInAwake();
             
             confirmButton.onClick.AddListener(OnClickConfirm);
-            closeButton.onClick.AddListener(OnClickClose);
+            // closeButton.onClick.AddListener(OnClickClose);
         }
 
         protected override void MoreActionOnDestroy()
@@ -53,12 +55,7 @@ namespace NamPhuThuy.UI
         
         private void OnClickConfirm()
         {
-            throw new NotImplementedException();
-        }
-
-        private void OnClickClose()
-        {
-            throw new NotImplementedException();
+            Hide();
         }
         
         #endregion
@@ -68,8 +65,14 @@ namespace NamPhuThuy.UI
         protected override void Show(Action onCompletedAction = null)
         {
             base.Show(onCompletedAction);
-            // GameEnum.BoosterType boosterType = TutorialManager.Ins.Data.GetTutRecord(currentLLevelId.Value).
+
+            tutorialRecord = TutorialManager.Ins.Data.GetTutRecord(currentLLevelId.Value);
+            GameEnum.BoosterType boosterType = tutorialRecord.UnlockedBoosterType;
             
+            BoosterRecord boosterRecord = boosterData.GetBoosterRecord(boosterType);
+            descriptionText.GetComponent<LeanLocalizedTextMeshProUGUI>().TranslationName = tutorialRecord.Description;
+            boosterImage.sprite = boosterRecord.gameplaySprite;
+            boosterImage.SetNativeSize();
         }
 
         protected override void Hide(Action onCompletedAction = null)
