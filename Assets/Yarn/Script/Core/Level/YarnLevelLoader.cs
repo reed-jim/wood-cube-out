@@ -4,14 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using NamPhuThuy.Common;
-using NamPhuThuy.GamePlay;
-using NamPhuThuy.Tutorial;
+using NamPhuThuy.PuzzleTutorial;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using static GameEnum;
 using DebugLogger = NamPhuThuy.Common.DebugLogger;
+using TutorialManager = NamPhuThuy.PuzzleTutorial.TutorialManager;
 
 public class YarnLevelLoader : MonoBehaviour
 {
@@ -217,6 +217,7 @@ public class YarnLevelLoader : MonoBehaviour
             }
             else
             {
+                DebugLogger.Log(message: $"This is not a tut-level");
                 isTutAvailableEvent?.Invoke(false);
             }
 
@@ -563,14 +564,14 @@ public class YarnLevelLoader : MonoBehaviour
     
     void TryTutorialData(Transform levelTransform, int levelId)
     {
-        // DebugLogger.Log();
+        DebugLogger.Log(message: $"level-id: {levelId}", context: levelTransform);
         tutorialAdapter.ResetState();
         tutorialAdapter.InitData(levelTransform, levelId);
     }
 
     private void TryActiveTutorial()
     {
-        DebugLogger.Log();
+        DebugLogger.Log(message: $"");
         if (tutorialAdapter.IsTutorialLevel)
         {
             StartCoroutine(IE_ActiveTutorial());

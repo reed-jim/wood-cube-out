@@ -782,8 +782,29 @@ PrefabInstance:
     - {fileID: 5819926339486860017, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
     - {fileID: 6736414970974081542, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 4590616944843588033, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 567178286}
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+--- !u!1 &567178285 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4590616944843588033, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 567178284}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &567178286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 567178285}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 384f4a5ac76277345b2b928005b7420b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: NamPhuThuy.Common::NamPhuThuy.Common.DontDestroyOnLoadTag
+  destroyDuplicates: 0
 --- !u!1 &817468848
 GameObject:
   m_ObjectHideFlags: 0

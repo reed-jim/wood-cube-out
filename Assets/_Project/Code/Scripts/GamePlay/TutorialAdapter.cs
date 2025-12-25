@@ -1,19 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using MoreMountains.Tools;
 using NamPhuThuy.Common;
-using NamPhuThuy.Tutorial;
 using UnityEngine;
-using UnityEngine.AddressableAssets.Initialization;
 using Random = UnityEngine.Random;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace NamPhuThuy.GamePlay
+namespace NamPhuThuy.PuzzleTutorial
 {
-    public class TutorialAdapter : MonoBehaviour
+    public partial class TutorialAdapter : TutorialAdapterBase
     {
         #region Private Serializable Fields
 
@@ -21,14 +18,10 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private bool isTutorialLevel = false;
         public bool IsTutorialLevel => isTutorialLevel;
         
-        [Header("Stats")] 
-        [SerializeField] private int levelId;
         
         [Header("Components")]
         [SerializeField] private List<BasePiece> pieceList;
         [SerializeField] private List<GameEnum.GameFaction> factionList;
-        [SerializeField] private TutorialRecord tutorialRecord;
-        [SerializeField] private TutorialStepRecord currentStepRecord;
 
 
         #endregion
@@ -37,9 +30,6 @@ namespace NamPhuThuy.GamePlay
         
         private Dictionary<GameEnum.GameFaction, List<BasePiece>> _basePieceByFaction = new Dictionary<GameEnum.GameFaction, List<BasePiece>>();
 
-        private Coroutine _tutorialRoutine;
-        private int _currentStepIndex;
-        private bool _isCurrentStepCompleted;
         #endregion
 
         #region MonoBehaviour Callbacks
@@ -49,6 +39,8 @@ namespace NamPhuThuy.GamePlay
             YarnGameInput.PieceSelectedWithFactionEvent += OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent += OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
+            
+            MMEventManager.RegisterAllCurrentEvents(this);
         }
 
       
@@ -58,34 +50,26 @@ namespace NamPhuThuy.GamePlay
             YarnGameInput.PieceSelectedWithFactionEvent -= OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent -= OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
+            
+            MMEventManager.UnregisterAllCurrentEvents(this);
         }
 
         #endregion
 
         #region Public Methods
         
-        public void ResetState()
+        public override void ResetState()
         {
-            // DebugLogger.Log();
+            DebugLogger.Log();
+            base.ResetState();
             pieceList.Clear();
             factionList.Clear();
             _basePieceByFaction.Clear();
-            
-            if (_tutorialRoutine != null)
-            {
-                StopCoroutine(_tutorialRoutine);
-                _tutorialRoutine = null;
-            }
-
-            if (TutorialManager.Ins != null && TutorialManager.Ins.TutorialHand != null)
-            {
-                TutorialManager.Ins.TutorialHand.DisableHand();
-            }
         }
 
         public void InitData(Transform levelTransform, int levelId)
         {
-            // DebugLogger.Log();
+            DebugLogger.Log(message: $"level-id: {levelId}", context: levelTransform);
             if (levelTransform == null)
             {
                 return;
@@ -101,10 +85,9 @@ namespace NamPhuThuy.GamePlay
                 return;
             }
 
+            isTutorialLevel = true;
             _currentStepIndex = 0;
             currentStepRecord = tutorialRecord.Steps[_currentStepIndex];
-
-            isTutorialLevel = true;
 
             foreach (BasePiece basePiece in levelTransform.GetComponentsArrayFromAllChildren<BasePiece>())
             {
@@ -155,7 +138,7 @@ namespace NamPhuThuy.GamePlay
         
         private IEnumerator RunTutorialSequence()
         {
-            // DebugLogger.Log();
+            DebugLogger.Log(message: $"");
             
             while (_currentStepIndex < tutorialRecord.Steps.Count)
             {
@@ -195,7 +178,7 @@ namespace NamPhuThuy.GamePlay
                     
                     TutorialManager.Ins.TutorialHand.EnableHand();
                     TutorialManager.Ins.TutorialHand.PlayAnimation(TutorialManager.Ins.TutorialHand.AnimAction2, true);
-                    TutorialManager.Ins.TutorialHand.MoveHandToScreenPointFromWorld(targetPiece.transform.position);
+                    TutorialManager.Ins.TutorialHand.MoveToScreenPointFromWorldTween(targetPiece.transform.position);
                     break;
                 case TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_HOLD:
                     
@@ -233,7 +216,7 @@ namespace NamPhuThuy.GamePlay
         
         private void OnPieceMoveCompleted(BasePiece obj)
         {
-            // DebugLogger.Log();
+            DebugLogger.Log();
             if (!isTutorialLevel)
             {
                 // DebugLogger.Log(message:$"This is not Tut-level", context: this);
@@ -242,7 +225,7 @@ namespace NamPhuThuy.GamePlay
             switch (currentStepRecord.Type)
             {
                 case TutorialStepType.HAND_POINT_AND_WAIT_FOR_TARGET_CLICK:
-                    TutorialManager.Ins.TutorialHand.MoveHandToScreenPointFromWorld(targetPiece.transform.position);
+                    TutorialManager.Ins.TutorialHand.MoveToScreenPointFromWorldTween(targetPiece.transform.position);
                     break;
             }
         }
@@ -250,7 +233,7 @@ namespace NamPhuThuy.GamePlay
         private void OnSpoolBoxSpawned(SpoolBox spoolBox)
         {
             
-            // DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
+            DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
             if (!isTutorialLevel)
             {
                 // DebugLogger.Log(message:$"This is not Tut-level", context: this);
@@ -275,11 +258,6 @@ namespace NamPhuThuy.GamePlay
         private void PrepareForLevel1Tutorial()
         {
             DebugLogger.Log(message:$"faction count: {factionList.Count}");
-            // factionList = _basePieceByFaction.Keys.ToList();
-            /*factionList = SpoolManager.Instance.SpoolBoxes
-                .Select(box => box.Faction)              // take the faction from each box
-                .Distinct()                              // optional: remove duplicates
-                .ToList();              // materialize as List<GameEnum.GameFaction>*/
             
             targetFaction = factionList[Random.Range(0, factionList.Count)];
             piecesOfFaction = _basePieceByFaction[targetFaction];
