@@ -23,6 +23,7 @@ namespace NamPhuThuy.PuzzleTutorial
         [Header("Components")]
         [SerializeField] private List<BasePiece> pieceList;
         [SerializeField] private List<GameEnum.GameFaction> factionList;
+        [SerializeField] private YarnLevelLoader yarnLevelLoader;
         
 
         #endregion
@@ -46,6 +47,8 @@ namespace NamPhuThuy.PuzzleTutorial
             YarnGameInput.PieceSelectedWithFactionEvent += OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent += OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
+            BasePopup.popupHideEvent += OnPopupHide;
+            BoosterUI.tryActiveBoosterEvent += OnActiveBooster;
             
             MMEventManager.RegisterAllCurrentEvents(this);
         }
@@ -55,9 +58,13 @@ namespace NamPhuThuy.PuzzleTutorial
             YarnGameInput.PieceSelectedWithFactionEvent -= OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent -= OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
+            BasePopup.popupHideEvent -= OnPopupHide;
+            BoosterUI.tryActiveBoosterEvent -= OnActiveBooster;
             
             MMEventManager.UnregisterAllCurrentEvents(this);
         }
+
+       
 
         #endregion
 
@@ -192,7 +199,16 @@ namespace NamPhuThuy.PuzzleTutorial
                     switchRouteEvent?.Invoke(GameEnum.ScreenRoute.Tutorial);
                     
                     break;
+                case TutorialStepType.HAND_POINT_FOR_A_LITTLE_WHILE:
                     
+                    TutorialManager.Ins.TutorialHand.EnableHand();
+                    TutorialManager.Ins.TutorialHand.PlayAnimation(TutorialManager.Ins.TutorialHand.AnimAction2, true);
+                    TutorialManager.Ins.TutorialHand.MoveToTargetRectTransformTween(yarnLevelLoader.CurrentBoosterRT.GetComponent<RectTransform>());
+                    StartCoroutine(TutorialManager.Ins.TutorialHand.IE_TurnOffWithDelay(5f));
+                    
+                    break;
+                default:
+                    break;
             }
         }
 
@@ -257,7 +273,43 @@ namespace NamPhuThuy.PuzzleTutorial
             }
             
         }
+        
+        private void OnPopupHide()
+        {
+            DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
+            if (!isTutorialLevel)
+            {
+                // DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                return;
+            }
+            
+            switch (currentStepRecord.Type)
+            {
+                case TutorialStepType.SHOW_GUI:
+                    _isCurrentStepCompleted = true;
+                    break;
+            }
+        }
 
+        private void OnActiveBooster(GameEnum.BoosterType obj)
+        {
+            DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
+            if (!isTutorialLevel)
+            {
+                // DebugLogger.Log(message:$"This is not Tut-level", context: this);
+                return;
+            }
+            
+            switch (currentStepRecord.Type)
+            {
+                case TutorialStepType.HAND_POINT_FOR_A_LITTLE_WHILE:
+                    TutorialManager.Ins.TutorialHand.DisableHand();
+                    _isCurrentStepCompleted = true;
+                    break;
+            }
+            
+        }
+        
         #endregion
 
         #region LEVEL 1 TUTORIAL

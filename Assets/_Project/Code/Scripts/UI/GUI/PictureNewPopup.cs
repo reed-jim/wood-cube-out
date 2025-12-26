@@ -508,7 +508,7 @@ namespace NamPhuThuy.UI
                 );
             }*/
 
-            TweenHelper.Wait1Second(() =>
+            TweenHelper.WaitSomeSeconds(3f, () =>
             {
                 TweenHelper.DoPunch(confirmButton.transform, 1, 
                     onCompleteAction: () =>

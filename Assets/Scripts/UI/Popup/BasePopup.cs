@@ -279,15 +279,6 @@ public class BasePopup : MonoBehaviour
         {
             ActualHideAfterAd(onCompletedAction);
 
-            // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-            // {
-            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
-            // }
-            // else
-            // {
-            //     ActualHideAfterAd(onCompletedAction);
-            // }
-
             _isInTransition = true;
         }
     }

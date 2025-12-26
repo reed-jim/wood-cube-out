@@ -2455,6 +2455,8 @@ MonoBehaviour:
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
   texturedMaterial: {fileID: 2100000, guid: 72965e0c84f67b442a7b11fa3475c345, type: 2}
   tutorialAdapter: {fileID: 598095789}
+  boosterUI: {fileID: 639205621}
+  currentBoosterRT: {fileID: 0}
 --- !u!114 &598095789
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2488,6 +2490,7 @@ MonoBehaviour:
   isTutorialLevel: 0
   pieceList: []
   factionList: 
+  yarnLevelLoader: {fileID: 598095788}
 --- !u!1 &602326779
 GameObject:
   m_ObjectHideFlags: 0
@@ -3013,6 +3016,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8115178826921894898, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
   m_PrefabInstance: {fileID: 639205618}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &639205621 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4720967594307153870, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+  m_PrefabInstance: {fileID: 639205618}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d86351b32a7f54cb3a7e55182ea007, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &668258049
 PrefabInstance:
   m_ObjectHideFlags: 0

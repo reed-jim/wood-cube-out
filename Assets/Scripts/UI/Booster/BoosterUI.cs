@@ -11,8 +11,14 @@ public class BoosterUI : MonoBehaviour
     [Header("UI")]
     [SerializeField] private RectTransform boosterContainer;
     [SerializeField] private RectTransform addMoreScrewPortButtonRT;
+    public RectTransform AddMoreScrewPortButtonRT => addMoreScrewPortButtonRT;
+    
     [SerializeField] private RectTransform breakModeButtonRT;
+    public RectTransform BreakModeButtonRT => breakModeButtonRT;
+    
     [SerializeField] private RectTransform clearAllScrewPortsButtonRT;
+    public RectTransform ClearAllScrewPortsButtonRT => clearAllScrewPortsButtonRT;
+    
     [SerializeField] private RectTransform breakModeContainer;
 
     [SerializeField] private Button addMoreScrewPortButton;
@@ -41,6 +47,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action<BoosterType> updateBoosterQuantityEvent;
     public static event Action shakeScrewPortsEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<BoosterType> tryActiveBoosterEvent;
 
     private List<Tween> _tweens;
     private int _numScrewPortsAdded;
@@ -167,6 +174,8 @@ public class BoosterUI : MonoBehaviour
 
             return;
         }
+        
+        tryActiveBoosterEvent?.Invoke(boosterType);
 
         if (boosterType == BoosterType.AddSpoolSlot)
         {

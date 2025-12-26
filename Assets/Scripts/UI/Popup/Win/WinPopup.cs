@@ -158,7 +158,7 @@ public class WinPopup : BasePopup
         
         TweenHelper.DoPunch(x5CoinButton.transform, 1);
         
-        TweenHelper.Wait1Second(() =>
+        TweenHelper.WaitSomeSeconds(3f, () =>
         {
             continueButton.gameObject.SetActive(true);
             TweenHelper.DoPunch(continueButton.transform, 1, onCompleteAction: () =>

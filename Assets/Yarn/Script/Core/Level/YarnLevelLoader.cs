@@ -32,6 +32,8 @@ public class YarnLevelLoader : MonoBehaviour
     [Header("Components")] [SerializeField]
     private TutorialAdapter tutorialAdapter;
 
+    [SerializeField] private BoosterUI boosterUI;
+
     #region PRIVATE FIELD
 
     private Camera _mainCamera;
@@ -606,12 +608,49 @@ public class YarnLevelLoader : MonoBehaviour
     #endregion
 
     #region Tutorial
+
+    [SerializeField] private RectTransform currentBoosterRT;
+    public RectTransform CurrentBoosterRT => currentBoosterRT;
     
     private void TryTutorialData(Transform levelTransform, int levelId)
     {
         DebugLogger.Log(message: $"level-id: {levelId}", context: levelTransform);
         tutorialAdapter.ResetState();
         tutorialAdapter.InitData(levelTransform, levelId);
+
+        // If there is Booster-tut
+        int currentBoosterId = 0;
+        bool hasBoosterTut = false;
+        try
+        {
+            for (var i = 0; i < tutorialAdapter.TutorialRecord.Rules.Count; i++)
+            {
+                if (tutorialAdapter.TutorialRecord.Rules[i].grantAmount > 0)
+                {
+                    currentBoosterId = i;
+                    hasBoosterTut = true;
+                    break;
+                }
+            }
+
+            if (!hasBoosterTut) return;
+            if (currentBoosterId == 0)
+            {
+                currentBoosterRT = boosterUI.AddMoreScrewPortButtonRT;
+            }
+            else if (currentBoosterId == 1)
+            {
+                currentBoosterRT = boosterUI.BreakModeButtonRT;
+            }
+            else if (currentBoosterId == 2)
+            {
+                currentBoosterRT = boosterUI.ClearAllScrewPortsButtonRT;
+            }
+        }
+        catch (Exception e)
+        {
+            DebugLogger.LogError(message: $"Error: {e}");
+        }
     }
 
     private void TryActiveTutorial()
