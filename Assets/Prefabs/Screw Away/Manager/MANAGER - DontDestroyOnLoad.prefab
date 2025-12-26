@@ -3834,6 +3834,7 @@ MonoBehaviour:
   rustyBreakSoundPrefab: {fileID: 7606835583939712495, guid: d900bdd5b030dd94d962aaff7ddf5f89, type: 3}
   completeTaskSoundPrefab: {fileID: 7606835583939712495, guid: 604763f047c2fa4429d3b98f55af37f9, type: 3}
   generateTaskSoundPrefab: {fileID: 7606835583939712495, guid: c4ba784a03d473b4cb2a80dd63512356, type: 3}
+  coinSoundPrefab: {fileID: 7606835583939712495, guid: d382556f6e1bbba42a1734adf1d86b5c, type: 3}
   destroyObjectPartFxPrefab: {fileID: 7243412146976613399, guid: 7f6a5f6ed46040745825be46b3f25418, type: 3}
   looseScrewFxPrefab: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
   boxCompletedFxPrefab: {fileID: 8915500580573861359, guid: 9d11447644b0e0842a7edb034fe1ac72, type: 3}
@@ -7826,6 +7827,7 @@ Transform:
   - {fileID: 7320067001522400920}
   - {fileID: 4450989114708121936}
   - {fileID: 7173445182022862289}
+  - {fileID: 65281796572380979}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -7840,7 +7842,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: French
+  currentLanguage: English
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -11971,6 +11973,79 @@ MonoBehaviour:
   - Language: Spanish
     Text: Proceder de todos modos
     Object: {fileID: 0}
+--- !u!1 &8233930287549432216
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 65281796572380979}
+  - component: {fileID: 7111739202195906256}
+  m_Layer: 0
+  m_Name: Almost there
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &65281796572380979
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8233930287549432216}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7111739202195906256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8233930287549432216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: "Almost there\u2026"
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Presque l\xE0\u2026"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Fast geschafft\u2026"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Ci siamo quasi...
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3082\u3046\u3059\u3050\u305D\u3053\u3067\u3059\u2026"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uAC70\uC758 \uB2E4 \uC654\uC5B4\uC694\u2026"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Quase l\xE1\u2026"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u043E\u0447\u0442\u0438 \u0442\u0430\u043C\u2026"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Casi llegamos\u2026"
+    Object: {fileID: 0}
 --- !u!1 &8256324105275650458
 GameObject:
   m_ObjectHideFlags: 0
@@ -13963,12 +14038,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_text
-      value: "D\xE9tendez-vous pendant un certain temps avant le prochain d\xE9fi
-        \xE0 la vis."
+      value: Relax for a while before the next screw challenge.
       objectReference: {fileID: 0}
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_fontSize
-      value: 49.4
+      value: 62.15
       objectReference: {fileID: 0}
     - target: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Pivot.x

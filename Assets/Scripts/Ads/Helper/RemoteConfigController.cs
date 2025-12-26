@@ -258,6 +258,17 @@ public class RemoteConfigController : MonoBehaviour
         // }
         #endregion
 
+        #region Remote Config Gameplay
+        GameplayBackgroundConfig gameplayBackgroundConfig = new GameplayBackgroundConfig();
+
+        GetJsonConfig(FirebaseConfig.gameplayBackgroundConfig, out gameplayBackgroundConfig);
+
+        if (gameplayBackgroundConfig != null)
+        {
+            GamePersistentVariable.gameplayBackgroundConfig = gameplayBackgroundConfig;
+        }
+        #endregion
+
         remoteConfigReadyEvent?.Invoke();
 
         int targetFPS = GetIntConfig(FirebaseConfig.TARGET_FPS, 120);

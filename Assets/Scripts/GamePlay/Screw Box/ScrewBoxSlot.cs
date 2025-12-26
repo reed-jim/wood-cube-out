@@ -5,6 +5,8 @@ using static GameEnum;
 
 public class ScrewBoxSlot : MonoBehaviour
 {
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private bool isScrewPort;
 
@@ -33,6 +35,11 @@ public class ScrewBoxSlot : MonoBehaviour
     public static event Action<int> screwBoxCompleteEvent;
     #endregion
 
+    void OnEnable()
+    {
+        SetScale();
+    }
+
     public void Fill(BaseScrew screw)
     {
         _screw = screw;
@@ -46,5 +53,29 @@ public class ScrewBoxSlot : MonoBehaviour
         {
             screwBoxCompleteEvent?.Invoke(transform.parent.gameObject.GetInstanceID());
         }
+    }
+
+    private void SetScale()
+    {
+        if (!isScrewPort || spriteRenderer == null)
+        {
+            return;
+        }
+
+        Camera mainCamera = Camera.main;
+
+        if (mainCamera == null)
+        {
+            return;
+        }
+
+        Vector2 worldSize = CommonUtil.GetScreenSizeWorld(mainCamera);
+
+        float scaleWithWidth = (0.06f * worldSize.x) * transform.localScale.x / spriteRenderer.bounds.size.x;
+        float scaleWithHeight = (0.025f * worldSize.y) * transform.localScale.y / spriteRenderer.bounds.size.y;
+
+        float finalScale = Mathf.Min(scaleWithWidth, scaleWithHeight);
+
+        transform.localScale = finalScale * transform.localScale / transform.lossyScale.x;
     }
 }

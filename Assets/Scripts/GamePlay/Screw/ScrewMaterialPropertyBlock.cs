@@ -114,6 +114,12 @@ public class ScrewMaterialPropertyBlock : MonoBehaviour
     private void TempRustyFx()
     {
         ParticleSystem looseScrewFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.LOOSE_SCREW_FX);
+
+        if (looseScrewFx.transform.childCount == 0)
+        {
+            return;
+        }
+
         ParticleSystem ringFx = looseScrewFx.transform.GetChild(0).GetComponent<ParticleSystem>();
 
         var looseScrewFxMain = looseScrewFx.main;

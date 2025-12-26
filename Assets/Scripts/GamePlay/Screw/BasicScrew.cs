@@ -29,7 +29,7 @@ namespace NamPhuThuy.GamePlay
             if (!_isInteractable) return;
             if (_isDone) return;
             if (_isMoving) return;
-            
+
             _isInteractable = false;
 
             if (isCheckObstacles && !IsOutsideWithNoScrewBox)
@@ -38,15 +38,16 @@ namespace NamPhuThuy.GamePlay
                 {
                     // avoid loose screw that is covering by other objects
                     bool isNotVisible = true;
+
                     try
                     {
                         isNotVisible = Physics.Raycast(
                             transform.position + 0.5f * _renderer.bounds.size.z * transform.forward,
                             _mainCamera.transform.position - transform.position, 5);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        DebugLogger.LogSimple(message:$"Error: {e}", color: Color.red, context:this);
+
                     }
 
                     if (isNotVisible)
@@ -143,6 +144,11 @@ namespace NamPhuThuy.GamePlay
                 for (int i = 0; i < hits.Length; i++)
                 {
                     if (hits[i] == null)
+                    {
+                        continue;
+                    }
+
+                    if (transform.parent == null)
                     {
                         continue;
                     }

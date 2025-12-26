@@ -165,9 +165,14 @@ public class HingeJointGenerator : EditorWindow
             GenerateScrews();
         }
 
+        // if (GUILayout.Button("Generate Screw Single Piece"))
+        // {
+        //     GenerateScrewForPiece(Selection.activeTransform.GetComponent<BasicObjectPart>());
+        // }
+
         if (GUILayout.Button("Generate Screw Single Piece"))
         {
-            GenerateScrewForPiece(Selection.activeTransform.GetComponent<BasicObjectPart>());
+            GenerateScrewsForAPieceSpiral(Selection.activeTransform.GetComponent<BasicObjectPart>());
         }
 
         expectedDirection = (FaceDirection)EditorGUILayout.EnumPopup("Expected Direction", expectedDirection);
@@ -231,7 +236,7 @@ public class HingeJointGenerator : EditorWindow
 
         GUILayout.Space(16);
         GUILayout.Label("Utils", centeredStyle);
-        
+
         if (GUILayout.Button("Remove Children's Components"))
         {
             RemoveComponentsForAllChildren();
@@ -1343,7 +1348,7 @@ public class HingeJointGenerator : EditorWindow
     private void RemoveComponentsForAllChildren()
     {
         Transform level = Selection.activeTransform;
-        
+
         if (level == null) return;
 
         foreach (Transform child in level)
@@ -1363,7 +1368,7 @@ public class HingeJointGenerator : EditorWindow
         }
         EditorUtility.SetDirty(level);
     }
-    
+
     private void AddRequiredComponentsToPieces()
     {
         Transform level = Selection.activeTransform;
@@ -1382,17 +1387,17 @@ public class HingeJointGenerator : EditorWindow
             {
                 piece.AddComponent<BasicObjectPart>();
             }
-            
+
             if (piece.GetComponent<ObjectPartMaterialPropertyBlock>() == null)
             {
                 piece.AddComponent<ObjectPartMaterialPropertyBlock>();
             }
-            
+
             if (piece.GetComponent<Rigidbody>() == null)
             {
                 piece.AddComponent<Rigidbody>();
             }
-            
+
             /*piece.AddComponent<BasicObjectPart>();
             piece.AddComponent<ObjectPartMaterialPropertyBlock>();
             piece.AddComponent<Rigidbody>();*/
@@ -3026,6 +3031,79 @@ public class HingeJointGenerator : EditorWindow
         }
 
         EditorUtility.SetDirty(level);
+    }
+
+    private void GenerateScrewsSpiral()
+    {
+        Transform level = Selection.activeTransform;
+
+        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.NORMAL_SCREW_PREFAB_PATH);
+
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
+    }
+
+    private void GenerateScrewsForAPieceSpiral(BasicObjectPart piece)
+    {
+        // Remove old screws
+        BaseScrew[] screws = GetComponentsFromAllChildren<BaseScrew>(piece.transform).ToArray();
+
+        List<BaseScrew> toRemoveList = new List<BaseScrew>();
+
+        toRemoveList.AddRange(screws);
+
+        foreach (var item in toRemoveList)
+        {
+            DestroyImmediate(item.gameObject, true);
+        }
+
+
+
+        float progress = 0;
+        float currentAngle;
+
+        Vector3 modelSize = piece.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+
+        float distance = 4 * Mathf.Max(new float[3] { modelSize.x, modelSize.y, modelSize.z });
+
+        Vector3 cachedPosition = piece.transform.position;
+
+        piece.transform.position = Vector3.zero;
+
+        while (progress <= 1)
+        {
+            currentAngle = progress * 4 * 2 * Mathf.PI;
+
+            float currentY = (0.5f - progress) * modelSize.y;
+
+            // Vector3 raycastPoint = new Vector3(Mathf.Cos(currentAngle) * distance, currentY, Mathf.Sin(currentAngle) * distance);
+            Vector3 raycastPoint = new Vector3(0, currentY, distance);
+            Debug.Log("GenerateScrewsForAPieceSpiral " + raycastPoint + " - "+ piece.transform.TransformPoint(raycastPoint));
+            raycastPoint = piece.transform.TransformPoint(raycastPoint);
+            Vector3 raycastDestination = piece.transform.TransformPoint(
+                new Vector3(0, currentY, 0)
+            );
+
+            RaycastHit hit;
+
+            Ray ray = new Ray(raycastPoint, raycastDestination - raycastPoint);
+
+            bool isHit = piece.GetComponent<Collider>().Raycast(ray, out hit, 8 * distance);
+
+            
+
+            if (hit.collider != null)
+            {
+                BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+                screw.transform.position = hit.point;
+
+                screw.transform.SetLossyScale(expectedScale * Vector3.one);
+            }
+
+            progress += 0.2f;
+        }
+
+        piece.transform.position = cachedPosition;
     }
 
     private void GenerateScrews()

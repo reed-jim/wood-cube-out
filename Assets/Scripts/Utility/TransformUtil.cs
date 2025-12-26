@@ -127,4 +127,24 @@ public static class TransformUtil
             GetComponentsFromAllChildrenRecursive<T>(child, components);
         }
     }
+
+    public static void SetLossyScale(this Transform t, Vector3 targetLossyScale)
+    {
+        if (t.parent == null)
+        {
+            // No parent? localScale = lossyScale.
+            t.localScale = targetLossyScale;
+        }
+        else
+        {
+            // localScale = desiredWorldScale / parentWorldScale
+            Vector3 parentScale = t.parent.lossyScale;
+
+            t.localScale = new Vector3(
+                targetLossyScale.x / parentScale.x,
+                targetLossyScale.y / parentScale.y,
+                targetLossyScale.z / parentScale.z
+            );
+        }
+    }
 }

@@ -34,6 +34,7 @@ namespace NamPhuThuy.GamePlay
         [SerializeField] private float tutorialDelay = 0.2f;
 
         #region PRIVATE FIELD
+        private Camera _mainCamera;
         private List<Tween> _tweens;
         private List<Tween> _autoCenterLevelTweens;
         private LevelDifficultyConfiguration _currentLevelDifficultyConfiguration;
@@ -54,6 +55,7 @@ namespace NamPhuThuy.GamePlay
 
         #region EVENT
         public static event Action startLevelEvent;
+        public static event Action startLevelCompletedEvent;
         public static event Action endCurrentLevelEvent;
         public static event Action setLevelNumberEvent;
         public static event Action<int> setLevelScrewNumberEvent;
@@ -62,7 +64,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<ScreenRoute> switchRouteEvent;
         public static event Action setIsLevelLoadedEvent;
         public static event Action<bool> enableSwipingEvent;
-        public static event Action<float> setTargetOrthographicSizeEvent;
+        public static event Action<float, bool> setTargetOrthographicSizeEvent;
         public static event Action<bool> showLoadLevelErrorEvent;
 
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
@@ -89,8 +91,12 @@ namespace NamPhuThuy.GamePlay
 
             currentLevel.Load();
 
+            _mainCamera = Camera.main;
+
             _maxLevel = levelDataContainer.MaxLevel;
+
             GoLevel(currentLevel.Value);
+
             GamePersistentVariable.hasPlayerReachedGameplay = true;
         }
 
@@ -317,7 +323,7 @@ namespace NamPhuThuy.GamePlay
 
                     _isSetLevelGradientBound = false;
 
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset);
+                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset, isLevelDirty: false);
 
                     _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
                 }
@@ -337,7 +343,6 @@ namespace NamPhuThuy.GamePlay
                 AutoAssignScrewFactionMultiPhaseLevel(level);
 
                 texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
-
 
                 if (isLoopLevel)
                 {
@@ -364,6 +369,8 @@ namespace NamPhuThuy.GamePlay
                 #endregion
 
                 GamePersistentVariable.isLevelLost = false;
+
+                startLevelCompletedEvent?.Invoke();
             }
 
             void SetIsLoopLevel(bool isLoop)
@@ -372,9 +379,6 @@ namespace NamPhuThuy.GamePlay
                 DebugLogger.LogSimple(message: $"isLoop: {isLoopLevel}", color: Color.red);
             }
         }
-
-
-
 
         private async void GoLevel(int level)
         {
@@ -679,7 +683,7 @@ namespace NamPhuThuy.GamePlay
                 _pivotAdjust.transform.position = Vector3.zero;
                 _pivotAdjust.transform.eulerAngles = Vector3.zero;
 
-                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset);
+                Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(_pieces, offset: GamePersistentVariable.levelOffset, isLevelDirty: true);
 
                 _pivotAdjust.transform.position = currentPosition;
                 _pivotAdjust.transform.eulerAngles = currentRotation;
@@ -696,7 +700,7 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset)
+        Vector3 GetCenterOfObjectsWithBoundsAndPivot(BasicObjectPart[] objects, Vector3 offset, bool isLevelDirty)
         {
             if (objects.Length == 0)
             {
@@ -730,6 +734,11 @@ namespace NamPhuThuy.GamePlay
                     continue;
                 }
 
+                if (!obj.gameObject.activeSelf)
+                {
+                    continue;
+                }
+
                 MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
                 MeshRenderer meshRenderer = obj.GetComponent<MeshRenderer>();
 
@@ -741,7 +750,6 @@ namespace NamPhuThuy.GamePlay
                 float boundYMax = objectPosition.y + 0.5f * obj.BoundSize.y;
                 float boundZMin = objectPosition.z - 0.5f * obj.BoundSize.z;
                 float boundZMax = objectPosition.z + 0.5f * obj.BoundSize.z;
-
 
                 minX = Mathf.Min(boundXMin, minX);
                 minY = Mathf.Min(boundYMin, minY);
@@ -762,9 +770,9 @@ namespace NamPhuThuy.GamePlay
             if (!_isSetLevelGradientBound)
             {
                 SetLevelGradientMinMaxIn(newCenter, minY, maxY);
-
-                SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ));
             }
+
+            SetFitCameraOrthographicSize(new Vector3(maxX - minX, maxY - minY, maxZ - minZ), isLevelDirty);
 
             // float halfDistance = (maxY - minY) / 2;
             // float shaderMinY = newCenter.y - halfDistance;
@@ -791,7 +799,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region LEVEL SETUP
-        private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize)
+        private void SetFitCameraOrthographicSize(Vector3 expectedLevelSize, bool isLevelDirty)
         {
             float maxExpectedLevelSize = expectedLevelSize.x;
 
@@ -817,21 +825,32 @@ namespace NamPhuThuy.GamePlay
                 targetOrthographicSize *= (1 + 0.25f * ratio * ratio);
             }
 
-            try
+            if (!isLevelDirty)
             {
-                ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
-
-                if (manualLevelZoomMultiplier != null)
+                try
                 {
-                    targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+                    ManualLevelZoomMultiplier manualLevelZoomMultiplier = transform.GetChild(0).GetComponent<ManualLevelZoomMultiplier>();
+
+                    if (manualLevelZoomMultiplier != null)
+                    {
+                        targetOrthographicSize *= manualLevelZoomMultiplier.zoomMultiplier;
+                    }
+                }
+                catch (System.Exception)
+                {
+
                 }
             }
-            catch (System.Exception)
-            {
 
+            if (isLevelDirty)
+            {
+                if (targetOrthographicSize > _mainCamera.orthographicSize || targetOrthographicSize < 6f)
+                {
+                    return;
+                }
             }
 
-            setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize);
+            setTargetOrthographicSizeEvent?.Invoke(targetOrthographicSize, isLevelDirty);
 
             GamePersistentVariable.currentTargetOrthographicSize = targetOrthographicSize;
         }
@@ -862,8 +881,8 @@ namespace NamPhuThuy.GamePlay
             float shaderMinY = levelCenter.y - halfDistance;
             float shaderMaxY = levelCenter.y + halfDistance;
 
-            shaderMinY = Mathf.Min(shaderMinY, 0);
-            shaderMaxY = Mathf.Max(shaderMaxY, 1);
+            shaderMinY = 3 * Mathf.Min(shaderMinY, 0);
+            shaderMaxY = 3 * Mathf.Max(shaderMaxY, 0);
 
             if (!_isSetLevelGradientBound)
             {
@@ -881,11 +900,6 @@ namespace NamPhuThuy.GamePlay
                 }
             }
         }
-
-        private void ModifyLevelBasedOnMode()
-        {
-
-        }
         #endregion
 
         #region BOOSTER SUGGESTION
@@ -893,20 +907,15 @@ namespace NamPhuThuy.GamePlay
         private LevelMode _tutorialMode = LevelMode.Normal;
         private void ShowSuggestion(int nextLevel, bool isLoopLevel)
         {
-            DebugLogger.LogSimple(message: $"nextLevel: {nextLevel}, isLoopLevel: {isLoopLevel}", context: this);
             int randomSuggestionIndex = UnityEngine.Random.Range(0, 2);
             int currentLevel = nextLevel - 1;
-
 
             try
             {
                 LevelMode currentLevelMode = levelDataContainer.LevelsData[currentLevel].levelMode;
-                DebugLogger.LogSimple(message: $"levelMode: {currentLevelMode}");
-
 
                 if (levelDataContainer.LevelsData[currentLevel].isHasTutorial)
                 {
-                    DebugLogger.LogSimple(message: $"special true", context: this);
                     GamePersistentVariable.currentTutLevelMode = currentLevelMode;
 
                     specialTutIntroduceEvent?.Invoke(true);
@@ -915,16 +924,13 @@ namespace NamPhuThuy.GamePlay
                 }
                 else
                 {
-                    DebugLogger.LogSimple(message: $"special false", context: this);
                     specialTutIntroduceEvent?.Invoke(false);
                 }
             }
             catch (Exception e)
             {
-                DebugLogger.LogSimple(message: $"Error: {e}");
                 specialTutIntroduceEvent?.Invoke(false);
             }
-
 
             if (randomSuggestionIndex == 0)
             {
@@ -954,8 +960,6 @@ namespace NamPhuThuy.GamePlay
                     }
                 }
             }
-
-
         }
 
         private bool IsShowBoosterSuggestion(int level, bool isLoopLevel)

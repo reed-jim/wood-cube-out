@@ -18,8 +18,6 @@ public class GameplayCamera : MonoBehaviour
     private void Awake()
     {
         LevelLoader.startLevelEvent += OnLevelStart;
-        LevelLoader.setTargetOrthographicSizeEvent += SetInitialOrthographicSize;
-        MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetInitialOrthographicSize;
         PinchGesture.pinchGestureEvent += Zoom;
         BasicObjectPart.shakeCameraEvent += Shake;
         MultiPhaseLevelManager.zoomCameraEvent += Zoom;
@@ -37,21 +35,10 @@ public class GameplayCamera : MonoBehaviour
     private void OnDestroy()
     {
         LevelLoader.startLevelEvent -= OnLevelStart;
-        LevelLoader.setTargetOrthographicSizeEvent -= SetInitialOrthographicSize;
-        MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetInitialOrthographicSize;
         PinchGesture.pinchGestureEvent -= Zoom;
         BasicObjectPart.shakeCameraEvent -= Shake;
         MultiPhaseLevelManager.zoomCameraEvent -= Zoom;
         MultiPhaseLevelManager.resetCameraEvent -= Reset;
-    }
-
-    private void Update()
-    {
-        gameplayCamera.orthographicSize = Mathf.Lerp(gameplayCamera.orthographicSize, _targetOrthographicSize, 0.333f);
-
-        background.localScale = Vector3.Lerp(background.localScale, _targetBackgroundScale, 0.333f);
-
-        updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
     }
 
     private void OnLevelStart()
@@ -65,16 +52,23 @@ public class GameplayCamera : MonoBehaviour
         // _targetBackgroundScale = _initialBackgroundScale;
     }
 
+    private void SetCameraOrthographicSize()
+    {
+        gameplayCamera.orthographicSize = _targetOrthographicSize;
+
+        background.localScale = _targetBackgroundScale;
+
+        // Debug.Log("_initialOrthographicSize " + gameplayCamera.orthographicSize + "/" + _initialOrthographicSize);
+
+        updateCameraZoomRatioEvent?.Invoke(gameplayCamera.orthographicSize / _initialOrthographicSize);
+    }
+
     private void Zoom(float orthographicSize)
     {
         _targetOrthographicSize = orthographicSize;
         _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
-    }
 
-    private void SetInitialOrthographicSize(float orthographicSize)
-    {
-        _targetOrthographicSize = orthographicSize;
-        _targetBackgroundScale = _initialBackgroundScale * orthographicSize / _initialOrthographicSize;
+        SetCameraOrthographicSize();
     }
 
     private void Shake()

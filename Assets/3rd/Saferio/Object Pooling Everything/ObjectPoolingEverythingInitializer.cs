@@ -34,7 +34,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject rustyBreakSoundPrefab;
     [SerializeField] private GameObject completeTaskSoundPrefab;
     [SerializeField] private GameObject generateTaskSoundPrefab;
-
+    [SerializeField] private GameObject coinSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -109,7 +109,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.RUSTY_BREAK_SOUND, rustyBreakSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.COMPlETE_TASK_SOUND, completeTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.GENERATE_TASK_SOUND, generateTaskSoundPrefab, 1);
-
+        RegisterPool<AudioSource>(GameConstants.collectCoinSound, coinSoundPrefab, 24);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

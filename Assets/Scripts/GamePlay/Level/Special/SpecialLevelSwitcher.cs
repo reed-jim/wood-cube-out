@@ -55,12 +55,7 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
             {
                 if (manager.levelMode == levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode)
                 {
-                    DebugLogger.LogSimple(message: $"Check {manager.levelMode} with {levelDataContainer.LevelsData[currentLevel.Value - 1].levelMode}");
-                    manager.gameObject.SetActive(true);
-                    
-                    
-
-                    manager.Run();
+                    StartCoroutine(DelayRunSpecialLevel(manager));
 
                     _currentSpecialLevelManager = manager;
 
@@ -68,6 +63,15 @@ public class SpecialLevelSwitcher : Singleton<SpecialLevelSwitcher>
                 }
             }
         }
+    }
+
+    private IEnumerator DelayRunSpecialLevel(BaseSpecialLevelManager manager)
+    {
+        yield return new WaitForEndOfFrame();
+
+        manager.gameObject.SetActive(true);
+
+        manager.Run();
     }
 
     private void DisableAll()

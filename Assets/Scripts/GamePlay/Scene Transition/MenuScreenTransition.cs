@@ -12,7 +12,7 @@ public class MenuScreenTransition : MonoBehaviour
     [SerializeField] private RectTransform fakeLoadingContainer;
     [SerializeField] private CanvasGroup fakeLoadingCanvasGroup;
     [SerializeField] private RectTransform rotatingLoadingIcon;
-    [SerializeField] private Image blackBackgroundToPassPolicy;
+    [SerializeField] private CanvasGroup blackBackgroundToPassPolicy;
     private Coroutine _fakeLoadingCoroutine;
 
     [SerializeField] private IntVariable currentLevel;

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using UnityEngine;
@@ -19,6 +18,7 @@ public class PinchGesture : MonoBehaviour
     public float delayToEnableSwipeGesture;
 
     private List<Tween> _tweens;
+    private Tween _autoZoomTween;
     private bool _isDisabled;
     private float _zoomPercent;
     private float _lastZoomPercent;
@@ -33,7 +33,6 @@ public class PinchGesture : MonoBehaviour
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         LevelLoader.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
-        MultiPhaseLevelManager.setTargetOrthographicSizeEvent += SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent += EnablePinching;
         LevelTutorial.enablePinchingEvent += EnablePinching;
 
@@ -49,7 +48,6 @@ public class PinchGesture : MonoBehaviour
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
         LevelLoader.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
-        MultiPhaseLevelManager.setTargetOrthographicSizeEvent -= SetNewCameraOrthographicSize;
         BasePopup.enableSwipingScreenEvent -= EnablePinching;
         LevelTutorial.enablePinchingEvent -= EnablePinching;
 
@@ -99,7 +97,7 @@ public class PinchGesture : MonoBehaviour
         {
             if (!Mathf.Approximately(zoomSlider.value, _zoomPercent))
             {
-                zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 4);
+                zoomSlider.value = Mathf.Lerp(zoomSlider.value, _zoomPercent, 1f / 2);
             }
             else
             {
@@ -146,21 +144,44 @@ public class PinchGesture : MonoBehaviour
         _lastZoomPercent = value;
     }
 
-    private void SetNewCameraOrthographicSize(float orthographicSize)
+    private void SetNewCameraOrthographicSize(float orthographicSize, bool isLevelDirty)
     {
-        // DebugLogger.LogSimple();
-        maxZoom = orthographicSize;
-        minZoom = 0.5f * orthographicSize;
+        float unit = 0.6f * orthographicSize;
 
-        Tween.Delay(0.2f).OnComplete(() =>
+        if (_autoZoomTween.isAlive)
+        {
+            _autoZoomTween.Stop();
+        }
+
+        float oldOrthographicSize = maxZoom - zoomSlider.value * (maxZoom - minZoom);
+
+        maxZoom = orthographicSize + 1.0f * zoomSlider.value * unit;
+        minZoom = orthographicSize - 1.0f * (1 - zoomSlider.value) * unit;
+
+        float currentOrthographicSize = maxZoom - zoomSlider.value * (maxZoom - minZoom);
+
+        if (!isLevelDirty)
         {
             zoomSlider.value = 0.5f;
-        });
+            pinchGestureEvent?.Invoke(maxZoom - zoomSlider.value * (maxZoom - minZoom));
+        }
+        else
+        {
+            zoomSlider.interactable = false;
+            _isDisabled = true;
+
+            _autoZoomTween = Tween.Custom(oldOrthographicSize, currentOrthographicSize, duration: 0.3f, onValueChange: newVal =>
+            {
+                pinchGestureEvent?.Invoke(newVal);
+
+                zoomSlider.interactable = true;
+                _isDisabled = false;
+            });
+        }
     }
 
     private void EnablePinching(bool isEnable)
     {
-        // DebugLogger.LogSimple();
         _isDisabled = !isEnable;
     }
 }

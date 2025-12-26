@@ -451,6 +451,7 @@ public class FirebaseConfig
     public const string longTermUserDifficultyConfig = "long_term_user_difficulty_config";
     public const string specialLevelConfig = "special_level_config";
     public const string isDisableLoopLevel = "isTester";
+    public const string gameplayBackgroundConfig = "gameplay_background_config";
     #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30

@@ -4,6 +4,7 @@ using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [Header("Buttons")]
     [SerializeField] private Button helpButton;
     [SerializeField] private Button pauseButton;
+    [SerializeField] private Button noAdsButton;
     [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
@@ -41,14 +43,22 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewBoxManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
-        
+        ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+
         pauseButton.onClick.AddListener(Pause);
+        noAdsButton.onClick.AddListener(OpenNoAdsPopup);
         helpButton.onClick.AddListener(OnClickHelp);
-        
+
         skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
         // debugNextLevelButton.onClick.AddListener(NextLevel);
         // debugPrevLevelButton.onClick.AddListener(PrevLevel);
+
+        if (UserData.IsRemoveAds)
+        {
+            noAdsButton.gameObject.SetActive(false);
+        }
 
         if (!gameSetting.IsDebug)
         {
@@ -67,10 +77,12 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewBoxManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
+        ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
+        SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
     }
 
     #endregion
-    
+
     #region Private Methods
 
     private void OnLevelWin()
@@ -82,10 +94,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         helpButton.gameObject.SetActive(false);
     }
-    
+
     private void ToggleHelpButton(bool isActive)
     {
-        DebugLogger.LogSimple(message:$"isActive: {isActive}");
+        DebugLogger.LogSimple(message: $"isActive: {isActive}");
         // guard against missing reference or destroyed object
         if (helpButton == null)
         {
@@ -108,17 +120,22 @@ public class GameplayScreen : Singleton<GameplayScreen>
     #endregion
 
     #region Button Events
-    
-    private async void Pause()
+
+    private void Pause()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Pause);
     }
-    
+
+    private void OpenNoAdsPopup()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
+    }
+
     private void OnClickHelp()
     {
         switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
     }
-    
+
     #endregion
 
     private void OpenDebugPopupButton()
@@ -174,6 +191,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
     {
         return currentLevel.Value;
     }
+
+    #region Remove Ads
+    private void OnAdsRemoved()
+    {
+        SaferioTween.ScaleDownWithPunch(noAdsButton.transform);
+    }
+    #endregion
 
     #region HARD MODE
     public void SwitchToHardMode()

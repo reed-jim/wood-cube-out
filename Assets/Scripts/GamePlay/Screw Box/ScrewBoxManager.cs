@@ -41,13 +41,6 @@ public class ScrewBoxManager : MonoBehaviour
     private bool _isCheckingLose;
     #endregion
 
-    #region PUBLIC FIELDS
-
-    public static int TotalScrewBoxes;
-    public static int TotalScrewBoxesSpawned;
-
-    #endregion
-
     #region EVENT
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewEvent;
     public static event Action<int, GameFaction, ScrewBoxSlot> looseScrewWithoutCheckingVisibilityEvent;
@@ -57,7 +50,6 @@ public class ScrewBoxManager : MonoBehaviour
     public static event Action loseLevelEvent;
     public static event Action<int> screwPortsClearedEvent;
     public static event Action<bool> enableBoosterEvent;
-    // public static event Action<ScrewBox[]> s
     #endregion
 
     #region LIFE CYCLE
@@ -457,10 +449,10 @@ public class ScrewBoxManager : MonoBehaviour
         }
 
         ScrewBox screwBox = ObjectPoolingEverything.GetFromPool<ScrewBox>(GameConstants.SCREW_BOX);
-        
+
         if (screwBox == null)
         {
-            DebugLogger.LogError(content:$"ScrewBoxManager.SpawnScrewBox(): The ScrewBox is null");
+            DebugLogger.LogError(content: $"ScrewBoxManager.SpawnScrewBox(): The ScrewBox is null");
         }
 
         screwBox.Faction = faction;
@@ -645,6 +637,7 @@ public class ScrewBoxManager : MonoBehaviour
 
         lockedScrewBox.transform.position = refScrewBox.transform.position;
         lockedScrewBox.transform.localScale = refScrewBox.transform.localScale;
+        lockedScrewBox.SetSize(CommonUtil.GetScreenSizeWorld(Camera.main));
 
         int index = screwBoxs
             .Select((value, idx) => new { value, idx })
@@ -871,7 +864,7 @@ public class ScrewBoxManager : MonoBehaviour
             {
                 if (index == screwPorts.Count - 1)
                 {
-                    _tweens.Add(Tween.Scale(addedScrewBoxSlot.transform, Vector3.one, duration: 0.3f));
+                    _tweens.Add(Tween.Scale(addedScrewBoxSlot.transform, screwPorts[0].transform.localScale, duration: 0.3f));
                 }
             }));
         }
