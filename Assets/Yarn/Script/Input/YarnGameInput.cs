@@ -106,9 +106,9 @@ public class YarnGameInput : MonoBehaviour
 
     #region Private Methods
 
-    private void CheckTutorialAvailable(bool isTutAvailable)
+    private void CheckTutorialAvailable(bool _isTutAvailable, bool isDisableUI)
     {
-        this.isTutAvailable = isTutAvailable;
+        this.isTutAvailable = _isTutAvailable;
         
         /*if (EventSystem.current != null)
         {

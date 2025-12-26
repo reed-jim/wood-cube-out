@@ -13,6 +13,7 @@ public class SpoolBoxUI : MonoBehaviour
 {
     [Header("Flags")] 
     [SerializeField] private bool isTutorial;
+    [SerializeField] private bool isDisableUI;
     
     [SerializeField] private SpoolBoxServiceLocator spoolBoxServiceLocator;
     [SerializeField] private SpriteRenderer screwBoxSpriteRenderer;
@@ -63,9 +64,10 @@ public class SpoolBoxUI : MonoBehaviour
 
     #region Events Listen
 
-    private void CheckTutAvailable(bool isTutAvailable)
+    private void CheckTutAvailable(bool isTutAvailable, bool _isDisableUI)
     {
         this.isTutorial = isTutAvailable;
+        this.isDisableUI = _isDisableUI;
     }
 
     #endregion
@@ -105,7 +107,7 @@ public class SpoolBoxUI : MonoBehaviour
 
     private void ClickButtonUnlockByAds()
     {
-        if (isTutorial)
+        if (isTutorial && isDisableUI)
         {
             PlayVFXPopupText(LocalizationConst.CANT_CLICK);
             return;

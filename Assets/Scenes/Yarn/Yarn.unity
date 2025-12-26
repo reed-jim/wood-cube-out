@@ -1807,6 +1807,67 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8902c9af307825c4ba942aa9aedfe2b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpoolBoxSlot
+--- !u!1001 &452578547
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 8093802041801891074, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_Name
+      value: LV_template
+      objectReference: {fileID: 0}
+    - target: {fileID: 8093802041801891074, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8870163540269238200, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 6e1142b12f17110459ee335edfc4b4fe, type: 3}
 --- !u!1 &467603875
 GameObject:
   m_ObjectHideFlags: 0
@@ -2390,6 +2451,7 @@ MonoBehaviour:
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   levelDataContainer: {fileID: 11400000, guid: 2c2244a646c4f2648bbeba465edb6b6f, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
+  userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
   texturedMaterial: {fileID: 2100000, guid: 72965e0c84f67b442a7b11fa3475c345, type: 2}
   tutorialAdapter: {fileID: 598095789}
@@ -9828,3 +9890,4 @@ SceneRoots:
   - {fileID: 117890140}
   - {fileID: 1680990592}
   - {fileID: 1762278675}
+  - {fileID: 452578547}

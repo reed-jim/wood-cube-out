@@ -130,10 +130,10 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     #region Events Listen
 
-    private void CheckTutAvailable(bool isTutAvailable)
+    private void CheckTutAvailable(bool isTutAvailable, bool isDisableUI)
     {
         // DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
-        if (isTutAvailable)
+        if (isTutAvailable && isDisableUI)
         {
             pauseButton.gameObject.SetActive(false);
             openShopButton.gameObject.SetActive(false);

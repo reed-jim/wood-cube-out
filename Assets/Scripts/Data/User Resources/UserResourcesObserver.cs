@@ -30,9 +30,14 @@ public class UserResourcesObserver : ScriptableObject
         defaultUserResources.CoinQuantity = 500;
         defaultUserResources.BoosterQuantities = new int[3];
 
-        for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
+        /*for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
         {
             defaultUserResources.BoosterQuantities[i] = 2;
+        }*/
+        
+        for (int i = 0; i < defaultUserResources.BoosterTutReceived.Length; i++)
+        {
+            defaultUserResources.BoosterTutReceived[i] = false;
         }
 
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
@@ -50,10 +55,7 @@ public class UserResourcesObserver : ScriptableObject
 
     public void ChangeBoosterQuantity(int boosterIndex, int value)
     {
-        // UserResources updatedUserResources = userResources;
-
-        // int[] updatedBoosterQuantities = updatedUserResources.BoosterQuantities;
-
+        DebugLogger.Log();
         Load();
 
         userResources.BoosterQuantities[boosterIndex] += value;
@@ -76,6 +78,34 @@ public class UserResourcesObserver : ScriptableObject
             Save();
         }
     }
+    
+    public void MarkBoosterTutReceived(int boosterIndex)
+    {
+        Load();
+
+        if (userResources.BoosterTutReceived == null)
+        {
+            userResources.BoosterTutReceived = new bool[3];
+        }
+
+        userResources.BoosterTutReceived[boosterIndex] = true;
+
+        Save();
+    }
+    
+    public bool IsBoosterTutReceived(int boosterIndex)
+    {
+        Load();
+
+        if (userResources.BoosterTutReceived == null)
+        {
+            userResources.BoosterTutReceived = new bool[3];
+        }
+
+        bool res = userResources.BoosterTutReceived[boosterIndex];
+        
+        return res;
+    }
 }
 
 [Serializable]
@@ -83,6 +113,16 @@ public class UserResources
 {
     [SerializeField] private float coinQuantity;
     [SerializeField] private int[] boosterQuantities;
+    [SerializeField] private bool[] boosterTutReceived;
+    
+    public bool[] BoosterTutReceived
+    {
+        get => boosterTutReceived;
+        set
+        {
+            boosterTutReceived = value;
+        }
+    }
 
     public float CoinQuantity
     {
@@ -102,9 +142,11 @@ public class UserResources
             boosterQuantities = value;
         }
     }
+    
 
     public UserResources()
     {
         boosterQuantities = new int[3];
+        boosterTutReceived = new bool[3];
     }
 }

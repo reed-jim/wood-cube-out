@@ -121,10 +121,10 @@ public class BoosterUI : MonoBehaviour
 
     #region Events Listen
 
-    private void CheckTutAvailable(bool isTutAvailable)
+    private void CheckTutAvailable(bool isTutAvailable, bool isDisableUI)
     {
         // DebugLogger.Log(message: $"isTutAvailable: {isTutAvailable}", context: this);
-        if (isTutAvailable)
+        if (isTutAvailable && isDisableUI)
         {
             addMoreScrewPortButton.gameObject.SetActive(false);
             breakObjectButton.gameObject.SetActive(false);

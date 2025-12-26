@@ -30,6 +30,7 @@ public class BoosterItemUI : MonoBehaviour
         BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+        YarnLevelLoader.updateBoosterTextEvent += UpdateQuantityText;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
 
@@ -76,6 +77,29 @@ public class BoosterItemUI : MonoBehaviour
     private void UpdateQuantityText(BoosterType boosterType)
     {
         if ((int)boosterType == this.boosterIndex)
+        {
+            userResourcesObserver.Load();
+
+            int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+
+            if (quantity > 0)
+            {
+                quantityTextContainer.gameObject.SetActive(true);
+                addButtonRT.gameObject.SetActive(false);
+
+                quantityText.text = $"{quantity}";
+            }
+            else
+            {
+                quantityTextContainer.gameObject.SetActive(false);
+                addButtonRT.gameObject.SetActive(true);
+            }
+        }
+    }
+    
+    private void UpdateQuantityText(int _boosterIndex)
+    {
+        if (_boosterIndex == this.boosterIndex)
         {
             userResourcesObserver.Load();
 

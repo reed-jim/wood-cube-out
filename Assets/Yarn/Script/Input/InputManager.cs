@@ -56,10 +56,10 @@ namespace NamPhuThuy
 
         #region Events Listen
 
-        private void CheckTutAvailable(bool isTutAvailable)
+        private void CheckTutAvailable(bool isTutAvailable, bool isDisableUI)
         {
             // DebugLogger.Log(message:$"isTutAvailable: {isTutAvailable}", context:this);
-            pinchGesture.ToggleSlider(!isTutAvailable);
+            pinchGesture.ToggleSlider(!(isTutAvailable && isDisableUI));
         }
 
         #endregion

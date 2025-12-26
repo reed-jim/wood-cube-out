@@ -23,6 +23,7 @@ public class YarnLevelLoader : MonoBehaviour
 
     [SerializeField] private LevelDataContainer levelDataContainer;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private ObjectPartMaterialContainer objectPartMaterialContainer;
 
     [Header("Textured Material Level")] 
@@ -62,8 +63,10 @@ public class YarnLevelLoader : MonoBehaviour
     public static event Action<int> setLevelScrewNumberEvent;
     public static event Action setIsLevelLoadedEvent;
     public static event Action<float> setTargetOrthographicSizeEvent;
-    public static event Action<bool> isTutAvailableEvent;
+    public static event Action<bool, bool> isTutAvailableEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+
+    public static event Action<int> updateBoosterTextEvent; // int: boosterIndex
 
     #endregion
 
@@ -86,6 +89,7 @@ public class YarnLevelLoader : MonoBehaviour
         BasePiece.pieceLoosenedEvent += OnPieceCompleted;
         LoadLevelErrorScene.retryLoadLevelEvent += LoadLevel;
         ChooseDifficultyPopup.hardModeSuggestionClosedEvent += OnHardModeSuggestionClosed;
+        
 
         _tweens = new List<Tween>();
         _autoCenterLevelTweens = new List<Tween>();
@@ -211,18 +215,55 @@ public class YarnLevelLoader : MonoBehaviour
             if (tutorialAdapter.IsTutorialLevel && TutorialManager.Ins.IsEnable)
             {
                 DebugLogger.Log(message: $"This is tut-level -> stop rotate");
-                isTutAvailableEvent?.Invoke(true);
+                
+                bool isDisableUI = currentLevel.Value <= 1;
+                
+                isTutAvailableEvent?.Invoke(true, isDisableUI);
                 if (tutorialAdapter.TutorialRecord.TutType == TutorialRecord.Type.HAND_CLICK)
                 {
                     level.GetComponent<RotateObject>().DisableAutoRotatingForever();
                 }
+                
+                // Add Booster 
+                foreach (BoosterRule boosterRule in tutorialAdapter.TutorialRecord.Rules)
+                {
+                    if (boosterRule.nativeType == NativeBoosterType.FIRST_BOOSTER)
+                    {
+                        if (boosterRule.grantAmount > 0 && !userResourcesObserver.IsBoosterTutReceived(0))
+                        {
+                            userResourcesObserver.ChangeBoosterQuantity(0, boosterRule.grantAmount);
+                            updateBoosterTextEvent?.Invoke(0);
+                            userResourcesObserver.MarkBoosterTutReceived(0);
+                        }
+                    }
+                    else if (boosterRule.nativeType == NativeBoosterType.SECOND_BOOSTER)
+                    {
+                        if (boosterRule.grantAmount > 0 && !userResourcesObserver.IsBoosterTutReceived(1))
+                        {
+                            userResourcesObserver.ChangeBoosterQuantity(1, boosterRule.grantAmount);
+                            updateBoosterTextEvent?.Invoke(1);
+                            userResourcesObserver.MarkBoosterTutReceived(1);
+                        }
+                    }
+                    else if (boosterRule.nativeType == NativeBoosterType.THIRD_BOOSTER)
+                    {
+                        if (boosterRule.grantAmount > 0 && !userResourcesObserver.IsBoosterTutReceived(2))
+                        {
+                            userResourcesObserver.ChangeBoosterQuantity(2, boosterRule.grantAmount);
+                            updateBoosterTextEvent?.Invoke(2);
+                            userResourcesObserver.MarkBoosterTutReceived(2);
+                        }
+                    }
+                } 
+                    
+                
 
                 TryActiveTutorial();
             }
             else
             {
                 DebugLogger.Log(message: $"This is not a tut-level");
-                isTutAvailableEvent?.Invoke(false);
+                isTutAvailableEvent?.Invoke(false, false);
             }
 
             _currentLevelContainer = level.transform;

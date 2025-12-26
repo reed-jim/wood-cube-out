@@ -82,6 +82,7 @@ public class GameVariableInitializer : MonoBehaviour
 
         RemoteGalleryRewardConfig galleryRewardConfig = new RemoteGalleryRewardConfig(items);
 
+        DebugLogger.Log(message: $"About to assign galleryRewardConfig to GamePersistentVariable. Items length: {galleryRewardConfig.Items.Length}", color: Color.yellow, context: this);
         GamePersistentVariable.galleryRewardConfig = galleryRewardConfig;
         GamePersistentVariable.remoteConfigIsShowMREC = true;
 
