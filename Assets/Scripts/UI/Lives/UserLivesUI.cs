@@ -78,6 +78,7 @@ public class UserLivesUI : SaferioTweenBehaviour
                 {
                     DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
                     addIcon.gameObject.SetActive(false);
+                    openLivesShopPopupButton.enabled = false;
                 }
             }
             else
@@ -86,6 +87,7 @@ public class UserLivesUI : SaferioTweenBehaviour
                 {
                     DebugLogger.Log(message:$"openLivesShopPopupButton SetActive false");
                     addIcon.gameObject.SetActive(true);
+                    openLivesShopPopupButton.enabled = true;
                 }
             }
 

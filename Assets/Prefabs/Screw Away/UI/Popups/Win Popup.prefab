@@ -1361,6 +1361,7 @@ MonoBehaviour:
   closeButton: {fileID: 0}
   detectClickOutsideButton: {fileID: 0}
   route: 9
+  prevRoute: 9999
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
   isShowingInterAdOnInteract: 0
@@ -1431,8 +1432,8 @@ RectTransform:
   m_GameObject: {fileID: 7827850019038855893}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6501819151076354975}
   - {fileID: 2437176006278288420}
@@ -2856,7 +2857,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1885711119122938885, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: FallbackText
-      value: Claim
+      value: Continue
       objectReference: {fileID: 0}
     - target: {fileID: 1885711119122938885, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: translationName
@@ -2888,7 +2889,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3952597634097154433, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 240
+      value: 381.7954
       objectReference: {fileID: 0}
     - target: {fileID: 3952597634097154433, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_SizeDelta.y
@@ -2944,7 +2945,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_text
-      value: Claim
+      value: Continue
       objectReference: {fileID: 0}
     - target: {fileID: 6727048351612143935, guid: a24239524a42e1e44981bc8a955afabc, type: 3}
       propertyPath: m_fontSize

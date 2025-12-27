@@ -161,7 +161,7 @@ public class WinPopup : BasePopup
         TweenHelper.WaitSomeSeconds(3f, () =>
         {
             continueButton.gameObject.SetActive(true);
-            TweenHelper.DoPunch(continueButton.transform, 1, onCompleteAction: () =>
+            TweenHelper.DoPunch(continueButton.transform, 0.9f, onCompleteAction: () =>
             {
                 continueButton.interactable = true;
             });
