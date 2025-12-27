@@ -46,9 +46,9 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
 
         // add new factions
         int numFactionsToAdd = Mathf.Min(3 * Random.Range(0, 1), 2 * pieces.Length);
-        // numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
-        // DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
-        // DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
+        numFactionsToAdd = AdjustNumToAddPieces(pieces.Length, numFactionsToAdd);
+        DebugLogger.LogFrog(message: $"Num Factions to add: {numFactionsToAdd}", context: this);
+        DebugLogger.LogFrog(message: $"Pieces Length: {pieces.Length}", context: this);
 
         numFactionsToAdd -= numFactionsToAdd % 3;
 
@@ -157,9 +157,10 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
                 // Debug.Log("SAFERIO CHECK " + currentInnerPieceFaction + "/" + faction + "/" + i);
 
                 currentInnerPieceFaction = faction;
-
                 innerPieceFactions.Remove(faction);
 
+                faction = PieceMaterialContainer.ValidateFaction(faction);
+                
                 generatedPiece.Faction = faction;
                 generatedPiece.PieceServiceLocator.pieceMaterialPropertyBlock.SetColor(faction);
                 generatedPiece.Lock();
@@ -282,7 +283,7 @@ public class YarnLevelDifficultyManager : Singleton<YarnLevelDifficultyManager>
     {
         new LevelTargetPieces { levelIndex = 1, targetPieces = -1 }, // Buffer
         new LevelTargetPieces { levelIndex = 1, targetPieces = 9 },
-        new LevelTargetPieces { levelIndex = 2, targetPieces = 18 },
+        new LevelTargetPieces { levelIndex = 2, targetPieces = 9 },
         new LevelTargetPieces { levelIndex = 3, targetPieces = 39 },
         new LevelTargetPieces { levelIndex = 4, targetPieces = 60 },
         new LevelTargetPieces { levelIndex = 5, targetPieces = 45 },

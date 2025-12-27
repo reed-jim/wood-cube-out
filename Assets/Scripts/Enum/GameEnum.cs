@@ -112,11 +112,7 @@ public class GameEnum : MonoBehaviour
         YarnRed = 22,
         YarnSky = 23,
         YarnSnow = 24,
-        YarnSteel = 25,
-        YarnTeal = 26,
-        YarnWhite = 27,
-        YarnYellow = 28,
-        None
+        None = 9999
     }
 
     public enum CharacterAnimationState

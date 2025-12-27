@@ -246,9 +246,10 @@ public class YarnLevelSetup : EditorWindow
         new FactionRemapEntry { fromFaction = GameFaction.YarnRed, toFaction = GameFaction.YarnCrimson },
         new FactionRemapEntry { fromFaction = GameFaction.YarnTeal, toFaction = GameFaction.YarnLightCyan },
         new FactionRemapEntry { fromFaction = GameFaction.YarnWhite, toFaction = GameFaction.YarnSnow },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnYellow, toFaction = GameFaction.YarnLime },*/
+        new FactionRemapEntry { fromFaction = GameFaction.YarnYellow, toFaction = GameFaction.YarnLime },
         new FactionRemapEntry { fromFaction = GameFaction.YarnSteel, toFaction = GameFaction.YarnDeep },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnSky, toFaction = GameFaction.YarnLightCyan },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnSky, toFaction = GameFaction.YarnLightCyan },*/
+        // new FactionRemapEntry { fromFaction = GameFaction.YarnSnow, toFaction = GameFaction.YarnSky },
         
         // Current black: Cream, Purple, Teal, White, Yellow
     };

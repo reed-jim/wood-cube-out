@@ -12,8 +12,25 @@ public class PieceMaterialContainer : ScriptableObject
 {
     [SerializeField] public Material[] materials;
 
+    
+    public static GameFaction ValidateFaction(GameFaction faction)
+    {
+        if (faction == GameFaction.YarnSky)
+        {
+            return GameFaction.YarnSnow;
+        }
+        else if (faction == GameFaction.YarnCyan)
+        {
+            return GameFaction.YarnDeep;
+        }
+        
+        return faction;
+    }
+    
     public Color GetColor(GameFaction faction)
     {
+        faction = ValidateFaction(faction);
+        
         Material mat = materials[(int)faction];
 
         if (mat != null)
@@ -27,6 +44,8 @@ public class PieceMaterialContainer : ScriptableObject
         }
         return Color.white; // default fallback
     }
+
+ 
 }
 
 #if UNITY_EDITOR

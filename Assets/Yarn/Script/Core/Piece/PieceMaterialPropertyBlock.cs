@@ -69,32 +69,12 @@ public class PieceMaterialPropertyBlock : MonoBehaviour
     public void SetColor(GameFaction faction)
     {
         TryAssignComponent();
-
-        // Color color = FactionUtility.GetColorForFaction(faction);
-
-        // _propertyBlock.SetColor(colorReference, color);
-        // _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
-
-        // _renderer.SetPropertyBlock(_propertyBlock);
-
         _renderer.material = pieceMaterialContainer.materials[(int)faction];
-
-        // _renderer.material.SetColor("_SecondaryColor", _renderer.material.GetColor("_Color") * 0.3f);
-
-        return;
     }
 
     public void SetColor(Color color)
     {
-        // meshRenderer.material = materials[Random.Range(0, materials.Length)];
-
-        // return;
-
-        // Init();
-
         _propertyBlock.SetColor("_Color", color);
-        // _propertyBlock.SetColor(secondaryColorReference, secondaryColorMultiplier * color);
-
         _renderer.SetPropertyBlock(_propertyBlock);
     }
 
