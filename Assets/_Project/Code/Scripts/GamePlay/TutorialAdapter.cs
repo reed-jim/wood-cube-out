@@ -177,6 +177,9 @@ namespace NamPhuThuy.PuzzleTutorial
         /// Start a single step: show hand, highlight piece, lock input, etc.
         /// Customize this logic for each step type.
         /// </summary>
+        
+        private Vector2 pointBoosterOffset = new Vector2(60f, 0f);        
+        
         private void StartStep(TutorialStepRecord step)
         {
             DebugLogger.Log(message:$"Type: {step.Type}");
@@ -199,12 +202,12 @@ namespace NamPhuThuy.PuzzleTutorial
                     switchRouteEvent?.Invoke(GameEnum.ScreenRoute.Tutorial);
                     
                     break;
-                case TutorialStepType.HAND_POINT_FOR_A_LITTLE_WHILE:
+                case TutorialStepType.HAND_POINT_FOR_BOOSTER:
                     
                     TutorialManager.Ins.TutorialHand.EnableHand();
                     TutorialManager.Ins.TutorialHand.PlayAnimation(TutorialManager.Ins.TutorialHand.AnimAction2, true);
-                    TutorialManager.Ins.TutorialHand.MoveToTargetRectTransformTween(yarnLevelLoader.CurrentBoosterRT.GetComponent<RectTransform>());
-                    StartCoroutine(TutorialManager.Ins.TutorialHand.IE_TurnOffWithDelay(5f));
+                    TutorialManager.Ins.TutorialHand.MoveToTargetRectTransformTween(yarnLevelLoader.CurrentBoosterRT.GetComponent<RectTransform>(), offset: pointBoosterOffset);
+                    // StartCoroutine(TutorialManager.Ins.TutorialHand.IE_TurnOffWithDelay(5f));
                     
                     break;
                 default:
@@ -303,7 +306,7 @@ namespace NamPhuThuy.PuzzleTutorial
             
             switch (currentStepRecord.Type)
             {
-                case TutorialStepType.HAND_POINT_FOR_A_LITTLE_WHILE:
+                case TutorialStepType.HAND_POINT_FOR_BOOSTER:
                     TutorialManager.Ins.TutorialHand.DisableHand();
                     _isCurrentStepCompleted = true;
                     break;
