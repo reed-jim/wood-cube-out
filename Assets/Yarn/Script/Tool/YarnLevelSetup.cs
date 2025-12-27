@@ -236,18 +236,19 @@ public class YarnLevelSetup : EditorWindow
     [SerializeField] private List<FactionRemapEntry> factionRemapConfig = new List<FactionRemapEntry>
     {
         // Example default "set\-first\-config"
-        new FactionRemapEntry { fromFaction = GameFaction.YarnCream, toFaction = GameFaction.YarnLightBrown },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnCyan, toFaction = GameFaction.YarnSky },
+        /*new FactionRemapEntry { fromFaction = GameFaction.YarnCream, toFaction = GameFaction.YarnLightBrown },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnCyan, toFaction = GameFaction.YarnLightCyan },
         new FactionRemapEntry { fromFaction = GameFaction.YarnDarkBrown, toFaction = GameFaction.YarnBrown },
         new FactionRemapEntry { fromFaction = GameFaction.YarnLightGreen, toFaction = GameFaction.YarnLightBrown },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnLightCyan, toFaction = GameFaction.YarnSky },
         new FactionRemapEntry { fromFaction = GameFaction.YarnMagenta, toFaction = GameFaction.YarnPink },
         new FactionRemapEntry { fromFaction = GameFaction.YarnGray, toFaction = GameFaction.YarnSnow },
         new FactionRemapEntry { fromFaction = GameFaction.YarnGreen, toFaction = GameFaction.YarnForest },
         new FactionRemapEntry { fromFaction = GameFaction.YarnRed, toFaction = GameFaction.YarnCrimson },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnTeal, toFaction = GameFaction.YarnSky },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnTeal, toFaction = GameFaction.YarnLightCyan },
         new FactionRemapEntry { fromFaction = GameFaction.YarnWhite, toFaction = GameFaction.YarnSnow },
-        new FactionRemapEntry { fromFaction = GameFaction.YarnYellow, toFaction = GameFaction.YarnLime },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnYellow, toFaction = GameFaction.YarnLime },*/
+        new FactionRemapEntry { fromFaction = GameFaction.YarnSteel, toFaction = GameFaction.YarnDeep },
+        new FactionRemapEntry { fromFaction = GameFaction.YarnSky, toFaction = GameFaction.YarnLightCyan },
         
         // Current black: Cream, Purple, Teal, White, Yellow
     };
