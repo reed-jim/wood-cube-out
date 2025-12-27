@@ -47,7 +47,7 @@ namespace NamPhuThuy.PuzzleTutorial
             YarnGameInput.PieceSelectedWithFactionEvent += OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent += OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent += OnSpoolBoxSpawned;
-            BasePopup.popupHideEvent += OnPopupHide;
+            BasePopup.popupHideWithRouteEvent += OnPopupHide;
             BoosterUI.tryActiveBoosterEvent += OnActiveBooster;
             
             MMEventManager.RegisterAllCurrentEvents(this);
@@ -58,7 +58,7 @@ namespace NamPhuThuy.PuzzleTutorial
             YarnGameInput.PieceSelectedWithFactionEvent -= OnPieceSelected;
             BasePiece.pieceMovedCompletedEvent -= OnPieceMoveCompleted;
             SpoolManager.spoolBoxSpawnedEvent -= OnSpoolBoxSpawned;
-            BasePopup.popupHideEvent -= OnPopupHide;
+            BasePopup.popupHideWithRouteEvent -= OnPopupHide;
             BoosterUI.tryActiveBoosterEvent -= OnActiveBooster;
             
             MMEventManager.UnregisterAllCurrentEvents(this);
@@ -274,7 +274,7 @@ namespace NamPhuThuy.PuzzleTutorial
             
         }
         
-        private void OnPopupHide()
+        private void OnPopupHide(GameEnum.ScreenRoute route)
         {
             DebugLogger.Log(message: $"Type: {currentStepRecord.Type}" );
             if (!isTutorialLevel)
@@ -286,6 +286,7 @@ namespace NamPhuThuy.PuzzleTutorial
             switch (currentStepRecord.Type)
             {
                 case TutorialStepType.SHOW_GUI:
+                    if (route != GameEnum.ScreenRoute.Tutorial) return;
                     _isCurrentStepCompleted = true;
                     break;
             }

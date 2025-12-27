@@ -33,6 +33,7 @@ public class BasePopup : MonoBehaviour
     #region EVENT
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
+    public static event Action<ScreenRoute> popupHideWithRouteEvent;
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
     public static event Action<ScreenRoute> switchPopupRouteEvent;
@@ -318,6 +319,7 @@ public class BasePopup : MonoBehaviour
 
             gameObject.SetActive(false);
             popupHideEvent?.Invoke();
+            popupHideWithRouteEvent?.Invoke(route);
         }
     }
 
@@ -338,6 +340,7 @@ public class BasePopup : MonoBehaviour
             gameObject.SetActive(false);
 
             popupHideEvent?.Invoke();
+            popupHideWithRouteEvent?.Invoke(route);
 
             _isShown = false;
 
