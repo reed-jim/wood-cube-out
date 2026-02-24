@@ -23,6 +23,13 @@ public enum Dimension
     Z
 }
 
+public enum Facing
+{
+    Top,
+    Right,
+    Front
+}
+
 public class HingeJointGenerator : EditorWindow
 {
     private GameObject target;
@@ -177,7 +184,19 @@ public class HingeJointGenerator : EditorWindow
         if (GUILayout.Button("Spawn Screws From Top"))
         {
             ClearScrews();
-            SpawnScrewsFromTop();
+            SpawnScrewsWithFacing(Facing.Top);
+        }
+
+        if (GUILayout.Button("Spawn Screws From Right"))
+        {
+            ClearScrews();
+            SpawnScrewsWithFacing(Facing.Right);
+        }
+
+        if (GUILayout.Button("Spawn Screws From Front"))
+        {
+            ClearScrews();
+            SpawnScrewsWithFacing(Facing.Front);
         }
 
         // if (GUILayout.Button("Generate Screw Single Piece"))
@@ -3356,7 +3375,7 @@ public class HingeJointGenerator : EditorWindow
         }
     }
 
-    private void SpawnScrewsFromTop()
+    private void SpawnScrewsWithFacing(Facing facing)
     {
         Transform level = Selection.activeTransform;
         screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.NORMAL_SCREW_PREFAB_PATH);
@@ -3381,7 +3400,7 @@ public class HingeJointGenerator : EditorWindow
 
             int numScrewSpawned = 0;
 
-            int row = 5;
+            int row = 4;
 
             float distanceBetweenScrew = 1.5f * screwSize.x;
 
@@ -3400,18 +3419,51 @@ public class HingeJointGenerator : EditorWindow
                     Vector3 localModelCenter = meshFilter.sharedMesh.bounds.center;
                     Vector3 worldModelCenter = meshFilter.transform.TransformPoint(localModelCenter);
 
-                    screw.transform.position = worldModelCenter +
-                        new Vector3
+                    Vector3 offset = Vector3.zero;
+
+                    if (facing == Facing.Top)
+                    {
+                        offset = new Vector3
                         (
                             (-(row - 1) / 2f + i) * distanceBetweenScrew,
                             3 * pieceSize.y,
                             (-(row - 1) / 2f + j) * distanceBetweenScrew
                         );
+                    }
+                    else if (facing == Facing.Right)
+                    {
+                        offset = new Vector3
+                        (
+                            3 * pieceSize.x,
+                            (-(row - 1) / 2f + i) * distanceBetweenScrew,
+                            (-(row - 1) / 2f + j) * distanceBetweenScrew
+                        );
+                    }
+                    else if (facing == Facing.Front)
+                    {
+                        offset = new Vector3
+                        (
+                            (-(row - 1) / 2f + i) * distanceBetweenScrew,
+                            (-(row - 1) / 2f + j) * distanceBetweenScrew,
+                            -3 * pieceSize.z
+                        );
+                    }
 
+                    screw.transform.position = worldModelCenter + offset;
                     screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
+                    if (facing == Facing.Right)
+                    {
+                        screw.transform.rotation = Quaternion.LookRotation(-piece.transform.right, piece.transform.up);
+                    }
+                    else if (facing == Facing.Front)
+                    {
+                        screw.transform.rotation = Quaternion.LookRotation(-piece.transform.forward);
+                    }
                     screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
                 }
             }
+
+            piece.transform.rotation = cachedPieceRotation;
         }
     }
 
