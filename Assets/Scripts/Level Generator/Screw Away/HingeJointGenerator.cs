@@ -174,6 +174,12 @@ public class HingeJointGenerator : EditorWindow
             GenerateScrewsNew();
         }
 
+        if (GUILayout.Button("Spawn Screws From Top"))
+        {
+            ClearScrews();
+            SpawnScrewsFromTop();
+        }
+
         // if (GUILayout.Button("Generate Screw Single Piece"))
         // {
         //     GenerateScrewForPiece(Selection.activeTransform.GetComponent<BasicObjectPart>());
@@ -3303,6 +3309,65 @@ public class HingeJointGenerator : EditorWindow
             else
             {
                 return false;
+            }
+        }
+    }
+
+    private void SpawnScrewsFromTop()
+    {
+        Transform level = Selection.activeTransform;
+        screwPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(GamePlayConst.NORMAL_SCREW_PREFAB_PATH);
+
+        BasicObjectPart[] pieces = GetComponentsFromAllChildren<BasicObjectPart>(level).ToArray();
+
+        for (int i = 0; i < pieces.Length; i++)
+        {
+            GenerateScrewForPiece(pieces[i]);
+        }
+
+        void GenerateScrewForPiece(BasicObjectPart piece)
+        {
+            // reset rotation
+            Quaternion cachedPieceRotation = piece.transform.rotation;
+
+            piece.transform.rotation = Quaternion.identity;
+
+            MeshFilter meshFilter = piece.GetComponent<MeshFilter>();
+            Vector3 pieceSize = piece.GetComponent<MeshCollider>().bounds.size;
+            Vector3 screwSize = screwPrefab.GetComponent<MeshFilter>().sharedMesh.bounds.size * expectedScale;
+
+            int numScrewSpawned = 0;
+
+            int row = 5;
+
+            float distanceBetweenScrew = 1.5f * screwSize.x;
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < row; j++)
+                {
+                    if (numScrewSpawned >= maxScrew) { break; }
+
+                    BaseScrew screw = PrefabUtility.InstantiatePrefab(screwPrefab, piece.transform).GetComponent<BaseScrew>();
+
+                    screw.name = $"Screw 3D {numScrewSpawned}";
+
+                    numScrewSpawned++;
+
+                    Vector3 localModelCenter = meshFilter.sharedMesh.bounds.center;
+                    Vector3 worldModelCenter = meshFilter.transform.TransformPoint(localModelCenter);
+
+                    screw.transform.position = worldModelCenter +
+                        new Vector3
+                        (
+                            (-(row - 1) / 2f + i) * distanceBetweenScrew,
+                            3 * pieceSize.y,
+                            (-(row - 1) / 2f + j) * distanceBetweenScrew
+                        );
+
+                    screw.transform.rotation = Quaternion.LookRotation(piece.transform.up);
+                    screw.transform.localScale = TransformUtil.ComponentWiseDivine(Mathf.Max(1, expectedScale) * screw.transform.localScale, screw.transform.lossyScale);
+                }
             }
         }
     }
