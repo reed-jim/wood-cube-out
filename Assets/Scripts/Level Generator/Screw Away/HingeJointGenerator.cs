@@ -1259,6 +1259,49 @@ public class HingeJointGenerator : EditorWindow
         }
     }
 
+    private void SnapSurfaceOrRemove(Transform target)
+    {
+        Transform selectedObject = target;
+
+        Vector3 screwSize = selectedObject.GetComponent<MeshFilter>().sharedMesh.bounds.size;
+        screwSize.z *= 0.779f;
+
+        Vector3 origin = selectedObject.position + 0.8f * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+
+        int maxRaycastDistance = 100;
+
+        RaycastHit hit;
+
+        if (selectedObject.gameObject.scene.GetPhysicsScene().Raycast(origin, -selectedObject.forward, out hit, maxRaycastDistance))
+        {
+            IObjectPart objectPart = hit.collider.GetComponent<IObjectPart>();
+
+            if (objectPart != null)
+            {
+                Snap();
+                Snap();
+            }
+            else
+            {
+                DestroyImmediate(target.gameObject, true);
+            }
+        }
+        else
+        {
+            DestroyImmediate(target.gameObject, true);
+        }
+
+        void Snap()
+        {
+            selectedObject.position = hit.point - expectedOffsetRatioAutoSnapSurface * selectedObject.lossyScale.z * screwSize.z * selectedObject.forward;
+
+            Quaternion surfaceRotation = Quaternion.FromToRotation(selectedObject.forward, hit.normal) * selectedObject.rotation;
+
+            selectedObject.rotation = surfaceRotation;
+            selectedObject.localEulerAngles = selectedObject.localEulerAngles.ChangeZ(0);
+        }
+    }
+
     private void SnapSurface()
     {
         SnapSurface(Selection.activeTransform);
@@ -1270,7 +1313,7 @@ public class HingeJointGenerator : EditorWindow
 
         foreach (var screw in screws)
         {
-            SnapSurface(screw.transform);
+            SnapSurfaceOrRemove(screw.transform);
         }
 
         EditorUtility.SetDirty(Selection.activeTransform);
