@@ -1,7 +1,12 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BaseTile : MonoBehaviour
 {
+    [SerializeField] private Button selectButton;
+
+
+
     [SerializeField] private ItemCategory itemCategory;
 
     public ItemCategory ItemCategory
@@ -10,11 +15,13 @@ public class BaseTile : MonoBehaviour
         set => itemCategory = value;
     }
 
-    private void MoveToSlot(TileSlot tileSlot)
+    void Awake()
     {
-        if (tileSlot.ItemCategory == itemCategory)
-        {
-            
-        }
+        selectButton.onClick.AddListener(Select);
+    }
+
+    private void Select()
+    {
+        TileManager.Ins.MoveTileToSlot(this);
     }
 }

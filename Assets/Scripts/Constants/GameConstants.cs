@@ -228,5 +228,9 @@ public static class GameConstants
 
     #region MEDAL TOURNAMENT
     public static string MEDAL_TOURNAMENT_DATA = "MEDAL_TOURNAMENT_DATA";
-    #endregion 
+    #endregion
+
+    #region CONNECT MASTER
+    public static string tileSlot = "tileSlot"; 
+    #endregion
 }
