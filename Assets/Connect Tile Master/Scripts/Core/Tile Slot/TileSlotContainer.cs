@@ -24,6 +24,12 @@ public class TileSlotContainer : MonoBehaviour
 
     void Awake()
     {
+        Init();
+    }
+
+    public void Init()
+    {
+        itemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
         category.text = $"{itemCategory.ToString()[0]}";
     }
 

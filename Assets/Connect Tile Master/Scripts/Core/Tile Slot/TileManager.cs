@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 
 public class TileManager : Singleton<TileManager>
@@ -51,16 +52,18 @@ public class TileManager : Singleton<TileManager>
 
                 if (tileSlot != null)
                 {
-                    tile.transform.position = tileSlot.transform.position;
+                    Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
+                    {
+                        if (tileSlotContainer.IsLastSlot(tileSlot))
+                        {
+                            tileSlotContainer.ClearTiles();
+                            tileSlotContainer.Init();
+                        }
+                    });
 
                     tileSlot.AddTile(tile);
 
                     isFound = true;
-
-                    if (tileSlotContainer.IsLastSlot(tileSlot))
-                    {
-                        tileSlotContainer.ClearTiles();
-                    }
 
                     break;
                 }
@@ -81,7 +84,10 @@ public class TileManager : Singleton<TileManager>
 
             if (additionalTileSlots[i].Tile == null)
             {
-                tile.transform.position = tileSlot.transform.position;
+                Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
+                {
+
+                });
 
                 additionalTileSlots[i].AddTile(tile);
 
