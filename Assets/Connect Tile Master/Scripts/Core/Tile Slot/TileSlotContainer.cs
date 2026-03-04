@@ -41,4 +41,17 @@ public class TileSlotContainer : MonoBehaviour
 
         return null;
     }
+
+    public bool IsLastSlot(TileSlot slot)
+    {
+        return slot == tileSlots[tileSlots.Length - 1];
+    }
+
+    public void ClearTiles()
+    {
+        foreach (var tileSlot in tileSlots)
+        {
+            tileSlot.ClearTile();
+        }
+    }
 }

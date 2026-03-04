@@ -22,4 +22,14 @@ public class TileSlot : MonoBehaviour
     {
         this.tile = tile;
     }
+
+    public void ClearTile()
+    {
+        if (tile != null)
+        {
+            tile.gameObject.SetActive(false);
+
+            tile = null;
+        }
+    }
 }

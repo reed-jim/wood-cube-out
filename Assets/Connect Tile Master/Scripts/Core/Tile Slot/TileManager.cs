@@ -57,6 +57,11 @@ public class TileManager : Singleton<TileManager>
 
                     isFound = true;
 
+                    if (tileSlotContainer.IsLastSlot(tileSlot))
+                    {
+                        tileSlotContainer.ClearTiles();
+                    }
+
                     break;
                 }
             }
