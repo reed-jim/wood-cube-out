@@ -310,5 +310,11 @@ public static class CommonUtil
     {
         return array[UnityEngine.Random.Range(0, array.Length)];
     }
+
+    public static T GetRandomEnumValue<T>()
+    {
+        T[] values = (T[])System.Enum.GetValues(typeof(T));
+        return values[UnityEngine.Random.Range(0, values.Length)];
+    }
     #endregion
 }

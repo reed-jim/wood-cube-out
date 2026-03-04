@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class TileManager : Singleton<TileManager>
 {
-    [SerializeField] private List<TileSlot> tileSlots;
+    public Transform tileContainer;
 
+    [SerializeField] private List<TileSlot> tileSlots;
     [SerializeField] private List<BaseTile> tiles;
+
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        SpawnTiles();
+    }
 
     public void AddSlot(TileSlot slot)
     {
@@ -36,11 +45,44 @@ public class TileManager : Singleton<TileManager>
     {
         for (int i = 0; i < tileSlots.Count; i++)
         {
-            if (tileSlots[i].ItemCategory == tile.ItemCategory)
+            TileSlot tileSlot = tileSlots[i];
+
+            if (tileSlot.ItemCategory == tile.ItemCategory)
             {
-                tile.gameObject.SetActive(false);
+                tile.transform.position = tileSlot.transform.position;
+
+                tileSlot.AddTile(tile);
 
                 break;
+            }
+        }
+    }
+
+    private void SpawnTiles()
+    {
+        int col = 5;
+        int row = 5;
+        float tileSpacing = 1.1f * 200;
+
+        float totalWidth = (col - 1) * tileSpacing;
+        float totalHeight = (row - 1) * tileSpacing;
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < col; j++)
+            {
+                float xPos = j * tileSpacing - totalWidth / 2f;
+                float zPos = i * tileSpacing - totalHeight / 2f;
+
+                Vector3 spawnPos = new Vector3(xPos, 0f, zPos);
+
+                BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
+
+                tile.transform.SetParent(tileContainer);
+                tile.transform.localPosition = spawnPos;
+                tile.ItemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
+
+                tiles.Add(tile);
             }
         }
     }

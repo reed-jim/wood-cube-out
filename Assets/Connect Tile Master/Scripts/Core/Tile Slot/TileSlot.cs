@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public enum ItemCategory
@@ -15,5 +16,12 @@ public class TileSlot : MonoBehaviour
     {
         get => itemCategory;
         set => itemCategory = value;
+    }
+
+    public List<BaseTile> tiles;
+
+    public void AddTile(BaseTile tile)
+    {
+        tiles.Add(tile);
     }
 }

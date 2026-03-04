@@ -46,6 +46,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
+    [Header("Connect Master")]
+    [SerializeField] private GameObject baseTile;
+
     private bool _isInitialized;
 
     private void Awake()
@@ -118,6 +121,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ParticleSystem>(GameConstants.SUPRISE_REWARD_FX, supriseRewardFxPrefab, 1);
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
+
+
+
+        RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
