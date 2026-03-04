@@ -6,7 +6,8 @@ public class TileManager : Singleton<TileManager>
 {
     public Transform tileContainer;
 
-    [SerializeField] private List<TileSlot> tileSlots;
+    [SerializeField] private List<TileSlotContainer> tileSlotContainers;
+    [SerializeField] private List<TileSlot> additionalTileSlots;
     [SerializeField] private List<BaseTile> tiles;
 
 
@@ -17,41 +18,67 @@ public class TileManager : Singleton<TileManager>
         SpawnTiles();
     }
 
-    public void AddSlot(TileSlot slot)
-    {
-        tileSlots.Add(slot);
-    }
-
     public void AddTile(BaseTile tile)
     {
         tiles.Add(tile);
     }
 
-    public void SpawnSlot()
-    {
-        List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
+    // public void SpawnSlot()
+    // {
+    //     List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
 
-        foreach (BaseTile tile in tiles)
-        {
-            itemCategoryPool.Add(tile.ItemCategory);
-        }
+    //     foreach (BaseTile tile in tiles)
+    //     {
+    //         itemCategoryPool.Add(tile.ItemCategory);
+    //     }
 
-        TileSlot tileSlot = ObjectPoolingEverything.GetFromPool<TileSlot>(GameConstants.tileSlot);
+    //     TileSlot tileSlot = ObjectPoolingEverything.GetFromPool<TileSlot>(GameConstants.tileSlot);
 
-        tileSlot.ItemCategory = ItemCategory.Ball;
-    }
+    //     tileSlot.ItemCategory = ItemCategory.Ball;
+    // }
 
     public void MoveTileToSlot(BaseTile tile)
     {
-        for (int i = 0; i < tileSlots.Count; i++)
-        {
-            TileSlot tileSlot = tileSlots[i];
+        bool isFound = false;
 
-            if (tileSlot.ItemCategory == tile.ItemCategory)
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.ItemCategory == tile.ItemCategory)
+            {
+                TileSlot tileSlot = tileSlotContainer.GetAvailableTileSlot();
+
+                if (tileSlot != null)
+                {
+                    tile.transform.position = tileSlot.transform.position;
+
+                    tileSlot.AddTile(tile);
+
+                    isFound = true;
+
+                    break;
+                }
+            }
+        }
+
+        if (!isFound)
+        {
+            MoveTileToAdditionalSlot(tile);
+        }
+    }
+
+    private void MoveTileToAdditionalSlot(BaseTile tile)
+    {
+        for (int i = 0; i < additionalTileSlots.Count; i++)
+        {
+            TileSlot tileSlot = additionalTileSlots[i];
+
+            if (additionalTileSlots[i].Tile == null)
             {
                 tile.transform.position = tileSlot.transform.position;
 
-                tileSlot.AddTile(tile);
+                additionalTileSlots[i].AddTile(tile);
 
                 break;
             }
@@ -72,15 +99,15 @@ public class TileManager : Singleton<TileManager>
             for (int j = 0; j < col; j++)
             {
                 float xPos = j * tileSpacing - totalWidth / 2f;
-                float zPos = i * tileSpacing - totalHeight / 2f;
+                float yPos = i * tileSpacing - totalHeight / 2f;
 
-                Vector3 spawnPos = new Vector3(xPos, 0f, zPos);
+                Vector3 spawnPos = new Vector3(xPos, yPos, 0);
 
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
 
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
-                tile.ItemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
+                tile.Init();
 
                 tiles.Add(tile);
             }

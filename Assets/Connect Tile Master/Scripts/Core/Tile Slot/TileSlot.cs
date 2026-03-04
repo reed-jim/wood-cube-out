@@ -10,18 +10,16 @@ public enum ItemCategory
 
 public class TileSlot : MonoBehaviour
 {
-    [SerializeField] private ItemCategory itemCategory;
+    [SerializeField] private BaseTile tile;
 
-    public ItemCategory ItemCategory
+    public BaseTile Tile
     {
-        get => itemCategory;
-        set => itemCategory = value;
+        get => tile;
+        set => tile = value;
     }
-
-    public List<BaseTile> tiles;
 
     public void AddTile(BaseTile tile)
     {
-        tiles.Add(tile);
+        this.tile = tile;
     }
 }

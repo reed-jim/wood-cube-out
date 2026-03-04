@@ -1,9 +1,11 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BaseTile : MonoBehaviour
 {
     [SerializeField] private Button selectButton;
+    [SerializeField] private TMP_Text category;
 
 
 
@@ -18,6 +20,12 @@ public class BaseTile : MonoBehaviour
     void Awake()
     {
         selectButton.onClick.AddListener(Select);
+    }
+
+    public void Init()
+    {
+        itemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
+        category.text = $"{itemCategory.ToString()[0]}";
     }
 
     private void Select()
