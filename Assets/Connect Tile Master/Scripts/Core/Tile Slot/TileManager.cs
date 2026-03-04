@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ public class TileManager : Singleton<TileManager>
         base.MoreActionOnAwake();
 
         SpawnTiles();
+        SpawnSlot();
     }
 
     public void AddTile(BaseTile tile)
@@ -24,19 +26,38 @@ public class TileManager : Singleton<TileManager>
         tiles.Add(tile);
     }
 
-    // public void SpawnSlot()
-    // {
-    //     List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
+    public void SpawnSlot()
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
 
-    //     foreach (BaseTile tile in tiles)
-    //     {
-    //         itemCategoryPool.Add(tile.ItemCategory);
-    //     }
+            if (!tileSlotContainer.IsActive)
+            {
+                tileSlotContainer.Init(GetNextCategory());
 
-    //     TileSlot tileSlot = ObjectPoolingEverything.GetFromPool<TileSlot>(GameConstants.tileSlot);
+                float initialPositionY = tileSlotContainer.transform.localPosition.y;
 
-    //     tileSlot.ItemCategory = ItemCategory.Ball;
-    // }
+                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
+                .OnComplete(() =>
+                {
+                    tileSlotContainer.ClearTiles();
+
+                    Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
+                });
+            }
+        }
+    }
+
+    private ItemCategory GetNextCategory()
+    {
+        return tiles
+            .Where(item => !item.IsDone)
+            .GroupBy(t => t.ItemCategory)
+            .OrderByDescending(g => g.Count())
+            .First()
+            .Key;
+    }
 
     public void MoveTileToSlot(BaseTile tile)
     {
@@ -56,8 +77,7 @@ public class TileManager : Singleton<TileManager>
                     {
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
-                            tileSlotContainer.ClearTiles();
-                            tileSlotContainer.Init();
+                            SpawnSlot();
                         }
                     });
 

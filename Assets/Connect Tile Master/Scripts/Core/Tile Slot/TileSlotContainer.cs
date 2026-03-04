@@ -8,11 +8,18 @@ public class TileSlotContainer : MonoBehaviour
 
 
     [SerializeField] private ItemCategory itemCategory;
+    [SerializeField] private bool isActive;
 
     public ItemCategory ItemCategory
     {
         get => itemCategory;
         set => itemCategory = value;
+    }
+
+    public bool IsActive
+    {
+        get => isActive;
+        set => isActive = value;
     }
 
     [SerializeField] private TileSlot[] tileSlots;
@@ -22,14 +29,9 @@ public class TileSlotContainer : MonoBehaviour
         get => tileSlots;
     }
 
-    void Awake()
+    public void Init(ItemCategory itemCategory)
     {
-        Init();
-    }
-
-    public void Init()
-    {
-        itemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
+        this.itemCategory = itemCategory;
         category.text = $"{itemCategory.ToString()[0]}";
     }
 

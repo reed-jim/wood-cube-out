@@ -5,16 +5,25 @@ using UnityEngine.UI;
 public class BaseTile : MonoBehaviour
 {
     [SerializeField] private Button selectButton;
-    [SerializeField] private TMP_Text category;
+    [SerializeField] private Image icon;
+
+    [SerializeField] private Sprite[] iconPool;
 
 
 
     [SerializeField] private ItemCategory itemCategory;
+    [SerializeField] private bool isDone;
 
     public ItemCategory ItemCategory
     {
         get => itemCategory;
         set => itemCategory = value;
+    }
+
+    public bool IsDone
+    {
+        get => isDone;
+        set => isDone = value;
     }
 
     void Awake()
@@ -25,7 +34,7 @@ public class BaseTile : MonoBehaviour
     public void Init()
     {
         itemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
-        category.text = $"{itemCategory.ToString()[0]}";
+        icon.sprite = iconPool[(int)itemCategory];
     }
 
     private void Select()
