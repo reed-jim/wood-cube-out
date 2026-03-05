@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class TileManager : Singleton<TileManager>
@@ -14,6 +15,8 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private Grid[] grids;
 
     [SerializeField] private TileIconContainer tileIconContainer;
+
+    private float highestYGridPosition;
 
     protected override void MoreActionOnAwake()
     {
@@ -140,6 +143,30 @@ public class TileManager : Singleton<TileManager>
                 affectedGrids[i + 1].tile = null;
             }
         }
+
+        SpawnTilesForEmptyGrid();
+    }
+
+    private void SpawnTilesForEmptyGrid()
+    {
+        for (int i = 0; i < grids.Length; i++)
+        {
+            if (grids[i].tile == null)
+            {
+                BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
+
+                Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition);
+
+                tile.transform.SetParent(tileContainer);
+                tile.transform.localPosition = spawnPos;
+                tile.Init(ItemCategory.Ball, tileIconContainer.categoryIconSets[0].icons[0]);
+                // tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
+
+                Tween.LocalPositionY(tile.transform, grids[i].position.y, duration: 0.3f);
+
+                grids[i].tile = tile;
+            }
+        }
     }
 
     private void SpawnTiles()
@@ -173,6 +200,11 @@ public class TileManager : Singleton<TileManager>
                     position = spawnedTile.transform.localPosition,
                     tile = spawnedTile
                 };
+
+                if (spawnedTile.TopBound > highestYGridPosition)
+                {
+                    highestYGridPosition = spawnedTile.TopBound;
+                }
             }
         }
 
