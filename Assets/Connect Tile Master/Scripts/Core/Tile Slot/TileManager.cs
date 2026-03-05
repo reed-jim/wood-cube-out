@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class TileManager : Singleton<TileManager>
 {
-    public Transform tileContainer;
+    public RectTransform tileContainer;
 
     [SerializeField] private List<TileSlotContainer> tileSlotContainers;
     [SerializeField] private List<TileSlot> additionalTileSlots;
@@ -78,6 +78,8 @@ public class TileManager : Singleton<TileManager>
 
                 if (tileSlot != null)
                 {
+                    tile.transform.SetParent(tileSlot.transform);
+
                     Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                     {
                         if (tileSlotContainer.IsLastSlot(tileSlot))
@@ -111,6 +113,8 @@ public class TileManager : Singleton<TileManager>
 
             if (additionalTileSlots[i].Tile == null)
             {
+                tile.transform.SetParent(tileSlot.transform);
+                
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
                     DropTileDown(tile);
@@ -155,7 +159,7 @@ public class TileManager : Singleton<TileManager>
             {
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
 
-                Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition);
+                Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
 
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
@@ -183,6 +187,11 @@ public class TileManager : Singleton<TileManager>
 
         grids = new Grid[col * row];
 
+        float leftMost = 0;
+        float rightMost = 0;
+        float topMost = 0;
+        float bottomMost = 0;
+
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
@@ -205,6 +214,28 @@ public class TileManager : Singleton<TileManager>
                 {
                     highestYGridPosition = spawnedTile.TopBound;
                 }
+
+                if (spawnedTile.LeftBound < leftMost)
+                {
+                    leftMost = spawnedTile.LeftBound;
+                }
+
+                if (spawnedTile.RightBound > rightMost)
+                {
+                    rightMost = spawnedTile.RightBound;
+                }
+
+                if (spawnedTile.TopBound > topMost)
+                {
+                    topMost = spawnedTile.TopBound;
+                }
+
+                if (spawnedTile.BottomBound < bottomMost)
+                {
+                    bottomMost = spawnedTile.BottomBound;
+                }
+
+                tileContainer.sizeDelta = new Vector2(rightMost - leftMost, topMost - bottomMost);
             }
         }
 

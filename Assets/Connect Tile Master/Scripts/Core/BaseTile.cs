@@ -7,6 +7,7 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image icon;
+    [SerializeField] private TMP_Text category;
 
     [SerializeField] private Sprite[] iconPool;
 
@@ -41,6 +42,7 @@ public class BaseTile : MonoBehaviour
     {
         this.itemCategory = itemCategory;
         icon.sprite = iconSprite;
+        category.text = itemCategory.ToString();
 
         UIUtil.SetSizeKeepRatioY(icon, 0.7f * container.sizeDelta.x);
     }
