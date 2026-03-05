@@ -12,6 +12,7 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private List<TileSlot> additionalTileSlots;
     [SerializeField] private List<BaseTile> tiles;
 
+    [SerializeField] private TileIconContainer tileIconContainer;
 
     protected override void MoreActionOnAwake()
     {
@@ -125,10 +126,21 @@ public class TileManager : Singleton<TileManager>
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;
 
+        int currentCategoryIndex = 0;
+        int categoryIconIndex = tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length;
+
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
             {
+                if (categoryIconIndex >= tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length)
+                {
+                    currentCategoryIndex = UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
+                    categoryIconIndex = 0;
+                }
+
+                CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
+
                 float xPos = j * tileSpacing - totalWidth / 2f;
                 float yPos = i * tileSpacing - totalHeight / 2f;
 
@@ -138,7 +150,9 @@ public class TileManager : Singleton<TileManager>
 
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
-                tile.Init();
+                tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
+
+                categoryIconIndex++;
 
                 tiles.Add(tile);
             }

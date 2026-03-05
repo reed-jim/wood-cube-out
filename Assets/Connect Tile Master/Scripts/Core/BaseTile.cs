@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class BaseTile : MonoBehaviour
 {
+    [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image icon;
 
@@ -31,10 +32,12 @@ public class BaseTile : MonoBehaviour
         selectButton.onClick.AddListener(Select);
     }
 
-    public void Init()
+    public void Init(ItemCategory itemCategory, Sprite iconSprite)
     {
-        itemCategory = CommonUtil.GetRandomEnumValue<ItemCategory>();
-        icon.sprite = iconPool[(int)itemCategory];
+        this.itemCategory = itemCategory;
+        icon.sprite = iconSprite;
+
+        UIUtil.SetSizeKeepRatioY(icon, 0.7f * container.sizeDelta.x);
     }
 
     private void Select()
