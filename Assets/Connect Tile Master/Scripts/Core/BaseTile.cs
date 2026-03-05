@@ -27,6 +27,11 @@ public class BaseTile : MonoBehaviour
         set => isDone = value;
     }
 
+    public float LeftBound => container.localPosition.x - 0.5f * container.sizeDelta.x;
+    public float RightBound => container.localPosition.x + 0.5f * container.sizeDelta.x;
+    public float TopBound => container.localPosition.y + 0.5f * container.sizeDelta.y;
+    public float BottomBound => container.localPosition.y - 0.5f * container.sizeDelta.y;
+
     void Awake()
     {
         selectButton.onClick.AddListener(Select);

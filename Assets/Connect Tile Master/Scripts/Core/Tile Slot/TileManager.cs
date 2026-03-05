@@ -11,6 +11,7 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private List<TileSlotContainer> tileSlotContainers;
     [SerializeField] private List<TileSlot> additionalTileSlots;
     [SerializeField] private List<BaseTile> tiles;
+    [SerializeField] private Grid[] grids;
 
     [SerializeField] private TileIconContainer tileIconContainer;
 
@@ -80,6 +81,8 @@ public class TileManager : Singleton<TileManager>
                         {
                             SpawnSlot();
                         }
+
+                        DropTileDown(tile);
                     });
 
                     tileSlot.AddTile(tile);
@@ -107,12 +110,34 @@ public class TileManager : Singleton<TileManager>
             {
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
-
+                    DropTileDown(tile);
                 });
 
                 additionalTileSlots[i].AddTile(tile);
 
                 break;
+            }
+        }
+    }
+
+    private void DropTileDown(BaseTile movedTile)
+    {
+        Grid selectedTileGrid = grids.First(item => item.tile == movedTile);
+        List<Grid> affectedGrids =
+            grids.Where(item => item.IsSameColumn(selectedTileGrid) && item.topBound > selectedTileGrid.topBound).ToList();
+
+        affectedGrids.Add(selectedTileGrid);
+        selectedTileGrid.tile = null;
+        affectedGrids = affectedGrids.OrderBy(item => item.bottomBound).ToList();
+
+        for (int i = 0; i < affectedGrids.Count; i++)
+        {
+            if (affectedGrids[i].tile == null && i + 1 < affectedGrids.Count)
+            {
+                Tween.LocalPositionY(affectedGrids[i + 1].tile.transform, affectedGrids[i].position.y, duration: 0.3f);
+
+                affectedGrids[i].tile = affectedGrids[i + 1].tile;
+                affectedGrids[i + 1].tile = null;
             }
         }
     }
@@ -129,33 +154,70 @@ public class TileManager : Singleton<TileManager>
         int currentCategoryIndex = 0;
         int categoryIconIndex = tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length;
 
+        grids = new Grid[col * row];
+
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
             {
-                if (categoryIconIndex >= tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length)
+                int index = j + i * col;
+
+                BaseTile spawnedTile = SpawnTile(j, i);
+
+                grids[index] = new Grid()
                 {
-                    currentCategoryIndex = UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
-                    categoryIconIndex = 0;
-                }
-
-                CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
-
-                float xPos = j * tileSpacing - totalWidth / 2f;
-                float yPos = i * tileSpacing - totalHeight / 2f;
-
-                Vector3 spawnPos = new Vector3(xPos, yPos, 0);
-
-                BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
-
-                tile.transform.SetParent(tileContainer);
-                tile.transform.localPosition = spawnPos;
-                tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
-
-                categoryIconIndex++;
-
-                tiles.Add(tile);
+                    leftBound = spawnedTile.LeftBound,
+                    rightBound = spawnedTile.RightBound,
+                    topBound = spawnedTile.TopBound,
+                    bottomBound = spawnedTile.BottomBound,
+                    position = spawnedTile.transform.localPosition,
+                    tile = spawnedTile
+                };
             }
         }
+
+        BaseTile SpawnTile(int xIndex, int yIndex)
+        {
+            if (categoryIconIndex >= tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length)
+            {
+                currentCategoryIndex = UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
+                categoryIconIndex = 0;
+            }
+
+            CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
+
+            float xPos = xIndex * tileSpacing - totalWidth / 2f;
+            float yPos = yIndex * tileSpacing - totalHeight / 2f;
+
+            Vector3 spawnPos = new Vector3(xPos, yPos, 0);
+
+            BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
+
+            tile.transform.SetParent(tileContainer);
+            tile.transform.localPosition = spawnPos;
+            tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
+
+            categoryIconIndex++;
+
+            tiles.Add(tile);
+
+            return tile;
+        }
+    }
+}
+
+[Serializable]
+public class Grid
+{
+    public float leftBound;
+    public float rightBound;
+    public float topBound;
+    public float bottomBound;
+    public Vector3 position;
+    public BaseTile tile;
+
+    public bool IsSameColumn(Grid other)
+    {
+        return Mathf.Approximately(leftBound, other.leftBound) && Mathf.Approximately(rightBound, other.rightBound);
     }
 }
