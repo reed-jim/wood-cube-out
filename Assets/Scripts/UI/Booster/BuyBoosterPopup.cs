@@ -58,6 +58,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
+        TileSlotContainer.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
 
@@ -70,6 +71,7 @@ public class BuyBoosterPopup : BasePopup
         BoosterUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         BoosterItemUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewBoxUI.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
+        TileSlotContainer.showBuyBoosterPopupEvent -= ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent -= OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourcesEarnPopupShown;
     }

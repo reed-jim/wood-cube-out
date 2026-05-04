@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class TileSlotContainer : MonoBehaviour
 {
@@ -29,6 +31,13 @@ public class TileSlotContainer : MonoBehaviour
     public TileSlot[] TileSlots
     {
         get => tileSlots;
+    }
+
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
+
+    void Awake()
+    {
+        unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
     }
 
     public void Init(ItemCategory itemCategory)
@@ -65,6 +74,14 @@ public class TileSlotContainer : MonoBehaviour
         foreach (var tileSlot in tileSlots)
         {
             tileSlot.ClearTile();
+        }
+    }
+
+    private void ClickButtonUnlockByAds()
+    {
+        if (isLocked)
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
         }
     }
 }
