@@ -23,7 +23,7 @@ public class TileManager : Singleton<TileManager>
         base.MoreActionOnAwake();
 
         SpawnTiles();
-        SpawnSlot();
+        SpawnSlots();
     }
 
     public void AddTile(BaseTile tile)
@@ -31,15 +31,39 @@ public class TileManager : Singleton<TileManager>
         tiles.Add(tile);
     }
 
-    public void SpawnSlot()
+    public void SpawnSlot(int slotIndex)
     {
+        ItemCategory nextCategory = GetNextCategory();
+
+        TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
+
+        if (!tileSlotContainer.IsActive)
+        {
+            tileSlotContainer.Init(nextCategory);
+
+            float initialPositionY = tileSlotContainer.transform.localPosition.y;
+
+            Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
+            .OnComplete(() =>
+            {
+                tileSlotContainer.ClearTiles();
+
+                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
+            });
+        }
+    }
+
+    public void SpawnSlots()
+    {
+        List<ItemCategory> categories = GetNextCategories(tileSlotContainers.Count);
+
         for (int i = 0; i < tileSlotContainers.Count; i++)
         {
             TileSlotContainer tileSlotContainer = tileSlotContainers[i];
 
             if (!tileSlotContainer.IsActive)
             {
-                tileSlotContainer.Init(GetNextCategory());
+                tileSlotContainer.Init(categories[0]);
 
                 float initialPositionY = tileSlotContainer.transform.localPosition.y;
 
@@ -50,6 +74,11 @@ public class TileManager : Singleton<TileManager>
 
                     Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
                 });
+            }
+
+            if (categories.Count > 0)
+            {
+                categories.RemoveAt(0);
             }
         }
     }
@@ -64,13 +93,31 @@ public class TileManager : Singleton<TileManager>
             .Key;
     }
 
+    private List<ItemCategory> GetNextCategories(int n)
+    {
+        return tiles
+            .Where(item => !item.IsDone)
+            .GroupBy(t => t.ItemCategory)
+            .OrderByDescending(g => g.Count())
+            .Take(n)
+            .Select(g => g.Key)
+            .ToList();
+    }
+
     public void MoveTileToSlot(BaseTile tile)
     {
         bool isFound = false;
 
         for (int i = 0; i < tileSlotContainers.Count; i++)
         {
+            int index = i;
+
             TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.isLocked)
+            {
+                continue;
+            }
 
             if (tileSlotContainer.ItemCategory == tile.ItemCategory)
             {
@@ -84,7 +131,7 @@ public class TileManager : Singleton<TileManager>
                     {
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
-                            SpawnSlot();
+                            SpawnSlot(index);
                         }
 
                         DropTileDown(tile);
@@ -114,7 +161,7 @@ public class TileManager : Singleton<TileManager>
             if (additionalTileSlots[i].Tile == null)
             {
                 tile.transform.SetParent(tileSlot.transform);
-                
+
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
                     DropTileDown(tile);

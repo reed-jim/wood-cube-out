@@ -1,14 +1,16 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TileSlotContainer : MonoBehaviour
 {
     [SerializeField] private TMP_Text category;
-
-
+    [SerializeField] private Button unlockButton;
+    public Image lockImage;
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
+    public bool isLocked;
 
     public ItemCategory ItemCategory
     {
@@ -32,7 +34,10 @@ public class TileSlotContainer : MonoBehaviour
     public void Init(ItemCategory itemCategory)
     {
         this.itemCategory = itemCategory;
-        category.text = $"{itemCategory.ToString()[0]}";
+        category.text = $"{itemCategory}";
+
+        lockImage.gameObject.SetActive(isLocked);
+        category.gameObject.SetActive(!isLocked);
     }
 
     public TileSlot GetAvailableTileSlot()
