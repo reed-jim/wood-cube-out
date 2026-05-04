@@ -13,10 +13,8 @@ using static GameEnum;
 public class GameplayScreen : Singleton<GameplayScreen>
 {
     [Header("Buttons")]
-    [SerializeField] private Button helpButton;
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
-    [SerializeField] private Button skipLevelButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
@@ -42,18 +40,13 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewManager.winLevelEvent += OnLevelWin;
         ScrewBoxManager.loseLevelEvent += OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
-        LevelLoader.specialTutIntroduceEvent += ToggleHelpButton;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
-        helpButton.onClick.AddListener(OnClickHelp);
 
-        skipLevelButton.onClick.AddListener(SkipLevel);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
-        // debugNextLevelButton.onClick.AddListener(NextLevel);
-        // debugPrevLevelButton.onClick.AddListener(PrevLevel);
 
         if (UserData.IsRemoveAds)
         {
@@ -64,8 +57,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             openDebugPopupButton.gameObject.SetActive(false);
         }
-
-        skipLevelButton.gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -76,7 +67,6 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewManager.winLevelEvent -= OnLevelWin;
         ScrewBoxManager.loseLevelEvent -= OnLevelLose;
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
-        LevelLoader.specialTutIntroduceEvent -= ToggleHelpButton;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
     }
@@ -87,34 +77,12 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelWin()
     {
-        helpButton.gameObject.SetActive(false);
+
     }
 
     private void OnLevelLose()
     {
-        helpButton.gameObject.SetActive(false);
-    }
 
-    private void ToggleHelpButton(bool isActive)
-    {
-        DebugLogger.LogSimple(message: $"isActive: {isActive}");
-        // guard against missing reference or destroyed object
-        if (helpButton == null)
-        {
-            DebugLogger.LogSimple(message: "helpButton is null. Assign it in the GameplayScreen inspector.", color: Color.yellow);
-            return;
-        }
-        if (helpButton.gameObject == null)
-        {
-            DebugLogger.LogSimple(message: "helpButton GameObject is missing/destroyed.", color: Color.yellow);
-            return;
-        }
-
-        // only toggle if state changes
-        if (helpButton.gameObject.activeSelf != isActive)
-        {
-            helpButton.gameObject.SetActive(isActive);
-        }
     }
 
     #endregion
@@ -162,14 +130,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
-        if (GamePersistentVariable.isAllowedSkipLevel)
-        {
-            skipLevelButton.gameObject.SetActive(true);
-        }
-        else
-        {
-            skipLevelButton.gameObject.SetActive(false);
-        }
+
     }
 
     private void OnLevelTextTranslated()
