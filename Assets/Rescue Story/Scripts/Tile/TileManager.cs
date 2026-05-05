@@ -83,6 +83,7 @@ namespace RescueStory
             int categoryIconIndex = tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length;
 
             grids = new Grid[col * row];
+            grid = new BaseTile[col, row];
 
             for (int i = 0; i < row; i++)
             {
@@ -91,6 +92,8 @@ namespace RescueStory
                     int index = j + i * col;
 
                     BaseTile spawnedTile = SpawnTile(j, i);
+
+                    grid[j, i] = spawnedTile;
                 }
             }
 
@@ -105,6 +108,7 @@ namespace RescueStory
                 CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
 
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
+                tile.transform.SetParent(transform);
 
                 if (tileSpacing == 0)
                 {
@@ -130,8 +134,13 @@ namespace RescueStory
         }
 
         #region Matching Tiles
-        bool HasValidPath(BaseTile start, BaseTile end)
+        public bool HasValidPath(BaseTile start, BaseTile end)
         {
+            if (start.faction != end.faction)
+            {
+                return false;
+            }
+
             Vector2Int startPos = CommonUtil.GetVector2Int(start.transform.position);
             Vector2Int endPos = CommonUtil.GetVector2Int(end.transform.position);
 

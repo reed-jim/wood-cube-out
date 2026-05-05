@@ -1,4 +1,5 @@
 
+using PrimeTween;
 using UnityEngine;
 
 namespace RescueStory
@@ -14,6 +15,7 @@ namespace RescueStory
         public int faction;
         public bool isMoving;
         public bool isDone;
+        public bool isSelected;
 
         public float Size => spriteRenderer.bounds.size.x;
 
@@ -22,6 +24,20 @@ namespace RescueStory
             highlight.gameObject.SetActive(true);
 
             highlight.color = new Color(1, 1, 1, 0);
+            Tween.Alpha(highlight, 1, duration: 0.3f);
+
+            isSelected = true;
+        }
+
+        public void Deselect()
+        {
+            Tween.Alpha(highlight, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                highlight.gameObject.SetActive(false);
+            });
+
+            isSelected = false;
         }
     }
 }
