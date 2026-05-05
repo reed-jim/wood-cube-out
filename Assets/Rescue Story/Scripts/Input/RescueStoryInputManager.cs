@@ -117,9 +117,9 @@ namespace RescueStory
                 tilesMatchPath.endColor = endColor.ChangeAlpha(newVal);
             });
 
-            Tween.Delay(0.6f).OnComplete(() =>
+            Tween.Delay(0.4f).OnComplete(() =>
             {
-                Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+                Tween.Custom(1, 0, duration: 0.2f, onValueChange: newVal =>
                 {
                     tilesMatchPath.startColor = startColor.ChangeAlpha(newVal);
                     tilesMatchPath.endColor = endColor.ChangeAlpha(newVal);

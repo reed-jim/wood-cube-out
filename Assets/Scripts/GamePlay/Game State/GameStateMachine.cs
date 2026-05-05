@@ -36,6 +36,7 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent += EnterPlayingState;
             ScrewManager.winLevelEvent += EnterWinState;
             ScrewBoxManager.loseLevelEvent += EnterLoseState;
+            SituationManager.loseLevelEvent += EnterLoseState;
             RevivePopup.reviveEvent += OnRevived;
 
             ChangeState(new GameStatePlaying());
@@ -46,6 +47,7 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent -= EnterPlayingState;
             ScrewManager.winLevelEvent -= EnterWinState;
             ScrewBoxManager.loseLevelEvent -= EnterLoseState;
+            SituationManager.loseLevelEvent -= EnterLoseState;
             RevivePopup.reviveEvent -= OnRevived;
         }
 
