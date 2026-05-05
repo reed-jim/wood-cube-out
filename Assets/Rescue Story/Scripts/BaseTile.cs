@@ -7,9 +7,11 @@ namespace RescueStory
     {
         public SpriteRenderer spriteRenderer;
         public SpriteRenderer highlight;
+        public BoxCollider2D tileCollider;
+
+        public TileIconContainer tileIconContainer;
 
         public int faction;
-
         public bool isMoving;
         public bool isDone;
 
@@ -23,4 +25,3 @@ namespace RescueStory
         }
     }
 }
-

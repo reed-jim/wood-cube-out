@@ -47,6 +47,18 @@ public static class CommonUtil
     }
     #endregion
 
+    #region POSITION
+    public static Vector2Int GetVector2Int(Vector3 position)
+    {
+        return new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+    }
+
+    public static Vector3Int GetVector3Int(Vector3 position)
+    {
+        return new Vector3Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z));
+    }
+    #endregion
+    
     public static void StopTween(Tween tween)
     {
         if (tween.isAlive)
