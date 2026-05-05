@@ -24,7 +24,20 @@ namespace RescueStory
         {
             base.MoreActionOnAwake();
 
-            SpawnTiles();
+            // SpawnTiles();
+            Setup();
+        }
+
+        private void Setup()
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentsArrayFromAllChildren<BaseTile>(transform);
+
+            grid = new Dictionary<Vector2Int, BaseTile>();
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                grid.Add(CommonUtil.GetVector2Int(tiles[i].transform.position), tiles[i]);
+            }
         }
 
         private void DropTileDown(BaseTile movedTile)

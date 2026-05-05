@@ -114,7 +114,7 @@ namespace RescueStory
 
                 if (tileSpacing == 0)
                 {
-                    tileSpacing = 1.01f * tile.Size;
+                    tileSpacing = 1;
                     totalWidth = (col - 1) * tileSpacing;
                     totalHeight = (row - 1) * tileSpacing;
                 }
