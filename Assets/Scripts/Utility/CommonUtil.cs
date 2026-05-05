@@ -50,15 +50,27 @@ public static class CommonUtil
     #region POSITION
     public static Vector2Int GetVector2Int(Vector3 position)
     {
-        return new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+        return new Vector2Int(Mathf.CeilToInt(position.x), Mathf.CeilToInt(position.y));
     }
 
     public static Vector3Int GetVector3Int(Vector3 position)
     {
-        return new Vector3Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y), Mathf.RoundToInt(position.z));
+        return new Vector3Int(Mathf.CeilToInt(position.x), Mathf.CeilToInt(position.y), Mathf.CeilToInt(position.z));
+    }
+
+    public static List<Vector3> GetListVector3(List<Vector2> input, float z)
+    {
+        List<Vector3> output = new List<Vector3>();
+
+        for (int i = 0; i < input.Count; i++)
+        {
+            output.Add(new Vector3(input[i].x, input[i].y, z));
+        }
+
+        return output;
     }
     #endregion
-    
+
     public static void StopTween(Tween tween)
     {
         if (tween.isAlive)
@@ -166,7 +178,7 @@ public static class CommonUtil
     #endregion
 
     #region COLOR
-    public static Color ChangeAlpha(Color color, float alpha)
+    public static Color ChangeAlpha(this Color color, float alpha)
     {
         return new Color(color.r, color.g, color.b, alpha);
     }

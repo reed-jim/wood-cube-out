@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -7,6 +8,7 @@ namespace RescueStory
     public class RescueStoryInputManager : MonoBehaviour
     {
         public List<BaseTile> selectedTiles;
+        public LineRenderer tilesMatchPath;
 
         private Camera _mainCamera;
 
@@ -15,6 +17,8 @@ namespace RescueStory
             _mainCamera = Camera.main;
 
             selectedTiles = new List<BaseTile>();
+
+            tilesMatchPath.gameObject.SetActive(false);
         }
 
         void Update()
@@ -57,10 +61,14 @@ namespace RescueStory
 
                     if (selectedTiles.Count == 2)
                     {
-                        if (TileManager.Ins.HasValidPath(selectedTiles[0], selectedTiles[1]))
+                        List<Vector2> path;
+
+                        if (TileManager.Ins.HasValidPath(selectedTiles[0], selectedTiles[1], out path))
                         {
                             selectedTiles[0].Complete();
                             selectedTiles[1].Complete();
+
+                            ShowMatchingPath(path);
                         }
                         else
                         {
@@ -92,6 +100,35 @@ namespace RescueStory
             {
                 return false;
             }
+        }
+
+        private void ShowMatchingPath(List<Vector2> path)
+        {
+            tilesMatchPath.gameObject.SetActive(true);
+            tilesMatchPath.positionCount = path.Count;
+            tilesMatchPath.SetPositions(CommonUtil.GetListVector3(path, -3f).ToArray());
+
+            Color startColor = tilesMatchPath.startColor;
+            Color endColor = tilesMatchPath.endColor;
+
+            Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+            {
+                tilesMatchPath.startColor = startColor.ChangeAlpha(newVal);
+                tilesMatchPath.endColor = endColor.ChangeAlpha(newVal);
+            });
+
+            Tween.Delay(0.6f).OnComplete(() =>
+            {
+                Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+                {
+                    tilesMatchPath.startColor = startColor.ChangeAlpha(newVal);
+                    tilesMatchPath.endColor = endColor.ChangeAlpha(newVal);
+                })
+                .OnComplete(() =>
+                {
+                    tilesMatchPath.gameObject.SetActive(false);
+                });
+            });
         }
     }
 }

@@ -149,8 +149,10 @@ namespace RescueStory
         }
 
         #region Matching Tiles
-        public bool HasValidPath(BaseTile start, BaseTile end)
+        public bool HasValidPath(BaseTile start, BaseTile end, out List<Vector2> path)
         {
+            path = new List<Vector2>();
+
             if (start.faction != end.faction)
             {
                 return false;
@@ -194,7 +196,12 @@ namespace RescueStory
                 while (IsInside(next, minX, maxX, minY, maxY) && IsEmpty(next, start, end))
                 {
                     if (next == endPos)
+                    {
+                        path = BuildPath(node);
+                        path.Add(end.transform.position);
+
                         return true;
+                    }
 
                     for (int nd = 0; nd < 4; nd++)
                     {
@@ -202,7 +209,7 @@ namespace RescueStory
 
                         if (newTurns <= 2)
                         {
-                            queue.Enqueue(new Node(next, nd, newTurns));
+                            queue.Enqueue(new Node(next, nd, newTurns, node));
                         }
                     }
 
@@ -213,17 +220,33 @@ namespace RescueStory
             return false;
         }
 
+        private List<Vector2> BuildPath(Node node)
+        {
+            List<Vector2> path = new List<Vector2>();
+
+            while (node != null)
+            {
+                path.Add(grid[node.pos].transform.position);
+                node = node.parent;
+            }
+
+            path.Reverse();
+            return path;
+        }
+
         class Node
         {
             public Vector2Int pos;
             public int dir;
             public int turns;
+            public Node parent;
 
-            public Node(Vector2Int p, int d, int t)
+            public Node(Vector2Int pos, int dir, int turns, Node parent = null)
             {
-                pos = p;
-                dir = d;
-                turns = t;
+                this.pos = pos;
+                this.dir = dir;
+                this.turns = turns;
+                this.parent = parent;
             }
         }
 
