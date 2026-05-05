@@ -1,4 +1,5 @@
 using System;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +38,14 @@ public class TileSlotContainer : MonoBehaviour
 
     void Awake()
     {
+        BuyBoosterPopup.unlockScrewBoxEvent += Unlock;
+
         unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
+    }
+
+    void OnDestroy()
+    {
+        BuyBoosterPopup.unlockScrewBoxEvent -= Unlock;
     }
 
     public void Init(ItemCategory itemCategory)
@@ -82,6 +90,21 @@ public class TileSlotContainer : MonoBehaviour
         if (isLocked)
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        }
+    }
+
+    private void Unlock()
+    {
+        if (isLocked)
+        {
+            category.gameObject.SetActive(true);
+            category.alpha = 0;
+
+            Tween.Alpha(category, 1, duration: 0.3f);
+            Tween.Alpha(lockImage, 0, duration: 0.3f).OnComplete(() =>
+            {
+                lockImage.gameObject.SetActive(false);
+            });
         }
     }
 }

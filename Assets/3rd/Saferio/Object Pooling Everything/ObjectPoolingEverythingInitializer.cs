@@ -91,7 +91,6 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<FakeScrew>(GameConstants.FAKE_SCREW, fakeScrewPrefab, 3);
         RegisterPool<BoosterHammer>(GameConstants.HAMMER, hammerPrefab, 3);
 
-
         RegisterPool<AudioSource>(GameConstants.LOOSEN_SCREW_SOUND, loosenScrewSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.TIGHTEN_SCREW_SOUND, tightenScrewSoundPrefab, 3);
         RegisterPool<AudioSource>(GameConstants.LOOSEN_SCREW_FAIL_SOUND, loosenScrewFailSoundPrefab, 3);
@@ -122,9 +121,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
 
-
-
-        RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
+        RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
