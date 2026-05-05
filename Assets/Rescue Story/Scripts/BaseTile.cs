@@ -8,6 +8,7 @@ namespace RescueStory
     public class BaseTile : MonoBehaviour
     {
         public SpriteRenderer spriteRenderer;
+        public SpriteRenderer icon;
         public SpriteRenderer highlight;
         public BoxCollider2D tileCollider;
 
@@ -19,6 +20,13 @@ namespace RescueStory
         public bool isSelected;
 
         public float Size => spriteRenderer.bounds.size.x;
+
+        public void Init(int faction)
+        {
+            icon.sprite = tileIconContainer.allSprites[faction];
+
+            this.faction = faction;
+        }
 
         public void Select()
         {

@@ -110,6 +110,7 @@ namespace RescueStory
 
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
                 tile.transform.SetParent(transform);
+                tile.Init(UnityEngine.Random.Range(0, 5));
 
                 if (tileSpacing == 0)
                 {
