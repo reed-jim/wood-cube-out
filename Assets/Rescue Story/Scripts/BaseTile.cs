@@ -1,5 +1,6 @@
 
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 namespace RescueStory
@@ -38,6 +39,13 @@ namespace RescueStory
             });
 
             isSelected = false;
+        }
+
+        public void Complete()
+        {
+            SaferioTween.ScaleDownWithPunch(transform);
+
+            isDone = true;
         }
     }
 }

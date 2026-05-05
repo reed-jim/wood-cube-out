@@ -59,9 +59,16 @@ namespace RescueStory
                     {
                         if (TileManager.Ins.HasValidPath(selectedTiles[0], selectedTiles[1]))
                         {
-                            selectedTiles[0].gameObject.SetActive(false);
-                            selectedTiles[1].gameObject.SetActive(false);
+                            selectedTiles[0].Complete();
+                            selectedTiles[1].Complete();
                         }
+                        else
+                        {
+                            selectedTiles[0].Deselect();
+                            selectedTiles[1].Deselect();
+                        }
+
+                        selectedTiles.Clear();
                     }
                 }
             }

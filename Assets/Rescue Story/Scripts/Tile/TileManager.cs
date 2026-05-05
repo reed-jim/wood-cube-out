@@ -9,9 +9,12 @@ namespace RescueStory
 {
     public class TileManager : Singleton<TileManager>
     {
+        public int col;
+        public int row;
+
         [SerializeField] private List<BaseTile> tiles;
         [SerializeField] private Grid[] grids;
-        public BaseTile[,] grid;
+        public Dictionary<Vector2Int, BaseTile> grid;
 
         [SerializeField] private TileIconContainer tileIconContainer;
 
@@ -72,8 +75,6 @@ namespace RescueStory
 
         private void SpawnTiles()
         {
-            int col = 5;
-            int row = 5;
             float tileSpacing = 0;
 
             float totalWidth = 0;
@@ -83,7 +84,7 @@ namespace RescueStory
             int categoryIconIndex = tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length;
 
             grids = new Grid[col * row];
-            grid = new BaseTile[col, row];
+            grid = new Dictionary<Vector2Int, BaseTile>();
 
             for (int i = 0; i < row; i++)
             {
@@ -93,7 +94,7 @@ namespace RescueStory
 
                     BaseTile spawnedTile = SpawnTile(j, i);
 
-                    grid[j, i] = spawnedTile;
+                    grid.Add(CommonUtil.GetVector2Int(spawnedTile.transform.position), spawnedTile);
                 }
             }
 
@@ -143,12 +144,13 @@ namespace RescueStory
 
             Vector2Int startPos = CommonUtil.GetVector2Int(start.transform.position);
             Vector2Int endPos = CommonUtil.GetVector2Int(end.transform.position);
-
-            int rows = grid.GetLength(0);
-            int cols = grid.GetLength(1);
+            int minX = grid.Min(item => item.Key.x);
+            int maxX = grid.Max(item => item.Key.x);
+            int minY = grid.Min(item => item.Key.y);
+            int maxY = grid.Max(item => item.Key.y);
 
             // visited with turn count
-            int[,,] visited = new int[rows, cols, 4];
+            // int[,,] visited = new int[rows, cols, 4];
 
             Queue<Node> queue = new Queue<Node>();
 
@@ -175,7 +177,7 @@ namespace RescueStory
 
                 Vector2Int next = node.pos + dirs[node.dir];
 
-                while (IsInside(next, rows, cols) && IsEmpty(next, start, end))
+                while (IsInside(next, minX, maxX, minY, maxY) && IsEmpty(next, start, end))
                 {
                     if (next == endPos)
                         return true;
@@ -211,14 +213,19 @@ namespace RescueStory
             }
         }
 
-        bool IsInside(Vector2Int pos, int rows, int cols)
+        bool IsInside(Vector2Int pos, int minX, int maxX, int minY, int maxY)
         {
-            return pos.x >= 0 && pos.x < rows && pos.y >= 0 && pos.y < cols;
+            return pos.x >= minX && pos.x <= maxX && pos.y >= minY && pos.y <= maxY;
         }
 
         bool IsEmpty(Vector2Int pos, BaseTile start, BaseTile end)
         {
-            BaseTile tile = grid[pos.x, pos.y];
+            if (!grid.ContainsKey(pos))
+            {
+                return true;
+            }
+
+            BaseTile tile = grid[pos];
 
             // allow passing through empty OR target tile
             return tile == null || tile == start || tile == end || tile.isDone;
