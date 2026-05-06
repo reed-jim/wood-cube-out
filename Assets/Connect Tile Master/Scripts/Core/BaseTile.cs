@@ -45,6 +45,8 @@ public class BaseTile : MonoBehaviour
         containerImage.color = containerImage.color.ChangeAlpha(1);
 
         UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+
+        isDone = false;
     }
 
     private void Select()

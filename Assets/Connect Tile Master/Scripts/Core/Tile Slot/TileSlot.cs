@@ -17,6 +17,8 @@ public class TileSlot : MonoBehaviour
 {
     [SerializeField] private BaseTile tile;
 
+    public bool isShelf;
+
     public BaseTile Tile
     {
         get => tile;
@@ -26,6 +28,11 @@ public class TileSlot : MonoBehaviour
     public void AddTile(BaseTile tile)
     {
         this.tile = tile;
+
+        if (!isShelf)
+        {
+            tile.IsDone = true;
+        }
     }
 
     public void ClearTile()

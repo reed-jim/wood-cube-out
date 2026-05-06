@@ -21,9 +21,9 @@ public class TileManager : Singleton<TileManager>
     public TMP_Text setCountText;
 
     public int difficultyLevel;
+    public int totalSet;
 
     private List<ItemCategory> itemCategoryPool;
-    private int totalSet;
     private int remainingSet;
     private float highestYGridPosition;
 
@@ -42,7 +42,7 @@ public class TileManager : Singleton<TileManager>
 
     public void SpawnSlot(int slotIndex)
     {
-        ItemCategory nextCategory = GetNextCategory();
+        ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel);
 
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
 
@@ -64,6 +64,15 @@ public class TileManager : Singleton<TileManager>
 
             UpdateSetCountText();
         }
+    }
+
+    public void HideSlot(int slotIndex)
+    {
+        TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
+
+        float initialPositionY = tileSlotContainer.transform.localPosition.y;
+
+        Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f);
     }
 
     public void SpawnSlots()
@@ -168,15 +177,15 @@ public class TileManager : Singleton<TileManager>
         //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
         // }
 
-        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
-        {
-            if (itemCategoryPool.Contains(sortedCategory[i]))
-            {
-                itemCategoryPool.Remove(sortedCategory[i]);
+        // for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        // {
+        //     if (itemCategoryPool.Contains(sortedCategory[i]))
+        //     {
+        //         itemCategoryPool.Remove(sortedCategory[i]);
 
-                return sortedCategory[i];
-            }
-        }
+        //         return sortedCategory[i];
+        //     }
+        // }
 
         // fallback return first value of itemCategoryPool
         ItemCategory nextCategory = itemCategoryPool.First();
@@ -184,6 +193,77 @@ public class TileManager : Singleton<TileManager>
         itemCategoryPool.RemoveAt(0);
 
         return nextCategory;
+    }
+
+    private ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel)
+    {
+        // The higher the score, the easier
+        Dictionary<ItemCategory, int> numTilePerCategory = new Dictionary<ItemCategory, int>();
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            BaseTile tile = tiles[i];
+
+            CommonUtil.SumValueOfDictionary(numTilePerCategory, tile.ItemCategory, 1);
+        }
+
+        Dictionary<ItemCategory, int> scoreOfEachCategory = new Dictionary<ItemCategory, int>();
+
+        foreach (var item in numTilePerCategory)
+        {
+            int addedScore = item.Value;
+
+            if (item.Value >= 4)
+            {
+                addedScore *= 10;
+            }
+
+            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, item.Key, addedScore);
+        }
+
+        for (int i = 0; i < itemCategoryPool.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, itemCategoryPool[i], 1);
+        }
+
+        scoreOfEachCategory = scoreOfEachCategory.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        ItemCategory[] sortedCategory = scoreOfEachCategory.OrderByDescending(item => item.Value)
+            .Select(kvp => kvp.Key)
+            .ToArray();
+
+        // Debug
+        // foreach (var item in scoreOfEachCategory)
+        // {
+        //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
+        // }
+
+        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        {
+            if (!tileSlotContainers.Any(item => item.ItemCategory == sortedCategory[i]))
+            {
+                int remaningTileOfCategory = tiles.Where(i => !i.IsDone).Count(item => item.ItemCategory == sortedCategory[i]) +
+                    itemCategoryPool.Count(item => item == sortedCategory[i]);
+
+                if (remaningTileOfCategory >= 4)
+                {
+                    return sortedCategory[i];
+                }
+            }
+        }
+
+        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        {
+            int remaningTileOfCategory = tiles.Where(i => !i.IsDone).Count(item => item.ItemCategory == sortedCategory[i]) +
+                    itemCategoryPool.Count(item => item == sortedCategory[i]);
+
+            if (remaningTileOfCategory >= 4)
+            {
+                return sortedCategory[i];
+            }
+        }
+
+        return GetNextCategory();
     }
 
     public void MoveTileToSlot(BaseTile tile)
@@ -213,7 +293,14 @@ public class TileManager : Singleton<TileManager>
 
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
-                            SpawnSlot(index);
+                            if (remainingSet > 0)
+                            {
+                                SpawnSlot(index);
+                            }
+                            else
+                            {
+                                HideSlot(index);
+                            }
                         }
 
                         DropTileDown(tile);
@@ -270,10 +357,13 @@ public class TileManager : Singleton<TileManager>
         {
             if (affectedGrids[i].tile == null && i + 1 < affectedGrids.Count)
             {
-                Tween.LocalPositionY(affectedGrids[i + 1].tile.transform, affectedGrids[i].position.y, duration: 0.3f);
+                if (affectedGrids[i + 1].tile != null)
+                {
+                    Tween.LocalPositionY(affectedGrids[i + 1].tile.transform, affectedGrids[i].position.y, duration: 0.3f);
 
-                affectedGrids[i].tile = affectedGrids[i + 1].tile;
-                affectedGrids[i + 1].tile = null;
+                    affectedGrids[i].tile = affectedGrids[i + 1].tile;
+                    affectedGrids[i + 1].tile = null;
+                }
             }
         }
 
@@ -282,6 +372,11 @@ public class TileManager : Singleton<TileManager>
 
     private void SpawnTilesForEmptyGrid()
     {
+        if (itemCategoryPool.Count <= 0)
+        {
+            return;
+        }
+
         for (int i = 0; i < grids.Length; i++)
         {
             if (grids[i].tile == null)
@@ -344,8 +439,7 @@ public class TileManager : Singleton<TileManager>
         float topMost = 0;
         float bottomMost = 0;
 
-        totalSet = 20;
-        remainingSet = 20;
+        remainingSet = totalSet;
 
         UpdateSetCountText();
 
