@@ -4,6 +4,7 @@ using System.Linq;
 using Dreamteck.Utilities;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 
 public class TileManager : Singleton<TileManager>
@@ -17,6 +18,11 @@ public class TileManager : Singleton<TileManager>
 
     [SerializeField] private TileIconContainer tileIconContainer;
 
+    public TMP_Text setCountText;
+
+    private List<ItemCategory> itemCategoryPool;
+    private int totalSet;
+    private int remainingSet;
     private float highestYGridPosition;
 
     protected override void MoreActionOnAwake()
@@ -51,6 +57,10 @@ public class TileManager : Singleton<TileManager>
 
                 Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
             });
+
+            remainingSet--;
+
+            UpdateSetCountText();
         }
     }
 
@@ -110,6 +120,15 @@ public class TileManager : Singleton<TileManager>
             .Take(n)
             .Select(g => g.Key)
             .ToList();
+    }
+
+    private ItemCategory GetNextCategoryBasedOnDifficulty(float difficulty)
+    {
+        ItemCategory nextCategory = itemCategoryPool.First();
+
+        itemCategoryPool.RemoveAt(0);
+
+        return nextCategory;
     }
 
     public void MoveTileToSlot(BaseTile tile)
@@ -218,8 +237,10 @@ public class TileManager : Singleton<TileManager>
 
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
-                tile.Init(ItemCategory.Vegetable, tileIconContainer.categoryIconSets[0].icons[0]);
-                // tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
+
+                ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(1);
+
+                tile.Init(nextCategory, tileIconContainer.GetRandomIconOfCategory(nextCategory));
 
                 Tween.LocalPositionY(tile.transform, grids[i].position.y, duration: 0.3f);
 
@@ -228,13 +249,13 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
-    private List<ItemCategory> GetItemCategoryPool(int col, int row)
+    private List<ItemCategory> GetItemCategoryPool(int totalSet)
     {
         List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
 
         ItemCategory currentItemCategory = ItemCategory.Vegetable;
 
-        for (int i = 0; i < col * row; i++)
+        for (int i = 0; i < totalSet * 4; i++)
         {
             if (i % 4 == 0)
             {
@@ -258,8 +279,8 @@ public class TileManager : Singleton<TileManager>
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;
 
-        int currentCategoryIndex = 0;
-        int categoryIconIndex = 0;
+        int currentCategoryIndex;
+        int categoryIconIndex;
 
         grids = new Grid[col * row];
 
@@ -268,7 +289,12 @@ public class TileManager : Singleton<TileManager>
         float topMost = 0;
         float bottomMost = 0;
 
-        List<ItemCategory> itemCategoryPool = GetItemCategoryPool(col, row);
+        totalSet = 20;
+        remainingSet = 20;
+
+        UpdateSetCountText();
+
+        itemCategoryPool = GetItemCategoryPool(totalSet);
 
         for (int i = 0; i < row; i++)
         {
@@ -341,6 +367,13 @@ public class TileManager : Singleton<TileManager>
 
             return tile;
         }
+    }
+
+    private void UpdateSetCountText()
+    {
+        setCountText.text = $"{remainingSet}/{totalSet}";
+
+        SaferioTween.Punch(setCountText.transform, 0.1f);
     }
 
     #region Util

@@ -42,6 +42,8 @@ public class BaseTile : MonoBehaviour
         icon.sprite = iconSprite;
         category.text = itemCategory.ToString();
 
+        containerImage.color = Color.white;
+
         UIUtil.SetSizeKeepRatioY(icon, 0.75f * container.sizeDelta.x);
     }
 
