@@ -341,4 +341,21 @@ public static class CommonUtil
         return values[UnityEngine.Random.Range(0, values.Length)];
     }
     #endregion
+
+    public static void SumValueOfDictionary<T>(Dictionary<T, int> dictionary, T key, int value)
+    {
+        if (dictionary == null)
+        {
+            dictionary = new Dictionary<T, int>();
+        }
+
+        if (dictionary.ContainsKey(key))
+        {
+            dictionary[key] += value;
+        }
+        else
+        {
+            dictionary.Add(key, value);
+        }
+    }
 }

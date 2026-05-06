@@ -20,6 +20,8 @@ public class TileManager : Singleton<TileManager>
 
     public TMP_Text setCountText;
 
+    public int difficultyLevel;
+
     private List<ItemCategory> itemCategoryPool;
     private int totalSet;
     private int remainingSet;
@@ -122,8 +124,61 @@ public class TileManager : Singleton<TileManager>
             .ToList();
     }
 
-    private ItemCategory GetNextCategoryBasedOnDifficulty(float difficulty)
+    private ItemCategory GetNextCategoryBasedOnDifficulty(int difficultyLevel)
     {
+        // The higher the score, the easier
+        List<ItemCategory> categoriesOfTileSlotContainers = new List<ItemCategory>();
+
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.isLocked)
+            {
+                continue;
+            }
+
+            if (!categoriesOfTileSlotContainers.Contains(tileSlotContainer.ItemCategory))
+            {
+                categoriesOfTileSlotContainers.Add(tileSlotContainer.ItemCategory);
+            }
+        }
+
+        Dictionary<ItemCategory, int> scoreOfEachCategory = new Dictionary<ItemCategory, int>();
+
+        for (int i = 0; i < categoriesOfTileSlotContainers.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, categoriesOfTileSlotContainers[i], 1000);
+        }
+
+        for (int i = 0; i < itemCategoryPool.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, itemCategoryPool[i], 1);
+        }
+
+        scoreOfEachCategory = scoreOfEachCategory.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        ItemCategory[] sortedCategory = scoreOfEachCategory.OrderByDescending(item => item.Value)
+            .Select(kvp => kvp.Key)
+            .ToArray();
+
+        // Debug
+        // foreach (var item in scoreOfEachCategory)
+        // {
+        //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
+        // }
+
+        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        {
+            if (itemCategoryPool.Contains(sortedCategory[i]))
+            {
+                itemCategoryPool.Remove(sortedCategory[i]);
+
+                return sortedCategory[i];
+            }
+        }
+
+        // fallback return first value of itemCategoryPool
         ItemCategory nextCategory = itemCategoryPool.First();
 
         itemCategoryPool.RemoveAt(0);
@@ -238,7 +293,7 @@ public class TileManager : Singleton<TileManager>
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
 
-                ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(1);
+                ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
 
                 tile.Init(nextCategory, tileIconContainer.GetRandomIconOfCategory(nextCategory));
 
