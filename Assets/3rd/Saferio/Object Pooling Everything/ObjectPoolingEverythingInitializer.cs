@@ -121,7 +121,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<EventItem>(GameConstants.EVENT_ITEM, eventItem, 5);
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
 
-        RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
+        // RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
+        RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

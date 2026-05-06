@@ -9,10 +9,6 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text category;
 
-    [SerializeField] private Sprite[] iconPool;
-
-
-
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isDone;
 
@@ -44,7 +40,7 @@ public class BaseTile : MonoBehaviour
         icon.sprite = iconSprite;
         category.text = itemCategory.ToString();
 
-        UIUtil.SetSizeKeepRatioY(icon, 0.7f * container.sizeDelta.x);
+        UIUtil.SetSizeKeepRatioY(icon, 0.75f * container.sizeDelta.x);
     }
 
     private void Select()

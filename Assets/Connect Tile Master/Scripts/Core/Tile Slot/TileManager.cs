@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dreamteck.Utilities;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -210,7 +211,7 @@ public class TileManager : Singleton<TileManager>
 
                 tile.transform.SetParent(tileContainer);
                 tile.transform.localPosition = spawnPos;
-                tile.Init(ItemCategory.Ball, tileIconContainer.categoryIconSets[0].icons[0]);
+                tile.Init(ItemCategory.Vegetable, tileIconContainer.categoryIconSets[0].icons[0]);
                 // tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
 
                 Tween.LocalPositionY(tile.transform, grids[i].position.y, duration: 0.3f);
@@ -220,17 +221,38 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    private List<ItemCategory> GetItemCategoryPool(int col, int row)
+    {
+        List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
+
+        ItemCategory currentItemCategory = ItemCategory.Vegetable;
+
+        for (int i = 0; i < col * row; i++)
+        {
+            if (i % 4 == 0)
+            {
+                currentItemCategory = (ItemCategory)UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
+            }
+
+            itemCategoryPool.Add(currentItemCategory);
+        }
+
+        itemCategoryPool.Shuffle();
+
+        return itemCategoryPool;
+    }
+
     private void SpawnTiles()
     {
         int col = 5;
-        int row = 5;
+        int row = GetRandomRow(col, 4, 8);
         float tileSpacing = 1.1f * 200;
 
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;
 
         int currentCategoryIndex = 0;
-        int categoryIconIndex = tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length;
+        int categoryIconIndex = 0;
 
         grids = new Grid[col * row];
 
@@ -238,6 +260,8 @@ public class TileManager : Singleton<TileManager>
         float rightMost = 0;
         float topMost = 0;
         float bottomMost = 0;
+
+        List<ItemCategory> itemCategoryPool = GetItemCategoryPool(col, row);
 
         for (int i = 0; i < row; i++)
         {
@@ -288,13 +312,12 @@ public class TileManager : Singleton<TileManager>
 
         BaseTile SpawnTile(int xIndex, int yIndex)
         {
-            if (categoryIconIndex >= tileIconContainer.categoryIconSets[currentCategoryIndex].icons.Length)
-            {
-                currentCategoryIndex = UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
-                categoryIconIndex = 0;
-            }
+            currentCategoryIndex = (int)itemCategoryPool.First();
+            itemCategoryPool.RemoveAt(0);
 
             CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
+
+            categoryIconIndex = UnityEngine.Random.Range(0, categoryIconSet.icons.Length);
 
             float xPos = xIndex * tileSpacing - totalWidth / 2f;
             float yPos = yIndex * tileSpacing - totalHeight / 2f;
@@ -307,13 +330,44 @@ public class TileManager : Singleton<TileManager>
             tile.transform.localPosition = spawnPos;
             tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
 
-            categoryIconIndex++;
-
             tiles.Add(tile);
 
             return tile;
         }
     }
+
+    #region Util
+    private int GetRandomRow(int col, int minRow, int maxRow, int maxTries = 50)
+    {
+        // Fast random attempts
+        for (int i = 0; i < maxTries; i++)
+        {
+            int row = UnityEngine.Random.Range(minRow, maxRow + 1);
+            if ((col * row) % 4 == 0)
+                return row;
+        }
+
+        // Guaranteed fallback
+        int step;
+
+        if (col % 4 == 0)
+            step = 1;
+        else if (col % 2 == 0)
+            step = 2;
+        else
+            step = 4;
+
+        // Find first valid row >= minRow
+        int start = ((minRow + step - 1) / step) * step;
+
+        if (start <= maxRow)
+            return start;
+
+        // Absolute guarantee fallback (if range somehow invalid)
+        // Clamp to nearest valid value (even outside range if needed)
+        return ((minRow + step - 1) / step) * step;
+    }
+    #endregion
 }
 
 [Serializable]

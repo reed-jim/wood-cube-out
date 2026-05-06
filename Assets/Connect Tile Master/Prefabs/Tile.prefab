@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8760920070172459467
 RectTransform:
   m_ObjectHideFlags: 0
@@ -164,14 +164,14 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4912963275598431589}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 116, y: 157}
+  m_SizeDelta: {x: 180, y: 180}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2190506935400488958
 CanvasRenderer:
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 731c790c4eaf1e74e9a564249d23514f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 02706505b4e90904b840797e892bb137, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -276,10 +276,6 @@ MonoBehaviour:
   selectButton: {fileID: 4157890992323415330}
   icon: {fileID: 1363866677395756504}
   category: {fileID: 330979440694906700}
-  iconPool:
-  - {fileID: 21300000, guid: 731c790c4eaf1e74e9a564249d23514f, type: 3}
-  - {fileID: 21300000, guid: afb73cc2890fe1141b61045751b9d928, type: 3}
-  - {fileID: 21300000, guid: 0f00904df4decc24cbfa69cfb51ac8db, type: 3}
   itemCategory: 0
   isDone: 0
 --- !u!114 &4858788533210362960
@@ -295,7 +291,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23529412, g: 0.23529412, b: 0.23529412, a: 1}
+  m_Color: {r: 0.38039216, g: 0.7490196, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

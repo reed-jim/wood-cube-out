@@ -3,7 +3,7 @@ using UnityEngine;
 
 public enum ItemCategory
 {
-    Ball,
+    Vegetable,
     Food,
     Animal
 }
