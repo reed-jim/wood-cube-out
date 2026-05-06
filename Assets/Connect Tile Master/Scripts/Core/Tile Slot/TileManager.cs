@@ -64,7 +64,14 @@ public class TileManager : Singleton<TileManager>
 
             if (!tileSlotContainer.IsActive)
             {
-                tileSlotContainer.Init(categories[0]);
+                if (categories.Count > 0)
+                {
+                    tileSlotContainer.Init(categories[0]);
+                }
+                else
+                {
+                    tileSlotContainer.Init();
+                }
 
                 float initialPositionY = tileSlotContainer.transform.localPosition.y;
 
@@ -126,10 +133,10 @@ public class TileManager : Singleton<TileManager>
 
                 if (tileSlot != null)
                 {
-                    tile.transform.SetParent(tileSlot.transform);
-
                     Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                     {
+                        tile.transform.SetParent(tileSlot.transform);
+
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
                             SpawnSlot(index);
@@ -245,7 +252,7 @@ public class TileManager : Singleton<TileManager>
     private void SpawnTiles()
     {
         int col = 5;
-        int row = GetRandomRow(col, 4, 8);
+        int row = GetRandomRow(col, 4, 6);
         float tileSpacing = 1.1f * 200;
 
         float totalWidth = (col - 1) * tileSpacing;

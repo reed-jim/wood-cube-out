@@ -1,3 +1,4 @@
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,6 +7,7 @@ public class BaseTile : MonoBehaviour
 {
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
+    [SerializeField] private Image containerImage;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text category;
 
@@ -45,6 +47,10 @@ public class BaseTile : MonoBehaviour
 
     private void Select()
     {
+        Tween.Alpha(containerImage, 0, duration: 0.3f);
+
+        transform.SetAsLastSibling();
+
         TileManager.Ins.MoveTileToSlot(this);
     }
 }

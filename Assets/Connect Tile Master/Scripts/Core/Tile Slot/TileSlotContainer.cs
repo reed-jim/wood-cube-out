@@ -48,7 +48,7 @@ public class TileSlotContainer : MonoBehaviour
         BuyBoosterPopup.unlockScrewBoxEvent -= Unlock;
     }
 
-    public void Init(ItemCategory itemCategory)
+    public void Init(ItemCategory itemCategory = ItemCategory.Vegetable)
     {
         this.itemCategory = itemCategory;
         category.text = $"{itemCategory}";
