@@ -15,7 +15,7 @@ public class SituationManager : Singleton<SituationManager>
     void Start()
     {
         progress = 1;
-        
+
         StartCoroutine(CountLevelProgress());
     }
 
@@ -25,7 +25,7 @@ public class SituationManager : Singleton<SituationManager>
 
         while (progress >= 0)
         {
-            progress -= 0.05f;
+            progress -= 0.01f;
 
             Tween.Custom(progressFill.fillAmount, progress, duration: 0.3f, onValueChange: newVal =>
             {

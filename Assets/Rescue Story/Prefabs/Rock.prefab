@@ -9,9 +9,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2024862723460612777}
+  - component: {fileID: 803780303611422754}
   - component: {fileID: 4601823740501359508}
-  - component: {fileID: 2976452296399338909}
   - component: {fileID: 2409921010591320965}
+  - component: {fileID: 1674278296454286274}
   m_Layer: 0
   m_Name: Rock
   m_TagString: Untagged
@@ -29,11 +30,29 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -3.34, y: 1.722, z: 0}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &803780303611422754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378736765362755640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abffe407c6c81b94ab522c52fff987bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Element
+  spriteRenderer: {fileID: 4601823740501359508}
+  spritePool:
+  - {fileID: 21300000, guid: 40bb14b56740db24399d64ced0f9ff44, type: 3}
+  - {fileID: 21300000, guid: 2256efdea7ef3c74dadcbcc23c71a394, type: 3}
+  - {fileID: 21300000, guid: 5090d5edb1813b643932a64d98b8582d, type: 3}
+  - {fileID: 21300000, guid: 0894a6153d3c80f4db58e836a9be2271, type: 3}
 --- !u!212 &4601823740501359508
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -81,7 +100,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: ace287cbdbebdcd4da61d84cc4a75204, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5090d5edb1813b643932a64d98b8582d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -92,8 +111,35 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!58 &2976452296399338909
-CircleCollider2D:
+--- !u!50 &2409921010591320965
+Rigidbody2D:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378736765362755640}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDamping: 0
+  m_AngularDamping: 0.01
+  m_GravityScale: 1
+  m_Material: {fileID: 6200000, guid: a4f77b04c3648c54d8ad529568a3e3fc, type: 2}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
+--- !u!70 &1674278296454286274
+CapsuleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -126,32 +172,6 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0, y: 0}
-  m_Radius: 3.4291666
---- !u!50 &2409921010591320965
-Rigidbody2D:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 378736765362755640}
-  m_BodyType: 0
-  m_Simulated: 1
-  m_UseFullKinematicContacts: 0
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDamping: 0
-  m_AngularDamping: 0.01
-  m_GravityScale: 1
-  m_Material: {fileID: 6200000, guid: a4f77b04c3648c54d8ad529568a3e3fc, type: 2}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Offset: {x: -0.002259735, y: -0.028689627}
+  m_Size: {x: 1.0811899, y: 0.7665498}
+  m_Direction: 1
