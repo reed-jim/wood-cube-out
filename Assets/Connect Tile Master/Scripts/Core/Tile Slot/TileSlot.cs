@@ -5,7 +5,12 @@ public enum ItemCategory
 {
     Vegetable,
     Food,
-    Animal
+    Animal,
+    Drink,
+    Vacation,
+    School,
+    Fruit,
+    Fastfood
 }
 
 public class TileSlot : MonoBehaviour
