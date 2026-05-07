@@ -142,7 +142,7 @@ public class BoosterUI : MonoBehaviour
         }
         else if (boosterType == BoosterType.BreakObject)
         {
-            EnableBreakObjectMode();
+            Shuffle();
         }
         else if (boosterType == BoosterType.ClearScrewPorts)
         {
@@ -184,6 +184,34 @@ public class BoosterUI : MonoBehaviour
             Tween.LocalPositionX(breakModeButtonRT, -0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
             Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
         }
+
+        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
+    }
+
+    private void Shuffle()
+    {
+        if (!IsBoosterAvailable(boosterIndex: 1))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        ConsumeBooster(boosterIndex: 1);
+
+        TileManager.Ins.UseShuffleBooster();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

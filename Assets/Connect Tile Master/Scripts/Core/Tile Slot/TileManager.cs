@@ -674,6 +674,68 @@ public class TileManager : Singleton<TileManager>
             Tween.LocalPositionX(additionalTileSlots[i].transform, position.x, duration: 0.3f);
         }
     }
+
+    public void UseShuffleBooster()
+    {
+        List<ItemCategory> categoryPoolForAllTileLeft = new List<ItemCategory>();
+        List<BaseTile> tilesToShuffle = new List<BaseTile>();
+
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            BaseTile tile = tiles[i];
+
+            if (tile.IsOnSlot)
+            {
+                continue;
+            }
+
+            categoryPoolForAllTileLeft.Add(tile.ItemCategory);
+            tilesToShuffle.Add(tile);
+        }
+
+        for (int i = 0; i < itemCategoryPool.Count; i++)
+        {
+            categoryPoolForAllTileLeft.Add(itemCategoryPool[i]);
+        }
+
+        List<ItemCategory> priorityCategory = new List<ItemCategory>();
+
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            if (!tileSlotContainers[i].isLocked && !priorityCategory.Contains(tileSlotContainers[i].ItemCategory))
+            {
+                priorityCategory.Add(tileSlotContainers[i].ItemCategory);
+            }
+        }
+
+        int totalActiveTiles = tilesToShuffle.Count();
+
+        List<ItemCategory> shuffledCategory = new List<ItemCategory>();
+
+        List<ItemCategory> toRemoveCategory = new List<ItemCategory>();
+
+        for (int i = 0; i < categoryPoolForAllTileLeft.Count; i++)
+        {
+            if (priorityCategory.Contains(categoryPoolForAllTileLeft[i]) && shuffledCategory.Count(item => item == categoryPoolForAllTileLeft[i]) < 4)
+            {
+                shuffledCategory.Add(categoryPoolForAllTileLeft[i]);
+                toRemoveCategory.Remove(categoryPoolForAllTileLeft[i]);
+            }
+        }
+
+        categoryPoolForAllTileLeft.RemoveAll(item => toRemoveCategory.Contains(item));
+
+        categoryPoolForAllTileLeft.Shuffle();
+
+        int currentCategoryAdded = shuffledCategory.Count;
+
+        shuffledCategory.AddRange(categoryPoolForAllTileLeft.Take(totalActiveTiles - currentCategoryAdded));
+
+        for (int i = 0; i < tilesToShuffle.Count; i++)
+        {
+            tilesToShuffle[i].Init(shuffledCategory[i], tileIconContainer.GetRandomIconOfCategory(shuffledCategory[i]));
+        }
+    }
     #endregion
 }
 

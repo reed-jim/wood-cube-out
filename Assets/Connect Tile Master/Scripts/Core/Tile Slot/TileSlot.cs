@@ -41,6 +41,8 @@ public class TileSlot : MonoBehaviour
         {
             tile.IsOnValidSlot = true;
         }
+
+        tile.IsOnSlot = true;
     }
 
     public void ClearTile()

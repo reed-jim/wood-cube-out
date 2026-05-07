@@ -13,6 +13,7 @@ public class BaseTile : MonoBehaviour
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isOnValidSlot;
+    [SerializeField] private bool isOnSlot;
     [SerializeField] private bool isDone;
 
     public ItemCategory ItemCategory
@@ -25,6 +26,12 @@ public class BaseTile : MonoBehaviour
     {
         get => isOnValidSlot;
         set => isOnValidSlot = value;
+    }
+
+    public bool IsOnSlot
+    {
+        get => isOnSlot;
+        set => isOnSlot = value;
     }
 
     public bool IsDone
