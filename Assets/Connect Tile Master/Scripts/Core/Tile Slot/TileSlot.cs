@@ -17,6 +17,7 @@ public enum ItemCategory
 public class TileSlot : MonoBehaviour
 {
     [SerializeField] private BaseTile tile;
+    public TileSlotContainer tileSlotContainer;
 
     public bool isShelf;
 

@@ -56,18 +56,9 @@ public class TileManager : Singleton<TileManager>
             return;
         }
 
-        tileSlotContainer.Init(nextCategory);
-
-        float initialPositionY = tileSlotContainer.transform.localPosition.y;
-
-        Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
-        .OnComplete(() =>
+        tileSlotContainer.Complete(nextCategory, onCompleteAction: () =>
         {
-            Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f)
-            .OnComplete(() =>
-            {
-                MoveTilesFromShelfToBox();
-            });
+            MoveTilesFromShelfToBox();
         });
 
         remainingSet--;
@@ -80,9 +71,11 @@ public class TileManager : Singleton<TileManager>
     {
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
 
-        float initialPositionY = tileSlotContainer.transform.localPosition.y;
+        tileSlotContainer.Hide();
 
-        Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f);
+        remainingSet--;
+
+        UpdateSetCountText();
     }
 
     public void SpawnSlots()

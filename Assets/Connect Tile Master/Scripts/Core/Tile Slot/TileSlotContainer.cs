@@ -14,6 +14,7 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
     public bool isLocked;
+    public bool isMoving;
 
     public ItemCategory ItemCategory
     {
@@ -63,6 +64,11 @@ public class TileSlotContainer : MonoBehaviour
         {
             TileSlot tileSlot = tileSlots[i];
 
+            if (tileSlot.tileSlotContainer != null && tileSlot.tileSlotContainer.isMoving)
+            {
+                continue;
+            }
+
             if (tileSlot.Tile == null)
             {
                 return tileSlot;
@@ -106,5 +112,39 @@ public class TileSlotContainer : MonoBehaviour
                 lockImage.gameObject.SetActive(false);
             });
         }
+    }
+
+    public void Complete(ItemCategory nextCategory, Action onCompleteAction)
+    {
+        Init(nextCategory);
+
+        float initialPositionY = transform.localPosition.y;
+
+        isMoving = true;
+
+        Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f)
+        .OnComplete(() =>
+        {
+            Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isMoving = false;
+
+                onCompleteAction?.Invoke();
+            });
+        });
+    }
+
+    public void Hide()
+    {
+        float initialPositionY = transform.localPosition.y;
+
+        isMoving = true;
+
+        Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f)
+        .OnComplete(() =>
+        {
+            isMoving = false;
+        });
     }
 }
