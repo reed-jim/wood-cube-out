@@ -19,6 +19,9 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] private TileIconContainer tileIconContainer;
 
     public TMP_Text setCountText;
+    public RectTransform outsideBox;
+    public CanvasGroup outsideBoxCanvasGroup;
+    public TMP_Text outsideTileCountText;
 
     public int difficultyLevel;
     public int totalSet;
@@ -735,6 +738,37 @@ public class TileManager : Singleton<TileManager>
         {
             tilesToShuffle[i].Init(shuffledCategory[i], tileIconContainer.GetRandomIconOfCategory(shuffledCategory[i]));
         }
+    }
+
+    public bool IsAnyTileOnShelf()
+    {
+        return additionalTileSlots.Any(item => item.Tile != null);
+    }
+
+    public void UseSweeperBooster()
+    {
+        if (!outsideBox.gameObject.activeInHierarchy)
+        {
+            outsideBox.gameObject.SetActive(true);
+
+            outsideBoxCanvasGroup.alpha = 0;
+            Tween.Alpha(outsideBoxCanvasGroup, 1, duration: 0.3f);
+        }
+
+        for (int i = 0; i < additionalTileSlots.Count; i++)
+        {
+            TileSlot tileSlot = additionalTileSlots[i];
+
+            if (tileSlot.Tile != null)
+            {
+                tileSlot.Tile.MoveToOutsideBox();
+                tileSlot.ClearTile();
+            }
+        }
+
+        int numOutsideTile = tiles.Count(item => item.IsOutside);
+
+        outsideTileCountText.text = $"{numOutsideTile}";
     }
     #endregion
 }

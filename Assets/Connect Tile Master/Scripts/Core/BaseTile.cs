@@ -14,6 +14,7 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isOnValidSlot;
     [SerializeField] private bool isOnSlot;
+    [SerializeField] private bool isOutside;
     [SerializeField] private bool isDone;
 
     public ItemCategory ItemCategory
@@ -32,6 +33,12 @@ public class BaseTile : MonoBehaviour
     {
         get => isOnSlot;
         set => isOnSlot = value;
+    }
+
+    public bool IsOutside
+    {
+        get => isOutside;
+        set => isOutside = value;
     }
 
     public bool IsDone
@@ -71,5 +78,13 @@ public class BaseTile : MonoBehaviour
         transform.SetAsLastSibling();
 
         TileManager.Ins.MoveTileToSlot(this);
+    }
+
+    public void MoveToOutsideBox()
+    {
+        Tween.Position(transform, TileManager.Ins.outsideBox.transform.position, duration: 0.3f);
+        Tween.Alpha(icon, 0, duration: 0.3f);
+
+        IsOutside = true;
     }
 }

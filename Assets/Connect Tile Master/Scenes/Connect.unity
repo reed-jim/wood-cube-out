@@ -8222,6 +8222,9 @@ MonoBehaviour:
   grids: []
   tileIconContainer: {fileID: 11400000, guid: d955bdbcab39aec4381245f6888fdf85, type: 2}
   setCountText: {fileID: 371161563}
+  outsideBox: {fileID: 2029138975}
+  outsideBoxCanvasGroup: {fileID: 2029138979}
+  outsideTileCountText: {fileID: 1610101183}
   difficultyLevel: 0
   totalSet: 10
   totalSlotInShelf: 0
@@ -9643,6 +9646,7 @@ GameObject:
   - component: {fileID: 2029138978}
   - component: {fileID: 2029138977}
   - component: {fileID: 2029138976}
+  - component: {fileID: 2029138979}
   m_Layer: 5
   m_Name: Box For Outside Screws
   m_TagString: Untagged
@@ -9722,6 +9726,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   container: {fileID: 2029138975}
   numberText: {fileID: 1610101183}
+--- !u!225 &2029138979
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2029138974}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &2078829275
 GameObject:
   m_ObjectHideFlags: 0

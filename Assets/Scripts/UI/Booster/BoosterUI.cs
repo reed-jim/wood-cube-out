@@ -279,7 +279,7 @@ public class BoosterUI : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
-        if (screwBoxesObserver.NumScrewInScrewPorts == 0)
+        if (!TileManager.Ins.IsAnyTileOnShelf())
         {
             // shakeScrewPortsEvent?.Invoke();
             showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
@@ -303,7 +303,8 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        clearAllScrewPortsEvent?.Invoke();
+        TileManager.Ins.UseSweeperBooster();
+        // clearAllScrewPortsEvent?.Invoke();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 
