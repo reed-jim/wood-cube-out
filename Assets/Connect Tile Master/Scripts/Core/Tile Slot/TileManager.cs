@@ -57,7 +57,11 @@ public class TileManager : Singleton<TileManager>
             {
                 tileSlotContainer.ClearTiles();
 
-                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
+                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    MoveTilesFromShelfToBox();
+                });
             });
 
             remainingSet--;
@@ -177,15 +181,15 @@ public class TileManager : Singleton<TileManager>
         //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
         // }
 
-        // for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
-        // {
-        //     if (itemCategoryPool.Contains(sortedCategory[i]))
-        //     {
-        //         itemCategoryPool.Remove(sortedCategory[i]);
+        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        {
+            if (itemCategoryPool.Contains(sortedCategory[i]))
+            {
+                itemCategoryPool.Remove(sortedCategory[i]);
 
-        //         return sortedCategory[i];
-        //     }
-        // }
+                return sortedCategory[i];
+            }
+        }
 
         // fallback return first value of itemCategoryPool
         ItemCategory nextCategory = itemCategoryPool.First();
@@ -293,7 +297,9 @@ public class TileManager : Singleton<TileManager>
 
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
-                            if (remainingSet > 0)
+                            bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+
+                            if (remainingSet > 0 && isAnyRemainingTile)
                             {
                                 SpawnSlot(index);
                             }
@@ -321,6 +327,34 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    public void MoveTileToSlotFromShelf(BaseTile tile, TileSlot slot, int tileSlotContainerIndex)
+    {
+        TileSlotContainer tileSlotContainer = tileSlotContainers[tileSlotContainerIndex];
+
+        Tween.Position(tile.transform, slot.transform.position, duration: 0.3f).OnComplete(() =>
+        {
+            tile.transform.SetParent(slot.transform);
+
+            if (tileSlotContainer.IsLastSlot(slot))
+            {
+                bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+
+                if (remainingSet > 0 && isAnyRemainingTile)
+                {
+                    SpawnSlot(tileSlotContainerIndex);
+                }
+                else
+                {
+                    HideSlot(tileSlotContainerIndex);
+                }
+            }
+
+            // DropTileDown(tile);
+        });
+
+        slot.AddTile(tile);
+    }
+
     private void MoveTileToAdditionalSlot(BaseTile tile)
     {
         for (int i = 0; i < additionalTileSlots.Count; i++)
@@ -340,6 +374,51 @@ public class TileManager : Singleton<TileManager>
 
                 break;
             }
+        }
+    }
+
+    private void MoveTilesFromShelfToBox()
+    {
+        for (int i = 0; i < additionalTileSlots.Count; i++)
+        {
+            TileSlot tileSlot = additionalTileSlots[i];
+
+            if (tileSlot.Tile != null)
+            {
+                TileSlot validTileSlot = GetEmptyTileSlot(tileSlot.Tile, out int tileSlotContainerIndex);
+
+                if (validTileSlot != null)
+                {
+                    MoveTileToSlotFromShelf(tileSlot.Tile, validTileSlot, tileSlotContainerIndex);
+
+                    tileSlot.ClearTile();
+                }
+            }
+        }
+
+        TileSlot GetEmptyTileSlot(BaseTile tile, out int tileSlotContainerIndex)
+        {
+            tileSlotContainerIndex = 0;
+
+            for (int i = 0; i < tileSlotContainers.Count; i++)
+            {
+                if (tileSlotContainers[i].isLocked)
+                {
+                    continue;
+                }
+
+                for (int j = 0; j < tileSlotContainers[i].TileSlots.Length; j++)
+                {
+                    if (tileSlotContainers[i].ItemCategory == tile.ItemCategory && tileSlotContainers[i].TileSlots[j].Tile == null)
+                    {
+                        tileSlotContainerIndex = i;
+
+                        return tileSlotContainers[i].TileSlots[j];
+                    }
+                }
+            }
+
+            return null;
         }
     }
 
