@@ -10,7 +10,8 @@ public enum ItemCategory
     Vacation,
     School,
     Fruit,
-    Fastfood
+    Fastfood,
+    None
 }
 
 public class TileSlot : MonoBehaviour
@@ -31,7 +32,7 @@ public class TileSlot : MonoBehaviour
 
         if (!isShelf)
         {
-            tile.IsDone = true;
+            tile.IsOnValidSlot = true;
         }
     }
 

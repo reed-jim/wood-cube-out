@@ -12,12 +12,19 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private TMP_Text category;
 
     [SerializeField] private ItemCategory itemCategory;
+    [SerializeField] private bool isOnValidSlot;
     [SerializeField] private bool isDone;
 
     public ItemCategory ItemCategory
     {
         get => itemCategory;
         set => itemCategory = value;
+    }
+
+    public bool IsOnValidSlot
+    {
+        get => isOnValidSlot;
+        set => isOnValidSlot = value;
     }
 
     public bool IsDone
@@ -46,7 +53,8 @@ public class BaseTile : MonoBehaviour
 
         UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
 
-        isDone = false;
+        IsOnValidSlot = false;
+        IsDone = false;
     }
 
     private void Select()

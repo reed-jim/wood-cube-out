@@ -25,6 +25,7 @@ public class TileManager : Singleton<TileManager>
 
     private List<ItemCategory> itemCategoryPool;
     private int remainingSet;
+    private int remainingSlotContainer;
     private float highestYGridPosition;
 
     protected override void MoreActionOnAwake()
@@ -42,32 +43,37 @@ public class TileManager : Singleton<TileManager>
 
     public void SpawnSlot(int slotIndex)
     {
-        ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel);
-
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
 
-        if (!tileSlotContainer.IsActive)
+        tileSlotContainer.ClearTiles();
+
+        ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel);
+
+        if (nextCategory == ItemCategory.None)
         {
-            tileSlotContainer.Init(nextCategory);
+            HideSlot(slotIndex);
 
-            float initialPositionY = tileSlotContainer.transform.localPosition.y;
+            return;
+        }
 
-            Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
+        tileSlotContainer.Init(nextCategory);
+
+        float initialPositionY = tileSlotContainer.transform.localPosition.y;
+
+        Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
+        .OnComplete(() =>
+        {
+            Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f)
             .OnComplete(() =>
             {
-                tileSlotContainer.ClearTiles();
-
-                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f)
-                .OnComplete(() =>
-                {
-                    MoveTilesFromShelfToBox();
-                });
+                MoveTilesFromShelfToBox();
             });
+        });
 
-            remainingSet--;
+        remainingSet--;
+        remainingSlotContainer--;
 
-            UpdateSetCountText();
-        }
+        UpdateSetCountText();
     }
 
     public void HideSlot(int slotIndex)
@@ -87,27 +93,24 @@ public class TileManager : Singleton<TileManager>
         {
             TileSlotContainer tileSlotContainer = tileSlotContainers[i];
 
-            if (!tileSlotContainer.IsActive)
+            if (categories.Count > 0)
             {
-                if (categories.Count > 0)
-                {
-                    tileSlotContainer.Init(categories[0]);
-                }
-                else
-                {
-                    tileSlotContainer.Init();
-                }
-
-                float initialPositionY = tileSlotContainer.transform.localPosition.y;
-
-                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
-                .OnComplete(() =>
-                {
-                    tileSlotContainer.ClearTiles();
-
-                    Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
-                });
+                tileSlotContainer.Init(categories[0]);
             }
+            else
+            {
+                tileSlotContainer.Init();
+            }
+
+            float initialPositionY = tileSlotContainer.transform.localPosition.y;
+
+            Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
+            .OnComplete(() =>
+            {
+                tileSlotContainer.ClearTiles();
+
+                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
+            });
 
             if (categories.Count > 0)
             {
@@ -246,7 +249,7 @@ public class TileManager : Singleton<TileManager>
         {
             if (!tileSlotContainers.Any(item => item.ItemCategory == sortedCategory[i]))
             {
-                int remaningTileOfCategory = tiles.Where(i => !i.IsDone).Count(item => item.ItemCategory == sortedCategory[i]) +
+                int remaningTileOfCategory = tiles.Where(i => !i.IsOnValidSlot).Count(item => item.ItemCategory == sortedCategory[i]) +
                     itemCategoryPool.Count(item => item == sortedCategory[i]);
 
                 if (remaningTileOfCategory >= 4)
@@ -258,7 +261,7 @@ public class TileManager : Singleton<TileManager>
 
         for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
         {
-            int remaningTileOfCategory = tiles.Where(i => !i.IsDone).Count(item => item.ItemCategory == sortedCategory[i]) +
+            int remaningTileOfCategory = tiles.Where(i => !i.IsOnValidSlot).Count(item => item.ItemCategory == sortedCategory[i]) +
                     itemCategoryPool.Count(item => item == sortedCategory[i]);
 
             if (remaningTileOfCategory >= 4)
@@ -267,7 +270,7 @@ public class TileManager : Singleton<TileManager>
             }
         }
 
-        return GetNextCategory();
+        return ItemCategory.None;
     }
 
     public void MoveTileToSlot(BaseTile tile)
@@ -299,7 +302,7 @@ public class TileManager : Singleton<TileManager>
                         {
                             bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
 
-                            if (remainingSet > 0 && isAnyRemainingTile)
+                            if (remainingSlotContainer > 0 && isAnyRemainingTile)
                             {
                                 SpawnSlot(index);
                             }
@@ -339,7 +342,7 @@ public class TileManager : Singleton<TileManager>
             {
                 bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
 
-                if (remainingSet > 0 && isAnyRemainingTile)
+                if (remainingSlotContainer > 0 && isAnyRemainingTile)
                 {
                     SpawnSlot(tileSlotContainerIndex);
                 }
@@ -462,6 +465,8 @@ public class TileManager : Singleton<TileManager>
             {
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
 
+                tiles.Add(tile);
+
                 Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
 
                 tile.transform.SetParent(tileContainer);
@@ -519,6 +524,7 @@ public class TileManager : Singleton<TileManager>
         float bottomMost = 0;
 
         remainingSet = totalSet;
+        remainingSlotContainer = totalSet - 2;
 
         UpdateSetCountText();
 
