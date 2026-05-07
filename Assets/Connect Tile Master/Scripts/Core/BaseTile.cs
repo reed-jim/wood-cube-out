@@ -8,7 +8,7 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image containerImage;
-    [SerializeField] private Image icon;
+    [SerializeField] public Image icon;
     [SerializeField] private TMP_Text category;
 
     [SerializeField] private ItemCategory itemCategory;

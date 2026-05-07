@@ -66,6 +66,7 @@ public class TileManager : Singleton<TileManager>
         tileSlotContainer.Complete(nextCategory, onCompleteAction: () =>
         {
             MoveTilesFromShelfToBox();
+            MoveTilesFromOutsideBoxToSlots();
         });
 
         remainingSet--;
@@ -610,6 +611,15 @@ public class TileManager : Singleton<TileManager>
         SaferioTween.Punch(setCountText.transform, 0.1f);
     }
 
+    private void UpdateOutsideTileCountText()
+    {
+        int numOutsideTile = tiles.Count(item => item.IsOutside);
+
+        outsideTileCountText.text = $"{numOutsideTile}";
+
+        SaferioTween.Punch(outsideTileCountText.transform, 0.1f);
+    }
+
     #region Util
     private int GetRandomRow(int col, int minRow, int maxRow, int maxTries = 50)
     {
@@ -766,9 +776,78 @@ public class TileManager : Singleton<TileManager>
             }
         }
 
-        int numOutsideTile = tiles.Count(item => item.IsOutside);
+        UpdateOutsideTileCountText();
+    }
 
-        outsideTileCountText.text = $"{numOutsideTile}";
+    public void MoveTilesFromOutsideBoxToSlots()
+    {
+        for (int i = 0; i < tiles.Count; i++)
+        {
+            BaseTile tile = tiles[i];
+
+            if (tile.IsOutside)
+            {
+                bool isFound = MoveTileToSlot(tile);
+
+                if (isFound)
+                {
+                    tile.IsOutside = false;
+                }
+            }
+        }
+
+        bool MoveTileToSlot(BaseTile tile)
+        {
+            for (int i = 0; i < tileSlotContainers.Count; i++)
+            {
+                int index = i;
+
+                TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+                if (tileSlotContainer.isLocked)
+                {
+                    continue;
+                }
+
+                if (tileSlotContainer.ItemCategory == tile.ItemCategory)
+                {
+                    TileSlot tileSlot = tileSlotContainer.GetAvailableTileSlot();
+
+                    if (tileSlot != null)
+                    {
+                        Tween.Alpha(tile.icon, 1, duration: 0.3f);
+                        Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
+                        {
+                            tile.transform.SetParent(tileSlot.transform);
+
+                            if (tileSlotContainer.IsLastSlot(tileSlot))
+                            {
+                                bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+
+                                if (remainingSlotContainer > 0 && isAnyRemainingTile)
+                                {
+                                    SpawnSlot(index);
+                                }
+                                else
+                                {
+                                    HideSlot(index);
+                                }
+                            }
+
+                            tile.IsOutside = false;
+
+                            UpdateOutsideTileCountText();
+                        });
+
+                        tileSlot.AddTile(tile);
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
     }
     #endregion
 }

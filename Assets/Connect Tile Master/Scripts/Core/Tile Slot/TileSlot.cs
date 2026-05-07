@@ -52,9 +52,9 @@ public class TileSlot : MonoBehaviour
             if (!isShelf)
             {
                 tile.gameObject.SetActive(false);
+                tile.IsDone = true;
             }
 
-            tile.IsDone = true;
             tile = null;
         }
     }
