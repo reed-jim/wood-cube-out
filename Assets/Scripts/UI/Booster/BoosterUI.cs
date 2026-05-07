@@ -170,7 +170,8 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 0);
 
-        addMoreScrewPortEvent?.Invoke();
+        TileManager.Ins.UseAddHoleBooster();
+        // addMoreScrewPortEvent?.Invoke();
 
         _numScrewPortsAdded++;
 

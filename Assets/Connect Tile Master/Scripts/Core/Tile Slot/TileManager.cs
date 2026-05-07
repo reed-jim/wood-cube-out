@@ -22,6 +22,7 @@ public class TileManager : Singleton<TileManager>
 
     public int difficultyLevel;
     public int totalSet;
+    public int totalSlotInShelf;
 
     private List<ItemCategory> itemCategoryPool;
     private int remainingSet;
@@ -32,6 +33,9 @@ public class TileManager : Singleton<TileManager>
     {
         base.MoreActionOnAwake();
 
+        totalSlotInShelf = 5;
+
+        ArrangeSlotsInShelf();
         SpawnTiles();
         SpawnSlots();
     }
@@ -357,7 +361,7 @@ public class TileManager : Singleton<TileManager>
         {
             TileSlot tileSlot = additionalTileSlots[i];
 
-            if (additionalTileSlots[i].Tile == null)
+            if (!additionalTileSlots[i].isLocked && additionalTileSlots[i].Tile == null)
             {
                 tile.transform.SetParent(tileSlot.transform);
 
@@ -633,6 +637,42 @@ public class TileManager : Singleton<TileManager>
         // Absolute guarantee fallback (if range somehow invalid)
         // Clamp to nearest valid value (even outside range if needed)
         return ((minRow + step - 1) / step) * step;
+    }
+    #endregion
+
+    #region Booster
+    public void UseAddHoleBooster()
+    {
+        if (totalSlotInShelf < 7)
+        {
+            totalSlotInShelf++;
+
+            ArrangeSlotsInShelf();
+        }
+    }
+
+    private void ArrangeSlotsInShelf()
+    {
+        float distance = 1.15f * additionalTileSlots[0].Size.x;
+        float totalWidth = (totalSlotInShelf - 1) * distance;
+
+        Vector3 position = additionalTileSlots[0].transform.localPosition;
+
+        for (int i = 0; i < additionalTileSlots.Count; i++)
+        {
+            if (!additionalTileSlots[i].gameObject.activeInHierarchy)
+            {
+                additionalTileSlots[i].containerImage.color = additionalTileSlots[i].containerImage.color.ChangeAlpha(0);
+                Tween.Alpha(additionalTileSlots[i].containerImage, 1, duration: 0.3f);
+            }
+
+            additionalTileSlots[i].gameObject.SetActive(i < totalSlotInShelf);
+            additionalTileSlots[i].isLocked = i >= totalSlotInShelf;
+
+            position.x = -totalWidth / 2f + i * distance;
+
+            Tween.LocalPositionX(additionalTileSlots[i].transform, position.x, duration: 0.3f);
+        }
     }
     #endregion
 }
