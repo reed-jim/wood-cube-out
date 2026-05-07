@@ -32,6 +32,8 @@ public class TileManager : Singleton<TileManager>
     private int remainingSlotContainer;
     private float highestYGridPosition;
 
+    public static event Action loseLevelEvent;
+
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -372,12 +374,30 @@ public class TileManager : Singleton<TileManager>
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
                     DropTileDown(tile);
+
+                    if (IsAllShelfFilled())
+                    {
+                        loseLevelEvent?.Invoke();
+                    }
                 });
 
                 additionalTileSlots[i].AddTile(tile);
 
                 break;
             }
+        }
+
+        bool IsAllShelfFilled()
+        {
+            for (int i = 0; i < additionalTileSlots.Count; i++)
+            {
+                if (!additionalTileSlots[i].isLocked && additionalTileSlots[i].Tile == null)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 
