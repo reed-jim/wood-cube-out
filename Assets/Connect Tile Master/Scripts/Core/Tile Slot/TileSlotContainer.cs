@@ -99,7 +99,12 @@ public class TileSlotContainer : MonoBehaviour
         }
     }
 
-    private void Unlock()
+    public void Unlock()
+    {
+        Unlock(onCompleteAction: null);
+    }
+
+    public void Unlock(Action onCompleteAction = null)
     {
         if (isLocked)
         {
@@ -111,6 +116,10 @@ public class TileSlotContainer : MonoBehaviour
             {
                 lockImage.gameObject.SetActive(false);
             });
+
+            isLocked = false;
+
+            onCompleteAction?.Invoke();
         }
     }
 

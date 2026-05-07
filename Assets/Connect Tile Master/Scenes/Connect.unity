@@ -437,60 +437,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 8684835883523114881, guid: ea94835eea8881f47a7755efc59184c4, type: 3}
   m_PrefabInstance: {fileID: 101923060}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &116079552
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 116079554}
-  - component: {fileID: 116079553}
-  m_Layer: 0
-  m_Name: Screw Box Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &116079553
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 116079552}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 184576b5d7a1d6f408159fc29e766cbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  screwBoxs: []
-  screwPorts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  screwPortsContainer: {fileID: 0}
-  screwBoxesObserver: {fileID: 11400000, guid: 4267c2c43005a7e4ab25c441ead4cb81, type: 2}
-  maxScrewBox: 4
---- !u!4 &116079554
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 116079552}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 116653387}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &116653386
 GameObject:
   m_ObjectHideFlags: 0
@@ -521,11 +467,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 480106035}
-  - {fileID: 563355290}
-  - {fileID: 116079554}
   - {fileID: 1256248090}
-  - {fileID: 162160019}
-  - {fileID: 271252337}
   - {fileID: 1065252652}
   - {fileID: 763648335}
   m_Father: {fileID: 0}
@@ -767,53 +709,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &162160018
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 162160019}
-  - component: {fileID: 162160020}
-  m_Layer: 0
-  m_Name: Screws Data Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &162160019
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162160018}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 116653387}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &162160020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 162160018}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8a332b071f535b49819750da6b16821, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _screws: []
-  screwBoxManager: {fileID: 116079553}
-  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
 --- !u!1 &162926987
 GameObject:
   m_ObjectHideFlags: 0
@@ -1354,52 +1249,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 7163538139800953621, guid: df7a374f7318b6441bdd33308f1b4300, type: 3}
   m_PrefabInstance: {fileID: 270534592}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &271252336
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 271252337}
-  - component: {fileID: 271252338}
-  m_Layer: 0
-  m_Name: Gameplay Cameras Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &271252337
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271252336}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 116653387}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &271252338
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 271252336}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4eb17065898ce8b499ac2284ed7505c7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
-  screwBoxCamera: {fileID: 0}
 --- !u!1 &283071721
 GameObject:
   m_ObjectHideFlags: 0
@@ -2386,28 +2235,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
---- !u!114 &480106033 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2145302381934619659, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
-  m_PrefabInstance: {fileID: 480106032}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93ab0e7bb935f254888401d200921b7a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &480106034 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7131112291935146004, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
-  m_PrefabInstance: {fileID: 480106032}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17988a5334a4a1a4c8754a42cf5582c3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &480106035 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6962531599927443505, guid: db139e3a86c74804185dc5e971ae4f1c, type: 3}
@@ -2488,80 +2315,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533372534}
   m_CullTransparentMesh: 1
---- !u!1001 &563355289
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 116653387}
-    m_Modifications:
-    - target: {fileID: 1304272934781682532, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_Name
-      value: Screw Manager
-      objectReference: {fileID: 0}
-    - target: {fileID: 4949786465380883905, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: screwBoxManager
-      value: 
-      objectReference: {fileID: 116079553}
-    - target: {fileID: 4949786465380883905, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: lockScrewColorLevelManager
-      value: 
-      objectReference: {fileID: 480106034}
-    - target: {fileID: 4949786465380883905, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: rustyScrewSpecialLevelManager
-      value: 
-      objectReference: {fileID: 480106033}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
---- !u!4 &563355290 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 9042227251833059740, guid: 2d77af1f397273246ad1eaa70de03299, type: 3}
-  m_PrefabInstance: {fileID: 563355289}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &575262178
 PrefabInstance:
   m_ObjectHideFlags: 0

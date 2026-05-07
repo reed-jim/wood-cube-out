@@ -6,6 +6,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using static GameEnum;
 
 public class TileManager : Singleton<TileManager>
 {
@@ -32,17 +33,26 @@ public class TileManager : Singleton<TileManager>
     private int remainingSlotContainer;
     private float highestYGridPosition;
 
+    public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
+
     public static event Action loseLevelEvent;
 
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
 
+        RevivePopup.reviveEvent += OnRevive;
+
         totalSlotInShelf = 5;
 
         ArrangeSlotsInShelf();
         SpawnTiles();
         SpawnSlots();
+    }
+
+    void OnDestroy()
+    {
+        RevivePopup.reviveEvent -= OnRevive;
     }
 
     public void AddTile(BaseTile tile)
@@ -639,6 +649,32 @@ public class TileManager : Singleton<TileManager>
 
         SaferioTween.Punch(outsideTileCountText.transform, 0.1f);
     }
+
+    #region Event
+    private void OnRevive(BoosterType boosterType)
+    {
+        if (boosterType == BoosterType.UnlockScrewBox)
+        {
+            for (int i = 0; i < tileSlotContainers.Count; i++)
+            {
+                TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+                if (tileSlotContainer.isLocked)
+                {
+                    tileSlotContainer.Unlock(() =>
+                    {
+                        MoveTilesFromShelfToBox();
+                        MoveTilesFromOutsideBoxToSlots();
+                    });
+                }
+            }
+        }
+        else
+        {
+            UseSweeperBooster();
+        }
+    }
+    #endregion
 
     #region Util
     private int GetRandomRow(int col, int minRow, int maxRow, int maxTries = 50)

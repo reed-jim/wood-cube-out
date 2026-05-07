@@ -31,9 +31,8 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        if (_gameStateMachine.ScrewBoxesObserver.NumLockedScrewBoxes == 0)
+        if (TileManager.Ins.NumLockedTileSlotContainer == 0)
         {
-            // loseLevelEvent?.Invoke();
             showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
         }
         else
