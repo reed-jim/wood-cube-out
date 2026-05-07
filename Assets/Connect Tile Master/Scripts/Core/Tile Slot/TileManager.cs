@@ -10,15 +10,13 @@ using static GameEnum;
 
 public class TileManager : Singleton<TileManager>
 {
-    public RectTransform tileContainer;
-
     [SerializeField] private List<TileSlotContainer> tileSlotContainers;
     [SerializeField] private List<TileSlot> additionalTileSlots;
     [SerializeField] private List<BaseTile> tiles;
     [SerializeField] private Grid[] grids;
-
     [SerializeField] private TileIconContainer tileIconContainer;
 
+    public RectTransform tileContainer;
     public TMP_Text setCountText;
     public RectTransform outsideBox;
     public CanvasGroup outsideBoxCanvasGroup;
@@ -27,7 +25,6 @@ public class TileManager : Singleton<TileManager>
     public int difficultyLevel;
     public int totalSet;
     public int totalSlotInShelf;
-
     private List<ItemCategory> itemCategoryPool;
     private int remainingSet;
     private int remainingSlotContainer;
@@ -37,6 +34,7 @@ public class TileManager : Singleton<TileManager>
 
     public static event Action loseLevelEvent;
 
+    #region Life Cycle
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -54,12 +52,9 @@ public class TileManager : Singleton<TileManager>
     {
         RevivePopup.reviveEvent -= OnRevive;
     }
+    #endregion
 
-    public void AddTile(BaseTile tile)
-    {
-        tiles.Add(tile);
-    }
-
+    #region Slot
     public void SpawnSlot(int slotIndex)
     {
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
@@ -131,17 +126,9 @@ public class TileManager : Singleton<TileManager>
             }
         }
     }
+    #endregion
 
-    private ItemCategory GetNextCategory()
-    {
-        return tiles
-            .Where(item => !item.IsDone)
-            .GroupBy(t => t.ItemCategory)
-            .OrderByDescending(g => g.Count())
-            .First()
-            .Key;
-    }
-
+    #region Category
     private List<ItemCategory> GetNextCategories(int n)
     {
         return tiles
@@ -286,6 +273,29 @@ public class TileManager : Singleton<TileManager>
         return ItemCategory.None;
     }
 
+    private List<ItemCategory> GetItemCategoryPool(int totalSet)
+    {
+        List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
+
+        ItemCategory currentItemCategory = ItemCategory.Vegetable;
+
+        for (int i = 0; i < totalSet * 4; i++)
+        {
+            if (i % 4 == 0)
+            {
+                currentItemCategory = (ItemCategory)UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
+            }
+
+            itemCategoryPool.Add(currentItemCategory);
+        }
+
+        itemCategoryPool.Shuffle();
+
+        return itemCategoryPool;
+    }
+    #endregion
+
+    #region Move Tiles  
     public void MoveTileToSlot(BaseTile tile)
     {
         bool isFound = false;
@@ -482,7 +492,9 @@ public class TileManager : Singleton<TileManager>
 
         SpawnTilesForEmptyGrid();
     }
+    #endregion
 
+    #region Spawn Tiles
     private void SpawnTilesForEmptyGrid()
     {
         if (itemCategoryPool.Count <= 0)
@@ -512,27 +524,6 @@ public class TileManager : Singleton<TileManager>
                 grids[i].tile = tile;
             }
         }
-    }
-
-    private List<ItemCategory> GetItemCategoryPool(int totalSet)
-    {
-        List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
-
-        ItemCategory currentItemCategory = ItemCategory.Vegetable;
-
-        for (int i = 0; i < totalSet * 4; i++)
-        {
-            if (i % 4 == 0)
-            {
-                currentItemCategory = (ItemCategory)UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
-            }
-
-            itemCategoryPool.Add(currentItemCategory);
-        }
-
-        itemCategoryPool.Shuffle();
-
-        return itemCategoryPool;
     }
 
     private void SpawnTiles()
@@ -633,7 +624,9 @@ public class TileManager : Singleton<TileManager>
             return tile;
         }
     }
+    #endregion
 
+    #region Text
     private void UpdateSetCountText()
     {
         setCountText.text = $"{remainingSet}/{totalSet}";
@@ -649,6 +642,7 @@ public class TileManager : Singleton<TileManager>
 
         SaferioTween.Punch(outsideTileCountText.transform, 0.1f);
     }
+    #endregion
 
     #region Event
     private void OnRevive(BoosterType boosterType)
