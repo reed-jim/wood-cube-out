@@ -335,10 +335,10 @@ public static class CommonUtil
         return array[UnityEngine.Random.Range(0, array.Length)];
     }
 
-    public static T GetRandomEnumValue<T>()
+    public static T GetRandomEnumValue<T>(int numLastValuesToSkip = 0)
     {
         T[] values = (T[])System.Enum.GetValues(typeof(T));
-        return values[UnityEngine.Random.Range(0, values.Length)];
+        return values[UnityEngine.Random.Range(0, values.Length - numLastValuesToSkip)];
     }
     #endregion
 
