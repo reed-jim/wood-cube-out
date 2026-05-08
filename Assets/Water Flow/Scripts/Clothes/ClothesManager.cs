@@ -1,0 +1,68 @@
+using System.Collections;
+using System.Collections.Generic;
+using Dreamteck.Splines;
+using Saferio.Util.SaferioTween;
+using UnityEngine;
+
+public class ClothesManager : Singleton<ClothesManager>
+{
+    public List<LoopPathSlot> loopPathSlots;
+    public List<ClothingPiece> clothingPieces;
+
+    public SplineComputer loopPath;
+
+    public float moveSpeed;
+    public float normalizedDistance;
+
+    void Start()
+    {
+        SetupSlots();
+        StartCoroutine(RunTheQueue());
+    }
+
+    private void SetupSlots()
+    {
+        for (int i = 0; i < loopPathSlots.Count; i++)
+        {
+            LoopPathSlot loopPathSlot = loopPathSlots[i];
+            ClothingPiece clothingPiece = clothingPieces[i];
+
+            loopPathSlot.AddClothingPiece(clothingPiece);
+        }
+    }
+
+    private IEnumerator RunTheQueue()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60);
+
+        normalizedDistance = 1f / loopPathSlots.Count;
+
+        for (int i = 0; i < loopPathSlots.Count; i++)
+        {
+            LoopPathSlot loopPathSlot = loopPathSlots[i];
+
+            loopPathSlot.percentInLoopPath = i * normalizedDistance;
+        }
+
+        while (true)
+        {
+            for (int i = 0; i < loopPathSlots.Count; i++)
+            {
+                LoopPathSlot loopPathSlot = loopPathSlots[i];
+
+                SplineSample sample = loopPath.Evaluate(loopPathSlot.percentInLoopPath);
+
+                loopPathSlot.transform.position = sample.position.ChangeZ(loopPathSlot.transform.position.z);
+
+                loopPathSlot.percentInLoopPath -= moveSpeed;
+
+                if (loopPathSlot.percentInLoopPath < 0)
+                {
+                    loopPathSlot.percentInLoopPath = 1;
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+}
