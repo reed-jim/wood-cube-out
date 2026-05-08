@@ -2,15 +2,10 @@ using UnityEngine;
 
 public class WashingMachineItem : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public int number;
 
-    // Update is called once per frame
-    void Update()
+    public void Select()
     {
-        
+        WashingMachineManager.Ins.MoveItemToSlot(this);
     }
 }

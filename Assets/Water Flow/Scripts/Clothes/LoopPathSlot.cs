@@ -13,4 +13,9 @@ public class LoopPathSlot : MonoBehaviour
 
         this.clothingPiece = clothingPiece;
     }
+
+    public void Clear()
+    {
+        clothingPiece = null;
+    }
 }
