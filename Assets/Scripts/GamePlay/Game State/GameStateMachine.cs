@@ -35,6 +35,7 @@ namespace NamPhuThuy.GamePlay
         {
             LevelLoader.startLevelEvent += EnterPlayingState;
             ScrewManager.winLevelEvent += EnterWinState;
+            TileManager.winLevelEvent += EnterWinState;
             ScrewBoxManager.loseLevelEvent += EnterLoseState;
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
@@ -47,6 +48,7 @@ namespace NamPhuThuy.GamePlay
         {
             LevelLoader.startLevelEvent -= EnterPlayingState;
             ScrewManager.winLevelEvent -= EnterWinState;
+            TileManager.winLevelEvent -= EnterWinState;
             ScrewBoxManager.loseLevelEvent -= EnterLoseState;
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;

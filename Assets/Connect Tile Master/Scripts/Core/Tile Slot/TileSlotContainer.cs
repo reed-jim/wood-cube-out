@@ -144,7 +144,7 @@ public class TileSlotContainer : MonoBehaviour
         });
     }
 
-    public void Hide()
+    public void Hide(Action onCompleteAction)
     {
         float initialPositionY = transform.localPosition.y;
 
@@ -154,6 +154,8 @@ public class TileSlotContainer : MonoBehaviour
         .OnComplete(() =>
         {
             isMoving = false;
+
+            onCompleteAction?.Invoke();
         });
     }
 }

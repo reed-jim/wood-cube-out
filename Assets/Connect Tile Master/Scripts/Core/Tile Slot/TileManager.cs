@@ -23,15 +23,17 @@ public class TileManager : Singleton<TileManager>
     public TMP_Text outsideTileCountText;
 
     public int difficultyLevel;
-    public int totalSet;
     public int totalSlotInShelf;
     private List<ItemCategory> itemCategoryPool;
+    private int totalSet;
     private int remainingSet;
     private int remainingSlotContainer;
     private float highestYGridPosition;
+    public LevelItem levelItem;
 
     public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
 
+    public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
 
     #region Life Cycle
@@ -44,13 +46,20 @@ public class TileManager : Singleton<TileManager>
         totalSlotInShelf = 5;
 
         ArrangeSlotsInShelf();
-        SpawnTiles();
+        SetupLevel(levelItem);
         SpawnSlots();
     }
 
     void OnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
+    }
+    #endregion
+
+    #region Level
+    private void SetupLevel(LevelItem levelItem)
+    {
+        SpawnTiles(levelItem.poolCategory.Length);
     }
     #endregion
 
@@ -86,7 +95,10 @@ public class TileManager : Singleton<TileManager>
     {
         TileSlotContainer tileSlotContainer = tileSlotContainers[slotIndex];
 
-        tileSlotContainer.Hide();
+        tileSlotContainer.Hide(() =>
+        {
+            CheckWinLevel();
+        });
 
         remainingSet--;
 
@@ -283,7 +295,7 @@ public class TileManager : Singleton<TileManager>
         {
             if (i % 4 == 0)
             {
-                currentItemCategory = (ItemCategory)UnityEngine.Random.Range(0, tileIconContainer.categoryIconSets.Length);
+                currentItemCategory = levelItem.poolCategory[i / 4];
             }
 
             itemCategoryPool.Add(currentItemCategory);
@@ -526,7 +538,7 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
-    private void SpawnTiles()
+    private void SpawnTiles(int totalSet)
     {
         int col = 5;
         int row = GetRandomRow(col, 4, 6);
@@ -545,6 +557,7 @@ public class TileManager : Singleton<TileManager>
         float topMost = 0;
         float bottomMost = 0;
 
+        this.totalSet = totalSet;
         remainingSet = totalSet;
         remainingSlotContainer = totalSet - 2;
 
@@ -897,6 +910,16 @@ public class TileManager : Singleton<TileManager>
             }
 
             return false;
+        }
+    }
+    #endregion
+
+    #region Win Level
+    private void CheckWinLevel()
+    {
+        if (remainingSet <= 0)
+        {
+            winLevelEvent?.Invoke();
         }
     }
     #endregion
