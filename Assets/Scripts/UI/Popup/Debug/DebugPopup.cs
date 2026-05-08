@@ -94,7 +94,8 @@ public class DebugPopup : BasePopup
     {
         AddCoin();
 
-        startAutoTestLevelEvent?.Invoke();
+        AutoplayManager.Ins.StartAutoplay();
+        // startAutoTestLevelEvent?.Invoke();
 
         Hide();
     }

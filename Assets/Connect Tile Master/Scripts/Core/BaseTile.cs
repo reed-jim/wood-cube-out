@@ -71,7 +71,7 @@ public class BaseTile : MonoBehaviour
         IsDone = false;
     }
 
-    private void Select()
+    public void Select()
     {
         Tween.Alpha(containerImage, 0, duration: 0.3f);
 

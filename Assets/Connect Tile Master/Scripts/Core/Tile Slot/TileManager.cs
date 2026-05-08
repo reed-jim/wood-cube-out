@@ -12,7 +12,7 @@ public class TileManager : Singleton<TileManager>
 {
     [SerializeField] private List<TileSlotContainer> tileSlotContainers;
     [SerializeField] private List<TileSlot> additionalTileSlots;
-    [SerializeField] private List<BaseTile> tiles;
+    [SerializeField] public List<BaseTile> tiles;
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
 
