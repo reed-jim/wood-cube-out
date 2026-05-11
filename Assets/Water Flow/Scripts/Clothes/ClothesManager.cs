@@ -16,7 +16,7 @@ public class ClothesManager : Singleton<ClothesManager>
     public Transform waitingSlotContainer;
 
     public SplineComputer loopPath;
-    public SplineComputer waitingPath;
+    public SplineComputer[] waitingPaths;
 
     public float moveSpeed;
     public float normalizedDistance;
@@ -109,28 +109,38 @@ public class ClothesManager : Singleton<ClothesManager>
 
     public void SpawnClothes()
     {
-        for (int i = 0; i < 10; i++)
+        bool isLeft = true;
+
+        for (int i = 0; i < waitingPaths.Length; i++)
         {
-            float percent = 1 - 0.1f * i;
+            SplineComputer waitingPath = waitingPaths[i];
 
-            PathSlot pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);
-            pathSlot.transform.SetParent(waitingSlotContainer);
-            waitingPathSlots.Add(pathSlot);
+            isLeft = !isLeft;
 
-            SplineSample sample = waitingPath.Evaluate(percent);
+            for (int j = 0; j < 10; j++)
+            {
+                float percent = 1 - 0.1f * j;
 
-            pathSlot.transform.position = sample.position;
+                PathSlot pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);
+                pathSlot.isLeft = isLeft;
+                pathSlot.transform.SetParent(waitingSlotContainer);
+                waitingPathSlots.Add(pathSlot);
 
-            pathSlot.percentInPath = percent;
+                SplineSample sample = waitingPath.Evaluate(percent);
 
-            ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
+                pathSlot.transform.position = sample.position;
 
-            clothingPiece.transform.SetParent(pathSlot.transform);
-            clothingPiece.transform.localPosition = new Vector3(0, 0, -1 - percent);
+                pathSlot.percentInPath = percent;
 
-            pathSlot.clothingPiece = clothingPiece;
+                ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
 
-            clothingPieces.Add(clothingPiece);
+                clothingPiece.transform.SetParent(pathSlot.transform);
+                clothingPiece.transform.localPosition = new Vector3(0, 0, -1 - percent);
+
+                pathSlot.clothingPiece = clothingPiece;
+
+                clothingPieces.Add(clothingPiece);
+            }
         }
     }
 
@@ -171,7 +181,7 @@ public class ClothesManager : Singleton<ClothesManager>
                 {
                     PathSlot anotherPathSlot = waitingPathSlots[j];
 
-                    if (anotherPathSlot.clothingPiece != null)
+                    if (anotherPathSlot.isLeft == pathSlot.isLeft && anotherPathSlot.clothingPiece != null)
                     {
                         MoveClothingPieceFromPathSlotToAnother(anotherPathSlot.clothingPiece, anotherPathSlot, pathSlot);
 
@@ -214,6 +224,9 @@ public class ClothesManager : Singleton<ClothesManager>
         clothingPiece.transform.SetParent(pathSlot.transform);
 
         clothingPiece.transform.localPosition = Vector3.zero;
+        clothingPiece.transform.localScale = Vector3.zero;
+
+        SaferioTween.ScaleUpWithPunch(clothingPiece.transform, 1);
 
         clothingPiece.Init(faction);
 

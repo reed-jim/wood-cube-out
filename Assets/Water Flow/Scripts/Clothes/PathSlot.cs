@@ -6,6 +6,8 @@ public class PathSlot : MonoBehaviour
 
     public ClothingPiece clothingPiece;
 
+    public bool isLeft;
+
     public void AddClothingPiece(ClothingPiece clothingPiece)
     {
         clothingPiece.transform.SetParent(transform);

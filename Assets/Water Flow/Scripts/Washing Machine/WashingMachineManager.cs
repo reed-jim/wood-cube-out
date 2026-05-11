@@ -34,6 +34,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
+        if (washingMachineSlot == null)
+        {
+            return;
+        }
+
         washingMachineSlot.washingMachineItem = washingMachineItem;
 
         washingMachineItem.isMoving = true;

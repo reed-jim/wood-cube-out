@@ -746,6 +746,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1736352350}
+  - {fileID: 758200345}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
 --- !u!212 &517884593
@@ -1046,6 +1047,162 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &758200343
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 758200345}
+  - component: {fileID: 758200344}
+  m_Layer: 0
+  m_Name: Spline (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &758200344
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758200343}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 598e68924c9f6324bbfd049d3bae754c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Dreamteck.Splines::Dreamteck.Splines.SplineComputer
+  editorDrawPivot: 1
+  editorPathColor: {r: 1, g: 1, b: 1, a: 1}
+  editorAlwaysDraw: 0
+  editorDrawThickness: 0
+  editorBillboardThickness: 1
+  isNewlyCreated: 0
+  editorUpdateMode: 0
+  multithreaded: 0
+  updateMode: 0
+  triggerGroups: []
+  _spline:
+    points:
+    - _type: 0
+      position: {x: 1.9081266, y: 2.8344262, z: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      normal: {x: -0.99999994, y: 0.000000059604645, z: 0}
+      size: 1
+      tangent: {x: 1.4933158, y: 3.5188646, z: 0}
+      tangent2: {x: 2.3229375, y: 2.1499877, z: 0}
+    - _type: 0
+      position: {x: 1.3999928, y: -0.02408027, z: 0}
+      color: {r: 1, g: 1, b: 1, a: 1}
+      normal: {x: -0.99999994, y: 0.000000059604645, z: 0}
+      size: 1
+      tangent: {x: 2.230213, y: 0.26628774, z: 0}
+      tangent2: {x: 0.5697729, y: -0.31444815, z: 0}
+    type: 2
+    linearAverageDirection: 1
+    customValueInterpolation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    customNormalInterpolation:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    sampleRate: 10
+    closed: 0
+    _knotParametrization: 0
+  _originalSamplePercents: []
+  _is2D: 0
+  hasSamples: 1
+  _optimizeAngleThreshold: 0.5
+  _space: 1
+  _sampleMode: 0
+  _subscribers: []
+  _rawSamples:
+  - position: {x: 1.9081266, y: 2.8344262, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: 0.5183015, y: -0.85519797, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0
+  - position: {x: 2.027284, y: 2.5656936, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: 0.3103385, y: -0.95062613, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.1111111111111111
+  - position: {x: 2.1069534, y: 2.2311113, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: 0.162585, y: -0.9866945, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.2222222222222222
+  - position: {x: 2.1452417, y: 1.8536631, z: 0}
+    up: {x: -0.9999999, y: 0.000000059604645, z: 0}
+    forward: {x: 0.043330297, y: -0.9990608, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.3333333333333333
+  - position: {x: 2.1402576, y: 1.4563342, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: -0.06803869, y: -0.9976827, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.4444444444444444
+  - position: {x: 2.0901072, y: 1.0621078, z: 0}
+    up: {x: -0.9999999, y: 0.000000059604645, z: 0}
+    forward: {x: -0.18718207, y: -0.9823252, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.5555555555555556
+  - position: {x: 1.9928982, y: 0.6939689, z: 0}
+    up: {x: -0.9999999, y: 0.000000059604645, z: 0}
+    forward: {x: -0.32978737, y: -0.94405526, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.6666666666666666
+  - position: {x: 1.8467379, y: 0.37490183, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: -0.51261264, y: -0.85862, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.7777777777777778
+  - position: {x: 1.6497335, y: 0.12789063, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: -0.73904467, y: -0.67365646, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 0.8888888888888888
+  - position: {x: 1.3999928, y: -0.02408027, z: 0}
+    up: {x: -0.99999994, y: 0.000000059604645, z: 0}
+    forward: {x: -0.9439325, y: -0.33013865, z: 0}
+    color: {r: 1, g: 1, b: 1, a: 1}
+    size: 1
+    percent: 1
+  _nodes: []
+--- !u!4 &758200345
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 758200343}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0.7071068, y: 0.7071068, z: 0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 517884592}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 90}
 --- !u!1 &817927186
 GameObject:
   m_ObjectHideFlags: 0
@@ -2695,7 +2852,9 @@ MonoBehaviour:
   waitingPathSlots: []
   waitingSlotContainer: {fileID: 0}
   loopPath: {fileID: 1388027198}
-  waitingPath: {fileID: 1736352349}
+  waitingPaths:
+  - {fileID: 1736352349}
+  - {fileID: 758200344}
   moveSpeed: 0.01
   normalizedDistance: 0
   percentMoveClothesOut: 0.4
