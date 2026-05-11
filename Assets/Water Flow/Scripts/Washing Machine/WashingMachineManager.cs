@@ -9,26 +9,10 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 {
     public List<WashingMachineSlot> washingMachineSlots;
     public List<WashingMachineStartSlot> washingMachineStartSlots;
-    public List<WashingMachineItem> washingMachineItems;
 
     public List<GameFaction> poolFaction;
 
     public int totalClothingPiece;
-
-    public WashingMachineSlot GetAvailableWashingMachineSlot()
-    {
-        for (int i = 0; i < washingMachineSlots.Count; i++)
-        {
-            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
-
-            if (washingMachineSlot.washingMachineItem == null)
-            {
-                return washingMachineSlot;
-            }
-        }
-
-        return null;
-    }
 
     public void MoveItemToSlot(WashingMachineItem washingMachineItem)
     {
@@ -70,15 +54,16 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
                 if (washingMachineItem.number > 0 && clothingPiece.faction == washingMachineItem.faction)
                 {
-                    clothingPiece.MoveToWashingMachine(washingMachineItem);
-                    ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
-
-                    washingMachineItem.ReceiveClothes();
-
-                    if (washingMachineItem.number == 0)
+                    clothingPiece.MoveToWashingMachine(washingMachineItem, onCompleteAction: () =>
                     {
-                        washingMachineSlot.washingMachineItem = null;
-                    }
+                        washingMachineItem.ReceiveClothes();
+
+                        if (washingMachineItem.number == 0)
+                        {
+                            washingMachineSlot.washingMachineItem = null;
+                        }
+                    });
+                    ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
 
                     return true;
                 }
@@ -88,6 +73,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         return false;
     }
 
+    #region Spawn
     public void SpawnFirstWashingMachines()
     {
         poolFaction = new List<GameFaction>();
@@ -164,6 +150,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             }
         }
     }
+    #endregion
 
     #region Pool Faction
     public GameFaction GetNextFactionInPool()
@@ -182,6 +169,21 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #endregion
 
     #region Util
+    public WashingMachineSlot GetAvailableWashingMachineSlot()
+    {
+        for (int i = 0; i < washingMachineSlots.Count; i++)
+        {
+            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            if (washingMachineSlot.washingMachineItem == null)
+            {
+                return washingMachineSlot;
+            }
+        }
+
+        return null;
+    }
+
     public Dictionary<GameFaction, int> GetScorePerFaction()
     {
         Dictionary<GameFaction, int> sortedPoolFaction = new Dictionary<GameFaction, int>();

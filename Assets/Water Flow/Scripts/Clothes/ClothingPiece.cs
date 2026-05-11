@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -23,12 +24,14 @@ public class ClothingPiece : MonoBehaviour
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
     }
 
-    public void MoveToWashingMachine(WashingMachineItem washingMachineItem)
+    public void MoveToWashingMachine(WashingMachineItem washingMachineItem, Action onCompleteAction)
     {
         Tween.Position(transform, washingMachineItem.transform.position, duration: 0.3f)
         .OnComplete(() =>
         {
             gameObject.SetActive(false);
+
+            onCompleteAction?.Invoke();
         });
     }
 }

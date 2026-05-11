@@ -23,6 +23,7 @@ public class ClothesManager : Singleton<ClothesManager>
     public float percentMoveClothesOut;
     public float percentPuttingClothesIntoLoopPath;
 
+    #region Life Cycle
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
@@ -35,6 +36,7 @@ public class ClothesManager : Singleton<ClothesManager>
         SetupSlots();
         StartCoroutine(RunTheQueue());
     }
+    #endregion
 
     private void SetupSlots()
     {
@@ -144,6 +146,7 @@ public class ClothesManager : Singleton<ClothesManager>
         }
     }
 
+    #region Move clothes in path
     public void MoveClothingPieceToLoopPath(LoopPathSlot loopPathSlot)
     {
         for (int i = 0; i < waitingPathSlots.Count; i++)
@@ -234,4 +237,5 @@ public class ClothesManager : Singleton<ClothesManager>
 
         clothingPieces.Add(clothingPiece);
     }
+    #endregion
 }
