@@ -1,3 +1,4 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -40,6 +41,9 @@ public class WashingMachineItem : MonoBehaviour
 
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);
+        transform.localScale = Vector3.zero;
+
+        Tween.Scale(transform, 1, duration: 0.3f);
     }
 
     public void ReceiveClothes()

@@ -201,14 +201,19 @@ public class ClothesManager : Singleton<ClothesManager>
 
     public void SpawnNewClothingPiece(PathSlot pathSlot)
     {
+        GameFaction faction = WashingMachineManager.Ins.GetNextFactionInPool();
+
+        if (faction == GameFaction.None)
+        {
+            return;
+        }
+
         ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
 
         clothingPiece.gameObject.SetActive(true);
         clothingPiece.transform.SetParent(pathSlot.transform);
 
         clothingPiece.transform.localPosition = Vector3.zero;
-
-        GameFaction faction = WashingMachineManager.Ins.GetNextFactionInPool();
 
         clothingPiece.Init(faction);
 

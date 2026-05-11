@@ -125,9 +125,9 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         Dictionary<GameFaction, int> sortedPoolFaction = GetScorePerFaction();
 
-        for (int j = 0; j < washingMachineStartSlots.Count; j++)
+        for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
-            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
             if (washingMachineStartSlot.washingMachine == null)
             {
@@ -153,6 +153,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #region Pool Faction
     public GameFaction GetNextFactionInPool()
     {
+        if (poolFaction.Count == 0)
+        {
+            return GameFaction.None;
+        }
+
         GameFaction nextFaction = poolFaction.First();
 
         poolFaction.RemoveAt(0);
