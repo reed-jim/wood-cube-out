@@ -123,7 +123,17 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void SpawnNewWashingMachine()
     {
+        if (poolFaction.Count == 0)
+        {
+            return;
+        }
+
         Dictionary<GameFaction, int> sortedPoolFaction = GetScorePerFaction();
+
+        if (sortedPoolFaction.ElementAt(0).Value <= 0)
+        {
+            return;
+        }
 
         for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
@@ -171,11 +181,34 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         Dictionary<GameFaction, int> sortedPoolFaction = new Dictionary<GameFaction, int>();
 
+        for (int i = 0; i < poolFaction.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(sortedPoolFaction, poolFaction[i], 1);
+        }
+
         for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
         {
-            ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
+            CommonUtil.SumValueOfDictionary(sortedPoolFaction, ClothesManager.Ins.clothingPieces[i].faction, 1);
+        }
 
-            CommonUtil.SumValueOfDictionary(sortedPoolFaction, clothingPiece.faction, 1);
+        for (int i = 0; i < washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+            if (washingMachineStartSlot.washingMachine != null)
+            {
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+            }
+        }
+
+        for (int i = 0; i < washingMachineSlots.Count; i++)
+        {
+            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            if (washingMachineSlot.washingMachineItem != null)
+            {
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+            }
         }
 
         sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
