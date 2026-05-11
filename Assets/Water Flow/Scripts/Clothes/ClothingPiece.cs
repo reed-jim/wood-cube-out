@@ -8,6 +8,11 @@ public class ClothingPiece : MonoBehaviour
 
     public GameFaction faction;
 
+    void Awake()
+    {
+        Setup();
+    }
+
     public void Setup()
     {
         faction = CommonUtil.GetRandomEnumValue<GameFaction>();

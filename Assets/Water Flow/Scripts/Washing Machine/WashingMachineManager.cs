@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
+using static GameEnum;
 
 public class WashingMachineManager : Singleton<WashingMachineManager>
 {
@@ -30,7 +32,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
         washingMachineSlot.washingMachineItem = washingMachineItem;
 
-        Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position, duration: 0.3f)
+        Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddZ(-1), duration: 0.3f)
         .OnComplete(() =>
         {
             // ClothesManager.Ins.MoveClothesToWashingMachine(washingMachineItem);
@@ -40,7 +42,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         });
     }
 
-    public void MoveClothesToWashingMachine(ClothingPiece clothingPiece)
+    public bool MoveClothesToWashingMachine(ClothingPiece clothingPiece)
     {
         for (int i = 0; i < washingMachineSlots.Count; i++)
         {
@@ -55,8 +57,37 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                     clothingPiece.MoveToWashingMachine(washingMachineItem);
 
                     washingMachineItem.ReceiveClothes();
+
+                    return true;
                 }
             }
+        }
+
+        return false;
+    }
+
+    public void SpawnFirstWashingMachines()
+    {
+        Dictionary<GameFaction, int> poolFaction = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
+        {
+            ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
+
+            CommonUtil.SumValueOfDictionary(poolFaction, clothingPiece.faction, 1);
+        }
+
+        GameFaction[] sortedFaction = poolFaction.OrderByDescending(item => item.Value).Select(item => item.Key).ToArray();
+
+        for (int i = 0; i < washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+            WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
+
+            washingMachineStartSlot.washingMachine = washingMachineItem;
+
+            washingMachineItem.Init(washingMachineStartSlot, sortedFaction[i]);
         }
     }
 

@@ -15,8 +15,6 @@ public class WashingMachineItem : MonoBehaviour
     void Awake()
     {
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
-
-        Setup();
     }
 
     public void Setup()
@@ -26,6 +24,20 @@ public class WashingMachineItem : MonoBehaviour
 
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
         numberText.text = $"{number}";
+    }
+
+    public void Init(WashingMachineStartSlot washingMachineStartSlot, GameFaction faction)
+    {
+        this.faction = faction;
+        number = Random.Range(1, 10);
+
+        spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
+        numberText.text = $"{number}";
+
+        this.washingMachineStartSlot = washingMachineStartSlot;
+
+        transform.SetParent(washingMachineStartSlot.transform);
+        transform.localPosition = new Vector3(0, 0, -1);
     }
 
     public void ReceiveClothes()

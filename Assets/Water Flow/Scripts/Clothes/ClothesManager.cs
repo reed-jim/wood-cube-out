@@ -30,6 +30,8 @@ public class ClothesManager : Singleton<ClothesManager>
 
             loopPathSlot.AddClothingPiece(clothingPiece);
         }
+
+        WashingMachineManager.Ins.SpawnFirstWashingMachines();
     }
 
     private IEnumerator RunTheQueue()
@@ -57,14 +59,22 @@ public class ClothesManager : Singleton<ClothesManager>
 
                 loopPathSlot.percentInLoopPath -= moveSpeed;
 
+                if (loopPathSlot.percentInLoopPath >= 0.4f - moveSpeed && loopPathSlot.percentInLoopPath < 0.4f)
+                {
+                    if (loopPathSlot.clothingPiece != null)
+                    {
+                        bool isFound = WashingMachineManager.Ins.MoveClothesToWashingMachine(loopPathSlot.clothingPiece);
+
+                        if (isFound)
+                        {
+                            loopPathSlot.Clear();
+                        }
+                    }
+                }
+
                 if (loopPathSlot.percentInLoopPath < 0)
                 {
                     loopPathSlot.percentInLoopPath = 1;
-
-                    if (loopPathSlot.clothingPiece != null)
-                    {
-                        WashingMachineManager.Ins.MoveClothesToWashingMachine(loopPathSlot.clothingPiece);
-                    }
                 }
             }
 

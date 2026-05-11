@@ -49,6 +49,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [Header("Connect Master")]
     [SerializeField] private GameObject baseTile;
 
+    [Header("Washing Machine")]
+    public GameObject washingMachineItemPrefab;
+
     private bool _isInitialized;
 
     private void Awake()
@@ -123,6 +126,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
         // RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
         RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
+
+        RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 100);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

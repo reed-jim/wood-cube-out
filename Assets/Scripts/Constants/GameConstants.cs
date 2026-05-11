@@ -232,6 +232,10 @@ public static class GameConstants
 
     #region CONNECT MASTER
     public static string tileSlot = "tileSlot";
-    public static string tile = "tile"; 
+    public static string tile = "tile";
+    #endregion
+
+    #region Washing Machine
+    public static string washingMachine = "washingMachine";
     #endregion
 }

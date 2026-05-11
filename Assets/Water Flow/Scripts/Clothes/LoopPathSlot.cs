@@ -10,6 +10,7 @@ public class LoopPathSlot : MonoBehaviour
     {
         clothingPiece.transform.SetParent(transform);
         clothingPiece.transform.localPosition = Vector3.zero;
+        clothingPiece.transform.localScale = Vector3.one;
 
         this.clothingPiece = clothingPiece;
     }
