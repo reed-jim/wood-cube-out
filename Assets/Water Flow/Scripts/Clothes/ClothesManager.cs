@@ -199,17 +199,6 @@ public class ClothesManager : Singleton<ClothesManager>
         }
     }
 
-    public void MoveClothesToWashingMachine(WashingMachineItem washingMachineItem)
-    {
-        LoopPathSlot loopPathSlot = loopPathSlots.First(item => item.clothingPiece != null);
-
-        ClothingPiece clothingPiece = loopPathSlot.clothingPiece;
-
-        loopPathSlot.Clear();
-
-        clothingPiece.MoveToWashingMachine(washingMachineItem);
-    }
-
     public void SpawnNewClothingPiece(PathSlot pathSlot)
     {
         ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
@@ -224,5 +213,7 @@ public class ClothesManager : Singleton<ClothesManager>
         clothingPiece.Init(faction);
 
         pathSlot.clothingPiece = clothingPiece;
+
+        clothingPieces.Add(clothingPiece);
     }
 }

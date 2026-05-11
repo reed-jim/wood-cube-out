@@ -42,6 +42,9 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         .OnComplete(() =>
         {
             washingMachineItem.isMoving = false;
+            washingMachineItem.washingMachineStartSlot.washingMachine = null;
+
+            SpawnNewWashingMachine();
         });
     }
 
@@ -63,6 +66,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                 if (washingMachineItem.number > 0 && clothingPiece.faction == washingMachineItem.faction)
                 {
                     clothingPiece.MoveToWashingMachine(washingMachineItem);
+                    ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
 
                     washingMachineItem.ReceiveClothes();
 
@@ -119,6 +123,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void SpawnNewWashingMachine()
     {
+        Dictionary<GameFaction, int> sortedPoolFaction = GetScorePerFaction();
+
         for (int j = 0; j < washingMachineStartSlots.Count; j++)
         {
             WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
@@ -135,6 +141,10 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
+                KeyValuePair<GameFaction, int> keyValuePair = sortedPoolFaction.ElementAt(0);
+
+                washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
+
                 break;
             }
         }
@@ -148,6 +158,24 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         poolFaction.RemoveAt(0);
 
         return nextFaction;
+    }
+    #endregion
+
+    #region Util
+    public Dictionary<GameFaction, int> GetScorePerFaction()
+    {
+        Dictionary<GameFaction, int> sortedPoolFaction = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
+        {
+            ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
+
+            CommonUtil.SumValueOfDictionary(sortedPoolFaction, clothingPiece.faction, 1);
+        }
+
+        sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        return sortedPoolFaction;
     }
     #endregion
 }
