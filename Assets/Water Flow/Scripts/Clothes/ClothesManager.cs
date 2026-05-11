@@ -110,7 +110,7 @@ public class ClothesManager : Singleton<ClothesManager>
     {
         for (int i = 0; i < 10; i++)
         {
-            float percent = 0.1f * i;
+            float percent = 1 - 0.1f * i;
 
             PathSlot pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);
             pathSlot.transform.SetParent(waitingSlotContainer);
@@ -125,7 +125,7 @@ public class ClothesManager : Singleton<ClothesManager>
             ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
 
             clothingPiece.transform.SetParent(pathSlot.transform);
-            clothingPiece.transform.localPosition = new Vector3(0, 0, -1);
+            clothingPiece.transform.localPosition = new Vector3(0, 0, -1 - percent);
 
             pathSlot.clothingPiece = clothingPiece;
         }
@@ -147,8 +147,43 @@ public class ClothesManager : Singleton<ClothesManager>
                 loopPathSlot.clothingPiece = clothingPiece;
                 pathSlot.clothingPiece = null;
 
+                MoveDownClothesInWaitingPath();
+
                 break;
             }
+        }
+    }
+
+    public void MoveDownClothesInWaitingPath()
+    {
+        for (int i = 0; i < waitingPathSlots.Count - 1; i++)
+        {
+            PathSlot pathSlot = waitingPathSlots[i];
+
+            if (pathSlot.clothingPiece == null)
+            {
+                for (int j = i + 1; j < waitingPathSlots.Count; j++)
+                {
+                    PathSlot anotherPathSlot = waitingPathSlots[j];
+
+                    if (anotherPathSlot.clothingPiece != null)
+                    {
+                        MoveClothingPieceFromPathSlotToAnother(anotherPathSlot.clothingPiece, anotherPathSlot, pathSlot);
+
+                        break;
+                    }
+                }
+            }
+        }
+
+        void MoveClothingPieceFromPathSlotToAnother(ClothingPiece clothingPiece, PathSlot fromPathSlot, PathSlot toPathSlot)
+        {
+            clothingPiece.transform.SetParent(toPathSlot.transform);
+
+            Tween.LocalPosition(clothingPiece.transform, new Vector3(0, 0, -1 - toPathSlot.percentInPath), duration: 0.3f);
+
+            fromPathSlot.clothingPiece = null;
+            toPathSlot.clothingPiece = clothingPiece;
         }
     }
 

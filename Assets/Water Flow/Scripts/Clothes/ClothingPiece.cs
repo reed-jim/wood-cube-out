@@ -7,6 +7,7 @@ public class ClothingPiece : MonoBehaviour
     public SpriteRenderer spriteRenderer;
 
     public GameFaction faction;
+    public bool isMoving;
 
     void Awake()
     {
