@@ -28,14 +28,36 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
+        washingMachineSlot.washingMachineItem = washingMachineItem;
+
         Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position, duration: 0.3f)
         .OnComplete(() =>
         {
-            ClothesManager.Ins.MoveClothesToWashingMachine(washingMachineItem);
-            washingMachineItem.washingMachineStartSlot.washingMachine = null;
-            washingMachineItem.washingMachineStartSlot = null;
-            SpawnNewWashingMachine();
+            // ClothesManager.Ins.MoveClothesToWashingMachine(washingMachineItem);
+            // washingMachineItem.washingMachineStartSlot.washingMachine = null;
+            // washingMachineItem.washingMachineStartSlot = null;
+            // SpawnNewWashingMachine();
         });
+    }
+
+    public void MoveClothesToWashingMachine(ClothingPiece clothingPiece)
+    {
+        for (int i = 0; i < washingMachineSlots.Count; i++)
+        {
+            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            if (washingMachineSlot.washingMachineItem != null)
+            {
+                WashingMachineItem washingMachineItem = washingMachineSlot.washingMachineItem;
+
+                if (washingMachineItem.number > 0 && clothingPiece.faction == washingMachineItem.faction)
+                {
+                    clothingPiece.MoveToWashingMachine(washingMachineItem);
+
+                    washingMachineItem.ReceiveClothes();
+                }
+            }
+        }
     }
 
     public void SpawnNewWashingMachine()

@@ -60,6 +60,11 @@ public class ClothesManager : Singleton<ClothesManager>
                 if (loopPathSlot.percentInLoopPath < 0)
                 {
                     loopPathSlot.percentInLoopPath = 1;
+
+                    if (loopPathSlot.clothingPiece != null)
+                    {
+                        WashingMachineManager.Ins.MoveClothesToWashingMachine(loopPathSlot.clothingPiece);
+                    }
                 }
             }
 
