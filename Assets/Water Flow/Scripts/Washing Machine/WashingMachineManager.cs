@@ -62,6 +62,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
                     washingMachineItem.ReceiveClothes();
 
+                    if (washingMachineItem.number == 0)
+                    {
+                        washingMachineSlot.washingMachineItem = null;
+                    }
+
                     return true;
                 }
             }
@@ -81,7 +86,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             CommonUtil.SumValueOfDictionary(poolFaction, clothingPiece.faction, 1);
         }
 
-        GameFaction[] sortedFaction = poolFaction.OrderByDescending(item => item.Value).Select(item => item.Key).ToArray();
+        Dictionary<GameFaction, int> sortedPoolFaction = poolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
@@ -91,7 +96,9 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
             washingMachineStartSlot.washingMachine = washingMachineItem;
 
-            washingMachineItem.Init(washingMachineStartSlot, sortedFaction[i]);
+            KeyValuePair<GameFaction, int> keyValuePair = sortedPoolFaction.ElementAt(i);
+
+            washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
         }
     }
 

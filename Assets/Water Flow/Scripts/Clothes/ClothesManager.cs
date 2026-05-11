@@ -128,6 +128,8 @@ public class ClothesManager : Singleton<ClothesManager>
             clothingPiece.transform.localPosition = new Vector3(0, 0, -1 - percent);
 
             pathSlot.clothingPiece = clothingPiece;
+
+            clothingPieces.Add(clothingPiece);
         }
     }
 

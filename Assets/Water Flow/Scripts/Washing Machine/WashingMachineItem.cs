@@ -1,3 +1,4 @@
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using static GameEnum;
@@ -27,10 +28,10 @@ public class WashingMachineItem : MonoBehaviour
         numberText.text = $"{number}";
     }
 
-    public void Init(WashingMachineStartSlot washingMachineStartSlot, GameFaction faction)
+    public void Init(WashingMachineStartSlot washingMachineStartSlot, GameFaction faction, int number)
     {
         this.faction = faction;
-        number = Random.Range(1, 10);
+        this.number = number;
 
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
         numberText.text = $"{number}";
@@ -46,6 +47,11 @@ public class WashingMachineItem : MonoBehaviour
         number--;
 
         numberText.text = $"{number}";
+
+        if (number <= 0)
+        {
+            SaferioTween.ScaleDownWithPunch(transform);
+        }
     }
 
     public void Select()
