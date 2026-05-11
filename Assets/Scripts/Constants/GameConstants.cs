@@ -237,5 +237,7 @@ public static class GameConstants
 
     #region Washing Machine
     public static string washingMachine = "washingMachine";
+    public static string clothingPiece = "clothingPiece";
+    public static string pathSlot = "pathSlot";
     #endregion
 }

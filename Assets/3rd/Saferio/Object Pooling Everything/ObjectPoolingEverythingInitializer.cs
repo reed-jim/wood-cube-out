@@ -51,6 +51,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [Header("Washing Machine")]
     public GameObject washingMachineItemPrefab;
+    public GameObject clothingPiecePrefab;
+    public GameObject pathSlotPrefab;
 
     private bool _isInitialized;
 
@@ -128,6 +130,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
 
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 100);
+        RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
+        RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
