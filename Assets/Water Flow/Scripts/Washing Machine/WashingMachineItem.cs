@@ -10,6 +10,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public GameFaction faction;
     public int number;
+    public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
 
     void Awake()

@@ -16,7 +16,7 @@ public class ClothingPiece : MonoBehaviour
 
     public void Setup()
     {
-        faction = CommonUtil.GetRandomEnumValue<GameFaction>();
+        faction = CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2);
 
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
     }

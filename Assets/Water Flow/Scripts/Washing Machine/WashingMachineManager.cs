@@ -32,13 +32,12 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
         washingMachineSlot.washingMachineItem = washingMachineItem;
 
+        washingMachineItem.isMoving = true;
+
         Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddZ(-1), duration: 0.3f)
         .OnComplete(() =>
         {
-            // ClothesManager.Ins.MoveClothesToWashingMachine(washingMachineItem);
-            // washingMachineItem.washingMachineStartSlot.washingMachine = null;
-            // washingMachineItem.washingMachineStartSlot = null;
-            // SpawnNewWashingMachine();
+            washingMachineItem.isMoving = false;
         });
     }
 
@@ -51,6 +50,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             if (washingMachineSlot.washingMachineItem != null)
             {
                 WashingMachineItem washingMachineItem = washingMachineSlot.washingMachineItem;
+
+                if (washingMachineItem.isMoving)
+                {
+                    continue;
+                }
 
                 if (washingMachineItem.number > 0 && clothingPiece.faction == washingMachineItem.faction)
                 {
