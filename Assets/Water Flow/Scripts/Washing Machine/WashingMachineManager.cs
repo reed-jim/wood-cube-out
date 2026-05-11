@@ -11,6 +11,10 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     public List<WashingMachineStartSlot> washingMachineStartSlots;
     public List<WashingMachineItem> washingMachineItems;
 
+    public List<GameFaction> poolFaction;
+
+    public int totalClothingPiece;
+
     public WashingMachineSlot GetAvailableWashingMachineSlot()
     {
         for (int i = 0; i < washingMachineSlots.Count; i++)
@@ -77,16 +81,27 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void SpawnFirstWashingMachines()
     {
-        Dictionary<GameFaction, int> poolFaction = new Dictionary<GameFaction, int>();
+        poolFaction = new List<GameFaction>();
+
+        for (int i = 0; i < totalClothingPiece; i++)
+        {
+            poolFaction.Add(CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2));
+        }
+
+        Dictionary<GameFaction, int> sortedPoolFaction = new Dictionary<GameFaction, int>();
 
         for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
         {
             ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
 
-            CommonUtil.SumValueOfDictionary(poolFaction, clothingPiece.faction, 1);
+            clothingPiece.Init(poolFaction.First());
+
+            CommonUtil.SumValueOfDictionary(sortedPoolFaction, clothingPiece.faction, 1);
+
+            poolFaction.RemoveAt(0);
         }
 
-        Dictionary<GameFaction, int> sortedPoolFaction = poolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
@@ -104,30 +119,35 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void SpawnNewWashingMachine()
     {
-        for (int i = 0; i < washingMachineItems.Count; i++)
+        for (int j = 0; j < washingMachineStartSlots.Count; j++)
         {
-            WashingMachineItem washingMachineItem = washingMachineItems[i];
+            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
 
-            if (!washingMachineItem.gameObject.activeInHierarchy)
+            if (washingMachineStartSlot.washingMachine == null)
             {
-                for (int j = 0; j < washingMachineStartSlots.Count; j++)
-                {
-                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+                WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
 
-                    if (washingMachineStartSlot.washingMachine == null)
-                    {
-                        washingMachineItem.gameObject.SetActive(true);
-                        washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
+                washingMachineItem.gameObject.SetActive(true);
+                washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
 
-                        washingMachineItem.transform.localPosition = new Vector3(0, -5, 0);
-                        Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
+                washingMachineItem.transform.localPosition = new Vector3(0, -5, 0);
+                Tween.LocalPositionY(washingMachineItem.transform, 0, duration: 0.3f);
 
-                        washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
+                washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                        break;
-                    }
-                }
+                break;
             }
         }
     }
+
+    #region Pool Faction
+    public GameFaction GetNextFactionInPool()
+    {
+        GameFaction nextFaction = poolFaction.First();
+
+        poolFaction.RemoveAt(0);
+
+        return nextFaction;
+    }
+    #endregion
 }

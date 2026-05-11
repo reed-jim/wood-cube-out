@@ -9,14 +9,16 @@ public class ClothingPiece : MonoBehaviour
     public GameFaction faction;
     public bool isMoving;
 
-    void Awake()
-    {
-        Setup();
-    }
-
     public void Setup()
     {
         faction = CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2);
+
+        spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
+    }
+
+    public void Init(GameFaction faction)
+    {
+        this.faction = faction;
 
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
     }

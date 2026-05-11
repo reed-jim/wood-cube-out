@@ -5,6 +5,7 @@ using Dreamteck.Splines;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
+using static GameEnum;
 
 public class ClothesManager : Singleton<ClothesManager>
 {
@@ -164,6 +165,8 @@ public class ClothesManager : Singleton<ClothesManager>
 
             if (pathSlot.clothingPiece == null)
             {
+                bool isFound = false;
+
                 for (int j = i + 1; j < waitingPathSlots.Count; j++)
                 {
                     PathSlot anotherPathSlot = waitingPathSlots[j];
@@ -172,8 +175,15 @@ public class ClothesManager : Singleton<ClothesManager>
                     {
                         MoveClothingPieceFromPathSlotToAnother(anotherPathSlot.clothingPiece, anotherPathSlot, pathSlot);
 
+                        isFound = true;
+
                         break;
                     }
+                }
+
+                if (!isFound)
+                {
+                    SpawnNewClothingPiece(pathSlot);
                 }
             }
         }
@@ -198,5 +208,21 @@ public class ClothesManager : Singleton<ClothesManager>
         loopPathSlot.Clear();
 
         clothingPiece.MoveToWashingMachine(washingMachineItem);
+    }
+
+    public void SpawnNewClothingPiece(PathSlot pathSlot)
+    {
+        ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
+
+        clothingPiece.gameObject.SetActive(true);
+        clothingPiece.transform.SetParent(pathSlot.transform);
+
+        clothingPiece.transform.localPosition = Vector3.zero;
+
+        GameFaction faction = WashingMachineManager.Ins.GetNextFactionInPool();
+
+        clothingPiece.Init(faction);
+
+        pathSlot.clothingPiece = clothingPiece;
     }
 }
