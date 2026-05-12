@@ -186,4 +186,8 @@ public static class GamePersistentVariable
     #region Remote Config Gameplay Background
     public static GameplayBackgroundConfig gameplayBackgroundConfig;
     #endregion
+
+    #region Water Flow
+    public static WashingMachineSlot currentWashingMachineSlotToUnlock;
+    #endregion
 }

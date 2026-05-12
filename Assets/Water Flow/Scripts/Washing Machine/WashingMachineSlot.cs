@@ -1,6 +1,8 @@
+using System;
 using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class WashingMachineSlot : MonoBehaviour
 {
@@ -11,11 +13,30 @@ public class WashingMachineSlot : MonoBehaviour
     public WashingMachineItem washingMachineItem;
     public bool isLocked;
 
+    public static event Action<BoosterType> showBuyBoosterPopupEvent;
+
     void Awake()
     {
-        unlockButton.onClick.AddListener(Unlock);
+        BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockBought;
+
+        unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
 
         lockSprite.gameObject.SetActive(isLocked);
+    }
+
+    void OnDestroy()
+    {
+        BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockBought;
+    }
+
+    private void ClickButtonUnlockByAds()
+    {
+        if (isLocked)
+        {
+            GamePersistentVariable.currentWashingMachineSlotToUnlock = this;
+
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        }
     }
 
     public void Unlock()
@@ -27,5 +48,13 @@ public class WashingMachineSlot : MonoBehaviour
 
             isLocked = false;
         });
+    }
+
+    public void OnUnlockBought()
+    {
+        if (this == GamePersistentVariable.currentWashingMachineSlotToUnlock)
+        {
+            Unlock();
+        }
     }
 }
