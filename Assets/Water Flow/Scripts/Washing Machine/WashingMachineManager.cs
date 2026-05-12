@@ -184,6 +184,58 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     }
     #endregion
 
+    #region Booster
+    public void UseBoosterShuffle()
+    {
+        Dictionary<GameFaction, int> currentAvailableClothesPerFaction = GetCurrentAvailableClothesPerFaction();
+        Dictionary<GameFaction, int> poolFactionSortedByDifficulty = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < ClothesManager.Ins.loopPathSlots.Count; i++)
+        {
+            LoopPathSlot loopPathSlot = ClothesManager.Ins.loopPathSlots[i];
+
+            if (loopPathSlot.clothingPiece != null)
+            {
+                ClothingPiece clothingPiece = loopPathSlot.clothingPiece;
+
+                CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, clothingPiece.faction, 10);
+            }
+        }
+
+        for (int i = 0; i < ClothesManager.Ins.waitingPathSlots.Count; i++)
+        {
+            PathSlot pathSlot = ClothesManager.Ins.waitingPathSlots[i];
+
+            if (pathSlot.clothingPiece != null)
+            {
+                ClothingPiece clothingPiece = pathSlot.clothingPiece;
+
+                CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, clothingPiece.faction, 1);
+            }
+        }
+
+        poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+        int index = 0;
+
+        for (int i = 0; i < washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+            if (washingMachineStartSlot.washingMachine != null)
+            {
+                WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+
+                KeyValuePair<GameFaction, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
+
+                washingMachine.Init(washingMachineStartSlot, keyValuePair.Key, currentAvailableClothesPerFaction[keyValuePair.Key]);
+
+                index++;
+            }
+        }
+    }
+    #endregion
+
     #region Check Win
     private void CheckWinLevel()
     {
@@ -237,6 +289,18 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         }
 
         return null;
+    }
+
+    public Dictionary<GameFaction, int> GetCurrentAvailableClothesPerFaction()
+    {
+        Dictionary<GameFaction, int> currentAvailableClothesPerFaction = new Dictionary<GameFaction, int>();
+
+        for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(currentAvailableClothesPerFaction, ClothesManager.Ins.clothingPieces[i].faction, 1);
+        }
+
+        return currentAvailableClothesPerFaction;
     }
 
     public Dictionary<GameFaction, int> GetScorePerFaction()

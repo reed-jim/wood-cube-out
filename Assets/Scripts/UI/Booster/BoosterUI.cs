@@ -211,7 +211,7 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 1);
 
-        TileManager.Ins.UseShuffleBooster();
+        WashingMachineManager.Ins.UseBoosterShuffle();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
