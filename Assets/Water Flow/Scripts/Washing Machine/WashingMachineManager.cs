@@ -214,6 +214,21 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #endregion
 
     #region Booster
+    public void UnlockWashingMachineSlot()
+    {
+        for (int i = 0; i < washingMachineSlots.Count; i++)
+        {
+            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            if (washingMachineSlot.isLocked)
+            {
+                washingMachineSlot.Unlock();
+
+                break;
+            }
+        }
+    }
+
     public void UseMagicBooster()
     {
         List<ClothingPiece> randomPickedClothes = new List<ClothingPiece>();

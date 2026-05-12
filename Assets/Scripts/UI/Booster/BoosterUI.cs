@@ -170,20 +170,19 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 0);
 
-        TileManager.Ins.UseAddHoleBooster();
-        // addMoreScrewPortEvent?.Invoke();
+        WashingMachineManager.Ins.UnlockWashingMachineSlot();
 
-        _numScrewPortsAdded++;
+        // _numScrewPortsAdded++;
 
-        if (_numScrewPortsAdded == 2)
-        {
-            addMoreScrewPortButton.interactable = false;
+        // if (_numScrewPortsAdded == 2)
+        // {
+        //     addMoreScrewPortButton.interactable = false;
 
-            Tween.LocalPositionY(addMoreScrewPortButtonRT, addMoreScrewPortButtonRT.localPosition.y - 600, duration: 0.3f);
+        //     Tween.LocalPositionY(addMoreScrewPortButtonRT, addMoreScrewPortButtonRT.localPosition.y - 600, duration: 0.3f);
 
-            Tween.LocalPositionX(breakModeButtonRT, -0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
-            Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
-        }
+        //     Tween.LocalPositionX(breakModeButtonRT, -0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
+        //     Tween.LocalPositionX(clearAllScrewPortsButtonRT, 0.7f * breakModeButtonRT.sizeDelta.x, duration: 0.3f);
+        // }
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
