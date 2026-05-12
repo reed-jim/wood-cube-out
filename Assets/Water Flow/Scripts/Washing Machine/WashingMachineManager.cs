@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
@@ -14,12 +15,17 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public int totalClothingPiece;
 
+    public static event Action winLevelEvent;
+    public static event Action loseLevelEvent;
+
     public void MoveItemToSlot(WashingMachineItem washingMachineItem)
     {
         WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
         if (washingMachineSlot == null)
         {
+            CheckLoseLevel();
+            
             return;
         }
 
@@ -56,12 +62,15 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                 {
                     clothingPiece.MoveToWashingMachine(washingMachineItem, onCompleteAction: () =>
                     {
-                        washingMachineItem.ReceiveClothes();
-
-                        if (washingMachineItem.number == 0)
+                        washingMachineItem.ReceiveClothes(onCompleteAction: () =>
                         {
-                            washingMachineSlot.washingMachineItem = null;
-                        }
+                            if (washingMachineItem.number == 0)
+                            {
+                                washingMachineSlot.washingMachineItem = null;
+
+                                CheckWinLevel();
+                            }
+                        });
                     });
                     ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
 
@@ -114,11 +123,6 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void SpawnNewWashingMachine()
     {
-        if (poolFaction.Count == 0)
-        {
-            return;
-        }
-
         Dictionary<GameFaction, int> sortedPoolFaction = GetScorePerFaction();
 
         if (sortedPoolFaction.ElementAt(0).Value <= 0)
@@ -168,6 +172,32 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     }
     #endregion
 
+    #region Check Win
+    private void CheckWinLevel()
+    {
+        Debug.Log($"CheckWinLevel {poolFaction.Count} {ClothesManager.Ins.clothingPieces.Count}");
+
+        bool isWin = poolFaction.Count + ClothesManager.Ins.clothingPieces.Count == 0;
+
+        if (isWin)
+        {
+            winLevelEvent?.Invoke();
+        }
+    }
+    #endregion
+
+    #region Check Lose
+    private void CheckLoseLevel()
+    {
+        bool isLose = washingMachineSlots.All(item => item.washingMachineItem != null);
+
+        if (isLose)
+        {
+            loseLevelEvent?.Invoke();
+        }
+    }
+    #endregion 
+
     #region Util
     public WashingMachineSlot GetAvailableWashingMachineSlot()
     {
@@ -216,6 +246,13 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             {
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
             }
+        }
+
+        Debug.Log($"GetScorePerFaction ****************");
+
+        foreach (var item in sortedPoolFaction)
+        {
+            Debug.Log($"GetScorePerFaction {item.Key} {item.Value}");
         }
 
         sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

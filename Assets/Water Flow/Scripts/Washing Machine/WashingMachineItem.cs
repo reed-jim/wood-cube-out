@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -23,7 +24,7 @@ public class WashingMachineItem : MonoBehaviour
     public void Setup()
     {
         faction = CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2);
-        number = Random.Range(1, 10);
+        number = UnityEngine.Random.Range(1, 10);
 
         spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
         numberText.text = $"{number}";
@@ -46,7 +47,7 @@ public class WashingMachineItem : MonoBehaviour
         Tween.Scale(transform, 1, duration: 0.3f);
     }
 
-    public void ReceiveClothes()
+    public void ReceiveClothes(Action onCompleteAction)
     {
         number--;
 
@@ -54,7 +55,10 @@ public class WashingMachineItem : MonoBehaviour
 
         if (number <= 0)
         {
-            SaferioTween.ScaleDownWithPunch(transform);
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                onCompleteAction?.Invoke();
+            });
         }
     }
 

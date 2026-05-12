@@ -36,9 +36,11 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent += EnterPlayingState;
             ScrewManager.winLevelEvent += EnterWinState;
             TileManager.winLevelEvent += EnterWinState;
+            WashingMachineManager.winLevelEvent += EnterWinState;
             ScrewBoxManager.loseLevelEvent += EnterLoseState;
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
+            WashingMachineManager.loseLevelEvent += EnterLoseState;
             RevivePopup.reviveEvent += OnRevived;
 
             ChangeState(new GameStatePlaying());
@@ -49,9 +51,11 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent -= EnterPlayingState;
             ScrewManager.winLevelEvent -= EnterWinState;
             TileManager.winLevelEvent -= EnterWinState;
+            WashingMachineManager.winLevelEvent -= EnterWinState;
             ScrewBoxManager.loseLevelEvent -= EnterLoseState;
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;
+            WashingMachineManager.loseLevelEvent -= EnterLoseState;
             RevivePopup.reviveEvent -= OnRevived;
         }
 

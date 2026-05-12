@@ -80,7 +80,7 @@ public class ClothesManager : Singleton<ClothesManager>
 
                 if (loopPathSlot.percentInLoopPath >= percentMoveClothesOut - moveSpeed && loopPathSlot.percentInLoopPath < percentMoveClothesOut)
                 {
-                    if (loopPathSlot.clothingPiece != null)
+                    if (loopPathSlot.clothingPiece != null && !loopPathSlot.clothingPiece.isMoving)
                     {
                         bool isFound = WashingMachineManager.Ins.MoveClothesToWashingMachine(loopPathSlot.clothingPiece);
 
@@ -157,8 +157,14 @@ public class ClothesManager : Singleton<ClothesManager>
             {
                 ClothingPiece clothingPiece = pathSlot.clothingPiece;
 
+                clothingPiece.isMoving = true;
+
                 clothingPiece.transform.SetParent(loopPathSlot.transform);
-                Tween.LocalPosition(clothingPiece.transform, new Vector3(0, 0, -1), duration: 0.3f);
+                Tween.LocalPosition(clothingPiece.transform, new Vector3(0, 0, -1), duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    clothingPiece.isMoving = false;
+                });
 
                 loopPathSlot.clothingPiece = clothingPiece;
                 pathSlot.clothingPiece = null;
@@ -172,7 +178,7 @@ public class ClothesManager : Singleton<ClothesManager>
 
     public void MoveDownClothesInWaitingPath()
     {
-        for (int i = 0; i < waitingPathSlots.Count - 1; i++)
+        for (int i = 0; i < waitingPathSlots.Count; i++)
         {
             PathSlot pathSlot = waitingPathSlots[i];
 
@@ -184,7 +190,7 @@ public class ClothesManager : Singleton<ClothesManager>
                 {
                     PathSlot anotherPathSlot = waitingPathSlots[j];
 
-                    if (anotherPathSlot.isLeft == pathSlot.isLeft && anotherPathSlot.clothingPiece != null)
+                    if (anotherPathSlot.isLeft == pathSlot.isLeft && anotherPathSlot.clothingPiece != null && !anotherPathSlot.clothingPiece.isMoving)
                     {
                         MoveClothingPieceFromPathSlotToAnother(anotherPathSlot.clothingPiece, anotherPathSlot, pathSlot);
 
@@ -205,7 +211,13 @@ public class ClothesManager : Singleton<ClothesManager>
         {
             clothingPiece.transform.SetParent(toPathSlot.transform);
 
-            Tween.LocalPosition(clothingPiece.transform, new Vector3(0, 0, -1 - toPathSlot.percentInPath), duration: 0.3f);
+            clothingPiece.isMoving = true;
+
+            Tween.LocalPosition(clothingPiece.transform, new Vector3(0, 0, -1 - toPathSlot.percentInPath), duration: 0.3f)
+            .OnComplete(() =>
+            {
+                clothingPiece.isMoving = false;
+            });
 
             fromPathSlot.clothingPiece = null;
             toPathSlot.clothingPiece = clothingPiece;
@@ -229,7 +241,12 @@ public class ClothesManager : Singleton<ClothesManager>
         clothingPiece.transform.localPosition = Vector3.zero;
         clothingPiece.transform.localScale = Vector3.zero;
 
-        SaferioTween.ScaleUpWithPunch(clothingPiece.transform, 1);
+        clothingPiece.isMoving = true;
+
+        SaferioTween.ScaleUpWithPunch(clothingPiece.transform, 1, onCompleteAction: () =>
+        {
+            clothingPiece.isMoving = false;
+        });
 
         clothingPiece.Init(faction);
 
