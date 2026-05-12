@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dreamteck.Utilities;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -94,6 +95,24 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         return false;
     }
 
+    public void MoveClothesToWashingMachine(ClothingPiece clothingPiece, WashingMachineStartSlot washingMachineStartSlot)
+    {
+        clothingPiece.MoveToWashingMachine(washingMachineStartSlot.washingMachine, onCompleteAction: () =>
+        {
+            washingMachineStartSlot.washingMachine.ReceiveClothes(onCompleteAction: () =>
+            {
+                if (washingMachineStartSlot.washingMachine.number == 0)
+                {
+                    washingMachineStartSlot.washingMachine = null;
+
+                    CheckWinLevel();
+                }
+            });
+        });
+
+        ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
+    }
+
     #region Spawn
     public void SpawnFirstWashingMachines()
     {
@@ -185,6 +204,41 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #endregion
 
     #region Booster
+    public void UseMagicBooster()
+    {
+        List<ClothingPiece> randomPickedClothes = new List<ClothingPiece>();
+
+        for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
+        {
+            ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
+
+            randomPickedClothes.Add(clothingPiece);
+        }
+
+        randomPickedClothes.Shuffle();
+        randomPickedClothes = randomPickedClothes.Take(5).ToList();
+
+        for (int i = 0; i < randomPickedClothes.Count; i++)
+        {
+            ClothingPiece clothingPiece = randomPickedClothes[i];
+
+            for (int j = 0; j < washingMachineStartSlots.Count; j++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    if (washingMachineStartSlot.washingMachine.faction == clothingPiece.faction && washingMachineStartSlot.washingMachine.number > 0)
+                    {
+                        MoveClothesToWashingMachine(clothingPiece, washingMachineStartSlot);
+
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     public void UseBoosterShuffle()
     {
         Dictionary<GameFaction, int> currentAvailableClothesPerFaction = GetCurrentAvailableClothesPerFaction();

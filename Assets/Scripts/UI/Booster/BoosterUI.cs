@@ -279,14 +279,6 @@ public class BoosterUI : MonoBehaviour
 
     private void ClearAllScrewPorts()
     {
-        if (!TileManager.Ins.IsAnyTileOnShelf())
-        {
-            // shakeScrewPortsEvent?.Invoke();
-            showNotificationEvent?.Invoke(GameConstants.TIPS, GameConstants.NO_SCREW_TO_BE_CLEARED);
-
-            return;
-        }
-
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
@@ -303,8 +295,7 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        TileManager.Ins.UseSweeperBooster();
-        // clearAllScrewPortsEvent?.Invoke();
+        WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 
