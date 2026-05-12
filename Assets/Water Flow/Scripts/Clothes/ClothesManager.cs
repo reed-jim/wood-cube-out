@@ -4,6 +4,7 @@ using System.Linq;
 using Dreamteck.Splines;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 using static GameEnum;
 
@@ -18,6 +19,9 @@ public class ClothesManager : Singleton<ClothesManager>
     public SplineComputer loopPath;
     public SplineComputer[] waitingPaths;
 
+    public TMP_Text clothesCountText;
+
+    public int totalClothingPiece;
     public float moveSpeed;
     public float normalizedDistance;
     public float percentMoveClothesOut;
@@ -51,6 +55,8 @@ public class ClothesManager : Singleton<ClothesManager>
         SpawnClothes();
 
         WashingMachineManager.Ins.SpawnFirstWashingMachines();
+
+        UpdateClothesCount();
     }
 
     private IEnumerator RunTheQueue()
@@ -253,6 +259,15 @@ public class ClothesManager : Singleton<ClothesManager>
         pathSlot.clothingPiece = clothingPiece;
 
         clothingPieces.Add(clothingPiece);
+    }
+    #endregion
+
+    #region Count
+    public void UpdateClothesCount()
+    {
+        int remainingClothes = clothingPieces.Count + WashingMachineManager.Ins.poolFaction.Count;
+
+        clothesCountText.text = $"{remainingClothes}/{totalClothingPiece}";
     }
     #endregion
 }

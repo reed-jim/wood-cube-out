@@ -14,8 +14,6 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public List<GameFaction> poolFaction;
 
-    public int totalClothingPiece;
-
     public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
 
@@ -87,7 +85,10 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                             }
                         });
                     });
+
                     ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
+
+                    ClothesManager.Ins.UpdateClothesCount();
 
                     return true;
                 }
@@ -116,6 +117,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         });
 
         ClothesManager.Ins.clothingPieces.Remove(clothingPiece);
+
+        ClothesManager.Ins.UpdateClothesCount();
     }
 
     #region Spawn
@@ -123,7 +126,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         poolFaction = new List<GameFaction>();
 
-        for (int i = 0; i < totalClothingPiece; i++)
+        for (int i = 0; i < ClothesManager.Ins.totalClothingPiece; i++)
         {
             poolFaction.Add(CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2));
         }
