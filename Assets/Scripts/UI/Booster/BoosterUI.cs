@@ -295,6 +295,8 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
+        ConsumeBooster(boosterIndex: 2);
+
         WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();

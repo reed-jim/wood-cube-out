@@ -73,6 +73,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
                 if (washingMachineItem.number > 0 && clothingPiece.faction == washingMachineItem.faction)
                 {
+                    washingMachineItem.MinusClothingPiece();
+
                     clothingPiece.MoveToWashingMachine(washingMachineItem, onCompleteAction: () =>
                     {
                         washingMachineItem.ReceiveClothes(onCompleteAction: () =>
@@ -97,6 +99,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
     public void MoveClothesToWashingMachine(ClothingPiece clothingPiece, WashingMachineStartSlot washingMachineStartSlot)
     {
+        washingMachineStartSlot.washingMachine.MinusClothingPiece();
+
         clothingPiece.MoveToWashingMachine(washingMachineStartSlot.washingMachine, onCompleteAction: () =>
         {
             washingMachineStartSlot.washingMachine.ReceiveClothes(onCompleteAction: () =>
@@ -105,6 +109,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                 {
                     washingMachineStartSlot.washingMachine = null;
 
+                    SpawnNewWashingMachine();
                     CheckWinLevel();
                 }
             });
@@ -155,6 +160,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     public void SpawnNewWashingMachine()
     {
         Dictionary<GameFaction, int> sortedPoolFaction = GetScorePerFaction();
+
+        if (sortedPoolFaction.Count == 0)
+        {
+            return;
+        }
 
         if (sortedPoolFaction.ElementAt(0).Value <= 0)
         {
@@ -230,6 +240,20 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                 {
                     if (washingMachineStartSlot.washingMachine.faction == clothingPiece.faction && washingMachineStartSlot.washingMachine.number > 0)
                     {
+                        PathSlot pathSlot = clothingPiece.GetComponentInParent<PathSlot>();
+
+                        if (pathSlot != null)
+                        {
+                            pathSlot.clothingPiece = null;
+                        }
+
+                        LoopPathSlot loopPathSlot = clothingPiece.GetComponentInParent<LoopPathSlot>();
+
+                        if (loopPathSlot != null)
+                        {
+                            loopPathSlot.clothingPiece = null;
+                        }
+
                         MoveClothesToWashingMachine(clothingPiece, washingMachineStartSlot);
 
                         break;
@@ -237,6 +261,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
                 }
             }
         }
+
+        ClothesManager.Ins.MoveDownClothesInWaitingPath();
     }
 
     public void UseBoosterShuffle()

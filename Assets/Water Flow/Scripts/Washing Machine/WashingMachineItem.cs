@@ -47,10 +47,13 @@ public class WashingMachineItem : MonoBehaviour
         Tween.Scale(transform, 1, duration: 0.3f);
     }
 
-    public void ReceiveClothes(Action onCompleteAction)
+    public void MinusClothingPiece()
     {
         number--;
+    }
 
+    public void ReceiveClothes(Action onCompleteAction)
+    {
         numberText.text = $"{number}";
 
         if (number <= 0)
