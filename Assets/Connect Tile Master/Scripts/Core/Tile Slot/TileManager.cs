@@ -308,7 +308,7 @@ public class TileManager : Singleton<TileManager>
     #endregion
 
     #region Move Tiles  
-    public void MoveTileToSlot(BaseTile tile)
+    public void MoveTileToSlot(BaseTile tile, Action onCompleteAction)
     {
         bool isFound = false;
 
@@ -348,6 +348,8 @@ public class TileManager : Singleton<TileManager>
                         }
 
                         DropTileDown(tile);
+
+                        onCompleteAction?.Invoke();
                     });
 
                     tileSlot.AddTile(tile);
@@ -480,6 +482,11 @@ public class TileManager : Singleton<TileManager>
 
     private void DropTileDown(BaseTile movedTile)
     {
+        if (!grids.Any(item => item.tile == movedTile))
+        {
+            return;
+        }
+
         Grid selectedTileGrid = grids.First(item => item.tile == movedTile);
         List<Grid> affectedGrids =
             grids.Where(item => item.IsSameColumn(selectedTileGrid) && item.topBound > selectedTileGrid.topBound).ToList();
