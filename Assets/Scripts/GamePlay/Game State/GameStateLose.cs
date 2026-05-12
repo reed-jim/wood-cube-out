@@ -31,14 +31,7 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        if (TileManager.Ins.NumLockedTileSlotContainer == 0)
-        {
-            showRevivePopupEvent?.Invoke(BoosterType.ClearScrewPorts);
-        }
-        else
-        {
-            showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
-        }
+        showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
     }
 
     public override void Exit()

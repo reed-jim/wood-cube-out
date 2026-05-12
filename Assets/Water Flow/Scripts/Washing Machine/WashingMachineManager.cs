@@ -18,6 +18,18 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
 
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        RevivePopup.reviveEvent += Revive;
+    }
+
+    void OnDestroy()
+    {
+        RevivePopup.reviveEvent -= Revive;
+    }
+
     public void MoveItemToSlot(WashingMachineItem washingMachineItem)
     {
         WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
@@ -25,7 +37,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         if (washingMachineSlot == null)
         {
             CheckLoseLevel();
-            
+
             return;
         }
 
@@ -175,8 +187,6 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #region Check Win
     private void CheckWinLevel()
     {
-        Debug.Log($"CheckWinLevel {poolFaction.Count} {ClothesManager.Ins.clothingPieces.Count}");
-
         bool isWin = poolFaction.Count + ClothesManager.Ins.clothingPieces.Count == 0;
 
         if (isWin)
@@ -189,14 +199,29 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #region Check Lose
     private void CheckLoseLevel()
     {
-        bool isLose = washingMachineSlots.All(item => item.washingMachineItem != null);
+        bool isLose = washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
 
         if (isLose)
         {
             loseLevelEvent?.Invoke();
         }
     }
-    #endregion 
+
+    private void Revive(BoosterType boosterType)
+    {
+        for (int i = 0; i < washingMachineSlots.Count; i++)
+        {
+            WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            if (washingMachineSlot.isLocked)
+            {
+                washingMachineSlot.Unlock();
+
+                break;
+            }
+        }
+    }
+    #endregion
 
     #region Util
     public WashingMachineSlot GetAvailableWashingMachineSlot()
@@ -205,7 +230,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
         {
             WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
 
-            if (washingMachineSlot.washingMachineItem == null)
+            if (!washingMachineSlot.isLocked && washingMachineSlot.washingMachineItem == null)
             {
                 return washingMachineSlot;
             }
@@ -246,13 +271,6 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             {
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
             }
-        }
-
-        Debug.Log($"GetScorePerFaction ****************");
-
-        foreach (var item in sortedPoolFaction)
-        {
-            Debug.Log($"GetScorePerFaction {item.Key} {item.Value}");
         }
 
         sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
