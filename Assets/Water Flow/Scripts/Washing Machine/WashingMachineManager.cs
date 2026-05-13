@@ -9,6 +9,8 @@ using static GameEnum;
 
 public class WashingMachineManager : Singleton<WashingMachineManager>
 {
+    public WashingMachine.LevelItem levelItem;
+
     public List<WashingMachineSlot> washingMachineSlots;
     public List<WashingMachineStartSlot> washingMachineStartSlots;
 
@@ -124,12 +126,18 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     #region Spawn
     public List<WashingMachineItem> SpawnFirstWashingMachines()
     {
+        // poolFaction = new List<GameFaction>();
+
+        // for (int i = 0; i < ClothesManager.Ins.totalClothingPiece; i++)
+        // {
+        //     poolFaction.Add(CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2));
+        // }
+
         poolFaction = new List<GameFaction>();
 
-        for (int i = 0; i < ClothesManager.Ins.totalClothingPiece; i++)
-        {
-            poolFaction.Add(CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2));
-        }
+        poolFaction.AddRange(levelItem.poolFaction);
+
+        ClothesManager.Ins.totalClothingPiece = poolFaction.Count;
 
         Dictionary<GameFaction, int> sortedPoolFaction = new Dictionary<GameFaction, int>();
 
@@ -150,6 +158,11 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
         for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
+            if (i >= sortedPoolFaction.Count)
+            {
+                break;
+            }
+            
             WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
             WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
@@ -162,7 +175,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
             washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
         }
-        
+
         return washingMachineItems;
     }
 

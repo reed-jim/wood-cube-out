@@ -121,6 +121,8 @@ public class ClothesManager : Singleton<ClothesManager>
     {
         bool isLeft = true;
 
+        totalClothingPiece = WashingMachineManager.Ins.levelItem.poolFaction.Count;
+
         for (int i = 0; i < waitingPaths.Length; i++)
         {
             SplineComputer waitingPath = waitingPaths[i];
@@ -129,6 +131,11 @@ public class ClothesManager : Singleton<ClothesManager>
 
             for (int j = 0; j < 10; j++)
             {
+                if (clothingPieces.Count == totalClothingPiece)
+                {
+                    break;
+                }
+
                 float percent = 1 - 0.1f * j;
 
                 PathSlot pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);

@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
 using System.Reflection;
+using Dreamteck.Utilities;
 using PrimeTween;
 using UnityEngine;
 using static GameEnum;
@@ -339,6 +341,25 @@ public static class CommonUtil
     {
         T[] values = (T[])System.Enum.GetValues(typeof(T));
         return values[UnityEngine.Random.Range(0, values.Length - numLastValuesToSkip)];
+    }
+
+    public static List<T> GetRandomEnumValuePool<T>(int maxUniqueValueCount, int numLastValuesToSkip = 0)
+    {
+        T[] values = (T[])System.Enum.GetValues(typeof(T));
+
+        int availableCount = values.Length - numLastValuesToSkip;
+
+        maxUniqueValueCount = Mathf.Clamp(
+            maxUniqueValueCount,
+            0,
+            availableCount);
+
+        // Copy allowed values
+        List<T> pool = values.Take(availableCount).ToList();
+
+        pool.Shuffle();
+
+        return pool.Take(maxUniqueValueCount).ToList();
     }
     #endregion
 
