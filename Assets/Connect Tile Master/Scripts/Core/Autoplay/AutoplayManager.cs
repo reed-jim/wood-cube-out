@@ -21,11 +21,13 @@ public class AutoplayManager : Singleton<AutoplayManager>
 
         while (true)
         {
+            poolTile = new List<BaseTile>();
+
             for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (!tile.IsOnSlot)
+                if (!tile.IsMoving && !tile.IsOnSlot)
                 {
                     poolTile.Add(tile);
                 }
@@ -33,9 +35,12 @@ public class AutoplayManager : Singleton<AutoplayManager>
 
             poolTile.Shuffle();
 
-            BaseTile selectedTile = poolTile.First();
+            if (poolTile.Count > 0)
+            {
+                BaseTile selectedTile = poolTile.First();
 
-            selectedTile.Select();
+                selectedTile.Select();
+            }
 
             GamePersistentVariable.isAutoTestingLevel = true;
 

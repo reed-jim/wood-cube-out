@@ -15,6 +15,7 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private bool isActive;
     public bool isLocked;
     public bool isMoving;
+    public bool isHidden;
 
     public ItemCategory ItemCategory
     {
@@ -63,10 +64,14 @@ public class TileSlotContainer : MonoBehaviour
         for (int i = 0; i < tileSlots.Length; i++)
         {
             TileSlot tileSlot = tileSlots[i];
+            TileSlotContainer tileSlotContainer = tileSlot.tileSlotContainer;
 
-            if (tileSlot.tileSlotContainer != null && tileSlot.tileSlotContainer.isMoving)
+            if (tileSlotContainer != null)
             {
-                continue;
+                if (tileSlotContainer.isMoving || tileSlotContainer.isHidden)
+                {
+                    continue;
+                }
             }
 
             if (tileSlot.Tile == null)
@@ -149,6 +154,7 @@ public class TileSlotContainer : MonoBehaviour
         float initialPositionY = transform.localPosition.y;
 
         isMoving = true;
+        isHidden = true;
 
         Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f)
         .OnComplete(() =>

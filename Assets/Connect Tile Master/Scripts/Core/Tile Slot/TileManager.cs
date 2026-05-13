@@ -363,7 +363,7 @@ public class TileManager : Singleton<TileManager>
 
         if (!isFound)
         {
-            MoveTileToAdditionalSlot(tile);
+            MoveTileToAdditionalSlot(tile, onCompleteAction);
         }
     }
 
@@ -395,8 +395,10 @@ public class TileManager : Singleton<TileManager>
         slot.AddTile(tile);
     }
 
-    private void MoveTileToAdditionalSlot(BaseTile tile)
+    private void MoveTileToAdditionalSlot(BaseTile tile, Action onCompleteAction)
     {
+        bool isFound = false;
+
         for (int i = 0; i < additionalTileSlots.Count; i++)
         {
             TileSlot tileSlot = additionalTileSlots[i];
@@ -413,12 +415,21 @@ public class TileManager : Singleton<TileManager>
                     {
                         loseLevelEvent?.Invoke();
                     }
+
+                    isFound = true;
+
+                    onCompleteAction?.Invoke();
                 });
 
                 additionalTileSlots[i].AddTile(tile);
 
                 break;
             }
+        }
+
+        if (!isFound)
+        {
+            onCompleteAction?.Invoke();
         }
 
         bool IsAllShelfFilled()

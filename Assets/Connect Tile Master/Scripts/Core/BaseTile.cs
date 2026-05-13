@@ -1,3 +1,4 @@
+using System;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -17,6 +18,8 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private bool isOnSlot;
     [SerializeField] private bool isOutside;
     [SerializeField] private bool isDone;
+
+    public static event Action<BaseTile> selectTileEvent;
 
     public ItemCategory ItemCategory
     {
@@ -95,6 +98,8 @@ public class BaseTile : MonoBehaviour
         {
             IsMoving = false;
         });
+
+        selectTileEvent?.Invoke(this);
     }
 
     public void MoveToOutsideBox()
