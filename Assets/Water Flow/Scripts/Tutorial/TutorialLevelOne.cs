@@ -1,0 +1,154 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
+using Spine.Unity;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class TutorialLevelOne : Singleton<TutorialLevelOne>
+{
+    public SkeletonAnimation tutorialHand;
+    public CanvasGroup tutorialCanvasGroup;
+    public TMP_Text description;
+    public CanvasGroup continueButtonCanvasGroup;
+    public Button continueButton;
+    public Image blackOverlay;
+
+    public Camera mainCamera;
+    public Canvas gameplayCanvas;
+    private int initialGameplayCanvasSortingOrder;
+
+    public List<WashingMachineItem> toSelectWashingMachines;
+
+    public int step;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        WashingMachineItem.selectWashingMachineEvent += OnWashingMachineSelected;
+
+        continueButton.onClick.AddListener(OnClickContinue);
+
+        continueButtonCanvasGroup.gameObject.SetActive(false);
+    }
+
+    void OnDestroy()
+    {
+        WashingMachineItem.selectWashingMachineEvent -= OnWashingMachineSelected;
+    }
+
+    public void StartTutorial(List<WashingMachineItem> washingMachines)
+    {
+        initialGameplayCanvasSortingOrder = gameplayCanvas.sortingOrder;
+
+        gameplayCanvas.renderMode = RenderMode.ScreenSpaceCamera;
+        gameplayCanvas.worldCamera = mainCamera;
+        gameplayCanvas.sortingOrder = 0;
+
+        SaferioTween.AlphaShow(blackOverlay, 230f / 255);
+
+        toSelectWashingMachines = washingMachines.Take(3).ToList();
+
+        StartCoroutine(ProgressingTutorial());
+    }
+
+    private IEnumerator ProgressingTutorial()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+        int maxStep = 2;
+
+        description.text = $"Select the washing machines to wash the clothes.";
+
+        MoveTutorialHandToTile(toSelectWashingMachines[0]);
+
+        while (step <= maxStep)
+        {
+            if (step == 0)
+            {
+                if (toSelectWashingMachines.Count == 0)
+                {
+                    NextStep();
+                    StartStepTwo();
+                }
+            }
+
+            yield return waitForSeconds;
+        }
+
+        EndTutorial();
+    }
+
+    private void StartStepTwo()
+    {
+        description.text = $"Repeat the process until no items remain.";
+
+        continueButton.interactable = false;
+
+        SaferioTween.AlphaShow(continueButtonCanvasGroup, 1, onCompleteAction: () =>
+        {
+            continueButton.interactable = true;
+        });
+    }
+
+    private void NextStep()
+    {
+        step++;
+    }
+
+    private void MoveTutorialHandToTile(WashingMachineItem washingMachine)
+    {
+        Tween.Position(tutorialHand.transform, washingMachine.transform.position.AddZ(-1), duration: 0.3f);
+    }
+
+    private void OnWashingMachineSelected(WashingMachineItem washingMachine)
+    {
+        toSelectWashingMachines.Remove(washingMachine);
+
+        if (toSelectWashingMachines.Count == 0)
+        {
+            return;
+        }
+
+        MoveTutorialHandToTile(toSelectWashingMachines[0]);
+    }
+
+    private void OnClickContinue()
+    {
+        NextStep();
+    }
+
+    private void EndTutorial()
+    {
+        SaferioTween.AlphaHide(blackOverlay);
+        SaferioTween.AlphaHide(tutorialCanvasGroup);
+
+        gameplayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        gameplayCanvas.sortingOrder = initialGameplayCanvasSortingOrder;
+    }
+}
+
+public class TutorialLevelOneStepOne : TutorialStep
+{
+    public override void Doing()
+    {
+
+    }
+}
+
+public class TutorialStep
+{
+    public virtual void Doing()
+    {
+
+    }
+
+    public virtual bool IsEnded()
+    {
+        return false;
+    }
+}

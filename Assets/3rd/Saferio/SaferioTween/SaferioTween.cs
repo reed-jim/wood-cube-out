@@ -3,6 +3,7 @@ using System.Collections;
 using System.Threading;
 using System.Threading.Tasks;
 using PrimeTween;
+using Spine.Unity;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -399,7 +400,7 @@ namespace Saferio.Util.SaferioTween
 
             return sequence;
         }
-        
+
         public static Sequence ScaleDownWithPunch(Transform target, float scaleUpVal = 1.1f, Action onCompleteAction = null)
         {
             float initialScale = target.localScale.x;
@@ -543,9 +544,58 @@ namespace Saferio.Util.SaferioTween
         #endregion
 
         #region COLOR
-        public async static void AlphaAsync(Image image, float endAlpha, float duration, Action onCompletedAction = null)
+        public static void AlphaShow(Image image, float endAlpha = 1)
         {
-            await AlphaAsync(SaferioTweenManager.CancellationTokenSourceOnDestroyed.Token, image, endAlpha, duration, onCompletedAction);
+            image.gameObject.SetActive(true);
+            image.color = image.color.ChangeAlpha(0);
+
+            Tween.Alpha(image, endAlpha, duration: 0.3f);
+        }
+
+        public static void AlphaShow(SkeletonGraphic skeletonGraphic, float endAlpha = 1, Action onCompleteAction = null)
+        {
+            skeletonGraphic.gameObject.SetActive(true);
+            skeletonGraphic.color = skeletonGraphic.color.ChangeAlpha(0);
+
+            Tween.Alpha(skeletonGraphic, endAlpha, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
+        }
+
+        public static void AlphaShow(CanvasGroup canvasGroup, float endAlpha = 1, Action onCompleteAction = null)
+        {
+            canvasGroup.gameObject.SetActive(true);
+            canvasGroup.alpha = 0;
+
+            Tween.Alpha(canvasGroup, endAlpha, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
+        }
+
+        public static void AlphaHide(Image image, Action onCompleteAction = null)
+        {
+            Tween.Alpha(image, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                image.gameObject.SetActive(false);
+
+                onCompleteAction?.Invoke();
+            });
+        }
+
+        public static void AlphaHide(CanvasGroup canvasGroup, Action onCompleteAction = null)
+        {
+            Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                canvasGroup.gameObject.SetActive(false);
+
+                onCompleteAction?.Invoke();
+            });
         }
 
         private async static Task AlphaAsync

@@ -122,7 +122,7 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
     }
 
     #region Spawn
-    public void SpawnFirstWashingMachines()
+    public List<WashingMachineItem> SpawnFirstWashingMachines()
     {
         poolFaction = new List<GameFaction>();
 
@@ -146,11 +146,15 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
         sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
+        List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
+
         for (int i = 0; i < washingMachineStartSlots.Count; i++)
         {
             WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
             WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
+
+            washingMachineItems.Add(washingMachineItem);
 
             washingMachineStartSlot.washingMachine = washingMachineItem;
 
@@ -158,6 +162,8 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
 
             washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
         }
+        
+        return washingMachineItems;
     }
 
     public void SpawnNewWashingMachine()

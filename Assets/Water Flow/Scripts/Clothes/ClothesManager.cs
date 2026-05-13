@@ -54,7 +54,9 @@ public class ClothesManager : Singleton<ClothesManager>
 
         SpawnClothes();
 
-        WashingMachineManager.Ins.SpawnFirstWashingMachines();
+        List<WashingMachineItem> washingMachineItems = WashingMachineManager.Ins.SpawnFirstWashingMachines();
+
+        TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
 
         UpdateClothesCount();
     }

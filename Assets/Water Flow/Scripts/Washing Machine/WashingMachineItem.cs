@@ -16,6 +16,8 @@ public class WashingMachineItem : MonoBehaviour
     public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
 
+    public static event Action<WashingMachineItem> selectWashingMachineEvent;
+
     void Awake()
     {
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
@@ -68,5 +70,7 @@ public class WashingMachineItem : MonoBehaviour
     public void Select()
     {
         WashingMachineManager.Ins.MoveItemToSlot(this);
+
+        selectWashingMachineEvent?.Invoke(this);
     }
 }
