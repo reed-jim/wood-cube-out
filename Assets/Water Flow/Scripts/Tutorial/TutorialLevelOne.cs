@@ -60,7 +60,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
-        int maxStep = 2;
+        int maxStep = 1;
 
         description.text = $"Select the washing machines to wash the clothes.";
 
@@ -92,6 +92,11 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         SaferioTween.AlphaShow(continueButtonCanvasGroup, 1, onCompleteAction: () =>
         {
             continueButton.interactable = true;
+        });
+        Tween.PositionX(tutorialHand.transform, tutorialHand.transform.position.x + 10, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            tutorialHand.gameObject.SetActive(false);
         });
     }
 
