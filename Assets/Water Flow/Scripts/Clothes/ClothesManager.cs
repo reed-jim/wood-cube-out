@@ -34,13 +34,15 @@ public class ClothesManager : Singleton<ClothesManager>
 
         waitingPathSlots = new List<PathSlot>();
     }
+    #endregion
 
-    void Start()
+    public void StartLevel(WashingMachine.LevelItem levelItem)
     {
+        WashingMachineManager.Ins.levelItem = levelItem;
+
         SetupSlots();
         StartCoroutine(RunTheQueue());
     }
-    #endregion
 
     private void SetupSlots()
     {

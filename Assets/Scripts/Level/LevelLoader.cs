@@ -237,6 +237,12 @@ namespace NamPhuThuy.GamePlay
             {
                 GameObject level = resultLoad;
 
+                WashingMachine.LevelItem levelItem = level.GetComponent<WashingMachine.LevelItem>();
+
+                ClothesManager.Ins.StartLevel(levelItem);
+
+                return;
+
                 _currentLevelContainer = level.transform;
 
                 #region ASSIGN CLONE TO CALC ROTATION
