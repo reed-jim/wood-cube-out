@@ -102,7 +102,7 @@ public class AdmobAdsMax : MonoBehaviour
             DontDestroyOnLoad(gameObject);
         }
 
-        StartCoroutine(Init());
+        // StartCoroutine(Init());
 
         countdownAds = int.MaxValue;
     }

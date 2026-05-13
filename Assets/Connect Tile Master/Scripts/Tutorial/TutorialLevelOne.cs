@@ -17,55 +17,72 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     public CanvasGroup continueButtonCanvasGroup;
     public Button continueButton;
 
+    public Canvas gameplayCanvas;
+    public Image blackOverlay;
+
     public List<BaseTile> tilesToSelect;
 
     public int step;
+    private int gameplayCanvasOriginalSortingOrder;
 
     protected override void MoreActionOnAwake()
     {
         base.MoreActionOnAwake();
 
         BaseTile.selectTileEvent += OnTileSelected;
-        LevelLoader.startLevelEvent += OnLevelStarted;
 
         continueButton.onClick.AddListener(Continue);
+
+        continueButton.gameObject.SetActive(false);
     }
 
     void OnDestroy()
     {
         BaseTile.selectTileEvent -= OnTileSelected;
-        LevelLoader.startLevelEvent -= OnLevelStarted;
     }
 
-    private void StartTutorial()
+    public void StartTutorial()
     {
+        tilesToSelect = TileManager.Ins.tiles.Where(item => item.ItemCategory == ItemCategory.School).Take(4).ToList();
+
+        gameplayCanvasOriginalSortingOrder = gameplayCanvas.sortingOrder;
+        gameplayCanvas.sortingOrder = 98;
+
+        SaferioTween.AlphaShow(blackOverlay, endAlpha: 230f / 255);
+
         StartCoroutine(ProgressingTutorial());
     }
 
     private IEnumerator ProgressingTutorial()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
 
         int maxStep = 3;
 
+        description.text = $"Select the tiles in the <color=#FF5252>School</color> category.";
+
+        Tween.Position(tutorialHand.transform, tilesToSelect[0].transform.position.AddZ(-1), duration: 0.3f);
+
         while (step < maxStep)
         {
-            if (step == 1)
+            if (step == 0)
             {
                 if (tilesToSelect.Count == 0)
                 {
                     step++;
                 }
             }
-            else if (step == 2)
+            else if (step == 1)
             {
                 description.text = $"When all tiles of a box are filled, the box is completed";
 
-                Tween.Alpha(continueButtonCanvasGroup, 1, duration: 0.3f)
-                .OnComplete(() =>
+                SaferioTween.AlphaShow(continueButtonCanvasGroup, onCompleteAction: () =>
                 {
                     continueButton.interactable = true;
                 });
+                Tween.Alpha(tutorialHand, 0, duration: 0.3f);
+
+                step++;
             }
 
             yield return waitForSeconds;
@@ -76,26 +93,26 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         step++;
 
-        if (step == 1)
-        {
-            description.text = $"Select the tiles in the <color=#FFB84D><b>Food</b></color> category.";
-
-            Tween.Position(tutorialHand.transform, tilesToSelect[0].transform.position.AddZ(-1), duration: 0.3f);
-
-            continueButton.interactable = false;
-            Tween.Alpha(continueButtonCanvasGroup, 0, duration: 0.3f);
-        }
-        else if (step == 3)
+        if (step == 3)
         {
             EndTutorial();
         }
-    }
 
-    private void OnLevelStarted()
-    {
-        tilesToSelect = TileManager.Ins.tiles.Where(item => item.ItemCategory == ItemCategory.Food).ToList();
+        // if (step == 1)
+        // {
+        //     description.text = $"Select the tiles in the <color=#FF5252>Food</color> category.";
 
-        StartTutorial();
+        //     SaferioTween.AlphaShow(tutorialHand);
+
+        //     Tween.Position(tutorialHand.transform, tilesToSelect[0].transform.position.AddZ(-1), duration: 0.3f);
+
+        //     continueButton.interactable = false;
+        //     Tween.Alpha(continueButtonCanvasGroup, 0, duration: 0.3f);
+        // }
+        // else if (step == 3)
+        // {
+        //     EndTutorial();
+        // }
     }
 
     private void OnTileSelected(BaseTile tile)
@@ -110,10 +127,18 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     private void EndTutorial()
     {
+        gameplayCanvas.sortingOrder = gameplayCanvasOriginalSortingOrder;
+
         Tween.Alpha(tutorialContainer, 0, duration: 0.3f)
         .OnComplete(() =>
         {
             tutorialContainer.gameObject.SetActive(false);
+        });
+        Tween.Alpha(tutorialHand, 0, duration: 0.3f);
+        Tween.Alpha(blackOverlay, 0, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            blackOverlay.gameObject.SetActive(false);
         });
     }
 }
