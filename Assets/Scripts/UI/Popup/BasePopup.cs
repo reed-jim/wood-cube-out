@@ -29,46 +29,25 @@ public class BasePopup : MonoBehaviour
     #endregion
 
     #region EVENT
+    public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action popupShowEvent;
     public static event Action popupHideEvent;
     public static event Action<bool> enableSwipingScreenEvent;
     public static event Action showAdNotLoadedPopupEvent;
-    public static event Action<ScreenRoute> switchPopupRouteEvent;
     public static event Action<string, string> showNotificationEvent;
     public static event Action<int, int[], bool> showResourcesEarnPopupEvent;
-    
-    /*[Header("Event Channels")]
-    [SerializeField] protected SwitchRouteChannelSO switchRouteChannel;
-    protected SwitchRouteChannelSO SwitchRouteChannel
-    {
-        get
-        {
-            if (switchRouteChannel == null)
-            {
-                switchRouteChannel = Resources.Load<SwitchRouteChannelSO>(nameof(SwitchRouteChannelSO));
-            }
-            return switchRouteChannel;
-        }
-    }*/
-   
     #endregion
 
+    #region Life Cycle
     private void Awake()
     {
-        switchPopupRouteEvent += OnRouteSwitched;
+        switchRouteEvent += OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent += OnRouteSwitched;
         TopBar.showPopupEvent += OnRouteSwitched;
         MenuScreen.switchRouteEvent += OnRouteSwitched;
         GameplayScreen.switchRouteEvent += OnRouteSwitched;
         LevelLoader.switchRouteEvent += OnRouteSwitched;
-        
-        SettingPopup.switchRouteEvent += OnRouteSwitched;
-        IAPShopPopup.switchRouteEvent += OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent += OnRouteSwitched;
-        PausePopup.switchRouteEvent += OnRouteSwitched;
-        
-        // SwitchRouteChannel.Event += OnRouteSwitched;
-        
+
         UserLivesUI.switchRouteEvent += OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent += OnRouteSwitched;
 
@@ -108,25 +87,16 @@ public class BasePopup : MonoBehaviour
 
     private void OnDestroy()
     {
-        switchPopupRouteEvent -= OnRouteSwitched;
+        switchRouteEvent -= OnRouteSwitched;
         SwitchRouteButton.switchRouteEvent -= OnRouteSwitched;
         TopBar.showPopupEvent -= OnRouteSwitched;
         MenuScreen.switchRouteEvent -= OnRouteSwitched;
         GameplayScreen.switchRouteEvent -= OnRouteSwitched;
-       
-        
         LevelLoader.switchRouteEvent -= OnRouteSwitched;
-        
+
         UserLivesUI.switchRouteEvent -= OnRouteSwitched;
         LeaderboardScreen.switchRouteEvent -= OnRouteSwitched;
 
-        PausePopup.switchRouteEvent -= OnRouteSwitched;
-        SettingPopup.switchRouteEvent -= OnRouteSwitched;
-        IAPShopPopup.switchRouteEvent -= OnRouteSwitched;
-        BuyBoosterPopup.switchRouteEvent -= OnRouteSwitched;
-        
-        // SwitchRouteChannel.Event -= OnRouteSwitched;
-        
         UnregisterMoreEvent();
 
         CommonUtil.StopAllTweens(_tweens);
@@ -153,6 +123,7 @@ public class BasePopup : MonoBehaviour
     {
 
     }
+    #endregion
 
     private void OnRouteSwitched(ScreenRoute route)
     {
@@ -166,18 +137,7 @@ public class BasePopup : MonoBehaviour
         }
     }
 
-    // private void OnRouteSwitchedWithoutAd(ScreenRoute route)
-    // {
-    //     if (route == this.route)
-    //     {
-    //         ShowWithoutAd();
-    //     }
-    //     else
-    //     {
-
-    //     }
-    // }
-
+    #region Show
     protected virtual void Show(Action onCompletedAction = null)
     {
         if (_isInTransition)
@@ -187,27 +147,8 @@ public class BasePopup : MonoBehaviour
 
         ActualShowAfterAd(onCompletedAction);
 
-        // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-        // {
-        //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
-        // }
-        // else
-        // {
-        //     ActualShowAfterAd(onCompletedAction);
-        // }
-
         _isInTransition = true;
     }
-
-    // protected void ShowWithoutAd(Action onCompletedAction = null)
-    // {
-    //     if (_isInTransition)
-    //     {
-    //         return;
-    //     }
-
-    //     ActualShowAfterAd(onCompletedAction);
-    // }
 
     private void ActualShowAfterAd(Action onCompletedAction = null)
     {
@@ -234,7 +175,9 @@ public class BasePopup : MonoBehaviour
     {
         Show(onCompletedAction: null);
     }
+    #endregion
 
+    #region Hide
     protected virtual void Hide(Action onCompletedAction = null)
     {
         if (_isInTransition)
@@ -245,15 +188,6 @@ public class BasePopup : MonoBehaviour
         if (_isShown)
         {
             ActualHideAfterAd(onCompletedAction);
-
-            // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
-            // {
-            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
-            // }
-            // else
-            // {
-            //     ActualHideAfterAd(onCompletedAction);
-            // }
 
             _isInTransition = true;
         }
@@ -381,10 +315,12 @@ public class BasePopup : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region Common
     protected void SwitchRoute(ScreenRoute route)
     {
-        switchPopupRouteEvent?.Invoke(route);
+        switchRouteEvent?.Invoke(route);
     }
 
     protected void ShowNotification(string title, string description)
@@ -406,4 +342,5 @@ public class BasePopup : MonoBehaviour
     {
         _tweens.Add(tween);
     }
+    #endregion
 }

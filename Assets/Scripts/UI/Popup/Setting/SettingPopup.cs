@@ -32,7 +32,6 @@ public class SettingPopup : BasePopup
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
-    public static event Action<ScreenRoute> switchRouteEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -161,30 +160,25 @@ public class SettingPopup : BasePopup
     #region RATE
     private void Rate()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Rate);
-        // switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
+        SwitchRoute(ScreenRoute.Rate);
     }
     #endregion
 
     #region Compensate
     private void OpenCompensatePopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Compensate);
-        // switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
+        SwitchRoute(ScreenRoute.Compensate);
     }
     #endregion
 
     private void OpenBackupPopup()
     {
-        DebugLogger.LogSimple();
-        switchRouteEvent?.Invoke(ScreenRoute.Backup);
-        // switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
+        SwitchRoute(ScreenRoute.Backup);
     }
 
     private void OpenUserConsentPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
-        // switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
+        SwitchRoute(ScreenRoute.UserConsent);
     }
 
     private void OpenFacebookGroup()

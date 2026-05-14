@@ -44,7 +44,6 @@ public class BuyBoosterPopup : BasePopup
     public static event Action<BoosterType> useBoosterEvent;
     public static event Action unlockScrewBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
-    public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<int> updateBoosterQuantityEvent;
 
     protected override void MoreActionInAwake()
@@ -242,8 +241,7 @@ public class BuyBoosterPopup : BasePopup
 
     private void ShowAdsNotLoadedPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.NoInternet);
-        // switchRouteChannel.Invoke(ScreenRoute.NoInternet, nameof(BuyBoosterPopup));
+        SwitchRoute(ScreenRoute.NoInternet);
 
         isAbleToHideOnClickOutside = true;
     }

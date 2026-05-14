@@ -20,7 +20,6 @@ public class IAPShopPopup : BasePopup
     private ScreenRoute _prevRoute;
     #endregion
 
-    public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action fetchLocalizedPriceIAPEvent;
 
     protected override void RegisterMoreEvent()
@@ -70,7 +69,7 @@ public class IAPShopPopup : BasePopup
     {
         base.Hide(onCompletedAction: () =>
         {
-            switchRouteEvent?.Invoke(_prevRoute);
+            SwitchRoute(_prevRoute);
             // switchRouteChannel.Invoke(_prevRoute, nameof(_prevRoute));
         });
     }
