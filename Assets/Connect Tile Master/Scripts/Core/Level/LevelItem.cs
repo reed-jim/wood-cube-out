@@ -16,6 +16,8 @@ public class LevelItem : MonoBehaviour
 
     public ItemCategory[] poolCategory;
     public TileIconContainer tileIconContainer;
+
+    public bool isTutorial;
 }
 
 #if UNITY_EDITOR

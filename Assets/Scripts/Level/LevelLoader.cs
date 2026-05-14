@@ -237,6 +237,8 @@ namespace NamPhuThuy.GamePlay
             {
                 GameObject level = resultLoad;
 
+                level.gameObject.SetActive(false);
+
                 LevelItem levelItem = level.GetComponent<LevelItem>();
 
                 TileManager.Ins.SetupLevel(levelItem);

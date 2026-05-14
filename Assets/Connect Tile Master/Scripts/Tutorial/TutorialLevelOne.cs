@@ -53,6 +53,12 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         StartCoroutine(ProgressingTutorial());
     }
 
+    public void HideTutorial()
+    {
+        tutorialContainer.gameObject.SetActive(false);
+        blackOverlay.gameObject.SetActive(false);
+    }
+
     private IEnumerator ProgressingTutorial()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);

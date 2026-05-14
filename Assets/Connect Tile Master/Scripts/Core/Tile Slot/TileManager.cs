@@ -55,11 +55,20 @@ public class TileManager : Singleton<TileManager>
     #region Level
     public void SetupLevel(LevelItem levelItem)
     {
+        this.levelItem = levelItem;
+        
         ArrangeSlotsInShelf();
 
         SpawnTiles(levelItem.poolCategory.Length);
 
-        TutorialLevelOne.Ins.StartTutorial();
+        if (levelItem.isTutorial)
+        {
+            TutorialLevelOne.Ins.StartTutorial();
+        }
+        else
+        {
+            TutorialLevelOne.Ins.HideTutorial();
+        }
 
         SpawnSlots();
     }
