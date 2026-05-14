@@ -40,25 +40,33 @@ public class ClothesManager : Singleton<ClothesManager>
     {
         WashingMachineManager.Ins.levelItem = levelItem;
 
-        SetupSlots();
+        SetupSlots(levelItem);
         StartCoroutine(RunTheQueue());
     }
 
-    private void SetupSlots()
+    private void SetupSlots(WashingMachine.LevelItem levelItem)
     {
-        for (int i = 0; i < loopPathSlots.Count; i++)
-        {
-            LoopPathSlot loopPathSlot = loopPathSlots[i];
-            ClothingPiece clothingPiece = clothingPieces[i];
+        // for (int i = 0; i < loopPathSlots.Count; i++)
+        // {
+        //     LoopPathSlot loopPathSlot = loopPathSlots[i];
+        //     ClothingPiece clothingPiece = clothingPieces[i];
 
-            loopPathSlot.AddClothingPiece(clothingPiece);
-        }
+        //     loopPathSlot.AddClothingPiece(clothingPiece);
+        // }
 
+        RemoveOldClothes();
         SpawnClothes();
 
         List<WashingMachineItem> washingMachineItems = WashingMachineManager.Ins.SpawnFirstWashingMachines();
 
-        TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
+        if (levelItem.isTutorialLevel)
+        {
+            TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
+        }
+        else
+        {
+            TutorialLevelOne.Ins.HideTutorial();
+        }
 
         UpdateClothesCount();
     }
@@ -119,6 +127,18 @@ public class ClothesManager : Singleton<ClothesManager>
         }
     }
 
+    private void RemoveOldClothes()
+    {
+        List<GameObject> toRemoveObjects = clothingPieces.Select(item => item.gameObject).ToList();
+
+        foreach (GameObject item in toRemoveObjects)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.clothingPiece, item);
+        }
+
+        clothingPieces = new List<ClothingPiece>();
+    }
+
     public void SpawnClothes()
     {
         bool isLeft = true;
@@ -140,10 +160,21 @@ public class ClothesManager : Singleton<ClothesManager>
 
                 float percent = 1 - 0.1f * j;
 
-                PathSlot pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);
-                pathSlot.isLeft = isLeft;
-                pathSlot.transform.SetParent(waitingSlotContainer);
-                waitingPathSlots.Add(pathSlot);
+                PathSlot pathSlot;
+
+                int index = j + i * 10;
+
+                if (index < waitingPathSlots.Count)
+                {
+                    pathSlot = waitingPathSlots[index];
+                }
+                else
+                {
+                    pathSlot = ObjectPoolingEverything.GetFromPool<PathSlot>(GameConstants.pathSlot);
+                    pathSlot.isLeft = isLeft;
+                    pathSlot.transform.SetParent(waitingSlotContainer);
+                    waitingPathSlots.Add(pathSlot);
+                }
 
                 SplineSample sample = waitingPath.Evaluate(percent);
 

@@ -12,6 +12,7 @@ namespace WashingMachine
     public class LevelItem : MonoBehaviour
     {
         public List<GameFaction> poolFaction;
+        public bool isTutorialLevel;
     }
 
 #if UNITY_EDITOR

@@ -56,6 +56,13 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         StartCoroutine(ProgressingTutorial());
     }
 
+    public void HideTutorial()
+    {
+        tutorialHand.gameObject.SetActive(false);
+        tutorialCanvasGroup.gameObject.SetActive(false);
+        blackOverlay.gameObject.SetActive(false);
+    }
+
     private IEnumerator ProgressingTutorial()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
@@ -127,7 +134,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         NextStep();
     }
 
-    private void EndTutorial()
+    public void EndTutorial()
     {
         SaferioTween.AlphaHide(blackOverlay);
         SaferioTween.AlphaHide(tutorialCanvasGroup);
