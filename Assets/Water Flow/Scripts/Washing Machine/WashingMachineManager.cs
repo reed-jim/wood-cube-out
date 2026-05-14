@@ -162,8 +162,13 @@ public class WashingMachineManager : Singleton<WashingMachineManager>
             {
                 break;
             }
-            
+
             WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+            if (washingMachineStartSlot.washingMachine != null)
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, washingMachineStartSlot.washingMachine.gameObject);
+            }
 
             WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
 

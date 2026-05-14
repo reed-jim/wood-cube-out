@@ -27,6 +27,8 @@ public class ClothesManager : Singleton<ClothesManager>
     public float percentMoveClothesOut;
     public float percentPuttingClothesIntoLoopPath;
 
+    private Coroutine movingPathSlotsCoroutine;
+
     #region Life Cycle
     protected override void MoreActionOnAwake()
     {
@@ -41,7 +43,13 @@ public class ClothesManager : Singleton<ClothesManager>
         WashingMachineManager.Ins.levelItem = levelItem;
 
         SetupSlots(levelItem);
-        StartCoroutine(RunTheQueue());
+
+        if (movingPathSlotsCoroutine != null)
+        {
+            StopCoroutine(movingPathSlotsCoroutine);
+        }
+
+        movingPathSlotsCoroutine = StartCoroutine(RunTheQueue());
     }
 
     private void SetupSlots(WashingMachine.LevelItem levelItem)
@@ -55,6 +63,7 @@ public class ClothesManager : Singleton<ClothesManager>
         // }
 
         RemoveOldClothes();
+        ResetPathSlots();
         SpawnClothes();
 
         List<WashingMachineItem> washingMachineItems = WashingMachineManager.Ins.SpawnFirstWashingMachines();
@@ -69,6 +78,19 @@ public class ClothesManager : Singleton<ClothesManager>
         }
 
         UpdateClothesCount();
+    }
+
+    private void ResetPathSlots()
+    {
+        for (int i = 0; i < loopPathSlots.Count; i++)
+        {
+            loopPathSlots[i].clothingPiece = null;
+        }
+
+        for (int i = 0; i < waitingPathSlots.Count; i++)
+        {
+            waitingPathSlots[i].clothingPiece = null;
+        }
     }
 
     private IEnumerator RunTheQueue()
