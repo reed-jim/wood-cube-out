@@ -243,6 +243,8 @@ namespace NamPhuThuy.GamePlay
 
                 TileManager.Ins.SetupLevel(levelItem);
 
+                setIsLevelLoadedEvent?.Invoke();
+
                 return;
 
                 _currentLevelContainer = level.transform;
