@@ -46,13 +46,6 @@ public class TileManager : Singleton<TileManager>
         totalSlotInShelf = 5;
     }
 
-    void Start()
-    {
-        ArrangeSlotsInShelf();
-        SetupLevel(levelItem);
-        SpawnSlots();
-    }
-
     void OnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
@@ -60,11 +53,15 @@ public class TileManager : Singleton<TileManager>
     #endregion
 
     #region Level
-    private void SetupLevel(LevelItem levelItem)
+    public void SetupLevel(LevelItem levelItem)
     {
+        ArrangeSlotsInShelf();
+
         SpawnTiles(levelItem.poolCategory.Length);
 
         TutorialLevelOne.Ins.StartTutorial();
+
+        SpawnSlots();
     }
     #endregion
 

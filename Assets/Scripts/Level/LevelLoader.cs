@@ -237,19 +237,13 @@ namespace NamPhuThuy.GamePlay
             {
                 GameObject level = resultLoad;
 
+                LevelItem levelItem = level.GetComponent<LevelItem>();
+
+                TileManager.Ins.SetupLevel(levelItem);
+
+                return;
+
                 _currentLevelContainer = level.transform;
-
-                #region ASSIGN CLONE TO CALC ROTATION
-
-                try
-                {
-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                }
-                catch (System.Exception e)
-                {
-                    DebugLogger.LogException(e);
-                }
-                #endregion
 
                 // FIND DEPENDENCY
                 // delay for pieces scaling before level

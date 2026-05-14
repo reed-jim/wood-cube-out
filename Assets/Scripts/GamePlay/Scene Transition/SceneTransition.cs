@@ -14,18 +14,7 @@ using UnityEngine.UI;
 public class SceneTransition : MonoBehaviour
 {
     [SerializeField] private RectTransform canvas;
-    [SerializeField] private RectTransform container;
-    [SerializeField] private RectTransform loadingContent;
-    [SerializeField] private RectTransform progressFillRT;
-    [SerializeField] private RectTransform loadingTextRT;
-    [SerializeField] private Image fadeBackground;
     [SerializeField] private CanvasGroup blackBackground;
-    [SerializeField] private Slider progressBar;
-    [SerializeField] private Image progressBarFill;
-    // [SerializeField] private Image progressFill;
-    [SerializeField] private TMP_Text loadingText;
-    [SerializeField] private SkeletonGraphic loadingSpine;
-    [SerializeField] private CanvasGroup canvasGroup;
 
     [Header("LOADING LEVEL IN PROGRESS")]
     [SerializeField] private RectTransform loadLevelInProgressContainer;
@@ -37,7 +26,6 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private IntVariable currentLevel;
 
     [Header("CUSTOMIZE")]
-    [SerializeField] private float startDelay;
     [SerializeField] private float blackScreenStartDelay;
     [SerializeField] private float fadeOutDuration;
 
@@ -52,7 +40,6 @@ public class SceneTransition : MonoBehaviour
     #region MonoBehaviour Callbacks
 
     private void Awake()
-
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
@@ -61,9 +48,6 @@ public class SceneTransition : MonoBehaviour
         _tweens = new List<Tween>();
 
         _canvasSize = canvas.sizeDelta;
-
-        // progressBar.value = 0;
-        // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
 
         _isFirstTimeEnterScene = true;
         _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
@@ -125,18 +109,6 @@ public class SceneTransition : MonoBehaviour
 
     private void TransitionOnLevelStarted()
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     _isFirstTimeEnterScene = false;
-
-        //     return;
-        // }
-
-        // if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
-        // {
-        //     LoadingLevelInProgress();
-        // }
-
         if (_waitForLevelLoadedCoroutine != null)
         {
             StopCoroutine(_waitForLevelLoadedCoroutine);
@@ -151,6 +123,7 @@ public class SceneTransition : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+
         ShowBlackScreenImmediately();
 
         yield return new WaitUntil(() => _isLevelLoaded);
@@ -186,7 +159,6 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        DebugLogger.LogSimple();
         if (_isFirstTimeEnterScene)
         {
             loadLevelInProgressContainer.gameObject.SetActive(false);
