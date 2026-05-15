@@ -1,7 +1,13 @@
 using UnityEngine;
 
+public enum DamageType
+{
+
+}
+
 public class DamageInflicter : MonoBehaviour
 {
+    public DamageType damageType;
     public int totalDamageCycle;
     public float damagePerCycle;
     public float damageInterval;

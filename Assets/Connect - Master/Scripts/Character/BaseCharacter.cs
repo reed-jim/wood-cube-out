@@ -1,10 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class BaseCharacter : MonoBehaviour
 {
     public float health;
+    public float armor;
+
+    public TMP_Text[] stackingTexts;
 
     public List<DamageInflicter> damageInflicters;
 
@@ -37,5 +41,30 @@ public class BaseCharacter : MonoBehaviour
         }
 
         damageInflicters = damageInflicters.Where(item => !item.IsExpire()).ToList();
+    }
+
+    private float CalculateFinalDamage(float flatDamage, ArmorPenetration armorPenetration)
+    {
+        float effectiveArmor = (armor - armorPenetration.flatAmount) * (1 - armorPenetration.percent);
+        float finalDamage = flatDamage * (100 / (100 + effectiveArmor));
+
+        return finalDamage;
+    }
+
+    private void ShowDamageStatus()
+    {
+        Dictionary<DamageType, int> stackingPerDamageType = new Dictionary<DamageType, int>();
+
+        for (int i = 0; i < damageInflicters.Count; i++)
+        {
+            DamageInflicter damageInflicter = damageInflicters[i];
+
+            CommonUtil.SumValueOfDictionary(stackingPerDamageType, damageInflicter.damageType, 1);
+        }
+
+        for (int i = 0; i < stackingTexts.Length; i++)
+        {
+            stackingTexts[i].text = $"{stackingPerDamageType.ElementAt(i)}";
+        }
     }
 }
