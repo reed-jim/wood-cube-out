@@ -1,5 +1,6 @@
 using System;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +10,7 @@ public class BaseTile : MonoBehaviour
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image containerImage;
+    [SerializeField] private Image glow;
     [SerializeField] public Image icon;
     [SerializeField] private TMP_Text category;
 
@@ -69,16 +71,36 @@ public class BaseTile : MonoBehaviour
 
     public void Init(ItemCategory itemCategory, Sprite iconSprite)
     {
-        this.itemCategory = itemCategory;
-        icon.sprite = iconSprite;
-        category.text = itemCategory.ToString();
+        isMoving = true;
 
-        containerImage.color = containerImage.color.ChangeAlpha(1);
+        SaferioTween.AlphaShow(glow, onCompleteAction: () =>
+        {
+            this.itemCategory = itemCategory;
+            icon.sprite = iconSprite;
+            category.text = itemCategory.ToString();
 
-        UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+            containerImage.color = containerImage.color.ChangeAlpha(1);
 
-        IsOnValidSlot = false;
-        IsDone = false;
+            UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+
+            IsOnValidSlot = false;
+            IsDone = false;
+
+            SaferioTween.AlphaHide(glow);
+        });
+
+        Vector3 initialPosition = transform.localPosition;
+        Vector3 expandedPosition = 1.2f * initialPosition;
+
+        Tween.LocalPosition(transform, expandedPosition, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            Tween.LocalPosition(transform, initialPosition, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isMoving = false;
+            });
+        });
     }
 
     public void Select()

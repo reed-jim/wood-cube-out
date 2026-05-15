@@ -544,12 +544,16 @@ namespace Saferio.Util.SaferioTween
         #endregion
 
         #region COLOR
-        public static void AlphaShow(Image image, float endAlpha = 1)
+        public static void AlphaShow(Image image, float endAlpha = 1, Action onCompleteAction = null)
         {
             image.gameObject.SetActive(true);
             image.color = image.color.ChangeAlpha(0);
 
-            Tween.Alpha(image, endAlpha, duration: 0.3f);
+            Tween.Alpha(image, endAlpha, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                onCompleteAction?.Invoke();
+            });
         }
 
         public static void AlphaShow(SkeletonGraphic skeletonGraphic, float endAlpha = 1, Action onCompleteAction = null)
@@ -572,6 +576,17 @@ namespace Saferio.Util.SaferioTween
             Tween.Alpha(canvasGroup, endAlpha, duration: 0.3f)
             .OnComplete(() =>
             {
+                onCompleteAction?.Invoke();
+            });
+        }
+
+        public static void AlphaHide(Image image, Action onCompleteAction = null)
+        {
+            Tween.Alpha(image, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                image.gameObject.SetActive(false);
+
                 onCompleteAction?.Invoke();
             });
         }

@@ -57,6 +57,8 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     {
         tutorialContainer.gameObject.SetActive(false);
         blackOverlay.gameObject.SetActive(false);
+
+        BaseTile.selectTileEvent -= OnTileSelected;
     }
 
     private IEnumerator ProgressingTutorial()
