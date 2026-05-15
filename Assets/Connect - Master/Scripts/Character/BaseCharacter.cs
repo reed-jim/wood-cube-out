@@ -5,11 +5,11 @@ using UnityEngine;
 
 public class BaseCharacter : MonoBehaviour
 {
-    public float health;
-    public float armor;
+    public CharacterServiceLocator characterServiceLocator;
 
     public TMP_Text[] stackingTexts;
 
+    public List<InventoryItem> inventoryItems;
     public List<DamageInflicter> damageInflicters;
 
     void Update()
@@ -24,6 +24,13 @@ public class BaseCharacter : MonoBehaviour
         damageInflicters.Add(damageInflicter);
     }
 
+    public void EquipInventoryItem(InventoryItem inventoryItem)
+    {
+        inventoryItems.Add(inventoryItem);
+
+        DataUtility.Save(gameObject.name, this);
+    }
+
     private void ApplyDamage()
     {
         float currentTime = Time.time;
@@ -34,7 +41,7 @@ public class BaseCharacter : MonoBehaviour
 
             if (damageInflicter.IsNewCycleToApplyDamage(currentTime))
             {
-                health -= damageInflicter.damagePerCycle;
+                characterServiceLocator.characterStat.health.currentValue -= damageInflicter.damagePerCycle;
 
                 damageInflicter.UpdateNewDamageCycle(currentTime);
             }
@@ -45,7 +52,7 @@ public class BaseCharacter : MonoBehaviour
 
     private float CalculateFinalDamage(float flatDamage, ArmorPenetration armorPenetration)
     {
-        float effectiveArmor = (armor - armorPenetration.flatAmount) * (1 - armorPenetration.percent);
+        float effectiveArmor = (characterServiceLocator.characterStat.armor.currentValue - armorPenetration.flatAmount) * (1 - armorPenetration.percent);
         float finalDamage = flatDamage * (100 / (100 + effectiveArmor));
 
         return finalDamage;
