@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ObjectPoolingPageView : MonoBehaviour
 {
@@ -7,14 +8,21 @@ public class ObjectPoolingPageView : MonoBehaviour
     [SerializeField] private List<PageViewItem> poolItems;
 
     [SerializeField] private RectTransform container;
+    [SerializeField] private Button nextButton;
+    [SerializeField] private Button prevButton;
 
     [Header("Customize")]
     public int row;
     public int column;
     public float distanceRatio;
 
+    private int currentPage;
+
     void Awake()
     {
+        nextButton.onClick.AddListener(NextPage);
+        prevButton.onClick.AddListener(PrevPage);
+        
         Init();
     }
 
@@ -32,6 +40,8 @@ public class ObjectPoolingPageView : MonoBehaviour
         {
             for (int j = 0; j < column; j++)
             {
+                int index = j + i * column;
+
                 position.x = -((column - 1) / 2f) * distance.x + j * distance.x;
                 position.y = ((row - 1) / 2f) * distance.y - i * distance.y;
 
@@ -39,9 +49,44 @@ public class ObjectPoolingPageView : MonoBehaviour
 
                 pageViewItem.Container.localPosition = position;
 
-                pageViewItem.Setup();
+                pageViewItem.Setup(index);
 
                 poolItems.Add(pageViewItem);
+            }
+        }
+    }
+
+    private void NextPage()
+    {
+        currentPage++;
+
+        UpdatePage();
+    }
+
+    private void PrevPage()
+    {
+        if (currentPage == 0)
+        {
+            return;
+        }
+
+        currentPage--;
+
+        UpdatePage();
+    }
+
+    private void UpdatePage()
+    {
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < column; j++)
+            {
+                int index = j + i * column;
+                int itemIndex = index + currentPage * column * row;
+
+                PageViewItem pageViewItem = poolItems[index];
+
+                pageViewItem.Setup(itemIndex);
             }
         }
     }

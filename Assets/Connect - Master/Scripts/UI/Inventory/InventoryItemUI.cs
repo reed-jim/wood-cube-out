@@ -2,7 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class InventoryItemUI : MonoBehaviour
+public class InventoryItemUI : PageViewItem
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Image tierImage;
