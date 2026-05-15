@@ -1,5 +1,10 @@
 using UnityEngine;
 
+public enum InventoryItemTier
+{
+    
+}
+
 public class InventoryItem : MonoBehaviour
 {
     public BaseStat health;
@@ -8,6 +13,6 @@ public class InventoryItem : MonoBehaviour
 
     public virtual void SpecialEffect()
     {
-        
+
     }
 }
