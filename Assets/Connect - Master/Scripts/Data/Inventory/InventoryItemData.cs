@@ -6,4 +6,6 @@ public class InventoryItemData : ScriptableObject
     public BaseStat health;
     public BaseStat armor;
     public InventoryItemTier tier;
+
+    public Sprite icon;
 }

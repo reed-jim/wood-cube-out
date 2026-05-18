@@ -68,7 +68,8 @@ public class GameEnum : MonoBehaviour
         ChooseDifficulty,
         UserConsent,
         SpecialLevelTutorial,
-        FacebookGroup
+        FacebookGroup,
+        Inventory
     }
 
     public enum GameFaction
