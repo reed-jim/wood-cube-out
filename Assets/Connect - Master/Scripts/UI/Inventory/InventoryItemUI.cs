@@ -12,23 +12,12 @@ public class InventoryItemUI : PageViewItem
     [SerializeField] private UnityEngine.UI.Outline outline;
 
     public Sprite[] tierSprites;
-    public static readonly Color[] tierColors =
-    {
-        new Color32(180, 180, 180, 255), // Common - Gray
-        new Color32( 80, 200, 120, 255), // Uncommon - Green
-        new Color32( 70, 140, 255, 255), // Rare - Blue
-        new Color32(180,  90, 255, 255), // Epic - Purple
-        new Color32(255, 170,  40, 255), // Legendary - Orange
-        new Color32(255,  60, 120, 255), // Mythic - Crimson/Pink
-        new Color32(  0, 255, 220, 255), // Exotic - Cyan/Turquoise
-        new Color32(255, 255, 120, 255)  // Unique - Gold-Yellow
-    };
 
     public InventoryDataContainer inventoryDataContainer;
 
     private InventoryItemData _inventoryItemData;
 
-    public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action<InventoryItemData> showInventoryItemDetailEvent;
 
     public override void Setup(int index)
     {
@@ -44,7 +33,7 @@ public class InventoryItemUI : PageViewItem
 
     protected override void Select()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Inventory);
+        showInventoryItemDetailEvent?.Invoke(_inventoryItemData);
     }
 
     public void Setup(InventoryItemData inventoryItemData)
@@ -53,7 +42,7 @@ public class InventoryItemUI : PageViewItem
 
         icon.sprite = inventoryItemData.icon;
         // tierImage.sprite = tierSprites[(int)inventoryItemData.tier];
-        outline.effectColor = tierColors[(int)inventoryItemData.tier];
+        outline.effectColor = InventoryDataContainer.GetTierColor(inventoryItemData.tier);
 
         _inventoryItemData = inventoryItemData;
     }
