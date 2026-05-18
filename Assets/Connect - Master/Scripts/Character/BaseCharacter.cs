@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -17,6 +18,7 @@ public class BaseCharacter : MonoBehaviour
 
     public static event Action equipInventoryItemEvent;
 
+    #region Life cycle
     void Awake()
     {
         LoadInventoryData();
@@ -33,6 +35,37 @@ public class BaseCharacter : MonoBehaviour
 
         damageInflicters.Add(damageInflicter);
     }
+    #endregion
+
+    #region Action
+    private IEnumerator Attacking()
+    {
+        float interval = 1 / characterServiceLocator.characterStat.attackSpeed.currentValue;
+
+        WaitForSeconds waitForSeconds = new WaitForSeconds(interval);
+
+        int totalAttack = 0;
+
+        while (true)
+        {
+            Attack();
+
+            totalAttack++;
+
+            if (totalAttack > 0 && totalAttack % 3 == 0)
+            {
+
+            }
+
+            yield return waitForSeconds;
+        }
+    }
+
+    private void Attack()
+    {
+
+    }
+    #endregion
 
     private void LoadInventoryData()
     {
@@ -45,7 +78,15 @@ public class BaseCharacter : MonoBehaviour
             inventoryItems.Add(inventoryDataContainer.items[index]);
         }
 
+        UpdateStats();
+
         equipInventoryItemEvent?.Invoke();
+    }
+
+    private void UpdateStats()
+    {
+        characterServiceLocator.characterStat.health.currentValue = inventoryItems.Sum(i => i.health.currentValue);
+        characterServiceLocator.characterStat.armor.currentValue = inventoryItems.Sum(i => i.armor.currentValue);
     }
 
     public bool IsInventoryItemEquipped(InventoryItem inventoryItem)
@@ -57,8 +98,7 @@ public class BaseCharacter : MonoBehaviour
     {
         inventoryItems.Add(inventoryItem);
 
-        characterServiceLocator.characterStat.health.currentValue = inventoryItems.Sum(i => i.health.currentValue);
-        characterServiceLocator.characterStat.armor.currentValue = inventoryItems.Sum(i => i.armor.currentValue);
+        UpdateStats();
 
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
@@ -69,8 +109,7 @@ public class BaseCharacter : MonoBehaviour
     {
         inventoryItems.Remove(inventoryItem);
 
-        characterServiceLocator.characterStat.health.currentValue = inventoryItems.Sum(i => i.health.currentValue);
-        characterServiceLocator.characterStat.armor.currentValue = inventoryItems.Sum(i => i.armor.currentValue);
+        UpdateStats();
 
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 

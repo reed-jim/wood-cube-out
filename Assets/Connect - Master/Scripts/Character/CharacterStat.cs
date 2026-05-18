@@ -7,6 +7,7 @@ public class CharacterStat : MonoBehaviour
 
     public BaseStat health;
     public BaseStat armor;
+    public BaseStat attackSpeed;
 
     public void CalculateFinalStat()
     {
