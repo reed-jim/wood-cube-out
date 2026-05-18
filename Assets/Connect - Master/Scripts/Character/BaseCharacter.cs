@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TMPro;
@@ -11,6 +12,8 @@ public class BaseCharacter : MonoBehaviour
 
     public List<InventoryItem> inventoryItems;
     public List<DamageInflicter> damageInflicters;
+
+    public static event Action equipInventoryItemEvent;
 
     void Update()
     {
@@ -29,6 +32,8 @@ public class BaseCharacter : MonoBehaviour
         inventoryItems.Add(inventoryItem);
 
         DataUtility.Save(gameObject.name, this);
+
+        equipInventoryItemEvent?.Invoke();
     }
 
     private void ApplyDamage()

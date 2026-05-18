@@ -1,25 +1,32 @@
+using System.Linq;
+using TMPro;
 using UnityEngine;
 
 public class InventoryScreen : BasePopup
 {
-    public InventoryItemUI inventoryItemUIPrefab;
+    [SerializeField] private TMP_Text healthText;
+    [SerializeField] private TMP_Text armorText;
 
-    [SerializeField] private InventoryDataContainer inventoryDataContainer;
-
-    void Awake()
+    protected override void RegisterMoreEvent()
     {
-        Setup();
+        base.RegisterMoreEvent();
+
+        BaseCharacter.equipInventoryItemEvent += UpdateUI;
     }
 
-    private void Setup()
+    protected override void UnregisterMoreEvent()
     {
-        for (int i = 0; i < inventoryDataContainer.items.Count; i++)
-        {
-            InventoryItemData inventoryItemData = inventoryDataContainer.items[i];
+        base.UnregisterMoreEvent();
 
-            InventoryItemUI inventoryItemUI = Instantiate(inventoryItemUIPrefab);
+        BaseCharacter.equipInventoryItemEvent -= UpdateUI;
+    }
 
-            inventoryItemUI.Setup(inventoryItemData);
-        }
+    public void UpdateUI()
+    {
+        float totalHealth = CharacterManager.Ins.mainCharacter.inventoryItems.Sum(i => i.health.currentValue);
+        float totalArmor = CharacterManager.Ins.mainCharacter.inventoryItems.Sum(i => i.armor.currentValue);
+
+        healthText.text = $"{totalHealth}";
+        armorText.text = $"{totalArmor}";
     }
 }

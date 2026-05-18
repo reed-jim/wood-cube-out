@@ -15,9 +15,9 @@ public class InventoryItemUI : PageViewItem
 
     public InventoryDataContainer inventoryDataContainer;
 
-    private InventoryItemData _inventoryItemData;
+    private InventoryItem _inventoryItem;
 
-    public static event Action<InventoryItemData> showInventoryItemDetailEvent;
+    public static event Action<InventoryItem> showInventoryItemDetailEvent;
 
     public override void Setup(int index)
     {
@@ -33,18 +33,18 @@ public class InventoryItemUI : PageViewItem
 
     protected override void Select()
     {
-        showInventoryItemDetailEvent?.Invoke(_inventoryItemData);
+        showInventoryItemDetailEvent?.Invoke(_inventoryItem);
     }
 
-    public void Setup(InventoryItemData inventoryItemData)
+    public void Setup(InventoryItem inventoryItem)
     {
-        nameText.text = inventoryItemData.name;
+        nameText.text = inventoryItem.name;
 
-        icon.sprite = inventoryItemData.icon;
-        // tierImage.sprite = tierSprites[(int)inventoryItemData.tier];
-        outline.effectColor = InventoryDataContainer.GetTierColor(inventoryItemData.tier);
+        icon.sprite = inventoryItem.icon;
+        // tierImage.sprite = tierSprites[(int)inventoryItem.tier];
+        outline.effectColor = InventoryDataContainer.GetTierColor(inventoryItem.tier);
 
-        _inventoryItemData = inventoryItemData;
+        _inventoryItem = inventoryItem;
     }
 
     private void HideImmediately()

@@ -4,7 +4,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "InventoryDataContainer", menuName = "Scriptable Objects/InventoryDataContainer")]
 public class InventoryDataContainer : ScriptableObject
 {
-    public List<InventoryItemData> items;
+    public List<InventoryItem> items;
 
     public static readonly Color[] tierColors =
     {

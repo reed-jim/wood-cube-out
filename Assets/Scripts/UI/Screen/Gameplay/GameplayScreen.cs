@@ -16,6 +16,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
     [SerializeField] private Button openDebugPopupButton;
+    [SerializeField] private Button openInventoryPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
 
@@ -45,6 +46,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
+
+        if (openInventoryPopupButton != null)
+        {
+            openInventoryPopupButton.onClick.AddListener(OpenInventoryPopup);
+        }
 
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
 
@@ -99,9 +105,9 @@ public class GameplayScreen : Singleton<GameplayScreen>
         switchRouteEvent?.Invoke(ScreenRoute.RemoveAd);
     }
 
-    private void OnClickHelp()
+    private void OpenInventoryPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.SpecialLevelTutorial);
+        switchRouteEvent?.Invoke(ScreenRoute.Inventory);
     }
 
     #endregion

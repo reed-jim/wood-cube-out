@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,8 +9,12 @@ public class ObjectPoolingPageView : MonoBehaviour
     [SerializeField] private List<PageViewItem> poolItems;
 
     [SerializeField] private RectTransform container;
+
+    #region Paging
     [SerializeField] private Button nextButton;
     [SerializeField] private Button prevButton;
+    [SerializeField] private TMP_InputField pageInputField;
+    #endregion
 
     [Header("Customize")]
     public int row;
@@ -22,7 +27,8 @@ public class ObjectPoolingPageView : MonoBehaviour
     {
         nextButton.onClick.AddListener(NextPage);
         prevButton.onClick.AddListener(PrevPage);
-        
+        pageInputField.onSubmit.AddListener(text => GoToPage(int.Parse(text)));
+
         Init();
     }
 
@@ -89,5 +95,17 @@ public class ObjectPoolingPageView : MonoBehaviour
                 pageViewItem.Setup(itemIndex);
             }
         }
+    }
+
+    private void GoToPage(int page)
+    {
+        if (page < 0)
+        {
+            return;
+        }
+
+        currentPage = page;
+
+        UpdatePage();
     }
 }

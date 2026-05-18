@@ -8,11 +8,17 @@ public class InventoryItemDetail : BasePopup
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text tierText;
 
+    [SerializeField] private Button equipButton;
+
+    private InventoryItem _inventoryItem;
+
     protected override void RegisterMoreEvent()
     {
         base.RegisterMoreEvent();
 
         InventoryItemUI.showInventoryItemDetailEvent += ShowItemDetail;
+
+        equipButton.onClick.AddListener(Equip);
     }
 
     protected override void UnregisterMoreEvent()
@@ -22,13 +28,22 @@ public class InventoryItemDetail : BasePopup
         InventoryItemUI.showInventoryItemDetailEvent -= ShowItemDetail;
     }
 
-    private void ShowItemDetail(InventoryItemData inventoryItemData)
+    private void ShowItemDetail(InventoryItem inventoryItem)
     {
-        nameText.text = inventoryItemData.name;
-        icon.sprite = inventoryItemData.icon;
-        tierText.text = $"{inventoryItemData.tier}";
-        tierText.color = InventoryDataContainer.GetTierColor(inventoryItemData.tier);
+        nameText.text = inventoryItem.name;
+        icon.sprite = inventoryItem.icon;
+        tierText.text = $"{inventoryItem.tier}";
+        tierText.color = InventoryDataContainer.GetTierColor(inventoryItem.tier);
 
         Show();
+
+        _inventoryItem = inventoryItem;
+    }
+
+    private void Equip()
+    {
+        CharacterManager.Ins.mainCharacter.EquipInventoryItem(_inventoryItem);
+
+        Hide();
     }
 }
