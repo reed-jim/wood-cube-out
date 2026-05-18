@@ -13,7 +13,14 @@ public class BaseCharacter : MonoBehaviour
     public List<InventoryItem> inventoryItems;
     public List<DamageInflicter> damageInflicters;
 
+    [SerializeField] private InventoryDataContainer inventoryDataContainer;
+
     public static event Action equipInventoryItemEvent;
+
+    void Awake()
+    {
+        LoadInventoryData();
+    }
 
     void Update()
     {
@@ -27,11 +34,39 @@ public class BaseCharacter : MonoBehaviour
         damageInflicters.Add(damageInflicter);
     }
 
+    private void LoadInventoryData()
+    {
+        int[] inventoryItemIndexes = DataUtility.Load<int[]>(gameObject.name, null);
+
+        for (int i = 0; i < inventoryItemIndexes.Length; i++)
+        {
+            int index = inventoryItemIndexes[i];
+
+            inventoryItems.Add(inventoryDataContainer.items[index]);
+        }
+
+        equipInventoryItemEvent?.Invoke();
+    }
+
+    public bool IsInventoryItemEquipped(InventoryItem inventoryItem)
+    {
+        return inventoryItems.Contains(inventoryItem);
+    }
+
     public void EquipInventoryItem(InventoryItem inventoryItem)
     {
         inventoryItems.Add(inventoryItem);
 
-        DataUtility.Save(gameObject.name, this);
+        DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
+
+        equipInventoryItemEvent?.Invoke();
+    }
+
+    public void UnequipInventoryItem(InventoryItem inventoryItem)
+    {
+        inventoryItems.Remove(inventoryItem);
+
+        DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
         equipInventoryItemEvent?.Invoke();
     }

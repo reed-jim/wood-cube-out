@@ -56,8 +56,10 @@ public class TileManager : Singleton<TileManager>
     public void SetupLevel(LevelItem levelItem)
     {
         this.levelItem = levelItem;
-        
+
         ArrangeSlotsInShelf();
+
+        RemoveOldTiles();
 
         SpawnTiles(levelItem.poolCategory.Length);
 
@@ -71,6 +73,16 @@ public class TileManager : Singleton<TileManager>
         }
 
         SpawnSlots();
+    }
+
+    private void RemoveOldTiles()
+    {
+        foreach (var tileToRemove in tiles)
+        {
+            Destroy(tileToRemove.gameObject);
+        }
+
+        tiles = new List<BaseTile>();
     }
     #endregion
 
@@ -838,7 +850,7 @@ public class TileManager : Singleton<TileManager>
 
         for (int i = 0; i < tilesToShuffle.Count; i++)
         {
-            tilesToShuffle[i].Init(shuffledCategory[i], tileIconContainer.GetRandomIconOfCategory(shuffledCategory[i]));
+            tilesToShuffle[i].Shuffle(shuffledCategory[i], tileIconContainer.GetRandomIconOfCategory(shuffledCategory[i]));
         }
     }
 

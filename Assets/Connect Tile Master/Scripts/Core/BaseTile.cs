@@ -71,6 +71,20 @@ public class BaseTile : MonoBehaviour
 
     public void Init(ItemCategory itemCategory, Sprite iconSprite)
     {
+        this.itemCategory = itemCategory;
+        icon.sprite = iconSprite;
+        category.text = itemCategory.ToString();
+
+        containerImage.color = containerImage.color.ChangeAlpha(1);
+
+        UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+
+        IsOnValidSlot = false;
+        IsDone = false;
+    }
+
+    public void Shuffle(ItemCategory itemCategory, Sprite iconSprite)
+    {
         isMoving = true;
 
         SaferioTween.AlphaShow(glow, onCompleteAction: () =>

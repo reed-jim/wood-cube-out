@@ -113,5 +113,10 @@ public class LevelItemEditor : Editor
 
         EditorUtility.SetDirty(levelItem);
     }
+
+    private void GenerateFullLevel()
+    {
+        
+    }
 }
 #endif

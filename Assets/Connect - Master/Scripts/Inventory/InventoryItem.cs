@@ -14,6 +14,7 @@ public enum InventoryItemTier
 
 public class InventoryItem : MonoBehaviour
 {
+    public int id;
     public BaseStat health;
     public BaseStat armor;
     public float price;
