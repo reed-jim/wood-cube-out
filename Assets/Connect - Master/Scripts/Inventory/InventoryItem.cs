@@ -25,4 +25,9 @@ public class InventoryItem : MonoBehaviour
     {
 
     }
+
+    public virtual string GetSpecialEffectDescription()
+    {
+        return "";
+    }
 }

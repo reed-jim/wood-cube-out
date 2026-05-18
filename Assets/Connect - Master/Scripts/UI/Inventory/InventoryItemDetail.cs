@@ -7,6 +7,7 @@ public class InventoryItemDetail : BasePopup
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Image icon;
     [SerializeField] private TMP_Text tierText;
+    [SerializeField] private TMP_Text specialEffectText;
 
     [SerializeField] private Button equipButton;
     [SerializeField] private TMP_Text equipButtonText;
@@ -33,6 +34,7 @@ public class InventoryItemDetail : BasePopup
         icon.sprite = inventoryItem.icon;
         tierText.text = $"{inventoryItem.tier}";
         tierText.color = InventoryDataContainer.GetTierColor(inventoryItem.tier);
+        specialEffectText.text = inventoryItem.GetSpecialEffectDescription();
 
         bool isItemEquipped = CharacterManager.Ins.mainCharacter.IsInventoryItemEquipped(inventoryItem);
 

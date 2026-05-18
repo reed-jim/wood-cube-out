@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &8038961217209056509
+--- !u!1 &938727146679879890
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,23 +8,24 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 7503047814431562989}
-  - component: {fileID: 1264779776914273433}
-  - component: {fileID: 7181554850028759866}
+  - component: {fileID: 4990483850362878944}
+  - component: {fileID: 3727618834410241897}
+  - component: {fileID: 5227976230782410404}
+  - component: {fileID: 4280102477129429556}
   m_Layer: 0
-  m_Name: Character
+  m_Name: Main
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7503047814431562989
+--- !u!4 &4990483850362878944
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8038961217209056509}
+  m_GameObject: {fileID: 938727146679879890}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
@@ -33,32 +34,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1264779776914273433
+--- !u!114 &3727618834410241897
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8038961217209056509}
+  m_GameObject: {fileID: 938727146679879890}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3571609c7398f924fbccb3b96b2562c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BaseCharacter
-  health: 0
-  armor: 0
+  characterServiceLocator: {fileID: 5227976230782410404}
   stackingTexts: []
+  inventoryItems: []
   damageInflicters: []
---- !u!114 &7181554850028759866
+  inventoryDataContainer: {fileID: 11400000, guid: 51709c82a53c58641916f88f47f5f6bb, type: 2}
+--- !u!114 &5227976230782410404
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8038961217209056509}
+  m_GameObject: {fileID: 938727146679879890}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8262650cf5579b54b8b94a2f1272581d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterServiceLocator
+  character: {fileID: 3727618834410241897}
+  characterStat: {fileID: 4280102477129429556}
+--- !u!114 &4280102477129429556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 938727146679879890}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4a22f27f497f1d742b94f5c746264693, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterStat
-  equipedInventoryItems: []
+  characterServiceLocator: {fileID: 5227976230782410404}
+  health:
+    initialValue: 0
+    currentValue: 0
+  armor:
+    initialValue: 0
+    currentValue: 0

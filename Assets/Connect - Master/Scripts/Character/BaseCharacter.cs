@@ -57,6 +57,9 @@ public class BaseCharacter : MonoBehaviour
     {
         inventoryItems.Add(inventoryItem);
 
+        characterServiceLocator.characterStat.health.currentValue = inventoryItems.Sum(i => i.health.currentValue);
+        characterServiceLocator.characterStat.armor.currentValue = inventoryItems.Sum(i => i.armor.currentValue);
+
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
         equipInventoryItemEvent?.Invoke();
@@ -65,6 +68,9 @@ public class BaseCharacter : MonoBehaviour
     public void UnequipInventoryItem(InventoryItem inventoryItem)
     {
         inventoryItems.Remove(inventoryItem);
+
+        characterServiceLocator.characterStat.health.currentValue = inventoryItems.Sum(i => i.health.currentValue);
+        characterServiceLocator.characterStat.armor.currentValue = inventoryItems.Sum(i => i.armor.currentValue);
 
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
