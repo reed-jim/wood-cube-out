@@ -18,7 +18,9 @@ public class DamageText : MonoBehaviour
 
         SaferioTween.ScaleUpWithPunch(text.transform, targetScale: 1, onCompleteAction: () =>
         {
-            Tween.LocalPositionY(transform, transform.localPosition.y + 50, duration: 0.3f);
+            SaferioTween.AlphaHide(text);
         });
+
+        Tween.PositionY(transform, transform.position.y + 1, duration: 0.3f);
     }
 }

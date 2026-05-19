@@ -10,6 +10,7 @@ public class BaseCharacter : MonoBehaviour
     public CharacterServiceLocator characterServiceLocator;
 
     public BaseRangedWeapon weapon;
+    public DamageText damageText;
 
     public TMP_Text[] stackingTexts;
 
@@ -36,6 +37,13 @@ public class BaseCharacter : MonoBehaviour
         DamageInflicter damageInflicter = collision.gameObject.GetComponent<DamageInflicter>();
 
         damageInflicters.Add(damageInflicter);
+
+        DamageText spawnedDamageText = Instantiate(damageText, damageText.transform.parent);
+        spawnedDamageText.gameObject.SetActive(true);
+        spawnedDamageText.transform.position = collision.contacts[0].point;
+        spawnedDamageText.Show(damageInflicter.damagePerCycle);
+
+        collision.gameObject.SetActive(false);
     }
     #endregion
 

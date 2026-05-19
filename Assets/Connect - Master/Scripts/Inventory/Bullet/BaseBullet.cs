@@ -37,8 +37,6 @@ public class BaseBullet : MonoBehaviour
 
     private void InitDamageInflicter()
     {
-        damageInflicter = new DamageInflicter();
-
         damageInflicter.damageInterval = 0;
         damageInflicter.damagePerCycle = initialVelocity * diameter;
     }
