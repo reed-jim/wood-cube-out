@@ -21,4 +21,13 @@ public class CharacterStat : MonoBehaviour
             armor.currentValue += inventoryItem.armor.currentValue;
         }
     }
+
+    public static CharacterStat operator +(CharacterStat stat1, CharacterStat stat2)
+    {
+        CharacterStat result = new CharacterStat();
+
+        result.health = stat1.health + stat2.health;
+
+        return result;
+    }
 }

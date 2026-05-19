@@ -23,14 +23,6 @@ public class BaseRangedWeapon : MonoBehaviour
         _delayPerRound = 1f / roundPerSecond;
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButton(0))
-        {
-            Shoot();
-        }
-    }
-
     private void Reload()
     {
 

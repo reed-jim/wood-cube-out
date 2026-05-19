@@ -17,10 +17,17 @@ public class BaseCharacter : MonoBehaviour
 
     public List<InventoryItem> inventoryItems;
     public List<DamageInflicter> damageInflicters;
+    public List<AugmentItem> augmentItems;
+
+    public bool isInvisible;
 
     [SerializeField] private InventoryDataContainer inventoryDataContainer;
 
     public static event Action equipInventoryItemEvent;
+
+    #region Properties
+    public int attackTime;
+    #endregion
 
     #region Life cycle
     void Awake()
@@ -28,6 +35,8 @@ public class BaseCharacter : MonoBehaviour
         LoadInventoryData();
 
         lazyHealthBar.gameObject.SetActive(false);
+
+        StartCoroutine(Attacking());
     }
 
     void Update()
@@ -57,19 +66,22 @@ public class BaseCharacter : MonoBehaviour
 
         WaitForSeconds waitForSeconds = new WaitForSeconds(interval);
 
-        int totalAttack = 0;
-
         while (true)
         {
-            Attack();
-
-            totalAttack++;
-
-            if (totalAttack > 0 && totalAttack % 3 == 0)
+            if (Input.GetMouseButton(0))
             {
+                Attack();
+
+                attackTime++;
+
                 for (int i = 0; i < inventoryItems.Count; i++)
                 {
                     inventoryItems[i].SpecialEffect();
+                }
+
+                for (int i = 0; i < augmentItems.Count; i++)
+                {
+                    augmentItems[i].ApplySpecialEffect(this);
                 }
             }
 
@@ -77,7 +89,7 @@ public class BaseCharacter : MonoBehaviour
         }
     }
 
-    private void Attack()
+    public void Attack()
     {
         DamageInflicter damageInflicter = new DamageInflicter();
 
@@ -186,4 +198,28 @@ public class BaseCharacter : MonoBehaviour
             stackingTexts[i].text = $"{stackingPerDamageType.ElementAt(i)}";
         }
     }
+
+    #region Augment
+    private void ApplyAugments()
+    {
+        CharacterStat totalBonusStat = new CharacterStat();
+        CharacterStat totalMultiplyStat = new CharacterStat();
+
+        for (int i = 0; i < augmentItems.Count; i++)
+        {
+            AugmentItem augmentItem = augmentItems[i];
+
+            if (!augmentItem.isApplied)
+            {
+                CharacterStat bonusStat = augmentItem.GetBonusStat();
+
+                totalBonusStat += bonusStat;
+
+                augmentItem.ApplySpecialEffect(this);
+            }
+        }
+
+        characterServiceLocator.characterStat += totalBonusStat;
+    }
+    #endregion
 }

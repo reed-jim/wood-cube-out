@@ -229,6 +229,12 @@ public class TileManager : Singleton<TileManager>
             }
         }
 
+        foreach (var item in scoreOfEachCategory)
+        {
+            ItemCategory category = item.Key;
+            int score = item.Value;
+        }
+
         // fallback return first value of itemCategoryPool
         ItemCategory nextCategory = itemCategoryPool.First();
 
