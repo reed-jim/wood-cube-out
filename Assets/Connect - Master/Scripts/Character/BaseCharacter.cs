@@ -9,7 +9,7 @@ public class BaseCharacter : MonoBehaviour
 {
     public CharacterServiceLocator characterServiceLocator;
 
-    public BaseRangedWeapon weapon;
+    public BaseWeapon weapon;
     public DamageText damageText;
     [SerializeField] private LazyHealthBar lazyHealthBar;
 
@@ -93,7 +93,7 @@ public class BaseCharacter : MonoBehaviour
     {
         DamageInflicter damageInflicter = new DamageInflicter();
 
-        weapon.Shoot();
+        weapon.Attack(this);
     }
     #endregion
 
@@ -197,6 +197,11 @@ public class BaseCharacter : MonoBehaviour
         {
             stackingTexts[i].text = $"{stackingPerDamageType.ElementAt(i)}";
         }
+    }
+
+    public virtual void Die()
+    {
+        
     }
 
     #region Augment

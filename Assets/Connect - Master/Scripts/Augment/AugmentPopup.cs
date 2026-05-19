@@ -9,6 +9,7 @@ public class AugmentPopup : BasePopup
         base.RegisterMoreEvent();
 
         AugmentManager.showAugmentSelectionEvent += ShowSelection;
+        AugmentItemUI.selectAugmentEvent += Hide;
     }
 
     protected override void UnregisterMoreEvent()
@@ -16,6 +17,7 @@ public class AugmentPopup : BasePopup
         base.UnregisterMoreEvent();
 
         AugmentManager.showAugmentSelectionEvent -= ShowSelection;
+        AugmentItemUI.selectAugmentEvent -= Hide;
     }
 
     private void ShowSelection(AugmentItem[] augmentItems)

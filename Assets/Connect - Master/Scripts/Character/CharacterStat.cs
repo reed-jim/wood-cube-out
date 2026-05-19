@@ -10,6 +10,7 @@ public class CharacterStat : MonoBehaviour
     public BaseStat damageMultiplier;
     public BaseStat attackSpeed;
     public BaseStat reloadSpeed;
+    public BaseStat moveSpeed;
 
     public void CalculateFinalStat()
     {

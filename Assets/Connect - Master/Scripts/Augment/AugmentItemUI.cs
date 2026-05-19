@@ -1,3 +1,4 @@
+using System;
 using Coffee.UIEffects;
 using TMPro;
 using UnityEngine;
@@ -11,6 +12,8 @@ public class AugmentItemUI : MonoBehaviour
     [SerializeField] private UIEffect effectUI;
 
     private AugmentItem _augmentItem;
+
+    public static event Action selectAugmentEvent;
 
     void Awake()
     {
@@ -28,6 +31,8 @@ public class AugmentItemUI : MonoBehaviour
 
     private void Select()
     {
+        CharacterManager.Ins.mainCharacter.augmentItems.Add(_augmentItem);
 
+        selectAugmentEvent?.Invoke();
     }
 }

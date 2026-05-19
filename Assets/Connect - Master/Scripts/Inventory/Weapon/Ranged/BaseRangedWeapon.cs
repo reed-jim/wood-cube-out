@@ -1,7 +1,7 @@
 using TMPro;
 using UnityEngine;
 
-public class BaseRangedWeapon : MonoBehaviour
+public class BaseRangedWeapon : BaseWeapon
 {
     public float bulletVelocity;
     public int totalRound;
@@ -28,7 +28,7 @@ public class BaseRangedWeapon : MonoBehaviour
 
     }
 
-    public void Shoot()
+    public override void Attack(BaseCharacter attacker)
     {
         float currentTime = Time.time;
 
