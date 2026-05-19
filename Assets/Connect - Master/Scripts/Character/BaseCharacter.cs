@@ -11,6 +11,7 @@ public class BaseCharacter : MonoBehaviour
 
     public BaseRangedWeapon weapon;
     public DamageText damageText;
+    [SerializeField] private LazyHealthBar lazyHealthBar;
 
     public TMP_Text[] stackingTexts;
 
@@ -25,6 +26,8 @@ public class BaseCharacter : MonoBehaviour
     void Awake()
     {
         LoadInventoryData();
+
+        lazyHealthBar.gameObject.SetActive(false);
     }
 
     void Update()
@@ -146,7 +149,11 @@ public class BaseCharacter : MonoBehaviour
 
             if (damageInflicter.IsNewCycleToApplyDamage(currentTime))
             {
-                characterServiceLocator.characterStat.health.currentValue -= damageInflicter.damagePerCycle;
+                BaseStat health = characterServiceLocator.characterStat.health;
+
+                health.currentValue -= damageInflicter.damagePerCycle;
+
+                lazyHealthBar.SetProgress(health.currentValue / health.initialValue);
 
                 damageInflicter.UpdateNewDamageCycle(currentTime);
             }
