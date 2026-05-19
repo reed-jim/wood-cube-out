@@ -9,6 +9,8 @@ public class BaseCharacter : MonoBehaviour
 {
     public CharacterServiceLocator characterServiceLocator;
 
+    public BaseRangedWeapon weapon;
+
     public TMP_Text[] stackingTexts;
 
     public List<InventoryItem> inventoryItems;
@@ -31,6 +33,7 @@ public class BaseCharacter : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        Debug.Log($"OnCollisionEnter {collision}");
         DamageInflicter damageInflicter = collision.gameObject.GetComponent<DamageInflicter>();
 
         damageInflicters.Add(damageInflicter);
@@ -54,7 +57,10 @@ public class BaseCharacter : MonoBehaviour
 
             if (totalAttack > 0 && totalAttack % 3 == 0)
             {
-
+                for (int i = 0; i < inventoryItems.Count; i++)
+                {
+                    inventoryItems[i].SpecialEffect();
+                }
             }
 
             yield return waitForSeconds;
@@ -63,13 +69,20 @@ public class BaseCharacter : MonoBehaviour
 
     private void Attack()
     {
+        DamageInflicter damageInflicter = new DamageInflicter();
 
+        weapon.Shoot();
     }
     #endregion
 
     private void LoadInventoryData()
     {
         int[] inventoryItemIndexes = DataUtility.Load<int[]>(gameObject.name, null);
+
+        if (inventoryItemIndexes == null)
+        {
+            return;
+        }
 
         for (int i = 0; i < inventoryItemIndexes.Length; i++)
         {
