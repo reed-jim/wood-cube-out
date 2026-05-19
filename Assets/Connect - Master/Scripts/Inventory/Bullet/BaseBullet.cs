@@ -18,21 +18,22 @@ public class BaseBullet : MonoBehaviour
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        // Plane at y = 0
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
+        Vector3 targetPoint;
 
-        float distance;
-
-        if (plane.Raycast(ray, out distance))
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            InitDamageInflicter();
-
-            Vector3 targetPoint = ray.GetPoint(distance);
-
-            Vector3 direction = (targetPoint - transform.position).normalized;
-
-            bulletRigidbody.AddForce(initialVelocity * direction, ForceMode.Impulse);
+            targetPoint = hit.point;
         }
+        else
+        {
+            targetPoint = ray.GetPoint(100f);
+        }
+
+        InitDamageInflicter();
+
+        Vector3 direction = (targetPoint - transform.position).normalized;
+
+        bulletRigidbody.AddForce(initialVelocity * direction, ForceMode.Impulse);
     }
 
     private void InitDamageInflicter()
