@@ -33,7 +33,6 @@ public class BaseCharacter : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"OnCollisionEnter {collision}");
         DamageInflicter damageInflicter = collision.gameObject.GetComponent<DamageInflicter>();
 
         damageInflicters.Add(damageInflicter);
