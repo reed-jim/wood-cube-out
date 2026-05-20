@@ -80,6 +80,8 @@ public class BaseTile : MonoBehaviour
         UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
 
         IsOnValidSlot = false;
+        IsOnSlot = false;
+        IsOutside = false;
         IsDone = false;
     }
 

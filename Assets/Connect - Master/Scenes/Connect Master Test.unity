@@ -937,6 +937,9 @@ MonoBehaviour:
   reloadSpeed:
     initialValue: 0
     currentValue: 0
+  moveSpeed:
+    initialValue: 0
+    currentValue: 0
 --- !u!114 &1167927266
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -951,6 +954,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CharacterServiceLocator
   character: {fileID: 1167927264}
   characterStat: {fileID: 1167927265}
+  characterAnimation: {fileID: 0}
 --- !u!1 &1352166153
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1371,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fb369b816223424786059b315b047a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AugmentManager
+  augmentItems: []
 --- !u!4 &1790901698
 Transform:
   m_ObjectHideFlags: 0

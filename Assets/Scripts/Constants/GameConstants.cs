@@ -5,7 +5,7 @@ public static class GameConstants
 {
     public static string LOADING_SCENE = "Loading";
     public static string MENU_SCENE = "Menu";
-    public static string GAMEPLAY_SCENE = "Gameplay";
+    public static string GAMEPLAY_SCENE = "Connect";
 
     #region SCREEN ROUTE
     public static string LOBBY_DETAIL_ROUTE = "Lobby Detail";
@@ -232,6 +232,6 @@ public static class GameConstants
 
     #region CONNECT MASTER
     public static string tileSlot = "tileSlot";
-    public static string tile = "tile"; 
+    public static string tile = "tile";
     #endregion
 }
