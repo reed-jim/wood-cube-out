@@ -1,4 +1,5 @@
 using System.Collections;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +12,6 @@ public class BaseRangedWeapon : BaseWeapon
     public int roundPerSecond;
 
     [SerializeField] private Transform head;
-    [SerializeField] private Transform tail;
     public BaseBullet bullet;
 
     public TMP_Text bulletText;
