@@ -24,6 +24,7 @@ public class BaseCharacter : MonoBehaviour
     [SerializeField] private InventoryDataContainer inventoryDataContainer;
 
     public static event Action equipInventoryItemEvent;
+    public static event Action<List<InventoryItem>> updateEquippedInventoryItemEvent;
 
     #region Properties
     public int attackTime;
@@ -131,6 +132,10 @@ public class BaseCharacter : MonoBehaviour
 
     public void EquipInventoryItem(InventoryItem inventoryItem)
     {
+        if (inventoryItems.Any(item => item.itemType == inventoryItem.itemType))
+        {
+            inventoryItems.Remove(inventoryItems.First(item => item.itemType == inventoryItem.itemType));
+        }
         inventoryItems.Add(inventoryItem);
 
         UpdateStats();
@@ -138,6 +143,7 @@ public class BaseCharacter : MonoBehaviour
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
         equipInventoryItemEvent?.Invoke();
+        UpdatePlayerInventoryItems();
     }
 
     public void UnequipInventoryItem(InventoryItem inventoryItem)
@@ -149,6 +155,17 @@ public class BaseCharacter : MonoBehaviour
         DataUtility.Save(gameObject.name, inventoryItems.Select(i => i.id).ToArray());
 
         equipInventoryItemEvent?.Invoke();
+        UpdatePlayerInventoryItems();
+    }
+
+    private void UpdatePlayerInventoryItems()
+    {
+        if (this is not MainCharacter)
+        {
+            return;
+        }
+
+        updateEquippedInventoryItemEvent?.Invoke(inventoryItems);
     }
 
     private void ApplyDamage()
@@ -201,7 +218,7 @@ public class BaseCharacter : MonoBehaviour
 
     public virtual void Die()
     {
-        
+
     }
 
     #region Augment

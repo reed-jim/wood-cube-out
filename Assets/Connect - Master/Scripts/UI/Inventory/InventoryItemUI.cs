@@ -1,4 +1,5 @@
 using System;
+using Coffee.UIEffects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,10 +9,7 @@ public class InventoryItemUI : PageViewItem
 {
     [SerializeField] private TMP_Text nameText;
     [SerializeField] private Image icon;
-    [SerializeField] private Image tierImage;
-    [SerializeField] private UnityEngine.UI.Outline outline;
-
-    public Sprite[] tierSprites;
+    [SerializeField] private UIEffect effectUI;
 
     public InventoryDataContainer inventoryDataContainer;
 
@@ -33,7 +31,10 @@ public class InventoryItemUI : PageViewItem
 
     protected override void Select()
     {
-        showInventoryItemDetailEvent?.Invoke(_inventoryItem);
+        if (_inventoryItem != null)
+        {
+            showInventoryItemDetailEvent?.Invoke(_inventoryItem);
+        }
     }
 
     public void Setup(InventoryItem inventoryItem)
@@ -41,8 +42,7 @@ public class InventoryItemUI : PageViewItem
         nameText.text = inventoryItem.name;
 
         icon.sprite = inventoryItem.icon;
-        // tierImage.sprite = tierSprites[(int)inventoryItem.tier];
-        outline.effectColor = InventoryDataContainer.GetTierColor(inventoryItem.tier);
+        effectUI.edgeColor = InventoryDataContainer.GetTierColor(inventoryItem.tier);
 
         _inventoryItem = inventoryItem;
     }

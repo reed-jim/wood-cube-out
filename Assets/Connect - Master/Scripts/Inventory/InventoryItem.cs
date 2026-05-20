@@ -12,6 +12,17 @@ public enum InventoryItemTier
     Unique
 }
 
+
+public enum InventoryItemType
+{
+    Weapon,
+    Armor,
+    Helmet,
+    Gloves,
+    Boots,
+    Accessories
+}
+
 public class InventoryItem : MonoBehaviour
 {
     public int id;
@@ -19,6 +30,7 @@ public class InventoryItem : MonoBehaviour
     public BaseStat armor;
     public float price;
     public Sprite icon;
+    public InventoryItemType itemType;
     public InventoryItemTier tier;
 
     public virtual void SpecialEffect()
