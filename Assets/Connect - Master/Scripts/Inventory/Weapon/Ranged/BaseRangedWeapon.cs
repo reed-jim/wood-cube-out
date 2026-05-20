@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 
@@ -10,6 +11,7 @@ public class BaseRangedWeapon : BaseWeapon
     public int roundPerSecond;
 
     [SerializeField] private Transform head;
+    [SerializeField] private Transform tail;
     public BaseBullet bullet;
 
     public TMP_Text bulletText;
@@ -21,6 +23,8 @@ public class BaseRangedWeapon : BaseWeapon
     {
         remainingBullet = totalRound;
         _delayPerRound = 1f / roundPerSecond;
+
+        StartCoroutine(Rotating());
     }
 
     private void Reload()
@@ -37,12 +41,44 @@ public class BaseRangedWeapon : BaseWeapon
             // BaseBullet spawnedBullet = ObjectPoolingEverything.GetFromPool<BaseBullet>(bullet.name);
             BaseBullet spawnedBullet = Instantiate(bullet, transform);
             spawnedBullet.transform.position = head.transform.position;
-            spawnedBullet.Shoot();
+
+            spawnedBullet.Shoot(transform.forward);
 
             remainingBullet--;
             bulletText.text = $"{remainingBullet}/{maxBulletPerRound}";
 
             _lastShootTime = currentTime;
         }
+    }
+
+    private IEnumerator Rotating()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+
+        while (true)
+        {
+            Vector3 aimingPoint = GetAimingPoint();
+            transform.LookAt(aimingPoint);
+
+            yield return waitForSeconds;
+        }
+    }
+
+    private Vector3 GetAimingPoint()
+    {
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Vector3 targetPoint;
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
+        {
+            targetPoint = hit.point;
+        }
+        else
+        {
+            targetPoint = ray.GetPoint(100f);
+        }
+
+        return targetPoint;
     }
 }

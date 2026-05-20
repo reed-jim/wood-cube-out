@@ -14,24 +14,24 @@ public class BaseBullet : MonoBehaviour
 
     }
 
-    public virtual void Shoot()
+    public virtual void Shoot(Vector3 direction)
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        // Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
-        Vector3 targetPoint;
+        // Vector3 targetPoint;
 
-        if (Physics.Raycast(ray, out RaycastHit hit))
-        {
-            targetPoint = hit.point;
-        }
-        else
-        {
-            targetPoint = ray.GetPoint(100f);
-        }
+        // if (Physics.Raycast(ray, out RaycastHit hit))
+        // {
+        //     targetPoint = hit.point;
+        // }
+        // else
+        // {
+        //     targetPoint = ray.GetPoint(100f);
+        // }
 
-        InitDamageInflicter();
+        // InitDamageInflicter();
 
-        Vector3 direction = (targetPoint - transform.position).normalized;
+        // Vector3 direction = (targetPoint - transform.position).normalized;
 
         bulletRigidbody.AddForce(initialVelocity * direction, ForceMode.Impulse);
     }

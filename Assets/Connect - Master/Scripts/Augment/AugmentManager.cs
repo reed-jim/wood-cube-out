@@ -19,7 +19,7 @@ public class AugmentManager : Singleton<AugmentManager>
         });
     }
 
-    private void StartAugmentSelection()
+    public void StartAugmentSelection()
     {
         augmentItems.Shuffle();
 
