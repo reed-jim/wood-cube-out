@@ -32,6 +32,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private float transitionTime;
     [SerializeField] private float waitTimeBetweenClicks;
 
+    public static event Action<BoosterType> useBoosterEvent;
     public static event Action addMoreScrewPortEvent;
     public static event Action enableBreakObjectModeEvent;
     public static event Action disableBreakObjectModeEvent;
@@ -40,6 +41,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action<int> updateBoosterQuantityEvent;
     public static event Action shakeScrewPortsEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<string, string, string, string> showNotificationWithParamEvent;
 
     private List<Tween> _tweens;
     private int _numScrewPortsAdded;
@@ -136,6 +138,15 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
+        int levelToUnlockBooster = GameConstants.GetLevelToUnlockBooster(boosterType);
+
+        if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
+        {
+            showNotificationWithParamEvent?.Invoke(GameConstants.TIPS, "UnlockAtLevel", "level", $"{levelToUnlockBooster}");
+
+            return;
+        }
+
         if (boosterType == BoosterType.AddScrewPort)
         {
             AddMoreScrewPort();
@@ -148,6 +159,8 @@ public class BoosterUI : MonoBehaviour
         {
             ClearAllScrewPorts();
         }
+
+        useBoosterEvent?.Invoke(boosterType);
     }
 
     private void AddMoreScrewPort()

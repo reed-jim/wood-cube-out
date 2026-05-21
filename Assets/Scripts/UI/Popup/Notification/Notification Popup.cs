@@ -17,6 +17,7 @@ public class NotificationPopup : BasePopup
     protected override void RegisterMoreEvent()
     {
         BoosterUI.showNotificationEvent += ShowNotification;
+        BoosterUI.showNotificationWithParamEvent += ShowNotification;
         IAPPackageUI.showNotificationEvent += ShowNotification;
         IAPCoinItemUI.showNotificationEvent += ShowNotification;
         RemoveAdPopup.showNotificationEvent += ShowNotification;
@@ -35,6 +36,7 @@ public class NotificationPopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         BoosterUI.showNotificationEvent -= ShowNotification;
+        BoosterUI.showNotificationWithParamEvent -= ShowNotification;
         IAPPackageUI.showNotificationEvent -= ShowNotification;
         IAPCoinItemUI.showNotificationEvent -= ShowNotification;
         RemoveAdPopup.showNotificationEvent -= ShowNotification;

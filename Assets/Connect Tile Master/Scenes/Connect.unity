@@ -3213,6 +3213,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1165840581}
     m_Modifications:
+    - target: {fileID: 1999899380530300, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: levelToUnlock
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 126127981460810127, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -3220,6 +3224,10 @@ PrefabInstance:
     - target: {fileID: 422656069520922749, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 1297639583786741955, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: levelToUnlock
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 1357240722991560044, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -3243,11 +3251,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.23541667
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3179054
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -3325,6 +3333,10 @@ PrefabInstance:
       propertyPath: canvas
       value: 
       objectReference: {fileID: 1165840582}
+    - target: {fileID: 2356702035427809762, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: levelToUnlock
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2405689300048938429, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
@@ -9184,6 +9196,7 @@ MonoBehaviour:
   pauseButton: {fileID: 2093658419}
   noAdsButton: {fileID: 301390720}
   openDebugPopupButton: {fileID: 1567452226}
+  openInventoryPopupButton: {fileID: 0}
   remainingScrewText: {fileID: 371161563}
   localizedLevelText: {fileID: 803696890}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}

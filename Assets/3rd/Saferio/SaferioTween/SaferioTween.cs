@@ -592,6 +592,17 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
+        public static void AlphaHide(CanvasGroup canvasGroup, Action onCompleteAction = null)
+        {
+            Tween.Alpha(canvasGroup, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                canvasGroup.gameObject.SetActive(false);
+
+                onCompleteAction?.Invoke();
+            });
+        }
+
         public static void AlphaHide(TMP_Text text, Action onCompleteAction = null)
         {
             Tween.Alpha(text, 0, duration: 0.3f)

@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,10 +16,16 @@ public class BoosterItemUI : MonoBehaviour
     [SerializeField] private TMP_Text quantityText;
     [SerializeField] private Button addButton;
 
+    [Header("LOCK")]
+    [SerializeField] private CanvasGroup lockCanvasGroup;
+    [SerializeField] private TMP_Text levelToUnlockText;
+    [SerializeField] private int levelToUnlock;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private int boosterIndex;
 
     [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
@@ -41,7 +48,7 @@ public class BoosterItemUI : MonoBehaviour
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
     }
 
-    private async void Setup()
+    private void Setup()
     {
         userResourcesObserver.Load();
 
@@ -59,6 +66,25 @@ public class BoosterItemUI : MonoBehaviour
             quantityTextContainer.gameObject.SetActive(false);
             addButtonRT.gameObject.SetActive(true);
         }
+
+        #region Lock
+        if (currentLevel.Value < levelToUnlock)
+        {
+            SaferioTween.AlphaShow(lockCanvasGroup);
+
+            levelToUnlockText.text = $"Level {levelToUnlock}";
+
+            quantityTextContainer.gameObject.SetActive(false);
+            addButton.gameObject.SetActive(false);
+        }
+        else
+        {
+            SaferioTween.AlphaHide(lockCanvasGroup);
+
+            quantityTextContainer.gameObject.SetActive(true);
+            addButton.gameObject.SetActive(true);
+        }
+        #endregion
     }
 
     private void ShowBuyBoosterPopup()

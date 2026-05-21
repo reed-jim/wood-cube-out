@@ -1,16 +1,35 @@
+using System.Collections;
+using Saferio.Util.SaferioTween;
+using Spine.Unity;
+using TMPro;
 using UnityEngine;
+using static GameEnum;
 
 public class BoosterTutorial : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private TMP_Text description;
+    [SerializeField] private SkeletonGraphic tutorialHand;
+
+    [SerializeField] private BoosterType boosterType;
+
+    private IEnumerator RunTutorialBoosterAddSlot()
     {
-        
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+
+        yield return waitForSeconds;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void EndTutorial()
     {
-        
+        SaferioTween.AlphaHide(canvasGroup);
+    }
+
+    private void OnBoosterUsed(BoosterType boosterType)
+    {
+        if (boosterType == this.boosterType)
+        {
+
+        }
     }
 }

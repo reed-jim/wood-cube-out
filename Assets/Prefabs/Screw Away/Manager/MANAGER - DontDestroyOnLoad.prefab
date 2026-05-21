@@ -7677,6 +7677,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Pase de oro
     Object: {fileID: 0}
+--- !u!1 &5514033171722342501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8256131113767801854}
+  - component: {fileID: 3276025170008363643}
+  m_Layer: 0
+  m_Name: UnlockAtLevel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8256131113767801854
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5514033171722342501}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3276025170008363643
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5514033171722342501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock at Level {level}
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9bloquer au niveau {level}"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Auf Level {level} freischalten
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca al livello {level}
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30EC\u30D9\u30EB {level} \u3067\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB808\uBCA8 {level}\uC5D0\uC11C \uC7A0\uAE08 \uD574\uC81C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Desbloquear no n\xEDvel {level}"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u043D\u0430 \u0443\u0440\u043E\u0432\u043D\u0435 {level}"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Desbloquear en el nivel {level}
+    Object: {fileID: 0}
 --- !u!1 &5558069693773874823
 GameObject:
   m_ObjectHideFlags: 0
@@ -7829,6 +7903,7 @@ Transform:
   - {fileID: 4450989114708121936}
   - {fileID: 7173445182022862289}
   - {fileID: 65281796572380979}
+  - {fileID: 8256131113767801854}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
