@@ -1,29 +1,23 @@
 using System;
 using System.Collections;
+using Animancer;
 using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
 {
-    [SerializeField] private Animator animator;
+    [SerializeField] private AnimancerComponent animancerComponent;
+    [SerializeField] private AnimationClip attackAnimation;
+    public LinearMixerTransition locomotionMixer;
 
-    [SerializeField] private string animationStateName = "Attack";
-
-    public void PlayAnimation(Action onComplete = null)
+    public void UpdateMixer(float value)
     {
-        StartCoroutine(PlayAnimationRoutine(onComplete));
+        locomotionMixer.State.Parameter = value;
     }
 
-    private IEnumerator PlayAnimationRoutine(Action onComplete)
+    public void PlayAnimation(Action onComplete)
     {
-        animator.Play(animationStateName);
+        AnimancerState state = animancerComponent.Play(attackAnimation);
 
-        yield return null;
-
-        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        float animationLength = stateInfo.length;
-
-        yield return new WaitForSeconds(animationLength);
-
-        onComplete?.Invoke();
+        state.Events(this).OnEnd += onComplete;
     }
 }
