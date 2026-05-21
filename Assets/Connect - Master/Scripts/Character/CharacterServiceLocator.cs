@@ -4,5 +4,6 @@ public class CharacterServiceLocator : MonoBehaviour
 {
     public BaseCharacter character;
     public CharacterStat characterStat;
+    public CharacterStateMachine characterStateMachine;
     public CharacterAnimation characterAnimation;
 }
