@@ -11,15 +11,20 @@ public class BoosterTutorial : MonoBehaviour
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text description;
     [SerializeField] private SkeletonGraphic tutorialHand;
-    [SerializeField] private Button useBoosterButton;
+    [SerializeField] private Button[] useBoosterButtons;
 
     [SerializeField] private BoosterType boosterType;
+
+    [SerializeField] private IntVariable currentLevel;
 
     private int step;
 
     void Awake()
     {
-        useBoosterButton.onClick.AddListener(OnBoosterUsed);
+        for (int i = 0; i < useBoosterButtons.Length; i++)
+        {
+            useBoosterButtons[i].onClick.AddListener(OnBoosterUsed);
+        }
     }
 
     void Start()
@@ -32,6 +37,13 @@ public class BoosterTutorial : MonoBehaviour
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
         int maxStep = 1;
+
+        for (int i = 0; i < useBoosterButtons.Length; i++)
+        {
+            useBoosterButtons[i].gameObject.SetActive(false);
+        }
+
+        useBoosterButtons[(int)boosterType].gameObject.SetActive(true);
 
         while (step < maxStep)
         {
@@ -54,5 +66,13 @@ public class BoosterTutorial : MonoBehaviour
     private void OnBoosterUsed()
     {
         NextStep();
+    }
+
+    private void OnLevelStarted()
+    {
+        if (currentLevel.Value == GameConstants.GetLevelToUnlockBooster(boosterType))
+        {
+            
+        }
     }
 }
