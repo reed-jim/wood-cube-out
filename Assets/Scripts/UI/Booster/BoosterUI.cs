@@ -68,7 +68,10 @@ public class BoosterUI : MonoBehaviour
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
-        disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+        if (disableBreakObjectModeEarlyButton != null)
+        {
+            disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+        }
 
         _tweens = new List<Tween>();
 
