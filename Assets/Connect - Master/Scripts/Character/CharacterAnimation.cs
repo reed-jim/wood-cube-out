@@ -5,8 +5,12 @@ using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
 {
+    [SerializeField] private Rigidbody characterRigidbody;
     [SerializeField] private AnimancerComponent animancerComponent;
     // [SerializeField] private AnimationClip attackAnimation;
+
+    [SerializeField] private Transform cameraTransform;
+
     public MixerTransition2D locomotionMixer;
 
     private Vector2 inputVector;
@@ -15,6 +19,11 @@ public class CharacterAnimation : MonoBehaviour
 
     public float runPower;
     private Vector2 oldInputVector;
+    private Vector3 desiredVelocity;
+
+    [Header("Movement")]
+    public float speed;
+    public float runPowerDelta;
 
     void Start()
     {
@@ -24,6 +33,7 @@ public class CharacterAnimation : MonoBehaviour
     void Update()
     {
         HandleInput();
+        HandleMovement();
         HandleAnimation();
     }
 
@@ -36,11 +46,11 @@ public class CharacterAnimation : MonoBehaviour
 
         if (h != 0 || v != 0)
         {
-            runPower += 0.01f;
+            runPower += runPowerDelta;
         }
         else
         {
-            runPower -= 0.01f;
+            runPower -= 3 * runPowerDelta;
 
             inputVector = oldInputVector;
         }
@@ -50,6 +60,39 @@ public class CharacterAnimation : MonoBehaviour
         oldInputVector = inputVector;
 
         inputVector = runPower * Vector2.ClampMagnitude(inputVector, 1f);
+    }
+
+    private void HandleMovement()
+    {
+        Vector3 camForward = cameraTransform.forward;
+        Vector3 camRight = cameraTransform.right;
+
+        camForward.y = 0;
+        camRight.y = 0;
+
+        camForward.Normalize();
+        camRight.Normalize();
+
+        Vector3 moveDirection =
+            camForward * inputVector.y +
+            camRight * inputVector.x;
+
+        desiredVelocity = speed * moveDirection;
+
+        Vector3 currentVelocity = characterRigidbody.linearVelocity;
+
+        Vector3 horizontalVelocity =
+            new Vector3(
+                currentVelocity.x,
+                0,
+                currentVelocity.z);
+
+        Vector3 velocityChange =
+            desiredVelocity - horizontalVelocity;
+
+        characterRigidbody.AddForce(
+            velocityChange,
+            ForceMode.VelocityChange);
     }
 
     private void HandleAnimation()
@@ -68,7 +111,22 @@ public class CharacterAnimation : MonoBehaviour
         Vector2 animationVector =
             new Vector2(horizontal, vertical);
 
-        mixerState.Parameter = animationVector;
+
+
+
+        Vector3 velocity = characterRigidbody.linearVelocity;
+        velocity.y = 0;
+
+        // // Convert world velocity to local velocity
+        // Vector3 localVelocity =
+        //     transform.InverseTransformDirection(velocity);
+
+        Vector2 targetAnimVelocity =
+            new Vector2(
+                velocity.x,
+                velocity.z);
+
+        mixerState.Parameter = targetAnimVelocity;
     }
 
     // void Update()
