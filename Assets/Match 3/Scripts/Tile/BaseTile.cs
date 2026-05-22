@@ -1,5 +1,4 @@
-using System.Drawing;
-using DG.Tweening;
+using PrimeTween;
 using UnityEngine;
 
 namespace Match3
@@ -18,11 +17,6 @@ namespace Match3
         public TileAssetsContainer tileAssetsContainer;
 
         public Vector2 Size => spriteRenderer.bounds.size;
-
-        void Awake()
-        {
-            Init();
-        }
 
         public void Init()
         {
@@ -52,8 +46,13 @@ namespace Match3
 
                     if (otherTile != null)
                     {
-                        transform.DOMove(otherTile.transform.position, duration: 0.3f);
-                        otherTile.transform.DOMove(transform.position, duration: 0.3f);
+                        Tween.Position(transform, otherTile.transform.position, duration: 0.3f);
+                        Tween.Position(otherTile.transform, transform.position, duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+                            TileManager.Ins.SwapTwoTiles(this, otherTile);
+                            TileManager.Ins.CheckMerge();
+                        });
 
                         break;
                     }
