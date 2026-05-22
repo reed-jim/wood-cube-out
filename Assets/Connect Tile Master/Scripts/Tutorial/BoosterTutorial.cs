@@ -1,4 +1,6 @@
 using System.Collections;
+using System.Collections.Generic;
+using NamPhuThuy.GamePlay;
 using Saferio.Util.SaferioTween;
 using Spine.Unity;
 using TMPro;
@@ -13,23 +15,26 @@ public class BoosterTutorial : MonoBehaviour
     [SerializeField] private SkeletonGraphic tutorialHand;
     [SerializeField] private Button[] useBoosterButtons;
 
-    [SerializeField] private BoosterType boosterType;
+    [SerializeField] private List<BoosterType> allboosterTypes;
 
     [SerializeField] private IntVariable currentLevel;
 
     private int step;
+    private BoosterType boosterType;
 
     void Awake()
     {
+        LevelLoader.startLevelEvent += OnLevelStarted;
+
         for (int i = 0; i < useBoosterButtons.Length; i++)
         {
             useBoosterButtons[i].onClick.AddListener(OnBoosterUsed);
         }
     }
 
-    void Start()
+    void OnDestroy()
     {
-        StartCoroutine(RunTutorial());
+        LevelLoader.startLevelEvent -= OnLevelStarted;
     }
 
     private IEnumerator RunTutorial()
@@ -70,9 +75,21 @@ public class BoosterTutorial : MonoBehaviour
 
     private void OnLevelStarted()
     {
-        if (currentLevel.Value == GameConstants.GetLevelToUnlockBooster(boosterType))
+        foreach (var boosterType in allboosterTypes)
         {
-            
+            if (currentLevel.Value == GameConstants.GetLevelToUnlockBooster(boosterType))
+            {
+                this.boosterType = boosterType;
+
+                Transform boosterButton = useBoosterButtons[(int)boosterType].transform;
+
+                tutorialHand.transform.SetParent(boosterButton);
+                tutorialHand.transform.localPosition = Vector3.zero;
+
+                break;
+            }
         }
+
+        StartCoroutine(RunTutorial());
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using Animancer;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class CharacterAnimation : MonoBehaviour
@@ -82,12 +83,9 @@ public class CharacterAnimation : MonoBehaviour
         desiredVelocity = speed * moveDirection;
         desiredVelocity.y = 0;
 
-        Vector3 currentVelocity = characterRigidbody.linearVelocity;
+        Vector3 currentVelocity = characterRigidbody.linearVelocity.ChangeY(0);
 
-        Vector3 horizontalVelocity = new Vector3(currentVelocity.x, 0, currentVelocity.z);
-
-        Vector3 velocityChange =
-            desiredVelocity - horizontalVelocity;
+        Vector3 velocityChange = desiredVelocity - currentVelocity;
 
         velocityChange.x = Mathf.Clamp(velocityChange.x, -10, 10);
         velocityChange.z = Mathf.Clamp(velocityChange.z, -10, 10);
