@@ -155,6 +155,40 @@ namespace Match3
             return new List<int>(matched);
         }
 
+        void CollapseBoard()
+        {
+            for (int x = 0; x < column; x++)
+            {
+                int emptyY = -1;
+
+                for (int y = 0; y < row; y++)
+                {
+                    int index = GetIndex(x, y);
+
+                    // First empty slot
+                    if (tiles[index] == null && emptyY == -1)
+                    {
+                        emptyY = y;
+                    }
+
+                    // Move tile down
+                    if (tiles[index] != null && emptyY != -1)
+                    {
+                        int targetIndex = GetIndex(x, emptyY);
+
+                        tiles[targetIndex] = tiles[index];
+                        tiles[index] = null;
+
+                        // Update world position
+                        tiles[targetIndex].transform.position =
+                            GetWorldPosition(x, emptyY);
+
+                        emptyY++;
+                    }
+                }
+            }
+        }
+
         private void DropDownTiles()
         {
 
