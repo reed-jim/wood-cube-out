@@ -159,6 +159,10 @@ Material:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _MatCap:
+        m_Texture: {fileID: 2800000, guid: 9234464538b24934d82e2a4e6cab4778, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _MatCap_Sampler:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -309,9 +313,11 @@ Material:
     - _BlendOp: 0
     - _BlurLevelMatcap: 0
     - _BlurLevelSGM: 0
+    - _Brighter: 6
     - _BumpScale: 1
     - _BumpScaleMatcap: 1
     - _CameraRolling_Stabilizer: 0
+    - _CastShadows: 0
     - _ClearCoat: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
@@ -571,11 +577,13 @@ Material:
     - _WorldMinY: -5
     - _XRMotionVectorsPass: 1
     - _ZOverDrawMode: 0
+    - _ZTest: 4
     - _ZTestDepthEqualForOpaque: 4
     - _ZTestGBuffer: 4
     - _ZTestModeDistortion: 8
     - _ZTestTransparent: 4
     - _ZWrite: 1
+    - _ZWriteControl: 1
     - _ZWriteMode: 1
     - _isUnityToonshader: 1
     - _simpleUI: 0
@@ -610,6 +618,7 @@ Material:
     - _MainTextureOffset: {r: 0, g: 0, b: 0, a: 0}
     - _MainTextureTiling: {r: 1, g: 1, b: 0, a: 0}
     - _MatCapColor: {r: 1, g: 1, b: 1, a: 1}
+    - _MatCapTiling: {r: 0, g: 0, b: 0, a: 0}
     - _NormalMapOffset: {r: 0, g: 0, b: 0, a: 0}
     - _NormalMapTiling: {r: 2, g: 2, b: 0, a: 0}
     - _OutlineMaskColor: {r: 0, g: 0, b: 0, a: 1}
