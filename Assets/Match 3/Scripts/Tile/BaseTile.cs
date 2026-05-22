@@ -7,6 +7,7 @@ namespace Match3
     public class BaseTile : MonoBehaviour
     {
         [SerializeField] private SpriteRenderer spriteRenderer;
+        [SerializeField] private SpriteRenderer icon;
 
         public int faction;
         #region State
@@ -18,9 +19,23 @@ namespace Match3
 
         public Vector2 Size => spriteRenderer.bounds.size;
 
+        void Awake()
+        {
+            Init();
+        }
+
         public void Init()
         {
-            spriteRenderer.sprite = tileAssetsContainer.tileFactionSprites[faction];
+            faction = Random.Range(0, 3);
+
+            icon.sprite = tileAssetsContainer.tileFactionSprites[faction];
+        }
+
+        public void Init(int faction)
+        {
+            icon.sprite = tileAssetsContainer.tileFactionSprites[faction];
+
+            this.faction = faction;
         }
 
         public void Move(Vector2Int direction)
