@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
@@ -212,6 +213,25 @@ namespace Match3
 
         private void SpawnNewTiles()
         {
+            List<int> indexesToSpawnNewTiles = new List<int>();
+
+            for (int x = 0; x < column; x++)
+            {
+                for (int y = row - 1; y >= 0; y--)
+                {
+                    int index = GetIndex(x, y);
+
+                    if (tiles[index] == null)
+                    {
+                        indexesToSpawnNewTiles.Add(index);
+                    }
+                }
+            }
+
+            List<int> poolFaction = GetNextFactions(indexesToSpawnNewTiles);
+
+            int factionIndex = 0;
+
             for (int x = 0; x < column; x++)
             {
                 Vector3 spawnPosition = grids[x + 0 * column].worldPosition;
@@ -227,6 +247,10 @@ namespace Match3
                         Vector3 destination = GetWorldPosition(x, y);
 
                         BaseTile spawnedTile = SpawnNewTile(spawnPosition, destination);
+
+                        spawnedTile.Init(poolFaction[factionIndex]);
+
+                        factionIndex++;
 
                         tiles[index] = spawnedTile;
                     }
@@ -291,12 +315,9 @@ namespace Match3
         }
 
         #region Level Difficulty
-        private int GetNextFaction(List<int> spawnIndexes)
+        private List<int> GetNextFactions(List<int> spawnIndexes)
         {
-            int difficultyLevel = 0;
-            int nextFaction = 0;
-
-            int numMatchToCreate = 0;
+            List<int> nextFactions = new List<int>();
 
             for (int i = 0; i < spawnIndexes.Count; i++)
             {
@@ -305,36 +326,60 @@ namespace Match3
                 List<int> factionOfRow = new List<int>();
                 List<int> factionOfColumn = new List<int>();
 
-                for (int j = 0; j < column; j++)
-                {
-                    int index = j + coordinate.y * column;
+                Dictionary<int, int> rowDifficultyScorePerFaction =
+                    GetLineDifficultyScorePerSpawnFaction(spawnIndexes[i], coordinate.y * column, (column - 1) + coordinate.y * column);
 
-                    if (tiles[j + coordinate.y * column] == null)
-                    {
-                        factionOfRow.Add(-1);
-                    }
-                    else
-                    {
-                        factionOfRow.Add(index);
-                    }
+                Dictionary<int, int> columnDifficultyScorePerFaction =
+                    GetLineDifficultyScorePerSpawnFaction(spawnIndexes[i], coordinate.x, coordinate.x + (row - 1) * column);
+
+                Dictionary<int, int> difficultyScorePerFaction = new Dictionary<int, int>();
+
+                for (int j = 0; j < rowDifficultyScorePerFaction.Count; j++)
+                {
+                    difficultyScorePerFaction.Add
+                    (
+                        rowDifficultyScorePerFaction.ElementAt(j).Key,
+                        rowDifficultyScorePerFaction.ElementAt(j).Value + columnDifficultyScorePerFaction.ElementAt(j).Value
+                    );
                 }
 
-                for (int j = 0; j < row; j++)
+                foreach (var item in difficultyScorePerFaction)
                 {
-                    int index = coordinate.x + j * column;
-
-                    if (tiles[coordinate.x + j * column] == null)
-                    {
-                        factionOfColumn.Add(-1);
-                    }
-                    else
-                    {
-                        factionOfColumn.Add(index);
-                    }
+                    Debug.Log($"Faction {item.Key} Score {item.Value}");
                 }
+
+                nextFactions.Add(difficultyScorePerFaction.OrderBy(item => item.Value).Last().Key);
+
+                // for (int j = 0; j < column; j++)
+                // {
+                //     int index = j + coordinate.y * column;
+
+                //     if (tiles[j + coordinate.y * column] == null)
+                //     {
+                //         factionOfRow.Add(-1);
+                //     }
+                //     else
+                //     {
+                //         factionOfRow.Add(index);
+                //     }
+                // }
+
+                // for (int j = 0; j < row; j++)
+                // {
+                //     int index = coordinate.x + j * column;
+
+                //     if (tiles[coordinate.x + j * column] == null)
+                //     {
+                //         factionOfColumn.Add(-1);
+                //     }
+                //     else
+                //     {
+                //         factionOfColumn.Add(index);
+                //     }
+                // }
             }
 
-            return nextFaction;
+            return nextFactions;
 
             Dictionary<int, int> GetLineDifficultyScorePerSpawnFaction(int spawnIndex, int startIndex, int endIndex)
             {
@@ -345,26 +390,32 @@ namespace Match3
                 for (int i = 0; i < allFactions.Length; i++)
                 {
                     int numMatch = 0;
+                    int numSameTile = 0;
                     int currentFaction = -1;
 
-                    for (int j = startIndex; j < endIndex; j++)
+                    for (int j = startIndex; j <= endIndex; j++)
                     {
                         if (tiles[j] != null)
                         {
                             if (currentFaction == -1)
                             {
-                                numMatch = 1;
+                                numSameTile = 1;
                                 currentFaction = tiles[j].faction;
                             }
                             else
                             {
                                 if (tiles[j].faction == currentFaction)
                                 {
-                                    numMatch++;
+                                    numSameTile++;
+
+                                    if (numSameTile == 3)
+                                    {
+                                        numMatch++;
+                                    }
                                 }
                                 else
                                 {
-                                    numMatch = 1;
+                                    numSameTile = 1;
                                     currentFaction = tiles[j].faction;
                                 }
                             }
@@ -375,21 +426,31 @@ namespace Match3
                             {
                                 if (currentFaction == -1)
                                 {
-                                    numMatch = 1;
+                                    numSameTile = 1;
                                     currentFaction = allFactions[i];
                                 }
                                 else
                                 {
                                     if (allFactions[i] == currentFaction)
                                     {
-                                        numMatch++;
+                                        numSameTile++;
+
+                                        if (numSameTile == 3)
+                                        {
+                                            numMatch++;
+                                        }
+
                                         currentFaction = allFactions[i];
                                     }
                                 }
                             }
                         }
                     }
+
+                    result.Add(i, numMatch);
                 }
+
+                return result;
             }
         }
         #endregion
