@@ -213,25 +213,6 @@ namespace Match3
 
         private void SpawnNewTiles()
         {
-            List<int> indexesToSpawnNewTiles = new List<int>();
-
-            for (int x = 0; x < column; x++)
-            {
-                for (int y = row - 1; y >= 0; y--)
-                {
-                    int index = GetIndex(x, y);
-
-                    if (tiles[index] == null)
-                    {
-                        indexesToSpawnNewTiles.Add(index);
-                    }
-                }
-            }
-
-            List<int> poolFaction = GetNextFactions(indexesToSpawnNewTiles);
-
-            int factionIndex = 0;
-
             for (int x = 0; x < column; x++)
             {
                 Vector3 spawnPosition = grids[x + 0 * column].worldPosition;
@@ -248,9 +229,9 @@ namespace Match3
 
                         BaseTile spawnedTile = SpawnNewTile(spawnPosition, destination);
 
-                        spawnedTile.Init(poolFaction[factionIndex]);
+                        int nextFaction = GetNextFaction(index);
 
-                        factionIndex++;
+                        spawnedTile.Init(nextFaction);
 
                         tiles[index] = spawnedTile;
                     }
@@ -315,6 +296,110 @@ namespace Match3
         }
 
         #region Level Difficulty
+        private int GetNextFaction(int spawnIndex)
+        {
+            Vector2Int coordinate = GetCoordinate(spawnIndex);
+
+            List<int> factionOfRow = new List<int>();
+            List<int> factionOfColumn = new List<int>();
+
+            Dictionary<int, int> rowDifficultyScorePerFaction =
+                GetLineDifficultyScorePerSpawnFaction(spawnIndex, coordinate.y * column, (column - 1) + coordinate.y * column);
+
+            Dictionary<int, int> columnDifficultyScorePerFaction =
+                GetLineDifficultyScorePerSpawnFaction(spawnIndex, coordinate.x, coordinate.x + (row - 1) * column);
+
+            Dictionary<int, int> difficultyScorePerFaction = new Dictionary<int, int>();
+
+            for (int j = 0; j < rowDifficultyScorePerFaction.Count; j++)
+            {
+                difficultyScorePerFaction.Add
+                (
+                    rowDifficultyScorePerFaction.ElementAt(j).Key,
+                    rowDifficultyScorePerFaction.ElementAt(j).Value + columnDifficultyScorePerFaction.ElementAt(j).Value
+                );
+            }
+
+            foreach (var item in difficultyScorePerFaction)
+            {
+                Debug.Log($"Faction {item.Key} Score {item.Value}");
+            }
+
+            return difficultyScorePerFaction.OrderBy(item => item.Value).Last().Key;
+
+            Dictionary<int, int> GetLineDifficultyScorePerSpawnFaction(int spawnIndex, int startIndex, int endIndex)
+            {
+                int[] allFactions = new int[tileAssetsContainer.tileFactionSprites.Length];
+
+                Dictionary<int, int> result = new Dictionary<int, int>();
+
+                for (int i = 0; i < allFactions.Length; i++)
+                {
+                    int numMatch = 0;
+                    int numSameTile = 0;
+                    int currentFaction = -1;
+
+                    for (int j = startIndex; j <= endIndex; j++)
+                    {
+                        if (tiles[j] != null)
+                        {
+                            if (currentFaction == -1)
+                            {
+                                numSameTile = 1;
+                                currentFaction = tiles[j].faction;
+                            }
+                            else
+                            {
+                                if (tiles[j].faction == currentFaction)
+                                {
+                                    numSameTile++;
+
+                                    if (numSameTile == 3)
+                                    {
+                                        numMatch++;
+                                    }
+                                }
+                                else
+                                {
+                                    numSameTile = 1;
+                                    currentFaction = tiles[j].faction;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (j == spawnIndex)
+                            {
+                                if (currentFaction == -1)
+                                {
+                                    numSameTile = 1;
+                                    currentFaction = allFactions[i];
+                                }
+                                else
+                                {
+                                    if (allFactions[i] == currentFaction)
+                                    {
+                                        numSameTile++;
+
+                                        if (numSameTile == 3)
+                                        {
+                                            numMatch++;
+                                        }
+
+                                        currentFaction = allFactions[i];
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    result.Add(i, numMatch);
+                }
+
+                return result;
+            }
+        }
+
         private List<int> GetNextFactions(List<int> spawnIndexes)
         {
             List<int> nextFactions = new List<int>();
