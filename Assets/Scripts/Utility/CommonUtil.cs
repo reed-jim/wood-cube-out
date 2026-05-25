@@ -358,4 +358,9 @@ public static class CommonUtil
             dictionary.Add(key, value);
         }
     }
+
+    public static Vector2 AbsVector2(Vector2 input)
+    {
+        return new Vector2(Mathf.Abs(input.x), Mathf.Abs(input.y));
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 namespace Match3
@@ -15,18 +16,25 @@ namespace Match3
     public class TileManager : Singleton<TileManager>
     {
         public LevelItem level;
+        public BaseTile tilePrefab;
 
         int column = 5;
         int row = 5;
+        Vector2 distanceBetweenTwoTiles;
 
         public List<BaseTile> tiles;
         public List<Grid> grids;
+
+        public TileAssetsContainer tileAssetsContainer;
 
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
 
             tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(level.transform);
+
+            distanceBetweenTwoTiles = tiles[1 + 1 * column].transform.position - tiles[0].transform.position;
+            distanceBetweenTwoTiles = CommonUtil.AbsVector2(distanceBetweenTwoTiles);
 
             InitGrids();
         }
@@ -77,6 +85,7 @@ namespace Match3
             }
 
             DropTilesDown();
+            SpawnNewTiles();
         }
 
         List<int> FindAllMatches()
@@ -198,50 +207,60 @@ namespace Match3
                         }
                     }
                 }
-
-                // for (int y = 0; y < row; y++)
-                // {
-                //     int index = GetIndex(x, y);
-
-                //     // First empty slot
-                //     if (tiles[index] == null && emptyY == -1)
-                //     {
-                //         emptyY = y;
-                //     }
-
-                //     y
-                //     y
-                //     x
-                //     x
-                //     x
-                //     y
-
-                //     // Move tile down
-                //     if (tiles[index] != null && emptyY != -1)
-                //     {
-                //         int targetIndex = GetIndex(x, emptyY);
-
-                //         tiles[targetIndex] = tiles[index];
-                //         tiles[index] = null;
-
-                //         // Update world position
-                //         tiles[targetIndex].transform.position =
-                //             GetWorldPosition(x, emptyY);
-
-                //         emptyY++;
-                //     }
-                // }
             }
         }
 
-        private void DropDownTiles()
+        private void SpawnNewTiles()
         {
+            for (int x = 0; x < column; x++)
+            {
+                Vector3 spawnPosition = grids[x + 0 * column].worldPosition;
 
+                for (int y = row - 1; y >= 0; y--)
+                {
+                    int index = GetIndex(x, y);
+
+                    if (tiles[index] == null)
+                    {
+                        spawnPosition = spawnPosition.AddY(distanceBetweenTwoTiles.y);
+
+                        Vector3 destination = GetWorldPosition(x, y);
+
+                        BaseTile spawnedTile = SpawnNewTile(spawnPosition, destination);
+
+                        tiles[index] = spawnedTile;
+                    }
+                }
+            }
+
+            BaseTile SpawnNewTile(Vector3 startPosition, Vector3 endPosition)
+            {
+                BaseTile baseTile = Instantiate(tilePrefab, level.transform);
+
+                baseTile.transform.position = startPosition;
+                baseTile.transform.localScale = Vector3.zero;
+
+                Tween.Scale(baseTile.transform, 1, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.Position(baseTile.transform, endPosition, duration: 0.3f);
+                });
+
+                return baseTile;
+            }
         }
 
         int GetIndex(int x, int y)
         {
             return y * column + x;
+        }
+
+        Vector2Int GetCoordinate(int index)
+        {
+            int x = index % column;
+            int y = (index - x) / column;
+
+            return new Vector2Int(x, y);
         }
 
         BaseTile GetTile(int x, int y)
@@ -270,5 +289,109 @@ namespace Match3
 
             return tile;
         }
+
+        #region Level Difficulty
+        private int GetNextFaction(List<int> spawnIndexes)
+        {
+            int difficultyLevel = 0;
+            int nextFaction = 0;
+
+            int numMatchToCreate = 0;
+
+            for (int i = 0; i < spawnIndexes.Count; i++)
+            {
+                Vector2Int coordinate = GetCoordinate(spawnIndexes[i]);
+
+                List<int> factionOfRow = new List<int>();
+                List<int> factionOfColumn = new List<int>();
+
+                for (int j = 0; j < column; j++)
+                {
+                    int index = j + coordinate.y * column;
+
+                    if (tiles[j + coordinate.y * column] == null)
+                    {
+                        factionOfRow.Add(-1);
+                    }
+                    else
+                    {
+                        factionOfRow.Add(index);
+                    }
+                }
+
+                for (int j = 0; j < row; j++)
+                {
+                    int index = coordinate.x + j * column;
+
+                    if (tiles[coordinate.x + j * column] == null)
+                    {
+                        factionOfColumn.Add(-1);
+                    }
+                    else
+                    {
+                        factionOfColumn.Add(index);
+                    }
+                }
+            }
+
+            return nextFaction;
+
+            Dictionary<int, int> GetLineDifficultyScorePerSpawnFaction(int spawnIndex, int startIndex, int endIndex)
+            {
+                int[] allFactions = new int[tileAssetsContainer.tileFactionSprites.Length];
+
+                Dictionary<int, int> result = new Dictionary<int, int>();
+
+                for (int i = 0; i < allFactions.Length; i++)
+                {
+                    int numMatch = 0;
+                    int currentFaction = -1;
+
+                    for (int j = startIndex; j < endIndex; j++)
+                    {
+                        if (tiles[j] != null)
+                        {
+                            if (currentFaction == -1)
+                            {
+                                numMatch = 1;
+                                currentFaction = tiles[j].faction;
+                            }
+                            else
+                            {
+                                if (tiles[j].faction == currentFaction)
+                                {
+                                    numMatch++;
+                                }
+                                else
+                                {
+                                    numMatch = 1;
+                                    currentFaction = tiles[j].faction;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (j == spawnIndex)
+                            {
+                                if (currentFaction == -1)
+                                {
+                                    numMatch = 1;
+                                    currentFaction = allFactions[i];
+                                }
+                                else
+                                {
+                                    if (allFactions[i] == currentFaction)
+                                    {
+                                        numMatch++;
+                                        currentFaction = allFactions[i];
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
     }
 }
