@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using PrimeTween;
 using UnityEngine;
 
 namespace Match3
@@ -7,6 +8,7 @@ namespace Match3
     {
         public int x;
         public int y;
+        public Vector3 worldPosition;
         public BaseTile tile;
     }
 
@@ -43,6 +45,7 @@ namespace Match3
                     {
                         x = j,
                         y = i,
+                        worldPosition = tiles[index].transform.position,
                         tile = tiles[index]
                     };
 
@@ -69,7 +72,11 @@ namespace Match3
                 BaseTile matchTile = tiles[matchIndexes[i]];
 
                 matchTile.gameObject.SetActive(false);
+
+                tiles[matchIndexes[i]] = null;
             }
+
+            DropTilesDown();
         }
 
         List<int> FindAllMatches()
@@ -155,37 +162,75 @@ namespace Match3
             return new List<int>(matched);
         }
 
-        void CollapseBoard()
+        void DropTilesDown()
         {
             for (int x = 0; x < column; x++)
             {
                 int emptyY = -1;
 
-                for (int y = 0; y < row; y++)
+                for (int y = row - 1; y >= 0; y--)
                 {
                     int index = GetIndex(x, y);
 
-                    // First empty slot
                     if (tiles[index] == null && emptyY == -1)
                     {
                         emptyY = y;
+
+                        continue;
                     }
 
-                    // Move tile down
-                    if (tiles[index] != null && emptyY != -1)
+                    if (emptyY != -1)
                     {
-                        int targetIndex = GetIndex(x, emptyY);
+                        if (tiles[index] == null)
+                        {
 
-                        tiles[targetIndex] = tiles[index];
-                        tiles[index] = null;
+                        }
+                        else
+                        {
+                            int targetIndex = GetIndex(x, emptyY);
 
-                        // Update world position
-                        tiles[targetIndex].transform.position =
-                            GetWorldPosition(x, emptyY);
+                            Tween.Position(tiles[index].transform, GetWorldPosition(x, emptyY), duration: 0.3f);
 
-                        emptyY++;
+                            tiles[targetIndex] = tiles[index];
+                            tiles[index] = null;
+
+                            emptyY = y;
+                        }
                     }
                 }
+
+                // for (int y = 0; y < row; y++)
+                // {
+                //     int index = GetIndex(x, y);
+
+                //     // First empty slot
+                //     if (tiles[index] == null && emptyY == -1)
+                //     {
+                //         emptyY = y;
+                //     }
+
+                //     y
+                //     y
+                //     x
+                //     x
+                //     x
+                //     y
+
+                //     // Move tile down
+                //     if (tiles[index] != null && emptyY != -1)
+                //     {
+                //         int targetIndex = GetIndex(x, emptyY);
+
+                //         tiles[targetIndex] = tiles[index];
+                //         tiles[index] = null;
+
+                //         // Update world position
+                //         tiles[targetIndex].transform.position =
+                //             GetWorldPosition(x, emptyY);
+
+                //         emptyY++;
+                //     }
+                // }
             }
         }
 
@@ -206,7 +251,9 @@ namespace Match3
 
         Vector3 GetWorldPosition(int x, int y)
         {
-            return new Vector3(x, y, 0);
+            int index = x + y * column;
+
+            return grids[index].worldPosition;
         }
 
         BaseTile SpawnRandomTile(int x, int y)
