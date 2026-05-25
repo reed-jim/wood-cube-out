@@ -79,7 +79,7 @@ public class TileManager : Singleton<TileManager>
     {
         foreach (var tileToRemove in tiles)
         {
-            Destroy(tileToRemove.gameObject);
+            ObjectPoolingEverything.ReturnToPool(GameConstants.tile, tileToRemove.gameObject);
         }
 
         tiles = new List<BaseTile>();
@@ -675,6 +675,7 @@ public class TileManager : Singleton<TileManager>
 
             BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
 
+            tile.gameObject.SetActive(true);
             tile.transform.SetParent(tileContainer);
             tile.transform.localPosition = spawnPos;
             tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
