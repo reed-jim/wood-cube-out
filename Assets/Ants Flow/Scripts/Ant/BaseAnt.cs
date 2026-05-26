@@ -108,7 +108,7 @@ namespace AntsFlow
         {
             float distance = Vector2.Distance(transform.position, agent.destination);
 
-            return distance < 0.02f;
+            return distance < 0.01f;
         }
     }
 }
