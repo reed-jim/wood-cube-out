@@ -55,6 +55,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject clothingPiecePrefab;
     public GameObject pathSlotPrefab;
     public GameObject antPrefab;
+    public GameObject antDissapearFxPrefab;
 
     private bool _isInitialized;
 
@@ -135,6 +136,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
         RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
         RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 100);
+        RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

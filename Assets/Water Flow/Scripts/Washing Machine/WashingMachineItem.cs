@@ -17,6 +17,7 @@ public class WashingMachineItem : MonoBehaviour
     public int number;
     public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
+    public WashingMachineSlot washingMachineSlot;
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
 
@@ -64,7 +65,9 @@ public class WashingMachineItem : MonoBehaviour
 
     public void Select()
     {
-        WashingMachineManager.Ins.MoveItemToSlot(this);
+        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+
+        this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
     }
@@ -83,7 +86,7 @@ public class WashingMachineItem : MonoBehaviour
 
     private IEnumerator SpawningAnts()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
 
         while (number > 0)
         {
@@ -105,7 +108,7 @@ public class WashingMachineItem : MonoBehaviour
 
         SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
         {
-
+            washingMachineSlot.washingMachineItem = null;
         });
     }
 }

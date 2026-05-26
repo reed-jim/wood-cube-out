@@ -66,6 +66,11 @@ namespace AntsFlow
                     tile.Complete();
                     gameObject.SetActive(false);
 
+                    ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+                    antDissappearFx.transform.position = transform.position;
+                    antDissappearFx.Play();
+
                     isMovingToNest = false;
                 }
             }

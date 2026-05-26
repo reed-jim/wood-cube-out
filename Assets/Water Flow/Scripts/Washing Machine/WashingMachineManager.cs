@@ -43,7 +43,7 @@ namespace AntsFlow
             SpawnFirstWashingMachines();
         }
 
-        public void MoveItemToSlot(WashingMachineItem washingMachineItem)
+        public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem)
         {
             WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
@@ -51,7 +51,7 @@ namespace AntsFlow
             {
                 CheckLoseLevel();
 
-                return;
+                return null;
             }
 
             washingMachineSlot.washingMachineItem = washingMachineItem;
@@ -68,6 +68,8 @@ namespace AntsFlow
 
                 SpawnNewWashingMachine();
             });
+
+            return washingMachineSlot;
         }
 
         public void MoveClothesToWashingMachine(ClothingPiece clothingPiece, WashingMachineStartSlot washingMachineStartSlot)
@@ -100,26 +102,12 @@ namespace AntsFlow
 
             poolFaction.AddRange(levelItem.poolFaction);
 
-            Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
-
-            for (int i = 0; i < poolFaction.Count; i++)
-            {
-                Color faction = poolFaction[i];
-
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, faction, 1);
-            }
-
-            sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumSpawnPerFactionOrderByDifficulty();
 
             List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
-                if (i >= sortedPoolFaction.Count)
-                {
-                    break;
-                }
-
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
                 if (washingMachineStartSlot.washingMachine != null)
@@ -133,7 +121,7 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                KeyValuePair<Color, int> keyValuePair = sortedPoolFaction.ElementAt(i);
+                KeyValuePair<Color, int> keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(i);
 
                 washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
             }
@@ -143,17 +131,19 @@ namespace AntsFlow
 
         public void SpawnNewWashingMachine()
         {
-            Dictionary<Color, int> sortedPoolFaction = GetScorePerFaction();
+            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumSpawnPerFactionOrderByDifficulty();
 
-            if (sortedPoolFaction.Count == 0)
-            {
-                return;
-            }
+            // if (sortedPoolFaction.Count == 0)
+            // {
+            //     return;
+            // }
 
-            if (sortedPoolFaction.ElementAt(0).Value <= 0)
-            {
-                return;
-            }
+            // if (sortedPoolFaction.ElementAt(0).Value <= 0)
+            // {
+            //     return;
+            // }
+
+            int difficultyLevel = 0;
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
@@ -171,7 +161,7 @@ namespace AntsFlow
 
                     washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                    KeyValuePair<Color, int> keyValuePair = sortedPoolFaction.ElementAt(0);
+                    KeyValuePair<Color, int> keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(difficultyLevel);
 
                     washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
 
@@ -382,13 +372,20 @@ namespace AntsFlow
             return currentAvailableClothesPerFaction;
         }
 
-        public Dictionary<Color, int> GetScorePerFaction()
+        public Dictionary<Color, int> GetRemaniningTilePerFaction()
         {
-            Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
+            Dictionary<Color, int> result = new Dictionary<Color, int>();
 
-            for (int i = 0; i < poolFaction.Count; i++)
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
             {
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, poolFaction[i], 1);
+                BaseTile tile = TileManager.Ins.tiles[i];
+
+                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                {
+                    continue;
+                }
+
+                CommonUtil.SumValueOfDictionary(result, tile.Faction, 1);
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -397,7 +394,7 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                 }
             }
 
@@ -407,13 +404,46 @@ namespace AntsFlow
 
                 if (washingMachineSlot.washingMachineItem != null)
                 {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+                    CommonUtil.SumValueOfDictionary(result, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
                 }
+            }
+
+            return result;
+        }
+
+        public Dictionary<Color, int> GetNumBlockagesPerFaction()
+        {
+            Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
+
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            {
+                BaseTile tile = TileManager.Ins.tiles[i];
+
+                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                {
+                    continue;
+                }
+
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count);
             }
 
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return sortedPoolFaction;
+        }
+
+        public Dictionary<Color, int> GetNumSpawnPerFactionOrderByDifficulty()
+        {
+            Dictionary<Color, int> result = new Dictionary<Color, int>();
+            Dictionary<Color, int> numBlockagesPerFaction = GetNumBlockagesPerFaction();
+            Dictionary<Color, int> remaniningTilePerFaction = GetRemaniningTilePerFaction();
+
+            foreach (var faction in numBlockagesPerFaction.Keys)
+            {
+                CommonUtil.SumValueOfDictionary(result, faction, UnityEngine.Random.Range(1, remaniningTilePerFaction[faction]));
+            }
+
+            return result;
         }
         #endregion
     }

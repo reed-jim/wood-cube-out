@@ -240,5 +240,6 @@ public static class GameConstants
     public static string clothingPiece = "clothingPiece";
     public static string pathSlot = "pathSlot";
     public static string ant = "ant";
+    public static string antDissapearFxPrefab = "antDissapearFxPrefab";
     #endregion
 }
