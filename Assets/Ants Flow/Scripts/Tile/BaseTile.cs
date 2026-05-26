@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 namespace AntsFlow
@@ -5,9 +9,47 @@ namespace AntsFlow
     public class BaseTile : MonoBehaviour
     {
         public SpriteRenderer spriteRenderer;
+        [SerializeField] private BoxCollider2D boxCollider;
+        [SerializeField] private SpriteRenderer border;
 
         public bool isAntApproaching;
+        public List<BaseTile> blockages;
 
         public Color Faction => spriteRenderer.color;
+
+        public static event Action<BaseTile> tileCompleteEvent;
+
+        void Awake()
+        {
+            tileCompleteEvent += OnTileCompleted;
+        }
+
+        void OnDestroy()
+        {
+            tileCompleteEvent -= OnTileCompleted;
+        }
+
+        public void MoveToAnt(BaseAnt ant)
+        {
+            boxCollider.enabled = false;
+
+            SaferioTween.AlphaShow(border);
+
+            transform.SetParent(ant.transform);
+            Tween.LocalPosition(transform, Vector3.zero, duration: 0.3f);
+            Tween.Scale(transform, 0.75f * transform.localScale.x, duration: 0.3f);
+        }
+
+        public void Complete()
+        {
+            tileCompleteEvent.Invoke(this);
+
+            gameObject.SetActive(false);
+        }
+
+        private void OnTileCompleted(BaseTile tile)
+        {
+            blockages.Remove(tile);
+        }
     }
 }

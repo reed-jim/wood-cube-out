@@ -48,6 +48,11 @@ namespace AntsFlow
             {
                 SpawnPixelArt(levelItem);
             }
+
+            if (GUILayout.Button("Find Tile Blockages"))
+            {
+                FindTileBlockages(levelItem);
+            }
         }
 
         private void GetPoolFaction(LevelItem levelItem)
@@ -93,6 +98,44 @@ namespace AntsFlow
                     tile.spriteRenderer.color = pixelColor;
 
                     index++;
+                }
+            }
+        }
+
+        private void FindTileBlockages(LevelItem level)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                tile.blockages = new List<BaseTile>();
+
+                BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
+
+                FindBlockage(tile, boxCollider, tile.transform.up);
+                FindBlockage(tile, boxCollider, tile.transform.right);
+                FindBlockage(tile, boxCollider, -tile.transform.up);
+                FindBlockage(tile, boxCollider, -tile.transform.right);
+            }
+
+            EditorUtility.SetDirty(level);
+
+            void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
+            {
+                RaycastHit2D[] hits = new RaycastHit2D[1];
+
+                collider.Raycast(direction, hits);
+
+                if (hits.Length > 0 && hits[0].collider != null)
+                {
+                    BaseTile blockage = hits[0].collider.GetComponent<BaseTile>();
+
+                    if (blockage != null)
+                    {
+                        tile.blockages.Add(blockage);
+                    }
                 }
             }
         }

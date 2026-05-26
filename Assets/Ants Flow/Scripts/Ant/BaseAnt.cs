@@ -54,9 +54,7 @@ namespace AntsFlow
             {
                 if (ReachedDestination(navMeshAgent))
                 {
-                    tile.transform.SetParent(transform);
-                    Tween.LocalPosition(tile.transform, Vector3.zero, duration: 0.3f);
-                    Tween.Scale(tile.transform, 0.5f * tile.transform.localScale.x, duration: 0.3f);
+                    tile.MoveToAnt(this);
 
                     MoveToNest();
                 }
@@ -65,7 +63,7 @@ namespace AntsFlow
             {
                 if (ReachedDestination(navMeshAgent))
                 {
-                    tile.gameObject.SetActive(false);
+                    tile.Complete();
                     gameObject.SetActive(false);
 
                     isMovingToNest = false;
@@ -83,6 +81,13 @@ namespace AntsFlow
         public void MoveToTile()
         {
             BaseTile tile = TileManager.Ins.GetAvailableTile(faction);
+
+            if (tile == null)
+            {
+                return;
+            }
+
+            tile.isAntApproaching = true;
 
             navMeshAgent.destination = tile.transform.position;
 
@@ -103,7 +108,7 @@ namespace AntsFlow
         {
             float distance = Vector2.Distance(transform.position, agent.destination);
 
-            return distance < 0.01f;
+            return distance < 0.02f;
         }
     }
 }

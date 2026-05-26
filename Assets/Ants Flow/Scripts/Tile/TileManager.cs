@@ -13,11 +13,24 @@ namespace AntsFlow
 
         public BaseTile GetAvailableTile(Color faction)
         {
-            BaseTile availableTile = tiles.First(i => i.gameObject.activeInHierarchy && i.Faction == faction && !i.isAntApproaching);
+            bool isAvailable = tiles.Any(
+                i => i.gameObject.activeInHierarchy &&
+                i.blockages.Count < 4 &&
+                i.Faction == faction &&
+                !i.isAntApproaching
+            );
 
-            availableTile.isAntApproaching = true;
+            if (isAvailable)
+            {
+                BaseTile availableTile =
+                    tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching);
 
-            return availableTile;
+                return availableTile;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

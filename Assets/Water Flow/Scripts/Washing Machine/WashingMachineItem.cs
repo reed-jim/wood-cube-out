@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -40,7 +41,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
 
-        Tween.Scale(transform, initialScale, duration: 0.3f);
+        Tween.Scale(transform, 0.5f, duration: 0.3f);
     }
 
     public void MinusClothingPiece()
@@ -70,11 +71,41 @@ public class WashingMachineItem : MonoBehaviour
 
     public void SpawnAnts()
     {
-        BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+        // BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
-        ant.transform.position = transform.position.AddZ(1);
+        // ant.transform.position = transform.position.AddZ(1);
 
-        ant.Init(faction);
-        ant.MoveToTile();
+        // ant.Init(faction);
+        // ant.MoveToTile();
+
+        StartCoroutine(SpawningAnts());
+    }
+
+    private IEnumerator SpawningAnts()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+
+        while (number > 0)
+        {
+            if (AntsFlow.TileManager.Ins.GetAvailableTile(faction) != null)
+            {
+                BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+
+                ant.transform.position = transform.position.AddZ(1);
+
+                ant.Init(faction);
+                ant.MoveToTile();
+
+                number--;
+                numberText.text = $"{number}";
+            }
+
+            yield return waitForSeconds;
+        }
+
+        SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+        {
+
+        });
     }
 }

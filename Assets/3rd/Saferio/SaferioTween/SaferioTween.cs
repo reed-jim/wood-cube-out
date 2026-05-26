@@ -552,6 +552,14 @@ namespace Saferio.Util.SaferioTween
             Tween.Alpha(image, endAlpha, duration: 0.3f);
         }
 
+        public static void AlphaShow(SpriteRenderer image, float endAlpha = 1)
+        {
+            image.gameObject.SetActive(true);
+            image.color = image.color.ChangeAlpha(0);
+
+            Tween.Alpha(image, endAlpha, duration: 0.3f);
+        }
+
         public static void AlphaShow(SkeletonGraphic skeletonGraphic, float endAlpha = 1, Action onCompleteAction = null)
         {
             skeletonGraphic.gameObject.SetActive(true);
