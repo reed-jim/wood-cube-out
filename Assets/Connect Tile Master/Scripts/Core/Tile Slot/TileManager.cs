@@ -589,7 +589,7 @@ public class TileManager : Singleton<TileManager>
     {
         int col = 5;
         int row = GetRandomRow(col, 4, 6);
-        float tileSpacing = 1.1f * 200;
+        float tileSpacing = 1.05f * 260;
 
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;

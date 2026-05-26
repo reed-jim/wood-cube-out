@@ -7,6 +7,7 @@ using static GameEnum;
 
 public class TileSlotContainer : MonoBehaviour
 {
+    [SerializeField] private RectTransform categoryContainer;
     [SerializeField] private TMP_Text category;
     [SerializeField] private Button unlockButton;
     public Image lockImage;
@@ -56,7 +57,7 @@ public class TileSlotContainer : MonoBehaviour
         category.text = $"{itemCategory}";
 
         lockImage.gameObject.SetActive(isLocked);
-        category.gameObject.SetActive(!isLocked);
+        categoryContainer.gameObject.SetActive(!isLocked);
     }
 
     public TileSlot GetAvailableTileSlot()
@@ -120,6 +121,7 @@ public class TileSlotContainer : MonoBehaviour
             Tween.Alpha(lockImage, 0, duration: 0.3f).OnComplete(() =>
             {
                 lockImage.gameObject.SetActive(false);
+                categoryContainer.gameObject.SetActive(true);
             });
 
             isLocked = false;
