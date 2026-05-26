@@ -13,6 +13,9 @@ namespace AntsFlow
 {
     public class LevelItem : MonoBehaviour
     {
+        public BaseTile tilePrefab;
+        public Sprite picture;
+
         public List<Color> poolFaction;
         public bool isTutorialLevel;
     }
@@ -36,9 +39,14 @@ namespace AntsFlow
             randomCount = EditorGUILayout.IntField("Random Count", randomCount);
             maxUniqueValueCount = EditorGUILayout.IntField("Max Unique Value Count", maxUniqueValueCount);
 
-            if (GUILayout.Button("GetPoolFaction"))
+            if (GUILayout.Button("Get Pool Faction"))
             {
                 GetPoolFaction(levelItem);
+            }
+
+            if (GUILayout.Button("Spawn Pixel Art"))
+            {
+                SpawnPixelArt(levelItem);
             }
         }
 
@@ -51,19 +59,43 @@ namespace AntsFlow
             EditorUtility.SetDirty(levelItem);
         }
 
-        // private void GeneratePoolFaction(LevelItem levelItem, int count, int maxUniqueValue)
-        // {
-        //     levelItem.poolFaction = new List<GameFaction>();
+        void SpawnPixelArt(LevelItem level)
+        {
+            // Make sure texture is readable in import settings
+            Color[] pixels = level.picture.texture.GetPixels();
 
-        //     List<GameFaction> validFactions = CommonUtil.GetRandomEnumValuePool<GameFaction>(maxUniqueValueCount: maxUniqueValue, numLastValuesToSkip: 2);
+            int width = level.picture.texture.width;
+            int height = level.picture.texture.height;
+            float tileSpacing = 1;
 
-        //     for (int i = 0; i < count; i++)
-        //     {
-        //         levelItem.poolFaction.Add(validFactions[Random.Range(0, validFactions.Count)]);
-        //     }
+            int index = 0;
 
-        //     EditorUtility.SetDirty(levelItem);
-        // }
+            for (int y = 32; y < height; y++)
+            {
+                for (int x = 60; x < width; x++)
+                {
+                    Color pixelColor = pixels[y * width + x];
+
+                    // Skip transparent pixels if enabled
+                    if (pixelColor.a <= 0.01f)
+                        continue;
+
+                    // Create tile
+                    Vector3 spawnPos = new Vector3((x - 32) * tileSpacing, (y - 60) * tileSpacing, 0);
+
+                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+                        level.tilePrefab,
+                        level.transform
+                    );
+                    tile.name = $"Tile {index}";
+                    tile.transform.position = spawnPos;
+
+                    tile.spriteRenderer.color = pixelColor;
+
+                    index++;
+                }
+            }
+        }
     }
 #endif
 }

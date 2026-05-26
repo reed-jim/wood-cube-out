@@ -1,3 +1,4 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.AI;
@@ -15,7 +16,8 @@ namespace AntsFlow
         public Color faction;
 
 
-        public bool isMoving;
+        public bool isMovingToTile;
+        public bool isMovingToNest;
         public BaseTile tile;
 
 
@@ -31,11 +33,21 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-2);
 
-            if (isMoving)
+            if (isMovingToTile)
             {
                 if (ReachedDestination(navMeshAgent))
                 {
-                    tile.gameObject.SetActive(false);
+                    tile.transform.SetParent(transform);
+                    Tween.LocalPosition(tile.transform, Vector3.zero, duration: 0.3f);
+
+                    MoveToNest();
+                }
+            }
+            else if (isMovingToNest)
+            {
+                if (ReachedDestination(navMeshAgent))
+                {
+                    Destroy(tile.gameObject);
                     gameObject.SetActive(false);
                 }
             }
@@ -56,14 +68,22 @@ namespace AntsFlow
 
             this.tile = tile;
 
-            isMoving = true;
+            isMovingToTile = true;
+        }
+
+        public void MoveToNest()
+        {
+            navMeshAgent.destination = TileManager.Ins.antNest.position;
+
+            isMovingToTile = false;
+            isMovingToNest = true;
         }
 
         public bool ReachedDestination(NavMeshAgent agent)
         {
             float distance = Vector2.Distance(transform.position, agent.destination);
 
-            return distance < 0.1f;
+            return distance < 0.01f;
         }
     }
 }

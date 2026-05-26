@@ -9,11 +9,13 @@ namespace AntsFlow
     {
         public List<BaseTile> tiles;
 
+        public Transform antNest;
+
         public BaseTile GetAvailableTile(Color faction)
         {
             BaseTile availableTile = tiles.First(i => i.gameObject.activeInHierarchy && i.Faction == faction && !i.isAntApproaching);
 
-            availableTile.isAntApproaching = false;
+            availableTile.isAntApproaching = true;
 
             return availableTile;
         }
