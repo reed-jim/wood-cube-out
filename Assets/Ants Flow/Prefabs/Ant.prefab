@@ -48,8 +48,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.BaseAnt
   navMeshAgent: {fileID: 5009413177813325341}
   spriteRenderer: {fileID: 6245597933907545938}
-  target: {fileID: 0}
+  rotationSpeed: 10
   faction: {r: 0, g: 0, b: 0, a: 0}
+  isMovingToTile: 0
+  isMovingToNest: 0
+  tile: {fileID: 0}
 --- !u!212 &6245597933907545938
 SpriteRenderer:
   m_ObjectHideFlags: 0

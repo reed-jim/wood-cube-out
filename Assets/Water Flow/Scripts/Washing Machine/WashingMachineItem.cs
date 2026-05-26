@@ -34,11 +34,13 @@ public class WashingMachineItem : MonoBehaviour
 
         this.washingMachineStartSlot = washingMachineStartSlot;
 
+        Vector3 initialScale = transform.localScale;
+
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
 
-        Tween.Scale(transform, 1, duration: 0.3f);
+        Tween.Scale(transform, initialScale, duration: 0.3f);
     }
 
     public void MinusClothingPiece()
@@ -70,7 +72,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
-        ant.transform.position = transform.position.AddZ(-1);
+        ant.transform.position = transform.position.AddZ(1);
 
         ant.Init(faction);
         ant.MoveToTile();

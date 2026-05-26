@@ -10,8 +10,9 @@ namespace AntsFlow
         [SerializeField] private NavMeshAgent navMeshAgent;
         [SerializeField] private SpriteRenderer spriteRenderer;
 
-        public Transform target;
         private NavMeshPath path;
+
+        public float rotationSpeed = 10f;
 
         public Color faction;
 
@@ -33,12 +34,29 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-2);
 
+            Vector2 direction = navMeshAgent.velocity;
+
+            // Avoid jitter when nearly stopped
+            if (direction.sqrMagnitude > 0.01f)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime
+                );
+            }
+
             if (isMovingToTile)
             {
                 if (ReachedDestination(navMeshAgent))
                 {
                     tile.transform.SetParent(transform);
                     Tween.LocalPosition(tile.transform, Vector3.zero, duration: 0.3f);
+                    Tween.Scale(tile.transform, 0.5f * tile.transform.localScale.x, duration: 0.3f);
 
                     MoveToNest();
                 }
@@ -47,8 +65,10 @@ namespace AntsFlow
             {
                 if (ReachedDestination(navMeshAgent))
                 {
-                    Destroy(tile.gameObject);
+                    tile.gameObject.SetActive(false);
                     gameObject.SetActive(false);
+
+                    isMovingToNest = false;
                 }
             }
         }
