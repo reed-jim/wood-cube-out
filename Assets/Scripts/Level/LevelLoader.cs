@@ -2,10 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AntsFlow;
 using Firebase.RemoteConfig;
 using NamPhuThuy;
 using NamPhuThuy.Data;
 using NamPhuThuy.GamePlay;
+using NavMeshPlus.Components;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.VisualScripting;
@@ -18,6 +20,8 @@ namespace NamPhuThuy.GamePlay
 {
     public class LevelLoader : MonoBehaviour
     {
+        [SerializeField] private NavMeshSurface navMeshSurface;
+
         [Header("Clone to calculate level rotation")]
         [SerializeField] private Transform cloneToCalculateRotation;
 
@@ -237,9 +241,11 @@ namespace NamPhuThuy.GamePlay
             {
                 GameObject level = resultLoad;
 
-                WashingMachine.LevelItem levelItem = level.GetComponent<WashingMachine.LevelItem>();
+                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
 
-                ClothesManager.Ins.StartLevel(levelItem);
+                WashingMachineManager.Ins.StartLevel(levelItem);
+
+                navMeshSurface.BuildNavMesh();
 
                 return;
 

@@ -239,5 +239,6 @@ public static class GameConstants
     public static string washingMachine = "washingMachine";
     public static string clothingPiece = "clothingPiece";
     public static string pathSlot = "pathSlot";
+    public static string ant = "ant";
     #endregion
 }

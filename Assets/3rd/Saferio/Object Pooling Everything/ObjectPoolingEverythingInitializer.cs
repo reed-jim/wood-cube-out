@@ -1,4 +1,5 @@
 using System.Collections;
+using AntsFlow;
 using NamPhuThuy.GamePlay;
 using UnityEngine;
 
@@ -53,6 +54,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject washingMachineItemPrefab;
     public GameObject clothingPiecePrefab;
     public GameObject pathSlotPrefab;
+    public GameObject antPrefab;
 
     private bool _isInitialized;
 
@@ -132,6 +134,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 100);
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
         RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
+        RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 100);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

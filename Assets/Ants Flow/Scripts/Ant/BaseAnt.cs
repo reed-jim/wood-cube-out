@@ -2,28 +2,68 @@ using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class BaseAnt : MonoBehaviour
+namespace AntsFlow
 {
-    [SerializeField] private NavMeshAgent navMeshAgent;
-
-    public Transform target;
-    private NavMeshPath path;
-
-    void Awake()
+    public class BaseAnt : MonoBehaviour
     {
-        navMeshAgent.updateRotation = false;
-        navMeshAgent.updateUpAxis = false;
+        [SerializeField] private NavMeshAgent navMeshAgent;
+        [SerializeField] private SpriteRenderer spriteRenderer;
 
-        path = new NavMeshPath();
-    }
+        public Transform target;
+        private NavMeshPath path;
 
-    void Start()
-    {
-        navMeshAgent.destination = target.position;
-    }
+        public Color faction;
 
-    void Update()
-    {
-        Debug.Log($"Ant {navMeshAgent.CalculatePath(target.position, path)}");
+
+        public bool isMoving;
+        public BaseTile tile;
+
+
+        void Awake()
+        {
+            navMeshAgent.updateRotation = false;
+            navMeshAgent.updateUpAxis = false;
+
+            path = new NavMeshPath();
+        }
+
+        void Update()
+        {
+            transform.position = transform.position.ChangeZ(-2);
+
+            if (isMoving)
+            {
+                if (ReachedDestination(navMeshAgent))
+                {
+                    tile.gameObject.SetActive(false);
+                    gameObject.SetActive(false);
+                }
+            }
+        }
+
+        public void Init(Color faction)
+        {
+            spriteRenderer.color = faction;
+
+            this.faction = faction;
+        }
+
+        public void MoveToTile()
+        {
+            BaseTile tile = TileManager.Ins.GetAvailableTile(faction);
+
+            navMeshAgent.destination = tile.transform.position;
+
+            this.tile = tile;
+
+            isMoving = true;
+        }
+
+        public bool ReachedDestination(NavMeshAgent agent)
+        {
+            float distance = Vector2.Distance(transform.position, agent.destination);
+
+            return distance < 0.1f;
+        }
     }
 }

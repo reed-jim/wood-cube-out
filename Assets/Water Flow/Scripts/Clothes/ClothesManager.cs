@@ -38,10 +38,8 @@ public class ClothesManager : Singleton<ClothesManager>
     }
     #endregion
 
-    public void StartLevel(WashingMachine.LevelItem levelItem)
+    public void StartLevel(AntsFlow.LevelItem levelItem)
     {
-        WashingMachineManager.Ins.levelItem = levelItem;
-
         SetupSlots(levelItem);
 
         if (movingPathSlotsCoroutine != null)
@@ -52,7 +50,7 @@ public class ClothesManager : Singleton<ClothesManager>
         movingPathSlotsCoroutine = StartCoroutine(RunTheQueue());
     }
 
-    private void SetupSlots(WashingMachine.LevelItem levelItem)
+    private void SetupSlots(AntsFlow.LevelItem levelItem)
     {
         // for (int i = 0; i < loopPathSlots.Count; i++)
         // {
@@ -65,17 +63,6 @@ public class ClothesManager : Singleton<ClothesManager>
         RemoveOldClothes();
         ResetPathSlots();
         SpawnClothes();
-
-        List<WashingMachineItem> washingMachineItems = WashingMachineManager.Ins.SpawnFirstWashingMachines();
-
-        if (levelItem.isTutorialLevel)
-        {
-            TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
-        }
-        else
-        {
-            TutorialLevelOne.Ins.HideTutorial();
-        }
 
         UpdateClothesCount();
     }
@@ -120,15 +107,7 @@ public class ClothesManager : Singleton<ClothesManager>
 
                 if (loopPathSlot.percentInLoopPath >= percentMoveClothesOut - moveSpeed && loopPathSlot.percentInLoopPath < percentMoveClothesOut)
                 {
-                    if (loopPathSlot.clothingPiece != null && !loopPathSlot.clothingPiece.isMoving)
-                    {
-                        bool isFound = WashingMachineManager.Ins.MoveClothesToWashingMachine(loopPathSlot.clothingPiece);
-
-                        if (isFound)
-                        {
-                            loopPathSlot.Clear();
-                        }
-                    }
+                    
                 }
 
                 if (loopPathSlot.percentInLoopPath >= percentPuttingClothesIntoLoopPath - moveSpeed && loopPathSlot.percentInLoopPath < percentPuttingClothesIntoLoopPath)
@@ -164,8 +143,6 @@ public class ClothesManager : Singleton<ClothesManager>
     public void SpawnClothes()
     {
         bool isLeft = true;
-
-        totalClothingPiece = WashingMachineManager.Ins.levelItem.poolFaction.Count;
 
         for (int i = 0; i < waitingPaths.Length; i++)
         {
@@ -296,42 +273,40 @@ public class ClothesManager : Singleton<ClothesManager>
 
     public void SpawnNewClothingPiece(PathSlot pathSlot)
     {
-        GameFaction faction = WashingMachineManager.Ins.GetNextFactionInPool();
+        // GameFaction faction = WashingMachineManager.Ins.GetNextFactionInPool();
 
-        if (faction == GameFaction.None)
-        {
-            return;
-        }
+        // if (faction == GameFaction.None)
+        // {
+        //     return;
+        // }
 
-        ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
+        // ClothingPiece clothingPiece = ObjectPoolingEverything.GetFromPool<ClothingPiece>(GameConstants.clothingPiece);
 
-        clothingPiece.gameObject.SetActive(true);
-        clothingPiece.transform.SetParent(pathSlot.transform);
+        // clothingPiece.gameObject.SetActive(true);
+        // clothingPiece.transform.SetParent(pathSlot.transform);
 
-        clothingPiece.transform.localPosition = Vector3.zero;
-        clothingPiece.transform.localScale = Vector3.zero;
+        // clothingPiece.transform.localPosition = Vector3.zero;
+        // clothingPiece.transform.localScale = Vector3.zero;
 
-        clothingPiece.isMoving = true;
+        // clothingPiece.isMoving = true;
 
-        SaferioTween.ScaleUpWithPunch(clothingPiece.transform, 1, onCompleteAction: () =>
-        {
-            clothingPiece.isMoving = false;
-        });
+        // SaferioTween.ScaleUpWithPunch(clothingPiece.transform, 1, onCompleteAction: () =>
+        // {
+        //     clothingPiece.isMoving = false;
+        // });
 
-        clothingPiece.Init(faction);
+        // clothingPiece.Init(faction);
 
-        pathSlot.clothingPiece = clothingPiece;
+        // pathSlot.clothingPiece = clothingPiece;
 
-        clothingPieces.Add(clothingPiece);
+        // clothingPieces.Add(clothingPiece);
     }
     #endregion
 
     #region Count
     public void UpdateClothesCount()
     {
-        int remainingClothes = clothingPieces.Count + WashingMachineManager.Ins.poolFaction.Count;
 
-        clothesCountText.text = $"{remainingClothes}/{totalClothingPiece}";
     }
     #endregion
 }

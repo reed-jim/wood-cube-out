@@ -1,4 +1,5 @@
 using System;
+using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -11,7 +12,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public TMP_Text numberText;
 
-    public GameFaction faction;
+    public Color faction;
     public int number;
     public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
@@ -23,21 +24,12 @@ public class WashingMachineItem : MonoBehaviour
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
     }
 
-    public void Setup()
-    {
-        faction = CommonUtil.GetRandomEnumValue<GameFaction>(numLastValuesToSkip: 2);
-        number = UnityEngine.Random.Range(1, 10);
-
-        spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
-        numberText.text = $"{number}";
-    }
-
-    public void Init(WashingMachineStartSlot washingMachineStartSlot, GameFaction faction, int number)
+    public void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
     {
         this.faction = faction;
         this.number = number;
 
-        spriteRenderer.color = FactionUtility.GetColorForFaction(faction);
+        spriteRenderer.color = faction;
         numberText.text = $"{number}";
 
         this.washingMachineStartSlot = washingMachineStartSlot;
@@ -72,5 +64,15 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.Ins.MoveItemToSlot(this);
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public void SpawnAnts()
+    {
+        BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
+
+        ant.transform.position = transform.position.AddZ(-1);
+
+        ant.Init(faction);
+        ant.MoveToTile();
     }
 }

@@ -1,17 +1,19 @@
 using UnityEngine;
 using static GameEnum;
 using System.Collections.Generic;
+using System.Linq;
+
 
 
 #if UNITY_EDITOR
 using UnityEditor;
 #endif
 
-namespace WashingMachine
+namespace AntsFlow
 {
     public class LevelItem : MonoBehaviour
     {
-        public List<GameFaction> poolFaction;
+        public List<Color> poolFaction;
         public bool isTutorialLevel;
     }
 
@@ -34,25 +36,34 @@ namespace WashingMachine
             randomCount = EditorGUILayout.IntField("Random Count", randomCount);
             maxUniqueValueCount = EditorGUILayout.IntField("Max Unique Value Count", maxUniqueValueCount);
 
-            if (GUILayout.Button("Generate Pool Faction"))
+            if (GUILayout.Button("GetPoolFaction"))
             {
-                GeneratePoolFaction(levelItem, randomCount, maxUniqueValueCount);
+                GetPoolFaction(levelItem);
             }
         }
 
-        private void GeneratePoolFaction(LevelItem levelItem, int count, int maxUniqueValue)
+        private void GetPoolFaction(LevelItem levelItem)
         {
-            levelItem.poolFaction = new List<GameFaction>();
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(levelItem.transform);
 
-            List<GameFaction> validFactions = CommonUtil.GetRandomEnumValuePool<GameFaction>(maxUniqueValueCount: maxUniqueValue, numLastValuesToSkip: 2);
-
-            for (int i = 0; i < count; i++)
-            {
-                levelItem.poolFaction.Add(validFactions[Random.Range(0, validFactions.Count)]);
-            }
+            levelItem.poolFaction = tiles.Select(item => item.Faction).ToList();
 
             EditorUtility.SetDirty(levelItem);
         }
+
+        // private void GeneratePoolFaction(LevelItem levelItem, int count, int maxUniqueValue)
+        // {
+        //     levelItem.poolFaction = new List<GameFaction>();
+
+        //     List<GameFaction> validFactions = CommonUtil.GetRandomEnumValuePool<GameFaction>(maxUniqueValueCount: maxUniqueValue, numLastValuesToSkip: 2);
+
+        //     for (int i = 0; i < count; i++)
+        //     {
+        //         levelItem.poolFaction.Add(validFactions[Random.Range(0, validFactions.Count)]);
+        //     }
+
+        //     EditorUtility.SetDirty(levelItem);
+        // }
     }
 #endif
 }
