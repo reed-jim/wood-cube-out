@@ -102,7 +102,8 @@ namespace AntsFlow
 
             poolFaction.AddRange(levelItem.poolFaction);
 
-            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumSpawnPerFactionOrderByDifficulty();
+            Color nextFaction;
+            int numAnt;
 
             List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
 
@@ -121,9 +122,9 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                KeyValuePair<Color, int> keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(i);
+                GetNextAntSpawnByDifficulty(difficultyLevel: i, out nextFaction, out numAnt);
 
-                washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
+                washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
             return washingMachineItems;
@@ -131,19 +132,17 @@ namespace AntsFlow
 
         public void SpawnNewWashingMachine()
         {
-            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumSpawnPerFactionOrderByDifficulty();
+            Color nextFaction;
+            int numAnt;
 
-            // if (sortedPoolFaction.Count == 0)
-            // {
-            //     return;
-            // }
+            if (GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt))
+            {
 
-            // if (sortedPoolFaction.ElementAt(0).Value <= 0)
-            // {
-            //     return;
-            // }
-
-            int difficultyLevel = 0;
+            }
+            else
+            {
+                return;
+            }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
@@ -161,9 +160,7 @@ namespace AntsFlow
 
                     washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                    KeyValuePair<Color, int> keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(difficultyLevel);
-
-                    washingMachineItem.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
+                    washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
                     break;
                 }
@@ -360,16 +357,29 @@ namespace AntsFlow
             return null;
         }
 
-        public Dictionary<GameFaction, int> GetCurrentAvailableClothesPerFaction()
+        private bool GetNextAntSpawnByDifficulty(int difficultyLevel, out Color nextFaction, out int numAnt)
         {
-            Dictionary<GameFaction, int> currentAvailableClothesPerFaction = new Dictionary<GameFaction, int>();
+            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty();
 
-            for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
+            for (int j = difficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
             {
-                CommonUtil.SumValueOfDictionary(currentAvailableClothesPerFaction, ClothesManager.Ins.clothingPieces[i].faction, 1);
+                if (numSpawnPerFactionOrderByDifficulty.ElementAt(j).Value > 0)
+                {
+                    KeyValuePair<Color, int> keyValuePair;
+
+                    keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(j);
+
+                    nextFaction = keyValuePair.Key;
+                    numAnt = keyValuePair.Value;
+
+                    return true;
+                }
             }
 
-            return currentAvailableClothesPerFaction;
+            nextFaction = Color.white;
+            numAnt = 0;
+
+            return false;
         }
 
         public Dictionary<Color, int> GetRemaniningTilePerFaction()
@@ -387,6 +397,13 @@ namespace AntsFlow
 
                 CommonUtil.SumValueOfDictionary(result, tile.Faction, 1);
             }
+
+            return result;
+        }
+
+        public Dictionary<Color, int> GetMaxAntRequiredPerFaction()
+        {
+            Dictionary<Color, int> result = GetRemaniningTilePerFaction();
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
@@ -427,20 +444,53 @@ namespace AntsFlow
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count);
             }
 
+            return sortedPoolFaction;
+        }
+
+        public Dictionary<Color, int> GetNumNotBlockedTilePerFaction()
+        {
+            Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
+
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            {
+                BaseTile tile = TileManager.Ins.tiles[i];
+
+                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                {
+                    continue;
+                }
+
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 1 : 0);
+            }
+
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return sortedPoolFaction;
         }
 
-        public Dictionary<Color, int> GetNumSpawnPerFactionOrderByDifficulty()
+        public Dictionary<Color, int> GetNumAntSpawnPerFactionOrderByDifficulty()
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
             Dictionary<Color, int> numBlockagesPerFaction = GetNumBlockagesPerFaction();
+            Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction();
             Dictionary<Color, int> remaniningTilePerFaction = GetRemaniningTilePerFaction();
+            Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction();
 
             foreach (var faction in numBlockagesPerFaction.Keys)
             {
-                CommonUtil.SumValueOfDictionary(result, faction, UnityEngine.Random.Range(1, remaniningTilePerFaction[faction]));
+                int numNotBlockedTileOfFaction = numNotBlockedTilePerFaction[faction];
+
+                int minValue = Mathf.Min(numNotBlockedTileOfFaction, maxAntRequiredPerFaction[faction]);
+                int maxValue = maxAntRequiredPerFaction[faction];
+
+                CommonUtil.SumValueOfDictionary(result, faction, UnityEngine.Random.Range(minValue, maxValue));
+            }
+
+            Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ==============");
+
+            foreach (var item in result)
+            {
+                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {item.Key} {item.Value}");
             }
 
             return result;
