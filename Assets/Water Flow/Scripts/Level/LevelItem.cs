@@ -25,8 +25,8 @@ namespace AntsFlow
     public class LevelItemEditor : Editor
     {
         // Change these to match your enum values
-        private int randomCount = 3;
-        private int maxUniqueValueCount = 3;
+        private int startX = 0;
+        private int startY = 0;
 
         public override void OnInspectorGUI()
         {
@@ -36,8 +36,8 @@ namespace AntsFlow
 
             GUILayout.Space(10);
 
-            randomCount = EditorGUILayout.IntField("Random Count", randomCount);
-            maxUniqueValueCount = EditorGUILayout.IntField("Max Unique Value Count", maxUniqueValueCount);
+            startX = EditorGUILayout.IntField("StartX", startX);
+            startY = EditorGUILayout.IntField("StartY", startY);
 
             if (GUILayout.Button("Get Pool Faction"))
             {
@@ -66,7 +66,18 @@ namespace AntsFlow
 
         void SpawnPixelArt(LevelItem level)
         {
-            // Make sure texture is readable in import settings
+            List<GameObject> toRemoveObjects = new List<GameObject>();
+
+            for (int i = 0; i < level.transform.childCount; i++)
+            {
+                toRemoveObjects.Add(level.transform.GetChild(i).gameObject);
+            }
+
+            foreach (var item in toRemoveObjects)
+            {
+                DestroyImmediate(item, true);
+            }
+
             Color[] pixels = level.picture.texture.GetPixels();
 
             int width = level.picture.texture.width;
@@ -75,18 +86,18 @@ namespace AntsFlow
 
             int index = 0;
 
-            for (int y = 32; y < height; y++)
+            for (int y = startY; y < startY + 16; y++)
             {
-                for (int x = 60; x < width; x++)
+                for (int x = startX; x < startX + 16; x++)
                 {
                     Color pixelColor = pixels[y * width + x];
 
                     // Skip transparent pixels if enabled
-                    if (pixelColor.a <= 0.01f)
+                    if (pixelColor.a < 1)
                         continue;
 
                     // Create tile
-                    Vector3 spawnPos = new Vector3((x - 32) * tileSpacing, (y - 60) * tileSpacing, 0);
+                    Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing, (y - startY) * tileSpacing, 0);
 
                     BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
                         level.tilePrefab,
@@ -100,6 +111,8 @@ namespace AntsFlow
                     index++;
                 }
             }
+
+            EditorUtility.SetDirty(level);
         }
 
         private void FindTileBlockages(LevelItem level)
