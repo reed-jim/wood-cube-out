@@ -41,6 +41,7 @@ namespace AntsFlow
             this.levelItem = levelItem;
 
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
+            TileManager.Ins.UpdateTileCount();
 
             SpawnFirstWashingMachines();
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
+using TMPro;
 using UnityEngine;
 
 namespace AntsFlow
@@ -9,6 +10,8 @@ namespace AntsFlow
     public class TileManager : Singleton<TileManager>
     {
         [SerializeField] private NavMeshSurface navMeshSurface;
+
+        [SerializeField] private TMP_Text tileCountText;
 
         public List<BaseTile> tiles;
 
@@ -53,13 +56,20 @@ namespace AntsFlow
         private void OnTileCompleted(BaseTile tile)
         {
             UpdateNavMesh();
-
+            UpdateTileCount();
             CheckWinLevel();
         }
 
         private void UpdateNavMesh()
         {
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+        }
+
+        public void UpdateTileCount()
+        {
+            int tileLeft = tiles.Count(item => item.gameObject.activeInHierarchy);
+
+            tileCountText.text = $"{tileLeft}/{tiles.Count()}";
         }
 
         private void CheckWinLevel()

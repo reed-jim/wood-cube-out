@@ -43,9 +43,9 @@ namespace AntsFlow
 
         public void Complete()
         {
-            tileCompleteEvent.Invoke(this);
-
             gameObject.SetActive(false);
+            
+            tileCompleteEvent.Invoke(this);
         }
 
         private void OnTileCompleted(BaseTile tile)
