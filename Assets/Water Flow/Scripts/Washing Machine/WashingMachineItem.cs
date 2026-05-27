@@ -63,6 +63,20 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
+    public void ReceiveTile()
+    {
+        number--;
+        numberText.text = $"{number}";
+
+        if (number <= 0)
+        {
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                
+            });
+        }
+    }
+
     public void Select()
     {
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);

@@ -202,53 +202,54 @@ namespace AntsFlow
 
         public void UseMagicBooster()
         {
-            // List<ClothingPiece> randomPickedClothes = new List<ClothingPiece>();
+            List<BaseTile> randomPickedTiles = new List<BaseTile>();
 
-            // for (int i = 0; i < ClothesManager.Ins.clothingPieces.Count; i++)
-            // {
-            //     ClothingPiece clothingPiece = ClothesManager.Ins.clothingPieces[i];
+            Dictionary<Color, int> numTileWithNoAntPerFaction = GetNumTileWithNoAntPerFaction();
 
-            //     randomPickedClothes.Add(clothingPiece);
-            // }
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            {
+                BaseTile tile = TileManager.Ins.tiles[i];
 
-            // randomPickedClothes.Shuffle();
-            // randomPickedClothes = randomPickedClothes.Take(5).ToList();
+                if (tile.gameObject.activeInHierarchy && !tile.isAntApproaching)
+                {
+                    randomPickedTiles.Add(tile);
+                }
+            }
 
-            // for (int i = 0; i < randomPickedClothes.Count; i++)
-            // {
-            //     ClothingPiece clothingPiece = randomPickedClothes[i];
+            randomPickedTiles.Shuffle();
+            randomPickedTiles = randomPickedTiles.Take(5).ToList();
 
-            //     for (int j = 0; j < washingMachineStartSlots.Count; j++)
-            //     {
-            //         WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+            for (int i = 0; i < randomPickedTiles.Count; i++)
+            {
+                BaseTile tile = randomPickedTiles[i];
 
-            //         if (washingMachineStartSlot.washingMachine != null)
-            //         {
-            //             if (washingMachineStartSlot.washingMachine.faction == clothingPiece.faction && washingMachineStartSlot.washingMachine.number > 0)
-            //             {
-            //                 PathSlot pathSlot = clothingPiece.GetComponentInParent<PathSlot>();
+                for (int j = 0; j < washingMachineStartSlots.Count; j++)
+                {
+                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+                    WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-            //                 if (pathSlot != null)
-            //                 {
-            //                     pathSlot.clothingPiece = null;
-            //                 }
+                    if (washingMachine != null)
+                    {
+                        if (washingMachine.faction == tile.Faction && washingMachine.number > 0)
+                        {
+                            Tween.Position(tile.transform, washingMachine.transform.position, duration: 0.3f)
+                            .OnComplete(() =>
+                            {
+                                ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-            //                 LoopPathSlot loopPathSlot = clothingPiece.GetComponentInParent<LoopPathSlot>();
+                                antDissappearFx.transform.position = tile.transform.position;
+                                antDissappearFx.Play();
 
-            //                 if (loopPathSlot != null)
-            //                 {
-            //                     loopPathSlot.clothingPiece = null;
-            //                 }
+                                tile.gameObject.SetActive(false);
+                            });
 
-            //                 MoveClothesToWashingMachine(clothingPiece, washingMachineStartSlot);
+                            tile.isAntApproaching = true;
 
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
-
-            // ClothesManager.Ins.MoveDownClothesInWaitingPath();
+                            washingMachine.ReceiveTile();
+                        }
+                    }
+                }
+            }
         }
 
         public void UseBoosterShuffle()
@@ -412,6 +413,12 @@ namespace AntsFlow
 
                 CommonUtil.SumValueOfDictionary(result, tile.Faction, 1);
             }
+
+            return result;
+        }
+        public Dictionary<Color, int> GetNumTileWithNoAntPerFaction()
+        {
+            Dictionary<Color, int> result = GetMaxAntRequiredPerFaction();
 
             return result;
         }
