@@ -135,7 +135,7 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt))
+            if (GetNextAntSpawnByDifficulty(difficultyLevel: 5, out nextFaction, out numAnt))
             {
 
             }
@@ -376,6 +376,21 @@ namespace AntsFlow
                 }
             }
 
+            for (int j = 0; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
+            {
+                if (numSpawnPerFactionOrderByDifficulty.ElementAt(j).Value > 0)
+                {
+                    KeyValuePair<Color, int> keyValuePair;
+
+                    keyValuePair = numSpawnPerFactionOrderByDifficulty.ElementAt(j);
+
+                    nextFaction = keyValuePair.Key;
+                    numAnt = keyValuePair.Value;
+
+                    return true;
+                }
+            }
+
             nextFaction = Color.white;
             numAnt = 0;
 
@@ -491,9 +506,7 @@ namespace AntsFlow
         public Dictionary<Color, int> GetNumAntSpawnPerFactionOrderByDifficulty()
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
-            Dictionary<Color, int> numBlockagesPerFaction = GetNumBlockagesPerFaction();
             Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction();
-            Dictionary<Color, int> remaniningTilePerFaction = GetRemaniningTilePerFaction();
             Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction();
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)

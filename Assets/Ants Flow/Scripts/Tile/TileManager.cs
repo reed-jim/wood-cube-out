@@ -14,6 +14,8 @@ namespace AntsFlow
 
         public Transform antNest;
 
+        public static event Action winLevelEvent;
+
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
@@ -51,11 +53,23 @@ namespace AntsFlow
         private void OnTileCompleted(BaseTile tile)
         {
             UpdateNavMesh();
+
+            CheckWinLevel();
         }
 
         private void UpdateNavMesh()
         {
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+        }
+
+        private void CheckWinLevel()
+        {
+            bool isWon = !tiles.Any(tile => tile.gameObject.activeInHierarchy);
+
+            if (isWon)
+            {
+                winLevelEvent?.Invoke();
+            }
         }
     }
 }
