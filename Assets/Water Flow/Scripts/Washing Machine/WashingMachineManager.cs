@@ -217,7 +217,7 @@ namespace AntsFlow
             }
 
             randomPickedTiles.Shuffle();
-            randomPickedTiles = randomPickedTiles.Take(5).ToList();
+            randomPickedTiles = randomPickedTiles.Take(10).ToList();
 
             for (int i = 0; i < randomPickedTiles.Count; i++)
             {
@@ -254,52 +254,37 @@ namespace AntsFlow
 
         public void UseBoosterShuffle()
         {
-            // Dictionary<GameFaction, int> currentAvailableClothesPerFaction = GetCurrentAvailableClothesPerFaction();
-            // Dictionary<GameFaction, int> poolFactionSortedByDifficulty = new Dictionary<GameFaction, int>();
+            Dictionary<Color, int> poolFactionSortedByDifficulty = GetRemaniningTilePerFaction();
 
-            // for (int i = 0; i < ClothesManager.Ins.loopPathSlots.Count; i++)
-            // {
-            //     LoopPathSlot loopPathSlot = ClothesManager.Ins.loopPathSlots[i];
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
 
-            //     if (loopPathSlot.clothingPiece != null)
-            //     {
-            //         ClothingPiece clothingPiece = loopPathSlot.clothingPiece;
+                if (washingMachineSlot.washingMachineItem != null)
+                {
+                    CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+                }
+            }
 
-            //         CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, clothingPiece.faction, 10);
-            //     }
-            // }
+            poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            // for (int i = 0; i < ClothesManager.Ins.waitingPathSlots.Count; i++)
-            // {
-            //     PathSlot pathSlot = ClothesManager.Ins.waitingPathSlots[i];
+            int index = 0;
 
-            //     if (pathSlot.clothingPiece != null)
-            //     {
-            //         ClothingPiece clothingPiece = pathSlot.clothingPiece;
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
-            //         CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, clothingPiece.faction, 1);
-            //     }
-            // }
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-            // poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                    KeyValuePair<Color, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
 
-            // int index = 0;
+                    washingMachine.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
 
-            // for (int i = 0; i < washingMachineStartSlots.Count; i++)
-            // {
-            //     WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-            //     if (washingMachineStartSlot.washingMachine != null)
-            //     {
-            //         WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
-
-            //         KeyValuePair<GameFaction, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
-
-            //         washingMachine.Init(washingMachineStartSlot, keyValuePair.Key, currentAvailableClothesPerFaction[keyValuePair.Key]);
-
-            //         index++;
-            //     }
-            // }
+                    index++;
+                }
+            }
         }
         #endregion
 
