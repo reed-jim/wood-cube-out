@@ -463,6 +463,26 @@ namespace AntsFlow
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 1 : 0);
             }
 
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                }
+            }
+
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+                if (washingMachineSlot.washingMachineItem != null)
+                {
+                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+                }
+            }
+
             sortedPoolFaction = sortedPoolFaction.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
             return sortedPoolFaction;
@@ -476,7 +496,7 @@ namespace AntsFlow
             Dictionary<Color, int> remaniningTilePerFaction = GetRemaniningTilePerFaction();
             Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction();
 
-            foreach (var faction in numBlockagesPerFaction.Keys)
+            foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
                 int numNotBlockedTileOfFaction = numNotBlockedTilePerFaction[faction];
 
@@ -484,13 +504,6 @@ namespace AntsFlow
                 int maxValue = maxAntRequiredPerFaction[faction];
 
                 CommonUtil.SumValueOfDictionary(result, faction, UnityEngine.Random.Range(minValue, maxValue));
-            }
-
-            Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty ==============");
-
-            foreach (var item in result)
-            {
-                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {item.Key} {item.Value}");
             }
 
             return result;
