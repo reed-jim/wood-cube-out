@@ -37,6 +37,7 @@ namespace AntsFlow
 
             transform.SetParent(ant.transform);
             Tween.LocalPosition(transform, Vector3.zero, duration: 0.3f);
+            Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
             Tween.Scale(transform, 0.75f * transform.localScale.x, duration: 0.3f);
         }
 

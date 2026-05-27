@@ -12,12 +12,14 @@ namespace AntsFlow
 {
     public class WashingMachineManager : Singleton<WashingMachineManager>
     {
-        public AntsFlow.LevelItem levelItem;
+        public LevelItem levelItem;
 
         public List<WashingMachineSlot> washingMachineSlots;
         public List<WashingMachineStartSlot> washingMachineStartSlots;
 
         public List<Color> poolFaction;
+
+        public int difficultyLevel;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
@@ -135,7 +137,7 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: 5, out nextFaction, out numAnt))
+            if (GetNextAntSpawnByDifficulty(difficultyLevel: difficultyLevel, out nextFaction, out numAnt))
             {
 
             }
