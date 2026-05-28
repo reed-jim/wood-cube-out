@@ -78,7 +78,7 @@ namespace AntsFlow
 
                 washingMachineItem.SpawnAnts();
 
-                SpawnNewWashingMachine();
+                MoveAntBoxTop();
             });
 
             return washingMachineSlot;
@@ -96,7 +96,7 @@ namespace AntsFlow
                     {
                         washingMachineStartSlot.washingMachine = null;
 
-                        SpawnNewWashingMachine();
+                        MoveAntBoxTop();
                         CheckWinLevel();
                     }
                 });
@@ -140,6 +140,60 @@ namespace AntsFlow
             }
 
             return washingMachineItems;
+        }
+
+        public void MoveAntBoxTop()
+        {
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine == null)
+                {
+                    int x = (int)washingMachineStartSlot.transform.position.x;
+
+                    bool isFound = false;
+
+                    for (int j = i + 1; j < washingMachineStartSlots.Count; j++)
+                    {
+                        WashingMachineStartSlot otherWashingMachineStartSlot = washingMachineStartSlots[j];
+
+                        if (otherWashingMachineStartSlot.washingMachine != null &&
+                            otherWashingMachineStartSlot.transform.position.x == x
+                        )
+                        {
+                            WashingMachineItem washingMachineItem = otherWashingMachineStartSlot.washingMachine;
+
+                            if (washingMachineItem.isMoving)
+                            {
+                                continue;
+                            }
+
+                            washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
+                            Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
+                            .OnComplete(() =>
+                            {
+                                washingMachineItem.isMoving = false;
+                            });
+
+                            washingMachineItem.washingMachineStartSlot = washingMachineStartSlot;
+                            washingMachineStartSlot.washingMachine = washingMachineItem;
+                            otherWashingMachineStartSlot.washingMachine = null;
+
+                            washingMachineItem.isMoving = true;
+
+                            isFound = true;
+
+                            break;
+                        }
+                    }
+
+                    if (!isFound)
+                    {
+                        SpawnNewWashingMachine();
+                    }
+                }
+            }
         }
 
         public void SpawnNewWashingMachine()
