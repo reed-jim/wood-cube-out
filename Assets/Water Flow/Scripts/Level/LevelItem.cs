@@ -30,6 +30,7 @@ namespace AntsFlow
         // Change these to match your enum values
         private int startX = 0;
         private int startY = 0;
+        private int size = 16;
 
         public override void OnInspectorGUI()
         {
@@ -41,6 +42,7 @@ namespace AntsFlow
 
             startX = EditorGUILayout.IntField("StartX", startX);
             startY = EditorGUILayout.IntField("StartY", startY);
+            size = EditorGUILayout.IntField("Size", size);
 
             if (GUILayout.Button("Get Pool Faction"))
             {
@@ -92,9 +94,9 @@ namespace AntsFlow
 
             int index = 0;
 
-            for (int y = startY; y < startY + 16; y++)
+            for (int y = startY; y < startY + size; y++)
             {
-                for (int x = startX; x < startX + 16; x++)
+                for (int x = startX; x < startX + size; x++)
                 {
                     Color pixelColor = pixels[y * width + x];
 
