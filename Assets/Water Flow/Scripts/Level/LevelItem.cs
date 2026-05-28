@@ -2,6 +2,8 @@ using UnityEngine;
 using static GameEnum;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+
 
 
 
@@ -31,6 +33,7 @@ namespace AntsFlow
         private int startX = 0;
         private int startY = 0;
         private int size = 16;
+        private string json;
 
         public override void OnInspectorGUI()
         {
@@ -43,6 +46,10 @@ namespace AntsFlow
             startX = EditorGUILayout.IntField("StartX", startX);
             startY = EditorGUILayout.IntField("StartY", startY);
             size = EditorGUILayout.IntField("Size", size);
+
+            GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
+            
+            json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
 
             if (GUILayout.Button("Get Pool Faction"))
             {
@@ -57,6 +64,11 @@ namespace AntsFlow
             if (GUILayout.Button("Find Tile Blockages"))
             {
                 FindTileBlockages(levelItem);
+            }
+            
+            if (GUILayout.Button("GenerateLevelFromJson"))
+            {
+                GenerateLevelFromJson(levelItem, json);
             }
         }
 
@@ -162,6 +174,110 @@ namespace AntsFlow
                     }
                 }
             }
+        }
+
+        private void GenerateLevelFromJson(LevelItem level, string json)
+        {
+            List<GameObject> toRemoveObjects = new List<GameObject>();
+
+            for (int i = 0; i < level.transform.childCount; i++)
+            {
+                toRemoveObjects.Add(level.transform.GetChild(i).gameObject);
+            }
+
+            foreach (var item in toRemoveObjects)
+            {
+                DestroyImmediate(item, true);
+            }
+
+            level.transform.position = Vector3.zero;
+            level.transform.localScale = Vector3.one;
+
+            // Parse JSON
+            LevelData data = JsonUtility.FromJson<LevelData>(json);
+
+            Dictionary<string, Color> paletteMap = new Dictionary<string, Color>();
+
+            // Create palette dictionary
+            paletteMap.Clear();
+
+            foreach (var p in data.palette)
+            {
+                paletteMap[p.key] = HexToColor(p.fill);
+            }
+
+            float tileSpacing = 1;
+
+            // Generate grid
+            for (int row = 0; row < data.gridRows; row++)
+            {
+                for (int col = 0; col < data.gridCols; col++)
+                {
+                    int index = row * data.gridCols + col;
+
+                    // Safety check
+                    if (index >= data.grid.Length)
+                        continue;
+
+                    string tileKey = data.grid[index];
+
+                    // "" means empty
+                    if (string.IsNullOrEmpty(tileKey))
+                        continue;
+
+                    // Create tile
+                    Vector3 pos = new Vector3(
+                        col * tileSpacing,
+                        -row * tileSpacing,
+                        0
+                    );
+
+                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+                        level.tilePrefab,
+                        level.transform
+                    );
+
+                    // Set tile data
+                    tile.name = $"Tile_{row}_{col}_{tileKey}";
+                    tile.transform.position = pos;
+
+                    // Apply color from palette
+                    if (paletteMap.TryGetValue(tileKey, out Color color))
+                    {
+                        tile.spriteRenderer.color = color;
+                    }
+                }
+            }
+
+            EditorUtility.SetDirty(level);
+        }
+
+        private Color HexToColor(string hex)
+        {
+            Color color;
+            ColorUtility.TryParseHtmlString(hex, out color);
+            return color;
+        }
+
+        [Serializable]
+        public class LevelData
+        {
+            public int gridRows;
+            public int gridCols;
+
+            public PaletteData[] palette;
+
+            public string[] grid;
+        }
+
+        [Serializable]
+        public class PaletteData
+        {
+            public string key;
+
+            public string fill;
+            public string dark;
+            public string light;
         }
     }
 #endif
