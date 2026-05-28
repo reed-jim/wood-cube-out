@@ -6,8 +6,6 @@ using UnityEngine;
 
 namespace AntsFlow
 {
-
-
     public class AutoplayManager : Singleton<AutoplayManager>
     {
         public float delayPerTap;
@@ -21,10 +19,12 @@ namespace AntsFlow
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(delayPerTap);
 
-            List<WashingMachineItem> poolAntBox = new List<WashingMachineItem>();
+            List<WashingMachineItem> poolAntBox;
 
             while (true)
             {
+                poolAntBox = new List<WashingMachineItem>();
+
                 for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
                 {
                     WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
@@ -36,6 +36,11 @@ namespace AntsFlow
                 }
 
                 poolAntBox.Shuffle();
+
+                if (poolAntBox.Count == 0)
+                {
+                    break;
+                }
 
                 WashingMachineItem selectedAntBox = poolAntBox.First();
 
