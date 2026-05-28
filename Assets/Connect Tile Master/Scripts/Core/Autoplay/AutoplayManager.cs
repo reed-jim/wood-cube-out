@@ -4,42 +4,47 @@ using System.Linq;
 using Dreamteck.Utilities;
 using UnityEngine;
 
-public class AutoplayManager : Singleton<AutoplayManager>
+namespace AntsFlow
 {
-    public float delayPerTap;
 
-    public void StartAutoplay()
+
+    public class AutoplayManager : Singleton<AutoplayManager>
     {
-        StartCoroutine(AutoplayLevel());
-    }
+        public float delayPerTap;
 
-    private IEnumerator AutoplayLevel()
-    {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(delayPerTap);
-
-        List<BaseTile> poolTile = new List<BaseTile>();
-
-        while (true)
+        public void StartAutoplay()
         {
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            StartCoroutine(AutoplayLevel());
+        }
+
+        private IEnumerator AutoplayLevel()
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(delayPerTap);
+
+            List<WashingMachineItem> poolAntBox = new List<WashingMachineItem>();
+
+            while (true)
             {
-                BaseTile tile = TileManager.Ins.tiles[i];
-
-                if (!tile.IsOnSlot)
+                for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
                 {
-                    poolTile.Add(tile);
+                    WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+                    if (washingMachineStartSlot.washingMachine != null)
+                    {
+                        poolAntBox.Add(washingMachineStartSlot.washingMachine);
+                    }
                 }
+
+                poolAntBox.Shuffle();
+
+                WashingMachineItem selectedAntBox = poolAntBox.First();
+
+                selectedAntBox.Select();
+
+                GamePersistentVariable.isAutoTestingLevel = true;
+
+                yield return waitForSeconds;
             }
-
-            poolTile.Shuffle();
-
-            BaseTile selectedTile = poolTile.First();
-
-            selectedTile.Select();
-
-            GamePersistentVariable.isAutoTestingLevel = true;
-
-            yield return waitForSeconds;
         }
     }
 }

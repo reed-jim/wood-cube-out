@@ -36,6 +36,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject completeTaskSoundPrefab;
     [SerializeField] private GameObject generateTaskSoundPrefab;
     [SerializeField] private GameObject coinSoundPrefab;
+    [SerializeField] private GameObject antPopSoundPrefab;
+    [SerializeField] private GameObject boxTapSoundPrefab;
+    [SerializeField] private GameObject cubeEatSoundPrefab;
+    [SerializeField] private GameObject cubeLandSoundPrefab;
+    [SerializeField] private GameObject slotDoneSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -120,6 +125,11 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.COMPlETE_TASK_SOUND, completeTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.GENERATE_TASK_SOUND, generateTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.collectCoinSound, coinSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.antPopSound, antPopSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.boxTapSound, boxTapSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.cubeEatSound, cubeEatSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.cubeLandSound, cubeLandSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.slotDoneSound, slotDoneSoundPrefab, 24);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

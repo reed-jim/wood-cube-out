@@ -71,6 +71,8 @@ namespace AntsFlow
                     antDissappearFx.transform.position = transform.position;
                     antDissappearFx.Play();
 
+                    SoundManager.Instance.PlaySoundCubeLand();
+
                     isMovingToNest = false;
                 }
             }

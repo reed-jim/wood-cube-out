@@ -18,6 +18,9 @@ namespace AntsFlow
 
         public List<Color> poolFaction;
         public bool isTutorialLevel;
+
+        public Vector3 spawnPosition = new Vector3(0, 3, 0);
+        public Vector3 spawnScale = 0.6f * Vector3.one;
     }
 
 #if UNITY_EDITOR
@@ -78,6 +81,9 @@ namespace AntsFlow
                 DestroyImmediate(item, true);
             }
 
+            level.transform.position = Vector3.zero;
+            level.transform.localScale = Vector3.one;
+
             Color[] pixels = level.picture.texture.GetPixels();
 
             int width = level.picture.texture.width;
@@ -111,6 +117,9 @@ namespace AntsFlow
                     index++;
                 }
             }
+
+            level.transform.position = level.spawnPosition;
+            level.transform.localScale = level.spawnScale;
 
             EditorUtility.SetDirty(level);
         }

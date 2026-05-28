@@ -77,6 +77,11 @@ public static class GameConstants
     public static string GENERATE_TASK_SOUND = "Generate Task Sound";
     public static string RUSTY_BREAK_SOUND = "Rusty Break Sound";
     public static string collectCoinSound = "Collect Coin Sound";
+    public static string antPopSound = "antPopSound";
+    public static string boxTapSound = "boxTapSound";
+    public static string cubeEatSound = "cubeEatSound";
+    public static string cubeLandSound = "cubeLandSound";
+    public static string slotDoneSound = "slotDoneSound";
     #endregion
 
     #region ANIMATION

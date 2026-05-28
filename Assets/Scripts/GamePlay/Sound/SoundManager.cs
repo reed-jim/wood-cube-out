@@ -198,7 +198,7 @@ public class SoundManager : MonoBehaviour
 
         breakObjectSound.Play();
     }
-    
+
     public void PlaySoundGenerateTask()
     {
         if (!_isEnableGameSound)
@@ -210,7 +210,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundCompleteTask()
     {
         if (!_isEnableGameSound)
@@ -222,7 +222,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundChainBreak()
     {
         if (!_isEnableGameSound)
@@ -234,7 +234,7 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
-    
+
     public void PlaySoundRustyBreak()
     {
         if (!_isEnableGameSound)
@@ -306,6 +306,68 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
+
+    #region Ants Flow
+    public void PlaySoundAntPop()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.antPopSound);
+
+        sound.Play();
+    }
+
+    public void PlaySoundBoxTap()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.boxTapSound);
+
+        sound.Play();
+    }
+
+    public void PlaySoundCubeEat()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.cubeEatSound);
+
+        sound.Play();
+    }
+
+    public void PlaySoundCubeLand()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.cubeLandSound);
+
+        sound.Play();
+    }
+
+    public void PlaySoundSlotDone()
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(GameConstants.slotDoneSound);
+
+        sound.Play();
+    }
+    #endregion
 
     private void FadeOutBackgroundMusic()
     {

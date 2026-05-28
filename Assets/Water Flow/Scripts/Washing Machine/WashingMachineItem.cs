@@ -72,14 +72,18 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
-                
+
             });
+
+            SoundManager.Instance.PlaySoundSlotDone();
         }
     }
 
     public void Select()
     {
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+
+        SoundManager.Instance.PlaySoundBoxTap();
 
         this.washingMachineSlot = washingMachineSlot;
 
@@ -112,6 +116,8 @@ public class WashingMachineItem : MonoBehaviour
 
                 ant.Init(faction);
                 ant.MoveToTile();
+
+                SoundManager.Instance.PlaySoundAntPop();
 
                 number--;
                 numberText.text = $"{number}";

@@ -94,13 +94,12 @@ public class DebugPopup : BasePopup
     {
         AddCoin();
 
-        AutoplayManager.Ins.StartAutoplay();
-        // startAutoTestLevelEvent?.Invoke();
+        AntsFlow.AutoplayManager.Ins.StartAutoplay();
 
         Hide();
     }
 
-    private async void DebugAdsButton()
+    private void DebugAdsButton()
     {
         if (UserData.IsRemoveAds)
         {
