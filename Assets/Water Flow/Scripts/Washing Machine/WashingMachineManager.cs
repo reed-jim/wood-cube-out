@@ -508,10 +508,12 @@ namespace AntsFlow
             {
                 int numNotBlockedTileOfFaction = numNotBlockedTilePerFaction[faction];
 
-                int minValue = Mathf.Min(numNotBlockedTileOfFaction, maxAntRequiredPerFaction[faction]);
+                // int minValue = Mathf.Min(numNotBlockedTileOfFaction, maxAntRequiredPerFaction[faction]);
+                int minValue = 1;
                 int maxValue = maxAntRequiredPerFaction[faction];
 
-                CommonUtil.SumValueOfDictionary(result, faction, UnityEngine.Random.Range(minValue, maxValue));
+                // CommonUtil.SumValueOfDictionary(result, faction, maxValue);
+                CommonUtil.SumValueOfDictionary(result, faction, CommonUtil.GaussianRange((int)(maxValue / 2f), maxValue));
             }
 
             return result;

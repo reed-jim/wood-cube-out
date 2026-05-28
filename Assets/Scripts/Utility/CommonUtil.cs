@@ -379,4 +379,51 @@ public static class CommonUtil
             dictionary.Add(key, value);
         }
     }
+
+    public static Color GetHighContrastComplementary(Color color)
+    {
+        Color.RGBToHSV(color, out float h, out float s, out float v);
+
+        // Opposite hue
+        h = (h + 0.5f) % 1f;
+
+        // Increase contrast
+        s = Mathf.Clamp01(s < 0.5f ? 1f : s);
+        v = v > 0.5f ? 0.15f : 1f;
+
+        Color result = Color.HSVToRGB(h, s, v);
+        result.a = color.a;
+
+        return result;
+    }
+
+    #region Guassian
+    // Returns a normally distributed float
+    public static float NextGaussian(float mean = 0f, float standardDeviation = 1f)
+    {
+        float u1 = 1.0f - UnityEngine.Random.value; // avoid 0
+        float u2 = 1.0f - UnityEngine.Random.value;
+
+        float randStdNormal =
+            Mathf.Sqrt(-2.0f * Mathf.Log(u1)) *
+            Mathf.Sin(2.0f * Mathf.PI * u2);
+
+        return mean + standardDeviation * randStdNormal;
+    }
+
+    // Returns a clamped int between min and max
+    public static int GaussianRange(int min, int max)
+    {
+        float mean = (min + max) / 2f;
+
+        // controls spread
+        float stdDev = (max - min) / 6f;
+
+        float value = NextGaussian(mean, stdDev);
+
+        value = Mathf.Clamp(value, min, max);
+
+        return Mathf.RoundToInt(value);
+    }
+    #endregion
 }
