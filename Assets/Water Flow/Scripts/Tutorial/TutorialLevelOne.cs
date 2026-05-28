@@ -69,7 +69,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         int maxStep = 1;
 
-        description.text = $"Select the washing machines to wash the clothes.";
+        description.text = $"Select the ant box to spawn ants.";
 
         MoveTutorialHandToTile(toSelectWashingMachines[0]);
 

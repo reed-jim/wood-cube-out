@@ -43,7 +43,16 @@ namespace AntsFlow
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
 
-            SpawnFirstWashingMachines();
+            List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines();
+
+            if (levelItem.isTutorialLevel)
+            {
+                TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
+            }
+            else
+            {
+                TutorialLevelOne.Ins.HideTutorial();
+            }
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem)
