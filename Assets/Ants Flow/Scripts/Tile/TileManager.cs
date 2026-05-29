@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using NavMeshPlus.Components;
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 
@@ -10,12 +11,15 @@ namespace AntsFlow
     public class TileManager : Singleton<TileManager>
     {
         [SerializeField] private NavMeshSurface navMeshSurface;
+        [SerializeField] private AstarPath astarPath;
 
         [SerializeField] private TMP_Text tileCountText;
 
         public List<BaseTile> tiles;
 
         public Transform antNest;
+
+        private bool isUpdatingNavMesh;
 
         public static event Action winLevelEvent;
 
@@ -55,14 +59,28 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            UpdateNavMesh();
+            // UpdateNavMesh();
             UpdateTileCount();
             CheckWinLevel();
         }
 
-        private void UpdateNavMesh()
+        public void UpdateNavMesh(BoxCollider2D collider)
         {
-            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            astarPath.UpdateGraphs(collider.bounds);
+
+            // if (isUpdatingNavMesh)
+            // {
+            //     return;
+            // }
+
+            // navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            // isUpdatingNavMesh = true;
+
+            // Tween.Delay(3).OnComplete(() =>
+            // {
+            //     isUpdatingNavMesh = false;
+            // });
         }
 
         public void UpdateTileCount()

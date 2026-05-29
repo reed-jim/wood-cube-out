@@ -66,6 +66,10 @@ public class GameLoading : MonoBehaviour
 
     void Start()
     {
+        SceneManager.LoadScene(3);
+
+        return;
+        
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {
             DebugLogger.LogSimple();
