@@ -59,14 +59,16 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // UpdateNavMesh();
+            UpdateNavMesh();
             UpdateTileCount();
             CheckWinLevel();
         }
 
         public void UpdateNavMesh(BoxCollider2D collider)
         {
-            astarPath.UpdateGraphs(collider.bounds);
+            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            // astarPath.UpdateGraphs(collider.bounds);
 
             // if (isUpdatingNavMesh)
             // {

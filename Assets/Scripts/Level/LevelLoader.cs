@@ -247,7 +247,7 @@ namespace NamPhuThuy.GamePlay
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
                 navMeshSurface.BuildNavMesh();
-                pathfinder.Scan();
+                // pathfinder.Scan();
 
                 return;
 
