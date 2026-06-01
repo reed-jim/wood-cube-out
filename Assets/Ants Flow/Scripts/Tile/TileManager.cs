@@ -5,6 +5,7 @@ using PrimeTween;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AntsFlow
 {
@@ -59,14 +60,32 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            UpdateNavMesh();
+            UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
 
-        public void UpdateNavMesh()
+        public void UpdateNavMesh(BaseTile tile)
         {
-            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            // navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            var sources = new List<NavMeshBuildSource>();
+
+            NavMeshBuilder.CollectSources(
+                navMeshSurface.transform,
+                LayerMask.GetMask("Default"),
+                NavMeshCollectGeometry.PhysicsColliders,
+                0,
+                new List<NavMeshBuildMarkup>(),
+                sources
+            );
+
+            NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
+            navMeshBuildSettings.preserveTilesOutsideBounds = true;
+
+            tile.navMeshModifierVolume.area = 0;
+
+            NavMeshBuilder.UpdateNavMeshData(navMeshSurface.navMeshData, navMeshBuildSettings, sources, tile.boxCollider.bounds);
 
             // astarPath.UpdateGraphs(collider.bounds);
 

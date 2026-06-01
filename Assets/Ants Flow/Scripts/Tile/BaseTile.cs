@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 namespace AntsFlow
@@ -9,7 +10,8 @@ namespace AntsFlow
     public class BaseTile : MonoBehaviour
     {
         public SpriteRenderer spriteRenderer;
-        [SerializeField] private BoxCollider2D boxCollider;
+        public BoxCollider2D boxCollider;
+        public NavMeshModifierVolume navMeshModifierVolume;
         [SerializeField] private SpriteRenderer border;
 
         public bool isAntApproaching;

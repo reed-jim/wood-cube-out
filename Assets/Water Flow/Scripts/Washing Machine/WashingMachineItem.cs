@@ -129,7 +129,7 @@ public class WashingMachineItem : MonoBehaviour
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
-                ant.transform.position = transform.position.AddZ(1);
+                ant.transform.position = transform.position.ChangeZ(0);
 
                 ant.Init(faction);
                 ant.MoveToTile();

@@ -27,6 +27,7 @@ namespace AntsFlow
         public bool isMovingToTile;
         public bool isMovingToNest;
         public BaseTile tile;
+        public Vector3 destination;
 
 
         void Awake()
@@ -83,6 +84,7 @@ namespace AntsFlow
                     SoundManager.Instance.PlaySoundCubeLand();
 
                     isMovingToNest = false;
+                    tile = null;
                 }
             }
         }
@@ -107,7 +109,8 @@ namespace AntsFlow
 
             tile.isAntApproaching = true;
 
-            navMeshAgent.destination = tile.transform.position;
+            navMeshAgent.destination = tile.transform.position.ChangeZ(transform.position.z);
+            destination = tile.transform.position;
             // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
             //AILerp.destination = tile.transform.position;
             // AIDestinationSetter.target = tile.transform;
@@ -131,7 +134,8 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
-            navMeshAgent.destination = TileManager.Ins.antNest.position;
+            navMeshAgent.destination = TileManager.Ins.antNest.position.ChangeZ(transform.position.z);
+            destination = TileManager.Ins.antNest.position;
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;
             // AIPath.destination = TileManager.Ins.antNest.transform.position;
@@ -142,7 +146,7 @@ namespace AntsFlow
 
         public bool ReachedDestination()
         {
-            return Vector2.Distance(transform.position, navMeshAgent.destination) < 0.1f;
+            return Vector2.Distance(transform.position, destination) < 0.5f;
             // return AIPath.remainingDistance < 0.01f;
             // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
 

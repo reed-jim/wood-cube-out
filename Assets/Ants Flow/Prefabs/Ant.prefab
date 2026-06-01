@@ -55,6 +55,7 @@ MonoBehaviour:
   isMovingToTile: 0
   isMovingToNest: 0
   tile: {fileID: 0}
+  destination: {x: 0, y: 0, z: 0}
 --- !u!212 &6245597933907545938
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -122,18 +123,18 @@ NavMeshAgent:
   m_GameObject: {fileID: 7633806343919385861}
   m_Enabled: 1
   m_AgentTypeID: 0
-  m_Radius: 0.32
+  m_Radius: 2
   m_Speed: 3.5
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
+  m_AutoBraking: 0
   m_AutoRepath: 1
-  m_Height: 0.64
-  m_BaseOffset: 0.32
-  m_WalkableMask: 1
+  m_Height: 0.01
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 0
 --- !u!1001 &9093788189888394262
 PrefabInstance:
