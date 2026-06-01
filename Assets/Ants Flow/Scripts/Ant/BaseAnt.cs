@@ -37,23 +37,23 @@ namespace AntsFlow
 
         void Update()
         {
-            transform.position = transform.position.ChangeZ(-2);
+            // transform.position = transform.position.ChangeZ(-2);
 
-            Vector2 direction = navMeshAgent.velocity;
+            // Vector2 direction = navMeshAgent.velocity;
 
-            // Avoid jitter when nearly stopped
-            if (direction.sqrMagnitude > 0.01f)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // // Avoid jitter when nearly stopped
+            // if (direction.sqrMagnitude > 0.01f)
+            // {
+            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
-            }
+            //     transform.rotation = Quaternion.Lerp(
+            //         transform.rotation,
+            //         targetRotation,
+            //         rotationSpeed * Time.deltaTime
+            //     );
+            // }
 
             if (isMovingToTile)
             {

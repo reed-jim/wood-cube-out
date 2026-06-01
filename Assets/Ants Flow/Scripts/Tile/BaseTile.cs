@@ -47,7 +47,7 @@ namespace AntsFlow
         {
             gameObject.SetActive(false);
 
-            TileManager.Ins.UpdateNavMesh(boxCollider);
+            // TileManager.Ins.UpdateNavMesh(boxCollider);
 
             tileCompleteEvent.Invoke(this);
         }

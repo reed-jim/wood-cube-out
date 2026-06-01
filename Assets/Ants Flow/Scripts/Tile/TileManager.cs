@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NavMeshPlus.Components;
 using PrimeTween;
 using TMPro;
+using Unity.AI.Navigation;
 using UnityEngine;
 
 namespace AntsFlow
@@ -64,7 +64,7 @@ namespace AntsFlow
             CheckWinLevel();
         }
 
-        public void UpdateNavMesh(BoxCollider2D collider)
+        public void UpdateNavMesh()
         {
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 
