@@ -14,6 +14,7 @@ public class WashingMachineItem : MonoBehaviour
     public TMP_Text numberText;
 
     public Color faction;
+    public bool isDisable;
     public int number;
     public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
@@ -43,6 +44,15 @@ public class WashingMachineItem : MonoBehaviour
         transform.localScale = Vector3.zero;
 
         Tween.Scale(transform, 0.5f, duration: 0.3f);
+
+        Setup(washingMachineStartSlot);
+    }
+
+    public void Setup(WashingMachineStartSlot washingMachineStartSlot)
+    {
+        isDisable = !washingMachineStartSlot.isTopRow;
+
+        numberText.alpha = isDisable ? 0.2f : 1;
     }
 
     public void MinusClothingPiece()
@@ -81,6 +91,13 @@ public class WashingMachineItem : MonoBehaviour
 
     public void Select()
     {
+        if (isDisable)
+        {
+            SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
+
+            return;
+        }
+
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
         SoundManager.Instance.PlaySoundBoxTap();

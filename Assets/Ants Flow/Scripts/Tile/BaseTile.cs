@@ -37,7 +37,7 @@ namespace AntsFlow
             SaferioTween.AlphaShow(border);
 
             transform.SetParent(ant.transform);
-            Tween.LocalPosition(transform, Vector3.zero, duration: 0.3f);
+            Tween.LocalPosition(transform, new Vector3(0, 0.5f, -1), duration: 0.3f);
             Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
             SoundManager.Instance.PlaySoundCubeEat();

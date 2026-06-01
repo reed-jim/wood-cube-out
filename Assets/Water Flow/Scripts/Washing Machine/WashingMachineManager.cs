@@ -173,6 +173,8 @@ namespace AntsFlow
                             Tween.LocalPosition(washingMachineItem.transform, Vector3.zero.AddZ(-1), duration: 0.3f)
                             .OnComplete(() =>
                             {
+                                washingMachineItem.Setup(washingMachineStartSlot);
+
                                 washingMachineItem.isMoving = false;
                             });
 
