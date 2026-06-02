@@ -7,6 +7,7 @@ public class ContractCalculator : MonoBehaviour
     [SerializeField] private TMP_InputField priceInput;
     [SerializeField] private TMP_InputField slInput;
     [SerializeField] private TMP_Text outputText;
+    [SerializeField] private TMP_Text recommendText;
     [SerializeField] private Button calculateButton;
 
     void Awake()
@@ -26,6 +27,16 @@ public class ContractCalculator : MonoBehaviour
         int floorSl = (int)((priceDifference * 10) * floorOutput);
         int ceilSl = (int)((priceDifference * 10) * ceilOutput);
 
-        outputText.text = $"{floorOutput} <color=#FF0000>(-{floorSl}) \n<color=#005A00>{ceilOutput} <color=#FF0000>(-{ceilSl})";
+        outputText.text = $"{floorOutput} <color=#FF0000>(-{floorSl})\n</color>{ceilOutput} <color=#FF0000>(-{ceilSl})</color>";
+
+        if (floorOutput < 10)
+        {
+            recommendText.gameObject.SetActive(false);
+        }
+        else
+        {
+            recommendText.gameObject.SetActive(true);
+            recommendText.text = "Enter macro instead";
+        }
     }
 }

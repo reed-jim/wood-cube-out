@@ -16,6 +16,7 @@ namespace AntsFlow
         [SerializeField] private NavMeshObstacle navMeshObstacle;
 
         public bool isAntApproaching;
+        public bool isLocked;
         public List<BaseTile> blockages;
 
         public Color Faction => spriteRenderer.color;
