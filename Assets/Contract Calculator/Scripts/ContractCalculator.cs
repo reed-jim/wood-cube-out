@@ -1,6 +1,8 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static GameEnum;
 
 public class ContractCalculator : MonoBehaviour
 {
@@ -10,9 +12,14 @@ public class ContractCalculator : MonoBehaviour
     [SerializeField] private TMP_Text recommendText;
     [SerializeField] private Button calculateButton;
 
+    [SerializeField] private Button openChangeThemePopupButton;
+
+    public static event Action<ScreenRoute> switchRouteEvent;
+
     void Awake()
     {
         calculateButton.onClick.AddListener(Calculate);
+        openChangeThemePopupButton.onClick.AddListener(OpenChangeThemePopupButton);
     }
 
     private void Calculate()
@@ -38,5 +45,10 @@ public class ContractCalculator : MonoBehaviour
             recommendText.gameObject.SetActive(true);
             recommendText.text = "Enter macro instead";
         }
+    }
+
+    private void OpenChangeThemePopupButton()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.ChangeTheme);
     }
 }
