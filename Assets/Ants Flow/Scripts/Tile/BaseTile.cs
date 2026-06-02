@@ -4,6 +4,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.AI.Navigation;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace AntsFlow
 {
@@ -11,8 +12,8 @@ namespace AntsFlow
     {
         public SpriteRenderer spriteRenderer;
         public BoxCollider2D boxCollider;
-        public NavMeshModifierVolume navMeshModifierVolume;
         [SerializeField] private SpriteRenderer border;
+        [SerializeField] private NavMeshObstacle navMeshObstacle;
 
         public bool isAntApproaching;
         public List<BaseTile> blockages;

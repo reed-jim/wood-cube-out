@@ -60,7 +60,7 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            UpdateNavMesh(tile);
+            // UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
@@ -82,8 +82,6 @@ namespace AntsFlow
 
             NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
             navMeshBuildSettings.preserveTilesOutsideBounds = true;
-
-            tile.navMeshModifierVolume.area = 0;
 
             NavMeshBuilder.UpdateNavMeshData(navMeshSurface.navMeshData, navMeshBuildSettings, sources, tile.boxCollider.bounds);
 

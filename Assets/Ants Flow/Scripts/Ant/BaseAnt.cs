@@ -134,7 +134,7 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
-            navMeshAgent.destination = TileManager.Ins.antNest.position.ChangeZ(transform.position.z);
+            navMeshAgent.destination = TileManager.Ins.antNest.position;
             destination = TileManager.Ins.antNest.position;
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;
@@ -142,6 +142,11 @@ namespace AntsFlow
 
             isMovingToTile = false;
             isMovingToNest = true;
+        }
+
+        private void WanderAroundThenMoveBackToDestination()
+        {
+            
         }
 
         public bool ReachedDestination()
