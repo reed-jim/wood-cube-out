@@ -16,9 +16,28 @@ public class DynamicTheme : Singleton<DynamicTheme>
 
     public ThemeThemeDetailKeyValuePair[] allThemes;
 
+    public static event Action changeThemeEvent;
+
+    void OnValidate()
+    {
+        ChangeTheme();
+    }
+
     public Color GetColorForUIElement(UIElement UIElement)
     {
         return allThemes.First(item => item.key == currentTheme).value.colorPerUIElement.First(item => item.key == UIElement).value;
+    }
+
+    public void ChangeTheme()
+    {
+        changeThemeEvent?.Invoke();
+    }
+
+    public void ChangeTheme(Theme theme)
+    {
+        currentTheme = theme;
+        
+        changeThemeEvent?.Invoke();
     }
 }
 

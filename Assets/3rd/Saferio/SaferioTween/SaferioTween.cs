@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using PrimeTween;
 using Spine.Unity;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
@@ -590,6 +591,17 @@ namespace Saferio.Util.SaferioTween
             .OnComplete(() =>
             {
                 image.gameObject.SetActive(false);
+
+                onCompleteAction?.Invoke();
+            });
+        }
+
+        public static void AlphaHide(TMP_Text text, Action onCompleteAction = null)
+        {
+            Tween.Alpha(text, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                text.gameObject.SetActive(false);
 
                 onCompleteAction?.Invoke();
             });

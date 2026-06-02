@@ -12,5 +12,5 @@ public class ThemeDetail : ScriptableObject
 public class UIElementColorKeyValuePair
 {
     public UIElement key;
-    public Color value;
+    public Color value = Color.white;
 }

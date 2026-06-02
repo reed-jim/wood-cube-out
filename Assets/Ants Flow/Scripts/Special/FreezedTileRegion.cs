@@ -8,7 +8,7 @@ namespace AntsFlow
 {
     public class FreezedTileRegion : MonoBehaviour
     {
-        [SerializeField] private CanvasGroup canvasGroup;
+        [SerializeField] private SpriteRenderer container;
         [SerializeField] private TMP_Text antLeftText;
 
         public BoxCollider2D regionCollider;
@@ -27,10 +27,20 @@ namespace AntsFlow
             BaseTile.tileCompleteEvent -= OnTileCompleted;
         }
 
+        void Start()
+        {
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                tiles[i].isLocked = true;
+            }
+
+            antLeft = tiles.Count;
+            antLeftText.text = $"{antLeft}";
+        }
+
         private void OnTileCompleted(BaseTile tile)
         {
             antLeft--;
-
             antLeftText.text = $"{antLeft}";
 
             if (antLeft <= 0)
@@ -41,12 +51,29 @@ namespace AntsFlow
 
         private void Complete()
         {
-            SaferioTween.AlphaHide(canvasGroup);
+            SaferioTween.AlphaHide(antLeftText);
+            SaferioTween.AlphaHide(container);
 
             foreach (var tile in tiles)
             {
                 tile.isLocked = false;
             }
+        }
+
+        public void MoveToCenterOfTiles()
+        {
+            Vector3 center = new Vector3();
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                center += tile.transform.position;
+            }
+
+            center /= tiles.Count;
+
+            transform.position = center.AddZ(-1);
         }
     }
 
@@ -80,6 +107,20 @@ namespace AntsFlow
             List<Collider2D> results = new List<Collider2D>();
 
             region.regionCollider.Overlap(results);
+
+            region.tiles = new List<BaseTile>();
+
+            for (int i = 0; i < results.Count; i++)
+            {
+                BaseTile tile = results[i].GetComponent<BaseTile>();
+
+                if (tile != null)
+                {
+                    region.tiles.Add(tile);
+                }
+            }
+
+            region.MoveToCenterOfTiles();
 
             EditorUtility.SetDirty(region);
         }

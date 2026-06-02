@@ -1,3 +1,4 @@
+using PrimeTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,19 @@ public class DynamicThemeItem : MonoBehaviour
 {
     public UIElement UIElement;
 
+    public Image cachedImage;
+    public TMP_Text cachedText;
+
+    void Awake()
+    {
+        DynamicTheme.changeThemeEvent += OnThemeChanged;
+    }
+
+    void OnDestroy()
+    {
+        DynamicTheme.changeThemeEvent -= OnThemeChanged;
+    }
+
     void Start()
     {
         AssignColor();
@@ -23,20 +37,43 @@ public class DynamicThemeItem : MonoBehaviour
     {
         Color color = DynamicTheme.Ins.GetColorForUIElement(UIElement);
 
-        Image image = GetComponent<Image>();
-
-        if (image != null)
+        if (cachedImage != null)
         {
-            image.color = color;
+            Tween.Color(cachedImage, color, duration: 0.3f);
 
             return;
         }
-
-        TMP_Text text = GetComponent<TMP_Text>();
-
-        if (text != null)
+        else
         {
-            text.color = color;
+            cachedImage = GetComponent<Image>();
+
+            if (cachedImage != null)
+            {
+                Tween.Color(cachedImage, color, duration: 0.3f);
+
+                return;
+            }
         }
+
+        if (cachedText != null)
+        {
+            Tween.Color(cachedText, color, duration: 0.3f);
+
+            return;
+        }
+        else
+        {
+            cachedText = GetComponent<TMP_Text>();
+
+            if (cachedText != null)
+            {
+                Tween.Color(cachedText, color, duration: 0.3f);
+            }
+        }
+    }
+
+    private void OnThemeChanged()
+    {
+        AssignColor();
     }
 }

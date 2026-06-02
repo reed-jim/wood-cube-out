@@ -1285,7 +1285,6 @@ Transform:
   - {fileID: 2863603839128518277}
   - {fileID: 3185775442423593837}
   - {fileID: 7621182039262473787}
-  - {fileID: 6225663207318253551}
   - {fileID: 5325688926769934508}
   - {fileID: 8567886038492078453}
   - {fileID: 7549172112257755899}
@@ -1641,8 +1640,8 @@ Transform:
   m_GameObject: {fileID: 9082916444104903232}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.28, y: -18.75, z: 0}
-  m_LocalScale: {x: 6, y: 6, z: 6}
+  m_LocalPosition: {x: 7.51, y: -19.5, z: -1}
+  m_LocalScale: {x: 6.5, y: 6.5, z: 6.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1661304698267913866}
@@ -1662,6 +1661,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.FreezedTileRegion
   canvasGroup: {fileID: 0}
   antLeftText: {fileID: 7962830708438906437}
+  regionCollider: {fileID: 8622177548869941660}
+  tiles:
+  - {fileID: 8540768783855251897}
+  - {fileID: 6585386861713409095}
+  - {fileID: 4013104537933285538}
+  - {fileID: 8810906363766538241}
+  - {fileID: 5242921134403700182}
+  - {fileID: 6521433155382338709}
+  - {fileID: 7233820180037466663}
+  - {fileID: 4934939170960487601}
+  - {fileID: 5148166945424943610}
+  - {fileID: 6053588448155344640}
+  - {fileID: 3395323978797464072}
+  - {fileID: 8293330302866799687}
+  - {fileID: 8911800075618871798}
+  - {fileID: 6072713707011252165}
+  - {fileID: 8861827497115904699}
+  - {fileID: 4312451036174599919}
+  - {fileID: 341576541306466131}
+  - {fileID: 5749446191446367917}
+  - {fileID: 6502320493950789748}
+  - {fileID: 4562958324850623496}
+  - {fileID: 7908581103024339651}
+  - {fileID: 2126101998190626379}
+  - {fileID: 6114926969479325934}
+  - {fileID: 4872896496497302222}
+  - {fileID: 4332015782953032272}
+  - {fileID: 5635787023341556657}
+  - {fileID: 868055583156183034}
+  - {fileID: 6853948405421071337}
+  - {fileID: 8465288557778831275}
+  - {fileID: 3004352721332357516}
+  - {fileID: 6345254006227072282}
+  - {fileID: 3673300583777252093}
+  - {fileID: 3404442756525856014}
+  - {fileID: 4437231467787521761}
+  - {fileID: 3785940628051135598}
+  - {fileID: 5524413981232431876}
   antLeft: 0
   isDone: 0
 --- !u!212 &7927806887674729110
@@ -30072,7 +30109,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6225663207318253551}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
 --- !u!114 &1538034345207867084 stripped
@@ -106730,7 +106770,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 8627647535231128167}
+    m_TransformParent: {fileID: 2811380506757333066}
     m_Modifications:
     - target: {fileID: 607671880863614814, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: blockages.Array.size
@@ -106750,11 +106790,11 @@ PrefabInstance:
       objectReference: {fileID: 6602229868763416765}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 9
+      value: -9
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -26
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalPosition.z
@@ -106766,15 +106806,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 4193651565897392600, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

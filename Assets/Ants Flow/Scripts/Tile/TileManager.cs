@@ -43,12 +43,13 @@ namespace AntsFlow
                 i.blockages.Count < 4 &&
                 i.Faction == faction &&
                 !i.isAntApproaching
+                && !i.isLocked
             );
 
             if (isAvailable)
             {
                 BaseTile availableTile =
-                    tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching);
+                    tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching && !i.isLocked);
 
                 return availableTile;
             }
