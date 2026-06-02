@@ -60,7 +60,7 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // UpdateNavMesh(tile);
+            UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
@@ -69,37 +69,37 @@ namespace AntsFlow
         {
             // navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 
-            var sources = new List<NavMeshBuildSource>();
+            // var sources = new List<NavMeshBuildSource>();
 
-            NavMeshBuilder.CollectSources(
-                navMeshSurface.transform,
-                LayerMask.GetMask("Default"),
-                NavMeshCollectGeometry.PhysicsColliders,
-                0,
-                new List<NavMeshBuildMarkup>(),
-                sources
-            );
+            // NavMeshBuilder.CollectSources(
+            //     navMeshSurface.transform,
+            //     LayerMask.GetMask("Default"),
+            //     NavMeshCollectGeometry.PhysicsColliders,
+            //     0,
+            //     new List<NavMeshBuildMarkup>(),
+            //     sources
+            // );
 
-            NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
-            navMeshBuildSettings.preserveTilesOutsideBounds = true;
+            // NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
+            // navMeshBuildSettings.preserveTilesOutsideBounds = true;
 
-            NavMeshBuilder.UpdateNavMeshData(navMeshSurface.navMeshData, navMeshBuildSettings, sources, tile.boxCollider.bounds);
+            // NavMeshBuilder.UpdateNavMeshData(navMeshSurface.navMeshData, navMeshBuildSettings, sources, tile.boxCollider.bounds);
 
             // astarPath.UpdateGraphs(collider.bounds);
 
-            // if (isUpdatingNavMesh)
-            // {
-            //     return;
-            // }
+            if (isUpdatingNavMesh)
+            {
+                return;
+            }
 
-            // navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 
-            // isUpdatingNavMesh = true;
+            isUpdatingNavMesh = true;
 
-            // Tween.Delay(3).OnComplete(() =>
-            // {
-            //     isUpdatingNavMesh = false;
-            // });
+            Tween.Delay(5).OnComplete(() =>
+            {
+                isUpdatingNavMesh = false;
+            });
         }
 
         public void UpdateTileCount()

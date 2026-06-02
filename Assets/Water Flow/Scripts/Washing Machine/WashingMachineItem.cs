@@ -27,7 +27,7 @@ public class WashingMachineItem : MonoBehaviour
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
     }
 
-    public void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
+    public virtual void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
     {
         this.faction = faction;
         this.number = number;

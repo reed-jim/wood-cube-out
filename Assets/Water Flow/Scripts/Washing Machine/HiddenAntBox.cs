@@ -1,16 +1,27 @@
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 public class HiddenAntBox : WashingMachineItem
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private SpriteRenderer hiddenContainer;
+    [SerializeField] private SpriteRenderer questionMark;
+
+    public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
     {
-        
+        base.Init(washingMachineStartSlot, faction, number);
+
+        Hide();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Hide()
     {
-        
+        SaferioTween.AlphaShow(questionMark);
+        SaferioTween.AlphaShow(hiddenContainer);
+    }
+
+    public void Reveal()
+    {
+        SaferioTween.AlphaHide(questionMark);
+        SaferioTween.AlphaHide(hiddenContainer);
     }
 }

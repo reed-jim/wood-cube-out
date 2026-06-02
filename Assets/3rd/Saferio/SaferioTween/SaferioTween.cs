@@ -595,6 +595,17 @@ namespace Saferio.Util.SaferioTween
             });
         }
 
+        public static void AlphaHide(SpriteRenderer spriteRenderer, Action onCompleteAction = null)
+        {
+            Tween.Alpha(spriteRenderer, 0, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                spriteRenderer.gameObject.SetActive(false);
+
+                onCompleteAction?.Invoke();
+            });
+        }
+
         public static void AlphaHide(CanvasGroup canvasGroup, Action onCompleteAction = null)
         {
             Tween.Alpha(canvasGroup, 0, duration: 0.3f)
