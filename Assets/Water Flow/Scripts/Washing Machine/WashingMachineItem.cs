@@ -48,7 +48,7 @@ public class WashingMachineItem : MonoBehaviour
         Setup(washingMachineStartSlot);
     }
 
-    public void Setup(WashingMachineStartSlot washingMachineStartSlot)
+    public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
         isDisable = !washingMachineStartSlot.isTopRow;
 

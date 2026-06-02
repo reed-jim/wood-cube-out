@@ -6,11 +6,18 @@ public class HiddenAntBox : WashingMachineItem
     [SerializeField] private SpriteRenderer hiddenContainer;
     [SerializeField] private SpriteRenderer questionMark;
 
-    public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
+    public override void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
-        base.Init(washingMachineStartSlot, faction, number);
+        base.Setup(washingMachineStartSlot);
 
-        Hide();
+        if (washingMachineStartSlot.isTopRow)
+        {
+            Reveal();
+        }
+        else
+        {
+            Hide();
+        }
     }
 
     private void Hide()
