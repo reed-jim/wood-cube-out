@@ -18,6 +18,9 @@ public class FreezedAntBox : WashingMachineItem
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
         freeze.gameObject.SetActive(true);
+
+        SaferioTween.AlphaShow(freeze);
+        SaferioTween.AlphaShow(numAntBoxToUnfreezeText);
     }
 
     public override bool IsValidToSelect()

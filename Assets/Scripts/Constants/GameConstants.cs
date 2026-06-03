@@ -247,5 +247,7 @@ public static class GameConstants
     public static string ant = "ant";
     public static string antDissapearFxPrefab = "antDissapearFxPrefab";
     public static string antBoxLink = "antBoxLink";
+    public static string hiddenAntBox = "hiddenAntBox";
+    public static string freezedAntBox = "freezedAntBox";
     #endregion
 }

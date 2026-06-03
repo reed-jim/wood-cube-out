@@ -62,6 +62,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     public GameObject antPrefab;
     public GameObject antDissapearFxPrefab;
     public GameObject antBoxLink;
+    public GameObject hiddenAntBoxPrefab;
+    public GameObject freezedAntBoxPrefab;
 
     private bool _isInitialized;
 
@@ -143,12 +145,14 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         // RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
         RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
 
-        RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 100);
+        RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 50);
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
         RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
         RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 100);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
+        RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 50);
+        RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 50);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)

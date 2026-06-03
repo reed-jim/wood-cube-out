@@ -220,7 +220,7 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine == null)
                 {
-                    WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
+                    WashingMachineItem washingMachineItem = GetAntBoxFromPool();
 
                     washingMachineItem.gameObject.SetActive(true);
                     washingMachineItem.transform.SetParent(washingMachineStartSlot.transform);
@@ -235,6 +235,32 @@ namespace AntsFlow
                     break;
                 }
             }
+        }
+
+        private WashingMachineItem GetAntBoxFromPool()
+        {
+            string key = GameConstants.washingMachine;
+
+            LevelElement levelElement = SpecialElementManager.Ins.nextLevelElement;
+
+            if (levelElement == LevelElement.NormalAntBox)
+            {
+                key = GameConstants.washingMachine;
+            }
+            else if (levelElement == LevelElement.HiddenAntBox)
+            {
+                key = GameConstants.hiddenAntBox;
+            }
+            else if (levelElement == LevelElement.FreezedAntBox)
+            {
+                key = GameConstants.freezedAntBox;
+            }
+
+            SpecialElementManager.Ins.RandomizeNextLevelElement();
+
+            WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
+
+            return antBox;
         }
         #endregion
 

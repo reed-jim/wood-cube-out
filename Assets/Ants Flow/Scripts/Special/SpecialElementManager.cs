@@ -4,8 +4,18 @@ using AntsFlow;
 using Dreamteck.Utilities;
 using UnityEngine;
 
+public enum LevelElement
+{
+    NormalAntBox,
+    HiddenAntBox,
+    AntBoxLink,
+    FreezedAntBox
+}
+
 public class SpecialElementManager : Singleton<SpecialElementManager>
 {
+    public LevelElement nextLevelElement;
+
     public List<AntBoxLink> antBoxLinks;
 
     public void SpawnAntBoxLink()
@@ -35,5 +45,10 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
         }
 
         antBoxLinks.Add(antBoxLink);
+    }
+
+    public void RandomizeNextLevelElement()
+    {
+        nextLevelElement = CommonUtil.GetRandomEnumValue<LevelElement>();
     }
 }

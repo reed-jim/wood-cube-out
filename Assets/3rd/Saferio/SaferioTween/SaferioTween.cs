@@ -553,6 +553,14 @@ namespace Saferio.Util.SaferioTween
             Tween.Alpha(image, endAlpha, duration: 0.3f);
         }
 
+        public static void AlphaShow(TMP_Text text, float endAlpha = 1)
+        {
+            text.gameObject.SetActive(true);
+            text.color = text.color.ChangeAlpha(0);
+
+            Tween.Alpha(text, endAlpha, duration: 0.3f);
+        }
+
         public static void AlphaShow(SpriteRenderer image, float endAlpha = 1)
         {
             image.gameObject.SetActive(true);
