@@ -20,6 +20,13 @@ public class HiddenAntBox : WashingMachineItem
         }
     }
 
+    public override void Enable()
+    {
+        base.Enable();
+        
+        Reveal();
+    }
+
     private void Hide()
     {
         SaferioTween.AlphaShow(questionMark);

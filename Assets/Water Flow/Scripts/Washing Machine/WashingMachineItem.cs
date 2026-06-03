@@ -22,6 +22,7 @@ public class WashingMachineItem : MonoBehaviour
     public WashingMachineSlot washingMachineSlot;
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
+    public static event Action<WashingMachineItem> antBoxDoneEvent;
 
     void Awake()
     {
@@ -69,6 +70,7 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
+                antBoxDoneEvent?.Invoke(this);
                 onCompleteAction?.Invoke();
             });
         }
@@ -83,7 +85,7 @@ public class WashingMachineItem : MonoBehaviour
         {
             SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
             {
-
+                antBoxDoneEvent?.Invoke(this);
             });
 
             SoundManager.Instance.PlaySoundSlotDone();
@@ -92,7 +94,12 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Select()
     {
-        if (!IsValidToSelect())
+        Select(numSlotRequired);
+    }
+
+    public void Select(int numSlotRequired)
+    {
+        if (!IsValidToSelect(numSlotRequired))
         {
             SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
@@ -108,9 +115,37 @@ public class WashingMachineItem : MonoBehaviour
         selectWashingMachineEvent?.Invoke(this);
     }
 
+    public void ForceSelect()
+    {
+        if (isDisable)
+        {
+            Enable();
+        }
+
+        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+
+        SoundManager.Instance.PlaySoundBoxTap();
+
+        this.washingMachineSlot = washingMachineSlot;
+
+        selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public virtual void Enable()
+    {
+        isDisable = false;
+
+        numberText.alpha = 1;
+    }
+
     public virtual bool IsValidToSelect()
     {
         return !isDisable && WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired;
+    }
+
+    public virtual bool IsValidToSelect(int currentNumSlotRequired)
+    {
+        return !isDisable && WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired;
     }
 
     public void SpawnAnts()
@@ -152,6 +187,8 @@ public class WashingMachineItem : MonoBehaviour
         SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
         {
             washingMachineSlot.washingMachineItem = null;
+
+            antBoxDoneEvent?.Invoke(this);
         });
     }
 }

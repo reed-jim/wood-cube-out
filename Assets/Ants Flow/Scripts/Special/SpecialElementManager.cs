@@ -1,16 +1,39 @@
+using System.Collections.Generic;
+using System.Linq;
+using AntsFlow;
+using Dreamteck.Utilities;
 using UnityEngine;
 
-public class SpecialElementManager : MonoBehaviour
+public class SpecialElementManager : Singleton<SpecialElementManager>
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    public List<AntBoxLink> antBoxLinks;
 
-    // Update is called once per frame
-    void Update()
+    public void SpawnAntBoxLink()
     {
-        
+        AntBoxLink antBoxLink = ObjectPoolingEverything.GetFromPool<AntBoxLink>(GameConstants.antBoxLink);
+
+        List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
+
+        for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
+        {
+            WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
+
+            if (washingMachine != null)
+            {
+                if (washingMachine.numSlotRequired == 1)
+                {
+                    validAntBoxesToLink.Add(washingMachine);
+                }
+            }
+        }
+
+        if (validAntBoxesToLink.Count >= 2)
+        {
+            validAntBoxesToLink.Shuffle();
+
+            antBoxLink.Setup(validAntBoxesToLink.Take(2).ToArray());
+        }
+
+        antBoxLinks.Add(antBoxLink);
     }
 }

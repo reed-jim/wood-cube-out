@@ -246,5 +246,6 @@ public static class GameConstants
     public static string pathSlot = "pathSlot";
     public static string ant = "ant";
     public static string antDissapearFxPrefab = "antDissapearFxPrefab";
+    public static string antBoxLink = "antBoxLink";
     #endregion
 }
