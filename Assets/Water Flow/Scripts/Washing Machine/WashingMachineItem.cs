@@ -15,6 +15,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public Color faction;
     public bool isDisable;
+    public bool isTemporarilyEnabled;
     public int numSlotRequired = 1;
     public int number;
     public bool isMoving;
@@ -26,6 +27,7 @@ public class WashingMachineItem : MonoBehaviour
 
     void Awake()
     {
+        selectWashingMachineEvent += OnAntBoxSelected;
         antBoxDoneEvent += OnAntBoxCompleted;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
@@ -35,6 +37,7 @@ public class WashingMachineItem : MonoBehaviour
 
     void OnDestroy()
     {
+        selectWashingMachineEvent -= OnAntBoxSelected;
         antBoxDoneEvent -= OnAntBoxCompleted;
 
         ExtendOnDestroy();
@@ -127,6 +130,8 @@ public class WashingMachineItem : MonoBehaviour
             return;
         }
 
+        Enable();
+
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
         SoundManager.Instance.PlaySoundBoxTap();
@@ -154,9 +159,35 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Enable()
     {
-        isDisable = false;
+        if (isDisable)
+        {
+            isDisable = false;
 
-        numberText.alpha = 1;
+            numberText.alpha = 1;
+        }
+    }
+
+    public virtual void Disable()
+    {
+        Tween.Alpha(numberText, 0.2f, duration: 0.3f)
+        .OnComplete(() =>
+        {
+            isTemporarilyEnabled = false;
+            isDisable = true;
+        });
+    }
+
+    public void TemporarilyEnable()
+    {
+        if (isDisable)
+        {
+            Tween.Alpha(numberText, 1, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                isTemporarilyEnabled = true;
+                isDisable = false;
+            });
+        }
     }
 
     public virtual bool IsValidToSelect()
@@ -211,6 +242,14 @@ public class WashingMachineItem : MonoBehaviour
 
             antBoxDoneEvent?.Invoke(this);
         });
+    }
+
+    private void OnAntBoxSelected(WashingMachineItem antBox)
+    {
+        if (isTemporarilyEnabled)
+        {
+            Disable();
+        }
     }
 
     protected virtual void OnAntBoxCompleted(WashingMachineItem antBox)

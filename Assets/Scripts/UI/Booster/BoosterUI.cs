@@ -171,7 +171,7 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 0);
 
-        WashingMachineManager.Ins.UnlockWashingMachineSlot();
+        WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
 
         // _numScrewPortsAdded++;
 

@@ -382,6 +382,19 @@ namespace AntsFlow
                 }
             }
         }
+
+        public void UseBoosterEnableAllAntBoxes()
+        {
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                WashingMachineItem antBox = washingMachineStartSlots[i].washingMachine;
+
+                if (antBox != null)
+                {
+                    antBox.TemporarilyEnable();
+                }
+            }
+        }
         #endregion
 
         #region Check Win
