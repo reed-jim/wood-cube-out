@@ -26,7 +26,28 @@ public class WashingMachineItem : MonoBehaviour
 
     void Awake()
     {
+        antBoxDoneEvent += OnAntBoxCompleted;
+
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
+
+        ExtendAwake();
+    }
+
+    void OnDestroy()
+    {
+        antBoxDoneEvent -= OnAntBoxCompleted;
+
+        ExtendOnDestroy();
+    }
+
+    protected virtual void ExtendAwake()
+    {
+
+    }
+
+    protected virtual void ExtendOnDestroy()
+    {
+
     }
 
     public virtual void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
@@ -190,5 +211,10 @@ public class WashingMachineItem : MonoBehaviour
 
             antBoxDoneEvent?.Invoke(this);
         });
+    }
+
+    protected virtual void OnAntBoxCompleted(WashingMachineItem antBox)
+    {
+
     }
 }
