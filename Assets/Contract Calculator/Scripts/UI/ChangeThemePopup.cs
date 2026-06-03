@@ -6,10 +6,8 @@ public class ChangeThemePopup : BasePopup
     public ChangeThemeItem itemPrefab;
     public RectTransform itemContainer;
 
-    protected override void MoreActionInAwake()
+    void Start()
     {
-        base.MoreActionInAwake();
-
         Init();
     }
 
@@ -19,7 +17,9 @@ public class ChangeThemePopup : BasePopup
 
         for (int i = 0; i < allThemes.Length; i++)
         {
-            Instantiate(itemPrefab, itemContainer);
+            ChangeThemeItem item = Instantiate(itemPrefab, itemContainer);
+
+            item.Setup(allThemes[i], onThemeChangedAction: () => Hide());
         }
     }
 }
