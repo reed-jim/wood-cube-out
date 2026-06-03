@@ -15,6 +15,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public Color faction;
     public bool isDisable;
+    public int numSlotRequired = 1;
     public int number;
     public bool isMoving;
     public WashingMachineStartSlot washingMachineStartSlot;
@@ -89,9 +90,9 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
-    public void Select()
+    public virtual void Select()
     {
-        if (isDisable)
+        if (!IsValidToSelect())
         {
             SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
@@ -105,6 +106,11 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    public virtual bool IsValidToSelect()
+    {
+        return !isDisable && WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired;
     }
 
     public void SpawnAnts()

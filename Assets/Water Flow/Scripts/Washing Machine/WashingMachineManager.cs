@@ -411,6 +411,23 @@ namespace AntsFlow
             return null;
         }
 
+        public List<WashingMachineSlot> GetAvailableWashingMachineSlots()
+        {
+            List<WashingMachineSlot> slots = new List<WashingMachineSlot>();
+
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+                if (!washingMachineSlot.isLocked && washingMachineSlot.washingMachineItem == null)
+                {
+                    slots.Add(washingMachineSlot);
+                }
+            }
+
+            return slots;
+        }
+
         private bool GetNextAntSpawnByDifficulty(int difficultyLevel, out Color nextFaction, out int numAnt)
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty();
