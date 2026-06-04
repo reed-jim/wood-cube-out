@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using EPOOutline;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.AI.Navigation;
@@ -13,7 +14,7 @@ namespace AntsFlow
         public SpriteRenderer spriteRenderer;
         public BoxCollider2D boxCollider;
         [SerializeField] private SpriteRenderer border;
-        [SerializeField] private NavMeshObstacle navMeshObstacle;
+        [SerializeField] private Outlinable outlinable;
 
         public bool isAntApproaching;
         public bool isLocked;
@@ -37,6 +38,7 @@ namespace AntsFlow
         public void MoveToAnt(BaseAnt ant)
         {
             boxCollider.enabled = false;
+            outlinable.enabled = false;
 
             border.color = CommonUtil.GetHighContrastComplementary(spriteRenderer.color);
             SaferioTween.AlphaShow(border);
