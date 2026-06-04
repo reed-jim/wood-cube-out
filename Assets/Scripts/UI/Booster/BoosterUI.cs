@@ -19,6 +19,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button addMoreScrewPortButton;
     [SerializeField] private Button breakObjectButton;
     [SerializeField] private Button clearAllScrewPortsButton;
+    [SerializeField] private Button clearOneColorButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
 
     [Header("SCRIPTABLE OBJECT")]
@@ -56,6 +57,7 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
+        AntsFlow.BaseTile.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
@@ -67,6 +69,7 @@ public class BoosterUI : MonoBehaviour
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
+        clearOneColorButton.onClick.AddListener(() => UseBooster(BoosterType.ClearOneColor));
         disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
 
         _tweens = new List<Tween>();
@@ -85,6 +88,7 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
+        AntsFlow.BaseTile.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
@@ -148,6 +152,10 @@ public class BoosterUI : MonoBehaviour
         else if (boosterType == BoosterType.ClearScrewPorts)
         {
             ClearAllScrewPorts();
+        }
+        else if (boosterType == BoosterType.ClearOneColor)
+        {
+            EnableClearOneColorMode();
         }
     }
 
@@ -228,6 +236,43 @@ public class BoosterUI : MonoBehaviour
     {
         _isEnable = isEnable;
         _isPreventShowWarningPopup = true;
+    }
+
+    private void EnableClearOneColorMode()
+    {
+        if (!IsBoosterAvailable(boosterIndex: 3))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearOneColor);
+
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        breakModeContainer.gameObject.SetActive(true);
+
+        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
+        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
+        .OnComplete(() =>
+        {
+            WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
+
+            _isInTransition = false;
+        });
+    }
+
+    private void ConfirmClearOneColor(Color faction)
+    {
+        ConsumeBooster(boosterIndex: 3);
+
+        DisableBreakObjectMode();
     }
 
     private void EnableBreakObjectMode()

@@ -29,11 +29,13 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             RevivePopup.reviveEvent += Revive;
+            BaseTile.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
         }
 
         void OnDestroy()
         {
             RevivePopup.reviveEvent -= Revive;
+            BaseTile.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
         }
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
@@ -393,6 +395,22 @@ namespace AntsFlow
                 {
                     antBox.TemporarilyEnable();
                 }
+            }
+        }
+
+        public void UseBoosterClearOneColor(Color selectedFaction)
+        {
+            List<BaseTile> tilesToClear = TileManager.Ins.tiles
+                .Where(tile => tile.gameObject.activeInHierarchy && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
+
+            for (int i = 0; i < tilesToClear.Count; i++)
+            {
+                BaseTile tile = tilesToClear[i];
+
+                SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+                {
+                    tile.Complete();
+                });
             }
         }
         #endregion

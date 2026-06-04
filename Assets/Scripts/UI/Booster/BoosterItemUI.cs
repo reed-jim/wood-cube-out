@@ -41,7 +41,7 @@ public class BoosterItemUI : MonoBehaviour
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
     }
 
-    private async void Setup()
+    private void Setup()
     {
         userResourcesObserver.Load();
 

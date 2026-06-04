@@ -22,6 +22,7 @@ namespace AntsFlow
         public Color Faction => spriteRenderer.color;
 
         public static event Action<BaseTile> tileCompleteEvent;
+        public static event Action<Color> useClearOneColorBoosterEvent;
 
         void Awake()
         {
@@ -60,6 +61,11 @@ namespace AntsFlow
         private void OnTileCompleted(BaseTile tile)
         {
             blockages.Remove(tile);
+        }
+
+        public void ClearAllTilesOfTheSameColor()
+        {
+            useClearOneColorBoosterEvent?.Invoke(Faction);
         }
     }
 }

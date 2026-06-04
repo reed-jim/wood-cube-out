@@ -117,7 +117,8 @@ public class GameEnum : MonoBehaviour
         AddScrewPort,
         BreakObject,
         ClearScrewPorts,
-        UnlockScrewBox
+        UnlockScrewBox,
+        ClearOneColor
     }
 
 

@@ -1,7 +1,15 @@
 using UnityEngine;
 
-public class WaterFlowGameInput : MonoBehaviour
+public enum AntsFlowInputMode
 {
+    Normal,
+    SelectTile
+}
+
+public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
+{
+    public AntsFlowInputMode inputMode;
+
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -15,11 +23,25 @@ public class WaterFlowGameInput : MonoBehaviour
 
             if (hit.collider != null)
             {
-                WashingMachineItem washingMachineItem = hit.collider.GetComponent<WashingMachineItem>();
-
-                if (washingMachineItem != null)
+                if (inputMode == AntsFlowInputMode.Normal)
                 {
-                    washingMachineItem.Select();
+                    WashingMachineItem washingMachineItem = hit.collider.GetComponent<WashingMachineItem>();
+
+                    if (washingMachineItem != null)
+                    {
+                        washingMachineItem.Select();
+                    }
+                }
+                else if (inputMode == AntsFlowInputMode.SelectTile)
+                {
+                    AntsFlow.BaseTile tile = hit.collider.GetComponent<AntsFlow.BaseTile>();
+
+                    if (tile != null)
+                    {
+                        tile.ClearAllTilesOfTheSameColor();
+
+                        inputMode = AntsFlowInputMode.Normal;
+                    }
                 }
             }
         }
