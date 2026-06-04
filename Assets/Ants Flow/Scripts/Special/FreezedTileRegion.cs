@@ -16,6 +16,7 @@ namespace AntsFlow
         public List<BaseTile> tiles;
         public int antLeft;
         public bool isDone;
+        private bool isAnimating;
 
         void Awake()
         {
@@ -42,6 +43,16 @@ namespace AntsFlow
         {
             antLeft--;
             antLeftText.text = $"{antLeft}";
+
+            if (!isAnimating)
+            {
+                SaferioTween.Punch(antLeftText.transform, 1.1f, onCompleteAction: () =>
+                {
+                    isAnimating = false;
+                });
+
+                isAnimating = true;
+            }
 
             if (antLeft <= 0)
             {

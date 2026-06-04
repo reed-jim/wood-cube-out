@@ -19,6 +19,7 @@ public class WashingMachineItem : MonoBehaviour
     public int numSlotRequired = 1;
     public int number;
     public bool isMoving;
+    public bool isAnimating;
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
@@ -226,6 +227,16 @@ public class WashingMachineItem : MonoBehaviour
 
                 number--;
                 numberText.text = $"{number}";
+
+                if (!isAnimating)
+                {
+                    SaferioTween.Punch(numberText.transform, 1.1f, onCompleteAction: () =>
+                    {
+                        isAnimating = false;
+                    });
+
+                    isAnimating = true;
+                }
             }
 
             yield return waitForSeconds;
