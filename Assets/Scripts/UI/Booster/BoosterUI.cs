@@ -7,6 +7,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
+public enum BoosterMode
+{
+    None,
+    EnableAllAntBoxes,
+    ClearOneColor
+}
+
 public class BoosterUI : MonoBehaviour
 {
     [Header("UI")]
@@ -65,6 +72,7 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
+        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent += ShowBooster;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
@@ -96,6 +104,7 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
+        WashingMachineManager.finishUsingEnableAllAntBoxesBoosterEvent -= ShowBooster;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -179,7 +188,7 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 0);
 
-        WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
+        WashingMachineManager.Ins.UnlockWashingMachineSlot();
 
         // _numScrewPortsAdded++;
 
@@ -322,6 +331,16 @@ public class BoosterUI : MonoBehaviour
         disableBreakObjectModeEvent?.Invoke();
     }
 
+    private void ShowBooster()
+    {
+        Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
+    }
+
+    private void HideBooster()
+    {
+        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
+    }
+
     private void ClearAllScrewPorts()
     {
         if (!IsBoosterAvailable(boosterIndex: 2))
@@ -342,7 +361,10 @@ public class BoosterUI : MonoBehaviour
 
         ConsumeBooster(boosterIndex: 2);
 
-        WashingMachineManager.Ins.UseMagicBooster();
+        HideBooster();
+
+        WashingMachineManager.Ins.UseBoosterEnableAllAntBoxes();
+        // WashingMachineManager.Ins.UseMagicBooster();
 
         SoundManager.Instance.PlaySoundClearScrewPorts();
 
@@ -350,6 +372,8 @@ public class BoosterUI : MonoBehaviour
         {
             _isInTransition = false;
         });
+
+        GamePersistentVariable.boosterMode = BoosterMode.EnableAllAntBoxes;
     }
 
     private bool IsBoosterAvailable(int boosterIndex)

@@ -189,5 +189,6 @@ public static class GamePersistentVariable
 
     #region Water Flow
     public static WashingMachineSlot currentWashingMachineSlotToUnlock;
+    public static BoosterMode boosterMode;
     #endregion
 }

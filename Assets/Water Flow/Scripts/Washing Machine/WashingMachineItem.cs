@@ -143,10 +143,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public void ForceSelect()
     {
-        if (isDisable)
-        {
-            Enable();
-        }
+        Enable();
 
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
@@ -159,12 +156,10 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Enable()
     {
-        if (isDisable)
-        {
-            isDisable = false;
+        isTemporarilyEnabled = false;
+        isDisable = false;
 
-            numberText.alpha = 1;
-        }
+        numberText.alpha = 1;
     }
 
     public virtual void Disable()

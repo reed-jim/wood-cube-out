@@ -13,6 +13,7 @@ namespace AntsFlow
     public class WashingMachineManager : Singleton<WashingMachineManager>
     {
         public LevelItem levelItem;
+        public Camera mainCamera;
 
         public List<WashingMachineSlot> washingMachineSlots;
         public List<WashingMachineStartSlot> washingMachineStartSlots;
@@ -23,6 +24,7 @@ namespace AntsFlow
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
+        public static event Action finishUsingEnableAllAntBoxesBoosterEvent;
 
         protected override void MoreActionOnAwake()
         {
@@ -30,12 +32,26 @@ namespace AntsFlow
 
             RevivePopup.reviveEvent += Revive;
             BaseTile.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
+            WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
         }
 
         void OnDestroy()
         {
             RevivePopup.reviveEvent -= Revive;
             BaseTile.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
+            WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
+        }
+
+        private void OnAntBoxSelected(WashingMachineItem antBox)
+        {
+            if (GamePersistentVariable.boosterMode == BoosterMode.EnableAllAntBoxes)
+            {
+                Tween.PositionY(mainCamera.transform, 0, duration: 0.3f);
+
+                GamePersistentVariable.boosterMode = BoosterMode.None;
+
+                finishUsingEnableAllAntBoxesBoosterEvent?.Invoke();
+            }
         }
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
@@ -396,6 +412,8 @@ namespace AntsFlow
                     antBox.TemporarilyEnable();
                 }
             }
+
+            Tween.PositionY(mainCamera.transform, -2, duration: 0.3f);
         }
 
         public void UseBoosterClearOneColor(Color selectedFaction)
