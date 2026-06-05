@@ -10,6 +10,7 @@ using static GameEnum;
 public class WashingMachineItem : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
+    public SpriteRenderer lid;
 
     public TMP_Text numberText;
 
@@ -60,6 +61,7 @@ public class WashingMachineItem : MonoBehaviour
         this.number = number;
 
         spriteRenderer.color = faction;
+        lid.color = faction;
         numberText.text = $"{number}";
 
         this.washingMachineStartSlot = washingMachineStartSlot;
@@ -71,6 +73,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.localScale = Vector3.zero;
 
         Tween.Scale(transform, 0.5f, duration: 0.3f);
+        SaferioTween.AlphaShow(lid);
 
         Setup(washingMachineStartSlot);
     }
@@ -211,6 +214,11 @@ public class WashingMachineItem : MonoBehaviour
     private IEnumerator SpawningAnts()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
+
+        SaferioTween.AlphaHide(lid);
+        Tween.LocalPositionY(numberText.transform, numberText.transform.position.y - 0.3f, duration: 0.3f);
+
+        yield return new WaitForSeconds(0.3f);
 
         while (number > 0)
         {

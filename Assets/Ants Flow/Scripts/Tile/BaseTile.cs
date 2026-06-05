@@ -13,9 +13,8 @@ namespace AntsFlow
     {
         public SpriteRenderer spriteRenderer;
         public SpriteRenderer shadow;
+        public SpriteRenderer outline;
         public BoxCollider2D boxCollider;
-        [SerializeField] private SpriteRenderer border;
-        [SerializeField] private Outlinable outlinable;
 
         public bool isAntApproaching;
         public bool isLocked;
@@ -39,11 +38,10 @@ namespace AntsFlow
         public void MoveToAnt(BaseAnt ant)
         {
             boxCollider.enabled = false;
-            outlinable.enabled = false;
+            outline.gameObject.SetActive(false);
             shadow.gameObject.SetActive(false);
 
-            border.color = CommonUtil.GetHighContrastComplementary(spriteRenderer.color);
-            SaferioTween.AlphaShow(border);
+            Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
 
             transform.SetParent(ant.transform);
             Tween.LocalPosition(transform, new Vector3(0, 0.7f, -1), duration: 0.3f);
