@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -9,7 +10,9 @@ public class TileSlotContainer : MonoBehaviour
 {
     [SerializeField] private RectTransform categoryContainer;
     [SerializeField] private TMP_Text category;
+    [SerializeField] private TMP_Text tileCountText;
     [SerializeField] private Button unlockButton;
+    [SerializeField] private Image currentTileImage;
     public Image lockImage;
 
     [SerializeField] private ItemCategory itemCategory;
@@ -17,6 +20,8 @@ public class TileSlotContainer : MonoBehaviour
     public bool isLocked;
     public bool isMoving;
     public bool isHidden;
+    public int maxTile;
+    public List<BaseTile> tiles;
 
     public ItemCategory ItemCategory
     {
@@ -58,6 +63,14 @@ public class TileSlotContainer : MonoBehaviour
 
         lockImage.gameObject.SetActive(isLocked);
         categoryContainer.gameObject.SetActive(!isLocked);
+    }
+
+    public void AddTile(BaseTile tile)
+    {
+        tiles.Add(tile);
+
+        tileCountText.text = $"{tiles.Count}/{maxTile}";
+        currentTileImage.sprite = tile.icon.sprite;
     }
 
     public TileSlot GetAvailableTileSlot()

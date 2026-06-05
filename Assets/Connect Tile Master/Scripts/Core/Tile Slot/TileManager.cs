@@ -382,6 +382,7 @@ public class TileManager : Singleton<TileManager>
                     });
 
                     tileSlot.AddTile(tile);
+                    tileSlotContainer.AddTile(tile);
 
                     isFound = true;
 
