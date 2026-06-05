@@ -24,7 +24,7 @@ public class TileManager : Singleton<TileManager>
 
     public int difficultyLevel;
     public int totalSlotInShelf;
-    private List<ItemCategory> itemCategoryPool;
+    public List<ItemCategory> itemCategoryPool;
     private int totalSet;
     private int remainingSet;
     private int remainingSlotContainer;
@@ -376,7 +376,9 @@ public class TileManager : Singleton<TileManager>
                             }
                         }
 
-                        DropTileDown(tile);
+                        // DropTileDown(tile);
+                        EmptyTile(tile);
+                        SpawnTilesForEmptyGrid();
 
                         onCompleteAction?.Invoke();
                     });
@@ -439,7 +441,9 @@ public class TileManager : Singleton<TileManager>
 
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
-                    DropTileDown(tile);
+                    EmptyTile(tile);
+                    SpawnTilesForEmptyGrid();
+                    // DropTileDown(tile);
 
                     if (IsAllShelfFilled())
                     {
@@ -521,6 +525,18 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    private void EmptyTile(BaseTile movedTile)
+    {
+        if (!grids.Any(item => item.tile == movedTile))
+        {
+            return;
+        }
+
+        Grid selectedTileGrid = grids.First(item => item.tile == movedTile);
+
+        selectedTileGrid.tile = null;
+    }
+
     private void DropTileDown(BaseTile movedTile)
     {
         if (!grids.Any(item => item.tile == movedTile))
@@ -570,18 +586,20 @@ public class TileManager : Singleton<TileManager>
 
                 tiles.Add(tile);
 
-                Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
+                // Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
 
                 tile.transform.SetParent(tileContainer);
-                tile.transform.localPosition = spawnPos;
+                tile.transform.position = CardStockPile.Ins.transform.position;
 
                 ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
 
                 tile.Init(nextCategory, tileIconContainer.GetRandomIconOfCategory(nextCategory));
 
-                Tween.LocalPositionY(tile.transform, grids[i].position.y, duration: 0.3f);
+                Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f);
 
                 grids[i].tile = tile;
+
+                CardStockPile.Ins.DrawNewCard(tile);
             }
         }
     }
