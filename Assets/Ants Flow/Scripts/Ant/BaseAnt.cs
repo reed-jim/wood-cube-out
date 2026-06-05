@@ -71,7 +71,7 @@ namespace AntsFlow
             }
             else if (isMovingToNest)
             {
-                if (ReachedDestination(threshold: 0.3f))
+                if (ReachedDestination())
                 {
                     tile.Complete();
                     gameObject.SetActive(false);

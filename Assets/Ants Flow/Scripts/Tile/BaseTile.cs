@@ -45,7 +45,7 @@ namespace AntsFlow
 
             transform.SetParent(ant.transform);
             Tween.LocalPosition(transform, new Vector3(0, 0.7f, -1), duration: 0.3f);
-            Tween.Scale(transform, 0.45f, duration: 0.3f);
+            // Tween.Scale(transform, 0.45f, duration: 0.3f);
             Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
             SoundManager.Instance.PlaySoundCubeEat();
