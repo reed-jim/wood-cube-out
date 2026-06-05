@@ -71,7 +71,7 @@ namespace AntsFlow
             }
             else if (isMovingToNest)
             {
-                if (ReachedDestination())
+                if (ReachedDestination(threshold: 0.3f))
                 {
                     tile.Complete();
                     gameObject.SetActive(false);
@@ -146,12 +146,12 @@ namespace AntsFlow
 
         private void WanderAroundThenMoveBackToDestination()
         {
-            
+
         }
 
-        public bool ReachedDestination()
+        public bool ReachedDestination(float threshold = 1)
         {
-            return Vector2.Distance(transform.position, destination) < 0.5f;
+            return Vector2.Distance(transform.position, destination) < threshold;
             // return AIPath.remainingDistance < 0.01f;
             // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
 

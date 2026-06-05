@@ -12,6 +12,7 @@ namespace AntsFlow
     public class BaseTile : MonoBehaviour
     {
         public SpriteRenderer spriteRenderer;
+        public SpriteRenderer shadow;
         public BoxCollider2D boxCollider;
         [SerializeField] private SpriteRenderer border;
         [SerializeField] private Outlinable outlinable;
@@ -39,6 +40,7 @@ namespace AntsFlow
         {
             boxCollider.enabled = false;
             outlinable.enabled = false;
+            shadow.gameObject.SetActive(false);
 
             border.color = CommonUtil.GetHighContrastComplementary(spriteRenderer.color);
             SaferioTween.AlphaShow(border);

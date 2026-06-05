@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using Saferio.Util.SaferioTween;
 using TMPro;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace AntsFlow
@@ -88,6 +90,7 @@ namespace AntsFlow
         }
     }
 
+#if UNITY_EDITOR
     [CustomEditor(typeof(FreezedTileRegion))]
     public class FreezedTileRegionEditor : Editor
     {
@@ -136,4 +139,5 @@ namespace AntsFlow
             EditorUtility.SetDirty(region);
         }
     }
+    #endif
 }

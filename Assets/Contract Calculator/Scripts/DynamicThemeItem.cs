@@ -14,9 +14,9 @@ public enum UIElement
 public class DynamicThemeItem : MonoBehaviour
 {
     public UIElement UIElement;
-
-    [ReadOnly] public Image cachedImage;
-    [ReadOnly] public TMP_Text cachedText;
+    
+    public Image cachedImage;
+    public TMP_Text cachedText;
 
     void Awake()
     {
