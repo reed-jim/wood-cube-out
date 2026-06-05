@@ -33,6 +33,7 @@ namespace AntsFlow
         private int startX = 0;
         private int startY = 0;
         private int size = 16;
+        private Vector2 tileSpacing;
         private string json;
 
         public override void OnInspectorGUI()
@@ -46,6 +47,7 @@ namespace AntsFlow
             startX = EditorGUILayout.IntField("StartX", startX);
             startY = EditorGUILayout.IntField("StartY", startY);
             size = EditorGUILayout.IntField("Size", size);
+            tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
 
             GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
             
@@ -102,7 +104,6 @@ namespace AntsFlow
 
             int width = level.picture.texture.width;
             int height = level.picture.texture.height;
-            float tileSpacing = 1;
 
             int index = 0;
 
@@ -117,7 +118,7 @@ namespace AntsFlow
                         continue;
 
                     // Create tile
-                    Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing, (y - startY) * tileSpacing, 0);
+                    Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing.x, (y - startY) * tileSpacing.y, 0.01f * y);
 
                     BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
                         level.tilePrefab,
