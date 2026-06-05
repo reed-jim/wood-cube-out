@@ -216,7 +216,7 @@ public class WashingMachineItem : MonoBehaviour
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
 
         SaferioTween.AlphaHide(lid);
-        Tween.LocalPositionY(numberText.transform, numberText.transform.position.y - 0.3f, duration: 0.3f);
+        Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1.2f, duration: 0.3f);
 
         yield return new WaitForSeconds(0.3f);
 
