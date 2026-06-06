@@ -26,6 +26,7 @@ namespace AntsFlow
 
         public bool isMovingToTile;
         public bool isMovingToNest;
+        public bool isDroppingTile;
         public BaseTile tile;
         public Vector3 destination;
 
@@ -42,12 +43,12 @@ namespace AntsFlow
 
         void Update()
         {
-            // transform.position = transform.position.ChangeZ(-2);
+            transform.position = transform.position.ChangeZ(-3);
 
             Vector2 direction = navMeshAgent.velocity;
 
             // Avoid jitter when nearly stopped
-            if (direction.sqrMagnitude > 0.01f)
+            if (direction.sqrMagnitude > 0.05f)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
@@ -69,22 +70,38 @@ namespace AntsFlow
                     MoveToNest();
                 }
             }
-            else if (isMovingToNest)
+            else if (isMovingToNest && !isDroppingTile)
             {
                 if (ReachedDestination())
                 {
-                    tile.Complete();
-                    gameObject.SetActive(false);
+                    Vector3 destination = TileManager.Ins.antNest.transform.position
+                        .AddY(1.5f)
+                        .ChangeZ(tile.transform.position.z);
 
-                    ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+                    Tween.Position(transform, destination, duration: 0.15f);
+                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.15f);
+                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 1.8f, onCompleteAction: () =>
+                    {
+                        tile.Complete();
+                        gameObject.SetActive(false);
 
-                    antDissappearFx.transform.position = transform.position;
-                    antDissappearFx.Play();
+                        ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-                    SoundManager.Instance.PlaySoundCubeLand();
+                        antDissappearFx.transform.position = transform.position;
+                        antDissappearFx.Play();
 
-                    isMovingToNest = false;
-                    tile = null;
+                        SoundManager.Instance.PlaySoundCubeLand();
+
+                        navMeshAgent.enabled = true;
+
+                        isMovingToNest = false;
+                        isDroppingTile = false;
+                        tile = null;
+                    });
+
+                    isDroppingTile = true;
+
+                    navMeshAgent.enabled = false;
                 }
             }
         }
@@ -134,7 +151,7 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
-            navMeshAgent.destination = TileManager.Ins.antNest.position;
+            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1);
             destination = TileManager.Ins.antNest.position;
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;

@@ -72,7 +72,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
 
-        Tween.Scale(transform, 0.5f, duration: 0.3f);
+        Tween.Scale(transform, 2f, duration: 0.3f);
         SaferioTween.AlphaShow(lid);
 
         Setup(washingMachineStartSlot);
@@ -227,6 +227,7 @@ public class WashingMachineItem : MonoBehaviour
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
                 ant.transform.position = transform.position.ChangeZ(-0.1f);
+                ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
                 ant.MoveToTile();
