@@ -1102,8 +1102,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 6.0999756}
-  m_SizeDelta: {x: 640, y: 120}
+  m_AnchoredPosition: {x: 0, y: 24}
+  m_SizeDelta: {x: 640, y: 160}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3193367286766872172
 CanvasRenderer:
@@ -1135,8 +1135,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Setting
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 5f5019980c1b0204f9760675dd1f797d, type: 2}
-  m_sharedMaterial: {fileID: 2100000, guid: 0d0ff83004c5fd548a94486ef5dcc6ed, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 777286ffd0bf5744da93cbd1979d578e, type: 2}
+  m_sharedMaterial: {fileID: 2100000, guid: 4df0a203b99ad9347abc00047dba9238, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1160,12 +1160,12 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 90
+  m_fontSize: 100
   m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 90
+  m_fontSizeMax: 100
   m_fontStyle: 0
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
@@ -4542,9 +4542,6 @@ MonoBehaviour:
   isRouteActiveFromStart: 0
   isAbleToHideOnClickOutside: 0
   isShowingInterAdOnInteract: 1
-  turnMusicToggle: {fileID: 0}
-  turnSoundToggle: {fileID: 0}
-  vibrationToggle: {fileID: 0}
   openCompensatePopupButton: {fileID: 928379821926261936}
   openBackupPopupButton: {fileID: 8243657212716442833}
   adPreferencesButton: {fileID: 2806799454414341471}
@@ -4567,7 +4564,6 @@ MonoBehaviour:
   - {fileID: 835189479643306055}
   - {fileID: 2015056044473696798}
   rateButton: {fileID: 1862818383041113755}
-  openReviewIAPPopupButton: {fileID: 0}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
 --- !u!114 &2397504283092880233
 MonoBehaviour:

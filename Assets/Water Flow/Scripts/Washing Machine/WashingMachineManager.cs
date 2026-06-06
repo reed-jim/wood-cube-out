@@ -157,7 +157,7 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
-            SpecialElementManager.Ins.SpawnAntBoxLink();
+            // SpecialElementManager.Ins.SpawnAntBoxLink();
 
             return washingMachineItems;
         }
