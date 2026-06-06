@@ -10,9 +10,6 @@ using static GameEnum;
 
 public class SettingPopup : BasePopup
 {
-    [SerializeField] private SaferioToggle turnMusicToggle;
-    [SerializeField] private SaferioToggle turnSoundToggle;
-    [SerializeField] private SaferioToggle vibrationToggle;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -25,7 +22,6 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button[] chooseLanguageButtons;
     [SerializeField] private Image[] chooseLanguageButtonBackground;
     [SerializeField] private Button rateButton;
-    [SerializeField] private Button openReviewIAPPopupButton;
     #endregion
 
     [SerializeField] private GameSetting gameSetting;
@@ -36,10 +32,6 @@ public class SettingPopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
-        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
-        vibrationToggle.SetState(gameSetting.IsVibrate);
-
         chooseLanguageContainer.gameObject.SetActive(false);
     }
 
@@ -47,9 +39,6 @@ public class SettingPopup : BasePopup
     {
         GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
 
-        turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
-        turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
-        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
@@ -91,9 +80,7 @@ public class SettingPopup : BasePopup
 
     private void OnGameSettingLoaded()
     {
-        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
-        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
-        vibrationToggle.SetState(gameSetting.IsVibrate);
+
     }
 
     #region LANGUAGE

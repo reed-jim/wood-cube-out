@@ -1,16 +1,36 @@
+using Saferio.Util.SaferioTween;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SettingItemUI : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [SerializeField] private Image activeState;
+    [SerializeField] private Image inactiveState;
+    [SerializeField] private Image cross;
+    [SerializeField] private Button selectButton;
+
+    public bool isActive;
+
+    void Awake()
     {
-        
+        selectButton.onClick.AddListener(Select);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Select()
     {
-        
+        isActive = !isActive;
+
+        if (isActive)
+        {
+            SaferioTween.AlphaShow(activeState);
+            SaferioTween.AlphaHide(inactiveState);
+            SaferioTween.AlphaHide(cross);
+        }
+        else
+        {
+            SaferioTween.AlphaHide(activeState);
+            SaferioTween.AlphaShow(inactiveState);
+            SaferioTween.AlphaShow(cross);
+        }
     }
 }

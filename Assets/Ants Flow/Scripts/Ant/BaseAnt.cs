@@ -78,8 +78,8 @@ namespace AntsFlow
                         .AddY(1.5f)
                         .ChangeZ(tile.transform.position.z);
 
-                    Tween.Position(transform, destination, duration: 0.15f);
-                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.15f);
+                    Tween.Position(transform, destination, duration: 0.3f);
+                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f);
                     SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 1.8f, onCompleteAction: () =>
                     {
                         tile.Complete();
@@ -151,7 +151,7 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
-            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1.8f);
+            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1.5f);
             destination = navMeshAgent.destination;
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;

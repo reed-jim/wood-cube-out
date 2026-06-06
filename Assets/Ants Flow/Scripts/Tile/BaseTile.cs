@@ -20,10 +20,17 @@ namespace AntsFlow
         public bool isLocked;
         public List<BaseTile> blockages;
 
+        [SerializeField] private Color faction;
+
         public Color Faction
         {
-            get => spriteRenderer.color;
-            set => spriteRenderer.color = value;
+            get => faction;
+            set
+            {
+                spriteRenderer.color = faction;
+
+                faction = value;
+            }
         }
 
         public static event Action<BaseTile> tileCompleteEvent;
@@ -43,6 +50,8 @@ namespace AntsFlow
 
         public void Init()
         {
+            faction = spriteRenderer.color;
+            
             spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(Faction);
             spriteRenderer.color = Color.white;
         }

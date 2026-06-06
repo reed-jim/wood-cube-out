@@ -20,12 +20,12 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetAntBoxLidSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.antBoxSprite;
+        return mapper.First(item => item.color == faction).spriteContainer.antBoxLidSprite;
     }
 
     public Sprite GetTileSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.antBoxSprite;
+        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 }
 
@@ -48,8 +48,6 @@ public class SpriteContainer
 [CustomEditor(typeof(FactionMapper))]
 public class FactionMapperEditor : Editor
 {
-    private Sprite levelSprite;
-
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -57,13 +55,6 @@ public class FactionMapperEditor : Editor
         LevelItem levelItem = (LevelItem)target;
 
         GUILayout.Space(10);
-
-        levelSprite = (Sprite)EditorGUILayout.ObjectField("Level Sprite", levelSprite, typeof(Sprite), true);
-
-        if (GUILayout.Button("MapSpriteToColor"))
-        {
-            MapSpriteToColor(levelSprite);
-        }
     }
 
     private void MapSpriteToColor(Sprite levelSprite)
