@@ -86,7 +86,7 @@ namespace AntsFlow
                         });
 
                     Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
-                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
+                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.5f), duration: 0.3f);
                     Tween.Scale(transform, 0, duration: 0.3f);
 
                     Vector3 antScale = transform.localScale;

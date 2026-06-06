@@ -179,7 +179,7 @@ namespace AntsFlow
                         WashingMachineStartSlot otherWashingMachineStartSlot = washingMachineStartSlots[j];
 
                         if (otherWashingMachineStartSlot.washingMachine != null &&
-                            otherWashingMachineStartSlot.transform.position.x == x
+                            (int)otherWashingMachineStartSlot.transform.position.x == x
                         )
                         {
                             WashingMachineItem washingMachineItem = otherWashingMachineStartSlot.washingMachine;

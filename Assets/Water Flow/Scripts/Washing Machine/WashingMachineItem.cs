@@ -11,6 +11,9 @@ public class WashingMachineItem : MonoBehaviour
 {
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer lid;
+    public SpriteRenderer shadow;
+
+    public Sprite[] shadows;
 
     public TMP_Text numberText;
 
@@ -82,6 +85,7 @@ public class WashingMachineItem : MonoBehaviour
 
         spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
         lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
+        shadow.sprite = shadows[0];
 
         Setup(washingMachineStartSlot);
     }
@@ -144,6 +148,8 @@ public class WashingMachineItem : MonoBehaviour
 
         Enable();
 
+        shadow.sprite = shadows[1];
+
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
         SoundManager.Instance.PlaySoundBoxTap();
@@ -156,6 +162,8 @@ public class WashingMachineItem : MonoBehaviour
     public void ForceSelect()
     {
         Enable();
+
+        shadow.sprite = shadows[1];
 
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
