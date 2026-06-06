@@ -15,6 +15,7 @@ namespace AntsFlow
         public SpriteRenderer shadow;
         public SpriteRenderer outline;
         public BoxCollider2D boxCollider;
+        public NavMeshModifierVolume navMeshModifierVolume;
 
         public bool isAntApproaching;
         public bool isLocked;
@@ -51,7 +52,7 @@ namespace AntsFlow
         public void Init()
         {
             faction = spriteRenderer.color;
-            
+
             spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(Faction);
             spriteRenderer.color = Color.white;
         }
@@ -59,6 +60,7 @@ namespace AntsFlow
         public void MoveToAnt(BaseAnt ant)
         {
             boxCollider.enabled = false;
+            navMeshModifierVolume.enabled = false;
             outline.gameObject.SetActive(false);
             shadow.gameObject.SetActive(false);
 

@@ -24,6 +24,8 @@ public class WashingMachineItem : MonoBehaviour
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
+    private Vector3 numberTextInitialPosition;
+
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
 
@@ -35,6 +37,8 @@ public class WashingMachineItem : MonoBehaviour
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
 
         ExtendAwake();
+
+        numberTextInitialPosition = numberText.transform.localPosition;
     }
 
     void OnDestroy()
@@ -71,6 +75,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);
         transform.localScale = Vector3.zero;
+        numberText.transform.localPosition = numberTextInitialPosition;
 
         Tween.Scale(transform, 2f, duration: 0.3f);
         SaferioTween.AlphaShow(lid);

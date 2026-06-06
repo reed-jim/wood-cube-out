@@ -48,7 +48,7 @@ namespace AntsFlow
             Vector2 direction = navMeshAgent.velocity;
 
             // Avoid jitter when nearly stopped
-            if (direction.sqrMagnitude > 0.05f)
+            if (direction.sqrMagnitude > 0.01f)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
@@ -74,20 +74,32 @@ namespace AntsFlow
             {
                 if (ReachedDestination())
                 {
-                    Vector3 destination = TileManager.Ins.antNest.transform.position
-                        .AddY(1.5f)
-                        .ChangeZ(tile.transform.position.z);
+                    // Vector3 destination = TileManager.Ins.antNest.transform.position
+                    //     .AddY(1.5f)
+                    //     .ChangeZ(tile.transform.position.z);
 
-                    Tween.Position(transform, destination, duration: 0.3f);
-                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f);
-                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 1.5f, onCompleteAction: () =>
+                    // Tween.Position(transform, destination, duration: 0.5f);
+                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+
+                        });
+
+                    Tween.Position(transform, TileManager.Ins.antNest.transform.position, duration: 0.2f);
+                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position, duration: 0.3f);
+
+                    Vector3 antScale = transform.localScale;
+
+                    SaferioTween.ScaleDownWithPunch(transform, scaleUpVal: 1.2f, onCompleteAction: () =>
                     {
                         tile.Complete();
                         gameObject.SetActive(false);
 
+                        transform.localScale = antScale;
+
                         ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-                        antDissappearFx.transform.position = transform.position;
+                        antDissappearFx.transform.position = tile.transform.position;
                         antDissappearFx.Play();
 
                         SoundManager.Instance.PlaySoundCubeLand();
