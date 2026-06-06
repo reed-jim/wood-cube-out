@@ -151,8 +151,8 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
-            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1);
-            destination = TileManager.Ins.antNest.position;
+            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1.8f);
+            destination = navMeshAgent.destination;
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;
             // AIPath.destination = TileManager.Ins.antNest.transform.position;
@@ -166,7 +166,7 @@ namespace AntsFlow
 
         }
 
-        public bool ReachedDestination(float threshold = 1)
+        public bool ReachedDestination(float threshold = 1f)
         {
             return Vector2.Distance(transform.position, destination) < threshold;
             // return AIPath.remainingDistance < 0.01f;

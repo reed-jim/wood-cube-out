@@ -23,6 +23,8 @@ namespace AntsFlow
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
         public Vector3 spawnScale = 0.6f * Vector3.one;
+
+        public List<Color> factions;
     }
 
 #if UNITY_EDITOR
@@ -33,8 +35,10 @@ namespace AntsFlow
         private int startX = 0;
         private int startY = 0;
         private int size = 16;
-        private Vector2 tileSpacing;
+        private Vector2 tileSpacing = 1.6f * Vector2.one;
         private string json;
+        private int numTileX = 12;
+        private int numTileY = 12;
 
         public override void OnInspectorGUI()
         {
@@ -48,9 +52,11 @@ namespace AntsFlow
             startY = EditorGUILayout.IntField("StartY", startY);
             size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
+            numTileX = EditorGUILayout.IntField("numTileX", numTileX);
+            numTileY = EditorGUILayout.IntField("numTileY", numTileY);
 
             GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
-            
+
             json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
 
             if (GUILayout.Button("Get Pool Faction"))
@@ -67,10 +73,25 @@ namespace AntsFlow
             {
                 FindTileBlockages(levelItem);
             }
-            
+
             if (GUILayout.Button("GenerateLevelFromJson"))
             {
                 GenerateLevelFromJson(levelItem, json);
+            }
+
+            if (GUILayout.Button("ReadLevel"))
+            {
+                ReadLevel(levelItem);
+            }
+
+            if (GUILayout.Button("GroupColors"))
+            {
+                GroupColors(levelItem);
+            }
+
+            if (GUILayout.Button("ReassignFactionForTiles"))
+            {
+                ReassignFactionForTiles(levelItem);
             }
         }
 
@@ -119,6 +140,70 @@ namespace AntsFlow
 
                     // Create tile
                     Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing.x, (y - startY) * tileSpacing.y, 0.01f * y);
+
+                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+                        level.tilePrefab,
+                        level.transform
+                    );
+                    tile.name = $"Tile {index}";
+                    tile.transform.position = spawnPos;
+
+                    tile.spriteRenderer.color = pixelColor;
+
+                    index++;
+                }
+            }
+
+            level.transform.position = level.spawnPosition;
+            level.transform.localScale = level.spawnScale;
+
+            EditorUtility.SetDirty(level);
+        }
+
+        void ReadLevel(LevelItem level)
+        {
+            List<GameObject> toRemoveObjects = new List<GameObject>();
+
+            for (int i = 0; i < level.transform.childCount; i++)
+            {
+                toRemoveObjects.Add(level.transform.GetChild(i).gameObject);
+            }
+
+            foreach (var item in toRemoveObjects)
+            {
+                DestroyImmediate(item, true);
+            }
+
+            level.transform.position = Vector3.zero;
+            level.transform.localScale = Vector3.one;
+
+            Color[] pixels = level.picture.texture.GetPixels();
+
+            int width = level.picture.texture.width;
+            int height = level.picture.texture.height;
+
+            int index = 0;
+
+            float pixelStepX = (float)width / numTileX;
+            float pixelStepY = (float)height / numTileY;
+
+            tileSpacing.y = tileSpacing.x * (pixelStepY / pixelStepX);
+
+            for (float y = 0; y < height; y += pixelStepY)
+            {
+                for (float x = 0; x < width; x += pixelStepX)
+                {
+                    int pixelX = (int)(x + 0.5f * pixelStepX);
+                    int pixelY = (int)(y + 0.7f * pixelStepY);
+
+                    Color pixelColor = pixels[pixelY * width + pixelX];
+
+                    // Skip transparent pixels if enabled
+                    if (pixelColor.a < 1)
+                        continue;
+
+                    // Create tile
+                    Vector3 spawnPos = new Vector3(pixelX / pixelStepX * tileSpacing.x, pixelY / pixelStepY * tileSpacing.y, 0.01f * y);
 
                     BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
                         level.tilePrefab,
@@ -248,6 +333,79 @@ namespace AntsFlow
                         tile.spriteRenderer.color = color;
                     }
                 }
+            }
+
+            EditorUtility.SetDirty(level);
+        }
+
+        private void GroupColors(LevelItem level)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            List<Color> colors = tiles.Select(item => item.spriteRenderer.color).ToList();
+
+            List<Color> groups = new();
+
+            float threshold = 0.05f;
+
+            foreach (var color in colors)
+            {
+                bool found = false;
+
+                for (int i = 0; i < groups.Count; i++)
+                {
+                    float distance = Vector3.Distance(
+                        new Vector3(color.r, color.g, color.b),
+                        new Vector3(groups[i].r, groups[i].g, groups[i].b));
+
+                    if (distance < threshold)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+
+                if (!found)
+                    groups.Add(color);
+            }
+
+
+            level.factions = groups;
+        }
+
+        private void ReassignFactionForTiles(LevelItem level)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            foreach (var tile in tiles)
+            {
+                tile.Faction = FindNearestFaction(tile.spriteRenderer.color, level.factions);
+            }
+
+            Color FindNearestFaction(Color color, List<Color> centers)
+            {
+                int bestIndex = 0;
+                float bestDistance = float.MaxValue;
+
+                Color outputFaction = color;
+
+                for (int i = 0; i < centers.Count; i++)
+                {
+                    float distance =
+                        Mathf.Pow(color.r - centers[i].r, 2) +
+                        Mathf.Pow(color.g - centers[i].g, 2) +
+                        Mathf.Pow(color.b - centers[i].b, 2);
+
+                    if (distance < bestDistance)
+                    {
+                        bestDistance = distance;
+                        bestIndex = i;
+
+                        outputFaction = centers[i];
+                    }
+                }
+
+                return outputFaction;
             }
 
             EditorUtility.SetDirty(level);

@@ -20,7 +20,11 @@ namespace AntsFlow
         public bool isLocked;
         public List<BaseTile> blockages;
 
-        public Color Faction => spriteRenderer.color;
+        public Color Faction
+        {
+            get => spriteRenderer.color;
+            set => spriteRenderer.color = value;
+        }
 
         public static event Action<BaseTile> tileCompleteEvent;
         public static event Action<Color> useClearOneColorBoosterEvent;
@@ -28,11 +32,19 @@ namespace AntsFlow
         void Awake()
         {
             tileCompleteEvent += OnTileCompleted;
+
+            Init();
         }
 
         void OnDestroy()
         {
             tileCompleteEvent -= OnTileCompleted;
+        }
+
+        public void Init()
+        {
+            spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(Faction);
+            spriteRenderer.color = Color.white;
         }
 
         public void MoveToAnt(BaseAnt ant)

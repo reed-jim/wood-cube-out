@@ -75,6 +75,9 @@ public class WashingMachineItem : MonoBehaviour
         Tween.Scale(transform, 2f, duration: 0.3f);
         SaferioTween.AlphaShow(lid);
 
+        spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
+        lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
+
         Setup(washingMachineStartSlot);
     }
 
