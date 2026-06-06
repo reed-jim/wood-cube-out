@@ -100,7 +100,7 @@ namespace AntsFlow
 
                         ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-                        antDissappearFx.transform.position = tile.transform.position;
+                        antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
                         antDissappearFx.Play();
 
                         SoundManager.Instance.PlaySoundCubeLand();

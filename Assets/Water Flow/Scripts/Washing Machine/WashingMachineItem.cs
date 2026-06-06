@@ -148,7 +148,7 @@ public class WashingMachineItem : MonoBehaviour
 
         Enable();
 
-        shadow.sprite = shadows[1];
+        SwitchShadow();
 
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
@@ -163,7 +163,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         Enable();
 
-        shadow.sprite = shadows[1];
+        SwitchShadow();
 
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
 
@@ -172,6 +172,18 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    private void SwitchShadow()
+    {
+        shadow.sprite = shadows[1];
+
+        shadow.gameObject.SetActive(false);
+
+        Tween.Delay(0.3f).OnComplete(() =>
+        {
+            SaferioTween.AlphaShow(shadow);
+        });
     }
 
     public virtual void Enable()
