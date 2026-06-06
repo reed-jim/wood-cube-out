@@ -22,6 +22,7 @@ public class WashingMachineSlot : MonoBehaviour
         unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
 
         lockSprite.gameObject.SetActive(isLocked);
+        unlockButton.gameObject.SetActive(isLocked);
     }
 
     void OnDestroy()
@@ -45,6 +46,7 @@ public class WashingMachineSlot : MonoBehaviour
         .OnComplete(() =>
         {
             lockSprite.gameObject.SetActive(false);
+            unlockButton.gameObject.SetActive(false);
 
             isLocked = false;
         });

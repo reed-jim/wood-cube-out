@@ -85,12 +85,13 @@ namespace AntsFlow
 
                         });
 
-                    Tween.Position(transform, TileManager.Ins.antNest.transform.position, duration: 0.2f);
-                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position, duration: 0.3f);
+                    Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
+                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
+                    Tween.Scale(transform, 0, duration: 0.3f);
 
                     Vector3 antScale = transform.localScale;
 
-                    SaferioTween.ScaleDownWithPunch(transform, scaleUpVal: 1.2f, onCompleteAction: () =>
+                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
                     {
                         tile.Complete();
                         gameObject.SetActive(false);
