@@ -80,7 +80,7 @@ namespace AntsFlow
 
                     Tween.Position(transform, destination, duration: 0.3f);
                     Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f);
-                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 1.8f, onCompleteAction: () =>
+                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 1.5f, onCompleteAction: () =>
                     {
                         tile.Complete();
                         gameObject.SetActive(false);
