@@ -146,6 +146,7 @@ namespace AntsFlow
             }
 
             tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
 
             navMeshAgent.enabled = false;
             navMeshAgent.areaMask = walkableMask;

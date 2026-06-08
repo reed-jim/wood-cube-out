@@ -254,7 +254,7 @@ public class WashingMachineItem : MonoBehaviour
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
-                ant.transform.position = transform.position.ChangeZ(-0.1f);
+                ant.transform.position = transform.position.AddY(0.274f).ChangeZ(-0.1f);
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);

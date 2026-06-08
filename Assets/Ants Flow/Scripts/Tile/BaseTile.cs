@@ -36,10 +36,12 @@ namespace AntsFlow
 
         public static event Action<BaseTile> tileCompleteEvent;
         public static event Action<Color> useClearOneColorBoosterEvent;
+        public static event Action<BaseTile> antStartMoveToTileEvent;
 
         void Awake()
         {
             tileCompleteEvent += OnTileCompleted;
+            antStartMoveToTileEvent += OnAntStartedMoveToTile;
 
             Init();
         }
@@ -47,6 +49,7 @@ namespace AntsFlow
         void OnDestroy()
         {
             tileCompleteEvent -= OnTileCompleted;
+            antStartMoveToTileEvent -= OnAntStartedMoveToTile;
         }
 
         public void Init()
@@ -67,7 +70,7 @@ namespace AntsFlow
             Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
 
             transform.SetParent(ant.transform);
-            Tween.LocalPosition(transform, new Vector3(0, 1f, -1), duration: 0.3f);
+            Tween.LocalPosition(transform, new Vector3(0, 0.64f, -1), duration: 0.3f);
             // Tween.Scale(transform, 0.45f, duration: 0.3f);
             Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
@@ -83,7 +86,17 @@ namespace AntsFlow
             tileCompleteEvent.Invoke(this);
         }
 
+        public void InvokeAntStartMoveToTileEvent()
+        {
+            antStartMoveToTileEvent?.Invoke(this);
+        }
+
         private void OnTileCompleted(BaseTile tile)
+        {
+
+        }
+
+        private void OnAntStartedMoveToTile(BaseTile tile)
         {
             blockages.Remove(tile);
         }
