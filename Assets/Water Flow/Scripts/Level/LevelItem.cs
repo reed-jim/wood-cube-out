@@ -292,8 +292,6 @@ namespace AntsFlow
                 paletteMap[p.key] = HexToColor(p.fill);
             }
 
-            float tileSpacing = 1;
-
             // Generate grid
             for (int row = 0; row < data.gridRows; row++)
             {
@@ -313,8 +311,8 @@ namespace AntsFlow
 
                     // Create tile
                     Vector3 pos = new Vector3(
-                        col * tileSpacing,
-                        -row * tileSpacing,
+                        col * tileSpacing.x,
+                        -row * tileSpacing.y,
                         0
                     );
 

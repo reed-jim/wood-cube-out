@@ -7,14 +7,18 @@ using UnityEngine;
 
 public class AntBoxLink : MonoBehaviour
 {
-    [SerializeField] private LineRenderer link;
+    [SerializeField] private SpriteRenderer link;
 
     [SerializeField] private WashingMachineItem[] antBoxes;
+
+    private MaterialPropertyBlock materialPropertyBlock;
 
     void Awake()
     {
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
         WashingMachineItem.antBoxDoneEvent += OnAntBoxDone;
+
+        materialPropertyBlock = new MaterialPropertyBlock();
     }
 
     void OnDestroy()
@@ -34,12 +38,12 @@ public class AntBoxLink : MonoBehaviour
 
         this.antBoxes = antBoxes;
 
-        link.positionCount = antBoxes.Length;
+        materialPropertyBlock.SetColor("_ColorLeft", antBoxes[0].faction);
+        materialPropertyBlock.SetColor("_ColorRight", antBoxes[1].faction);
 
-        for (int i = 0; i < antBoxes.Length; i++)
-        {
-            link.SetPosition(i, antBoxes[i].transform.position);
-        }
+        link.SetPropertyBlock(materialPropertyBlock);
+
+        PlaceTheLink();
     }
 
     private IEnumerator UpdateLinkPositions()
@@ -50,15 +54,31 @@ public class AntBoxLink : MonoBehaviour
 
         while (Time.time - startTime < 3)
         {
-            link.positionCount = antBoxes.Length;
-
-            for (int i = 0; i < antBoxes.Length; i++)
-            {
-                link.SetPosition(i, antBoxes[i].transform.position);
-            }
+            PlaceTheLink();
 
             yield return waitForSeconds;
         }
+    }
+
+    private void PlaceTheLink()
+    {
+        Vector3 a = antBoxes[0].transform.position;
+        Vector3 b = antBoxes[1].transform.position;
+
+        // Position sprite in the middle
+        transform.position = (a + b) * 0.5f;
+
+        // Rotate to face pointB
+        Vector3 dir = b - a;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0, 0, angle);
+
+        // Set width to distance between points
+        float distance = dir.magnitude;
+
+        Vector2 size = link.size;
+        size.x = distance;
+        link.size = size;
     }
 
     private void Unlink()
