@@ -1,10 +1,11 @@
 using Saferio.Util.SaferioTween;
+using TMPro;
 using UnityEngine;
 
 public class HiddenAntBox : WashingMachineItem
 {
     [SerializeField] private SpriteRenderer hiddenContainer;
-    [SerializeField] private SpriteRenderer questionMark;
+    [SerializeField] private TMP_Text questionMark;
 
     public override void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {

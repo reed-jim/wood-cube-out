@@ -17,6 +17,7 @@ public class AntBoxLink : MonoBehaviour
     {
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
         WashingMachineItem.antBoxDoneEvent += OnAntBoxDone;
+        WashingMachineItem.moveUpEvent += OnAntBoxMovingUp;
 
         materialPropertyBlock = new MaterialPropertyBlock();
     }
@@ -25,6 +26,7 @@ public class AntBoxLink : MonoBehaviour
     {
         WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
         WashingMachineItem.antBoxDoneEvent -= OnAntBoxDone;
+        WashingMachineItem.moveUpEvent -= OnAntBoxMovingUp;
     }
 
     public void Setup(WashingMachineItem[] antBoxes)
@@ -133,6 +135,11 @@ public class AntBoxLink : MonoBehaviour
         {
             StartCoroutine(UpdateLinkPositions());
         }
+    }
+
+    private void OnAntBoxMovingUp(WashingMachineItem antBox)
+    {
+        StartCoroutine(UpdateLinkPositions());
     }
 
     private void OnAntBoxDone(WashingMachineItem antBox)

@@ -219,6 +219,8 @@ namespace AntsFlow
 
                             isFound = true;
 
+                            washingMachineItem?.InvokeMoveUpEvent();
+
                             break;
                         }
                     }

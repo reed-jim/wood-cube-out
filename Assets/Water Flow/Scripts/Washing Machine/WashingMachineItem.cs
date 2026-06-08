@@ -40,6 +40,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
+    public static event Action<WashingMachineItem> moveUpEvent;
 
     void Awake()
     {
@@ -306,6 +307,11 @@ public class WashingMachineItem : MonoBehaviour
     protected virtual void OnAntBoxCompleted(WashingMachineItem antBox)
     {
 
+    }
+
+    public void InvokeMoveUpEvent()
+    {
+        moveUpEvent?.Invoke(this);
     }
 
     private void OnSelectTrueCompleted(TrackEntry trackEntry)
