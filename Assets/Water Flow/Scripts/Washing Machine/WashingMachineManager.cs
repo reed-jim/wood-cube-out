@@ -88,6 +88,7 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
 
+            Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddZ(-0.1f), duration: 0.3f)
             .OnComplete(() =>
             {

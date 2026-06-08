@@ -22,6 +22,8 @@ namespace AntsFlow
         public float rotationSpeed = 10f;
 
         public Color faction;
+        public int walkableMask;
+        public int walkableAndNestMask;
 
 
         public bool isMovingToTile;
@@ -39,6 +41,12 @@ namespace AntsFlow
             path = new NavMeshPath();
 
             materialPropertyBlock = new MaterialPropertyBlock();
+
+            int walkableArea = NavMesh.GetAreaFromName("Walkable");
+            int nestArea = NavMesh.GetAreaFromName("Nest");
+
+            walkableMask = 1 << walkableArea;
+            walkableAndNestMask = walkableMask | (1 << nestArea);
         }
 
         void Update()
@@ -98,19 +106,19 @@ namespace AntsFlow
 
                         transform.localScale = antScale;
 
-                        ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-                        antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
-                        antDissappearFx.Play();
-
-                        SoundManager.Instance.PlaySoundCubeLand();
-
                         navMeshAgent.enabled = true;
 
                         isMovingToNest = false;
                         isDroppingTile = false;
                         tile = null;
                     });
+
+                    ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+                    antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
+                    antDissappearFx.Play();
+
+                    SoundManager.Instance.PlaySoundCubeLand();
 
                     isDroppingTile = true;
 
@@ -139,8 +147,12 @@ namespace AntsFlow
 
             tile.isAntApproaching = true;
 
+            navMeshAgent.enabled = false;
+            navMeshAgent.areaMask = walkableMask;
+            navMeshAgent.enabled = true;
+
             navMeshAgent.destination = tile.transform.position.ChangeZ(transform.position.z);
-            destination = tile.transform.position;
+            destination = navMeshAgent.destination;
             // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
             //AILerp.destination = tile.transform.position;
             // AIDestinationSetter.target = tile.transform;
@@ -164,6 +176,8 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
+            navMeshAgent.areaMask = walkableAndNestMask;
+
             navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1.5f);
             destination = navMeshAgent.destination;
             // AILerp.destination = TileManager.Ins.antNest.position;
