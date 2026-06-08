@@ -190,6 +190,10 @@ MonoBehaviour:
   lid: {fileID: 3451961694251783844}
   shadow: {fileID: 379933700654909350}
   skeletonAnimation: {fileID: 5522793974852404075}
+  beginAnimation: begin
+  jumpAnimation: jump
+  selectTrueAnimation: select_true
+  selectFalseAnimation: select_fail
   shadows:
   - {fileID: 21300000, guid: 9722e491621a7eb498228f9e5382c93e, type: 3}
   - {fileID: 21300000, guid: 6567c6d9170e7b7459a276561b7f1439, type: 3}
@@ -435,7 +439,7 @@ Transform:
   m_GameObject: {fileID: 4557279254320150926}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.015, y: 0.274, z: -0.1}
+  m_LocalPosition: {x: 0.002, y: 0.312, z: -0.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -488,7 +492,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 1f6332407d68a3a488f479283c6f1f20, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 79eeadef50784464ebc25d1e8aae20a8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -527,7 +531,7 @@ Transform:
   m_GameObject: {fileID: 4994516180547850451}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.002, y: -0.881, z: -1}
+  m_LocalPosition: {x: 0.002, y: -0.881, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -626,7 +630,7 @@ MonoBehaviour:
   disableRenderingOnOverride: 1
   updateTiming: 1
   unscaledTime: 0
-  _animationName: idle
+  _animationName: begin
   loop: 1
   timeScale: 1
 --- !u!1 &8681561946960665055

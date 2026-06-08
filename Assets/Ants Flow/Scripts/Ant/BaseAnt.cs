@@ -173,8 +173,6 @@ namespace AntsFlow
 
             Vector2 nextDirection = isObstacle ? -transform.up : transform.up;
 
-            Debug.Log($"MoveToSingleStep {isObstacle} {nextDirection}");
-
             Vector3 nextPosition = nextDirection.x < 0 ? transform.position.ChangeX(-8) : transform.position.ChangeX(8);
 
             direction = nextPosition - transform.position;
@@ -187,14 +185,37 @@ namespace AntsFlow
             moveTween = Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
             .OnComplete(() =>
             {
-                nextPosition = position;
-                direction = nextPosition - transform.position;
+                isObstacle = Physics2D.Raycast(transform.position, position - transform.position);
 
-                Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
-                .OnComplete(() =>
+                if (isObstacle)
                 {
-                    onCompleteAction?.Invoke();
-                });
+                    nextPosition = position.ChangeX(transform.position.x);
+                    direction = nextPosition - transform.position;
+
+                    Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        nextPosition = position;
+                        direction = nextPosition - transform.position;
+
+                        Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                        .OnComplete(() =>
+                        {
+                            onCompleteAction?.Invoke();
+                        });
+                    });
+                }
+                else
+                {
+                    nextPosition = position;
+                    direction = nextPosition - transform.position;
+
+                    Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        onCompleteAction?.Invoke();
+                    });
+                }
             });
         }
 
