@@ -23,6 +23,7 @@ namespace AntsFlow
 
         private bool isUpdatingNavMesh;
         private Coroutine delayedUpdateNavmeshCoroutine;
+        private AsyncOperation navMeshUpdateOperation;
 
         public static event Action winLevelEvent;
 
@@ -31,6 +32,7 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
+            BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
 
             BuildGrids();
         }
@@ -38,6 +40,7 @@ namespace AntsFlow
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
+            BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
         }
 
         public BaseTile GetAvailableTile(Color faction)
@@ -65,33 +68,35 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            UpdateNavMesh(tile);
+            // UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
 
         public void UpdateNavMesh(BaseTile tile)
         {
-            if (isUpdatingNavMesh)
-            {
-                if (delayedUpdateNavmeshCoroutine != null)
-                {
-                    StopCoroutine(delayedUpdateNavmeshCoroutine);
-                }
-
-                delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
-
-                return;
-            }
-
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 
-            isUpdatingNavMesh = true;
+            // if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            // {
+            //     if (delayedUpdateNavmeshCoroutine != null)
+            //     {
+            //         StopCoroutine(delayedUpdateNavmeshCoroutine);
+            //     }
 
-            Tween.Delay(2).OnComplete(() =>
-            {
-                isUpdatingNavMesh = false;
-            });
+            //     delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
+
+            //     return;
+            // }
+
+            // navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            // isUpdatingNavMesh = true;
+
+            // Tween.Delay(2).OnComplete(() =>
+            // {
+            //     isUpdatingNavMesh = false;
+            // });
         }
 
         private IEnumerator DelayedUpdateNavmesh()

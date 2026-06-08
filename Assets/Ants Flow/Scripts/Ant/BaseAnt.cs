@@ -32,6 +32,8 @@ namespace AntsFlow
         public BaseTile tile;
         public Vector3 destination;
 
+        private int siblingIndex;
+
 
         void Awake()
         {
@@ -47,11 +49,13 @@ namespace AntsFlow
 
             walkableMask = 1 << walkableArea;
             walkableAndNestMask = walkableMask | (1 << nestArea);
+
+            siblingIndex = transform.GetSiblingIndex();
         }
 
         void Update()
         {
-            transform.position = transform.position.ChangeZ(-3);
+            transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
             Vector2 direction = navMeshAgent.velocity;
 
@@ -177,7 +181,9 @@ namespace AntsFlow
 
         public void MoveToNest()
         {
+            navMeshAgent.enabled = false;
             navMeshAgent.areaMask = walkableAndNestMask;
+            navMeshAgent.enabled = true;
 
             navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.2f);
             destination = TileManager.Ins.antNest.position.AddY(0.2f);

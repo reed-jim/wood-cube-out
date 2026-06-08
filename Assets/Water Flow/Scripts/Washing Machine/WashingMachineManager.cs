@@ -162,7 +162,7 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: i, out nextFaction, out numAnt);
+                GetNextAntSpawnByDifficulty(difficultyLevel: i / 3, out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
@@ -689,6 +689,8 @@ namespace AntsFlow
 
                 // CommonUtil.SumValueOfDictionary(result, faction, maxValue);
                 CommonUtil.SumValueOfDictionary(result, faction, CommonUtil.GaussianRange((int)(maxValue / 2f), maxValue));
+
+                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {faction} {numNotBlockedTilePerFaction[faction]}");
             }
 
             return result;
