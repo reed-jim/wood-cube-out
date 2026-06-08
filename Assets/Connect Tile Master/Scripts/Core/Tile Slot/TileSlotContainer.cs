@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private TMP_Text tileCountText;
     [SerializeField] private Button unlockButton;
     [SerializeField] private Image currentTileImage;
+    [SerializeField] private Image fakeTileImage;
     public Image lockImage;
 
     [SerializeField] private ItemCategory itemCategory;
@@ -70,7 +72,11 @@ public class TileSlotContainer : MonoBehaviour
         tiles.Add(tile);
 
         tileCountText.text = $"{tiles.Count}/{maxTile}";
+        fakeTileImage.sprite = currentTileImage.sprite;
         currentTileImage.sprite = tile.icon.sprite;
+
+        SaferioTween.AlphaShow(currentTileImage);
+        SaferioTween.AlphaHide(fakeTileImage);
     }
 
     public TileSlot GetAvailableTileSlot()
