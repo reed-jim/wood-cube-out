@@ -3,6 +3,7 @@ using System.Collections;
 using AntsFlow;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using static GameEnum;
@@ -12,6 +13,7 @@ public class WashingMachineItem : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer lid;
     public SpriteRenderer shadow;
+    public SkeletonAnimation skeletonAnimation;
 
     public Sprite[] shadows;
 
@@ -86,6 +88,10 @@ public class WashingMachineItem : MonoBehaviour
         spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
         lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
         shadow.sprite = shadows[0];
+
+        skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+        skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+        skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
         Setup(washingMachineStartSlot);
     }
@@ -244,7 +250,7 @@ public class WashingMachineItem : MonoBehaviour
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
 
         SaferioTween.AlphaHide(lid);
-        Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1.2f, duration: 0.3f);
+        Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
 
         yield return new WaitForSeconds(0.3f);
 
@@ -254,7 +260,7 @@ public class WashingMachineItem : MonoBehaviour
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
-                ant.transform.position = transform.position.AddY(0.274f).ChangeZ(-0.1f);
+                ant.transform.position = transform.position.AddY(0.6f).ChangeZ(-0.1f);
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);

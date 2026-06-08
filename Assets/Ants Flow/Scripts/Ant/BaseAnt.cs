@@ -1,3 +1,4 @@
+using System;
 using Pathfinding;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -8,7 +9,6 @@ namespace AntsFlow
 {
     public class BaseAnt : MonoBehaviour
     {
-        [SerializeField] private NavMeshAgent navMeshAgent;
         // [SerializeField] private Seeker seeker;
         // [SerializeField] private AILerp AILerp;
         // [SerializeField] private AIPath AIPath;
@@ -19,6 +19,7 @@ namespace AntsFlow
 
         private NavMeshPath path;
 
+        public float moveSpeed = 1;
         public float rotationSpeed = 10f;
 
         public Color faction;
@@ -31,13 +32,13 @@ namespace AntsFlow
         public bool isDroppingTile;
         public BaseTile tile;
         public Vector3 destination;
+        public Vector2 direction;
+
+        private Tween moveTween;
 
 
         void Awake()
         {
-            navMeshAgent.updateRotation = false;
-            navMeshAgent.updateUpAxis = false;
-
             path = new NavMeshPath();
 
             materialPropertyBlock = new MaterialPropertyBlock();
@@ -53,21 +54,15 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-3);
 
-            Vector2 direction = navMeshAgent.velocity;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            // Avoid jitter when nearly stopped
-            if (direction.sqrMagnitude > 0.01f)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
-            }
+            transform.rotation = Quaternion.Lerp(
+                transform.rotation,
+                targetRotation,
+                rotationSpeed * Time.deltaTime
+            );
 
             if (isMovingToTile)
             {
@@ -106,7 +101,7 @@ namespace AntsFlow
 
                         transform.localScale = antScale;
 
-                        navMeshAgent.enabled = true;
+                        // navMeshAgent.enabled = true;
 
                         isMovingToNest = false;
                         isDroppingTile = false;
@@ -122,7 +117,7 @@ namespace AntsFlow
 
                     isDroppingTile = true;
 
-                    navMeshAgent.enabled = false;
+                    // navMeshAgent.enabled = false;
                 }
             }
         }
@@ -134,6 +129,73 @@ namespace AntsFlow
             antRenderer.SetPropertyBlock(materialPropertyBlock);
 
             this.faction = faction;
+        }
+
+        public void MoveTo(Vector3 position, Action onCompleteAction = null)
+        {
+            bool isNearLeft = transform.position.x < 0;
+
+            Vector3 nextPosition = isNearLeft ? transform.position.ChangeX(-8) : transform.position.ChangeX(8);
+
+            direction = nextPosition - transform.position;
+
+            if (moveTween.isAlive)
+            {
+                moveTween.Stop();
+            }
+
+            moveTween = Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                nextPosition = transform.position.ChangeY(position.y);
+                direction = nextPosition - transform.position;
+
+                Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    nextPosition = transform.position.ChangeX(position.x);
+                    direction = nextPosition - transform.position;
+
+                    Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                    .OnComplete(() =>
+                    {
+                        onCompleteAction?.Invoke();
+                    });
+                });
+            });
+        }
+
+        public void MoveToSingleStep(Vector3 position, Action onCompleteAction = null)
+        {
+            bool isNearLeft = transform.position.x < 0;
+
+            bool isObstacle = Physics2D.Raycast(transform.position, transform.up);
+
+            Vector2 nextDirection = isObstacle ? -transform.up : transform.up;
+
+            Debug.Log($"MoveToSingleStep {isObstacle} {nextDirection}");
+
+            Vector3 nextPosition = nextDirection.x < 0 ? transform.position.ChangeX(-8) : transform.position.ChangeX(8);
+
+            direction = nextPosition - transform.position;
+
+            if (moveTween.isAlive)
+            {
+                moveTween.Stop();
+            }
+
+            moveTween = Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                nextPosition = position;
+                direction = nextPosition - transform.position;
+
+                Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+            });
         }
 
         public void MoveToTile()
@@ -148,59 +210,27 @@ namespace AntsFlow
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
 
-            navMeshAgent.enabled = false;
-            navMeshAgent.areaMask = walkableMask;
-            navMeshAgent.enabled = true;
+            destination = tile.transform.position;
 
-            navMeshAgent.destination = tile.transform.position.ChangeZ(transform.position.z);
-            destination = navMeshAgent.destination;
-            // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
-            //AILerp.destination = tile.transform.position;
-            // AIDestinationSetter.target = tile.transform;
-            // AIPath.destination = tile.transform.position;
+            MoveTo(tile.transform.position.ChangeZ(transform.position.z));
 
             this.tile = tile;
 
             isMovingToTile = true;
         }
 
-        public void OnPathComplete(Path p)
-        {
-            Debug.Log("A path was calculated. Did it fail with an error? " + p.error);
-
-            // if (!p.error) {
-            //     path = p;
-            //     // Reset the waypoint counter so that we start to move towards the first point in the path
-            //     currentWaypoint = 0;
-            // }
-        }
-
         public void MoveToNest()
         {
-            navMeshAgent.areaMask = walkableAndNestMask;
-
-            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(1.5f);
-            destination = navMeshAgent.destination;
-            // AILerp.destination = TileManager.Ins.antNest.position;
-            // AIDestinationSetter.target = TileManager.Ins.antNest;
-            // AIPath.destination = TileManager.Ins.antNest.transform.position;
+            destination = TileManager.Ins.antNest.position;
+            MoveToSingleStep(TileManager.Ins.antNest.position);
 
             isMovingToTile = false;
             isMovingToNest = true;
         }
 
-        private void WanderAroundThenMoveBackToDestination()
-        {
-
-        }
-
         public bool ReachedDestination(float threshold = 1f)
         {
             return Vector2.Distance(transform.position, destination) < threshold;
-            // return AIPath.remainingDistance < 0.01f;
-            // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
-
-            // return distance < 0.05f;
         }
     }
 }

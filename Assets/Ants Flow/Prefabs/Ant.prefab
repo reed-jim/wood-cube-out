@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 757617558201522317}
   - component: {fileID: 6123969967507386802}
-  - component: {fileID: 4537649281072822570}
   m_Layer: 0
   m_Name: Ant
   m_TagString: Untagged
@@ -46,9 +45,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e4ed276cb4f2f4599a9c3efc23b763, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.BaseAnt
-  navMeshAgent: {fileID: 4537649281072822570}
   spriteRenderer: {fileID: 0}
   antRenderer: {fileID: 251625072949987562}
+  moveSpeed: 5
   rotationSpeed: 6
   faction: {r: 0, g: 0, b: 0, a: 0}
   walkableMask: 0
@@ -58,28 +57,7 @@ MonoBehaviour:
   isDroppingTile: 0
   tile: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
---- !u!195 &4537649281072822570
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7633806343919385861}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 2
-  m_Speed: 6
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 0
-  m_AutoBraking: 0
-  m_AutoRepath: 1
-  m_Height: 0.01
-  m_BaseOffset: 0
-  m_WalkableMask: 1
-  m_ObstacleAvoidanceType: 0
+  direction: {x: 0, y: 0}
 --- !u!1 &7823964545588481959
 GameObject:
   m_ObjectHideFlags: 0

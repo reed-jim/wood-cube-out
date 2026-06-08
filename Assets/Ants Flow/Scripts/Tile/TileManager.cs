@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
@@ -21,6 +22,7 @@ namespace AntsFlow
         public Transform antNest;
 
         private bool isUpdatingNavMesh;
+        private Coroutine delayedUpdateNavmeshCoroutine;
 
         public static event Action winLevelEvent;
 
@@ -61,35 +63,22 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            UpdateNavMesh(tile);
+            // UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
 
         public void UpdateNavMesh(BaseTile tile)
         {
-            // navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
-
-            // var sources = new List<NavMeshBuildSource>();
-
-            // NavMeshBuilder.CollectSources(
-            //     navMeshSurface.transform,
-            //     LayerMask.GetMask("Default"),
-            //     NavMeshCollectGeometry.PhysicsColliders,
-            //     0,
-            //     new List<NavMeshBuildMarkup>(),
-            //     sources
-            // );
-
-            // NavMeshBuildSettings navMeshBuildSettings = NavMesh.GetSettingsByID(0);
-            // navMeshBuildSettings.preserveTilesOutsideBounds = true;
-
-            // NavMeshBuilder.UpdateNavMeshData(navMeshSurface.navMeshData, navMeshBuildSettings, sources, tile.boxCollider.bounds);
-
-            // astarPath.UpdateGraphs(collider.bounds);
-
             if (isUpdatingNavMesh)
             {
+                if (delayedUpdateNavmeshCoroutine != null)
+                {
+                    StopCoroutine(delayedUpdateNavmeshCoroutine);
+                }
+
+                delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
+
                 return;
             }
 
@@ -97,10 +86,17 @@ namespace AntsFlow
 
             isUpdatingNavMesh = true;
 
-            Tween.Delay(5).OnComplete(() =>
+            Tween.Delay(2).OnComplete(() =>
             {
                 isUpdatingNavMesh = false;
             });
+        }
+
+        private IEnumerator DelayedUpdateNavmesh()
+        {
+            yield return new WaitForSeconds(2);
+
+            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
         }
 
         public void UpdateTileCount()

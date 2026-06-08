@@ -62,8 +62,8 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
-        Vector3 a = antBoxes[0].transform.position;
-        Vector3 b = antBoxes[1].transform.position;
+        Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
+        Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
         // Position sprite in the middle
         transform.position = (a + b) * 0.5f;

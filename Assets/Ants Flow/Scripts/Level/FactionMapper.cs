@@ -27,6 +27,11 @@ public class FactionMapper : Singleton<FactionMapper>
     {
         return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
+
+    public string GetAntBoxSkin(Color faction)
+    {
+        return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
+    }
 }
 
 [Serializable]
@@ -42,6 +47,7 @@ public class SpriteContainer
     public Sprite antBoxSprite;
     public Sprite antBoxLidSprite;
     public Sprite tileSprite;
+    public string antBoxSkin;
 }
 
 #if UNITY_EDITOR
