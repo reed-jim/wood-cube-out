@@ -11,6 +11,7 @@ namespace AntsFlow
 {
     public class BaseTile : MonoBehaviour
     {
+        public Transform coordinate;
         public SpriteRenderer spriteRenderer;
         public SpriteRenderer shadow;
         public SpriteRenderer outline;

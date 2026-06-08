@@ -381,21 +381,21 @@ namespace AntsFlow
 
         public void UseBoosterShuffle()
         {
-            Dictionary<Color, int> poolFactionSortedByDifficulty = GetRemaniningTilePerFaction();
+            // Dictionary<Color, int> poolFactionSortedByDifficulty = GetRemaniningTilePerFaction();
 
-            for (int i = 0; i < washingMachineSlots.Count; i++)
-            {
-                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+            // for (int i = 0; i < washingMachineSlots.Count; i++)
+            // {
+            //     WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
 
-                if (washingMachineSlot.washingMachineItem != null)
-                {
-                    CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
-                }
-            }
+            //     if (washingMachineSlot.washingMachineItem != null)
+            //     {
+            //         CommonUtil.SumValueOfDictionary(poolFactionSortedByDifficulty, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+            //     }
+            // }
 
-            poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            // poolFactionSortedByDifficulty = poolFactionSortedByDifficulty.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
-            int index = 0;
+            // int index = 0;
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
@@ -405,11 +405,14 @@ namespace AntsFlow
                 {
                     WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    KeyValuePair<Color, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
+                    // KeyValuePair<Color, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
 
-                    washingMachine.Init(washingMachineStartSlot, keyValuePair.Key, keyValuePair.Value);
+                    Color nextFaction;
+                    int numAnt;
 
-                    index++;
+                    GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt);
+
+                    washingMachine.Init(washingMachineStartSlot, nextFaction, numAnt);
                 }
             }
         }

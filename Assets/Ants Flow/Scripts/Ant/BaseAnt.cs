@@ -152,8 +152,8 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableMask;
             navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = tile.transform.position.ChangeZ(transform.position.z);
-            destination = navMeshAgent.destination;
+            navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(transform.position.z);
+            destination = tile.transform.position.ChangeZ(transform.position.z);
             // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
             //AILerp.destination = tile.transform.position;
             // AIDestinationSetter.target = tile.transform;
@@ -180,7 +180,7 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableAndNestMask;
 
             navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.2f);
-            destination = navMeshAgent.destination;
+            destination = TileManager.Ins.antNest.position.AddY(0.2f);
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;
             // AIPath.destination = TileManager.Ins.antNest.transform.position;

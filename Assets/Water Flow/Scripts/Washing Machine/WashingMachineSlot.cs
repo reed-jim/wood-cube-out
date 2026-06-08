@@ -1,5 +1,7 @@
 using System;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -9,6 +11,7 @@ public class WashingMachineSlot : MonoBehaviour
     public SpriteRenderer lockSprite;
 
     public Button unlockButton;
+    public Image unlockButtonIcon;
 
     public WashingMachineItem washingMachineItem;
     public bool isLocked;
@@ -18,6 +21,7 @@ public class WashingMachineSlot : MonoBehaviour
     void Awake()
     {
         BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockBought;
+        LevelLoader.startLevelEvent += OnLevelLoaded;
 
         unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
 
@@ -28,6 +32,7 @@ public class WashingMachineSlot : MonoBehaviour
     void OnDestroy()
     {
         BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockBought;
+        LevelLoader.startLevelEvent -= OnLevelLoaded;
     }
 
     private void ClickButtonUnlockByAds()
@@ -42,6 +47,7 @@ public class WashingMachineSlot : MonoBehaviour
 
     public void Unlock()
     {
+        SaferioTween.AlphaHide(unlockButtonIcon);
         Tween.Alpha(lockSprite, 0, duration: 0.3f)
         .OnComplete(() =>
         {
@@ -58,5 +64,10 @@ public class WashingMachineSlot : MonoBehaviour
         {
             Unlock();
         }
+    }
+
+    private void OnLevelLoaded()
+    {
+        unlockButtonIcon.color = Color.white;
     }
 }
