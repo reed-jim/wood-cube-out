@@ -15,12 +15,12 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetAntBoxSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.antBoxSprite;
+        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
     public Sprite GetAntBoxLidSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.antBoxLidSprite;
+        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
     public Sprite GetTileSprite(Color faction)
@@ -44,8 +44,8 @@ public class ColorSpriteContainerPair
 [Serializable]
 public class SpriteContainer
 {
-    public Sprite antBoxSprite;
-    public Sprite antBoxLidSprite;
+    // public Sprite antBoxSprite;
+    // public Sprite antBoxLidSprite;
     public Sprite tileSprite;
     public string antBoxSkin;
 }

@@ -90,7 +90,7 @@ public class WashingMachineItem : MonoBehaviour
         numberText.transform.localPosition = numberTextInitialPosition;
 
         Tween.Scale(transform, 2f, duration: 0.3f);
-        SaferioTween.AlphaShow(lid);
+        // SaferioTween.AlphaShow(lid);
 
         spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
         lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
@@ -188,7 +188,7 @@ public class WashingMachineItem : MonoBehaviour
 
         shadow.gameObject.SetActive(false);
 
-        Tween.Delay(0.3f).OnComplete(() =>
+        Tween.Delay(0.5f).OnComplete(() =>
         {
             SaferioTween.AlphaShow(shadow);
         });
@@ -251,12 +251,10 @@ public class WashingMachineItem : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
 
-        SaferioTween.AlphaHide(lid);
+        yield return new WaitForSeconds(0.3f);
+
+        // SaferioTween.AlphaHide(lid);
         Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
-
-        skeletonAnimation.AnimationState.SetAnimation(0, jumpAnimation, false);
-
-        yield return new WaitForSeconds(0.8f);
 
         while (number > 0)
         {
@@ -323,5 +321,7 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+
+        // skeletonAnimation.AnimationState.SetAnimation(0, jumpAnimation, false);
     }
 }

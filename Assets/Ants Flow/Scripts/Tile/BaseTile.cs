@@ -54,9 +54,7 @@ namespace AntsFlow
 
         public void Init()
         {
-            faction = spriteRenderer.color;
-
-            spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(Faction);
+            spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(faction);
             spriteRenderer.color = Color.white;
         }
 

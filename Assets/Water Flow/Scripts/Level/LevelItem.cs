@@ -39,6 +39,7 @@ namespace AntsFlow
         private string json;
         private int numTileX = 12;
         private int numTileY = 12;
+        private float colorGroupThreshold = 0.05f;
 
         public override void OnInspectorGUI()
         {
@@ -54,6 +55,7 @@ namespace AntsFlow
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
+            colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
 
             GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
 
@@ -344,7 +346,7 @@ namespace AntsFlow
 
             List<Color> groups = new();
 
-            float threshold = 0.05f;
+            float threshold = colorGroupThreshold;
 
             foreach (var color in colors)
             {

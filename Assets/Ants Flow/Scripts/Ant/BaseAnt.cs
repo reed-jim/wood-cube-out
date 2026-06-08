@@ -77,11 +77,11 @@ namespace AntsFlow
             {
                 if (ReachedDestination())
                 {
-                    // Vector3 destination = TileManager.Ins.antNest.transform.position
-                    //     .AddY(1.5f)
-                    //     .ChangeZ(tile.transform.position.z);
+                    if (moveTween.isAlive)
+                    {
+                        moveTween.Stop();
+                    }
 
-                    // Tween.Position(transform, destination, duration: 0.5f);
                     Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
                         .OnComplete(() =>
                         {
@@ -135,7 +135,10 @@ namespace AntsFlow
         {
             bool isNearLeft = transform.position.x < 0;
 
-            Vector3 nextPosition = isNearLeft ? transform.position.ChangeX(-8) : transform.position.ChangeX(8);
+            int childIndex = transform.GetSiblingIndex();
+            float xOffset = childIndex % 2 == 0 ? 0.3f : -0.3f;
+
+            Vector3 nextPosition = isNearLeft ? transform.position.ChangeX(-10 + xOffset) : transform.position.ChangeX(10 + xOffset);
 
             direction = nextPosition - transform.position;
 
@@ -173,7 +176,10 @@ namespace AntsFlow
 
             Vector2 nextDirection = isObstacle ? -transform.up : transform.up;
 
-            Vector3 nextPosition = nextDirection.x < 0 ? transform.position.ChangeX(-8) : transform.position.ChangeX(8);
+            int childIndex = transform.GetSiblingIndex();
+            float xOffset = childIndex % 2 == 0 ? 0.3f : -0.3f;
+
+            Vector3 nextPosition = nextDirection.x < 0 ? transform.position.ChangeX(-10 + xOffset) : transform.position.ChangeX(10 + xOffset);
 
             direction = nextPosition - transform.position;
 

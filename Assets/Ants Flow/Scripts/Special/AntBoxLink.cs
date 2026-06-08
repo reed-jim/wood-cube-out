@@ -62,6 +62,7 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
+        Debug.Log("Place " + antBoxes[0].lid.transform.position);
         Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
         Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
@@ -83,9 +84,9 @@ public class AntBoxLink : MonoBehaviour
 
     private void Unlink()
     {
-        SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+        SaferioTween.AlphaHide(link, onCompleteAction: () =>
         {
-            transform.localScale = Vector3.one;
+            link.color = Color.white;
         });
     }
 

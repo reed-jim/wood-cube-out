@@ -88,16 +88,24 @@ namespace AntsFlow
 
             washingMachineItem.isMoving = true;
 
-            Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
-            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddZ(-0.1f), duration: 0.3f)
+            // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
+            Vector3 initialScale = washingMachineItem.transform.localScale;
+            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(1.5f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+            Tween.ScaleY(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.y, duration: 0.2f)
             .OnComplete(() =>
             {
-                washingMachineItem.isMoving = false;
-                washingMachineItem.washingMachineStartSlot.washingMachine = null;
+                Tween.Scale(washingMachineItem.transform, initialScale, duration: 0.2f);
 
-                washingMachineItem.SpawnAnts();
+                Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    washingMachineItem.isMoving = false;
+                    washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
-                MoveAntBoxTop();
+                    washingMachineItem.SpawnAnts();
+
+                    MoveAntBoxTop();
+                });
             });
 
             return washingMachineSlot;
@@ -158,7 +166,10 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
-            SpecialElementManager.Ins.SpawnAntBoxLink();
+            Tween.Delay(0.5f).OnComplete(() =>
+            {
+                SpecialElementManager.Ins.SpawnAntBoxLink();
+            });
 
             return washingMachineItems;
         }
