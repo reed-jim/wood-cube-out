@@ -31,6 +31,8 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
+
+            BuildGrids();
         }
 
         void OnDestroy()
@@ -63,7 +65,7 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // UpdateNavMesh(tile);
+            UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
@@ -115,5 +117,165 @@ namespace AntsFlow
                 winLevelEvent?.Invoke();
             }
         }
+
+
+
+
+        public List<GridNode> grids;
+
+        public void BuildGrids()
+        {
+            int row = 40;
+            int column = 40;
+            int distance = 1;
+
+            grids = new List<GridNode>(row * column);
+
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    int index = j + i * column;
+
+                    grids.Add(new GridNode(new Vector3(j - row / 2, row / 2 - i, 0), new Vector2Int(j - row / 2, row / 2 - i), null));
+                }
+            }
+        }
+
+        public void AssignTilesForGrids()
+        {
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
+                gridNode.tile = tiles[i];
+            }
+        }
+
+        public GridNode GetGridNode(Vector3 position)
+        {
+            return grids.First(item => item.Position == CommonUtil.GetVector2Int(position));
+        }
+
+        public List<GridNode> FindPath
+        (
+            GridNode start,
+            GridNode goal
+        )
+        {
+            var openSet = new List<GridNode> { start };
+            var closedSet = new HashSet<GridNode>();
+
+            var cameFrom = new Dictionary<GridNode, GridNode>();
+
+            var gScore = new Dictionary<GridNode, float>
+            {
+                [start] = 0
+            };
+
+            var fScore = new Dictionary<GridNode, float>
+            {
+                [start] = Heuristic(start, goal)
+            };
+
+            while (openSet.Count > 0)
+            {
+                GridNode current = openSet
+                    .OrderBy(n => fScore.GetValueOrDefault(n, float.MaxValue))
+                    .First();
+
+                if (current == goal)
+                    return ReconstructPath(cameFrom, current);
+
+                openSet.Remove(current);
+                closedSet.Add(current);
+
+                foreach (var neighbor in GetNeighbors(current, grids))
+                {
+                    if (neighbor.IsObstacle || closedSet.Contains(neighbor))
+                        continue;
+
+                    float tentativeG =
+                        gScore.GetValueOrDefault(current, float.MaxValue) + 1;
+
+                    if (tentativeG < gScore.GetValueOrDefault(neighbor, float.MaxValue))
+                    {
+                        cameFrom[neighbor] = current;
+                        gScore[neighbor] = tentativeG;
+                        fScore[neighbor] = tentativeG + Heuristic(neighbor, goal);
+
+                        if (!openSet.Contains(neighbor))
+                            openSet.Add(neighbor);
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        static float Heuristic(GridNode a, GridNode b)
+        {
+            return Mathf.Abs(a.Position.x - b.Position.x) +
+                   Mathf.Abs(a.Position.y - b.Position.y);
+        }
+
+        static List<GridNode> GetNeighbors(
+            GridNode node,
+            List<GridNode> grid)
+        {
+            Vector2Int[] dirs =
+            {
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
+
+            List<GridNode> neighbors = new();
+
+            foreach (var dir in dirs)
+            {
+                Vector2Int pos = node.Position + dir;
+
+                GridNode neighbor = grid.FirstOrDefault(
+                    n => n.Position == pos);
+
+                if (neighbor != null)
+                    neighbors.Add(neighbor);
+            }
+
+            return neighbors;
+        }
+
+        static List<GridNode> ReconstructPath(
+            Dictionary<GridNode, GridNode> cameFrom,
+            GridNode current)
+        {
+            List<GridNode> path = new() { current };
+
+            while (cameFrom.ContainsKey(current))
+            {
+                current = cameFrom[current];
+                path.Insert(0, current);
+            }
+
+            return path;
+        }
+    }
+}
+
+[Serializable]
+public class GridNode
+{
+    public Vector3 worldPosition;
+    public Vector2Int Position;
+    public AntsFlow.BaseTile tile;
+
+    public bool IsObstacle => tile != null;
+
+    public GridNode(Vector3 worldPosition, Vector2Int pos, AntsFlow.BaseTile tile)
+    {
+        this.worldPosition = worldPosition;
+        Position = pos;
+        this.tile = tile;
     }
 }

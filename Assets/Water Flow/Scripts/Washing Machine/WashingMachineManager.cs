@@ -60,6 +60,7 @@ namespace AntsFlow
 
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
+            TileManager.Ins.AssignTilesForGrids();
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines();
 
@@ -90,7 +91,7 @@ namespace AntsFlow
 
             // Tween.Scale(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.x, duration: 0.3f, cycles: 2, cycleMode: CycleMode.Yoyo);
             Vector3 initialScale = washingMachineItem.transform.localScale;
-            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(1.5f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
+            Tween.Position(washingMachineItem.transform, washingMachineSlot.transform.position.AddY(2.5f).AddZ(-0.1f), duration: 0.2f, ease: Ease.Linear);
             Tween.ScaleY(washingMachineItem.transform, 1.3f * washingMachineItem.transform.localScale.y, duration: 0.2f)
             .OnComplete(() =>
             {
