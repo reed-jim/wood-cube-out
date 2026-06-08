@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -24,6 +25,8 @@ public class TileSlotContainer : MonoBehaviour
     public bool isHidden;
     public int maxTile;
     public List<BaseTile> tiles;
+
+    public TileIconContainer tileIconContainer;
 
     public ItemCategory ItemCategory
     {
@@ -65,6 +68,11 @@ public class TileSlotContainer : MonoBehaviour
 
         lockImage.gameObject.SetActive(isLocked);
         categoryContainer.gameObject.SetActive(!isLocked);
+
+        currentTileImage.sprite = tileIconContainer.categoryIconSets.First(item => item.itemCategory == itemCategory).icons[0];
+        tileCountText.text = $"{tiles.Count}/{maxTile}";
+
+        fakeTileImage.gameObject.SetActive(false);
     }
 
     public void AddTile(BaseTile tile)
@@ -72,8 +80,15 @@ public class TileSlotContainer : MonoBehaviour
         tiles.Add(tile);
 
         tileCountText.text = $"{tiles.Count}/{maxTile}";
+    }
+
+    public void SwitchItem(BaseTile tile)
+    {
+        fakeTileImage.color = Color.white;
         fakeTileImage.sprite = currentTileImage.sprite;
         currentTileImage.sprite = tile.icon.sprite;
+
+        fakeTileImage.gameObject.SetActive(true);
 
         SaferioTween.AlphaShow(currentTileImage);
         SaferioTween.AlphaHide(fakeTileImage);
@@ -114,6 +129,8 @@ public class TileSlotContainer : MonoBehaviour
         {
             tileSlot.ClearTile();
         }
+
+        tiles.Clear();
     }
 
     private void ClickButtonUnlockByAds()

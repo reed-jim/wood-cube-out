@@ -362,6 +362,8 @@ public class TileManager : Singleton<TileManager>
                     {
                         tile.transform.SetParent(tileSlot.transform);
 
+                        tileSlotContainer.SwitchItem(tile);
+
                         if (tileSlotContainer.IsLastSlot(tileSlot))
                         {
                             bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
