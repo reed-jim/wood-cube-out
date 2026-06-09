@@ -75,28 +75,26 @@ namespace AntsFlow
 
         public void UpdateNavMesh(BaseTile tile)
         {
-            navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            {
+                if (delayedUpdateNavmeshCoroutine != null)
+                {
+                    StopCoroutine(delayedUpdateNavmeshCoroutine);
+                }
 
-            // if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
-            // {
-            //     if (delayedUpdateNavmeshCoroutine != null)
-            //     {
-            //         StopCoroutine(delayedUpdateNavmeshCoroutine);
-            //     }
+                delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
 
-            //     delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
+                return;
+            }
 
-            //     return;
-            // }
+            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
 
-            // navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            isUpdatingNavMesh = true;
 
-            // isUpdatingNavMesh = true;
-
-            // Tween.Delay(2).OnComplete(() =>
-            // {
-            //     isUpdatingNavMesh = false;
-            // });
+            Tween.Delay(2).OnComplete(() =>
+            {
+                isUpdatingNavMesh = false;
+            });
         }
 
         private IEnumerator DelayedUpdateNavmesh()

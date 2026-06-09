@@ -64,7 +64,6 @@ public class AntBoxLink : MonoBehaviour
 
     private void PlaceTheLink()
     {
-        Debug.Log("Place " + antBoxes[0].lid.transform.position);
         Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
         Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
@@ -139,7 +138,10 @@ public class AntBoxLink : MonoBehaviour
 
     private void OnAntBoxMovingUp(WashingMachineItem antBox)
     {
-        StartCoroutine(UpdateLinkPositions());
+        if (antBoxes.Contains(antBox))
+        {
+            StartCoroutine(UpdateLinkPositions());
+        }
     }
 
     private void OnAntBoxDone(WashingMachineItem antBox)

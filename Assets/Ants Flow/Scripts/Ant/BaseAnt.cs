@@ -1,6 +1,7 @@
 using Pathfinding;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -15,6 +16,7 @@ namespace AntsFlow
         // [SerializeField] private AIDestinationSetter AIDestinationSetter;
         [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Renderer antRenderer;
+        [SerializeField] private SkeletonAnimation skeletonAnimation;
         private MaterialPropertyBlock materialPropertyBlock;
 
         private NavMeshPath path;
@@ -136,6 +138,10 @@ namespace AntsFlow
             // spriteRenderer.color = faction;
             materialPropertyBlock.SetColor("_Color", faction);
             antRenderer.SetPropertyBlock(materialPropertyBlock);
+
+            // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+            // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
             this.faction = faction;
         }

@@ -1,25 +1,50 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 
 public class FreezedAntBox : WashingMachineItem
 {
-    [SerializeField] private SpriteRenderer freeze;
     [SerializeField] private TMP_Text numAntBoxToUnfreezeText;
+    [SerializeField] private SkeletonAnimation frozenSkeletonAnimation;
+    [SerializeField] private Renderer frozenSkeletonRenderer;
+    [SpineAnimation] public string frozenStateOneAnimation;
+    [SpineAnimation] public string frozenStateTwoAnimation;
+    [SpineAnimation] public string frozenStateThreeAnimation;
+
+    [SerializeField] private ParticleSystem iceBreakFx;
 
     public int numAntBoxToUnfreeze;
+    public int totalNumAntBoxToUnfreeze;
+
+    private MaterialPropertyBlock materialPropertyBlock;
+    private bool isPlayingIceBreakFx;
+
+    protected override void ExtendAwake()
+    {
+        base.ExtendAwake();
+
+        materialPropertyBlock = new MaterialPropertyBlock();
+    }
 
     public override void Init(WashingMachineStartSlot washingMachineStartSlot, Color faction, int number)
     {
         base.Init(washingMachineStartSlot, faction, number);
 
-        numAntBoxToUnfreeze = Random.Range(1, 9);
+        totalNumAntBoxToUnfreeze = Random.Range(1, 9);
+        numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
 
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
-        freeze.gameObject.SetActive(true);
+        frozenSkeletonAnimation.gameObject.SetActive(true);
 
-        SaferioTween.AlphaShow(freeze);
+        Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
+        {
+            materialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(Color.white, newVal));
+            frozenSkeletonRenderer.SetPropertyBlock(materialPropertyBlock);
+        });
+
         SaferioTween.AlphaShow(numAntBoxToUnfreezeText);
     }
 
@@ -35,7 +60,11 @@ public class FreezedAntBox : WashingMachineItem
 
     private void Unfreeze()
     {
-        SaferioTween.AlphaHide(freeze);
+        Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>
+        {
+            materialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(Color.white, newVal));
+            frozenSkeletonRenderer.SetPropertyBlock(materialPropertyBlock);
+        });
         SaferioTween.AlphaHide(numAntBoxToUnfreezeText);
     }
 
@@ -52,5 +81,44 @@ public class FreezedAntBox : WashingMachineItem
         {
             Unfreeze();
         }
+        else
+        {
+            if (!isPlayingIceBreakFx)
+            {
+                iceBreakFx.Play();
+
+                isPlayingIceBreakFx = true;
+
+                Tween.Delay(1, onComplete: () =>
+                {
+                    isPlayingIceBreakFx = false;
+                });
+            }
+        }
+
+        SetState();
+    }
+
+    private void SetState()
+    {
+        float progress = GetProgress();
+
+        if (progress > 0.5f)
+        {
+            frozenSkeletonAnimation.AnimationState.SetAnimation(0, frozenStateOneAnimation, false);
+        }
+        else if (progress > 0)
+        {
+            frozenSkeletonAnimation.AnimationState.SetAnimation(0, frozenStateThreeAnimation, false);
+        }
+        else
+        {
+            frozenSkeletonAnimation.AnimationState.SetAnimation(0, frozenStateThreeAnimation, false);
+        }
+    }
+
+    private float GetProgress()
+    {
+        return (float)numAntBoxToUnfreeze / totalNumAntBoxToUnfreeze;
     }
 }

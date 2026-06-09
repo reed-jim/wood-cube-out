@@ -28,7 +28,11 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
         {
             WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
-            if (washingMachine != null)
+            if (
+                washingMachine != null &&
+                washingMachine is not HiddenAntBox &&
+                washingMachine is not FreezedAntBox
+            )
             {
                 if (washingMachine.numSlotRequired == 1)
                 {

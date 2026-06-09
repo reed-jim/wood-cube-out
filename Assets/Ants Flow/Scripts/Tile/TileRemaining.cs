@@ -12,7 +12,7 @@ namespace AntsFlow
         {
             gameObject.SetActive(true);
 
-            spriteRenderer.color = Color.white;
+            spriteRenderer.color = tile.Faction;
 
             transform.position = tile.transform.position;
 

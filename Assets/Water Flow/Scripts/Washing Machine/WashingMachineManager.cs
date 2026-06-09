@@ -156,7 +156,7 @@ namespace AntsFlow
                     ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, washingMachineStartSlot.washingMachine.gameObject);
                 }
 
-                WashingMachineItem washingMachineItem = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(GameConstants.washingMachine);
+                WashingMachineItem washingMachineItem = GetAntBoxFromPool();
 
                 washingMachineItems.Add(washingMachineItem);
 
