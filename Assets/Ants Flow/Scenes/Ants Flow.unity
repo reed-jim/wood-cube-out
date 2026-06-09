@@ -3862,6 +3862,7 @@ MonoBehaviour:
   tileCountText: {fileID: 1440758466}
   tiles: []
   antNest: {fileID: 654761504}
+  grids: []
 --- !u!4 &732912310
 Transform:
   m_ObjectHideFlags: 0
@@ -4744,6 +4745,50 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2462661810120900210, guid: 34b4ec6dad621c545976b349ebd2784b, type: 3}
   m_PrefabInstance: {fileID: 863308308}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &870449591
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 870449593}
+  - component: {fileID: 870449592}
+  m_Layer: 0
+  m_Name: Tile Remaining Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &870449592
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870449591}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cbf186d44c43a054da01ae4200cf7250, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.TileRemainingManager
+--- !u!4 &870449593
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 870449591}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &929642186
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -12479,3 +12524,4 @@ SceneRoots:
   - {fileID: 1552864237}
   - {fileID: 451403621}
   - {fileID: 777790744}
+  - {fileID: 870449593}
