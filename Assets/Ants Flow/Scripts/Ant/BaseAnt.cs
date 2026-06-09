@@ -10,11 +10,6 @@ namespace AntsFlow
     public class BaseAnt : MonoBehaviour
     {
         [SerializeField] private NavMeshAgent navMeshAgent;
-        // [SerializeField] private Seeker seeker;
-        // [SerializeField] private AILerp AILerp;
-        // [SerializeField] private AIPath AIPath;
-        // [SerializeField] private AIDestinationSetter AIDestinationSetter;
-        [SerializeField] private SpriteRenderer spriteRenderer;
         [SerializeField] private Renderer antRenderer;
         [SerializeField] private SkeletonAnimation skeletonAnimation;
         private MaterialPropertyBlock materialPropertyBlock;
@@ -139,9 +134,9 @@ namespace AntsFlow
             materialPropertyBlock.SetColor("_Color", faction);
             antRenderer.SetPropertyBlock(materialPropertyBlock);
 
-            // skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
-            // skeletonAnimation.Skeleton.SetSlotsToSetupPose();
-            // skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
+            skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
+            skeletonAnimation.Skeleton.SetSlotsToSetupPose();
+            skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
             this.faction = faction;
         }

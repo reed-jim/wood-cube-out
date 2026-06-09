@@ -33,8 +33,6 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
-
-            BuildGrids();
         }
 
         void OnDestroy()

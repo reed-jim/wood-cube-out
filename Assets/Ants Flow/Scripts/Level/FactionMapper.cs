@@ -30,6 +30,7 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public string GetAntBoxSkin(Color faction)
     {
+        Debug.Log("SAFERIO " + faction);
         return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
     }
 }
@@ -50,22 +51,22 @@ public class SpriteContainer
     public string antBoxSkin;
 }
 
-#if UNITY_EDITOR
-[CustomEditor(typeof(FactionMapper))]
-public class FactionMapperEditor : Editor
-{
-    public override void OnInspectorGUI()
-    {
-        DrawDefaultInspector();
+// #if UNITY_EDITOR
+// [CustomEditor(typeof(FactionMapper))]
+// public class FactionMapperEditor : Editor
+// {
+//     public override void OnInspectorGUI()
+//     {
+//         DrawDefaultInspector();
 
-        LevelItem levelItem = (LevelItem)target;
+//         LevelItem levelItem = (LevelItem)target;
 
-        GUILayout.Space(10);
-    }
+//         GUILayout.Space(10);
+//     }
 
-    private void MapSpriteToColor(Sprite levelSprite)
-    {
+//     private void MapSpriteToColor(Sprite levelSprite)
+//     {
 
-    }
-}
-#endif
+//     }
+// }
+// #endif

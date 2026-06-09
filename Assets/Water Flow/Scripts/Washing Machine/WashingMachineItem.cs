@@ -17,7 +17,7 @@ public class WashingMachineItem : MonoBehaviour
     public SkeletonAnimation skeletonAnimation;
 
     [SpineAnimation] public string beginAnimation;
-    [SpineAnimation] public string jumpAnimation;
+    [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string selectTrueAnimation;
     [SpineAnimation] public string selectFalseAnimation;
 
@@ -93,8 +93,8 @@ public class WashingMachineItem : MonoBehaviour
         Tween.Scale(transform, 2f, duration: 0.3f);
         // SaferioTween.AlphaShow(lid);
 
-        spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
-        lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
+        // spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
+        // lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
         shadow.sprite = shadows[0];
 
         skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
@@ -261,6 +261,7 @@ public class WashingMachineItem : MonoBehaviour
 
         // SaferioTween.AlphaHide(lid);
         Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
+        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
 
         while (number > 0)
         {
@@ -325,14 +326,15 @@ public class WashingMachineItem : MonoBehaviour
 
         SwitchShadow();
 
-        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this);
+        WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+        {
+            
+        });
 
         SoundManager.Instance.PlaySoundBoxTap();
 
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
-
-        // skeletonAnimation.AnimationState.SetAnimation(0, jumpAnimation, false);
     }
 }
