@@ -30,7 +30,6 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public string GetAntBoxSkin(Color faction)
     {
-        Debug.Log("SAFERIO " + faction);
         return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
     }
 }

@@ -692,8 +692,6 @@ namespace AntsFlow
 
                 // CommonUtil.SumValueOfDictionary(result, faction, maxValue);
                 CommonUtil.SumValueOfDictionary(result, faction, CommonUtil.GaussianRange((int)(maxValue / 2f), maxValue));
-
-                Debug.Log($"GetNumAntSpawnPerFactionOrderByDifficulty {faction} {numNotBlockedTilePerFaction[faction]}");
             }
 
             return result;

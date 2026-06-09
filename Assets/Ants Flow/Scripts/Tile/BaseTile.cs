@@ -69,7 +69,7 @@ namespace AntsFlow
             Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
 
             transform.SetParent(ant.transform);
-            Tween.LocalPosition(transform, new Vector3(0, 0.48f, -1), duration: 0.3f);
+            Tween.LocalPosition(transform, new Vector3(0, 1f, -1), duration: 0.3f);
             // Tween.Scale(transform, 0.45f, duration: 0.3f);
             Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 

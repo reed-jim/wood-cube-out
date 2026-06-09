@@ -33,12 +33,14 @@ public class HiddenAntBox : WashingMachineItem
     {
         SaferioTween.AlphaShow(questionMark);
         SaferioTween.AlphaShow(hiddenContainer);
+        SaferioTween.AlphaHide(numberText);
     }
 
     public void Reveal()
     {
         SaferioTween.AlphaHide(questionMark);
         SaferioTween.AlphaHide(hiddenContainer);
+        SaferioTween.AlphaShow(numberText);
     }
 
     protected override void PlayInvalidSelectAnimation()

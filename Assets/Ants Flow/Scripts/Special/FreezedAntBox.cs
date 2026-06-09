@@ -39,6 +39,7 @@ public class FreezedAntBox : WashingMachineItem
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
         frozenSkeletonAnimation.gameObject.SetActive(true);
+        numberText.gameObject.SetActive(false);
 
         Tween.Custom(0, 1, duration: 0.3f, onValueChange: newVal =>
         {
@@ -74,6 +75,7 @@ public class FreezedAntBox : WashingMachineItem
             frozenSkeletonRenderer.SetPropertyBlock(materialPropertyBlock);
         });
         SaferioTween.AlphaHide(numAntBoxToUnfreezeText);
+        SaferioTween.AlphaShow(numberText);
     }
 
     protected override void OnAntBoxCompleted(WashingMachineItem antBox)

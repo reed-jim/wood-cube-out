@@ -8,10 +8,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Ant_Material
-  m_Shader: {fileID: 4800000, guid: 2b7b92b7956cb394d82509b784676fdd, type: 3}
+  m_Shader: {fileID: 4800000, guid: 1e8a610c9e01c3648bac42585e5fc676, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
-  m_ValidKeywords: []
+  m_ValidKeywords:
+  - _STRAIGHT_ALPHA_INPUT
   m_InvalidKeywords:
   - _USE8NEIGHBOURHOOD_ON
   m_LightmapFlags: 4
@@ -41,7 +42,7 @@ Material:
     - _Saturation: 1
     - _StencilComp: 8
     - _StencilRef: 1
-    - _StraightAlphaInput: 0
+    - _StraightAlphaInput: 1
     - _ThresholdEnd: 0.25
     - _Use8Neighbourhood: 1
     m_Colors:
