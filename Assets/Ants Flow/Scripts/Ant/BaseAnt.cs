@@ -74,7 +74,7 @@ namespace AntsFlow
 
             if (isMovingToTile)
             {
-                if (ReachedDestination(threshold: 0.5f))
+                if (ReachedDestination())
                 {
                     tile.MoveToAnt(this);
 
