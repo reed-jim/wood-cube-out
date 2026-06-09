@@ -7,8 +7,13 @@ public class CardStockPile : Singleton<CardStockPile>
 
     public int numCardLeft;
 
-    public void DrawNewCard(BaseTile toReplaceCard)
+    public void UpdateText()
     {
         numCardLeftText.text = $"{TileManager.Ins.itemCategoryPool.Count}";
+    }
+
+    public void DrawNewCard(BaseTile toReplaceCard)
+    {
+        UpdateText();
     }
 }

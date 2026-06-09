@@ -54,6 +54,18 @@ public class BoosterUI : MonoBehaviour
     private Vector2 _initialbreakObjectButtonPosition;
     private Vector2 _initialClearAllScrewPortsButtonPosition;
 
+    private bool _isInitialized;
+
+    private void InitializePositions()
+    {
+        if (_isInitialized) return;
+        _initialBoosterContainerPosition = boosterContainer.localPosition;
+        _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
+        _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
+        _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
+        _isInitialized = true;
+    }
+
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
@@ -80,10 +92,7 @@ public class BoosterUI : MonoBehaviour
 
     private void Start()
     {
-        _initialBoosterContainerPosition = boosterContainer.localPosition;
-        _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
-        _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
-        _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
+        InitializePositions();
     }
 
     void OnDestroy()
@@ -102,6 +111,8 @@ public class BoosterUI : MonoBehaviour
 
     private void Reset()
     {
+        InitializePositions();
+
         Tween.LocalPosition(boosterContainer, _initialBoosterContainerPosition, duration: transitionTime);
         Tween.LocalPosition(addMoreScrewPortButtonRT, _initialAddMoreScrewPortButtonPosition, duration: transitionTime);
         Tween.LocalPosition(breakModeButtonRT, _initialbreakObjectButtonPosition, duration: transitionTime);

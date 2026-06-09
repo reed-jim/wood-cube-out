@@ -23,4 +23,5 @@ public class CategoryIconSet
 {
     public ItemCategory itemCategory;
     public Sprite[] icons;
+    public string[] text;
 }

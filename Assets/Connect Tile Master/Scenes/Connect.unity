@@ -211,6 +211,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Additional Tile Slot 1
       objectReference: {fileID: 0}
+    - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7700459591640243349, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: isShelf
       value: 1
@@ -624,8 +628,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -60, y: 60}
-  m_SizeDelta: {x: 60, y: 60}
+  m_AnchoredPosition: {x: -51.4, y: 62.1}
+  m_SizeDelta: {x: 45, y: 45}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &112850787
 MonoBehaviour:
@@ -674,7 +678,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 46.6
+  m_fontSize: 34.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1420,11 +1424,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.44444445
+      value: 2.1471174
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.16216215
+      value: 2.167043
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -2940,6 +2944,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile Slot Container (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 170
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2966,11 +2990,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 260
+      value: 195
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3002,11 +3026,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -300
+      value: -192
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 960
+      value: 687
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -3983,11 +4007,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 2.1471174
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 2.167043
       objectReference: {fileID: 0}
     - target: {fileID: 1701801352705855816, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_AnchorMin.x
@@ -4132,6 +4156,10 @@ PrefabInstance:
     - target: {fileID: 6753653686871864712, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_Name
       value: Booster
+      objectReference: {fileID: 0}
+    - target: {fileID: 6753653686871864712, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6753653686871864712, guid: 26a52acb505b4b8479729e0cd4b6c42b, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6080,6 +6108,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile Slot Container (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 170
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4337613929886133818, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: isLocked
       value: 1
@@ -6110,11 +6158,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 260
+      value: 195
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6146,11 +6194,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -40
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 960
+      value: 687
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -6379,6 +6427,10 @@ PrefabInstance:
     - target: {fileID: 1458145355300776511, guid: c656d771f26760e4a9ea129b76e2e606, type: 3}
       propertyPath: m_StaticEditorFlags
       value: 2147483647
+      objectReference: {fileID: 0}
+    - target: {fileID: 2024698081237160427, guid: c656d771f26760e4a9ea129b76e2e606, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2024698081237160427, guid: c656d771f26760e4a9ea129b76e2e606, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -6878,6 +6930,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1910661385570204529, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3482841541842527475, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
       propertyPath: m_text
       value: Shop
@@ -6886,9 +6942,17 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 3665661190274508404, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4102773923515762754, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
       propertyPath: m_text
       value: Shop
+      objectReference: {fileID: 0}
+    - target: {fileID: 4844274461200625518, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5781427163644949665, guid: de99094ccd2479c4eab13ff8bc6fbad3, type: 3}
       propertyPath: m_LocalPosition.x
@@ -6983,8 +7047,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 520, y: 960}
-  m_SizeDelta: {x: 200, y: 260}
+  m_AnchoredPosition: {x: 408, y: 687}
+  m_SizeDelta: {x: 150, y: 195}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &995762913
 MonoBehaviour:
@@ -7309,6 +7373,10 @@ PrefabInstance:
     - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: m_Name
       value: Additional Tile Slot 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7700459591640243349, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: isShelf
@@ -8564,6 +8632,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile Slot Container (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 170
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4337613929886133818, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: isLocked
       value: 1
@@ -8594,11 +8682,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 260
+      value: 195
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8630,11 +8718,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 220
+      value: 208
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 960
+      value: 687
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -8794,7 +8882,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -320}
+  m_AnchoredPosition: {x: 0, y: -35}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1596626912
@@ -8804,7 +8892,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1596626910}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
   m_Name: 
@@ -8823,7 +8911,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -9659,6 +9747,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Additional Tile Slot 3
       objectReference: {fileID: 0}
+    - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7700459591640243349, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: isShelf
       value: 1
@@ -10240,6 +10332,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Additional Tile Slot 2
       objectReference: {fileID: 0}
+    - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7700459591640243349, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: isShelf
       value: 1
@@ -10603,7 +10699,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1917026409
 RectTransform:
   m_ObjectHideFlags: 0
@@ -11539,6 +11635,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tile Slot Container (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 170
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 1467741642239748155, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 140
+      objectReference: {fileID: 0}
+    - target: {fileID: 1707876683344763380, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -11565,11 +11681,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 200
+      value: 150
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 260
+      value: 195
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalPosition.x
@@ -11601,11 +11717,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -560
+      value: -392
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 960
+      value: 687
       objectReference: {fileID: 0}
     - target: {fileID: 8536052460354968310, guid: 9de96e5654f73b741a863c990c0e8035, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -12328,6 +12444,10 @@ PrefabInstance:
     - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: m_Name
       value: Additional Tile Slot
+      objectReference: {fileID: 0}
+    - target: {fileID: 6188579721205303517, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7700459591640243349, guid: 2cf2985c24ecb6744afb244d34eb9f4a, type: 3}
       propertyPath: isShelf

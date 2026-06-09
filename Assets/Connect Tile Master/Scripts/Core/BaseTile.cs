@@ -4,8 +4,9 @@ using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class BaseTile : MonoBehaviour
+public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
@@ -64,9 +65,12 @@ public class BaseTile : MonoBehaviour
     public float TopBound => container.localPosition.y + 0.5f * container.sizeDelta.y;
     public float BottomBound => container.localPosition.y - 0.5f * container.sizeDelta.y;
 
+    private Vector3 _originalPosition;
+    private int _originalSiblingIndex;
+
     void Awake()
     {
-        selectButton.onClick.AddListener(Select);
+        // selectButton.onClick.AddListener(Select);
     }
 
     public void Init(ItemCategory itemCategory, Sprite iconSprite)
@@ -121,23 +125,54 @@ public class BaseTile : MonoBehaviour
 
     public void Select()
     {
-        if (IsMoving || IsOnSlot)
-        {
-            return;
-        }
+    }
 
-        IsMoving = true;
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        if (IsMoving || IsOnSlot || IsDone) return;
 
-        Tween.Alpha(containerImage, 0, duration: 0.3f);
+        _originalPosition = transform.position;
+        _originalSiblingIndex = transform.GetSiblingIndex();
 
         transform.SetAsLastSibling();
+    }
 
-        TileManager.Ins.MoveTileToSlot(this, onCompleteAction: () =>
+    public void OnDrag(PointerEventData eventData)
+    {
+        if (IsMoving || IsOnSlot || IsDone) return;
+
+        if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                (RectTransform)transform.parent, 
+                eventData.position, 
+                eventData.pressEventCamera, 
+                out Vector3 worldPoint))
         {
-            IsMoving = false;
-        });
+            transform.position = worldPoint;
+        }
+    }
 
-        selectTileEvent?.Invoke(this);
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        if (IsMoving || IsOnSlot || IsDone) return;
+
+        if (TileManager.Ins.IsHoveringValidContainer(this.itemCategory, eventData.position, eventData.pressEventCamera))
+        {
+            IsMoving = true;
+
+            Tween.Alpha(containerImage, 0, duration: 0.3f);
+
+            TileManager.Ins.MoveTileToSlot(this, onCompleteAction: () =>
+            {
+                IsMoving = false;
+            });
+
+            selectTileEvent?.Invoke(this);
+        }
+        else
+        {
+            transform.position = _originalPosition;
+            transform.SetSiblingIndex(_originalSiblingIndex);
+        }
     }
 
     public void MoveToOutsideBox()

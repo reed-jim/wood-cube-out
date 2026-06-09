@@ -93,7 +93,7 @@ public class TileManager : Singleton<TileManager>
 
         tileSlotContainer.ClearTiles();
 
-        ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel);
+        ItemCategory nextCategory = GetNextCategoryForSlotBasedOnDifficulty(difficultyLevel, tileSlotContainer);
 
         if (nextCategory == ItemCategory.None)
         {
@@ -243,7 +243,7 @@ public class TileManager : Singleton<TileManager>
         return nextCategory;
     }
 
-    private ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel)
+    private ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel, TileSlotContainer requestingContainer)
     {
         // The higher the score, the easier
         Dictionary<ItemCategory, int> numTilePerCategory = new Dictionary<ItemCategory, int>();
@@ -252,7 +252,17 @@ public class TileManager : Singleton<TileManager>
         {
             BaseTile tile = tiles[i];
 
+            if (tile.IsDone)
+            {
+                continue;
+            }
+
             CommonUtil.SumValueOfDictionary(numTilePerCategory, tile.ItemCategory, 1);
+        }
+
+        for (int i = 0; i < itemCategoryPool.Count; i++)
+        {
+            CommonUtil.SumValueOfDictionary(numTilePerCategory, itemCategoryPool[i], 1);
         }
 
         Dictionary<ItemCategory, int> scoreOfEachCategory = new Dictionary<ItemCategory, int>();
@@ -269,45 +279,38 @@ public class TileManager : Singleton<TileManager>
             CommonUtil.SumValueOfDictionary(scoreOfEachCategory, item.Key, addedScore);
         }
 
-        for (int i = 0; i < itemCategoryPool.Count; i++)
-        {
-            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, itemCategoryPool[i], 1);
-        }
-
         scoreOfEachCategory = scoreOfEachCategory.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
 
         ItemCategory[] sortedCategory = scoreOfEachCategory.OrderByDescending(item => item.Value)
             .Select(kvp => kvp.Key)
             .ToArray();
 
-        // Debug
-        // foreach (var item in scoreOfEachCategory)
-        // {
-        //     Debug.Log($"scoreOfEachCategory {item.Key} {item.Value}");
-        // }
-
         for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
         {
-            if (!tileSlotContainers.Any(item => item.ItemCategory == sortedCategory[i]))
-            {
-                int remaningTileOfCategory = tiles.Where(i => !i.IsOnValidSlot).Count(item => item.ItemCategory == sortedCategory[i]) +
-                    itemCategoryPool.Count(item => item == sortedCategory[i]);
+            ItemCategory category = sortedCategory[i];
+            
+            int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
+            int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
 
-                if (remaningTileOfCategory >= 4)
+            if (totalNotDone >= (activeContainersForCategory + 1) * 4)
+            {
+                if (activeContainersForCategory == 0)
                 {
-                    return sortedCategory[i];
+                    return category;
                 }
             }
         }
 
-        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        for (int i = 0; i < scoreOfEachCategory.Count; i++)
         {
-            int remaningTileOfCategory = tiles.Where(i => !i.IsOnValidSlot).Count(item => item.ItemCategory == sortedCategory[i]) +
-                    itemCategoryPool.Count(item => item == sortedCategory[i]);
+            ItemCategory category = sortedCategory[i];
+            
+            int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
+            int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
 
-            if (remaningTileOfCategory >= 4)
+            if (totalNotDone >= (activeContainersForCategory + 1) * 4)
             {
-                return sortedCategory[i];
+                return category;
             }
         }
 
@@ -427,6 +430,50 @@ public class TileManager : Singleton<TileManager>
         });
 
         slot.AddTile(tile);
+    }
+
+    public bool HasOpenContainerOfCategory(ItemCategory category)
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.isLocked || tileSlotContainer.isHidden || tileSlotContainer.isMoving)
+            {
+                continue;
+            }
+
+            if (tileSlotContainer.ItemCategory == category && tileSlotContainer.GetAvailableTileSlot() != null)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public bool IsHoveringValidContainer(ItemCategory category, Vector2 screenPoint, Camera camera)
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            TileSlotContainer tileSlotContainer = tileSlotContainers[i];
+
+            if (tileSlotContainer.isLocked || tileSlotContainer.isHidden || tileSlotContainer.isMoving)
+            {
+                continue;
+            }
+
+            if (tileSlotContainer.ItemCategory == category && tileSlotContainer.GetAvailableTileSlot() != null)
+            {
+                RectTransform rectTransform = tileSlotContainer.GetComponent<RectTransform>();
+                if (rectTransform != null && RectTransformUtility.RectangleContainsScreenPoint(rectTransform, screenPoint, camera))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private void MoveTileToAdditionalSlot(BaseTile tile, Action onCompleteAction)
@@ -582,6 +629,11 @@ public class TileManager : Singleton<TileManager>
 
         for (int i = 0; i < grids.Length; i++)
         {
+            if (itemCategoryPool.Count <= 0)
+            {
+                break;
+            }
+
             if (grids[i].tile == null)
             {
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
@@ -610,7 +662,7 @@ public class TileManager : Singleton<TileManager>
     {
         int col = 5;
         int row = GetRandomRow(col, 4, 6);
-        float tileSpacing = 1.05f * 260;
+        float tileSpacing = 1.05f * 195;
 
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;
@@ -679,6 +731,8 @@ public class TileManager : Singleton<TileManager>
                 tileContainer.sizeDelta = new Vector2(rightMost - leftMost, topMost - bottomMost);
             }
         }
+
+        CardStockPile.Ins.UpdateText();
 
         BaseTile SpawnTile(int xIndex, int yIndex)
         {
@@ -798,25 +852,9 @@ public class TileManager : Singleton<TileManager>
 
     private void ArrangeSlotsInShelf()
     {
-        float distance = 1.15f * additionalTileSlots[0].Size.x;
-        float totalWidth = (totalSlotInShelf - 1) * distance;
-
-        Vector3 position = additionalTileSlots[0].transform.localPosition;
-
         for (int i = 0; i < additionalTileSlots.Count; i++)
         {
-            if (!additionalTileSlots[i].gameObject.activeInHierarchy)
-            {
-                additionalTileSlots[i].containerImage.color = additionalTileSlots[i].containerImage.color.ChangeAlpha(0);
-                Tween.Alpha(additionalTileSlots[i].containerImage, 1, duration: 0.3f);
-            }
-
-            additionalTileSlots[i].gameObject.SetActive(i < totalSlotInShelf);
-            additionalTileSlots[i].isLocked = i >= totalSlotInShelf;
-
-            position.x = -totalWidth / 2f + i * distance;
-
-            Tween.LocalPositionX(additionalTileSlots[i].transform, position.x, duration: 0.3f);
+            additionalTileSlots[i].gameObject.SetActive(false);
         }
     }
 
