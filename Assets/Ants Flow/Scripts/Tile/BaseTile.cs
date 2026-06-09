@@ -22,6 +22,8 @@ namespace AntsFlow
         public bool isLocked;
         public List<BaseTile> blockages;
 
+        public int priority;
+
         [SerializeField] private Color faction;
 
         public Color Faction

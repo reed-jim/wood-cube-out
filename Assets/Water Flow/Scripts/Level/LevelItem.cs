@@ -95,6 +95,11 @@ namespace AntsFlow
             {
                 ReassignFactionForTiles(levelItem);
             }
+
+            if (GUILayout.Button("AssignLevelPriority"))
+            {
+                AssignLevelPriority(levelItem);
+            }
         }
 
         private void GetPoolFaction(LevelItem levelItem)
@@ -406,6 +411,44 @@ namespace AntsFlow
                 }
 
                 return outputFaction;
+            }
+
+            EditorUtility.SetDirty(level);
+        }
+
+        private void AssignLevelPriority(LevelItem level)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            Vector3 center = Vector3.zero;
+
+            foreach (var tile in tiles)
+            {
+                center += tile.transform.localPosition;
+            }
+
+            center /= tiles.Length;
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                Vector2 pos = tile.transform.localPosition;
+
+                float dx = Mathf.Abs(pos.x - center.x);
+                float dy = Mathf.Abs(pos.y - center.y);
+
+                int ring = Mathf.RoundToInt(Mathf.Max(dx, dy));
+
+                // Base order: inner rings above outer rings
+                int order = ring * 1000;
+
+                // Within same ring:
+                // lower Y first, then lower X first
+                order += Mathf.RoundToInt(100 * (center.y - pos.y));
+                order += Mathf.RoundToInt(10 * (center.x - pos.x));
+
+                tile.priority = order;
             }
 
             EditorUtility.SetDirty(level);

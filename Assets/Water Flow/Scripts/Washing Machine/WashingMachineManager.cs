@@ -61,6 +61,8 @@ namespace AntsFlow
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
 
+            TileManager.Ins.CalculateLevelCenter();
+
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines();
 
             if (levelItem.isTutorialLevel)
@@ -168,10 +170,10 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
-            Tween.Delay(0.5f).OnComplete(() =>
-            {
-                SpecialElementManager.Ins.SpawnAntBoxLink();
-            });
+            // Tween.Delay(0.5f).OnComplete(() =>
+            // {
+            //     SpecialElementManager.Ins.SpawnAntBoxLink();
+            // });
 
             return washingMachineItems;
         }

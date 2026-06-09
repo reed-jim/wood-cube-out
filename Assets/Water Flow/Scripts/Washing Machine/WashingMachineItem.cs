@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using AntsFlow;
+using CandyCoded.HapticFeedback;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -90,7 +91,7 @@ public class WashingMachineItem : MonoBehaviour
         transform.localScale = Vector3.zero;
         numberText.transform.localPosition = numberTextInitialPosition;
 
-        Tween.Scale(transform, 2f, duration: 0.3f);
+        Tween.Scale(transform, 2.3f, duration: 0.3f);
         // SaferioTween.AlphaShow(lid);
 
         // spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
@@ -163,8 +164,12 @@ public class WashingMachineItem : MonoBehaviour
 
         Enable();
 
-        entry = skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
-        entry.Complete += OnSelectTrueCompleted;
+        skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
+
+        OnSelectTrueCompleted();
+
+        // entry = skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
+        // entry.Complete += OnSelectTrueCompleted;
     }
 
     public void ForceSelect()
@@ -186,6 +191,8 @@ public class WashingMachineItem : MonoBehaviour
     {
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
+
+        HapticFeedback.HeavyFeedback();
     }
 
     private void SwitchShadow()
@@ -320,15 +327,13 @@ public class WashingMachineItem : MonoBehaviour
         moveUpEvent?.Invoke(this);
     }
 
-    private void OnSelectTrueCompleted(TrackEntry trackEntry)
+    private void OnSelectTrueCompleted()
     {
-        entry.Complete -= OnSelectTrueCompleted;
-
         SwitchShadow();
 
         WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
         {
-            
+
         });
 
         SoundManager.Instance.PlaySoundBoxTap();
@@ -337,4 +342,22 @@ public class WashingMachineItem : MonoBehaviour
 
         selectWashingMachineEvent?.Invoke(this);
     }
+
+    // private void OnSelectTrueCompleted(TrackEntry trackEntry)
+    // {
+    //     entry.Complete -= OnSelectTrueCompleted;
+
+    //     SwitchShadow();
+
+    //     WashingMachineSlot washingMachineSlot = WashingMachineManager.Ins.MoveItemToSlot(this, onCompleteAction: () =>
+    //     {
+
+    //     });
+
+    //     SoundManager.Instance.PlaySoundBoxTap();
+
+    //     this.washingMachineSlot = washingMachineSlot;
+
+    //     selectWashingMachineEvent?.Invoke(this);
+    // }
 }

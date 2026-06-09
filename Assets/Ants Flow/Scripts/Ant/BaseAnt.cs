@@ -141,6 +141,11 @@ namespace AntsFlow
             this.faction = faction;
         }
 
+        public void EnableNavmesh(bool isEnable)
+        {
+            navMeshAgent.enabled = isEnable;
+        }
+
         public void MoveToTile()
         {
             BaseTile tile = TileManager.Ins.GetAvailableTile(faction);

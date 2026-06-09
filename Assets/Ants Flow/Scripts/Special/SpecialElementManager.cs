@@ -53,7 +53,7 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
     public void RandomizeNextLevelElement()
     {
-        // nextLevelElement = LevelElement.NormalAntBox;
-        nextLevelElement = CommonUtil.GetRandomEnumValue<LevelElement>();
+        nextLevelElement = LevelElement.NormalAntBox;
+        // nextLevelElement = CommonUtil.GetRandomEnumValue<LevelElement>();
     }
 }

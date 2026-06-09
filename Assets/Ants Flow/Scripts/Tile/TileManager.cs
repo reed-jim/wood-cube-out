@@ -24,6 +24,7 @@ namespace AntsFlow
         private bool isUpdatingNavMesh;
         private Coroutine delayedUpdateNavmeshCoroutine;
         private AsyncOperation navMeshUpdateOperation;
+        private Vector2 levelCenter;
 
         public static event Action winLevelEvent;
 
@@ -41,26 +42,92 @@ namespace AntsFlow
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
         }
 
+        public void CalculateLevelCenter()
+        {
+            levelCenter = Vector3.zero;
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                levelCenter += (Vector2)tile.transform.position;
+            }
+
+            levelCenter /= tiles.Count;
+        }
+
         public BaseTile GetAvailableTile(Color faction)
         {
-            bool isAvailable = tiles.Any(
-                i => i.gameObject.activeInHierarchy &&
-                i.blockages.Count < 4 &&
-                i.Faction == faction &&
-                !i.isAntApproaching
-                && !i.isLocked
-            );
+            // bool isAvailable = tiles.Any(
+            //     i => i.gameObject.activeInHierarchy &&
+            //     i.blockages.Count < 4 &&
+            //     i.Faction == faction &&
+            //     !i.isAntApproaching
+            //     && !i.isLocked
+            // );
 
-            if (isAvailable)
+            List<BaseTile> validTiles = new List<BaseTile>();
+
+            for (int i = 0; i < tiles.Count; i++)
             {
-                BaseTile availableTile =
-                    tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching && !i.isLocked);
+                BaseTile tile = tiles[i];
 
-                return availableTile;
+                if (tile.gameObject.activeInHierarchy &&
+                    tile.blockages.Count < 4 &&
+                    tile.Faction == faction &&
+                    !tile.isAntApproaching &&
+                    !tile.isLocked
+                )
+                {
+                    validTiles.Add(tile);
+                }
+            }
+
+            validTiles = validTiles.OrderByDescending(item => item.priority).ToList();
+            // validTiles = SortFrom9OClockCounterClockwise(validTiles, levelCenter);
+
+            // validTiles = validTiles
+            //     .OrderBy(p =>
+            //     {
+            //         Vector2 dir = ((Vector2)p.transform.position - levelCenter).normalized;
+
+            //         // Standard atan2 starts at +X (3 o'clock)
+            //         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+            //         // Shift so 9 o'clock becomes 0°
+            //         angle = (angle - 180f + 360f) % 360f;
+            //     }).ToList();
+
+            if (validTiles.Count > 0)
+            {
+                // BaseTile availableTile =
+                //     tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching && !i.isLocked);
+
+                // return availableTile;
+                return validTiles[0];
             }
             else
             {
                 return null;
+            }
+
+            List<BaseTile> SortFrom9OClockCounterClockwise(
+                List<BaseTile> tiles,
+                Vector2 center)
+            {
+                return tiles
+                    .OrderBy(tile =>
+                    {
+                        Vector2 dir = ((Vector2)tile.transform.position - center).normalized;
+
+                        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+
+                        // Make 9 o'clock (left) = 0°
+                        angle = (angle - 180f + 360f) % 360f;
+
+                        return angle;
+                    })
+                    .ToList();
             }
         }
 
