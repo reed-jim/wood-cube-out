@@ -73,6 +73,7 @@ namespace AntsFlow
             // Tween.Scale(transform, 0.45f, duration: 0.3f);
             Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
+            TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
         }
 
@@ -88,7 +89,7 @@ namespace AntsFlow
         public void InvokeAntStartMoveToTileEvent()
         {
             navMeshModifierVolume.enabled = false;
-            
+
             antStartMoveToTileEvent?.Invoke(this);
         }
 
