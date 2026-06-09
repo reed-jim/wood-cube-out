@@ -7,7 +7,8 @@ using UnityEngine;
 
 public class AntBoxLink : MonoBehaviour
 {
-    [SerializeField] private SpriteRenderer link;
+    [SerializeField] private SpriteRenderer leftHalf;
+    [SerializeField] private SpriteRenderer rightHalf;
 
     [SerializeField] private WashingMachineItem[] antBoxes;
 
@@ -40,10 +41,10 @@ public class AntBoxLink : MonoBehaviour
 
         this.antBoxes = antBoxes;
 
-        materialPropertyBlock.SetColor("_ColorLeft", antBoxes[0].faction);
-        materialPropertyBlock.SetColor("_ColorRight", antBoxes[1].faction);
+        // materialPropertyBlock.SetColor("_ColorLeft", antBoxes[0].faction);
+        // materialPropertyBlock.SetColor("_ColorRight", antBoxes[1].faction);
 
-        link.SetPropertyBlock(materialPropertyBlock);
+        // link.SetPropertyBlock(materialPropertyBlock);
 
         PlaceTheLink();
     }
@@ -67,27 +68,38 @@ public class AntBoxLink : MonoBehaviour
         Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
         Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
-        // Position sprite in the middle
-        transform.position = (a + b) * 0.5f;
-
-        // Rotate to face pointB
         Vector3 dir = b - a;
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
-
-        // Set width to distance between points
         float distance = dir.magnitude;
+        Vector3 mid = (a + b) * 0.5f;
 
-        Vector2 size = link.size;
-        size.x = distance;
-        link.size = size;
+        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+        Quaternion rot = Quaternion.Euler(0, 0, angle);
+
+        leftHalf.transform.position = mid;
+        rightHalf.transform.position = mid;
+
+        leftHalf.transform.rotation = rot;
+        rightHalf.transform.rotation = rot;
+
+        leftHalf.flipX = false;
+        rightHalf.flipX = true;
+
+        Vector2 size = leftHalf.size;
+        size.x = distance * 0.5f;
+
+        leftHalf.size = size;
+        rightHalf.size = size;
     }
 
     private void Unlink()
     {
-        SaferioTween.AlphaHide(link, onCompleteAction: () =>
+        SaferioTween.AlphaHide(leftHalf, onCompleteAction: () =>
         {
-            link.color = Color.white;
+            leftHalf.color = Color.white;
+        });
+        SaferioTween.AlphaHide(rightHalf, onCompleteAction: () =>
+        {
+            rightHalf.color = Color.white;
         });
     }
 

@@ -14,6 +14,7 @@ public class FreezedAntBox : WashingMachineItem
     [SpineAnimation] public string frozenStateThreeAnimation;
 
     [SerializeField] private ParticleSystem iceBreakFx;
+    [SerializeField] private ParticleSystem bigIceBreakFx;
 
     public int numAntBoxToUnfreeze;
     public int totalNumAntBoxToUnfreeze;
@@ -72,6 +73,11 @@ public class FreezedAntBox : WashingMachineItem
     {
         base.OnAntBoxCompleted(antBox);
 
+        if (numAntBoxToUnfreeze <= 0)
+        {
+            return;
+        }
+
         numAntBoxToUnfreeze--;
         numAntBoxToUnfreeze = Mathf.Max(numAntBoxToUnfreeze, 0);
 
@@ -80,6 +86,8 @@ public class FreezedAntBox : WashingMachineItem
         if (numAntBoxToUnfreeze == 0)
         {
             Unfreeze();
+
+            bigIceBreakFx.Play();
         }
         else
         {
