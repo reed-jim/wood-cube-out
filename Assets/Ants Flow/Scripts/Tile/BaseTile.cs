@@ -98,7 +98,7 @@ namespace AntsFlow
 
         public void InvokeAntStartMoveToTileEvent()
         {
-            navMeshModifierVolume.enabled = false;
+            // navMeshModifierVolume.enabled = false;
 
             antStartMoveToTileEvent?.Invoke(this);
         }

@@ -86,7 +86,7 @@ public class WinPopup : BasePopup
         _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
         _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 5);
 
-        coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
+        // coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
 
         if (!_isCollectCoinRemoteConfig)

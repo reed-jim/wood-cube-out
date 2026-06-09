@@ -280,6 +280,13 @@ public class WashingMachineItem : MonoBehaviour
 
     private void CheckAntsPath()
     {
+        if (isMoving)
+        {
+            return;
+        }
+
+        int addedTile = 0;
+
         for (int i = 0; i < remainingNumber; i++)
         {
             AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.GetAvailableTile(faction);
@@ -294,10 +301,12 @@ public class WashingMachineItem : MonoBehaviour
 
                 tile.isAntApproaching = true;
                 tile.InvokeRemoveTileAsBlockageEvent();
+
+                addedTile++;
             }
         }
 
-        remainingNumber -= tilesToMove.Count;
+        remainingNumber -= addedTile;
 
         tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
 

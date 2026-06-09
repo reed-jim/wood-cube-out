@@ -149,7 +149,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 50);
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
         RegisterPool<PathSlot>(GameConstants.pathSlot, pathSlotPrefab, 50);
-        RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 100);
+        RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 200);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 50);

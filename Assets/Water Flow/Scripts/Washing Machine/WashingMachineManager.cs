@@ -165,7 +165,7 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: i / 3, out nextFaction, out numAnt);
+                GetNextAntSpawnByDifficulty(difficultyLevel: i / 6, out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
