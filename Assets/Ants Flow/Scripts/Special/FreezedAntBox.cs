@@ -59,6 +59,13 @@ public class FreezedAntBox : WashingMachineItem
         return base.IsValidToSelect(currentNumSlotRequired) && numAntBoxToUnfreeze <= 0;
     }
 
+    protected override void PlayInvalidSelectAnimation()
+    {
+        Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+
+        iceBreakFx.Play();
+    }
+
     private void Unfreeze()
     {
         Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>

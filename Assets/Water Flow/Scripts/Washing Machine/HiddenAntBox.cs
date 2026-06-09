@@ -1,3 +1,4 @@
+using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
@@ -24,7 +25,7 @@ public class HiddenAntBox : WashingMachineItem
     public override void Enable()
     {
         base.Enable();
-        
+
         Reveal();
     }
 
@@ -38,5 +39,10 @@ public class HiddenAntBox : WashingMachineItem
     {
         SaferioTween.AlphaHide(questionMark);
         SaferioTween.AlphaHide(hiddenContainer);
+    }
+
+    protected override void PlayInvalidSelectAnimation()
+    {
+        Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
     }
 }

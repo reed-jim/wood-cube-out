@@ -156,8 +156,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         if (!IsValidToSelect(numSlotRequired))
         {
-            skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
-            // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
+            PlayInvalidSelectAnimation();
 
             return;
         }
@@ -181,6 +180,12 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    protected virtual void PlayInvalidSelectAnimation()
+    {
+        skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
+        // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
     }
 
     private void SwitchShadow()

@@ -68,24 +68,31 @@ public class AntBoxLink : MonoBehaviour
         Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
         Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
-        Vector3 dir = b - a;
+        if (a.x > b.x)
+        {
+            Vector3 temp = a;
+            a = b;
+            b = temp;
+        }
+
+        Vector2 dir = b - a;
         float distance = dir.magnitude;
         Vector3 mid = (a + b) * 0.5f;
 
         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
         Quaternion rot = Quaternion.Euler(0, 0, angle);
 
-        leftHalf.transform.position = mid;
-        rightHalf.transform.position = mid;
+        float halfLength = distance * 0.5f;
+
+        // Position each half halfway between its endpoint and the center
+        leftHalf.transform.position = (a + mid) * 0.5f;
+        rightHalf.transform.position = (b + mid) * 0.5f;
 
         leftHalf.transform.rotation = rot;
         rightHalf.transform.rotation = rot;
 
-        leftHalf.flipX = false;
-        rightHalf.flipX = true;
-
         Vector2 size = leftHalf.size;
-        size.x = distance * 0.5f;
+        size.x = halfLength;
 
         leftHalf.size = size;
         rightHalf.size = size;
