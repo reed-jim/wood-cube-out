@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using AntsFlow;
 using CandyCoded.HapticFeedback;
 using PrimeTween;
@@ -31,22 +33,27 @@ public class WashingMachineItem : MonoBehaviour
     public bool isTemporarilyEnabled;
     public int numSlotRequired = 1;
     public int number;
+    private int remainingNumber;
     public bool isMoving;
     public bool isAnimating;
+    public bool isInSlot;
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
     private Vector3 numberTextInitialPosition;
-    private TrackEntry entry;
+    private Coroutine spawningAntCoroutine;
 
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
 
+    public List<AntsFlow.BaseTile> tilesToMove;
+
     void Awake()
     {
         selectWashingMachineEvent += OnAntBoxSelected;
         antBoxDoneEvent += OnAntBoxCompleted;
+        AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
 
@@ -59,6 +66,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         selectWashingMachineEvent -= OnAntBoxSelected;
         antBoxDoneEvent -= OnAntBoxCompleted;
+        AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
 
         ExtendOnDestroy();
     }
@@ -103,7 +111,12 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
         skeletonAnimation.AnimationState.SetAnimation(0, beginAnimation, false);
 
+        tilesToMove = new List<AntsFlow.BaseTile>();
+
         Setup(washingMachineStartSlot);
+
+        isInSlot = false;
+        remainingNumber = number;
     }
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
@@ -257,22 +270,60 @@ public class WashingMachineItem : MonoBehaviour
         // ant.Init(faction);
         // ant.MoveToTile();
 
-        StartCoroutine(SpawningAnts());
+        // StartCoroutine(SpawningAnts());
+
+        Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
+        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+
+        CheckAntsPath();
+    }
+
+    private void CheckAntsPath()
+    {
+        for (int i = 0; i < remainingNumber; i++)
+        {
+            AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.GetAvailableTile(faction);
+
+            if (tile == null)
+            {
+                break;
+            }
+            else if (!tilesToMove.Contains(tile))
+            {
+                tilesToMove.Add(tile);
+
+                tile.isAntApproaching = true;
+                tile.InvokeRemoveTileAsBlockageEvent();
+            }
+        }
+
+        remainingNumber -= tilesToMove.Count;
+
+        tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
+
+        if (spawningAntCoroutine != null)
+        {
+            StopCoroutine(spawningAntCoroutine);
+        }
+
+        spawningAntCoroutine = StartCoroutine(SpawningAnts());
     }
 
     private IEnumerator SpawningAnts()
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.3f);
 
-        yield return new WaitForSeconds(0.3f);
+        // yield return new WaitForSeconds(0.3f);
 
         // SaferioTween.AlphaHide(lid);
-        Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
-        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        // Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
+        // skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
 
-        while (number > 0)
+        int currentAntIndex = 0;
+
+        while (tilesToMove.Count > 0)
         {
-            if (AntsFlow.TileManager.Ins.GetAvailableTile(faction) != null)
+            if (IsMovable(tilesToMove[currentAntIndex]))
             {
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
@@ -280,7 +331,7 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveToTile();
+                ant.MoveToTile(tilesToMove[currentAntIndex]);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -296,17 +347,40 @@ public class WashingMachineItem : MonoBehaviour
 
                     isAnimating = true;
                 }
-            }
 
-            yield return waitForSeconds;
+                tilesToMove.RemoveAt(currentAntIndex);
+
+                currentAntIndex = 0;
+
+                yield return waitForSeconds;
+            }
+            else
+            {
+                for (int i = 1; i < tilesToMove.Count; i++)
+                {
+                    if (IsMovable(tilesToMove[i]))
+                    {
+                        currentAntIndex = i;
+
+                        break;
+                    }
+                }
+
+                yield return new WaitForSeconds(1f / 60f);
+            }
         }
 
-        SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+        if (number == 0)
         {
-            washingMachineSlot.washingMachineItem = null;
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                washingMachineSlot.washingMachineItem = null;
 
-            antBoxDoneEvent?.Invoke(this);
-        });
+                antBoxDoneEvent?.Invoke(this);
+            });
+
+            isInSlot = false;
+        }
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)
@@ -314,6 +388,18 @@ public class WashingMachineItem : MonoBehaviour
         if (isTemporarilyEnabled)
         {
             Disable();
+        }
+
+        if (antBox != this)
+        {
+            if (isInSlot)
+            {
+                CheckAntsPath();
+            }
+        }
+        else
+        {
+            isInSlot = true;
         }
     }
 
@@ -341,6 +427,19 @@ public class WashingMachineItem : MonoBehaviour
         this.washingMachineSlot = washingMachineSlot;
 
         selectWashingMachineEvent?.Invoke(this);
+    }
+
+    private void OnTileCompleted(AntsFlow.BaseTile tile)
+    {
+        if (isInSlot)
+        {
+            CheckAntsPath();
+        }
+    }
+
+    private bool IsMovable(AntsFlow.BaseTile tile)
+    {
+        return tile.actualBlockages.Count < 4;
     }
 
     // private void OnSelectTrueCompleted(TrackEntry trackEntry)

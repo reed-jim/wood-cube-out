@@ -56,6 +56,8 @@ namespace AntsFlow
 
             Vector2 direction = navMeshAgent.velocity;
 
+            destination = navMeshAgent.destination;
+
             // Avoid jitter when nearly stopped
             if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
             {
@@ -146,15 +148,8 @@ namespace AntsFlow
             navMeshAgent.enabled = isEnable;
         }
 
-        public void MoveToTile()
+        public void MoveToTile(BaseTile tile)
         {
-            BaseTile tile = TileManager.Ins.GetAvailableTile(faction);
-
-            if (tile == null)
-            {
-                return;
-            }
-
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
 
@@ -162,8 +157,8 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableMask;
             navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(transform.position.z);
-            destination = tile.transform.position.ChangeZ(transform.position.z);
+            navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+            destination = tile.transform.position.ChangeZ(0);
             // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
             //AILerp.destination = tile.transform.position;
             // AIDestinationSetter.target = tile.transform;

@@ -21,6 +21,7 @@ namespace AntsFlow
         public bool isAntApproaching;
         public bool isLocked;
         public List<BaseTile> blockages;
+        public List<BaseTile> actualBlockages;
 
         public int ring;
         public int priority;
@@ -38,6 +39,7 @@ namespace AntsFlow
             }
         }
 
+        public static event Action<BaseTile> removeTileAsBlockageEvent;
         public static event Action<BaseTile> tileCompleteEvent;
         public static event Action<Color> useClearOneColorBoosterEvent;
         public static event Action<BaseTile> antStartMoveToTileEvent;
@@ -46,6 +48,10 @@ namespace AntsFlow
         {
             tileCompleteEvent += OnTileCompleted;
             antStartMoveToTileEvent += OnAntStartedMoveToTile;
+            removeTileAsBlockageEvent += OnRemoveTileAsBlockage;
+
+            actualBlockages = new List<BaseTile>();
+            actualBlockages.AddRange(blockages);
 
             Init();
         }
@@ -54,6 +60,7 @@ namespace AntsFlow
         {
             tileCompleteEvent -= OnTileCompleted;
             antStartMoveToTileEvent -= OnAntStartedMoveToTile;
+            removeTileAsBlockageEvent -= OnRemoveTileAsBlockage;
         }
 
         public void Init()
@@ -96,14 +103,32 @@ namespace AntsFlow
             antStartMoveToTileEvent?.Invoke(this);
         }
 
+        public void InvokeRemoveTileAsBlockageEvent()
+        {
+            removeTileAsBlockageEvent?.Invoke(this);
+        }
+
         private void OnTileCompleted(BaseTile tile)
         {
+            // if (actualBlockages.Contains(tile))
+            // {
+            //     actualBlockages.Remove(tile);
+            // }
+        }
 
+        private void OnRemoveTileAsBlockage(BaseTile tile)
+        {
+            blockages.Remove(tile);
         }
 
         private void OnAntStartedMoveToTile(BaseTile tile)
         {
             blockages.Remove(tile);
+
+            if (actualBlockages.Contains(tile))
+            {
+                actualBlockages.Remove(tile);
+            }
         }
 
         public void ClearAllTilesOfTheSameColor()
