@@ -13,9 +13,13 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private RectTransform categoryContainer;
     [SerializeField] private TMP_Text category;
     [SerializeField] private TMP_Text tileCountText;
+    [SerializeField] private TMP_Text txFilled;
+
     [SerializeField] private Button unlockButton;
     [SerializeField] private Image currentTileImage;
     [SerializeField] private Image fakeTileImage;
+    [SerializeField] private TMP_Text currentTileText;
+    [SerializeField] private TMP_Text fakeTileText;
     public Image lockImage;
 
     [SerializeField] private ItemCategory itemCategory;
@@ -23,6 +27,7 @@ public class TileSlotContainer : MonoBehaviour
     public bool isLocked;
     public bool isMoving;
     public bool isHidden;
+    public bool isCompleted;
     public int maxTile;
     public List<BaseTile> tiles;
 
@@ -61,58 +66,125 @@ public class TileSlotContainer : MonoBehaviour
         BuyBoosterPopup.unlockScrewBoxEvent -= Unlock;
     }
 
-    public void Init(ItemCategory itemCategory = ItemCategory.Vegetable)
+    private BaseTile tileTemp;
+
+    public void Init(ItemCategory itemCategory = ItemCategory.Fast_Food, int targetCardAmount = 4)
     {
         this.itemCategory = itemCategory;
-        category.text = $"{itemCategory}";
+        this.maxTile = targetCardAmount;
+        this.isCompleted = false;
+        category.text = itemCategory.ToString().Replace("_", " ");
 
         lockImage.gameObject.SetActive(isLocked);
         categoryContainer.gameObject.SetActive(!isLocked);
 
-        currentTileImage.sprite = tileIconContainer.categoryIconSets.First(item => item.itemCategory == itemCategory).icons[0];
-        tileCountText.text = $"{tiles.Count}/{maxTile}";
+        if (tileSlots != null && tileSlots.Length > 0)
+        {
+            for (int i = 0; i < tileSlots.Length; i++)
+            {
+                tileSlots[i].gameObject.SetActive(i == 0);
+            }
+        }
 
-        fakeTileImage.gameObject.SetActive(false);
+        CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == itemCategory);
+
+        bool hasText = iconSet.text != null && iconSet.text.Length > 0;
+        bool hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
+
+        bool useText = false;
+        if (hasText && hasIcon)
+        {
+            useText = UnityEngine.Random.value > 0.5f;
+        }
+        else if (hasText)
+        {
+            useText = true;
+        }
+        else if (hasIcon)
+        {
+            useText = false;
+        }
+
+        if (useText)
+        {
+            if (currentTileImage != null) currentTileImage.gameObject.SetActive(false);
+            if (currentTileText != null)
+            {
+                currentTileText.gameObject.SetActive(true);
+                currentTileText.text = tileIconContainer.GetRandomTextOfCategory(itemCategory);
+            }
+        }
+        else
+        {
+            if (currentTileText != null) currentTileText.gameObject.SetActive(false);
+            if (currentTileImage != null && hasIcon)
+            {
+                currentTileImage.gameObject.SetActive(true);
+                currentTileImage.sprite = iconSet.icons[UnityEngine.Random.Range(0, iconSet.icons.Length)];
+            }
+        }
+
+        if (fakeTileImage != null) fakeTileImage.gameObject.SetActive(false);
+        if (fakeTileText != null) fakeTileText.gameObject.SetActive(false);
+
+        tileCountText.text = $"{tiles.Count}/{maxTile}";
     }
 
     public void AddTile(BaseTile tile)
     {
         tiles.Add(tile);
-
         tileCountText.text = $"{tiles.Count}/{maxTile}";
     }
 
     public void SwitchItem(BaseTile tile)
     {
-        fakeTileImage.color = Color.white;
-        fakeTileImage.sprite = currentTileImage.sprite;
-        currentTileImage.sprite = tile.icon.sprite;
+        if (tile.IsText)
+        {
+            if (currentTileImage != null) currentTileImage.gameObject.SetActive(false);
+            if (fakeTileImage != null) fakeTileImage.gameObject.SetActive(false);
 
-        fakeTileImage.gameObject.SetActive(true);
+            if (currentTileText != null && fakeTileText != null)
+            {
+                fakeTileText.gameObject.SetActive(true);
+                fakeTileText.text = currentTileText.text;
+                fakeTileText.color = Color.white;
 
-        SaferioTween.AlphaShow(currentTileImage);
-        SaferioTween.AlphaHide(fakeTileImage);
+                currentTileText.gameObject.SetActive(true);
+                currentTileText.text = tile.category.text;
+                Color txtColor = currentTileText.color;
+                currentTileText.color = new Color(txtColor.r, txtColor.g, txtColor.b, 0f);
+
+                Tween.Alpha(currentTileText, 1f, duration: 0.3f);
+                Tween.Alpha(fakeTileText, 0f, duration: 0.3f).OnComplete(() => fakeTileText.gameObject.SetActive(false));
+            }
+        }
+        else
+        {
+            if (currentTileText != null) currentTileText.gameObject.SetActive(false);
+            if (fakeTileText != null) fakeTileText.gameObject.SetActive(false);
+
+            if (currentTileImage != null && fakeTileImage != null)
+            {
+                fakeTileImage.gameObject.SetActive(true);
+                fakeTileImage.sprite = currentTileImage.sprite;
+                fakeTileImage.color = Color.white;
+
+                currentTileImage.gameObject.SetActive(true);
+                currentTileImage.sprite = tile.icon.sprite;
+
+                SaferioTween.AlphaShow(currentTileImage);
+                SaferioTween.AlphaHide(fakeTileImage);
+            }
+        }
     }
 
     public TileSlot GetAvailableTileSlot()
     {
-        for (int i = 0; i < tileSlots.Length; i++)
+        if (isMoving || isHidden || isLocked) return null;
+
+        if (tiles.Count < maxTile && tileSlots != null && tileSlots.Length > 0)
         {
-            TileSlot tileSlot = tileSlots[i];
-            TileSlotContainer tileSlotContainer = tileSlot.tileSlotContainer;
-
-            if (tileSlotContainer != null)
-            {
-                if (tileSlotContainer.isMoving || tileSlotContainer.isHidden)
-                {
-                    continue;
-                }
-            }
-
-            if (tileSlot.Tile == null)
-            {
-                return tileSlot;
-            }
+            return tileSlots[0];
         }
 
         return null;
@@ -120,17 +192,26 @@ public class TileSlotContainer : MonoBehaviour
 
     public bool IsLastSlot(TileSlot slot)
     {
-        return slot == tileSlots[tileSlots.Length - 1];
+        return tiles.Count >= maxTile;
     }
 
     public void ClearTiles()
     {
-        foreach (var tileSlot in tileSlots)
+        tiles.Clear();
+
+        if (tileSlots != null)
         {
-            tileSlot.ClearTile();
+            foreach (var tileSlot in tileSlots)
+            {
+                tileSlot.Tile = null;
+            }
         }
 
-        tiles.Clear();
+        if (tileTemp != null)
+        {
+            tileTemp.gameObject.SetActive(false);
+            tileTemp = null;
+        }
     }
 
     private void ClickButtonUnlockByAds()
@@ -168,7 +249,7 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Complete(ItemCategory nextCategory, Action onCompleteAction)
     {
-        Init(nextCategory);
+        Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
 
         float initialPositionY = transform.localPosition.y;
 

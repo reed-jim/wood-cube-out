@@ -43,7 +43,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     public void StartTutorial()
     {
-        tilesToSelect = TileManager.Ins.tiles.Where(item => item.ItemCategory == ItemCategory.School).Take(4).ToList();
+        tilesToSelect = TileManager.Ins.tiles.Where(item => item.ItemCategory == ItemCategory.Bakery).Take(4).ToList();
 
         gameplayCanvasOriginalSortingOrder = gameplayCanvas.sortingOrder;
         gameplayCanvas.sortingOrder = 98;

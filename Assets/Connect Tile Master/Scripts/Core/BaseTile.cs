@@ -13,7 +13,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private Image containerImage;
     [SerializeField] private Image glow;
     [SerializeField] public Image icon;
-    [SerializeField] private TMP_Text category;
+    [SerializeField] public TMP_Text category;
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isMoving;
@@ -21,6 +21,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private bool isOnSlot;
     [SerializeField] private bool isOutside;
     [SerializeField] private bool isDone;
+    [SerializeField] private bool isText;
+
 
     public static event Action<BaseTile> selectTileEvent;
 
@@ -60,6 +62,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         set => isDone = value;
     }
 
+    public bool IsText
+    {
+        get => isText;
+        set => isText = value;
+    }
+
     public float LeftBound => container.localPosition.x - 0.5f * container.sizeDelta.x;
     public float RightBound => container.localPosition.x + 0.5f * container.sizeDelta.x;
     public float TopBound => container.localPosition.y + 0.5f * container.sizeDelta.y;
@@ -67,46 +75,71 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     private Vector3 _originalPosition;
     private int _originalSiblingIndex;
+    private bool _isDragging;
 
     void Awake()
     {
         // selectButton.onClick.AddListener(Select);
     }
 
-    public void Init(ItemCategory itemCategory, Sprite iconSprite)
+    public void Init(ItemCategory itemCategory, Sprite iconSprite, string textData = null)
     {
         this.itemCategory = itemCategory;
-        icon.sprite = iconSprite;
-        category.text = itemCategory.ToString();
+        isText = !string.IsNullOrEmpty(textData);
+        if (!string.IsNullOrEmpty(textData))
+        {
+            icon.gameObject.SetActive(false);
+            category.gameObject.SetActive(true);
+            category.text = textData;
+        }
+        else
+        {
+            icon.gameObject.SetActive(true);
+            category.gameObject.SetActive(false);
+            icon.sprite = iconSprite;
+            UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+        }
 
         containerImage.color = containerImage.color.ChangeAlpha(1);
-
-        UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
 
         IsOnValidSlot = false;
         IsOnSlot = false;
         IsOutside = false;
         IsDone = false;
+        _isDragging = false;
     }
 
-    public void Shuffle(ItemCategory itemCategory, Sprite iconSprite)
+    public void Shuffle(ItemCategory itemCategory, Sprite iconSprite, string textData = null)
     {
         isMoving = true;
 
         SaferioTween.AlphaShow(glow, onCompleteAction: () =>
         {
             this.itemCategory = itemCategory;
-            icon.sprite = iconSprite;
-            category.text = itemCategory.ToString();
+
+            if (!string.IsNullOrEmpty(textData))
+            {
+                icon.gameObject.SetActive(false);
+                category.gameObject.SetActive(true);
+                category.text = textData;
+            }
+            else
+            {
+                icon.gameObject.SetActive(true);
+                category.gameObject.SetActive(false);
+                icon.sprite = iconSprite;
+                UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
+            }
 
             containerImage.color = containerImage.color.ChangeAlpha(1);
-
-            UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
 
             IsOnValidSlot = false;
             IsDone = false;
 
-            SaferioTween.AlphaHide(glow);
+            SaferioTween.AlphaHide(glow, onCompleteAction: () =>
+            {
+                isMoving = false;
+            });
         });
 
         Vector3 initialPosition = transform.localPosition;
@@ -131,6 +164,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     {
         if (IsMoving || IsOnSlot || IsDone) return;
 
+        _isDragging = true;
         _originalPosition = transform.position;
         _originalSiblingIndex = transform.GetSiblingIndex();
 
@@ -139,12 +173,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnDrag(PointerEventData eventData)
     {
+        if (!_isDragging) return;
         if (IsMoving || IsOnSlot || IsDone) return;
 
         if (RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                (RectTransform)transform.parent, 
-                eventData.position, 
-                eventData.pressEventCamera, 
+                (RectTransform)transform.parent,
+                eventData.position,
+                eventData.pressEventCamera,
                 out Vector3 worldPoint))
         {
             transform.position = worldPoint;
@@ -153,6 +188,9 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        if (!_isDragging) return;
+        _isDragging = false;
+
         if (IsMoving || IsOnSlot || IsDone) return;
 
         if (TileManager.Ins.IsHoveringValidContainer(this.itemCategory, eventData.position, eventData.pressEventCamera))
@@ -170,8 +208,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         }
         else
         {
-            transform.position = _originalPosition;
-            transform.SetSiblingIndex(_originalSiblingIndex);
+            IsMoving = true;
+            Tween.Position(transform, _originalPosition, duration: 0.2f).OnComplete(() =>
+            {
+                IsMoving = false;
+                transform.SetSiblingIndex(_originalSiblingIndex);
+            });
         }
     }
 

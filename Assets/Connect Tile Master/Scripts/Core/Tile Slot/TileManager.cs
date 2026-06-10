@@ -31,6 +31,12 @@ public class TileManager : Singleton<TileManager>
     private float highestYGridPosition;
     public LevelItem levelItem;
 
+    public float currentLevelTime;
+    public bool isLevelActive;
+
+    private Dictionary<ItemCategory, List<Sprite>> availableSpritesPerCategory = new Dictionary<ItemCategory, List<Sprite>>();
+    private Dictionary<ItemCategory, List<string>> availableTextsPerCategory = new Dictionary<ItemCategory, List<string>>();
+
     public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
 
     public static event Action winLevelEvent;
@@ -46,7 +52,22 @@ public class TileManager : Singleton<TileManager>
         totalSlotInShelf = 5;
     }
 
-    void OnDestroy()
+    private void Update()
+    {
+        if (isLevelActive && currentLevelTime > 0)
+        {
+            currentLevelTime -= Time.deltaTime;
+
+            if (currentLevelTime <= 0)
+            {
+                currentLevelTime = 0;
+                isLevelActive = false;
+                loseLevelEvent?.Invoke();
+            }
+        }
+    }
+
+    protected virtual void MoreActionOnDestroy()
     {
         RevivePopup.reviveEvent -= OnRevive;
     }
@@ -57,11 +78,47 @@ public class TileManager : Singleton<TileManager>
     {
         this.levelItem = levelItem;
 
+        if (levelItem.timeLimit > 0)
+        {
+            currentLevelTime = levelItem.timeLimit;
+            isLevelActive = true;
+        }
+
+        availableSpritesPerCategory.Clear();
+        availableTextsPerCategory.Clear();
+
+        foreach (var theme in levelItem.themeDataList)
+        {
+            var iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == theme.category);
+            if (iconSet != null)
+            {
+                if (iconSet.icons != null && iconSet.icons.Length > 0)
+                {
+                    availableSpritesPerCategory[theme.category] = new List<Sprite>(iconSet.icons);
+                }
+                else
+                {
+                    availableSpritesPerCategory[theme.category] = new List<Sprite>();
+                }
+
+                if (iconSet.text != null && iconSet.text.Length > 0)
+                {
+                    availableTextsPerCategory[theme.category] = new List<string>(iconSet.text);
+                }
+                else
+                {
+                    availableTextsPerCategory[theme.category] = new List<string>();
+                }
+            }
+        }
+
         ArrangeSlotsInShelf();
 
         RemoveOldTiles();
 
-        SpawnTiles(levelItem.poolCategory.Length);
+        int totalSet = levelItem.themeDataList.Count;
+
+        SpawnTiles(totalSet);
 
         if (levelItem.isTutorial)
         {
@@ -138,7 +195,7 @@ public class TileManager : Singleton<TileManager>
 
             if (categories.Count > 0)
             {
-                tileSlotContainer.Init(categories[0]);
+                tileSlotContainer.Init(categories[0], GetTargetCardAmount(categories[0]));
             }
             else
             {
@@ -270,8 +327,9 @@ public class TileManager : Singleton<TileManager>
         foreach (var item in numTilePerCategory)
         {
             int addedScore = item.Value;
+            int targetCardAmount = GetTargetCardAmount(item.Key);
 
-            if (item.Value >= 4)
+            if (item.Value >= targetCardAmount)
             {
                 addedScore *= 10;
             }
@@ -288,11 +346,12 @@ public class TileManager : Singleton<TileManager>
         for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
         {
             ItemCategory category = sortedCategory[i];
-            
+
             int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
             int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
+            int targetCardAmount = GetTargetCardAmount(category);
 
-            if (totalNotDone >= (activeContainersForCategory + 1) * 4)
+            if (totalNotDone >= (activeContainersForCategory + 1) * targetCardAmount)
             {
                 if (activeContainersForCategory == 0)
                 {
@@ -304,11 +363,12 @@ public class TileManager : Singleton<TileManager>
         for (int i = 0; i < scoreOfEachCategory.Count; i++)
         {
             ItemCategory category = sortedCategory[i];
-            
+
             int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
             int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
+            int targetCardAmount = GetTargetCardAmount(category);
 
-            if (totalNotDone >= (activeContainersForCategory + 1) * 4)
+            if (totalNotDone >= (activeContainersForCategory + 1) * targetCardAmount)
             {
                 return category;
             }
@@ -317,20 +377,40 @@ public class TileManager : Singleton<TileManager>
         return ItemCategory.None;
     }
 
+    public int GetTargetCardAmount(ItemCategory category)
+    {
+        var theme = levelItem.themeDataList.FirstOrDefault(t => t.category == category);
+        if (theme != null)
+        {
+            return theme.numSprite + theme.numString;
+        }
+        return 4; // fallback
+    }
+
+    private Dictionary<ItemCategory, int> remainingStringPerCategory = new Dictionary<ItemCategory, int>();
+    private Dictionary<ItemCategory, int> remainingSpritePerCategory = new Dictionary<ItemCategory, int>();
+
     private List<ItemCategory> GetItemCategoryPool(int totalSet)
     {
         List<ItemCategory> itemCategoryPool = new List<ItemCategory>();
+        remainingStringPerCategory.Clear();
+        remainingSpritePerCategory.Clear();
 
-        ItemCategory currentItemCategory = ItemCategory.Vegetable;
-
-        for (int i = 0; i < totalSet * 4; i++)
+        foreach (var theme in levelItem.themeDataList)
         {
-            if (i % 4 == 0)
-            {
-                currentItemCategory = levelItem.poolCategory[i / 4];
-            }
+            if (!remainingSpritePerCategory.ContainsKey(theme.category))
+                remainingSpritePerCategory[theme.category] = 0;
+            if (!remainingStringPerCategory.ContainsKey(theme.category))
+                remainingStringPerCategory[theme.category] = 0;
 
-            itemCategoryPool.Add(currentItemCategory);
+            remainingSpritePerCategory[theme.category] += theme.numSprite;
+            remainingStringPerCategory[theme.category] += theme.numString;
+
+            int count = theme.numSprite + theme.numString;
+            for (int i = 0; i < count; i++)
+            {
+                itemCategoryPool.Add(theme.category);
+            }
         }
 
         itemCategoryPool.Shuffle();
@@ -363,12 +443,18 @@ public class TileManager : Singleton<TileManager>
                 {
                     Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                     {
+                        tile.IsMoving = false;
+
+                        // Hide tile and mark as done so it returns to pool and updates win condition properly
+                        tile.IsDone = true;
+                        tile.gameObject.SetActive(false);
                         tile.transform.SetParent(tileSlot.transform);
 
                         tileSlotContainer.SwitchItem(tile);
 
-                        if (tileSlotContainer.IsLastSlot(tileSlot))
+                        if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                         {
+                            tileSlotContainer.isCompleted = true;
                             bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
 
                             if (remainingSlotContainer > 0 && isAnyRemainingTile)
@@ -381,11 +467,11 @@ public class TileManager : Singleton<TileManager>
                             }
                         }
 
+                        onCompleteAction?.Invoke();
+
                         // DropTileDown(tile);
                         EmptyTile(tile);
                         SpawnTilesForEmptyGrid();
-
-                        onCompleteAction?.Invoke();
                     });
 
                     tileSlot.AddTile(tile);
@@ -408,12 +494,20 @@ public class TileManager : Singleton<TileManager>
     {
         TileSlotContainer tileSlotContainer = tileSlotContainers[tileSlotContainerIndex];
 
+        tile.IsMoving = true;
         Tween.Position(tile.transform, slot.transform.position, duration: 0.3f).OnComplete(() =>
         {
+            tile.IsMoving = false;
+
+            tile.IsDone = true;
+            tile.gameObject.SetActive(false);
             tile.transform.SetParent(slot.transform);
 
-            if (tileSlotContainer.IsLastSlot(slot))
+            tileSlotContainer.SwitchItem(tile);
+
+            if (tileSlotContainer.IsLastSlot(slot) && !tileSlotContainer.isCompleted)
             {
+                tileSlotContainer.isCompleted = true;
                 bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
 
                 if (remainingSlotContainer > 0 && isAnyRemainingTile)
@@ -490,6 +584,8 @@ public class TileManager : Singleton<TileManager>
 
                 Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                 {
+                    onCompleteAction?.Invoke();
+
                     EmptyTile(tile);
                     SpawnTilesForEmptyGrid();
                     // DropTileDown(tile);
@@ -500,8 +596,6 @@ public class TileManager : Singleton<TileManager>
                     }
 
                     isFound = true;
-
-                    onCompleteAction?.Invoke();
                 });
 
                 additionalTileSlots[i].AddTile(tile);
@@ -607,9 +701,14 @@ public class TileManager : Singleton<TileManager>
             {
                 if (affectedGrids[i + 1].tile != null)
                 {
-                    Tween.LocalPositionY(affectedGrids[i + 1].tile.transform, affectedGrids[i].position.y, duration: 0.3f);
+                    BaseTile movingTile = affectedGrids[i + 1].tile;
+                    movingTile.IsMoving = true;
+                    Tween.LocalPositionY(movingTile.transform, affectedGrids[i].position.y, duration: 0.3f).OnComplete(() =>
+                    {
+                        movingTile.IsMoving = false;
+                    });
 
-                    affectedGrids[i].tile = affectedGrids[i + 1].tile;
+                    affectedGrids[i].tile = movingTile;
                     affectedGrids[i + 1].tile = null;
                 }
             }
@@ -637,6 +736,7 @@ public class TileManager : Singleton<TileManager>
             if (grids[i].tile == null)
             {
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
+                tile.gameObject.SetActive(true);
 
                 tiles.Add(tile);
 
@@ -647,9 +747,13 @@ public class TileManager : Singleton<TileManager>
 
                 ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
 
-                tile.Init(nextCategory, tileIconContainer.GetRandomIconOfCategory(nextCategory));
+                InitTileWithSpriteOrString(tile, nextCategory);
 
-                Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f);
+                tile.IsMoving = true;
+                Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f).OnComplete(() =>
+                {
+                    tile.IsMoving = false;
+                });
 
                 grids[i].tile = tile;
 
@@ -660,17 +764,18 @@ public class TileManager : Singleton<TileManager>
 
     private void SpawnTiles(int totalSet)
     {
-        int col = 5;
-        int row = GetRandomRow(col, 4, 6);
+        int col = levelItem.initColumn;
+        int row = levelItem.initRow;
         float tileSpacing = 1.05f * 195;
 
         float totalWidth = (col - 1) * tileSpacing;
         float totalHeight = (row - 1) * tileSpacing;
 
         int currentCategoryIndex;
-        int categoryIconIndex;
 
-        grids = new Grid[col * row];
+        int totalCards = levelItem.themeDataList.Sum(t => t.numSprite + t.numString);
+        int slotsToFill = Mathf.Min(col * row, totalCards);
+        grids = new Grid[slotsToFill];
 
         float leftMost = 0;
         float rightMost = 0;
@@ -689,6 +794,8 @@ public class TileManager : Singleton<TileManager>
         {
             for (int j = 0; j < col; j++)
             {
+                if (itemCategoryPool.Count == 0) break;
+
                 int index = j + i * col;
 
                 BaseTile spawnedTile = SpawnTile(j, i);
@@ -736,12 +843,10 @@ public class TileManager : Singleton<TileManager>
 
         BaseTile SpawnTile(int xIndex, int yIndex)
         {
-            currentCategoryIndex = (int)itemCategoryPool.First();
+            ItemCategory currentCategory = itemCategoryPool.First();
             itemCategoryPool.RemoveAt(0);
 
-            CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets[currentCategoryIndex];
-
-            categoryIconIndex = UnityEngine.Random.Range(0, categoryIconSet.icons.Length);
+            CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == currentCategory);
 
             float xPos = xIndex * tileSpacing - totalWidth / 2f;
             float yPos = yIndex * tileSpacing - totalHeight / 2f;
@@ -753,7 +858,8 @@ public class TileManager : Singleton<TileManager>
             tile.gameObject.SetActive(true);
             tile.transform.SetParent(tileContainer);
             tile.transform.localPosition = spawnPos;
-            tile.Init(categoryIconSet.itemCategory, categoryIconSet.icons[categoryIconIndex]);
+
+            InitTileWithSpriteOrString(tile, categoryIconSet.itemCategory);
 
             tiles.Add(tile);
 
@@ -761,6 +867,69 @@ public class TileManager : Singleton<TileManager>
         }
     }
     #endregion
+
+    private void InitTileWithSpriteOrString(BaseTile tile, ItemCategory nextCategory)
+    {
+        bool isString = false;
+        int remainingString = remainingStringPerCategory.ContainsKey(nextCategory) ? remainingStringPerCategory[nextCategory] : 0;
+        int remainingSprite = remainingSpritePerCategory.ContainsKey(nextCategory) ? remainingSpritePerCategory[nextCategory] : 0;
+
+        int totalRemaining = remainingString + remainingSprite;
+        if (totalRemaining > 0)
+        {
+            if (UnityEngine.Random.Range(0, totalRemaining) < remainingString)
+            {
+                isString = true;
+                remainingStringPerCategory[nextCategory]--;
+            }
+            else
+            {
+                remainingSpritePerCategory[nextCategory]--;
+            }
+        }
+
+        string textData = null;
+        Sprite spriteData = null;
+
+        if (isString)
+        {
+            textData = GetUniqueText(nextCategory);
+        }
+        else
+        {
+            spriteData = GetUniqueSprite(nextCategory);
+        }
+
+        tile.Init(nextCategory, spriteData, textData);
+    }
+
+    private string GetUniqueText(ItemCategory category)
+    {
+        if (availableTextsPerCategory.ContainsKey(category) && availableTextsPerCategory[category].Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, availableTextsPerCategory[category].Count);
+            string text = availableTextsPerCategory[category][index];
+            availableTextsPerCategory[category].RemoveAt(index);
+            return text;
+        }
+
+        // Fallback if we run out
+        return tileIconContainer.GetRandomTextOfCategory(category);
+    }
+
+    private Sprite GetUniqueSprite(ItemCategory category)
+    {
+        if (availableSpritesPerCategory.ContainsKey(category) && availableSpritesPerCategory[category].Count > 0)
+        {
+            int index = UnityEngine.Random.Range(0, availableSpritesPerCategory[category].Count);
+            Sprite sprite = availableSpritesPerCategory[category][index];
+            availableSpritesPerCategory[category].RemoveAt(index);
+            return sprite;
+        }
+
+        // Fallback if we run out
+        return tileIconContainer.GetRandomIconOfCategory(category);
+    }
 
     #region Text
     private void UpdateSetCountText()
@@ -806,38 +975,7 @@ public class TileManager : Singleton<TileManager>
     }
     #endregion
 
-    #region Util
-    private int GetRandomRow(int col, int minRow, int maxRow, int maxTries = 50)
-    {
-        // Fast random attempts
-        for (int i = 0; i < maxTries; i++)
-        {
-            int row = UnityEngine.Random.Range(minRow, maxRow + 1);
-            if ((col * row) % 4 == 0)
-                return row;
-        }
 
-        // Guaranteed fallback
-        int step;
-
-        if (col % 4 == 0)
-            step = 1;
-        else if (col % 2 == 0)
-            step = 2;
-        else
-            step = 4;
-
-        // Find first valid row >= minRow
-        int start = ((minRow + step - 1) / step) * step;
-
-        if (start <= maxRow)
-            return start;
-
-        // Absolute guarantee fallback (if range somehow invalid)
-        // Clamp to nearest valid value (even outside range if needed)
-        return ((minRow + step - 1) / step) * step;
-    }
-    #endregion
 
     #region Booster
     public void UseAddHoleBooster()
@@ -899,7 +1037,8 @@ public class TileManager : Singleton<TileManager>
 
         for (int i = 0; i < categoryPoolForAllTileLeft.Count; i++)
         {
-            if (priorityCategory.Contains(categoryPoolForAllTileLeft[i]) && shuffledCategory.Count(item => item == categoryPoolForAllTileLeft[i]) < 4)
+            int targetCardAmount = GetTargetCardAmount(categoryPoolForAllTileLeft[i]);
+            if (priorityCategory.Contains(categoryPoolForAllTileLeft[i]) && shuffledCategory.Count(item => item == categoryPoolForAllTileLeft[i]) < targetCardAmount)
             {
                 shuffledCategory.Add(categoryPoolForAllTileLeft[i]);
                 toRemoveCategory.Remove(categoryPoolForAllTileLeft[i]);
@@ -985,13 +1124,21 @@ public class TileManager : Singleton<TileManager>
 
                     if (tileSlot != null)
                     {
+                        tile.IsMoving = true;
                         Tween.Alpha(tile.icon, 1, duration: 0.3f);
                         Tween.Position(tile.transform, tileSlot.transform.position, duration: 0.3f).OnComplete(() =>
                         {
+                            tile.IsMoving = false;
+
+                            tile.IsDone = true;
+                            tile.gameObject.SetActive(false);
                             tile.transform.SetParent(tileSlot.transform);
 
-                            if (tileSlotContainer.IsLastSlot(tileSlot))
+                            tileSlotContainer.SwitchItem(tile);
+
+                            if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                             {
+                                tileSlotContainer.isCompleted = true;
                                 bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
 
                                 if (remainingSlotContainer > 0 && isAnyRemainingTile)
