@@ -43,11 +43,13 @@ namespace AntsFlow
         public static event Action<BaseTile> tileCompleteEvent;
         public static event Action<Color> useClearOneColorBoosterEvent;
         public static event Action<BaseTile> antStartMoveToTileEvent;
+        public static event Action<BaseTile> tileMoveToAntEvent;
 
         void Awake()
         {
             tileCompleteEvent += OnTileCompleted;
             antStartMoveToTileEvent += OnAntStartedMoveToTile;
+            tileMoveToAntEvent += OnTileMoveToAnt;
             removeTileAsBlockageEvent += OnRemoveTileAsBlockage;
 
             actualBlockages = new List<BaseTile>();
@@ -60,6 +62,7 @@ namespace AntsFlow
         {
             tileCompleteEvent -= OnTileCompleted;
             antStartMoveToTileEvent -= OnAntStartedMoveToTile;
+            tileMoveToAntEvent -= OnTileMoveToAnt;
             removeTileAsBlockageEvent -= OnRemoveTileAsBlockage;
         }
 
@@ -85,6 +88,8 @@ namespace AntsFlow
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
+
+            tileMoveToAntEvent?.Invoke(this);
         }
 
         public void Complete()
@@ -98,7 +103,7 @@ namespace AntsFlow
 
         public void InvokeAntStartMoveToTileEvent()
         {
-            // navMeshModifierVolume.enabled = false;
+            navMeshModifierVolume.enabled = false;
 
             antStartMoveToTileEvent?.Invoke(this);
         }
@@ -110,10 +115,7 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // if (actualBlockages.Contains(tile))
-            // {
-            //     actualBlockages.Remove(tile);
-            // }
+
         }
 
         private void OnRemoveTileAsBlockage(BaseTile tile)
@@ -129,6 +131,14 @@ namespace AntsFlow
             {
                 actualBlockages.Remove(tile);
             }
+        }
+
+        private void OnTileMoveToAnt(BaseTile tile)
+        {
+            // if (actualBlockages.Contains(tile))
+            // {
+            //     actualBlockages.Remove(tile);
+            // }
         }
 
         public void ClearAllTilesOfTheSameColor()

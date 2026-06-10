@@ -146,9 +146,8 @@ GameObject:
   - component: {fileID: 607671880863614814}
   - component: {fileID: 7405699418028617195}
   - component: {fileID: 3448534482802678961}
-  - component: {fileID: 7845431424302319933}
   - component: {fileID: 6408854877097581271}
-  - component: {fileID: 892770014573525238}
+  - component: {fileID: 3286495827074299801}
   m_Layer: 8
   m_Name: Block
   m_TagString: Untagged
@@ -192,7 +191,7 @@ MonoBehaviour:
   shadow: {fileID: 2325350225161218639}
   outline: {fileID: 8189786474290027868}
   boxCollider: {fileID: 3448534482802678961}
-  navMeshModifierVolume: {fileID: 7845431424302319933}
+  navMeshModifierVolume: {fileID: 3286495827074299801}
   isAntApproaching: 0
   isLocked: 0
   blockages: []
@@ -304,23 +303,6 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.6, y: 1.88}
   m_EdgeRadius: 0
---- !u!114 &7845431424302319933
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7515087262887657689}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
-  m_SerializedVersion: 0
-  m_Size: {x: 1.55, y: 1.75, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
-  m_Area: 1
-  m_AffectedAgents: ffffffff
 --- !u!114 &6408854877097581271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -333,22 +315,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 034bc47afcbf5e141a58d5c20b7808e4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: EPO::EPOOutline.TargetStateListener
---- !u!208 &892770014573525238
-NavMeshObstacle:
+--- !u!114 &3286495827074299801
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7515087262887657689}
   m_Enabled: 1
-  serializedVersion: 3
-  m_Shape: 1
-  m_Extents: {x: 0.8, y: 0.94000006, z: 0.1}
-  m_MoveThreshold: 0.1
-  m_Carve: 1
-  m_CarveOnlyStationary: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35e95dc5ff2b64380880dd7ac5922847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.AI.Navigation::Unity.AI.Navigation.NavMeshModifierVolume
+  m_SerializedVersion: 0
+  m_Size: {x: 1.5, y: 1.5, z: 10}
   m_Center: {x: 0, y: 0, z: 0}
-  m_TimeToStationary: 0.5
+  m_Area: 1
+  m_AffectedAgents: ffffffff
 --- !u!1 &8756038962237506395
 GameObject:
   m_ObjectHideFlags: 0

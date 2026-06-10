@@ -35,14 +35,14 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
-            BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
+            // BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
-            BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
+            // BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
         }
 
         public void CalculateLevelCenter()
@@ -143,8 +143,6 @@ namespace AntsFlow
 
         public void UpdateNavMesh(BaseTile tile)
         {
-            return;
-            
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
             {
                 if (delayedUpdateNavmeshCoroutine != null)
@@ -161,7 +159,7 @@ namespace AntsFlow
 
             isUpdatingNavMesh = true;
 
-            Tween.Delay(2).OnComplete(() =>
+            Tween.Delay(1).OnComplete(() =>
             {
                 isUpdatingNavMesh = false;
             });
@@ -169,8 +167,6 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
-            return;
-
             if (isUpdatingNavMesh)
             {
                 return;
@@ -183,23 +179,6 @@ namespace AntsFlow
             Tween.Delay(2).OnComplete(() =>
             {
                 isUpdatingNavMesh = false;
-            });
-        }
-
-        public void UpdateNavMeshWhenStuck()
-        {
-            if (isUpdatingNavMeshWhenStuck)
-            {
-                return;
-            }
-
-            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
-
-            isUpdatingNavMeshWhenStuck = true;
-
-            Tween.Delay(0.3f).OnComplete(() =>
-            {
-                isUpdatingNavMeshWhenStuck = false;
             });
         }
 

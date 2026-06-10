@@ -57,6 +57,7 @@ namespace AntsFlow
 
             siblingIndex = transform.GetSiblingIndex();
             stuckThreshold = 3 * Time.deltaTime;
+            stuckNoReachDestinationThreshold = 0.2f;
         }
 
         void Update()
@@ -79,12 +80,10 @@ namespace AntsFlow
                 );
             }
 
-            if (navMeshAgent.isOnNavMesh)
-            {
-                navMeshAgent.destination = destination;
-            }
-
-
+            // if (navMeshAgent.isOnNavMesh)
+            // {
+            //     navMeshAgent.destination = destination;
+            // }
 
             if (isMovingToTile)
             {
@@ -99,7 +98,7 @@ namespace AntsFlow
             }
             else if (isMovingToNest && !isDroppingTile)
             {
-                if (stuckTime > stuckThreshold)
+                if (ReachedDestination(1f))
                 {
                     stuckTime = 0;
 
@@ -160,6 +159,13 @@ namespace AntsFlow
                     if (stuckTimeNoReachDestination > stuckNoReachDestinationThreshold)
                     {
                         requestUpdateNavmeshEvent?.Invoke();
+
+                        ReturnToNavMesh();
+
+                        if (navMeshAgent.isOnNavMesh)
+                        {
+                            navMeshAgent.destination = destination;
+                        }
 
                         stuckTimeNoReachDestination = 0;
                     }
@@ -238,6 +244,30 @@ namespace AntsFlow
         private void WanderAroundThenMoveBackToDestination()
         {
 
+        }
+
+        void ReturnToNavMesh()
+        {
+            NavMeshHit hit;
+
+            float searchRadius = 1;
+
+            if (NavMesh.SamplePosition(
+                            transform.position,
+                            out hit,
+                            searchRadius,
+                            NavMesh.AllAreas))
+            {
+                // Instantly place the agent on the NavMesh
+                navMeshAgent.Warp(hit.position);
+
+                // Optional: continue moving somewhere
+                // agent.SetDestination(target.position);
+            }
+            else
+            {
+                Debug.LogWarning("No NavMesh found nearby.");
+            }
         }
 
         public bool ReachedDestination(float threshold = 1f)

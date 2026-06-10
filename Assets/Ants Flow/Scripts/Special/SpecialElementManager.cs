@@ -65,11 +65,8 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
     {
         int random = Random.Range(0, 10);
 
-        Debug.Log($"RandomizeNextLevelElement {random}");
-
         if (random < 5)
         {
-            Debug.Log($"RandomizeNextLevelElement {specialElementConfig.hiddenAntBoxConfig.num} {specialElementConfig.frozenAntBoxConfig.num}");
             if (specialElementConfig.hiddenAntBoxConfig.num > 0)
             {
                 nextLevelElement = LevelElement.HiddenAntBox;

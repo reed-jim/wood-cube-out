@@ -541,12 +541,12 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty();
 
-            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+            // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
-            foreach (var item in numSpawnPerFactionOrderByDifficulty)
-            {
-                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-            }
+            // foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            // {
+            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            // }
 
             for (int j = difficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
             {
