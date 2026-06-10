@@ -791,7 +791,7 @@ namespace AntsFlow
             }
 
             // No multiple of 5 exists in range
-            return UnityEngine.Random.Range(min, max + 1);
+            return min;
         }
 
         private float GetLevelProgress()
