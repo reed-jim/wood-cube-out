@@ -101,14 +101,14 @@ public class RevivePopup : BasePopup
 
         SoundManager.Instance.PlaySoundLose();
 
-        if (boosterType == BoosterType.UnlockScrewBox)
-        {
-            boosterImage.sprite = unlockBoxSprite;
-        }
-        else if (boosterType == BoosterType.ClearScrewPorts)
-        {
-            boosterImage.sprite = clearHolesSprite;
-        }
+        // if (boosterType == BoosterType.UnlockScrewBox)
+        // {
+        //     boosterImage.sprite = unlockBoxSprite;
+        // }
+        // else if (boosterType == BoosterType.ClearScrewPorts)
+        // {
+        //     boosterImage.sprite = clearHolesSprite;
+        // }
 
         UIUtil.SetSizeKeepRatioY(boosterImage, 0.2f * container.sizeDelta.x);
 
@@ -173,6 +173,10 @@ public class RevivePopup : BasePopup
         {
             return;
         }
+
+        OnRewaredAdCompleted();
+
+        return;
 
         ActionWatchVideo actionWatchVideo;
 

@@ -100,46 +100,7 @@ namespace AntsFlow
             {
                 if (ReachedDestination(1f))
                 {
-                    stuckTime = 0;
-
-                    Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
-                        .OnComplete(() =>
-                        {
-
-                        });
-
-                    Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
-                    Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.5f), duration: 0.3f);
-                    Tween.Scale(transform, 0, duration: 0.3f);
-
-                    Vector3 antScale = transform.localScale;
-
-                    SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
-                    {
-                        LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
-
-                        tile.Complete();
-                        gameObject.SetActive(false);
-
-                        transform.localScale = antScale;
-
-                        navMeshAgent.enabled = true;
-
-                        isMovingToNest = false;
-                        isDroppingTile = false;
-                        tile = null;
-                    });
-
-                    ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-                    antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
-                    antDissappearFx.Play();
-
-                    SoundManager.Instance.PlaySoundCubeLand();
-
-                    isDroppingTile = true;
-
-                    navMeshAgent.enabled = false;
+                    OnAntMovedToNest();
                 }
             }
 
@@ -173,6 +134,50 @@ namespace AntsFlow
             }
         }
 
+        private void OnAntMovedToNest()
+        {
+            stuckTime = 0;
+
+            Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
+                .OnComplete(() =>
+                {
+
+                });
+
+            Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
+            Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.5f), duration: 0.3f);
+            Tween.Scale(transform, 0, duration: 0.3f);
+
+            Vector3 antScale = transform.localScale;
+
+            SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
+            {
+                LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
+
+                tile.Complete();
+                gameObject.SetActive(false);
+
+                transform.localScale = antScale;
+
+                navMeshAgent.enabled = true;
+
+                isMovingToNest = false;
+                isDroppingTile = false;
+                tile = null;
+            });
+
+            ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+            antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
+            antDissappearFx.Play();
+
+            SoundManager.Instance.PlaySoundCubeLand();
+
+            isDroppingTile = true;
+
+            navMeshAgent.enabled = false;
+        }
+
         public void Init(Color faction)
         {
             // spriteRenderer.color = faction;
@@ -186,6 +191,12 @@ namespace AntsFlow
             this.faction = faction;
 
             stuckTime = 0;
+        }
+
+        public void SetGhostMode()
+        {
+            materialPropertyBlock.SetColor("_Color", ColorUtil.WithAlpha(faction, 0.5f));
+            antRenderer.SetPropertyBlock(materialPropertyBlock);
         }
 
         public void EnableNavmesh(bool isEnable)
@@ -214,15 +225,60 @@ namespace AntsFlow
             isMovingToTile = true;
         }
 
-        public void OnPathComplete(Path p)
+        public void MoveToTileGhostMode(BaseTile tile)
         {
-            Debug.Log("A path was calculated. Did it fail with an error? " + p.error);
+            navMeshAgent.enabled = false;
 
-            // if (!p.error) {
-            //     path = p;
-            //     // Reset the waypoint counter so that we start to move towards the first point in the path
-            //     currentWaypoint = 0;
-            // }
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
+
+            this.tile = tile;
+
+            SetRotation((Vector2)(tile.transform.position - transform.position));
+
+            Vector2 direction;
+            float speed = 10;
+            float distance;
+            float duration;
+
+            direction = (Vector2)(tile.transform.position - transform.position);
+            distance = direction.magnitude;
+            duration = distance / speed;
+
+            SetRotation(direction);
+
+            Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                tile.MoveToAnt(this);
+
+                direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
+                distance = direction.magnitude;
+                duration = distance / speed;
+
+                SetRotation(direction);
+
+                Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    OnAntMovedToNest();
+                });
+            });
+
+            void SetRotation(Vector2 direction)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                transform.rotation = targetRotation;
+
+                // transform.rotation = Quaternion.Lerp(
+                //     transform.rotation,
+                //     targetRotation,
+                //     rotationSpeed * Time.deltaTime
+                // );
+            }
         }
 
         public void MoveToNest()

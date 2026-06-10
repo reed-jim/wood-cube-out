@@ -27,9 +27,11 @@ namespace AntsFlow
         public AnimationCurve difficultyCurve;
 
         private int totalTile;
+        public List<WashingMachineItem> ghostAntBoxes;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
+        public static event Action ghostAntBoxesClearedEvent;
         public static event Action finishUsingEnableAllAntBoxesBoosterEvent;
 
         protected override void MoreActionOnAwake()
@@ -88,14 +90,16 @@ namespace AntsFlow
         {
             WashingMachineSlot washingMachineSlot = GetAvailableWashingMachineSlot();
 
-            if (washingMachineSlot == null)
-            {
-                CheckLoseLevel();
+            // if (washingMachineSlot == null)
+            // {
+            //     CheckLoseLevel();
 
-                return null;
-            }
+            //     return null;
+            // }
 
             washingMachineSlot.washingMachineItem = washingMachineItem;
+
+            bool isLose = CheckLoseLevel();
 
             washingMachineItem.isMoving = true;
 
@@ -113,7 +117,11 @@ namespace AntsFlow
                     washingMachineItem.isMoving = false;
                     washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
-                    washingMachineItem.SpawnAnts();
+                    washingMachineItem.OpenTheBox();
+                    if (!isLose)
+                    {
+                        washingMachineItem.CheckAntsPath();
+                    }
 
                     MoveAntBoxTop();
 
@@ -478,28 +486,76 @@ namespace AntsFlow
         #endregion
 
         #region Check Lose
-        private void CheckLoseLevel()
+        private bool CheckLoseLevel()
         {
             bool isLose = washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
 
             if (isLose)
             {
                 loseLevelEvent?.Invoke();
+
+                GamePersistentVariable.isLevelLost = true;
             }
+
+            return isLose;
         }
 
         private void Revive(BoosterType boosterType)
         {
+            // Revive by unlock ant box
+            // for (int i = 0; i < washingMachineSlots.Count; i++)
+            // {
+            //     WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+
+            //     if (washingMachineSlot.isLocked)
+            //     {
+            //         washingMachineSlot.Unlock();
+
+            //         break;
+            //     }
+            // }
+
+            List<WashingMachineItem> antBoxesToClear = new List<WashingMachineItem>();
+            ghostAntBoxes = new List<WashingMachineItem>();
+
             for (int i = 0; i < washingMachineSlots.Count; i++)
             {
-                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
+                WashingMachineSlot slot = washingMachineSlots[i];
 
-                if (washingMachineSlot.isLocked)
+                if (slot.washingMachineItem != null)
                 {
-                    washingMachineSlot.Unlock();
+                    antBoxesToClear.Add(slot.washingMachineItem);
+                    ghostAntBoxes.Add(slot.washingMachineItem);
 
-                    break;
+                    if (antBoxesToClear.Count == 2)
+                    {
+                        break;
+                    }
                 }
+            }
+
+            foreach (var item in antBoxesToClear)
+            {
+                item.CheckAntsPathGhostMode();
+            }
+
+            GamePersistentVariable.isLevelLost = false;
+        }
+        #endregion
+
+        #region Ghost Ant
+        public bool IsAnyGhostAntBox()
+        {
+            return ghostAntBoxes.Count > 0;
+        }
+
+        public void CompleteGhostAntBox(WashingMachineItem antBox)
+        {
+            ghostAntBoxes.Remove(antBox);
+
+            if (ghostAntBoxes.Count == 0)
+            {
+                ghostAntBoxesClearedEvent?.Invoke();
             }
         }
         #endregion

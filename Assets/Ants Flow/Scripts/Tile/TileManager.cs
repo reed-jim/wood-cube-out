@@ -113,25 +113,29 @@ namespace AntsFlow
             {
                 return null;
             }
+        }
 
-            List<BaseTile> SortFrom9OClockCounterClockwise(
-                List<BaseTile> tiles,
-                Vector2 center)
+        public List<BaseTile> GetAvailableTileForGhostModeAnt(Color faction)
+        {
+            List<BaseTile> validTiles = new List<BaseTile>();
+
+            for (int i = 0; i < tiles.Count; i++)
             {
-                return tiles
-                    .OrderBy(tile =>
-                    {
-                        Vector2 dir = ((Vector2)tile.transform.position - center).normalized;
+                BaseTile tile = tiles[i];
 
-                        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-                        // Make 9 o'clock (left) = 0°
-                        angle = (angle - 180f + 360f) % 360f;
-
-                        return angle;
-                    })
-                    .ToList();
+                if (tile.gameObject.activeInHierarchy &&
+                    tile.Faction == faction &&
+                    !tile.isAntApproaching &&
+                    !tile.isLocked
+                )
+                {
+                    validTiles.Add(tile);
+                }
             }
+
+            validTiles = validTiles.OrderByDescending(item => item.ring).ThenBy(item => item.priority).ToList();
+
+            return validTiles;
         }
 
         private void OnTileCompleted(BaseTile tile)

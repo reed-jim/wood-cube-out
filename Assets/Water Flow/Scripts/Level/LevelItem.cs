@@ -84,22 +84,22 @@ namespace AntsFlow
                 GenerateLevelFromJson(levelItem, json);
             }
 
-            if (GUILayout.Button("ReadLevel"))
+            if (GUILayout.Button("Step 1: ReadLevel"))
             {
                 ReadLevel(levelItem);
             }
 
-            if (GUILayout.Button("GroupColors"))
+            if (GUILayout.Button("Step 2: GroupColors"))
             {
                 GroupColors(levelItem);
             }
 
-            if (GUILayout.Button("ReassignFactionForTiles"))
+            if (GUILayout.Button("Step 3: ReassignFactionForTiles"))
             {
                 ReassignFactionForTiles(levelItem);
             }
 
-            if (GUILayout.Button("AssignLevelPriority"))
+            if (GUILayout.Button("Step 4: AssignLevelPriority"))
             {
                 AssignLevelPriority(levelItem);
             }
