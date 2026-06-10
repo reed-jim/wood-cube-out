@@ -1,3 +1,4 @@
+using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -30,6 +31,8 @@ namespace AntsFlow
         public Vector3 destination;
 
         private int siblingIndex;
+        private float stuckTime;
+        private float stuckThreshold;
 
 
         void Awake()
@@ -48,6 +51,7 @@ namespace AntsFlow
             walkableAndNestMask = walkableMask | (1 << nestArea);
 
             siblingIndex = transform.GetSiblingIndex();
+            stuckThreshold = 3 * Time.deltaTime;
         }
 
         void Update()
@@ -55,8 +59,6 @@ namespace AntsFlow
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
             Vector2 direction = navMeshAgent.velocity;
-
-            destination = navMeshAgent.destination;
 
             // Avoid jitter when nearly stopped
             if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
@@ -72,10 +74,19 @@ namespace AntsFlow
                 );
             }
 
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.destination = destination;
+            }
+
+
+
             if (isMovingToTile)
             {
-                if (ReachedDestination())
+                if (stuckTime > stuckThreshold)
                 {
+                    stuckTime = 0;
+
                     tile.MoveToAnt(this);
 
                     MoveToNest();
@@ -83,13 +94,10 @@ namespace AntsFlow
             }
             else if (isMovingToNest && !isDroppingTile)
             {
-                if (ReachedDestination())
+                if (stuckTime > stuckThreshold)
                 {
-                    // Vector3 destination = TileManager.Ins.antNest.transform.position
-                    //     .AddY(1.5f)
-                    //     .ChangeZ(tile.transform.position.z);
+                    stuckTime = 0;
 
-                    // Tween.Position(transform, destination, duration: 0.5f);
                     Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
                         .OnComplete(() =>
                         {
@@ -104,6 +112,8 @@ namespace AntsFlow
 
                     SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
                     {
+                        LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
+
                         tile.Complete();
                         gameObject.SetActive(false);
 
@@ -128,6 +138,14 @@ namespace AntsFlow
                     navMeshAgent.enabled = false;
                 }
             }
+
+            if (isMovingToTile || isMovingToNest)
+            {
+                if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f && ReachedDestination(1f))
+                {
+                    stuckTime += Time.deltaTime;
+                }
+            }
         }
 
         public void Init(Color faction)
@@ -141,6 +159,8 @@ namespace AntsFlow
             skeletonAnimation.AnimationState.Apply(skeletonAnimation.Skeleton);
 
             this.faction = faction;
+
+            stuckTime = 0;
         }
 
         public void EnableNavmesh(bool isEnable)
@@ -158,7 +178,7 @@ namespace AntsFlow
             navMeshAgent.enabled = true;
 
             navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
-            destination = tile.transform.position.ChangeZ(0);
+            destination = tile.coordinate.transform.position.ChangeZ(0);
             // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
             //AILerp.destination = tile.transform.position;
             // AIDestinationSetter.target = tile.transform;
@@ -186,7 +206,7 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableAndNestMask;
             navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.2f);
+            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.3f);
             destination = TileManager.Ins.antNest.position.AddY(0.2f);
             // AILerp.destination = TileManager.Ins.antNest.position;
             // AIDestinationSetter.target = TileManager.Ins.antNest;

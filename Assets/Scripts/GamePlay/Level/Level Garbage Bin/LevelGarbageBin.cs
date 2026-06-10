@@ -33,6 +33,11 @@ namespace NamPhuThuy.GamePlay
             LevelLoader.startLevelEvent -= EmptyGarbageBin;
         }
 
+        public void PutOnGarbage(Transform target)
+        {
+            target.SetParent(transform);
+        }
+
         private void EmptyGarbageBin()
         {
             foreach (Transform child in transform)
