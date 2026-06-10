@@ -17,12 +17,14 @@ public class WashingMachineItem : MonoBehaviour
     public SpriteRenderer spriteRenderer;
     public SpriteRenderer lid;
     public SpriteRenderer shadow;
+    public SpriteRenderer doubleAntBoxHole;
     public SkeletonAnimation skeletonAnimation;
 
     [SpineAnimation] public string beginAnimation;
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string selectTrueAnimation;
     [SpineAnimation] public string selectFalseAnimation;
+    [SpineAnimation] public string doubleBoxAnimation;
 
     public Sprite[] shadows;
 
@@ -99,7 +101,7 @@ public class WashingMachineItem : MonoBehaviour
 
         this.washingMachineStartSlot = washingMachineStartSlot;
 
-        Vector3 initialScale = transform.localScale;
+        doubleAntBoxHole.gameObject.SetActive(false);
 
         transform.SetParent(washingMachineStartSlot.transform);
         transform.localPosition = new Vector3(0, 0, -1);

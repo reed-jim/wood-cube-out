@@ -189,10 +189,10 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
-            // Tween.Delay(0.5f).OnComplete(() =>
-            // {
-            //     SpecialElementManager.Ins.SpawnAntBoxLink();
-            // });
+            Tween.Delay(0.5f).OnComplete(() =>
+            {
+                SpecialElementManager.Ins.SpawnAntBoxLink();
+            });
 
             return washingMachineItems;
         }

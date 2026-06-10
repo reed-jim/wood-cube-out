@@ -28,6 +28,16 @@ public class FactionMapper : Singleton<FactionMapper>
         return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
+    public Sprite GetDoubleAntLinkSprite(Color faction)
+    {
+        return mapper.First(item => item.color == faction).spriteContainer.doubleBoxLink;
+    }
+
+    public Sprite GetDoubleAntHoleSprite(Color faction)
+    {
+        return mapper.First(item => item.color == faction).spriteContainer.doubleBoxHole;
+    }
+
     public string GetAntBoxSkin(Color faction)
     {
         return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
@@ -47,6 +57,8 @@ public class SpriteContainer
     // public Sprite antBoxSprite;
     // public Sprite antBoxLidSprite;
     public Sprite tileSprite;
+    public Sprite doubleBoxLink;
+    public Sprite doubleBoxHole;
     public string antBoxSkin;
 }
 

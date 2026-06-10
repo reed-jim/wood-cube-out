@@ -37,6 +37,18 @@ public class AntBoxLink : MonoBehaviour
             WashingMachineItem antBox = antBoxes[i];
 
             antBox.numSlotRequired = antBoxes.Length;
+
+            if (i == 0)
+            {
+                leftHalf.sprite = FactionMapper.Ins.GetDoubleAntLinkSprite(antBox.faction);
+            }
+            else
+            {
+                rightHalf.sprite = FactionMapper.Ins.GetDoubleAntLinkSprite(antBox.faction);
+            }
+
+            antBox.doubleAntBoxHole.gameObject.SetActive(true);
+            antBox.doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(antBox.faction);
         }
 
         this.antBoxes = antBoxes;
@@ -68,12 +80,16 @@ public class AntBoxLink : MonoBehaviour
         Vector3 a = antBoxes[0].lid.transform.position.AddZ(-0.2f);
         Vector3 b = antBoxes[1].lid.transform.position.AddZ(-0.2f);
 
-        if (a.x > b.x)
-        {
-            Vector3 temp = a;
-            a = b;
-            b = temp;
-        }
+        // if (a.x > b.x)
+        // {
+        //     Vector3 temp = a;
+        //     a = b;
+        //     b = temp;
+
+        //     Sprite tempSprite = leftHalf.sprite;
+        //     leftHalf.sprite = rightHalf.sprite;
+        //     rightHalf.sprite = tempSprite;
+        // }
 
         Vector2 dir = b - a;
         float distance = dir.magnitude;
