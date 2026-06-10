@@ -1,3 +1,4 @@
+using System;
 using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
@@ -32,7 +33,11 @@ namespace AntsFlow
 
         private int siblingIndex;
         private float stuckTime;
+        private float stuckTimeNoReachDestination;
         private float stuckThreshold;
+        private float stuckNoReachDestinationThreshold;
+
+        public static event Action requestUpdateNavmeshEvent;
 
 
         void Awake()
@@ -141,9 +146,23 @@ namespace AntsFlow
 
             if (isMovingToTile || isMovingToNest)
             {
-                if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f && ReachedDestination(1f))
+                if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f)
                 {
-                    stuckTime += Time.deltaTime;
+                    if (ReachedDestination(1f))
+                    {
+                        stuckTime += Time.deltaTime;
+                    }
+                    else
+                    {
+                        stuckTimeNoReachDestination += Time.deltaTime;
+                    }
+
+                    if (stuckTimeNoReachDestination > stuckNoReachDestinationThreshold)
+                    {
+                        requestUpdateNavmeshEvent?.Invoke();
+
+                        stuckTimeNoReachDestination = 0;
+                    }
                 }
             }
         }

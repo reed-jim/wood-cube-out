@@ -20,6 +20,8 @@ namespace AntsFlow
 
         public List<Color> poolFaction;
         public bool isTutorialLevel;
+        public int difficulty;
+        public SpecialElementConfig specialElementConfig;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
         public Vector3 spawnScale = 0.6f * Vector3.one;
@@ -40,6 +42,7 @@ namespace AntsFlow
         private int numTileX = 12;
         private int numTileY = 12;
         private float colorGroupThreshold = 0.05f;
+        public float difficulty;
 
         public override void OnInspectorGUI()
         {
@@ -582,4 +585,24 @@ namespace AntsFlow
         }
     }
 #endif
+}
+
+[Serializable]
+public class SpecialElementConfig
+{
+    public SpecialElementItemConfig hiddenAntBoxConfig;
+    public FrozenAntBoxConfig frozenAntBoxConfig;
+    public SpecialElementItemConfig doubleAntBoxConfig;
+}
+
+[Serializable]
+public class SpecialElementItemConfig
+{
+    public int num;
+}
+
+[Serializable]
+public class FrozenAntBoxConfig : SpecialElementItemConfig
+{
+    public int[] numBoxToUnfreeze;
 }

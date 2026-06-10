@@ -15,8 +15,18 @@ public enum LevelElement
 public class SpecialElementManager : Singleton<SpecialElementManager>
 {
     public LevelElement nextLevelElement;
+    public SpecialElementConfig specialElementConfig;
+
+    // private FrozenAntBoxConfig frozenAntBoxConfig;
+    // private SpecialElementItemConfig hiddenAntBoxConfig;
+    // private SpecialElementItemConfig doubleAntBoxConfig;
 
     public List<AntBoxLink> antBoxLinks;
+
+    public void Setup(AntsFlow.LevelItem levelItem)
+    {
+        specialElementConfig = levelItem.specialElementConfig;
+    }
 
     public void SpawnAntBoxLink()
     {
@@ -53,7 +63,29 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
     public void RandomizeNextLevelElement()
     {
-        nextLevelElement = LevelElement.NormalAntBox;
-        // nextLevelElement = CommonUtil.GetRandomEnumValue<LevelElement>();
+        int random = Random.Range(0, 10);
+
+        Debug.Log($"RandomizeNextLevelElement {random}");
+
+        if (random < 5)
+        {
+            Debug.Log($"RandomizeNextLevelElement {specialElementConfig.hiddenAntBoxConfig.num} {specialElementConfig.frozenAntBoxConfig.num}");
+            if (specialElementConfig.hiddenAntBoxConfig.num > 0)
+            {
+                nextLevelElement = LevelElement.HiddenAntBox;
+
+                specialElementConfig.hiddenAntBoxConfig.num--;
+            }
+            else if (specialElementConfig.frozenAntBoxConfig.num > 0)
+            {
+                nextLevelElement = LevelElement.FreezedAntBox;
+
+                specialElementConfig.frozenAntBoxConfig.num--;
+            }
+        }
+        else
+        {
+            nextLevelElement = LevelElement.NormalAntBox;
+        }
     }
 }

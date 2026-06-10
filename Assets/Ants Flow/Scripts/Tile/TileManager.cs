@@ -22,6 +22,7 @@ namespace AntsFlow
         public Transform antNest;
 
         private bool isUpdatingNavMesh;
+        private bool isUpdatingNavMeshWhenStuck;
         private Coroutine delayedUpdateNavmeshCoroutine;
         private AsyncOperation navMeshUpdateOperation;
         private Vector2 levelCenter;
@@ -34,12 +35,14 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
+            BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
+            BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
         }
 
         public void CalculateLevelCenter()
@@ -140,6 +143,8 @@ namespace AntsFlow
 
         public void UpdateNavMesh(BaseTile tile)
         {
+            return;
+            
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
             {
                 if (delayedUpdateNavmeshCoroutine != null)
@@ -159,6 +164,42 @@ namespace AntsFlow
             Tween.Delay(2).OnComplete(() =>
             {
                 isUpdatingNavMesh = false;
+            });
+        }
+
+        public void UpdateNavMesh()
+        {
+            return;
+
+            if (isUpdatingNavMesh)
+            {
+                return;
+            }
+
+            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            isUpdatingNavMesh = true;
+
+            Tween.Delay(2).OnComplete(() =>
+            {
+                isUpdatingNavMesh = false;
+            });
+        }
+
+        public void UpdateNavMeshWhenStuck()
+        {
+            if (isUpdatingNavMeshWhenStuck)
+            {
+                return;
+            }
+
+            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            isUpdatingNavMeshWhenStuck = true;
+
+            Tween.Delay(0.3f).OnComplete(() =>
+            {
+                isUpdatingNavMeshWhenStuck = false;
             });
         }
 

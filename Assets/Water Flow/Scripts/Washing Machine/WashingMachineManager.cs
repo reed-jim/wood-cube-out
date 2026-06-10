@@ -5,6 +5,7 @@ using Dreamteck.Utilities;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.VisualScripting;
+using UnityEditor.UIElements;
 using UnityEngine;
 using static GameEnum;
 
@@ -21,6 +22,11 @@ namespace AntsFlow
         public List<Color> poolFaction;
 
         public int difficultyLevel;
+        public int minAntNumberThreshold;
+        public int maxAntNumberThreshold;
+        public AnimationCurve difficultyCurve;
+
+        private int totalTile;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
@@ -58,10 +64,13 @@ namespace AntsFlow
         {
             this.levelItem = levelItem;
 
+            difficultyLevel = levelItem.difficulty;
+
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
-
             TileManager.Ins.CalculateLevelCenter();
+
+            SpecialElementManager.Ins.Setup(levelItem);
 
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines();
 
@@ -145,12 +154,14 @@ namespace AntsFlow
 
             poolFaction.AddRange(levelItem.poolFaction);
 
+            totalTile = poolFaction.Count;
+
             Color nextFaction;
             int numAnt;
 
             List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
 
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            for (int i = 0; i < 6; i++)
             {
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
@@ -165,7 +176,7 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: i / 6, out nextFaction, out numAnt);
+                GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
@@ -241,7 +252,7 @@ namespace AntsFlow
             Color nextFaction;
             int numAnt;
 
-            if (GetNextAntSpawnByDifficulty(difficultyLevel: difficultyLevel, out nextFaction, out numAnt))
+            if (GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt))
             {
 
             }
@@ -530,6 +541,13 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty();
 
+            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+
+            foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            {
+                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            }
+
             for (int j = difficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
             {
                 if (numSpawnPerFactionOrderByDifficulty.ElementAt(j).Value > 0)
@@ -651,6 +669,8 @@ namespace AntsFlow
                 }
 
                 CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 1 : 0);
+                // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 50 : 0);
+                // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.ring);
             }
 
             for (int i = 0; i < washingMachineStartSlots.Count; i++)
@@ -686,17 +706,50 @@ namespace AntsFlow
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
-                int numNotBlockedTileOfFaction = numNotBlockedTilePerFaction[faction];
-
-                // int minValue = Mathf.Min(numNotBlockedTileOfFaction, maxAntRequiredPerFaction[faction]);
-                int minValue = 1;
                 int maxValue = maxAntRequiredPerFaction[faction];
+                maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
 
-                // CommonUtil.SumValueOfDictionary(result, faction, maxValue);
-                CommonUtil.SumValueOfDictionary(result, faction, CommonUtil.GaussianRange((int)(maxValue / 2f), maxValue));
+                if (maxValue < minAntNumberThreshold)
+                {
+                    CommonUtil.SumValueOfDictionary(result, faction, maxValue);
+                }
+                else
+                {
+                    CommonUtil.SumValueOfDictionary(result, faction, RandomPreferMultipleOf5(minAntNumberThreshold, maxValue));
+                }
             }
 
             return result;
+        }
+
+        public static int RandomPreferMultipleOf5(int min, int max)
+        {
+            int first = Mathf.CeilToInt(min / 5f) * 5;
+            int last = Mathf.FloorToInt(max / 5f) * 5;
+
+            // At least one multiple of 5 exists in range
+            if (first <= last)
+            {
+                int count = ((last - first) / 5) + 1;
+                return first + UnityEngine.Random.Range(0, count) * 5;
+            }
+
+            // No multiple of 5 exists in range
+            return UnityEngine.Random.Range(min, max + 1);
+        }
+
+        private float GetLevelProgress()
+        {
+            return (totalTile - poolFaction.Count) / (float)totalTile;
+        }
+
+        private int GetCurrentLevelDifficulty()
+        {
+            float progress = GetLevelProgress();
+
+            int difficultyAtCurrentProgress = (int)(difficultyLevel * difficultyCurve.Evaluate(progress));
+
+            return difficultyAtCurrentProgress;
         }
         #endregion
     }

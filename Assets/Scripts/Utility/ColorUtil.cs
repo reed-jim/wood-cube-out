@@ -57,6 +57,13 @@ public static class ColorUtil
         ColorUtility.TryParseHtmlString(hex, out color);
         return color;
     }
+
+    public static string ColorToHex(Color color)
+    {
+        string hex = "#" + ColorUtility.ToHtmlStringRGB(color);
+        
+        return hex;
+    }
     
     public static Color GetColorFromHex(string hex)
     {

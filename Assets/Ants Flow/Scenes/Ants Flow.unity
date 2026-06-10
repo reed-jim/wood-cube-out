@@ -2460,6 +2460,41 @@ MonoBehaviour:
   - {fileID: 1351706839}
   poolFaction: []
   difficultyLevel: 0
+  minAntNumberThreshold: 10
+  maxAntNumberThreshold: 50
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.0005211206
+      outSlope: 0.0005211206
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.50044453
+      value: 0.00026079197
+      inSlope: 0.025012394
+      outSlope: 0.025012394
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.175322
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.0012577
+      outSlope: 2.0012577
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &555808846
 Transform:
   m_ObjectHideFlags: 0
