@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AntsFlow;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -36,6 +37,11 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private UserResourcesObserver userResourcesObserver;
     [SerializeField] private ScrewBoxesObserver screwBoxesObserver;
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
+
+    [Header("Booster Anim")]
+    [SerializeField] private SkeletonGraphic skeletonGraphic;
+    [SpineAnimation] public string appearAnim;
+    [SpineAnimation] public string ideaAnim;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
@@ -91,6 +97,8 @@ public class BoosterUI : MonoBehaviour
         _initialAddMoreScrewPortButtonPosition = addMoreScrewPortButtonRT.localPosition;
         _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
         _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
+
+        skeletonGraphic.gameObject.SetActive(false);
     }
 
     void OnDestroy()
@@ -150,22 +158,38 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
-        if (boosterType == BoosterType.AddScrewPort)
+        skeletonGraphic.gameObject.SetActive(true);
+        skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+        Tween.Delay(0.667f).OnComplete(() =>
         {
-            AddMoreScrewPort();
-        }
-        else if (boosterType == BoosterType.BreakObject)
-        {
-            Shuffle();
-        }
-        else if (boosterType == BoosterType.ClearScrewPorts)
-        {
-            ClearAllScrewPorts();
-        }
-        else if (boosterType == BoosterType.ClearOneColor)
-        {
-            EnableClearOneColorMode();
-        }
+            skeletonGraphic.AnimationState.SetAnimation(0, ideaAnim, false);
+
+            Tween.Delay(1.667f).OnComplete(() =>
+            {
+                Tween.Alpha(skeletonGraphic, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    skeletonGraphic.color = Color.white;
+                    skeletonGraphic.gameObject.SetActive(false);
+
+                    if (boosterType == BoosterType.AddScrewPort)
+                    {
+                        AddMoreScrewPort();
+                    }
+                    else if (boosterType == BoosterType.BreakObject)
+                    {
+                        Shuffle();
+                    }
+                    else if (boosterType == BoosterType.ClearScrewPorts)
+                    {
+                        ClearAllScrewPorts();
+                    }
+                    else if (boosterType == BoosterType.ClearOneColor)
+                    {
+                        EnableClearOneColorMode();
+                    }
+                });
+            });
+        });
     }
 
     private void AddMoreScrewPort()
