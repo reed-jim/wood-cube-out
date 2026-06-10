@@ -116,8 +116,9 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         SaferioTween.AlphaShow(glow, onCompleteAction: () =>
         {
             this.itemCategory = itemCategory;
+            isText = !string.IsNullOrEmpty(textData);
 
-            if (!string.IsNullOrEmpty(textData))
+            if (isText)
             {
                 icon.gameObject.SetActive(false);
                 category.gameObject.SetActive(true);

@@ -13,7 +13,6 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private RectTransform categoryContainer;
     [SerializeField] private TMP_Text category;
     [SerializeField] private TMP_Text tileCountText;
-    [SerializeField] private TMP_Text txFilled;
 
     [SerializeField] private Button unlockButton;
     [SerializeField] private Image currentTileImage;
@@ -73,7 +72,7 @@ public class TileSlotContainer : MonoBehaviour
         this.itemCategory = itemCategory;
         this.maxTile = targetCardAmount;
         this.isCompleted = false;
-        category.text = itemCategory.ToString().Replace("_", " ");
+        category.text = "???";
 
         lockImage.gameObject.SetActive(isLocked);
         categoryContainer.gameObject.SetActive(!isLocked);
@@ -249,38 +248,51 @@ public class TileSlotContainer : MonoBehaviour
 
     public void Complete(ItemCategory nextCategory, Action onCompleteAction)
     {
-        Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
-
-        float initialPositionY = transform.localPosition.y;
-
         isMoving = true;
 
-        Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f)
-        .OnComplete(() =>
+        Tween.Alpha(category, 0f, duration: 0.2f).OnComplete(() =>
         {
-            Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
-            .OnComplete(() =>
+            category.text = this.itemCategory.ToString().Replace("_", " ");
+            Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
             {
-                isMoving = false;
+                float initialPositionY = transform.localPosition.y;
 
-                onCompleteAction?.Invoke();
+                Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
+                .OnComplete(() =>
+                {
+                    Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
+                    category.alpha = 1f;
+
+                    Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+                    .OnComplete(() =>
+                    {
+                        isMoving = false;
+                        onCompleteAction?.Invoke();
+                    });
+                });
             });
         });
     }
 
     public void Hide(Action onCompleteAction)
     {
-        float initialPositionY = transform.localPosition.y;
-
         isMoving = true;
         isHidden = true;
 
-        Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f)
-        .OnComplete(() =>
+        Tween.Alpha(category, 0f, duration: 0.2f).OnComplete(() =>
         {
-            isMoving = false;
+            category.text = this.itemCategory.ToString().Replace("_", " ");
+            Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
+            {
+                float initialPositionY = transform.localPosition.y;
 
-            onCompleteAction?.Invoke();
+                Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
+                .OnComplete(() =>
+                {
+                    isMoving = false;
+                    onCompleteAction?.Invoke();
+                });
+            });
         });
     }
 }

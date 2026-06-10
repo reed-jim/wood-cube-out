@@ -159,10 +159,15 @@ public static class GameConstants
     {
         switch (boosterType)
         {
-            case BoosterType.AddScrewPort: return 3;
-            case BoosterType.BreakObject: return 6;
-            case BoosterType.ClearScrewPorts: return 9;
-            default: return 3;
+            //case BoosterType.AddScrewPort: return 3;
+            //case BoosterType.BreakObject: return 6;
+            //case BoosterType.ClearScrewPorts: return 9;
+            case BoosterType.AddScrewPort: return 1;
+            case BoosterType.BreakObject: return 1;
+            case BoosterType.ClearScrewPorts: return 1;
+            //default: return 3;
+            default: return 1;
+
         }
     }
     #endregion

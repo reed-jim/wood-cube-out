@@ -220,6 +220,11 @@ public class BoosterUI : MonoBehaviour
 
     private void Shuffle()
     {
+        if (!TileManager.Ins.CanUseShuffleBooster())
+        {
+            return;
+        }
+
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);

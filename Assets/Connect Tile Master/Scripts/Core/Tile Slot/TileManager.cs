@@ -996,6 +996,11 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    public bool CanUseShuffleBooster()
+    {
+        return tiles.Any(tile => !tile.IsOnSlot && !tile.IsDone && !tile.IsOutside);
+    }
+
     public void UseShuffleBooster()
     {
         List<ItemCategory> categoryPoolForAllTileLeft = new List<ItemCategory>();
@@ -1008,6 +1013,20 @@ public class TileManager : Singleton<TileManager>
             if (tile.IsOnSlot)
             {
                 continue;
+            }
+
+            if (tile.IsText)
+            {
+                if (!availableTextsPerCategory.ContainsKey(tile.ItemCategory))
+                    availableTextsPerCategory[tile.ItemCategory] = new List<string>();
+                availableTextsPerCategory[tile.ItemCategory].Add(tile.category.text);
+            }
+            else
+            {
+                if (!availableSpritesPerCategory.ContainsKey(tile.ItemCategory))
+                    availableSpritesPerCategory[tile.ItemCategory] = new List<Sprite>();
+                if (tile.icon.sprite != null)
+                    availableSpritesPerCategory[tile.ItemCategory].Add(tile.icon.sprite);
             }
 
             categoryPoolForAllTileLeft.Add(tile.ItemCategory);
@@ -1041,11 +1060,14 @@ public class TileManager : Singleton<TileManager>
             if (priorityCategory.Contains(categoryPoolForAllTileLeft[i]) && shuffledCategory.Count(item => item == categoryPoolForAllTileLeft[i]) < targetCardAmount)
             {
                 shuffledCategory.Add(categoryPoolForAllTileLeft[i]);
-                toRemoveCategory.Remove(categoryPoolForAllTileLeft[i]);
+                toRemoveCategory.Add(categoryPoolForAllTileLeft[i]);
             }
         }
 
-        categoryPoolForAllTileLeft.RemoveAll(item => toRemoveCategory.Contains(item));
+        foreach (var category in toRemoveCategory)
+        {
+            categoryPoolForAllTileLeft.Remove(category);
+        }
 
         categoryPoolForAllTileLeft.Shuffle();
 
@@ -1055,7 +1077,47 @@ public class TileManager : Singleton<TileManager>
 
         for (int i = 0; i < tilesToShuffle.Count; i++)
         {
-            tilesToShuffle[i].Shuffle(shuffledCategory[i], tileIconContainer.GetRandomIconOfCategory(shuffledCategory[i]));
+            ItemCategory newCategory = shuffledCategory[i];
+
+            bool useText = false;
+            int textsLeft = availableTextsPerCategory.ContainsKey(newCategory) ? availableTextsPerCategory[newCategory].Count : 0;
+            int spritesLeft = availableSpritesPerCategory.ContainsKey(newCategory) ? availableSpritesPerCategory[newCategory].Count : 0;
+
+            if (textsLeft > 0 && spritesLeft > 0)
+            {
+                useText = UnityEngine.Random.Range(0, textsLeft + spritesLeft) < textsLeft;
+            }
+            else if (textsLeft > 0)
+            {
+                useText = true;
+            }
+            else if (spritesLeft > 0)
+            {
+                useText = false;
+            }
+            else
+            {
+                CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == newCategory);
+                bool hasText = iconSet.text != null && iconSet.text.Length > 0;
+                bool hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
+                if (hasText && hasIcon) useText = UnityEngine.Random.value > 0.5f;
+                else if (hasText) useText = true;
+                else useText = false;
+            }
+
+            string textData = null;
+            Sprite spriteData = null;
+
+            if (useText)
+            {
+                textData = GetUniqueText(newCategory);
+            }
+            else
+            {
+                spriteData = GetUniqueSprite(newCategory);
+            }
+
+            tilesToShuffle[i].Shuffle(newCategory, spriteData, textData);
         }
     }
 
