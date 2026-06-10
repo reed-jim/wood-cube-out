@@ -36,7 +36,9 @@ public class AntBoxLink : MonoBehaviour
         {
             WashingMachineItem antBox = antBoxes[i];
 
+            antBox.isDouble = true;
             antBox.numSlotRequired = antBoxes.Length;
+            antBox.skeletonAnimation.AnimationState.SetAnimation(0, antBox.doubleBoxAnimation, false);
 
             if (i == 0)
             {
@@ -46,9 +48,6 @@ public class AntBoxLink : MonoBehaviour
             {
                 rightHalf.sprite = FactionMapper.Ins.GetDoubleAntLinkSprite(antBox.faction);
             }
-
-            antBox.doubleAntBoxHole.gameObject.SetActive(true);
-            antBox.doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(antBox.faction);
         }
 
         this.antBoxes = antBoxes;
@@ -112,6 +111,17 @@ public class AntBoxLink : MonoBehaviour
 
         leftHalf.size = size;
         rightHalf.size = size;
+
+        for (int i = 0; i < antBoxes.Length; i++)
+        {
+            WashingMachineItem antBox = antBoxes[i];
+
+            if (antBox.isInSlot)
+            {
+                antBox.doubleAntBoxHole.gameObject.SetActive(true);
+                antBox.doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(antBox.faction);
+            }
+        }
     }
 
     private void Unlink()

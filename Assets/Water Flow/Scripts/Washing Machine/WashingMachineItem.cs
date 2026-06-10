@@ -39,6 +39,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isMoving;
     public bool isAnimating;
     public bool isInSlot;
+    public bool isDouble;
     public bool isGhostMode;
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
@@ -126,6 +127,7 @@ public class WashingMachineItem : MonoBehaviour
 
         isInSlot = false;
         isGhostMode = false;
+        isDouble = false;
         remainingNumber = number;
     }
 
@@ -283,7 +285,18 @@ public class WashingMachineItem : MonoBehaviour
     public void OpenTheBox()
     {
         Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
-        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+
+        if (isDouble)
+        {
+            doubleAntBoxHole.gameObject.SetActive(true);
+            doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(faction);
+
+            skeletonAnimation.AnimationState.SetAnimation(0, doubleBoxAnimation, false);
+        }
+        else
+        {
+            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        }
 
         // CheckAntsPath();
     }
