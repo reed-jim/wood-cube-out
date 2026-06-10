@@ -86,7 +86,7 @@ namespace AntsFlow
                 }
             }
 
-            validTiles = validTiles.OrderByDescending(item => item.ring).ThenBy(item => item.priority).ToList();
+            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
             // validTiles = SortFrom9OClockCounterClockwise(validTiles, levelCenter);
 
             // validTiles = validTiles
