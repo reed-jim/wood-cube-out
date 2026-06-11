@@ -41,7 +41,12 @@ public class IAPShopPopup : BasePopup
 
     protected override void Show(Action onCompletedAction = null)
     {
-        base.Show(onCompletedAction);
+        scrollRect.vertical = false;
+
+        base.Show(onCompletedAction: () =>
+        {
+            ScrollToTop();
+        });
 
         fetchLocalizedPriceIAPEvent?.Invoke();
 
@@ -50,20 +55,45 @@ public class IAPShopPopup : BasePopup
 
     private void ShowAndScrollToCoinPack(ScreenRoute prevRoute)
     {
-        scrollRect.vertical = false;
+        Show();
 
-        Show(onCompletedAction: () =>
-        {
-            float distance = 0.9f * (firstPackRT.localPosition.y - firstCoinPackRT.localPosition.y);
+        // scrollRect.vertical = false;
 
-            _tweens.Add(Tween.LocalPositionY(scrollContent, distance, duration: scrollToCoinPackDuration)
-            .OnComplete(() =>
-            {
-                scrollRect.vertical = true;
-            }));
-        });
+        // Show(onCompletedAction: () =>
+        // {
+        //     Tween.Custom(scrollRect.verticalNormalizedPosition, 1, duration: 1f, onValueChange: newVal =>
+        //     {
+        //         scrollRect.verticalNormalizedPosition = newVal;
+        //     })
+        //     .OnComplete(() =>
+        //     {
+        //         scrollRect.vertical = true;
+        //     });
+
+        //     // float distance = 0.9f * (firstPackRT.localPosition.y - firstCoinPackRT.localPosition.y);
+
+        //     // _tweens.Add(Tween.LocalPositionY(scrollContent, distance, duration: scrollToCoinPackDuration)
+        //     // .OnComplete(() =>
+        //     // {
+        //     //     scrollRect.vertical = true;
+        //     // }));
+        // });
 
         _prevRoute = prevRoute;
+    }
+
+    private void ScrollToTop()
+    {
+        scrollRect.vertical = false;
+
+        Tween.Custom(scrollRect.verticalNormalizedPosition, 1, duration: 0.6f, onValueChange: newVal =>
+        {
+            scrollRect.verticalNormalizedPosition = newVal;
+        })
+        .OnComplete(() =>
+        {
+            scrollRect.vertical = true;
+        });
     }
 
     protected override void Hide()
