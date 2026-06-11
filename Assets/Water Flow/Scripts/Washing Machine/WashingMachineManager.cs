@@ -74,7 +74,7 @@ namespace AntsFlow
 
             SpecialElementManager.Ins.Setup(levelItem);
 
-            List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines();
+            List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxed);
 
             if (levelItem.isTutorialLevel)
             {
@@ -153,7 +153,7 @@ namespace AntsFlow
         }
 
         #region Spawn
-        public List<WashingMachineItem> SpawnFirstWashingMachines()
+        public List<WashingMachineItem> SpawnFirstWashingMachines(int numStartAntBoxes)
         {
             poolFaction = new List<Color>();
 
@@ -166,7 +166,7 @@ namespace AntsFlow
 
             List<WashingMachineItem> washingMachineItems = new List<WashingMachineItem>();
 
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < numStartAntBoxes; i++)
             {
                 WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 

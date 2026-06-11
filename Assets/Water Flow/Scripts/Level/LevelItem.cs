@@ -21,6 +21,7 @@ namespace AntsFlow
         public List<Color> poolFaction;
         public bool isTutorialLevel;
         public int difficulty;
+        public int numStartAntBoxed = 6;
         public SpecialElementConfig specialElementConfig;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);

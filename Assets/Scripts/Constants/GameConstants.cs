@@ -160,6 +160,16 @@ public static class GameConstants
     public static int BREAK_OBJECT_BOOSTER_INDEX = 1;
     public static int CLEAR_HOLES_BOOSTER_INDEX = 2;
     public static int UNLOCK_SCREW_BOX_BOOSTER_INDEX = 3;
+    public static int GetLevelToUnlockBooster(BoosterType boosterType)
+    {
+        switch (boosterType)
+        {
+            case BoosterType.BreakObject: return 3;
+            case BoosterType.ClearScrewPorts: return 6;
+            case BoosterType.ClearOneColor: return 9;
+            default: return 3;
+        }
+    }
     #endregion
 
     #region LEVEL
