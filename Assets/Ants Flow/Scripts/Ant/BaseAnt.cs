@@ -25,6 +25,7 @@ namespace AntsFlow
         public int walkableAndNestMask;
 
 
+        public bool isMovingToSideTile;
         public bool isMovingToTile;
         public bool isMovingToNest;
         public bool isDroppingTile;
@@ -64,20 +65,23 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
-            Vector2 direction = navMeshAgent.velocity;
-
-            // Avoid jitter when nearly stopped
-            if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+            if (!isMovingToSideTile)
             {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+                Vector2 direction = navMeshAgent.velocity;
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+                // Avoid jitter when nearly stopped
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = Quaternion.Lerp(
+                        transform.rotation,
+                        targetRotation,
+                        rotationSpeed * Time.deltaTime
+                    );
+                }
             }
 
             // if (navMeshAgent.isOnNavMesh)
@@ -191,6 +195,7 @@ namespace AntsFlow
             this.faction = faction;
 
             stuckTime = 0;
+            isMovingToSideTile = false;
         }
 
         public void SetGhostMode()
@@ -210,19 +215,23 @@ namespace AntsFlow
             tile.InvokeAntStartMoveToTileEvent();
 
             navMeshAgent.enabled = false;
-            navMeshAgent.areaMask = walkableMask;
-            navMeshAgent.enabled = true;
+            // navMeshAgent.areaMask = walkableMask;
+            // navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+            // navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+            MoveTo(tile.coordinate.transform.position.ChangeZ(0), onCompleteAction: () =>
+            {
+                stuckTime = 0;
+
+                tile.MoveToAnt(this);
+
+                MoveToNest();
+            });
             destination = tile.coordinate.transform.position.ChangeZ(0);
-            // seeker.StartPath(transform.position, tile.transform.position, OnPathComplete);
-            //AILerp.destination = tile.transform.position;
-            // AIDestinationSetter.target = tile.transform;
-            // AIPath.destination = tile.transform.position;
 
             this.tile = tile;
 
-            isMovingToTile = true;
+            isMovingToSideTile = true;
         }
 
         public void MoveToTileGhostMode(BaseTile tile)
@@ -297,9 +306,50 @@ namespace AntsFlow
             isMovingToNest = true;
         }
 
-        private void WanderAroundThenMoveBackToDestination()
+        public void MoveTo(Vector3 position, Action onCompleteAction = null)
         {
+            bool isNearLeft = transform.position.x < 0;
 
+            Vector3 nextPosition = isNearLeft ? transform.position.ChangeX(-9.5f) : transform.position.ChangeX(9.5f);
+            Vector2 direction = nextPosition - transform.position;
+            float moveSpeed = 6;
+
+            Rotate(direction);
+
+            Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                nextPosition = transform.position.ChangeY(position.y);
+                direction = nextPosition - transform.position;
+
+                Rotate(direction);
+
+                Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    // onCompleteAction?.Invoke();
+                    navMeshAgent.enabled = false;
+                    navMeshAgent.areaMask = walkableMask;
+                    navMeshAgent.enabled = true;
+
+                    navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+
+                    isMovingToSideTile = false;
+                    isMovingToTile = true;
+                });
+            });
+
+            void Rotate(Vector2 direction)
+            {
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = targetRotation;
+                }
+            }
         }
 
         void ReturnToNavMesh()
