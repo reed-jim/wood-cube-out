@@ -1,3 +1,4 @@
+using System;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,16 +11,22 @@ public class SettingItemUI : MonoBehaviour
     [SerializeField] private Button selectButton;
 
     public bool isActive;
+    private bool _isInTransition;
+
+    private Action<bool> onSwitched;
 
     void Awake()
     {
-        selectButton.onClick.AddListener(Select);
+        selectButton.onClick.AddListener(Switch);
     }
 
-    private void Select()
+    public void RegisterOnSwitchedEvent(Action<bool> action)
     {
-        isActive = !isActive;
+        onSwitched = action;
+    }
 
+    public void SetState(bool isActive)
+    {
         if (isActive)
         {
             SaferioTween.AlphaShow(activeState);
@@ -29,6 +36,41 @@ public class SettingItemUI : MonoBehaviour
         else
         {
             SaferioTween.AlphaHide(activeState);
+            SaferioTween.AlphaShow(inactiveState);
+            SaferioTween.AlphaShow(cross);
+        }
+
+        this.isActive = isActive;
+    }
+
+    private void Switch()
+    {
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        isActive = !isActive;
+
+        if (isActive)
+        {
+            SaferioTween.AlphaShow(activeState);
+            SaferioTween.AlphaHide(inactiveState);
+            SaferioTween.AlphaHide(cross, onCompleteAction: () =>
+            {
+                _isInTransition = false;
+            });
+        }
+        else
+        {
+            SaferioTween.AlphaHide(activeState, onCompleteAction: () =>
+            {
+                _isInTransition = false;
+            });
             SaferioTween.AlphaShow(inactiveState);
             SaferioTween.AlphaShow(cross);
         }

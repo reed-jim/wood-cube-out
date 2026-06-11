@@ -1826,7 +1826,7 @@ GameObject:
   - component: {fileID: 6778539611711192657}
   - component: {fileID: 9047227480353637906}
   - component: {fileID: 5175478263147644818}
-  - component: {fileID: 591062124443485034}
+  - component: {fileID: 8832382180898916098}
   m_Layer: 5
   m_Name: Title Text
   m_TagString: Untagged
@@ -1914,7 +1914,7 @@ MonoBehaviour:
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 100
-  m_fontStyle: 0
+  m_fontStyle: 17
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
@@ -1966,7 +1966,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   translationName: Revive
   FallbackText: Good Job!
---- !u!114 &591062124443485034
+--- !u!114 &8832382180898916098
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1975,43 +1975,43 @@ MonoBehaviour:
   m_GameObject: {fileID: 7228871045657117349}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a45946f3c67abe341ae84d3b8ef7a5df, type: 3}
+  m_Script: {fileID: 11500000, guid: 47c0cc445d947f740aef1f14069e2f57, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CurvedTextMeshPro
-  curve:
+  m_EditorClassIdentifier: Assembly-CSharp::TMPWarpText
+  warpCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.0000013262033
-      value: -0.00001001358
-      inSlope: 0
-      outSlope: 0
+      time: 0
+      value: 0
+      inSlope: 10.12177
+      outSlope: 10.12177
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.28428027
-      value: 5.001269
-      inSlope: -0.10662109
-      outSlope: -0.10662109
+      time: 0.5
+      value: 2
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
       outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
-      value: 0.04762268
-      inSlope: 0
-      outSlope: 0
+      value: 0
+      inSlope: -10.837328
+      outSlope: -10.837328
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  curveScale: 5.49
+  curveScale: 6
 --- !u!1 &7337932656295590703
 GameObject:
   m_ObjectHideFlags: 0
@@ -2260,7 +2260,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 68, y: 12}
-  m_SizeDelta: {x: 311.9492, y: 130.4698}
+  m_SizeDelta: {x: 311.9492, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4586842759361498547
 CanvasRenderer:
@@ -2317,13 +2317,13 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 61.45
+  m_fontSize: 52.6
   m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
   m_fontSizeMax: 72
-  m_fontStyle: 0
+  m_fontStyle: 16
   m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
