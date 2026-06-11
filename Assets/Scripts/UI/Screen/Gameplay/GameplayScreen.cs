@@ -15,6 +15,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [Header("Buttons")]
     [SerializeField] private Button pauseButton;
     [SerializeField] private Button noAdsButton;
+    [SerializeField] private Button openShopPopupButton;
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
@@ -46,6 +47,7 @@ public class GameplayScreen : Singleton<GameplayScreen>
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
 
+        openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
 
         if (UserData.IsRemoveAds)
@@ -109,6 +111,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
     private void OpenDebugPopupButton()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Debug);
+    }
+
+    private void OpenShopPopupButton()
+    {
+        switchRouteEvent?.Invoke(ScreenRoute.IAPShopPopup);
     }
 
     private void NextLevel()
