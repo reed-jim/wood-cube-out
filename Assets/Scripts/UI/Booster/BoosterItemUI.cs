@@ -1,6 +1,8 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Spine;
+using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +13,13 @@ public class BoosterItemUI : MonoBehaviour
     [SerializeField] private RectTransform quantityTextContainer;
     [SerializeField] private RectTransform quantityTextRT;
     [SerializeField] private RectTransform addButtonRT;
+    [SerializeField] private SkeletonGraphic skeletonGraphic;
+
+    [SpineAnimation] public string idleAnimation;
+    [SpineAnimation] public string pressAnimation;
 
     [SerializeField] private TMP_Text quantityText;
+    [SerializeField] private Button pressButton;
     [SerializeField] private Button addButton;
 
     [Header("CUSTOMIZE")]
@@ -30,6 +37,7 @@ public class BoosterItemUI : MonoBehaviour
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
+        pressButton.onClick.AddListener(Press);
 
         Setup();
     }
@@ -58,6 +66,23 @@ public class BoosterItemUI : MonoBehaviour
         {
             quantityTextContainer.gameObject.SetActive(false);
             addButtonRT.gameObject.SetActive(true);
+        }
+    }
+
+    private void Press()
+    {
+        skeletonGraphic.AnimationState.Complete += OnAnimationComplete;
+
+        skeletonGraphic.AnimationState.SetAnimation(0, pressAnimation, false);
+
+        void OnAnimationComplete(TrackEntry trackEntry)
+        {
+            skeletonGraphic.AnimationState.Complete -= OnAnimationComplete;
+
+            if (trackEntry.Animation.Name == pressAnimation)
+            {
+                skeletonGraphic.AnimationState.SetAnimation(0, idleAnimation, false);
+            }
         }
     }
 

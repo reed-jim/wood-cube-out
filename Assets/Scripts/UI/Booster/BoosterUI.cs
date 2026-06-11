@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AntsFlow;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Spine;
 using Spine.Unity;
 using UnityEngine;
 using UnityEngine.UI;
@@ -42,6 +43,8 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private SkeletonGraphic skeletonGraphic;
     [SpineAnimation] public string appearAnim;
     [SpineAnimation] public string ideaAnim;
+    [SpineSlot] public string slotName;
+    [SpineAttachment] public string[] boosterAttachments;
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float transitionTime;
@@ -160,6 +163,25 @@ public class BoosterUI : MonoBehaviour
 
         skeletonGraphic.gameObject.SetActive(true);
         skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+        for (int i = 0; i < boosterAttachments.Length; i++)
+        {
+            skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[i], null);
+        }
+        int boosterIndex = 0;
+        if (boosterType == BoosterType.BreakObject)
+        {
+            boosterIndex = 1;
+        }
+        else if (boosterType == BoosterType.ClearScrewPorts)
+        {
+            boosterIndex = 2;
+        }
+        else
+        {
+            boosterIndex = 3;
+        }
+        skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[boosterIndex], boosterAttachments[boosterIndex]);
+
         Tween.Delay(0.667f).OnComplete(() =>
         {
             skeletonGraphic.AnimationState.SetAnimation(0, ideaAnim, false);
@@ -177,11 +199,11 @@ public class BoosterUI : MonoBehaviour
                     }
                     else if (boosterType == BoosterType.BreakObject)
                     {
-                        Shuffle();
+                        EnableAllAntBoxes();
                     }
                     else if (boosterType == BoosterType.ClearScrewPorts)
                     {
-                        ClearAllScrewPorts();
+                        Shuffle();
                     }
                     else if (boosterType == BoosterType.ClearOneColor)
                     {
@@ -365,7 +387,7 @@ public class BoosterUI : MonoBehaviour
         Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
     }
 
-    private void ClearAllScrewPorts()
+    private void EnableAllAntBoxes()
     {
         if (!IsBoosterAvailable(boosterIndex: 2))
         {
