@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using static GameEnum;
 using System.Collections.Generic;
 using System.Linq;
@@ -423,135 +423,135 @@ namespace AntsFlow
         {
             BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            Vector3 center = Vector3.zero;
+            // Gom theo hàng
+            Dictionary<float, List<BaseTile>> rows = new();
 
             foreach (var tile in tiles)
             {
-                center += tile.transform.localPosition;
+                float y = tile.transform.localPosition.y;
+
+                // Làm tròn để tránh lỗi float
+                y = Mathf.Round(y * 1000f) / 1000f;
+
+                if (!rows.ContainsKey(y))
+                    rows[y] = new List<BaseTile>();
+
+                rows[y].Add(tile);
             }
 
-            center /= tiles.Length;
+            // Sắp xếp từ dưới lên trên
+            int numberPriovity = 0;
+            var sortedRows = rows.Keys.OrderBy(y => y).ToList();
 
-            for (int i = 0; i < tiles.Length; i++)
+            for (int rowIndex = 0; rowIndex < sortedRows.Count; rowIndex++)
             {
-                BaseTile tile = tiles[i];
+                float y = sortedRows[rowIndex];
 
-                Vector2 pos = tile.transform.localPosition;
-
-                float dx = Mathf.Abs(pos.x - center.x);
-                float dy = Mathf.Abs(pos.y - center.y);
-
-                int ring = Mathf.RoundToInt(Mathf.Max(dx, dy));
-
-                // Base order: inner rings above outer rings
-                int order = ring * 1000;
-
-                // Within same ring:
-                // lower Y first, then lower X first
-                order += Mathf.RoundToInt(100 * (center.y - pos.y));
-                order += Mathf.RoundToInt(10 * (center.x - pos.x));
-
-                tile.ring = ring;
-                tile.priority = 0;
-            }
-
-            Dictionary<int, List<BaseTile>> groups = new Dictionary<int, List<BaseTile>>();
-
-            for (int i = 0; i < tiles.Length; i++)
-            {
-                BaseTile tile = tiles[i];
-
-                if (!groups.ContainsKey(tile.ring))
+                foreach (var tile in rows[y])
                 {
-                    groups.Add(tile.ring, new List<BaseTile>() { tile });
-                }
-                else
-                {
-                    groups[tile.ring].Add(tile);
+                    tile.ring = rowIndex;
+                    tile.priority = numberPriovity;
+                    numberPriovity++;
                 }
             }
 
-            foreach (var group in groups)
-            {
-                int ring = group.Key;
-                List<BaseTile> tilesInSameRing = group.Value;
+            //Dictionary<int, List<BaseTile>> groups = new Dictionary<int, List<BaseTile>>();
 
-                int minX = tilesInSameRing.Min(tile => (int)tile.transform.position.x);
-                int maxX = tilesInSameRing.Max(tile => (int)tile.transform.position.x);
-                int minY = tilesInSameRing.Min(tile => (int)tile.transform.position.y);
-                int maxY = tilesInSameRing.Max(tile => (int)tile.transform.position.y);
+            //for (int i = 0; i < tiles.Length; i++)
+            //{
+            //    BaseTile tile = tiles[i];
 
-                // int numCol = maxX - minX;
-                // int numRow = maxY - minY;
+            //    if (!groups.ContainsKey(tile.ring))
+            //    {
+            //        groups.Add(tile.ring, new List<BaseTile>() { tile });
+            //    }
+            //    else
+            //    {
+            //        groups[tile.ring].Add(tile);
+            //    }
+            //}
 
-                // Debug.Log($"AssignLevelPriority {}")
+            //foreach (var group in groups)
+            //{
+            //    int ring = group.Key;
+            //    List<BaseTile> tilesInSameRing = group.Value;
 
-                int priority = 0;
+            //    int minX = tilesInSameRing.Min(tile => (int)tile.transform.position.x);
+            //    int maxX = tilesInSameRing.Max(tile => (int)tile.transform.position.x);
+            //    int minY = tilesInSameRing.Min(tile => (int)tile.transform.position.y);
+            //    int maxY = tilesInSameRing.Max(tile => (int)tile.transform.position.y);
 
-                // bottom left --> bottom right
-                List<BaseTile> validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.y == minY)
-                        .OrderBy(tile => tile.transform.position.x)
-                        .ToList();
+            //    // int numCol = maxX - minX;
+            //    // int numRow = maxY - minY;
 
-                for (int j = 0; j < validTiles.Count; j++)
-                {
-                    BaseTile tile = validTiles[j];
+            //    // Debug.Log($"AssignLevelPriority {}")
 
-                    if (tile.priority == 0)
-                    {
-                        tile.priority = priority;
-                        priority++;
-                    }
-                }
+            //    int priority = 0;
 
-                // bottom right --> top right
-                validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.x == maxX)
-                        .OrderBy(tile => tile.transform.position.y)
-                        .ToList();
+            //    // bottom left --> bottom right
+            //    List<BaseTile> validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.y == minY)
+            //            .OrderBy(tile => tile.transform.position.x)
+            //            .ToList();
 
-                for (int j = 0; j < validTiles.Count; j++)
-                {
-                    BaseTile tile = validTiles[j];
+            //    for (int j = 0; j < validTiles.Count; j++)
+            //    {
+            //        BaseTile tile = validTiles[j];
 
-                    if (tile.priority == 0)
-                    {
-                        tile.priority = priority;
-                        priority++;
-                    }
-                }
+            //        if (tile.priority == 0)
+            //        {
+            //            tile.priority = priority;
+            //            priority++;
+            //        }
+            //    }
 
-                // top right --> top left
-                validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.y == maxY)
-                        .OrderByDescending(tile => tile.transform.position.x)
-                        .ToList();
+            //    // bottom right --> top right
+            //    validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.x == maxX)
+            //            .OrderBy(tile => tile.transform.position.y)
+            //            .ToList();
 
-                for (int j = 0; j < validTiles.Count; j++)
-                {
-                    BaseTile tile = validTiles[j];
+            //    for (int j = 0; j < validTiles.Count; j++)
+            //    {
+            //        BaseTile tile = validTiles[j];
 
-                    if (tile.priority == 0)
-                    {
-                        tile.priority = priority;
-                        priority++;
-                    }
-                }
+            //        if (tile.priority == 0)
+            //        {
+            //            tile.priority = priority;
+            //            priority++;
+            //        }
+            //    }
 
-                // top left --> bottom left
-                validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.x == minX)
-                        .OrderByDescending(tile => tile.transform.position.y)
-                        .ToList();
+            //    // top right --> top left
+            //    validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.y == maxY)
+            //            .OrderByDescending(tile => tile.transform.position.x)
+            //            .ToList();
 
-                for (int j = 0; j < validTiles.Count; j++)
-                {
-                    BaseTile tile = validTiles[j];
+            //    for (int j = 0; j < validTiles.Count; j++)
+            //    {
+            //        BaseTile tile = validTiles[j];
 
-                    if (tile.priority == 0)
-                    {
-                        tile.priority = priority;
-                        priority++;
-                    }
-                }
-            }
+            //        if (tile.priority == 0)
+            //        {
+            //            tile.priority = priority;
+            //            priority++;
+            //        }
+            //    }
+
+            //    // top left --> bottom left
+            //    validTiles = tilesInSameRing.Where(tile => (int)tile.transform.position.x == minX)
+            //            .OrderByDescending(tile => tile.transform.position.y)
+            //            .ToList();
+
+            //    for (int j = 0; j < validTiles.Count; j++)
+            //    {
+            //        BaseTile tile = validTiles[j];
+
+            //        if (tile.priority == 0)
+            //        {
+            //            tile.priority = priority;
+            //            priority++;
+            //        }
+            //    }
+            //}
 
             EditorUtility.SetDirty(level);
         }
