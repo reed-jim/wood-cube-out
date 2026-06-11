@@ -238,7 +238,9 @@ public class BoosterUI : MonoBehaviour
             {
                 Tween.Alpha(skeletonGraphic, 0, duration: 0.3f).OnComplete(() =>
                 {
-                    skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+                    skeletonGraphic.Skeleton.SetToSetupPose();
+                    skeletonGraphic.AnimationState.Apply(skeletonGraphic.Skeleton);
+                    skeletonGraphic.AnimationState.ClearTracks();
 
                     skeletonGraphic.color = Color.white;
                     skeletonGraphic.gameObject.SetActive(false);
