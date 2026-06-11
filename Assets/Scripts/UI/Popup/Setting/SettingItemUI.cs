@@ -63,6 +63,8 @@ public class SettingItemUI : MonoBehaviour
             SaferioTween.AlphaHide(cross, onCompleteAction: () =>
             {
                 _isInTransition = false;
+
+                onSwitched?.Invoke(isActive);
             });
         }
         else
@@ -70,6 +72,8 @@ public class SettingItemUI : MonoBehaviour
             SaferioTween.AlphaHide(activeState, onCompleteAction: () =>
             {
                 _isInTransition = false;
+
+                onSwitched?.Invoke(isActive);
             });
             SaferioTween.AlphaShow(inactiveState);
             SaferioTween.AlphaShow(cross);
