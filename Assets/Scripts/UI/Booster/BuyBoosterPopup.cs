@@ -106,11 +106,31 @@ public class BuyBoosterPopup : BasePopup
         SetupRewardedAdsButton();
     }
 
+    private int GetBoosterIndex(BoosterType boosterType)
+    {
+        int boosterIndex = 0;
+
+        if (boosterType == BoosterType.BreakObject)
+        {
+            boosterIndex = 1;
+        }
+        else if (boosterType == BoosterType.ClearScrewPorts)
+        {
+            boosterIndex = 2;
+        }
+        else
+        {
+            boosterIndex = 3;
+        }
+
+        return boosterIndex;
+    }
+
     private void GetWithCoin()
     {
         userResourcesObserver.Load();
 
-        int boosterIndex = (int)_boosterType;
+        int boosterIndex = GetBoosterIndex(_boosterType);
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {

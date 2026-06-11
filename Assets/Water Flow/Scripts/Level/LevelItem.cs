@@ -637,5 +637,5 @@ public class SpecialElementItemConfig
 [Serializable]
 public class FrozenAntBoxConfig : SpecialElementItemConfig
 {
-    public int[] numBoxToUnfreeze;
+    public List<int> numBoxToUnfreeze;
 }

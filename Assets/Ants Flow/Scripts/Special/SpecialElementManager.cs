@@ -17,10 +17,7 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
     public LevelElement nextLevelElement;
     public SpecialElementConfig specialElementConfig;
 
-    // private FrozenAntBoxConfig frozenAntBoxConfig;
-    // private SpecialElementItemConfig hiddenAntBoxConfig;
-    // private SpecialElementItemConfig doubleAntBoxConfig;
-
+    public int nextFreezeAntBoxRequiredNumber;
     public List<AntBoxLink> antBoxLinks;
 
     public void Setup(AntsFlow.LevelItem levelItem)
@@ -97,6 +94,9 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
             else if (specialElementConfig.frozenAntBoxConfig.num > 0)
             {
                 nextLevelElement = LevelElement.FreezedAntBox;
+
+                nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
+                specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
 
                 specialElementConfig.frozenAntBoxConfig.num--;
             }

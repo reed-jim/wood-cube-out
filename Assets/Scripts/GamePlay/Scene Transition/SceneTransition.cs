@@ -164,14 +164,16 @@ public class SceneTransition : MonoBehaviour
             }
             else
             {
-                if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
-                {
-                    LoadingLevelInProgress();
-                }
-                else
-                {
-                    loadLevelInProgressContainer.gameObject.SetActive(false);
-                }
+                LoadingLevelInProgress();
+                
+                // if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
+                // {
+                //     LoadingLevelInProgress();
+                // }
+                // else
+                // {
+                //     loadLevelInProgressContainer.gameObject.SetActive(false);
+                // }
             }
         });
 

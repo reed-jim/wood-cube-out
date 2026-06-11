@@ -33,7 +33,7 @@ public class FreezedAntBox : WashingMachineItem
     {
         base.Init(washingMachineStartSlot, faction, number);
 
-        totalNumAntBoxToUnfreeze = Random.Range(1, 9);
+        totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.nextFreezeAntBoxRequiredNumber;
         numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
 
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";

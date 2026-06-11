@@ -161,13 +161,43 @@ public class BoosterUI : MonoBehaviour
             return;
         }
 
-        skeletonGraphic.gameObject.SetActive(true);
-        skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
-        for (int i = 0; i < boosterAttachments.Length; i++)
+        if (IsBoosterAvailable(GetBoosterIndex(boosterType)))
         {
-            skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[i], null);
+            PlayPreBoosterAnimation(boosterType, onCompleteAction: () =>
+            {
+                UseBooster(boosterType);
+            });
         }
+        else
+        {
+            UseBooster(boosterType);
+        }
+
+        void UseBooster(BoosterType boosterType)
+        {
+            if (boosterType == BoosterType.AddScrewPort)
+            {
+                AddMoreScrewPort();
+            }
+            else if (boosterType == BoosterType.BreakObject)
+            {
+                EnableAllAntBoxes();
+            }
+            else if (boosterType == BoosterType.ClearScrewPorts)
+            {
+                Shuffle();
+            }
+            else if (boosterType == BoosterType.ClearOneColor)
+            {
+                EnableClearOneColorMode();
+            }
+        }
+    }
+
+    private int GetBoosterIndex(BoosterType boosterType)
+    {
         int boosterIndex = 0;
+
         if (boosterType == BoosterType.BreakObject)
         {
             boosterIndex = 1;
@@ -180,6 +210,22 @@ public class BoosterUI : MonoBehaviour
         {
             boosterIndex = 3;
         }
+
+        return boosterIndex;
+    }
+
+    private void PlayPreBoosterAnimation(BoosterType boosterType, Action onCompleteAction)
+    {
+        skeletonGraphic.gameObject.SetActive(true);
+        skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+
+        for (int i = 0; i < boosterAttachments.Length; i++)
+        {
+            skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[i], null);
+        }
+
+        int boosterIndex = GetBoosterIndex(boosterType);
+
         skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[boosterIndex], boosterAttachments[boosterIndex]);
 
         Tween.Delay(0.667f).OnComplete(() =>
@@ -193,22 +239,7 @@ public class BoosterUI : MonoBehaviour
                     skeletonGraphic.color = Color.white;
                     skeletonGraphic.gameObject.SetActive(false);
 
-                    if (boosterType == BoosterType.AddScrewPort)
-                    {
-                        AddMoreScrewPort();
-                    }
-                    else if (boosterType == BoosterType.BreakObject)
-                    {
-                        EnableAllAntBoxes();
-                    }
-                    else if (boosterType == BoosterType.ClearScrewPorts)
-                    {
-                        Shuffle();
-                    }
-                    else if (boosterType == BoosterType.ClearOneColor)
-                    {
-                        EnableClearOneColorMode();
-                    }
+                    onCompleteAction?.Invoke();
                 });
             });
         });
@@ -256,9 +287,9 @@ public class BoosterUI : MonoBehaviour
 
     private void Shuffle()
     {
-        if (!IsBoosterAvailable(boosterIndex: 1))
+        if (!IsBoosterAvailable(boosterIndex: 2))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
 
             return;
         }
@@ -330,36 +361,6 @@ public class BoosterUI : MonoBehaviour
         DisableBreakObjectMode();
     }
 
-    private void EnableBreakObjectMode()
-    {
-        if (!IsBoosterAvailable(boosterIndex: 1))
-        {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
-
-            return;
-        }
-
-        if (_isInTransition)
-        {
-            return;
-        }
-        else
-        {
-            _isInTransition = true;
-        }
-
-        breakModeContainer.gameObject.SetActive(true);
-
-        Tween.LocalPositionY(boosterContainer, -canvasSizeOfReferenceDevice.Value.y, duration: transitionTime);
-        Tween.LocalPositionY(breakModeContainer, _initialBoosterContainerPosition.y + 0.5f * breakModeContainer.sizeDelta.y, duration: transitionTime)
-        .OnComplete(() =>
-        {
-            enableBreakObjectModeEvent?.Invoke();
-
-            _isInTransition = false;
-        });
-    }
-
     private void DisableBreakObjectMode()
     {
         Tween.LocalPositionY(boosterContainer, _initialBoosterContainerPosition.y, duration: transitionTime);
@@ -389,9 +390,9 @@ public class BoosterUI : MonoBehaviour
 
     private void EnableAllAntBoxes()
     {
-        if (!IsBoosterAvailable(boosterIndex: 2))
+        if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearScrewPorts);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
 
             return;
         }
