@@ -10,6 +10,7 @@ public class GameController : MonoBehaviour
     public AdmobAdsMax admobAds;
     public AnalyticsController AnalyticsController;
     public SegmentController segmentController;
+    public ActionLimitQueue ActionLimitQueue;
     [HideInInspector] public SceneType currentScene;
 
     [HideInInspector] public bool openFeatureBox = false;
@@ -26,7 +27,7 @@ public class GameController : MonoBehaviour
         UserData.CurrentLevelPlay = UserData.CurrentLevel;
 
         //notificationController.Initialize();
-
+        ActionLimitQueue.Init();
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
 //         ResetDay();
