@@ -52,9 +52,9 @@ namespace AntsFlow
 
             GUILayout.Space(10);
 
-            startX = EditorGUILayout.IntField("StartX", startX);
-            startY = EditorGUILayout.IntField("StartY", startY);
-            size = EditorGUILayout.IntField("Size", size);
+            // startX = EditorGUILayout.IntField("StartX", startX);
+            // startY = EditorGUILayout.IntField("StartY", startY);
+            // size = EditorGUILayout.IntField("Size", size);
             tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
@@ -64,25 +64,15 @@ namespace AntsFlow
 
             json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
 
-            if (GUILayout.Button("Get Pool Faction"))
-            {
-                GetPoolFaction(levelItem);
-            }
+            // if (GUILayout.Button("Spawn Pixel Art"))
+            // {
+            //     SpawnPixelArt(levelItem);
+            // }
 
-            if (GUILayout.Button("Spawn Pixel Art"))
-            {
-                SpawnPixelArt(levelItem);
-            }
-
-            if (GUILayout.Button("Find Tile Blockages"))
-            {
-                FindTileBlockages(levelItem);
-            }
-
-            if (GUILayout.Button("GenerateLevelFromJson"))
-            {
-                GenerateLevelFromJson(levelItem, json);
-            }
+            // if (GUILayout.Button("GenerateLevelFromJson"))
+            // {
+            //     GenerateLevelFromJson(levelItem, json);
+            // }
 
             if (GUILayout.Button("Step 1: ReadLevel"))
             {
@@ -102,6 +92,16 @@ namespace AntsFlow
             if (GUILayout.Button("Step 4: AssignLevelPriority"))
             {
                 AssignLevelPriority(levelItem);
+            }
+
+            if (GUILayout.Button("Step 5: Find Tile Blockages"))
+            {
+                FindTileBlockages(levelItem);
+            }
+
+            if (GUILayout.Button("Step 6: Get Pool Faction"))
+            {
+                GetPoolFaction(levelItem);
             }
         }
 
@@ -387,7 +387,9 @@ namespace AntsFlow
 
             foreach (var tile in tiles)
             {
-                tile.Faction = FindNearestFaction(tile.spriteRenderer.color, level.factions);
+                Color color = FindNearestFaction(tile.spriteRenderer.color, level.factions);
+                tile.Faction = color;
+                tile.spriteRenderer.color = color;
             }
 
             Color FindNearestFaction(Color color, List<Color> centers)
