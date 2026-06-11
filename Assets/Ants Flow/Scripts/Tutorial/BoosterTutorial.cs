@@ -34,6 +34,7 @@ public class BoosterTutorial : MonoBehaviour
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
+        AntsFlow.BaseTile.useClearOneColorBoosterEvent += OnClearOneColorBoosterUsed;
 
         for (int i = 0; i < useBoosterButtons.Length; i++)
         {
@@ -45,6 +46,7 @@ public class BoosterTutorial : MonoBehaviour
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
+        AntsFlow.BaseTile.useClearOneColorBoosterEvent -= OnClearOneColorBoosterUsed;
     }
 
     private IEnumerator RunTutorial()
@@ -90,7 +92,8 @@ public class BoosterTutorial : MonoBehaviour
 
                 SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
                 Tween.Position(worldTutorialHand.transform,
-                    WashingMachineManager.Ins.washingMachineStartSlots[6].transform.position.AddZ(-0.1f), duration: 0.3f);
+                    WashingMachineManager.Ins.washingMachineStartSlots[6].transform.position.AddZ(-5f), duration: 0.3f);
+                SaferioTween.AlphaHide(canvasGroup);
 
                 step++;
             }
@@ -103,6 +106,46 @@ public class BoosterTutorial : MonoBehaviour
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)
+    {
+        NextStep();
+    }
+    #endregion
+
+    #region  EnableClearOneColorBooster
+    private IEnumerator RunClearOneColorBoosterTutorial()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+
+        int maxStep = 3;
+
+        for (int i = 0; i < useBoosterButtons.Length; i++)
+        {
+            useBoosterButtons[i].gameObject.SetActive(false);
+        }
+
+        useBoosterButtons[(int)boosterType].gameObject.SetActive(true);
+
+        while (step < maxStep)
+        {
+            if (step == 1)
+            {
+                description.text = "Now, you can select any ant box!";
+
+                SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
+                Tween.Position(worldTutorialHand.transform,
+                    TileManager.Ins.tiles[0].transform.position.AddZ(-5f), duration: 0.3f);
+
+                step++;
+            }
+            yield return waitForSeconds;
+        }
+
+        SaferioTween.ScaleDownWithPunch(worldTutorialHand.transform);
+
+        EndTutorial();
+    }
+
+    private void OnClearOneColorBoosterUsed(Color faction)
     {
         NextStep();
     }
