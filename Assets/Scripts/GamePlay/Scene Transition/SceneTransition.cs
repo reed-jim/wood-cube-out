@@ -19,10 +19,8 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private RectTransform progressFillRT;
     [SerializeField] private RectTransform loadingTextRT;
     [SerializeField] private Image fadeBackground;
-    [SerializeField] private CanvasGroup blackBackground;
-    [SerializeField] private Slider progressBar;
+    [SerializeField] private CanvasGroup almostThereBackground;
     [SerializeField] private Image progressBarFill;
-    // [SerializeField] private Image progressFill;
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
@@ -52,7 +50,6 @@ public class SceneTransition : MonoBehaviour
     #region MonoBehaviour Callbacks
 
     private void Awake()
-
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
@@ -74,7 +71,7 @@ public class SceneTransition : MonoBehaviour
         }
         else
         {
-            blackBackground.gameObject.SetActive(false);
+            almostThereBackground.gameObject.SetActive(false);
 
             DataUtility.Save(GameConstants.IS_FIRST_TIME_OPEN_APP, false);
         }
@@ -102,15 +99,15 @@ public class SceneTransition : MonoBehaviour
             return;
         }
 
-        blackBackground.alpha = 1;
+        almostThereBackground.alpha = 1;
 
-        blackBackground.gameObject.SetActive(true);
+        almostThereBackground.gameObject.SetActive(true);
 
         CommonUtil.StopAllTweens(_tweens);
 
-        _tweens.Add(Tween.Alpha(blackBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
+        _tweens.Add(Tween.Alpha(almostThereBackground, 1, 0, startDelay: delay, duration: fadeOutDuration).OnComplete(() =>
         {
-            blackBackground.gameObject.SetActive(false);
+            almostThereBackground.gameObject.SetActive(false);
 
             onCompletedAction?.Invoke();
         }));
@@ -118,9 +115,9 @@ public class SceneTransition : MonoBehaviour
 
     private void ShowBlackScreenImmediately()
     {
-        blackBackground.gameObject.SetActive(true);
+        almostThereBackground.gameObject.SetActive(true);
 
-        blackBackground.alpha = 1;
+        almostThereBackground.alpha = 1;
     }
 
     private void TransitionOnLevelStarted()
@@ -155,25 +152,28 @@ public class SceneTransition : MonoBehaviour
 
         yield return new WaitUntil(() => _isLevelLoaded);
 
-        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: null);
+        progressBarFill.fillAmount = 0;
 
-        if (GamePersistentVariable.isLoadingLevelInProgress)
+        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
         {
-            LoadingLevelInProgress();
-
-            GamePersistentVariable.isLoadingLevelInProgress = false;
-        }
-        else
-        {
-            if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
+            if (GamePersistentVariable.isLoadingLevelInProgress)
             {
                 LoadingLevelInProgress();
+
+                GamePersistentVariable.isLoadingLevelInProgress = false;
             }
             else
             {
-                loadLevelInProgressContainer.gameObject.SetActive(false);
+                if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
+                {
+                    LoadingLevelInProgress();
+                }
+                else
+                {
+                    loadLevelInProgressContainer.gameObject.SetActive(false);
+                }
             }
-        }
+        });
 
         _isLevelLoaded = false;
     }
@@ -186,15 +186,14 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        DebugLogger.LogSimple();
-        if (_isFirstTimeEnterScene)
-        {
-            loadLevelInProgressContainer.gameObject.SetActive(false);
+        // if (_isFirstTimeEnterScene)
+        // {
+        //     loadLevelInProgressContainer.gameObject.SetActive(false);
 
-            _isFirstTimeEnterScene = false;
+        //     _isFirstTimeEnterScene = false;
 
-            return;
-        }
+        //     return;
+        // }
 
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
@@ -209,12 +208,17 @@ public class SceneTransition : MonoBehaviour
 
         AdmobAdsMax.Instance.ShowMRec();
 
-        float minWaitTime = 2;
+        float minWaitTime = 1;
 
         if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
         {
-            minWaitTime = 4.5f;
+            minWaitTime = 2f;
         }
+
+        _tweens.Add(Tween.Custom(0, 1, duration: minWaitTime, onValueChange: newVal =>
+        {
+            progressBarFill.fillAmount = newVal;
+        }));
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {

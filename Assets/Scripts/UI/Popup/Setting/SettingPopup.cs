@@ -10,6 +10,9 @@ using static GameEnum;
 
 public class SettingPopup : BasePopup
 {
+    [SerializeField] private SettingItemUI turnMusicToggle;
+    [SerializeField] private SettingItemUI turnSoundToggle;
+    [SerializeField] private SettingItemUI vibrationToggle;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -32,12 +35,20 @@ public class SettingPopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
+
         chooseLanguageContainer.gameObject.SetActive(false);
     }
 
     protected override void RegisterMoreEvent()
     {
         GameVariableInitializer.gameSettingLoadedEvent += OnGameSettingLoaded;
+
+        turnMusicToggle.RegisterOnSwitchedEvent(SettingGameMusic);
+        turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
+        vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
 
         rateButton.onClick.AddListener(Rate);
         openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
@@ -80,7 +91,9 @@ public class SettingPopup : BasePopup
 
     private void OnGameSettingLoaded()
     {
-
+        turnMusicToggle.SetState(gameSetting.IsTurnOnBackgroundMusic);
+        turnSoundToggle.SetState(gameSetting.IsTurnOnSound);
+        vibrationToggle.SetState(gameSetting.IsVibrate);
     }
 
     #region LANGUAGE

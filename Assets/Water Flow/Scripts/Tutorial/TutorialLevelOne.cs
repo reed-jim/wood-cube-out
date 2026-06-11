@@ -15,7 +15,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     public TMP_Text description;
     public CanvasGroup continueButtonCanvasGroup;
     public Button continueButton;
-    public Image blackOverlay;
+    public SpriteRenderer blackOverlay;
 
     public Camera mainCamera;
     public Canvas gameplayCanvas;
@@ -51,7 +51,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         SaferioTween.AlphaShow(blackOverlay, 230f / 255);
 
-        toSelectWashingMachines = washingMachines.Take(3).ToList();
+        toSelectWashingMachines = washingMachines.Take(2).ToList();
 
         StartCoroutine(ProgressingTutorial());
     }

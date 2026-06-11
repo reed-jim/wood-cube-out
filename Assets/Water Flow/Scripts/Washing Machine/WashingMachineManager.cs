@@ -429,7 +429,10 @@ namespace AntsFlow
                 {
                     WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    // KeyValuePair<Color, int> keyValuePair = poolFactionSortedByDifficulty.ElementAt(index);
+                    if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                    {
+                        continue;
+                    }
 
                     Color nextFaction;
                     int numAnt;
