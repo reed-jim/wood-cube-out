@@ -83,14 +83,15 @@ public class BuyBoosterPopup : BasePopup
         Show();
 
         _boosterType = boosterType;
+        int boosterIndex = GetBoosterIndex(_boosterType);
 
-        icon.sprite = boosterSprites[(int)_boosterType];
+        icon.sprite = boosterSprites[boosterIndex];
 
         UIUtil.SetSizeKeepRatioY(icon, 0.25f * container.sizeDelta.x);
 
-        costText.text = $"{boosterDataObserver.BoosterCosts[(int)_boosterType]}";
-        title.TranslationName = leanTranslationTitle[(int)_boosterType];
-        boosterDescription.TranslationName = leanTranslationNames[(int)_boosterType];
+        costText.text = $"{boosterDataObserver.BoosterCosts[boosterIndex]}";
+        title.TranslationName = leanTranslationTitle[boosterIndex];
+        boosterDescription.TranslationName = leanTranslationNames[boosterIndex];
 
         getWithAdsButton.onClick.RemoveAllListeners();
 

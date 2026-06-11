@@ -175,6 +175,21 @@ public class WashingMachineItem : MonoBehaviour
         }
     }
 
+    public void UpdateNumber()
+    {
+        numberText.text = $"{number}";
+
+        if (number <= 0)
+        {
+            SaferioTween.ScaleDownWithPunch(transform, onCompleteAction: () =>
+            {
+                antBoxDoneEvent?.Invoke(this);
+            });
+
+            SoundManager.Instance.PlaySoundSlotDone();
+        }
+    }
+
     public virtual void Select()
     {
         Select(numSlotRequired);

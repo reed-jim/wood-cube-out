@@ -462,10 +462,102 @@ namespace AntsFlow
             {
                 BaseTile tile = tilesToClear[i];
 
-                SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+                Vector3 initialPosition = tile.transform.position;
+
+                Tween.PositionY(tile.transform, tile.transform.position.y + 1f, duration: 0.3f)
+                .OnComplete(() =>
                 {
-                    tile.Complete();
+                    Tween.Position(tile.transform, initialPosition, duration: 0.2f)
+                    .OnComplete(() =>
+                    {
+                        SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+                        {
+                            tile.Complete();
+                        });
+                    });
                 });
+            }
+
+            AdjustAntBoxAfterClearingOneColor(tilesToClear);
+        }
+
+        private void AdjustAntBoxAfterClearingOneColor(List<BaseTile> tilesToClear)
+        {
+            if (tilesToClear.Count == 0)
+            {
+                return;
+            }
+
+            List<WashingMachineItem> antBoxes = new List<WashingMachineItem>();
+
+            for (int i = 0; i < washingMachineSlots.Count; i++)
+            {
+                if (washingMachineSlots[i].washingMachineItem != null)
+                {
+                    antBoxes.Add(washingMachineSlots[i].washingMachineItem);
+                }
+            }
+
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            {
+                if (washingMachineStartSlots[i].washingMachine != null)
+                {
+                    antBoxes.Add(washingMachineStartSlots[i].washingMachine);
+                }
+            }
+
+            int numToClear = tilesToClear.Count;
+
+            for (int i = 0; i < antBoxes.Count; i++)
+            {
+                WashingMachineItem antBox = antBoxes[i];
+
+                if (numToClear <= 0)
+                {
+                    break;
+                }
+
+                if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
+                {
+                    int numToRemove = Mathf.Min(antBox.number, numToClear);
+                    antBox.number -= numToRemove;
+                    numToClear -= numToRemove;
+
+                    if (numToClear >= antBox.number)
+                    {
+                        if (!antBox.isInSlot)
+                        {
+                            antBox.washingMachineStartSlot.washingMachine = null;
+                        }
+                    }
+                }
+            }
+
+            MoveAntBoxTop();
+
+            for (int i = 0; i < antBoxes.Count; i++)
+            {
+                WashingMachineItem antBox = antBoxes[i];
+
+                if (antBox.faction == tilesToClear[0].Faction)
+                {
+                    antBox.UpdateNumber();
+                }
+            }
+
+            if (numToClear > 0)
+            {
+                var indices = poolFaction
+                    .Select((item, index) => new { item, index })
+                    .Where(x => x.item == tilesToClear[0].Faction)
+                    .Take(numToClear)
+                    .Select(x => x.index)
+                    .OrderByDescending(i => i);
+
+                foreach (int index in indices)
+                {
+                    poolFaction.RemoveAt(index);
+                }
             }
         }
         #endregion
