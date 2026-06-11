@@ -50,6 +50,7 @@ public class WashingMachineItem : MonoBehaviour
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
+    public static event Action loseLevelEvent;
 
     public List<AntsFlow.BaseTile> tilesToMove;
 
@@ -272,14 +273,16 @@ public class WashingMachineItem : MonoBehaviour
     {
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
-            !WashingMachineManager.Ins.IsAnyGhostAntBox();
+            !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
+            GamePersistentVariable.isPreventSelectAntBox;
     }
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
     {
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
-            !WashingMachineManager.Ins.IsAnyGhostAntBox();
+            !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
+            GamePersistentVariable.isPreventSelectAntBox;
     }
 
     public void OpenTheBox()
@@ -316,6 +319,11 @@ public class WashingMachineItem : MonoBehaviour
 
             if (tile == null)
             {
+                if (WashingMachineManager.Ins.IsNoSlotAvailable())
+                {
+                    LoseLevel();
+                }
+
                 break;
             }
             else if (!tilesToMove.Contains(tile))
@@ -523,6 +531,13 @@ public class WashingMachineItem : MonoBehaviour
 
             WashingMachineManager.Ins.CompleteGhostAntBox(this);
         }
+    }
+
+    private void LoseLevel()
+    {
+        loseLevelEvent?.Invoke();
+
+        GamePersistentVariable.isLevelLost = true;
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)

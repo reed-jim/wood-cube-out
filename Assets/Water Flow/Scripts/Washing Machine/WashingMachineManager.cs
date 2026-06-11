@@ -500,6 +500,11 @@ namespace AntsFlow
             return isLose;
         }
 
+        public bool IsNoSlotAvailable()
+        {
+            return washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
+        }
+
         private void Revive(BoosterType boosterType)
         {
             // Revive by unlock ant box

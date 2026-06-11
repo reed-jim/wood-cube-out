@@ -228,6 +228,8 @@ public class BoosterUI : MonoBehaviour
 
         skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[boosterIndex], boosterAttachments[boosterIndex]);
 
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
         Tween.Delay(0.667f).OnComplete(() =>
         {
             skeletonGraphic.AnimationState.SetAnimation(0, ideaAnim, false);
@@ -236,8 +238,12 @@ public class BoosterUI : MonoBehaviour
             {
                 Tween.Alpha(skeletonGraphic, 0, duration: 0.3f).OnComplete(() =>
                 {
+                    skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+
                     skeletonGraphic.color = Color.white;
                     skeletonGraphic.gameObject.SetActive(false);
+
+                    GamePersistentVariable.isPreventSelectAntBox = false;
 
                     onCompleteAction?.Invoke();
                 });
