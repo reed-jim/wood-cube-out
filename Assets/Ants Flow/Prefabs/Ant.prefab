@@ -53,11 +53,14 @@ MonoBehaviour:
   faction: {r: 0, g: 0, b: 0, a: 0}
   walkableMask: 0
   walkableAndNestMask: 0
+  isMovingToSideTile: 0
   isMovingToTile: 0
   isMovingToNest: 0
   isDroppingTile: 0
   tile: {fileID: 0}
   destination: {x: 0, y: 0, z: 0}
+  noiseFrequency: 0.1
+  noiseMagnitude: 0.2
 --- !u!195 &9042187430261845247
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -169,6 +172,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
 --- !u!114 &793793920769624515
 MonoBehaviour:

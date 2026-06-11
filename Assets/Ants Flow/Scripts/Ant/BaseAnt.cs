@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
@@ -41,6 +41,15 @@ namespace AntsFlow
         public static event Action requestUpdateNavmeshEvent;
 
 
+
+        [Header("Noise Settings")]
+        [Tooltip("Độ mạnh của sự lắc lư (gạt sang 2 bên)")]
+        public float noiseFrequency = 5f;
+        [Tooltip("Biên độ nhiễu loạn (càng cao kiến bò càng rộng sang 2 bên)")]
+        public float noiseMagnitude = 2f;
+        private float randomNoiseOffset;
+
+
         void Awake()
         {
             navMeshAgent.updateRotation = false;
@@ -59,6 +68,20 @@ namespace AntsFlow
             siblingIndex = transform.GetSiblingIndex();
             stuckThreshold = 3 * Time.deltaTime;
             stuckNoReachDestinationThreshold = 0.2f;
+
+
+            ActionLimitQueue.ActionLimit actionAntToNest = new ActionLimitQueue.ActionLimit(() =>
+            {
+
+                ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+
+                antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
+                antDissappearFx.Play();
+
+                SoundManager.Instance.PlaySoundCubeLand();
+            }, 0.15f);
+
+            GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
         }
 
         void Update()
@@ -82,6 +105,11 @@ namespace AntsFlow
                         rotationSpeed * Time.deltaTime
                     );
                 }
+
+                //if (navMeshAgent.hasPath && navMeshAgent.velocity.sqrMagnitude > 0.1f)
+                //{
+                //    ApplyAntJitter();
+                //}
             }
 
             // if (navMeshAgent.isOnNavMesh)
@@ -170,12 +198,7 @@ namespace AntsFlow
                 tile = null;
             });
 
-            ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
-
-            antDissappearFx.transform.position = TileManager.Ins.antNest.transform.position;
-            antDissappearFx.Play();
-
-            SoundManager.Instance.PlaySoundCubeLand();
+            GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
 
             isDroppingTile = true;
 
@@ -214,24 +237,36 @@ namespace AntsFlow
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
 
-            navMeshAgent.enabled = false;
+            //navMeshAgent.enabled = false;
+            this.tile = tile;
             // navMeshAgent.areaMask = walkableMask;
             // navMeshAgent.enabled = true;
 
-            // navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
-            MoveTo(tile.coordinate.transform.position.ChangeZ(0), onCompleteAction: () =>
-            {
-                stuckTime = 0;
+            //// navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+            //MoveTo(tile.coordinate.transform.position.ChangeZ(0), onCompleteAction: () =>
+            //{
+            //    stuckTime = 0;
 
-                tile.MoveToAnt(this);
+            //    tile.MoveToAnt(this);
 
-                MoveToNest();
-            });
+            //    MoveToNest();
+            //});
             destination = tile.coordinate.transform.position.ChangeZ(0);
+            stuckTime = 0;
+            navMeshAgent.enabled = false;
+            navMeshAgent.areaMask = walkableMask;
+            navMeshAgent.enabled = true;
 
-            this.tile = tile;
+            navMeshAgent.destination = destination;
 
-            isMovingToSideTile = true;
+            isMovingToSideTile = false;
+            isMovingToTile = true;
+            // tile.MoveToAnt(this);
+
+            //MoveToNest();
+
+
+            //isMovingToSideTile = true;
         }
 
         public void MoveToTileGhostMode(BaseTile tile)
@@ -383,6 +418,40 @@ namespace AntsFlow
             // float distance = Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position);
 
             // return distance < 0.05f;
+        }
+
+        void ApplyAntJitter()
+        {
+            // 1. Lấy hướng di chuyển mong muốn gốc của NavMesh (chưa bị can thiệp)
+            Vector3 desiredVelocity = navMeshAgent.desiredVelocity;
+
+            // Nếu NavMesh đang không muốn di chuyển con kiến đi đâu cả, thoát hàm để tránh tự dịch chuyển
+            if (desiredVelocity.sqrMagnitude < 0.1f) return;
+
+            Vector3 forwardDirection = desiredVelocity.normalized;
+
+            // 2. Tính toán Vector vuông góc với hướng đi trong 2D (trên mặt phẳng XY)
+            Vector3 sidewaysDirection = new Vector3(-forwardDirection.y, forwardDirection.x, 0f);
+
+            // 3. Sử dụng Perlin Noise để tính độ lắc lư
+            float timeParam = Time.time * noiseFrequency + randomNoiseOffset;
+            float noiseValue = Mathf.PerlinNoise(timeParam, 0f) - 0.5f;
+
+            // 4. Tính toán vận tốc nhiễu loạn cuối cùng
+            Vector3 jitterVelocity = sidewaysDirection * noiseValue * noiseMagnitude;
+            Vector3 finalVelocity = desiredVelocity + jitterVelocity;
+            finalVelocity.z = 0f; // Khóa trục Z cho game 2D
+
+            // 5. THAY ĐỔI QUAN TRỌNG: Dùng agent.Move thay vì gán agent.velocity
+            // agent.Move nhận vào một khoảng cách dịch chuyển trong Frame đó (Velocity * DeltaTime)
+            navMeshAgent.Move(finalVelocity * Time.deltaTime);
+
+            // 6. Quay mặt con kiến theo hướng di chuyển thực tế
+            if (finalVelocity.sqrMagnitude > 0.1f)
+            {
+                float angle = Mathf.Atan2(finalVelocity.y, finalVelocity.x) * Mathf.Rad2Deg;
+                transform.rotation = Quaternion.Euler(0f, 0f, angle);
+            }
         }
     }
 }
