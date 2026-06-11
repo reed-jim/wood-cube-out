@@ -103,6 +103,11 @@ namespace AntsFlow
             {
                 GetPoolFaction(levelItem);
             }
+
+            if (GUILayout.Button("Step 7: Center On X"))
+            {
+                CenterOnX(levelItem);
+            }
         }
 
         private void GetPoolFaction(LevelItem levelItem)
@@ -203,6 +208,16 @@ namespace AntsFlow
             {
                 for (float x = 0; x < width; x += pixelStepX)
                 {
+                    if (x + 0.5f * pixelStepX > width)
+                    {
+                        continue;
+                    }
+
+                    if (y + 0.7f * pixelStepY > height)
+                    {
+                        continue;
+                    }
+
                     int pixelX = (int)(x + 0.5f * pixelStepX);
                     int pixelY = (int)(y + 0.7f * pixelStepY);
 
@@ -554,6 +569,22 @@ namespace AntsFlow
             //        }
             //    }
             //}
+
+            EditorUtility.SetDirty(level);
+        }
+
+        public void CenterOnX(LevelItem level)
+        {
+            float sumX = 0f;
+
+            foreach (Transform child in level.transform)
+            {
+                sumX += child.position.x;
+            }
+
+            float averageX = sumX / level.transform.childCount;
+
+            level.transform.position += Vector3.left * averageX;
 
             EditorUtility.SetDirty(level);
         }
