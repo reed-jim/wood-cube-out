@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class WashingMachineStartSlot : MonoBehaviour
 {
-    public bool isTopRow;
+    public int row;
     
     public WashingMachineItem washingMachine;
 }

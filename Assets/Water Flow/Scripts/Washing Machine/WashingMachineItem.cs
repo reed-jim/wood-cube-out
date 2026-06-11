@@ -133,7 +133,7 @@ public class WashingMachineItem : MonoBehaviour
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
-        isDisable = !washingMachineStartSlot.isTopRow;
+        isDisable = !(washingMachineStartSlot.row == 0);
 
         numberText.alpha = isDisable ? 0.2f : 1;
     }

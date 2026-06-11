@@ -30,12 +30,29 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
     public void SpawnAntBoxLink()
     {
-        AntBoxLink antBoxLink = ObjectPoolingEverything.GetFromPool<AntBoxLink>(GameConstants.antBoxLink);
+        if (specialElementConfig.doubleAntBoxConfig.num <= 0)
+        {
+            return;
+        }
+
+        int random = Random.Range(0, 10);
+
+        if (random > 2)
+        {
+            return;
+        }
 
         List<WashingMachineItem> validAntBoxesToLink = new List<WashingMachineItem>();
 
         for (int i = 0; i < WashingMachineManager.Ins.washingMachineStartSlots.Count; i++)
         {
+            WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
+
+            if (washingMachineStartSlot.row < 2)
+            {
+                continue;
+            }
+
             WashingMachineItem washingMachine = WashingMachineManager.Ins.washingMachineStartSlots[i].washingMachine;
 
             if (
@@ -53,12 +70,16 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
         if (validAntBoxesToLink.Count >= 2)
         {
+            AntBoxLink antBoxLink = ObjectPoolingEverything.GetFromPool<AntBoxLink>(GameConstants.antBoxLink);
+
             validAntBoxesToLink.Shuffle();
 
             antBoxLink.Setup(validAntBoxesToLink.Take(2).ToArray());
-        }
 
-        antBoxLinks.Add(antBoxLink);
+            antBoxLinks.Add(antBoxLink);
+
+            specialElementConfig.doubleAntBoxConfig.num--;
+        }
     }
 
     public void RandomizeNextLevelElement()

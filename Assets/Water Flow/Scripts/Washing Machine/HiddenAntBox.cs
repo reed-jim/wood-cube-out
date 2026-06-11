@@ -12,7 +12,7 @@ public class HiddenAntBox : WashingMachineItem
     {
         base.Setup(washingMachineStartSlot);
 
-        if (washingMachineStartSlot.isTopRow)
+        if (washingMachineStartSlot.row == 0)
         {
             Reveal();
         }

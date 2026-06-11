@@ -189,11 +189,6 @@ namespace AntsFlow
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 
-            Tween.Delay(0.5f).OnComplete(() =>
-            {
-                SpecialElementManager.Ins.SpawnAntBoxLink();
-            });
-
             return washingMachineItems;
         }
 
@@ -287,9 +282,11 @@ namespace AntsFlow
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
+                    SpecialElementManager.Ins.SpawnAntBoxLink();
+
                     break;
                 }
-            }
+            }            
         }
 
         private WashingMachineItem GetAntBoxFromPool()
