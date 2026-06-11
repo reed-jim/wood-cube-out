@@ -87,6 +87,11 @@ public class FreezedAntBox : WashingMachineItem
             return;
         }
 
+        if (antBox.washingMachineStartSlot != null && antBox.washingMachineStartSlot.row > 1)
+        {
+            return;
+        }
+
         numAntBoxToUnfreeze--;
         numAntBoxToUnfreeze = Mathf.Max(numAntBoxToUnfreeze, 0);
 
