@@ -41,6 +41,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isInSlot;
     public bool isDouble;
     public bool isGhostMode;
+    public bool isStucking;
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
@@ -274,7 +275,7 @@ public class WashingMachineItem : MonoBehaviour
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= numSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
-            GamePersistentVariable.isPreventSelectAntBox;
+            !GamePersistentVariable.isPreventSelectAntBox;
     }
 
     public virtual bool IsValidToSelect(int currentNumSlotRequired)
@@ -282,7 +283,7 @@ public class WashingMachineItem : MonoBehaviour
         return !isInSlot && !isDisable &&
             WashingMachineManager.Ins.GetAvailableWashingMachineSlots().Count >= currentNumSlotRequired &&
             !WashingMachineManager.Ins.IsAnyGhostAntBox() &&
-            GamePersistentVariable.isPreventSelectAntBox;
+            !GamePersistentVariable.isPreventSelectAntBox;
     }
 
     public void OpenTheBox()
@@ -319,10 +320,7 @@ public class WashingMachineItem : MonoBehaviour
 
             if (tile == null)
             {
-                if (WashingMachineManager.Ins.IsNoSlotAvailable())
-                {
-                    LoseLevel();
-                }
+                isStucking = true;
 
                 break;
             }

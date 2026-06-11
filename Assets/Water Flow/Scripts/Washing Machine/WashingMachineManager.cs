@@ -99,7 +99,7 @@ namespace AntsFlow
 
             washingMachineSlot.washingMachineItem = washingMachineItem;
 
-            bool isLose = CheckLoseLevel();
+            // bool isLose = CheckLoseLevel();
 
             washingMachineItem.isMoving = true;
 
@@ -118,10 +118,7 @@ namespace AntsFlow
                     washingMachineItem.washingMachineStartSlot.washingMachine = null;
 
                     washingMachineItem.OpenTheBox();
-                    if (!isLose)
-                    {
-                        washingMachineItem.CheckAntsPath();
-                    }
+                    washingMachineItem.CheckAntsPath();
 
                     MoveAntBoxTop();
 
@@ -286,7 +283,7 @@ namespace AntsFlow
 
                     break;
                 }
-            }            
+            }
         }
 
         private WashingMachineItem GetAntBoxFromPool()
@@ -488,14 +485,38 @@ namespace AntsFlow
         #region Check Lose
         private bool CheckLoseLevel()
         {
-            bool isLose = washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
+            bool isLose = false;
+            int numAntBoxLeft = washingMachineSlots.Count;
 
-            if (isLose)
+            for (int i = 0; i < washingMachineSlots.Count; i++)
             {
-                loseLevelEvent?.Invoke();
+                WashingMachineSlot washingMachineSlot = washingMachineSlots[i];
 
-                GamePersistentVariable.isLevelLost = true;
+                if (washingMachineSlot.isLocked)
+                {
+                    numAntBoxLeft--;
+                }
+                else
+                {
+                    WashingMachineItem antBox = washingMachineSlot.washingMachineItem;
+
+                    if (antBox != null && antBox.isStucking)
+                    {
+                        numAntBoxLeft--;
+                    }
+                }
             }
+
+            isLose = numAntBoxLeft == 0;
+
+            // bool isLose = washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
+
+            // if (isLose)
+            // {
+            //     loseLevelEvent?.Invoke();
+
+            //     GamePersistentVariable.isLevelLost = true;
+            // }
 
             return isLose;
         }
