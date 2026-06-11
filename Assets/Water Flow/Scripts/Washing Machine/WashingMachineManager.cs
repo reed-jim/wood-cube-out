@@ -483,9 +483,8 @@ namespace AntsFlow
         #endregion
 
         #region Check Lose
-        private bool CheckLoseLevel()
+        public bool CheckLoseLevel()
         {
-            bool isLose = false;
             int numAntBoxLeft = washingMachineSlots.Count;
 
             for (int i = 0; i < washingMachineSlots.Count; i++)
@@ -507,16 +506,14 @@ namespace AntsFlow
                 }
             }
 
-            isLose = numAntBoxLeft == 0;
+            bool isLose = numAntBoxLeft == 0;
 
-            // bool isLose = washingMachineSlots.All(item => item.isLocked || item.washingMachineItem != null);
+            if (isLose)
+            {
+                loseLevelEvent?.Invoke();
 
-            // if (isLose)
-            // {
-            //     loseLevelEvent?.Invoke();
-
-            //     GamePersistentVariable.isLevelLost = true;
-            // }
+                GamePersistentVariable.isLevelLost = true;
+            }
 
             return isLose;
         }

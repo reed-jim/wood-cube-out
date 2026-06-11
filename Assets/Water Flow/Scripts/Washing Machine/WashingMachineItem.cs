@@ -320,8 +320,6 @@ public class WashingMachineItem : MonoBehaviour
 
             if (tile == null)
             {
-                isStucking = true;
-
                 break;
             }
             else if (!tilesToMove.Contains(tile))
@@ -339,17 +337,19 @@ public class WashingMachineItem : MonoBehaviour
 
         tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
 
-        if (spawningAntCoroutine == null)
+        if (tilesToMove.Count > 0)
         {
-            spawningAntCoroutine = StartCoroutine(SpawningAnts());
+            if (spawningAntCoroutine == null)
+            {
+                spawningAntCoroutine = StartCoroutine(SpawningAnts());
+            }
         }
+        else
+        {
+            isStucking = true;
 
-        // if (spawningAntCoroutine != null)
-        // {
-        //     StopCoroutine(spawningAntCoroutine);
-        // }
-
-        // spawningAntCoroutine = StartCoroutine(SpawningAnts());
+            WashingMachineManager.Ins.CheckLoseLevel();
+        }
     }
 
     public void CheckAntsPathGhostMode()
@@ -360,19 +360,6 @@ public class WashingMachineItem : MonoBehaviour
         }
 
         List<AntsFlow.BaseTile> tilesForGhostAnt = AntsFlow.TileManager.Ins.GetAvailableTileForGhostModeAnt(faction).Take(number).ToList();
-
-        // for (int i = 0; i < number; i++)
-        // {
-        //     AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.GetAvailableTileForGhostModeAnt(faction);
-
-        //     if (tile != null)
-        //     {
-        //         tilesForGhostAnt.Add(tile);
-
-        //         tile.isAntApproaching = true;
-        //         // tile.InvokeRemoveTileAsBlockageEvent();
-        //     }
-        // }
 
         for (int i = 0; i < tilesForGhostAnt.Count; i++)
         {
@@ -388,13 +375,9 @@ public class WashingMachineItem : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(0.45f);
 
-        // yield return new WaitForSeconds(0.3f);
-
-        // SaferioTween.AlphaHide(lid);
-        // Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
-        // skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
-
         int currentAntIndex = 0;
+
+        isStucking = false;
 
         while (tilesToMove.Count > 0)
         {
@@ -417,7 +400,6 @@ public class WashingMachineItem : MonoBehaviour
                 BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);
 
                 ant.transform.position = transform.position.AddY(1.2f).ChangeZ(-0.1f);
-                //ant.transform.position = new Vector3(doubleAntBoxHole.transform.position.x, ant.transform.position.y, ant.transform.position.z);
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
@@ -446,17 +428,28 @@ public class WashingMachineItem : MonoBehaviour
             }
             else
             {
+                bool isAnyMovableAnt = false;
+
                 for (int i = 1; i < tilesToMove.Count; i++)
                 {
                     if (IsMovable(tilesToMove[i]))
                     {
                         currentAntIndex = i;
 
+                        isAnyMovableAnt = true;
+
                         break;
                     }
                 }
 
-                yield return new WaitForSeconds(1f / 60f);
+                if (!isAnyMovableAnt)
+                {
+                    isStucking = true;
+
+                    WashingMachineManager.Ins.CheckLoseLevel();
+                }
+
+                yield return waitForSeconds;
             }
         }
 
