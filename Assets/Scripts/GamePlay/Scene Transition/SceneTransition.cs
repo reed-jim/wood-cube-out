@@ -5,6 +5,7 @@ using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
+using Spine;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
@@ -24,6 +25,9 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
+
+    [SpineAnimation] public string idleAnimation;
+    [SpineAnimation] public string appearAnimation;
 
     [Header("LOADING LEVEL IN PROGRESS")]
     [SerializeField] private RectTransform loadLevelInProgressContainer;
@@ -133,6 +137,7 @@ public class SceneTransition : MonoBehaviour
         // {
         //     LoadingLevelInProgress();
         // }
+        loadingSpine.gameObject.SetActive(false);
 
         if (_waitForLevelLoadedCoroutine != null)
         {
@@ -156,6 +161,20 @@ public class SceneTransition : MonoBehaviour
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
         {
+            loadingSpine.gameObject.SetActive(true);
+            loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+            loadingSpine.AnimationState.Complete += OnAnimationComplete;
+
+            void OnAnimationComplete(TrackEntry trackEntry)
+            {
+                loadingSpine.AnimationState.Complete -= OnAnimationComplete;
+
+                if (trackEntry.Animation.Name == appearAnimation)
+                {
+                    loadingSpine.AnimationState.SetAnimation(0, idleAnimation, false);
+                }
+            }
+
             if (GamePersistentVariable.isLoadingLevelInProgress)
             {
                 LoadingLevelInProgress();
@@ -165,7 +184,7 @@ public class SceneTransition : MonoBehaviour
             else
             {
                 LoadingLevelInProgress();
-                
+
                 // if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
                 // {
                 //     LoadingLevelInProgress();
@@ -251,8 +270,11 @@ public class SceneTransition : MonoBehaviour
             .OnComplete(() =>
                 {
                     loadLevelInProgressContainer.gameObject.SetActive(false);
+                    loadingSpine.AnimationState.ClearTracks();
+                    loadingSpine.color = Color.white;
                 })
             );
+            Tween.Alpha(loadingSpine, 0, duration: 0.3f);
 
             StopCoroutine(_loadingLevelInProgressCoroutine);
         }));
