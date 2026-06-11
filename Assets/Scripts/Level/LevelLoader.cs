@@ -247,7 +247,11 @@ namespace NamPhuThuy.GamePlay
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
                 navMeshSurface.BuildNavMesh();
-                // pathfinder.Scan();
+
+                Tween.Delay(1).OnComplete(() =>
+                {
+                    setIsLevelLoadedEvent?.Invoke();
+                });
 
                 return;
 
