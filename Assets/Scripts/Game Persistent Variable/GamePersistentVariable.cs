@@ -191,5 +191,6 @@ public static class GamePersistentVariable
     public static WashingMachineSlot currentWashingMachineSlotToUnlock;
     public static BoosterMode boosterMode;
     public static bool isPreventSelectAntBox;
+    public static AntsFlow.LevelItem levelItem;
     #endregion
 }

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using TMPro;
 using Unity.AI.Navigation;
 using UnityEngine;
@@ -210,8 +211,62 @@ namespace AntsFlow
             }
         }
 
+        public void StartHightlightEachFactionSequentially()
+        {
+            StartCoroutine(HightlightEachFactionSequentially());
+        }
 
+        private IEnumerator HightlightEachFactionSequentially()
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
 
+            Dictionary<Color, List<BaseTile>> tilesOfFaction = new Dictionary<Color, List<BaseTile>>();
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                if (!tile.isAntApproaching)
+                {
+                    CommonUtil.AddValueOfDictionary(tilesOfFaction, tile.Faction, tile);
+                }
+            }
+
+            int currentFactionIndex = 0;
+
+            while (WaterFlowGameInput.Ins.inputMode == AntsFlowInputMode.SelectTile)
+            {
+                KeyValuePair<Color, List<BaseTile>> item = tilesOfFaction.ElementAt(currentFactionIndex);
+
+                for (int i = 0; i < item.Value.Count; i++)
+                {
+                    int index = i;
+
+                    BaseTile tile = item.Value[i];
+
+                    tile.isAnimating = true;
+
+                    SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
+                    {
+                        tile.isAnimating = false;
+
+                        if (index == item.Value.Count - 1)
+                        {
+                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+
+                            currentFactionIndex++;
+
+                            if (currentFactionIndex >= item.Value.Count)
+                            {
+                                currentFactionIndex = 0;
+                            }
+                        }
+                    });
+                }
+
+                yield return waitForSeconds;
+            }
+        }
 
         public List<GridNode> grids;
 

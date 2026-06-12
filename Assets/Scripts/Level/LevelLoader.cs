@@ -244,6 +244,8 @@ namespace NamPhuThuy.GamePlay
 
                 AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
 
+                GamePersistentVariable.levelItem = levelItem;
+
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
                 navMeshSurface.BuildNavMesh();

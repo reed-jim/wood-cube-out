@@ -464,6 +464,23 @@ namespace AntsFlow
             List<BaseTile> tilesToClear = TileManager.Ins.tiles
                 .Where(tile => tile.gameObject.activeInHierarchy && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
+            // Remove blockages
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            {
+                BaseTile tile = TileManager.Ins.tiles[i];
+
+                if (!tile.isAntApproaching && !tilesToClear.Contains(tile))
+                {
+                    List<BaseTile> toRemoveBlockages = tilesToClear.Where(item => tile.blockages.Contains(item)).ToList();
+
+                    for (int j = 0; j < toRemoveBlockages.Count; j++)
+                    {
+                        tile.blockages.Remove(toRemoveBlockages[j]);
+                        tile.actualBlockages.Remove(toRemoveBlockages[j]);
+                    }
+                }
+            }
+
             for (int i = 0; i < tilesToClear.Count; i++)
             {
                 int index = i;
