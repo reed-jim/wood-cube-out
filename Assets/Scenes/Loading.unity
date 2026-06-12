@@ -293,6 +293,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -731,6 +732,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -772,6 +774,153 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 535832575}
   m_CullTransparentMesh: 1
+--- !u!1 &748749126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 748749127}
+  - component: {fileID: 748749128}
+  m_Layer: 0
+  m_Name: Keep Playing
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &748749127
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748749126}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1385512815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &748749128
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 748749126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Keep Playing
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Continuez \xE0 jouer"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Spielen Sie weiter
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Continua a giocare
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D7\u30EC\u30A4\u3092\u7D9A\u3051\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uACC4\uC18D \uD50C\uB808\uC774\uD558\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Continue jogando
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0440\u043E\u0434\u043E\u043B\u0436\u0430\u0439\u0442\u0435 \u0438\u0433\u0440\u0430\u0442\u044C"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Sigue jugando
+    Object: {fileID: 0}
+--- !u!1 &796692104
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 796692105}
+  - component: {fileID: 796692106}
+  m_Layer: 0
+  m_Name: Hold to see the board
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &796692105
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796692104}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1385512815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &796692106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 796692104}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Hold to see the board
+    Object: {fileID: 0}
+  - Language: French
+    Text: Attendez pour voir le tableau
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Halten Sie gedr\xFCckt, um die Tafel anzuzeigen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Tieni premuto per vedere il tabellone
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u62BC\u3057\u7D9A\u3051\u308B\u3068\u30DC\u30FC\u30C9\u304C\u8868\u793A\u3055\u308C\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBCF4\uB4DC\uB97C \uBCF4\uB824\uBA74 \uAE38\uAC8C \uB204\uB974\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Segure para ver o quadro
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0423\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0439\u0442\u0435, \u0447\u0442\u043E\u0431\u044B
+      \u0443\u0432\u0438\u0434\u0435\u0442\u044C \u0434\u043E\u0441\u043A\u0443"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Mantenga presionado para ver el tablero
+    Object: {fileID: 0}
 --- !u!1 &817468848
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,6 +1353,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1433,6 +1583,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1346863602}
   m_CullTransparentMesh: 1
+--- !u!4 &1385512815 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+  m_PrefabInstance: {fileID: 1582410615}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1582410615
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1481,6 +1636,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1448366303307356327, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      propertyPath: segments.Array.data[0].adsNewData.config.mrec.isActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6041947459616754546, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
       propertyPath: gameLoading
       value: 
@@ -1491,7 +1650,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 748749127}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1955524394}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1943754602}
+    - targetCorrespondingSourceObject: {fileID: 2382114561705044355, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 796692105}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3d0f613d337db4e80b8169cefb2635, type: 3}
 --- !u!1 &1626087555
@@ -1604,6 +1775,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1740,6 +1912,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -1826,6 +1999,156 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1943754601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1943754602}
+  - component: {fileID: 1943754603}
+  m_Layer: 0
+  m_Name: Des Revive
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1943754602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943754601}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1385512815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1943754603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1943754601}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Clear 2 Boxes to get more space and continue playing
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Effacez 2 cases pour obtenir plus d'espace et continuer \xE0 jouer"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "R\xE4umen Sie 2 Kisten ab, um mehr Platz zu erhalten und weiterzuspielen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: "Cancella 2 caselle per ottenere pi\xF9 spazio e continuare a giocare"
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "2 \u3064\u306E\u30DC\u30C3\u30AF\u30B9\u3092\u30AF\u30EA\u30A2\u3057\u3066\u30B9\u30DA\u30FC\u30B9\u3092\u5897\u3084\u3057\u3001\u30D7\u30EC\u30A4\u3092\u7D9A\u884C\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB354 \uB9CE\uC740 \uACF5\uAC04\uC744 \uD655\uBCF4\uD558\uACE0 \uACC4\uC18D
+      \uD50C\uB808\uC774\uD558\uB824\uBA74 \uC0C1\uC790 2\uAC1C\uB97C \uC9C0\uC6B0\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Limpe 2 caixas para obter mais espa\xE7o e continuar jogando"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u0435 2 \u043A\u043E\u0440\u043E\u0431\u043A\u0438,
+      \u0447\u0442\u043E\u0431\u044B \u043F\u043E\u043B\u0443\u0447\u0438\u0442\u044C
+      \u0431\u043E\u043B\u044C\u0448\u0435 \u043C\u0435\u0441\u0442\u0430 \u0438
+      \u043F\u0440\u043E\u0434\u043E\u043B\u0436\u0438\u0442\u044C \u0438\u0433\u0440\u0443."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Limpia 2 casillas para obtener m\xE1s espacio y seguir jugando."
+    Object: {fileID: 0}
+--- !u!1 &1955524393
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1955524394}
+  - component: {fileID: 1955524395}
+  m_Layer: 0
+  m_Name: Out Of Slot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1955524394
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955524393}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1385512815}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1955524395
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955524393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Out Of Slot
+    Object: {fileID: 0}
+  - Language: French
+    Text: Hors emplacement
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Au\xDFerhalb des Slots"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Fuori slot
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30B9\u30ED\u30C3\u30C8\u304C\u3042\u308A\u307E\u305B\u3093"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC2AC\uB86F \uC5C6\uC74C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Fora do slot
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041D\u0435\u0442 \u0441\u043B\u043E\u0442\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Fuera de la ranura
+    Object: {fileID: 0}
 --- !u!1 &395928970860806824
 GameObject:
   m_ObjectHideFlags: 0
@@ -2471,6 +2794,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
