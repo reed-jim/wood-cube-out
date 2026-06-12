@@ -34,11 +34,13 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             SceneTransition.levelSceneTransitionCompleteEvent += OnLevelSceneTransitionComplete;
+            LevelLoader.startLevelEvent += OnLevelStarted;
         }
 
         void OnDestroy()
         {
             SceneTransition.levelSceneTransitionCompleteEvent -= OnLevelSceneTransitionComplete;
+            LevelLoader.startLevelEvent -= OnLevelStarted;
         }
 
         public void Setup(LevelItem levelItem)
@@ -50,8 +52,9 @@ namespace AntsFlow
 
                 hardLevelSpine.gameObject.SetActive(true);
                 hardLevelSpine.color = Color.white;
-                hardLevelSpine.Skeleton.SetToSetupPose();
-                hardLevelSpine.AnimationState.ClearTracks();
+
+                // hardLevelSpine.Skeleton.SetToSetupPose();
+                // hardLevelSpine.AnimationState.ClearTracks();
                 hardLevelSpine.Skeleton.SetSkin(hardSkin);
 
                 hardLevelText.fontMaterial = hardTextMaterial;
@@ -65,10 +68,9 @@ namespace AntsFlow
                     localizedHardLevelText.TranslationName = "Super Hard";
                 }
 
-                hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+                TrackEntry entry = hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+                entry.TimeScale = 1f;
                 hardLevelSpine.AnimationState.Complete += OnAnimationComplete;
-
-                SaferioTween.AlphaShow(blackOverlay, endAlpha: 0.9f);
             }
             else
             {
@@ -91,6 +93,13 @@ namespace AntsFlow
                     SaferioTween.AlphaHide(canvasGroup);
                 });
             }
+        }
+
+        private void OnLevelStarted()
+        {
+            TrackEntry entry = hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+            entry.TrackTime = 0f;
+            entry.TimeScale = 0f;
         }
 
         private void OnLevelSceneTransitionComplete()
