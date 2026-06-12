@@ -97,7 +97,7 @@ namespace AntsFlow
 
         private void OnLevelLoaded()
         {
-            if (GamePersistentVariable.levelItem.difficulty > hardLevelThreshold)
+            if (GamePersistentVariable.levelItem.difficulty < hardLevelThreshold)
             {
                 hardLevelSpine.gameObject.SetActive(false);
                 SaferioTween.AlphaHide(canvasGroup);
