@@ -1187,10 +1187,10 @@ public class AdmobAdsMax
 
         this.adWhere = adWhere;
 
-#if UNITY_EDITOR
-        actionReward?.Invoke();
-        return;
-#endif
+//#if UNITY_EDITOR
+//        actionReward?.Invoke();
+//        return;
+//#endif
 
         actionWatchVideo = actionType;
         GameController.Instance.AnalyticsController.LogRequestVideoReward(actionType.ToString());

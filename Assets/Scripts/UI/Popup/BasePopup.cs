@@ -6,6 +6,7 @@ using PrimeTween;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+
 using static GameEnum;
 
 public class BasePopup : MonoBehaviour

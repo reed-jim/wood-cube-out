@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.Experimental.AI;
 using UnityEngine.UI;
+
 using static GameEnum;
 
 public class WinPopup : BasePopup
@@ -37,6 +38,8 @@ public class WinPopup : BasePopup
 
     [Header("CUSTOMIZE")]
     [SerializeField] private float timeCollectCoin;
+    [SerializeField]
+    private CanvasGroup nextLevelCG;
 
     private bool _isCollectCoinRemoteConfig;
     private int _multiplierCoinWinLevel;
@@ -50,6 +53,12 @@ public class WinPopup : BasePopup
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
     public static event Action<Vector3, int> collectCoinEvent;
+
+    private void OnEnable()
+    {
+        nextLevelCG.alpha = 0;
+        Tween.Alpha(nextLevelCG, 1, duration: 0.3f, startDelay: 1);
+    }
 
     protected override void RegisterMoreEvent()
     {
