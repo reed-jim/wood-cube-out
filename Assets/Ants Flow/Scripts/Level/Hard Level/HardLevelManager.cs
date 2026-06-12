@@ -45,7 +45,7 @@ namespace AntsFlow
 
         public void Setup(LevelItem levelItem)
         {
-            if (levelItem.difficulty > hardLevelThreshold)
+            if (levelItem.difficulty >= hardLevelThreshold)
             {
                 canvasGroup.gameObject.SetActive(true);
                 canvasGroup.alpha = 1;
@@ -60,7 +60,7 @@ namespace AntsFlow
                 hardLevelText.fontMaterial = hardTextMaterial;
                 localizedHardLevelText.TranslationName = "Hard";
 
-                if (levelItem.difficulty > superHardLevelThreshold)
+                if (levelItem.difficulty >= superHardLevelThreshold)
                 {
                     hardLevelSpine.Skeleton.SetSkin(superHardSkin);
 

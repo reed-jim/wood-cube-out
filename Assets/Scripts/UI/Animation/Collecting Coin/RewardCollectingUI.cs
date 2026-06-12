@@ -23,6 +23,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     #region EVENT
     public static event Action<float> addCoinEvent;
     public static event Action<float> updateCoinTextEvent;
+    public static event Action collectCoinCompleteEvent;
     #endregion
 
     protected override void MoreActionInAwake()
@@ -39,8 +40,6 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         }
 
         CoinContainerUI.collectCoinEvent += Collect;
-        // CoinContainerUI.collectItemsEvent += CollectItem;
-        WinPopup.collectCoinEvent += Collect;
 
         CreatePool();
     }
@@ -48,8 +47,6 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     protected override void MoreActionOnDestroy()
     {
         CoinContainerUI.collectCoinEvent -= Collect;
-        // CoinContainerUI.collectItemsEvent -= CollectItem;
-        WinPopup.collectCoinEvent -= Collect;
     }
 
     private void CreatePool()
@@ -151,30 +148,42 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
 
+        float maxDuration = 0;
+
         for (int i = 0; i < poolSize; i++)
         {
             int index = i;
+            float duration;
 
             Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
 
             AddTween(Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: Ease.Linear)
             .OnComplete(() =>
             {
-                AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f), ease: Ease.InOutSine)
+                duration = UnityEngine.Random.Range(0.2f, 0.6f);
+
+                if (duration > maxDuration)
+                {
+                    maxDuration = duration;
+                }
+
+                AddTween(Tween.LocalPosition(_rewards[index], position, duration: duration, ease: Ease.InOutSine)
                 .OnComplete(() =>
                 {
                     float valueLeft = (poolSize - index - 1) * unitValue;
 
-                    if (index == poolSize - 1)
+                    if (duration == maxDuration)
                     {
                         valueLeft = 0;
+
+                        collectCoinCompleteEvent?.Invoke();
                     }
 
                     onCompleteAction?.Invoke();
 
                     _rewards[index].gameObject.SetActive(false);
 
-                    if(i % 2 == 0)
+                    if (i % 2 == 0)
                     {
                         SoundManager.Instance.PlaySoundCollectCoin();
                     }

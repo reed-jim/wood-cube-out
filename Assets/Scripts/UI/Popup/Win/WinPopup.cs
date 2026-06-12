@@ -52,7 +52,8 @@ public class WinPopup : BasePopup
 
     public static event Action<int> goLevelEvent;
     public static event Action nextLevelEvent;
-    public static event Action<Vector3, int> collectCoinEvent;
+    // public static event Action<Vector3, int> collectCoinEvent;
+    public static event Action<int> collectCoinEvent;
 
     private void OnEnable()
     {
@@ -64,6 +65,7 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent += OnLevelWinAsync;
         DebugPopup.winLevelEvent += OnLevelWinAsync;
+        RewardCollectingUI.collectCoinCompleteEvent += OnCollectCoinCompleted;
 
         continueButton.onClick.AddListener(Continue);
         returnHomeButton.onClick.AddListener(ReturnHome);
@@ -74,11 +76,12 @@ public class WinPopup : BasePopup
     {
         GameStateWin.winLevelEvent -= OnLevelWinAsync;
         DebugPopup.winLevelEvent -= OnLevelWinAsync;
+        RewardCollectingUI.collectCoinCompleteEvent -= OnCollectCoinCompleted;
     }
 
     private async void OnLevelWinAsync()
     {
-         GameController.Instance.admobAds.ShowBannerCollap();
+        GameController.Instance.admobAds.ShowBannerCollap();
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
@@ -93,7 +96,7 @@ public class WinPopup : BasePopup
 
         // REMOTE CONFIG IS COLLECT COIN
         _isCollectCoinRemoteConfig = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_COLLECT_COIN_WIN_LEVEL, true);
-        _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 5);
+        _multiplierCoinWinLevel = RemoteConfigController.GetIntConfig(FirebaseConfig.MULTIPLIER_COIN_WIN_LEVEL, 2);
 
         // coinContainer.gameObject.SetActive(_isCollectCoinRemoteConfig);
         x5CoinButton.gameObject.SetActive(_isCollectCoinRemoteConfig);
@@ -206,10 +209,11 @@ public class WinPopup : BasePopup
 
     private async void Continue()
     {
-        // collectCoinEvent?.Invoke(coinContainer.localPosition - new Vector3(0, coinContainer.sizeDelta.y), 500);
+        collectCoinEvent?.Invoke(_currentCollectedCoin);
+    }
 
-        // await Task.Delay(3000);
-
+    private void OnCollectCoinCompleted()
+    {
         if (_isAlreadyWatchRewardedAd)
         {
             OnInterstitialAdCompleted();
@@ -222,14 +226,14 @@ public class WinPopup : BasePopup
 
             if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
-                 GameController.Instance.admobAds.ShowInterstitial
-                (
-                   actionIniterClose:  OnInterstitialAdCompleted
-                );
+                GameController.Instance.admobAds.ShowInterstitial
+               (
+                  actionIniterClose: OnInterstitialAdCompleted
+               );
             }
             else
             {
-                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
     }
@@ -257,8 +261,8 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
-         GameController.Instance.admobAds.ShowVideoReward(
-            OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
+        GameController.Instance.admobAds.ShowVideoReward(
+           OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 
     private void OnRewaredAdCompleted()

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public enum AntsFlowInputMode
 {
@@ -20,6 +21,11 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
             Vector2.zero,
             0f
         );
+
+            if (IsClickedOnUI())
+            {
+                return;
+            }
 
             if (hit.collider != null)
             {
@@ -45,5 +51,28 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 }
             }
         }
+    }
+
+    private bool IsClickedOnUI()
+    {
+        bool res;
+        PointerEventData pointerData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+
+        var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+        EventSystem.current.RaycastAll(pointerData, raycastResults);
+
+        if (raycastResults.Count > 0)
+        {
+            res = true;
+        }
+        else
+        {
+            res = false;
+        }
+
+        return res;
     }
 }

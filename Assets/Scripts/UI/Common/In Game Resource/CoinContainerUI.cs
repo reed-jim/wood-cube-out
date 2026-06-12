@@ -35,6 +35,7 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent += UpdateCoinText;
         SaferioIAPManager.collectCoinEvent += CollectCoin;
         ResourceEarnPopup.collectCoinEvent += CollectCoin;
+        WinPopup.collectCoinEvent += CollectCoin;
         BackupPopup.updateCoinTextEvent += UpdateCoinText;
         CompensatePopup.updateCoinTextEvent += UpdateCoinText;
         LivesShopPopup.updateCoinTextEvent += UpdateCoinText;
@@ -62,6 +63,7 @@ public class CoinContainerUI : MonoBehaviour
         UserResourcesManager.updateCoinTextEvent -= UpdateCoinText;
         SaferioIAPManager.collectCoinEvent -= CollectCoin;
         ResourceEarnPopup.collectCoinEvent -= CollectCoin;
+        WinPopup.collectCoinEvent -= CollectCoin;
         BackupPopup.updateCoinTextEvent -= UpdateCoinText;
         CompensatePopup.updateCoinTextEvent -= UpdateCoinText;
         LivesShopPopup.updateCoinTextEvent -= UpdateCoinText;
