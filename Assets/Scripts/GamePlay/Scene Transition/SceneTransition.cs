@@ -92,6 +92,8 @@ public class SceneTransition : MonoBehaviour
 
     private void Reset()
     {
+        loadLevelInProgressContainer.gameObject.SetActive(true);
+
         loadLevelInProgressCanvasGroup.alpha = 1;
         loadingSpine.color = Color.white;
     }
@@ -206,10 +208,6 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        loadLevelInProgressContainer.gameObject.SetActive(true);
-
-        loadLevelInProgressCanvasGroup.alpha = 1;
-
         GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 2;

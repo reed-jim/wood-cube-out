@@ -33,11 +33,13 @@ namespace AntsFlow
         {
             base.MoreActionOnAwake();
 
+            LevelLoader.setIsLevelLoadedEvent += OnLevelLoaded;
             SceneTransition.levelSceneTransitionCompleteEvent += OnLevelSceneTransitionComplete;
         }
 
         void OnDestroy()
         {
+            LevelLoader.setIsLevelLoadedEvent -= OnLevelLoaded;
             SceneTransition.levelSceneTransitionCompleteEvent -= OnLevelSceneTransitionComplete;
         }
 
@@ -69,13 +71,10 @@ namespace AntsFlow
                 hardLevelSpine.Skeleton.SetToSetupPose();
                 hardLevelSpine.AnimationState.ClearTracks();
                 TrackEntry entry = hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+                entry.TrackTime = 0;
                 hardLevelSpine.AnimationState.Apply(hardLevelSpine.Skeleton);
                 hardLevelSpine.Skeleton.UpdateWorldTransform();
                 hardLevelSpine.AnimationState.Complete += OnAnimationComplete;
-            }
-            else
-            {
-                hardLevelSpine.gameObject.SetActive(false);
             }
 
             void OnAnimationComplete(TrackEntry entry)
@@ -93,6 +92,15 @@ namespace AntsFlow
                     });
                     SaferioTween.AlphaHide(canvasGroup);
                 });
+            }
+        }
+
+        private void OnLevelLoaded()
+        {
+            if (GamePersistentVariable.levelItem.difficulty > hardLevelThreshold)
+            {
+                hardLevelSpine.gameObject.SetActive(false);
+                SaferioTween.AlphaHide(canvasGroup);
             }
         }
 

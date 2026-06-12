@@ -76,7 +76,7 @@ namespace AntsFlow
 
             SpecialElementManager.Ins.Setup(levelItem);
 
-            List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxed);
+            List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
 
             if (levelItem.isTutorialLevel)
             {
