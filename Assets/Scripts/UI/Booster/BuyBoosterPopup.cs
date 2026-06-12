@@ -137,14 +137,14 @@ public class BuyBoosterPopup : BasePopup
         {
             if (_boosterType == BoosterType.BreakObject)
             {
-                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 3);
 
                 updateBoosterQuantityEvent?.Invoke(boosterIndex);
 
                 _isBoughtBreakObjectBoosterByCoin = true;
 
                 SaferioTracking.TrackResourceSource(
-                    currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
+                    currentLevel.Value, _boosterType.ToString(), 3, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
@@ -164,7 +164,7 @@ public class BuyBoosterPopup : BasePopup
             else
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
-                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
+                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 3);
 
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
