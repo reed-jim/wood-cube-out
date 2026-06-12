@@ -435,7 +435,7 @@ namespace AntsFlow
                     Color nextFaction;
                     int numAnt;
 
-                    GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt);
+                    GetNextAntSpawnByDifficulty(difficultyLevel: 0, out nextFaction, out numAnt, isIncludeStartSlot: false);
 
                     washingMachine.Init(washingMachineStartSlot, nextFaction, numAnt);
                 }
@@ -742,9 +742,9 @@ namespace AntsFlow
             return slots;
         }
 
-        private bool GetNextAntSpawnByDifficulty(int difficultyLevel, out Color nextFaction, out int numAnt)
+        private bool GetNextAntSpawnByDifficulty(int difficultyLevel, out Color nextFaction, out int numAnt, bool isIncludeStartSlot = true)
         {
-            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty();
+            Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
             // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
@@ -814,17 +814,20 @@ namespace AntsFlow
             return result;
         }
 
-        public Dictionary<Color, int> GetMaxAntRequiredPerFaction()
+        public Dictionary<Color, int> GetMaxAntRequiredPerFaction(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> result = GetRemaniningTilePerFaction();
 
-            for (int i = 0; i < washingMachineStartSlots.Count; i++)
+            if (isIncludeStartSlot)
             {
-                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-                if (washingMachineStartSlot.washingMachine != null)
+                for (int i = 0; i < washingMachineStartSlots.Count; i++)
                 {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                    if (washingMachineStartSlot.washingMachine != null)
+                    {
+                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
                 }
             }
 
@@ -903,11 +906,11 @@ namespace AntsFlow
             return sortedPoolFaction;
         }
 
-        public Dictionary<Color, int> GetNumAntSpawnPerFactionOrderByDifficulty()
+        public Dictionary<Color, int> GetNumAntSpawnPerFactionOrderByDifficulty(bool isIncludeStartSlot = true)
         {
             Dictionary<Color, int> result = new Dictionary<Color, int>();
             Dictionary<Color, int> numNotBlockedTilePerFaction = GetNumNotBlockedTilePerFaction();
-            Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction();
+            Dictionary<Color, int> maxAntRequiredPerFaction = GetMaxAntRequiredPerFaction(isIncludeStartSlot);
 
             foreach (var faction in numNotBlockedTilePerFaction.Keys)
             {
