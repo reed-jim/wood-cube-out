@@ -190,12 +190,23 @@ public class TileIconContainerEditor : UnityEditor.Editor
                         string[] spriteGuids = AssetDatabase.FindAssets("t:Sprite", new[] { subFolder });
                         var sprites = new System.Collections.Generic.List<Sprite>();
 
+                        string categoryName1 = targetCategorySet.itemCategory.ToString();
+                        string categoryName2 = categoryName1.Replace("_", " ");
+                        string categoryName3 = categoryName1.Replace("_", "");
+
                         foreach (string guid in spriteGuids)
                         {
                             string assetPath = AssetDatabase.GUIDToAssetPath(guid);
                             Sprite sprite = AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
                             if (sprite != null)
                             {
+                                if (string.Equals(sprite.name, categoryName1, StringComparison.OrdinalIgnoreCase) ||
+                                    string.Equals(sprite.name, categoryName2, StringComparison.OrdinalIgnoreCase) ||
+                                    string.Equals(sprite.name, categoryName3, StringComparison.OrdinalIgnoreCase))
+                                {
+                                    targetCategorySet.spriteOrder = sprite;
+                                    continue;
+                                }
                                 sprites.Add(sprite);
                             }
                         }

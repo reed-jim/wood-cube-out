@@ -25,7 +25,7 @@ public class UserResourcesObserver : ScriptableObject
         UserResources defaultUserResources = new UserResources();
 
         defaultUserResources.CoinQuantity = 500;
-        defaultUserResources.BoosterQuantities = new int[3];
+        defaultUserResources.BoosterQuantities = new int[5];
 
         for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
         {
@@ -33,6 +33,24 @@ public class UserResourcesObserver : ScriptableObject
         }
 
         userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
+
+        if (userResources.BoosterQuantities == null || userResources.BoosterQuantities.Length < 5)
+        {
+            int[] newQuantities = new int[5];
+            for (int i = 0; i < 5; i++)
+            {
+                if (userResources.BoosterQuantities != null && i < userResources.BoosterQuantities.Length)
+                {
+                    newQuantities[i] = userResources.BoosterQuantities[i];
+                }
+                else
+                {
+                    newQuantities[i] = 2; // Default starting booster quantity
+                }
+            }
+            userResources.BoosterQuantities = newQuantities;
+            Save();
+        }
     }
 
     public void ChangeCoin(float value)
@@ -101,6 +119,6 @@ public class UserResources
 
     public UserResources()
     {
-        boosterQuantities = new int[3];
+        boosterQuantities = new int[5];
     }
 }

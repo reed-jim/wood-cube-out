@@ -19,6 +19,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button breakObjectButton;
     [SerializeField] private Button clearAllScrewPortsButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
+    [SerializeField] private Button freezeTimeButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -83,6 +84,10 @@ public class BoosterUI : MonoBehaviour
         if (disableBreakObjectModeEarlyButton != null)
         {
             disableBreakObjectModeEarlyButton.onClick.AddListener(DisableBreakObjectModeEarly);
+        }
+        if (freezeTimeButton != null)
+        {
+            freezeTimeButton.onClick.AddListener(() => UseBooster(BoosterType.FreezeTime));
         }
 
         _tweens = new List<Tween>();
@@ -173,6 +178,10 @@ public class BoosterUI : MonoBehaviour
         {
             ClearAllScrewPorts();
         }
+        else if (boosterType == BoosterType.FreezeTime)
+        {
+            UseFreezeTime();
+        }
 
         useBoosterEvent?.Invoke(boosterType);
     }
@@ -244,6 +253,35 @@ public class BoosterUI : MonoBehaviour
         ConsumeBooster(boosterIndex: 1);
 
         TileManager.Ins.UseShuffleBooster();
+
+        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
+    }
+
+    private void UseFreezeTime()
+    {
+        if (!IsBoosterAvailable(boosterIndex: 4))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.FreezeTime);
+
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        ConsumeBooster(boosterIndex: 4);
+
+        // Freeze time for 15 seconds
+        TileManager.Ins.UseFreezeTimeBooster(15f);
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

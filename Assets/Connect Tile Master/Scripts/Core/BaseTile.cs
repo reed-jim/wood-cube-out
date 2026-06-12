@@ -22,6 +22,8 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private bool isOutside;
     [SerializeField] private bool isDone;
     [SerializeField] private bool isText;
+    [SerializeField] private int themeItemId;
+
 
 
     public static event Action<BaseTile> selectTileEvent;
@@ -68,6 +70,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         set => isText = value;
     }
 
+    public int ThemeItemId
+    {
+        get => themeItemId;
+        set => themeItemId = value;
+    }
+
     public float LeftBound => container.localPosition.x - 0.5f * container.sizeDelta.x;
     public float RightBound => container.localPosition.x + 0.5f * container.sizeDelta.x;
     public float TopBound => container.localPosition.y + 0.5f * container.sizeDelta.y;
@@ -82,10 +90,16 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         // selectButton.onClick.AddListener(Select);
     }
 
-    public void Init(ItemCategory itemCategory, Sprite iconSprite, string textData = null)
+    public void Init(ItemCategory itemCategory, int themeItemId, Sprite iconSprite, string textData = null)
     {
         this.itemCategory = itemCategory;
+        this.themeItemId = themeItemId;
         isText = !string.IsNullOrEmpty(textData);
+        if (iconSprite == null)
+        {
+            Debug.Log("Icon sprite is null for category: " + itemCategory);
+            Debug.Log("isText =" + !string.IsNullOrEmpty(textData));
+        }
         if (!string.IsNullOrEmpty(textData))
         {
             icon.gameObject.SetActive(false);
@@ -109,13 +123,19 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         _isDragging = false;
     }
 
-    public void Shuffle(ItemCategory itemCategory, Sprite iconSprite, string textData = null)
+    public void Shuffle(ItemCategory itemCategory, int themeItemId, Sprite iconSprite, string textData, Vector3 deckLocalPos)
     {
         isMoving = true;
 
-        SaferioTween.AlphaShow(glow, onCompleteAction: () =>
+        Vector3 initialPosition = transform.localPosition;
+
+        Tween.LocalPosition(transform, deckLocalPos, duration: 0.3f)
+        .OnComplete(() =>
         {
+            if (gameObject == null) return;
+
             this.itemCategory = itemCategory;
+            this.themeItemId = themeItemId;
             isText = !string.IsNullOrEmpty(textData);
 
             if (isText)
@@ -137,22 +157,11 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
             IsOnValidSlot = false;
             IsDone = false;
 
-            SaferioTween.AlphaHide(glow, onCompleteAction: () =>
-            {
-                isMoving = false;
-            });
-        });
-
-        Vector3 initialPosition = transform.localPosition;
-        Vector3 expandedPosition = 1.2f * initialPosition;
-
-        Tween.LocalPosition(transform, expandedPosition, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            Tween.LocalPosition(transform, initialPosition, duration: 0.3f)
+            Tween.LocalPosition(transform, initialPosition, duration: 0.3f, startDelay: 0.1f)
             .OnComplete(() =>
             {
-                isMoving = false;
+                if (gameObject != null)
+                    isMoving = false;
             });
         });
     }

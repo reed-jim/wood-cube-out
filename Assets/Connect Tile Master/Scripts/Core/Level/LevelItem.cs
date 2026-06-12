@@ -22,14 +22,22 @@ public class LevelItem : MonoBehaviour
     public PictureItem pictureItemPrefab;
     public Canvas previewCanvas;
 
+    [Header("Level Data")]
     public List<ThemeData> themeDataList = new List<ThemeData>();
     public TileIconContainer tileIconContainer;
 
     public int initRow = 4;
     public int initColumn = 5;
 
-    public bool isTutorial;
     public float timeLimit = 60f;
+
+    public float priorityCardRatio = 0.5f;
+    public bool isHard = false;
+
+    [Space(20)]
+    [Header("Tutorial")]
+    public bool isTutorial;
+
 }
 
 #if UNITY_EDITOR

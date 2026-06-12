@@ -165,6 +165,7 @@ public static class GameConstants
             case BoosterType.AddScrewPort: return 1;
             case BoosterType.BreakObject: return 1;
             case BoosterType.ClearScrewPorts: return 1;
+            case BoosterType.FreezeTime: return 1;
             //default: return 3;
             default: return 1;
 

@@ -85,23 +85,49 @@ public class TileSlotContainer : MonoBehaviour
             }
         }
 
-        CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == itemCategory);
+        TileIconContainer containerToUse = tileIconContainer;
+        if (TileManager.Ins != null && TileManager.Ins.levelItem != null && TileManager.Ins.levelItem.tileIconContainer != null)
+        {
+            containerToUse = TileManager.Ins.levelItem.tileIconContainer;
+        }
+
+        CategoryIconSet iconSet = containerToUse.categoryIconSets.First(item => item.itemCategory == itemCategory);
 
         bool hasText = iconSet.text != null && iconSet.text.Length > 0;
         bool hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
 
+        // Check if specific order text or order sprite is defined
+        bool hasTextOrder = !string.IsNullOrEmpty(iconSet.textOrder);
+        bool hasIconOrder = iconSet.spriteOrder != null;
+
         bool useText = false;
-        if (hasText && hasIcon)
+        if (hasTextOrder && hasIconOrder)
         {
             useText = UnityEngine.Random.value > 0.5f;
         }
-        else if (hasText)
+        else if (hasTextOrder)
         {
             useText = true;
         }
-        else if (hasIcon)
+        else if (hasIconOrder)
         {
             useText = false;
+        }
+        else
+        {
+            // Fallback to random if neither order is set
+            if (hasText && hasIcon)
+            {
+                useText = UnityEngine.Random.value > 0.5f;
+            }
+            else if (hasText)
+            {
+                useText = true;
+            }
+            else if (hasIcon)
+            {
+                useText = false;
+            }
         }
 
         if (useText)
@@ -110,16 +136,30 @@ public class TileSlotContainer : MonoBehaviour
             if (currentTileText != null)
             {
                 currentTileText.gameObject.SetActive(true);
-                currentTileText.text = tileIconContainer.GetRandomTextOfCategory(itemCategory);
+                if (hasTextOrder)
+                {
+                    currentTileText.text = iconSet.textOrder;
+                }
+                else
+                {
+                    currentTileText.text = containerToUse.GetRandomTextOfCategory(itemCategory);
+                }
             }
         }
         else
         {
             if (currentTileText != null) currentTileText.gameObject.SetActive(false);
-            if (currentTileImage != null && hasIcon)
+            if (currentTileImage != null)
             {
                 currentTileImage.gameObject.SetActive(true);
-                currentTileImage.sprite = iconSet.icons[UnityEngine.Random.Range(0, iconSet.icons.Length)];
+                if (hasIconOrder)
+                {
+                    currentTileImage.sprite = iconSet.spriteOrder;
+                }
+                else if (hasIcon)
+                {
+                    currentTileImage.sprite = iconSet.icons[UnityEngine.Random.Range(0, iconSet.icons.Length)];
+                }
             }
         }
 

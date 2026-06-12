@@ -33,9 +33,10 @@ public class TileManager : Singleton<TileManager>
 
     public float currentLevelTime;
     public bool isLevelActive;
+    [HideInInspector] public bool isTimeFrozen;
+    private Tween freezeTimeTween;
 
-    private Dictionary<ItemCategory, List<Sprite>> availableSpritesPerCategory = new Dictionary<ItemCategory, List<Sprite>>();
-    private Dictionary<ItemCategory, List<string>> availableTextsPerCategory = new Dictionary<ItemCategory, List<string>>();
+    private Dictionary<ItemCategory, List<int>> availableItemIdsPerCategory = new Dictionary<ItemCategory, List<int>>();
 
     public int NumLockedTileSlotContainer => tileSlotContainers.Count(item => item.isLocked);
 
@@ -54,7 +55,7 @@ public class TileManager : Singleton<TileManager>
 
     private void Update()
     {
-        if (isLevelActive && currentLevelTime > 0)
+        if (isLevelActive && !isTimeFrozen && currentLevelTime > 0)
         {
             currentLevelTime -= Time.deltaTime;
 
@@ -84,31 +85,29 @@ public class TileManager : Singleton<TileManager>
             isLevelActive = true;
         }
 
-        availableSpritesPerCategory.Clear();
-        availableTextsPerCategory.Clear();
+        isTimeFrozen = false;
+        if (freezeTimeTween.isAlive)
+        {
+            freezeTimeTween.Stop();
+        }
+
+        availableItemIdsPerCategory.Clear();
 
         foreach (var theme in levelItem.themeDataList)
         {
             var iconSet = tileIconContainer.categoryIconSets.FirstOrDefault(x => x.itemCategory == theme.category);
             if (iconSet != null)
             {
-                if (iconSet.icons != null && iconSet.icons.Length > 0)
-                {
-                    availableSpritesPerCategory[theme.category] = new List<Sprite>(iconSet.icons);
-                }
-                else
-                {
-                    availableSpritesPerCategory[theme.category] = new List<Sprite>();
-                }
+                int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                int textCount = iconSet.text != null ? iconSet.text.Length : 0;
+                int totalItems = spriteCount + textCount;
 
-                if (iconSet.text != null && iconSet.text.Length > 0)
+                List<int> itemIds = new List<int>();
+                for (int i = 0; i < totalItems; i++)
                 {
-                    availableTextsPerCategory[theme.category] = new List<string>(iconSet.text);
+                    itemIds.Add(i);
                 }
-                else
-                {
-                    availableTextsPerCategory[theme.category] = new List<string>();
-                }
+                availableItemIdsPerCategory[theme.category] = itemIds;
             }
         }
 
@@ -224,7 +223,6 @@ public class TileManager : Singleton<TileManager>
     private List<ItemCategory> GetNextCategories(int n)
     {
         return tiles
-            .Where(item => !item.IsDone)
             .GroupBy(t => t.ItemCategory)
             .OrderByDescending(g => g.Count())
             .Take(n)
@@ -302,14 +300,14 @@ public class TileManager : Singleton<TileManager>
 
     private ItemCategory GetNextCategoryForSlotBasedOnDifficulty(int difficultyLevel, TileSlotContainer requestingContainer)
     {
-        // The higher the score, the easier
         Dictionary<ItemCategory, int> numTilePerCategory = new Dictionary<ItemCategory, int>();
 
         for (int i = 0; i < tiles.Count; i++)
         {
             BaseTile tile = tiles[i];
 
-            if (tile.IsDone)
+            // Skip tiles already done or already committed to a slot
+            if (tile.IsDone || tile.IsOnSlot)
             {
                 continue;
             }
@@ -322,56 +320,69 @@ public class TileManager : Singleton<TileManager>
             CommonUtil.SumValueOfDictionary(numTilePerCategory, itemCategoryPool[i], 1);
         }
 
-        Dictionary<ItemCategory, int> scoreOfEachCategory = new Dictionary<ItemCategory, int>();
-
-        foreach (var item in numTilePerCategory)
+        // Count active tiles of each category currently on the board
+        Dictionary<ItemCategory, int> boardCounts = new Dictionary<ItemCategory, int>();
+        for (int i = 0; i < tiles.Count; i++)
         {
-            int addedScore = item.Value;
-            int targetCardAmount = GetTargetCardAmount(item.Key);
-
-            if (item.Value >= targetCardAmount)
+            BaseTile tile = tiles[i];
+            if (tile.IsDone || tile.IsOnSlot)
             {
-                addedScore *= 10;
+                continue;
             }
-
-            CommonUtil.SumValueOfDictionary(scoreOfEachCategory, item.Key, addedScore);
+            CommonUtil.SumValueOfDictionary(boardCounts, tile.ItemCategory, 1);
         }
 
-        scoreOfEachCategory = scoreOfEachCategory.OrderByDescending(item => item.Value).ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+        bool isHardMode = levelItem != null && levelItem.isHard;
 
-        ItemCategory[] sortedCategory = scoreOfEachCategory.OrderByDescending(item => item.Value)
-            .Select(kvp => kvp.Key)
-            .ToArray();
-
-        for (int i = difficultyLevel; i < scoreOfEachCategory.Count; i++)
+        // Find candidates that have enough tiles remaining
+        List<ItemCategory> candidates = new List<ItemCategory>();
+        foreach (var category in numTilePerCategory.Keys)
         {
-            ItemCategory category = sortedCategory[i];
-
-            int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
-            int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
+            int activeContainersForCategory = tileSlotContainers.Count(item =>
+                item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
+            int totalNotDone = numTilePerCategory[category];
             int targetCardAmount = GetTargetCardAmount(category);
 
             if (totalNotDone >= (activeContainersForCategory + 1) * targetCardAmount)
             {
-                if (activeContainersForCategory == 0)
-                {
-                    return category;
-                }
+                candidates.Add(category);
             }
         }
 
-        for (int i = 0; i < scoreOfEachCategory.Count; i++)
+        // Split candidates into Group A (not currently ordered elsewhere) and Group B (already ordered elsewhere)
+        List<ItemCategory> groupA = new List<ItemCategory>();
+        List<ItemCategory> groupB = new List<ItemCategory>();
+
+        foreach (var cat in candidates)
         {
-            ItemCategory category = sortedCategory[i];
+            int activeContainersForCategory = tileSlotContainers.Count(item =>
+                item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == cat);
+            if (activeContainersForCategory == 0)
+                groupA.Add(cat);
+            else
+                groupB.Add(cat);
+        }
 
-            int activeContainersForCategory = tileSlotContainers.Count(item => item != requestingContainer && !item.isLocked && !item.isHidden && item.ItemCategory == category);
-            int totalNotDone = numTilePerCategory.ContainsKey(category) ? numTilePerCategory[category] : 0;
-            int targetCardAmount = GetTargetCardAmount(category);
+        Func<ItemCategory, int> getBoardCount = (cat) => boardCounts.ContainsKey(cat) ? boardCounts[cat] : 0;
 
-            if (totalNotDone >= (activeContainersForCategory + 1) * targetCardAmount)
-            {
-                return category;
-            }
+        if (isHardMode)
+        {
+            groupA = groupA.OrderBy(getBoardCount).ToList();
+            groupB = groupB.OrderBy(getBoardCount).ToList();
+        }
+        else
+        {
+            groupA = groupA.OrderByDescending(getBoardCount).ToList();
+            groupB = groupB.OrderByDescending(getBoardCount).ToList();
+        }
+
+        if (groupA.Count > 0)
+        {
+            return groupA[0];
+        }
+        if (groupB.Count > 0)
+        {
+            return groupB[0];
         }
 
         return ItemCategory.None;
@@ -447,6 +458,7 @@ public class TileManager : Singleton<TileManager>
 
                         // Hide tile and mark as done so it returns to pool and updates win condition properly
                         tile.IsDone = true;
+                        tiles.Remove(tile);
                         tile.gameObject.SetActive(false);
                         tile.transform.SetParent(tileSlot.transform);
 
@@ -455,7 +467,7 @@ public class TileManager : Singleton<TileManager>
                         if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                         {
                             tileSlotContainer.isCompleted = true;
-                            bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+                            bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
                             if (remainingSlotContainer > 0 && isAnyRemainingTile)
                             {
@@ -500,6 +512,7 @@ public class TileManager : Singleton<TileManager>
             tile.IsMoving = false;
 
             tile.IsDone = true;
+            tiles.Remove(tile);
             tile.gameObject.SetActive(false);
             tile.transform.SetParent(slot.transform);
 
@@ -508,7 +521,7 @@ public class TileManager : Singleton<TileManager>
             if (tileSlotContainer.IsLastSlot(slot) && !tileSlotContainer.isCompleted)
             {
                 tileSlotContainer.isCompleted = true;
-                bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
                 if (remainingSlotContainer > 0 && isAnyRemainingTile)
                 {
@@ -736,28 +749,32 @@ public class TileManager : Singleton<TileManager>
             if (grids[i].tile == null)
             {
                 BaseTile tile = ObjectPoolingEverything.GetFromPool<BaseTile>(GameConstants.tile);
-                tile.gameObject.SetActive(true);
-
-                tiles.Add(tile);
-
-                // Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
-
-                tile.transform.SetParent(tileContainer);
-                tile.transform.position = CardStockPile.Ins.transform.position;
-
-                ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
-
-                InitTileWithSpriteOrString(tile, nextCategory);
-
-                tile.IsMoving = true;
-                Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f).OnComplete(() =>
+                if (tile != null)
                 {
-                    tile.IsMoving = false;
-                });
+                    tile.gameObject.SetActive(true);
 
-                grids[i].tile = tile;
+                    tiles.Add(tile);
 
-                CardStockPile.Ins.DrawNewCard(tile);
+                    // Vector3 spawnPos = grids[i].position.ChangeY(highestYGridPosition + 200);
+
+                    tile.transform.SetParent(tileContainer);
+                    tile.transform.position = CardStockPile.Ins.transform.position;
+
+                    ItemCategory nextCategory = GetNextCategoryBasedOnDifficulty(difficultyLevel);
+
+                    InitTileWithSpriteOrString(tile, nextCategory);
+
+                    tile.IsMoving = true;
+                    Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f).OnComplete(() =>
+                    {
+                        tile.IsMoving = false;
+                    });
+
+                    grids[i].tile = tile;
+
+                    CardStockPile.Ins.DrawNewCard(tile);
+                }
+
             }
         }
     }
@@ -870,66 +887,43 @@ public class TileManager : Singleton<TileManager>
 
     private void InitTileWithSpriteOrString(BaseTile tile, ItemCategory nextCategory)
     {
-        bool isString = false;
-        int remainingString = remainingStringPerCategory.ContainsKey(nextCategory) ? remainingStringPerCategory[nextCategory] : 0;
-        int remainingSprite = remainingSpritePerCategory.ContainsKey(nextCategory) ? remainingSpritePerCategory[nextCategory] : 0;
+        CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(x => x.itemCategory == nextCategory);
 
-        int totalRemaining = remainingString + remainingSprite;
-        if (totalRemaining > 0)
-        {
-            if (UnityEngine.Random.Range(0, totalRemaining) < remainingString)
-            {
-                isString = true;
-                remainingStringPerCategory[nextCategory]--;
-            }
-            else
-            {
-                remainingSpritePerCategory[nextCategory]--;
-            }
-        }
+        int itemId = GetUniqueItemId(nextCategory, iconSet);
 
+        int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
         string textData = null;
         Sprite spriteData = null;
 
-        if (isString)
+        if (itemId < spriteCount)
         {
-            textData = GetUniqueText(nextCategory);
+            spriteData = iconSet.icons[itemId];
         }
         else
         {
-            spriteData = GetUniqueSprite(nextCategory);
+            textData = iconSet.text[itemId - spriteCount];
         }
 
-        tile.Init(nextCategory, spriteData, textData);
+        tile.Init(nextCategory, itemId, spriteData, textData);
     }
 
-    private string GetUniqueText(ItemCategory category)
+    private int GetUniqueItemId(ItemCategory category, CategoryIconSet iconSet)
     {
-        if (availableTextsPerCategory.ContainsKey(category) && availableTextsPerCategory[category].Count > 0)
+        if (availableItemIdsPerCategory.ContainsKey(category) && availableItemIdsPerCategory[category].Count > 0)
         {
-            int index = UnityEngine.Random.Range(0, availableTextsPerCategory[category].Count);
-            string text = availableTextsPerCategory[category][index];
-            availableTextsPerCategory[category].RemoveAt(index);
-            return text;
+            int index = UnityEngine.Random.Range(0, availableItemIdsPerCategory[category].Count);
+            int itemId = availableItemIdsPerCategory[category][index];
+            availableItemIdsPerCategory[category].RemoveAt(index);
+            return itemId;
         }
 
-        // Fallback if we run out
-        return tileIconContainer.GetRandomTextOfCategory(category);
+        // Fallback: return a random valid index
+        int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+        int textCount = iconSet.text != null ? iconSet.text.Length : 0;
+        int totalItems = spriteCount + textCount;
+        return UnityEngine.Random.Range(0, totalItems);
     }
 
-    private Sprite GetUniqueSprite(ItemCategory category)
-    {
-        if (availableSpritesPerCategory.ContainsKey(category) && availableSpritesPerCategory[category].Count > 0)
-        {
-            int index = UnityEngine.Random.Range(0, availableSpritesPerCategory[category].Count);
-            Sprite sprite = availableSpritesPerCategory[category][index];
-            availableSpritesPerCategory[category].RemoveAt(index);
-            return sprite;
-        }
-
-        // Fallback if we run out
-        return tileIconContainer.GetRandomIconOfCategory(category);
-    }
 
     #region Text
     private void UpdateSetCountText()
@@ -978,6 +972,21 @@ public class TileManager : Singleton<TileManager>
 
 
     #region Booster
+    public void UseFreezeTimeBooster(float duration)
+    {
+        isTimeFrozen = true;
+
+        if (freezeTimeTween.isAlive)
+        {
+            freezeTimeTween.Stop();
+        }
+
+        freezeTimeTween = Tween.Delay(duration).OnComplete(() =>
+        {
+            isTimeFrozen = false;
+        });
+    }
+
     public void UseAddHoleBooster()
     {
         if (totalSlotInShelf < 7)
@@ -998,127 +1007,199 @@ public class TileManager : Singleton<TileManager>
 
     public bool CanUseShuffleBooster()
     {
-        return tiles.Any(tile => !tile.IsOnSlot && !tile.IsDone && !tile.IsOutside);
+        return tiles.Any(tile => !tile.IsOnSlot && !tile.IsOutside);
     }
 
     public void UseShuffleBooster()
     {
-        List<ItemCategory> categoryPoolForAllTileLeft = new List<ItemCategory>();
-        List<BaseTile> tilesToShuffle = new List<BaseTile>();
+        // ── STEP 1: Identify tiles to shuffle (on grid, not on slot, not outside) ──
+        // Note: tiles list only contains active (non-done) tiles since completed tiles are removed immediately.
+        List<BaseTile> tilesToShuffle = tiles.Where(t => !t.IsOnSlot && !t.IsOutside && !t.IsMoving).ToList();
+        int gridSize = tilesToShuffle.Count;
+        if (gridSize == 0) return;
 
-        for (int i = 0; i < tiles.Count; i++)
+        // ── STEP 2 & 3: Build per-category item ID pools from TWO sources: ──
+        //   (a) ThemeItemId of active grid tiles
+        //   (b) Unspawned content in availableItemIdsPerCategory
+        Dictionary<ItemCategory, List<int>> itemPools = new Dictionary<ItemCategory, List<int>>();
+
+        // (a) Collect actual item IDs from active tiles
+        foreach (BaseTile tile in tilesToShuffle)
         {
-            BaseTile tile = tiles[i];
+            ItemCategory cat = tile.ItemCategory;
+            if (!itemPools.ContainsKey(cat)) itemPools[cat] = new List<int>();
+            itemPools[cat].Add(tile.ThemeItemId);
+        }
 
-            if (tile.IsOnSlot)
+        // (b) Add unspawned content from existing available pools
+        foreach (var theme in levelItem.themeDataList)
+        {
+            ItemCategory cat = theme.category;
+            if (!itemPools.ContainsKey(cat)) itemPools[cat] = new List<int>();
+
+            if (availableItemIdsPerCategory.ContainsKey(cat))
             {
-                continue;
+                itemPools[cat].AddRange(availableItemIdsPerCategory[cat]);
             }
+        }
 
-            if (tile.IsText)
+        // Shuffle each pool and convert to queues for sequential unique dequeue
+        Dictionary<ItemCategory, Queue<int>> itemQueues = new Dictionary<ItemCategory, Queue<int>>();
+        foreach (var kv in itemPools)
+        {
+            kv.Value.Shuffle();
+            itemQueues[kv.Key] = new Queue<int>(kv.Value);
+        }
+
+        // ── STEP 4: Build combined category pool: active grid tiles + stock ──
+        //    Shuffle determines new category assignments for all grid positions.
+        List<ItemCategory> allCategoriesInPlay = tilesToShuffle.Select(t => t.ItemCategory).ToList();
+        allCategoriesInPlay.AddRange(itemCategoryPool);
+
+        // Priority: categories currently showing in active (non-locked) TileSlotContainers
+        List<ItemCategory> priorityCategories = tileSlotContainers
+            .Where(c => !c.isLocked && !c.isHidden)
+            .Select(c => c.ItemCategory)
+            .Distinct()
+            .ToList();
+
+        // Guarantee exactly 1 tile on the grid for each active unlocked theme,
+        // so the player always has at least 1 playable tile per open slot.
+        List<ItemCategory> guaranteedCategories = new List<ItemCategory>();
+        foreach (ItemCategory cat in priorityCategories)
+        {
+            if (guaranteedCategories.Count >= gridSize) break;
+            if (allCategoriesInPlay.Contains(cat))
             {
-                if (!availableTextsPerCategory.ContainsKey(tile.ItemCategory))
-                    availableTextsPerCategory[tile.ItemCategory] = new List<string>();
-                availableTextsPerCategory[tile.ItemCategory].Add(tile.category.text);
+                guaranteedCategories.Add(cat);
+                allCategoriesInPlay.Remove(cat); // consume exactly one occurrence
+            }
+        }
+
+        // Fill remaining slots with weighted random:
+        //  - If priority-theme cards are still available, 50% chance to draw from them first
+        //    (encourages more playable tiles appearing on grid)
+        //  - Otherwise draw freely from any remaining category
+        List<ItemCategory> priorityPool = allCategoriesInPlay
+            .Where(c => priorityCategories.Contains(c))
+            .ToList();
+        List<ItemCategory> otherPool = allCategoriesInPlay
+            .Where(c => !priorityCategories.Contains(c))
+            .ToList();
+
+        priorityPool.Shuffle();
+        otherPool.Shuffle();
+
+        int slotsLeft = gridSize - guaranteedCategories.Count;
+
+        List<ItemCategory> shuffledGridCategories = new List<ItemCategory>(guaranteedCategories);
+
+        for (int slot = 0; slot < slotsLeft; slot++)
+        {
+            bool hasPriority = priorityPool.Count > 0;
+            bool hasOther = otherPool.Count > 0;
+
+            if (!hasPriority && !hasOther) break;
+
+            ItemCategory chosen;
+            // priorityCardRatio% → pick from priority pool (same theme as active orders), else from other
+            float ratio = levelItem != null ? levelItem.priorityCardRatio : 0.5f;
+            if (hasPriority && (!hasOther || UnityEngine.Random.value < ratio))
+            {
+                chosen = priorityPool[0];
+                priorityPool.RemoveAt(0);
             }
             else
             {
-                if (!availableSpritesPerCategory.ContainsKey(tile.ItemCategory))
-                    availableSpritesPerCategory[tile.ItemCategory] = new List<Sprite>();
-                if (tile.icon.sprite != null)
-                    availableSpritesPerCategory[tile.ItemCategory].Add(tile.icon.sprite);
+                // No priority cards left OR lost the 50/50 coin flip
+                if (hasOther)
+                {
+                    chosen = otherPool[0];
+                    otherPool.RemoveAt(0);
+                }
+                else
+                {
+                    // otherPool empty, fall back to remaining priorityPool
+                    chosen = priorityPool[0];
+                    priorityPool.RemoveAt(0);
+                }
             }
 
-            categoryPoolForAllTileLeft.Add(tile.ItemCategory);
-            tilesToShuffle.Add(tile);
+            shuffledGridCategories.Add(chosen);
         }
 
-        for (int i = 0; i < itemCategoryPool.Count; i++)
+        // Shuffle the final list so guaranteed tiles land at random positions, not always first
+        shuffledGridCategories.Shuffle();
+
+        // ── STEP 5: Assign unique content to each grid tile from the queues ──
+        // Shuffle tilesToShuffle itself so different tile objects (grid positions) receive
+        // different categories each time, preventing identical consecutive shuffles.
+        tilesToShuffle.Shuffle();
+
+        Vector3 deckLocalPos = Vector3.zero;
+        if (CardStockPile.Ins != null)
+            deckLocalPos = tilesToShuffle[0].transform.parent.InverseTransformPoint(CardStockPile.Ins.transform.position);
+
+        for (int i = 0; i < gridSize; i++)
         {
-            categoryPoolForAllTileLeft.Add(itemCategoryPool[i]);
-        }
+            ItemCategory newCat = shuffledGridCategories[i];
+            CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(x => x.itemCategory == newCat);
 
-        List<ItemCategory> priorityCategory = new List<ItemCategory>();
-
-        for (int i = 0; i < tileSlotContainers.Count; i++)
-        {
-            if (!tileSlotContainers[i].isLocked && !priorityCategory.Contains(tileSlotContainers[i].ItemCategory))
+            int itemId = 0;
+            if (itemQueues.ContainsKey(newCat) && itemQueues[newCat].Count > 0)
             {
-                priorityCategory.Add(tileSlotContainers[i].ItemCategory);
-            }
-        }
-
-        int totalActiveTiles = tilesToShuffle.Count();
-
-        List<ItemCategory> shuffledCategory = new List<ItemCategory>();
-
-        List<ItemCategory> toRemoveCategory = new List<ItemCategory>();
-
-        for (int i = 0; i < categoryPoolForAllTileLeft.Count; i++)
-        {
-            int targetCardAmount = GetTargetCardAmount(categoryPoolForAllTileLeft[i]);
-            if (priorityCategory.Contains(categoryPoolForAllTileLeft[i]) && shuffledCategory.Count(item => item == categoryPoolForAllTileLeft[i]) < targetCardAmount)
-            {
-                shuffledCategory.Add(categoryPoolForAllTileLeft[i]);
-                toRemoveCategory.Add(categoryPoolForAllTileLeft[i]);
-            }
-        }
-
-        foreach (var category in toRemoveCategory)
-        {
-            categoryPoolForAllTileLeft.Remove(category);
-        }
-
-        categoryPoolForAllTileLeft.Shuffle();
-
-        int currentCategoryAdded = shuffledCategory.Count;
-
-        shuffledCategory.AddRange(categoryPoolForAllTileLeft.Take(totalActiveTiles - currentCategoryAdded));
-
-        for (int i = 0; i < tilesToShuffle.Count; i++)
-        {
-            ItemCategory newCategory = shuffledCategory[i];
-
-            bool useText = false;
-            int textsLeft = availableTextsPerCategory.ContainsKey(newCategory) ? availableTextsPerCategory[newCategory].Count : 0;
-            int spritesLeft = availableSpritesPerCategory.ContainsKey(newCategory) ? availableSpritesPerCategory[newCategory].Count : 0;
-
-            if (textsLeft > 0 && spritesLeft > 0)
-            {
-                useText = UnityEngine.Random.Range(0, textsLeft + spritesLeft) < textsLeft;
-            }
-            else if (textsLeft > 0)
-            {
-                useText = true;
-            }
-            else if (spritesLeft > 0)
-            {
-                useText = false;
+                itemId = itemQueues[newCat].Dequeue();
             }
             else
             {
-                CategoryIconSet iconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == newCategory);
-                bool hasText = iconSet.text != null && iconSet.text.Length > 0;
-                bool hasIcon = iconSet.icons != null && iconSet.icons.Length > 0;
-                if (hasText && hasIcon) useText = UnityEngine.Random.value > 0.5f;
-                else if (hasText) useText = true;
-                else useText = false;
+                // Fallback if queue is empty
+                int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
+                int textCount = iconSet.text != null ? iconSet.text.Length : 0;
+                itemId = UnityEngine.Random.Range(0, spriteCount + textCount);
             }
 
+            int currentSpriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
             string textData = null;
             Sprite spriteData = null;
 
-            if (useText)
+            if (itemId < currentSpriteCount)
             {
-                textData = GetUniqueText(newCategory);
+                spriteData = iconSet.icons[itemId];
             }
             else
             {
-                spriteData = GetUniqueSprite(newCategory);
+                textData = iconSet.text[itemId - currentSpriteCount];
             }
 
-            tilesToShuffle[i].Shuffle(newCategory, spriteData, textData);
+            tilesToShuffle[i].Shuffle(newCat, itemId, spriteData, textData, deckLocalPos);
         }
+
+        // ── STEP 6: Rebuild available pools from queue remnants ──
+        //    Whatever remains in the queues after grid assignment = content for future spawns.
+        foreach (var theme in levelItem.themeDataList)
+        {
+            ItemCategory cat = theme.category;
+            availableItemIdsPerCategory[cat] = itemQueues.ContainsKey(cat)
+                ? new List<int>(itemQueues[cat])
+                : new List<int>();
+        }
+
+        // ── STEP 6b: Safety dedup pass ──
+        // Solution: remove every currently-visible tile content from the pool right now.
+        foreach (BaseTile tile in tiles)
+        {
+            if (tile.IsDone) continue;
+            ItemCategory tileCat = tile.ItemCategory;
+            if (availableItemIdsPerCategory.ContainsKey(tileCat))
+            {
+                availableItemIdsPerCategory[tileCat].Remove(tile.ThemeItemId);
+            }
+        }
+
+        // ── STEP 7: Rebuild itemCategoryPool from leftover categories not assigned to the grid ──
+        // Leftover = what remains in priorityPool + otherPool after the fill loop consumed from them.
+        itemCategoryPool = priorityPool;
+        itemCategoryPool.AddRange(otherPool);
     }
 
     public bool IsAnyTileOnShelf()
@@ -1193,6 +1274,7 @@ public class TileManager : Singleton<TileManager>
                             tile.IsMoving = false;
 
                             tile.IsDone = true;
+                            tiles.Remove(tile);
                             tile.gameObject.SetActive(false);
                             tile.transform.SetParent(tileSlot.transform);
 
@@ -1201,7 +1283,7 @@ public class TileManager : Singleton<TileManager>
                             if (tileSlotContainer.IsLastSlot(tileSlot) && !tileSlotContainer.isCompleted)
                             {
                                 tileSlotContainer.isCompleted = true;
-                                bool isAnyRemainingTile = tiles.Any(item => !item.IsDone);
+                                bool isAnyRemainingTile = tiles.Any(item => !item.IsOnSlot);
 
                                 if (remainingSlotContainer > 0 && isAnyRemainingTile)
                                 {
