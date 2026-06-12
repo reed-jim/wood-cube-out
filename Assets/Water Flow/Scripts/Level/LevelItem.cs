@@ -44,6 +44,7 @@ namespace AntsFlow
         private int numTileY = 12;
         private float colorGroupThreshold = 0.05f;
         public float difficulty;
+        public float moveTilesCloserFactor = 0.9f;
 
         public override void OnInspectorGUI()
         {
@@ -60,6 +61,7 @@ namespace AntsFlow
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
             colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
+            moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
 
             GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
 
@@ -108,6 +110,11 @@ namespace AntsFlow
             if (GUILayout.Button("Step 7: Center On X"))
             {
                 CenterOnX(levelItem);
+            }
+
+            if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
+            {
+                MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
             }
         }
 
@@ -586,6 +593,25 @@ namespace AntsFlow
             float averageX = sumX / level.transform.childCount;
 
             level.transform.position += Vector3.left * averageX;
+
+            EditorUtility.SetDirty(level);
+        }
+
+        public void MoveTilesCloserTogether(LevelItem level, float factor)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            Vector3 center = Vector3.zero;
+
+            foreach (BaseTile tile in tiles)
+                center += tile.transform.position;
+
+            center /= tiles.Length;
+
+            foreach (BaseTile tile in tiles)
+            {
+                tile.transform.position = center + (tile.transform.position - center) * factor;
+            }
 
             EditorUtility.SetDirty(level);
         }
