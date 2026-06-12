@@ -144,34 +144,34 @@ namespace AntsFlow
                 }
             }
 
-            if (isMovingToTile || isMovingToNest)
-            {
-                if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f)
-                {
-                    if (ReachedDestination(1f))
-                    {
-                        stuckTime += Time.deltaTime;
-                    }
-                    else
-                    {
-                        stuckTimeNoReachDestination += Time.deltaTime;
-                    }
+            // if (isMovingToTile || isMovingToNest)
+            // {
+            //     if (navMeshAgent.isOnNavMesh && navMeshAgent.velocity.sqrMagnitude < 0.2f)
+            //     {
+            //         if (ReachedDestination(1f))
+            //         {
+            //             stuckTime += Time.deltaTime;
+            //         }
+            //         else
+            //         {
+            //             stuckTimeNoReachDestination += Time.deltaTime;
+            //         }
 
-                    if (stuckTimeNoReachDestination > stuckNoReachDestinationThreshold)
-                    {
-                        requestUpdateNavmeshEvent?.Invoke();
+            //         if (stuckTimeNoReachDestination > stuckNoReachDestinationThreshold)
+            //         {
+            //             requestUpdateNavmeshEvent?.Invoke();
 
-                        ReturnToNavMesh();
+            //             ReturnToNavMesh();
 
-                        if (navMeshAgent.isOnNavMesh)
-                        {
-                            navMeshAgent.destination = destination;
-                        }
+            //             if (navMeshAgent.isOnNavMesh)
+            //             {
+            //                 navMeshAgent.destination = destination;
+            //             }
 
-                        stuckTimeNoReachDestination = 0;
-                    }
-                }
-            }
+            //             stuckTimeNoReachDestination = 0;
+            //         }
+            //     }
+            // }
         }
 
         private void Reset()
@@ -210,6 +210,8 @@ namespace AntsFlow
                 isMovingToNest = false;
                 isDroppingTile = false;
                 tile = null;
+
+                GamePersistentVariable.numActiveAnt--;
             });
 
             GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);

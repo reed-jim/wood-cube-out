@@ -242,6 +242,11 @@ public class WashingMachineItem : MonoBehaviour
         HapticFeedback.HeavyFeedback();
     }
 
+    public void PlaySelectFalseAnimationLoop()
+    {
+        skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, true);
+    }
+
     private void SwitchShadow()
     {
         shadow.sprite = shadows[1];
@@ -438,6 +443,8 @@ public class WashingMachineItem : MonoBehaviour
                 tilesToMove.RemoveAt(currentAntIndex);
 
                 currentAntIndex = 0;
+
+                GamePersistentVariable.numActiveAnt++;
 
                 yield return waitForSeconds;
             }

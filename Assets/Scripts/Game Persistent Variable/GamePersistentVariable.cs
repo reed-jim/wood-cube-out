@@ -192,5 +192,6 @@ public static class GamePersistentVariable
     public static BoosterMode boosterMode;
     public static bool isPreventSelectAntBox;
     public static AntsFlow.LevelItem levelItem;
+    public static int numActiveAnt;
     #endregion
 }

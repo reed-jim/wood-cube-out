@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
@@ -636,12 +637,33 @@ namespace AntsFlow
 
             if (isLose)
             {
-                loseLevelEvent?.Invoke();
+                List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
-                GamePersistentVariable.isLevelLost = true;
+                for (int i = 0; i < stuckAntBoxes.Count; i++)
+                {
+                    WashingMachineItem antBox = stuckAntBoxes[i];
+
+                    antBox.PlaySelectFalseAnimationLoop();
+                }
+
+                StartCoroutine(PendingLoseLevel());
             }
 
             return isLose;
+        }
+
+        private IEnumerator PendingLoseLevel()
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(0.2f);
+
+            while (GamePersistentVariable.numActiveAnt > 0)
+            {
+                yield return waitForSeconds;
+            }
+
+            loseLevelEvent?.Invoke();
+
+            GamePersistentVariable.isLevelLost = true;
         }
 
         public bool IsNoSlotAvailable()
