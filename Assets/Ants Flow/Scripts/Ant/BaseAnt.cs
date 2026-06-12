@@ -69,8 +69,10 @@ namespace AntsFlow
             siblingIndex = transform.GetSiblingIndex();
             stuckThreshold = 3 * Time.deltaTime;
             stuckNoReachDestinationThreshold = 0.2f;
+        }
 
-
+        private void Start()
+        {
             ActionLimitQueue.ActionLimit actionAntToNest = new ActionLimitQueue.ActionLimit(() =>
             {
 
