@@ -158,49 +158,50 @@ public class SceneTransition : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
 
-        ShowBlackScreenImmediately();
-
-        yield return new WaitUntil(() => _isLevelLoaded);
+        // ShowBlackScreenImmediately();
 
         progressBarFill.fillAmount = 0;
         loadingText.text = "0%";
 
-        BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
+        if (_loadingLevelInProgressCoroutine != null)
         {
-            loadingSpine.gameObject.SetActive(true);
-            loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
-            loadingSpine.AnimationState.Complete += OnAnimationComplete;
+            StopCoroutine(_loadingLevelInProgressCoroutine);
+        }
 
-            void OnAnimationComplete(TrackEntry trackEntry)
+        _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
+
+        yield return new WaitUntil(() => _isLevelLoaded);
+
+        loadingSpine.gameObject.SetActive(true);
+        TrackEntry entry = loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+        entry.TrackTime = 0f;
+        loadingSpine.AnimationState.Complete += OnAnimationComplete;
+
+        void OnAnimationComplete(TrackEntry trackEntry)
+        {
+            loadingSpine.AnimationState.Complete -= OnAnimationComplete;
+
+            if (trackEntry.Animation.Name == appearAnimation)
             {
-                loadingSpine.AnimationState.Complete -= OnAnimationComplete;
-
-                if (trackEntry.Animation.Name == appearAnimation)
-                {
-                    loadingSpine.AnimationState.SetAnimation(0, idleAnimation, false);
-                }
+                loadingSpine.AnimationState.SetAnimation(0, idleAnimation, false);
             }
+        }
 
-            if (GamePersistentVariable.isLoadingLevelInProgress)
-            {
-                LoadingLevelInProgress();
+        if (GamePersistentVariable.isLoadingLevelInProgress)
+        {
+            LoadingLevelInProgress();
 
-                GamePersistentVariable.isLoadingLevelInProgress = false;
-            }
-            else
-            {
-                LoadingLevelInProgress();
+            GamePersistentVariable.isLoadingLevelInProgress = false;
+        }
+        else
+        {
+            LoadingLevelInProgress();
+        }
 
-                // if (GamePersistentVariable.doubleInterAdsConfig.isEnable && currentLevel.Value >= GamePersistentVariable.doubleInterAdsConfig.minLevel)
-                // {
-                //     LoadingLevelInProgress();
-                // }
-                // else
-                // {
-                //     loadLevelInProgressContainer.gameObject.SetActive(false);
-                // }
-            }
-        });
+        // BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
+        // {
+
+        // });
 
         _isLevelLoaded = false;
     }
@@ -226,20 +227,13 @@ public class SceneTransition : MonoBehaviour
 
         loadLevelInProgressCanvasGroup.alpha = 1;
 
-        if (_loadingLevelInProgressCoroutine != null)
-        {
-            StopCoroutine(_loadingLevelInProgressCoroutine);
-        }
-
-        _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
-
         GameController.Instance.admobAds.ShowMRec();
 
-        float minWaitTime = 1;
+        float minWaitTime = 2;
 
         if (GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
         {
-            minWaitTime = 2f;
+            minWaitTime = 4.5f;
         }
 
         _tweens.Add(Tween.Custom(0, 1, duration: minWaitTime, onValueChange: newVal =>
@@ -303,7 +297,7 @@ public class SceneTransition : MonoBehaviour
     {
         WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60f);
 
-        float moveSpeed = 200f;
+        float moveSpeed = 300f;
         Vector2 resetOffset = scrollingAntBoxes[0].sizeDelta;
         Vector2 direction = new Vector2(1f, 1f).normalized;
 
