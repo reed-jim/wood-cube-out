@@ -21,15 +21,12 @@ using UnityEngine.Serialization;
 /// </summary>
 public class AppLovinSettings : ScriptableObject
 {
-    public const string SettingsExportPath = "MaxSdk/Resources/AppLovinSettings.asset";
+    private const string SettingsExportPath = "MaxSdk/Resources/AppLovinSettings.asset";
 
     private static AppLovinSettings instance;
 
     [SerializeField] private bool qualityServiceEnabled = true;
     [SerializeField] private string sdkKey;
-
-    [SerializeField] private bool setAttributionReportEndpoint;
-    [SerializeField] private bool addApsSkAdNetworkIds;
 
     [SerializeField] private string customGradleVersionUrl;
     [SerializeField] private string customGradleToolsVersion;
@@ -60,16 +57,15 @@ public class AppLovinSettings : ScriptableObject
                     return instance;
                 }
 
-                // If there is no existing AppLovinSettings asset, create one in the default location
                 string settingsFilePath;
                 // The settings file should be under the Assets/ folder so that it can be version controlled and cannot be overriden when updating.
-                // If the plugin is outside the Assets folder, create the settings asset at the default location.
+                // If the plugin is outside the Assets folder or if there is no existing AppLovinSettings asset, create the settings asset at the default location.
                 if (AppLovinIntegrationManager.IsPluginInPackageManager)
                 {
-                    // Note: Can't use absolute path when calling `CreateAsset`. Should use relative path to Assets/ directory.
-                    settingsFilePath = Path.Combine("Assets", SettingsExportPath);
+                    // Note: Can't use absolute path when calling `CreateAsset`. Should use path relative to Assets/ directory.
+                    settingsFilePath = MaxSdkUtils.NormalizeToUnityPath(Path.Combine("Assets", SettingsExportPath));
 
-                    var maxSdkDir = Path.Combine(Application.dataPath, "MaxSdk");
+                    var maxSdkDir = MaxSdkUtils.NormalizeToUnityPath(Path.Combine(Application.dataPath, "MaxSdk"));
                     if (!Directory.Exists(maxSdkDir))
                     {
                         Directory.CreateDirectory(maxSdkDir);
@@ -77,7 +73,7 @@ public class AppLovinSettings : ScriptableObject
                 }
                 else
                 {
-                    settingsFilePath = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, SettingsExportPath);
+                    settingsFilePath = MaxSdkUtils.NormalizeToUnityPath(Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, SettingsExportPath));
                 }
 
                 var settingsDir = Path.GetDirectoryName(settingsFilePath);
@@ -115,24 +111,6 @@ public class AppLovinSettings : ScriptableObject
     {
         get { return Instance.sdkKey; }
         set { Instance.sdkKey = value; }
-    }
-
-    /// <summary>
-    /// Whether or not to set `NSAdvertisingAttributionReportEndpoint` in Info.plist.
-    /// </summary>
-    public bool SetAttributionReportEndpoint
-    {
-        get { return Instance.setAttributionReportEndpoint; }
-        set { Instance.setAttributionReportEndpoint = value; }
-    }
-
-    /// <summary>
-    /// Whether or not to add Amazon Publisher Services SKAdNetworkID's.
-    /// </summary>
-    public bool AddApsSkAdNetworkIds
-    {
-        get { return Instance.addApsSkAdNetworkIds; }
-        set { Instance.addApsSkAdNetworkIds = value; }
     }
 
     /// <summary>

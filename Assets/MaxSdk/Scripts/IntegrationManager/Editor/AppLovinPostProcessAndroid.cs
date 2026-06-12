@@ -24,13 +24,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
     /// </summary>
     public class AppLovinPostProcessAndroid : IPostGenerateGradleAndroidProject
     {
-#if UNITY_2019_3_OR_NEWER
         private const string PropertyAndroidX = "android.useAndroidX";
         private const string PropertyJetifier = "android.enableJetifier";
         private const string EnableProperty = "=true";
-#endif
-        private const string PropertyDexingArtifactTransform = "android.enableDexingArtifactTransform";
-        private const string DisableProperty = "=false";
 
         private const string KeyMetaDataAppLovinVerboseLoggingOn = "applovin.sdk.verbose_logging";
         private const string KeyMetaDataGoogleApplicationId = "com.google.android.gms.ads.APPLICATION_ID";
@@ -44,16 +40,12 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         private const string AppLovinSettingsFileName = "applovin_settings.json";
 
-        private const string KeyTermsFlowSettings = "terms_flow_settings";
-        private const string KeyTermsFlowEnabled = "terms_flow_enabled";
-        private const string KeyTermsFlowTermsOfService = "terms_flow_terms_of_service";
-        private const string KeyTermsFlowPrivacyPolicy = "terms_flow_privacy_policy";
-
         private const string KeySdkKey = "sdk_key";
         private const string KeyConsentFlowSettings = "consent_flow_settings";
         private const string KeyConsentFlowEnabled = "consent_flow_enabled";
         private const string KeyConsentFlowTermsOfService = "consent_flow_terms_of_service";
         private const string KeyConsentFlowPrivacyPolicy = "consent_flow_privacy_policy";
+        private const string KeyConsentFlowShowTermsAndPrivacyPolicyAlertInGDPR = "consent_flow_show_terms_and_privacy_policy_alert_in_gdpr";
         private const string KeyConsentFlowDebugUserGeography = "consent_flow_debug_user_geography";
 
         private const string KeyRenderOutsideSafeArea = "render_outside_safe_area";
@@ -74,15 +66,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         public void OnPostGenerateGradleAndroidProject(string path)
         {
-#if UNITY_2019_3_OR_NEWER
             var rootGradleBuildFilePath = Path.Combine(path, "../build.gradle");
             var gradlePropertiesPath = Path.Combine(path, "../gradle.properties");
             var gradleWrapperPropertiesPath = Path.Combine(path, "../gradle/wrapper/gradle-wrapper.properties");
-#else
-            var rootGradleBuildFilePath = Path.Combine(path, "build.gradle");
-            var gradlePropertiesPath = Path.Combine(path, "gradle.properties");
-            var gradleWrapperPropertiesPath = Path.Combine(path, "gradle/wrapper/gradle-wrapper.properties");
-#endif
 
             UpdateGradleVersionsIfNeeded(gradleWrapperPropertiesPath, rootGradleBuildFilePath);
 
@@ -93,26 +79,13 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             {
                 var lines = File.ReadAllLines(gradlePropertiesPath);
 
-#if UNITY_2019_3_OR_NEWER
                 // Add all properties except AndroidX, Jetifier, and DexingArtifactTransform since they may already exist. We will re-add them below.
-                gradlePropertiesUpdated.AddRange(lines.Where(line => !line.Contains(PropertyAndroidX) && !line.Contains(PropertyJetifier) && !line.Contains(PropertyDexingArtifactTransform)));
-#else
-                // Add all properties except DexingArtifactTransform since it may already exist. We will re-add it below.
-                gradlePropertiesUpdated.AddRange(lines.Where(line => !line.Contains(PropertyDexingArtifactTransform)));
-#endif
+                gradlePropertiesUpdated.AddRange(lines.Where(line => !line.Contains(PropertyAndroidX) && !line.Contains(PropertyJetifier)));
             }
 
-#if UNITY_2019_3_OR_NEWER
             // Enable AndroidX and Jetifier properties
             gradlePropertiesUpdated.Add(PropertyAndroidX + EnableProperty);
             gradlePropertiesUpdated.Add(PropertyJetifier + EnableProperty);
-#endif
-
-            // `DexingArtifactTransform` has been removed in Gradle 8+ which is the default Gradle version for Unity 6.
-#if !UNITY_6000_0_OR_NEWER
-            // Disable dexing using artifact transform (it causes issues for ExoPlayer with Gradle plugin 3.5.0+)
-            gradlePropertiesUpdated.Add(PropertyDexingArtifactTransform + DisableProperty);
-#endif
 
             try
             {
@@ -130,7 +103,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         public int callbackOrder
         {
-            get { return int.MaxValue; }
+            get { return AppLovinPreProcess.CallbackOrder; }
         }
 
         private static void ProcessAndroidManifest(string path)
@@ -301,7 +274,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 }
                 else
                 {
-                    MaxSdkLogger.E("Failed to set distribution URL");
+                    MaxSdkLogger.UserError("Failed to set distribution URL");
                 }
             }
 
@@ -311,7 +284,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 // Unity 2022.3+ requires Gradle Plugin version 7.1.2+.
                 if (MaxSdkUtils.CompareVersions(customGradleToolsVersion, "7.1.2") == MaxSdkUtils.VersionComparisonResult.Lesser)
                 {
-                    MaxSdkLogger.E("Failed to set gradle plugin version. Unity 2022.3+ requires gradle plugin version 7.1.2+");
+                    MaxSdkLogger.UserError("Failed to set gradle plugin version. Unity 2022.3+ requires gradle plugin version 7.1.2+");
                     return;
                 }
 
@@ -322,7 +295,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 }
                 else
                 {
-                    MaxSdkLogger.E("Failed to set gradle library version");
+                    MaxSdkLogger.UserError("Failed to set gradle library version");
                 }
 
                 var newGradleVersionLine = AppLovinProcessGradleBuildFile.GetFormattedBuildScriptLine(string.Format("id 'com.android.application' version '{0}' apply false", customGradleToolsVersion));
@@ -335,7 +308,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 }
                 else
                 {
-                    MaxSdkLogger.E("Failed to set gradle plugin version");
+                    MaxSdkLogger.UserError("Failed to set gradle plugin version");
                 }
             }
         }
@@ -383,6 +356,8 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             {
                 consentFlowSettings[KeyConsentFlowTermsOfService] = termsOfServiceUrl;
             }
+            
+            consentFlowSettings[KeyConsentFlowShowTermsAndPrivacyPolicyAlertInGDPR] = AppLovinInternalSettings.Instance.ShouldShowTermsAndPrivacyPolicyAlertInGDPR;
 
             var debugUserGeography = AppLovinInternalSettings.Instance.DebugUserGeography;
             if (debugUserGeography == MaxSdkBase.ConsentFlowUserGeography.Gdpr)

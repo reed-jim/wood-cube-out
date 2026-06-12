@@ -6,10 +6,8 @@
 //  Copyright © 2019 AppLovin. All rights reserved.
 //
 
-using AppLovinMax.Scripts.IntegrationManager.Editor;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using UnityEditor;
 
 namespace AppLovinMax.Scripts.IntegrationManager.Editor
@@ -21,6 +19,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         {
             "AdColony",
             "Criteo",
+            "LinkedIn",
             "Nend",
             "Snap",
             "Tapjoy",
@@ -74,11 +73,22 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             "MaxSdk/Version.md",
             "MaxSdk/Version.md.meta",
 
-            // TODO: Add MaxTargetingData and MaxUserSegment when the plugin has enough traction.
+            // The alert_icon.png has been renamed to error_icon.png.
+            "MaxSdk/Resources/Images/alert_icon.png",
+            "MaxSdk/Resources/Images/alert_icon.png.meta",
+
+            // `TargetingData` has been removed and we no longer set `UserSegment` through the Unity Plugin.
+            "MaxSdk/Scripts/MaxUserSegment.cs",
+            "MaxSdk/Scripts/MaxUserSegment.cs.meta",
+            "MaxSdk/Scripts/MaxTargetingData.cs",
+            "MaxSdk/Scripts/MaxTargetingData.cs.meta"
         };
 
         static AppLovinInitialize()
         {
+            // Don't run obsolete file cleanup logic when entering play mode.
+            if (EditorApplication.isPlayingOrWillChangePlaymode) return;
+
 #if UNITY_IOS
             // Check that the publisher is targeting iOS 9.0+
             if (!PlayerSettings.iOS.targetOSVersionString.StartsWith("9.") && !PlayerSettings.iOS.targetOSVersionString.StartsWith("1"))

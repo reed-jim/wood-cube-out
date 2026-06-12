@@ -8,7 +8,7 @@
 
 #import "MAUnityAdManager.h"
 
-#define VERSION @"8.0.1"
+#define VERSION @"8.6.4"
 #define NSSTRING(_X) ( (_X != NULL) ? [NSString stringWithCString: _X encoding: NSStringEncodingConversionAllowLossy].al_stringByTrimmingWhitespace : nil)
 
 @interface NSString (ALUtils)
@@ -41,8 +41,8 @@ extern "C"
     // Helper method to create C string copy
     static const char * cStringCopy(NSString *string);
     // Helper method to log errors
-    void logUninitializedAccessError(const char *callingMethod);
-    void e(NSString *message);
+    void max_unity_log_uninitialized_access_error(const char *callingMethod);
+    void max_unity_log_error(NSString *message);
 
     ALSdk *getSdk()
     {
@@ -190,13 +190,14 @@ extern "C"
         NSArray<MAMediatedNetworkInfo *> *availableMediatedNetworks = [getSdk() availableMediatedNetworks];
         
         // Create array of serialized network strings
-        NSMutableArray<NSDictionary<NSString *, NSString *> *> *serializedNetworks = [NSMutableArray arrayWithCapacity: availableMediatedNetworks.count];
+        NSMutableArray<NSDictionary<NSString *, id> *> *serializedNetworks = [NSMutableArray arrayWithCapacity: availableMediatedNetworks.count];
         for ( MAMediatedNetworkInfo *mediatedNetwork in availableMediatedNetworks )
         {
-            NSDictionary<NSString *, NSString *> *mediatedNetworkDictionary = @{@"name" : mediatedNetwork.name,
-                                                                                @"adapterClassName" : mediatedNetwork.adapterClassName,
-                                                                                @"adapterVersion" : mediatedNetwork.adapterVersion,
-                                                                                @"sdkVersion" : mediatedNetwork.sdkVersion};
+            NSDictionary<NSString *, id> *mediatedNetworkDictionary = @{@"name" : mediatedNetwork.name,
+                                                                        @"adapterClassName" : mediatedNetwork.adapterClassName,
+                                                                        @"adapterVersion" : mediatedNetwork.adapterVersion,
+                                                                        @"sdkVersion" : mediatedNetwork.sdkVersion,
+                                                                        @"initializationStatus" : @(mediatedNetwork.initializationStatus)};
             [serializedNetworks addObject: mediatedNetworkDictionary];
         }
         
@@ -208,7 +209,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            e(@"Failed to show mediation debugger - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!");
+            max_unity_log_error(@"Failed to show mediation debugger - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!");
             return;
         }
         
@@ -219,20 +220,13 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            e(@"Failed to show creative debugger - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!");
+            max_unity_log_error(@"Failed to show creative debugger - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!");
             return;
         }
         
         [getSdk() showCreativeDebugger];
     }
 
-    int _MaxConsentDialogState()
-    {
-        if ( !_isSdkInitialized ) return ALConsentDialogStateUnknown;
-        
-        return (int) getSdk().configuration.consentDialogState;
-    }
-    
     void _MaxSetUserId(const char *userId)
     {
         getSdk().settings.userIdentifier = NSSTRING(userId);
@@ -242,7 +236,7 @@ extern "C"
     {
         if ( _initializeSdkCalled )
         {
-            e(@"Segment collection must be set before MAX SDK is initialized");
+            max_unity_log_error(@"Segment collection must be set before MAX SDK is initialized");
             return;
         }
         
@@ -253,7 +247,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxGetSdkConfiguration");
+            max_unity_log_uninitialized_access_error("_MaxGetSdkConfiguration");
             return cStringCopy(@"");
         }
         
@@ -299,33 +293,33 @@ extern "C"
         return [ALPrivacySettings isDoNotSellSet];
     }
     
-    void _MaxCreateBanner(const char *adUnitIdentifier, const char *bannerPosition)
+    void _MaxCreateBanner(const char *adUnitIdentifier, const char *bannerPosition, bool isAdaptive)
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxCreateBanner");
+            max_unity_log_uninitialized_access_error("_MaxCreateBanner");
             return;
         }
         
-        [getAdManager() createBannerWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) atPosition: NSSTRING(bannerPosition)];
+        [getAdManager() createBannerWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) atPosition: NSSTRING(bannerPosition) isAdaptive: isAdaptive];
     }
 
-    void _MaxCreateBannerXY(const char *adUnitIdentifier, const float x, const float y)
+    void _MaxCreateBannerXY(const char *adUnitIdentifier, const float x, const float y, bool isAdaptive)
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxCreateBannerXY");
+            max_unity_log_uninitialized_access_error("_MaxCreateBannerXY");
             return;
         }
         
-        [getAdManager() createBannerWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) x: x y: y];
+        [getAdManager() createBannerWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) x: x y: y isAdaptive: isAdaptive];
     }
     
    void _MaxLoadBanner(const char *adUnitIdentifier)
    {
        if ( !_initializeSdkCalled )
        {
-           logUninitializedAccessError("_MaxLoadBanner");
+           max_unity_log_uninitialized_access_error("_MaxLoadBanner");
            return;
        }
        
@@ -336,7 +330,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerBackgroundColor");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerBackgroundColor");
             return;
         }
         
@@ -347,7 +341,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerPlacement");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerPlacement");
             return;
         }
         
@@ -358,7 +352,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxStartBannerAutoRefresh");
+            max_unity_log_uninitialized_access_error("_MaxStartBannerAutoRefresh");
             return;
         }
         
@@ -369,7 +363,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxStopBannerAutoRefresh");
+            max_unity_log_uninitialized_access_error("_MaxStopBannerAutoRefresh");
             return;
         }
         
@@ -380,7 +374,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerExtraParameter");
             return;
         }
         
@@ -393,7 +387,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerLocalExtraParameter");
             return;
         }
         
@@ -406,7 +400,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerLocalExtraParameter");
             return;
         }
         
@@ -420,7 +414,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerCustomData");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerCustomData");
             return;
         }
         
@@ -431,7 +425,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetBannerWidth");
+            max_unity_log_uninitialized_access_error("_MaxSetBannerWidth");
             return;
         }
         
@@ -442,7 +436,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxUpdateBannerPosition");
+            max_unity_log_uninitialized_access_error("_MaxUpdateBannerPosition");
             return;
         }
         
@@ -453,7 +447,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxUpdateBannerPositionXY");
+            max_unity_log_uninitialized_access_error("_MaxUpdateBannerPositionXY");
             return;
         }
         
@@ -464,7 +458,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowBanner");
+            max_unity_log_uninitialized_access_error("_MaxShowBanner");
             return;
         }
         
@@ -475,7 +469,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxDestroyBanner");
+            max_unity_log_uninitialized_access_error("_MaxDestroyBanner");
             return;
         }
         
@@ -486,7 +480,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxHideBanner");
+            max_unity_log_uninitialized_access_error("_MaxHideBanner");
             return;
         }
         
@@ -497,7 +491,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxGetBannerLayout");
+            max_unity_log_uninitialized_access_error("_MaxGetBannerLayout");
             return cStringCopy(@"");
         }
                 
@@ -508,7 +502,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxCreateMRec");
+            max_unity_log_uninitialized_access_error("_MaxCreateMRec");
             return;
         }
         
@@ -519,7 +513,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxCreateMRecXY");
+            max_unity_log_uninitialized_access_error("_MaxCreateMRecXY");
             return;
         }
         
@@ -530,7 +524,7 @@ extern "C"
    {
        if ( !_initializeSdkCalled )
        {
-           logUninitializedAccessError("_MaxLoadMRec");
+           max_unity_log_uninitialized_access_error("_MaxLoadMRec");
            return;
        }
        
@@ -541,7 +535,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetMRecPlacement");
+            max_unity_log_uninitialized_access_error("_MaxSetMRecPlacement");
             return;
         }
         
@@ -552,7 +546,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxStartMRecAutoRefresh");
+            max_unity_log_uninitialized_access_error("_MaxStartMRecAutoRefresh");
             return;
         }
         
@@ -563,7 +557,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxStopMRecAutoRefresh");
+            max_unity_log_uninitialized_access_error("_MaxStopMRecAutoRefresh");
             return;
         }
         
@@ -574,7 +568,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxUpdateMRecPosition");
+            max_unity_log_uninitialized_access_error("_MaxUpdateMRecPosition");
             return;
         }
         
@@ -585,7 +579,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxUpdateMRecPositionXY");
+            max_unity_log_uninitialized_access_error("_MaxUpdateMRecPositionXY");
             return;
         }
         
@@ -596,7 +590,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowMRec");
+            max_unity_log_uninitialized_access_error("_MaxShowMRec");
             return;
         }
         
@@ -607,7 +601,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxDestroyMRec");
+            max_unity_log_uninitialized_access_error("_MaxDestroyMRec");
             return;
         }
         
@@ -618,7 +612,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxHideMRec");
+            max_unity_log_uninitialized_access_error("_MaxHideMRec");
             return;
         }
         
@@ -629,7 +623,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetMRecExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetMRecExtraParameter");
             return;
         }
         
@@ -642,7 +636,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetMRecLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetMRecLocalExtraParameter");
             return;
         }
         
@@ -655,7 +649,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetMRecLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetMRecLocalExtraParameter");
             return;
         }
         
@@ -669,7 +663,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetMRecCustomData");
+            max_unity_log_uninitialized_access_error("_MaxSetMRecCustomData");
             return;
         }
         
@@ -680,7 +674,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxGetMRecLayout");
+            max_unity_log_uninitialized_access_error("_MaxGetMRecLayout");
             return cStringCopy(@"");
         }
                 
@@ -691,7 +685,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxLoadInterstitial");
+            max_unity_log_uninitialized_access_error("_MaxLoadInterstitial");
             return;
         }
         
@@ -702,7 +696,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetInterstitialExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetInterstitialExtraParameter");
             return;
         }
         
@@ -715,7 +709,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetInterstitialLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetInterstitialLocalExtraParameter");
             return;
         }
         
@@ -728,7 +722,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetInterstitialLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetInterstitialLocalExtraParameter");
             return;
         }
         
@@ -742,7 +736,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxIsInterstitialReady");
+            max_unity_log_uninitialized_access_error("_MaxIsInterstitialReady");
             return false;
         }
         
@@ -753,7 +747,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowInterstitial");
+            max_unity_log_uninitialized_access_error("_MaxShowInterstitial");
             return;
         }
         
@@ -764,7 +758,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxLoadAppOpenAd");
+            max_unity_log_uninitialized_access_error("_MaxLoadAppOpenAd");
             return;
         }
         
@@ -775,7 +769,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetAppOpenAdExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetAppOpenAdExtraParameter");
             return;
         }
         
@@ -788,7 +782,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetAppOpenAdLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetAppOpenAdLocalExtraParameter");
             return;
         }
         
@@ -801,7 +795,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetAppOpenAdLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetAppOpenAdLocalExtraParameter");
             return;
         }
         
@@ -815,7 +809,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxIsAppOpenAdReady");
+            max_unity_log_uninitialized_access_error("_MaxIsAppOpenAdReady");
             return false;
         }
         
@@ -826,7 +820,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowAppOpenAd");
+            max_unity_log_uninitialized_access_error("_MaxShowAppOpenAd");
             return;
         }
         
@@ -837,7 +831,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxLoadRewardedAd");
+            max_unity_log_uninitialized_access_error("_MaxLoadRewardedAd");
             return;
         }
         
@@ -848,7 +842,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetRewardedAdExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetRewardedAdExtraParameter");
             return;
         }
         
@@ -861,7 +855,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetRewardedAdLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetRewardedAdLocalExtraParameter");
             return;
         }
         
@@ -874,7 +868,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxSetRewardedAdLocalExtraParameter");
+            max_unity_log_uninitialized_access_error("_MaxSetRewardedAdLocalExtraParameter");
             return;
         }
         
@@ -888,7 +882,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxIsRewardedAdReady");
+            max_unity_log_uninitialized_access_error("_MaxIsRewardedAdReady");
             return false;
         }
         
@@ -899,91 +893,18 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowRewardedAd");
+            max_unity_log_uninitialized_access_error("_MaxShowRewardedAd");
             return;
         }
         
         [getAdManager() showRewardedAdWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) placement: NSSTRING(placement) customData: NSSTRING(customData)];
     }
     
-    void _MaxLoadRewardedInterstitialAd(const char *adUnitIdentifier)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxLoadRewardedInterstitialAd");
-            return;
-        }
-        
-        [getAdManager() loadRewardedInterstitialAdWithAdUnitIdentifier: NSSTRING(adUnitIdentifier)];
-    }
-    
-    void _MaxSetRewardedInterstitialAdExtraParameter(const char *adUnitIdentifier, const char *key, const char *value)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxSetRewardedInterstitialAdExtraParameter");
-            return;
-        }
-        
-        [getAdManager() setRewardedInterstitialAdExtraParameterForAdUnitIdentifier: NSSTRING(adUnitIdentifier)
-                                                                               key: NSSTRING(key)
-                                                                             value: NSSTRING(value)];
-    }
-    
-    void _MaxSetRewardedInterstitialAdLocalExtraParameter(const char *adUnitIdentifier, const char *key, MAUnityRef value)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxSetRewardedInterstitialAdLocalExtraParameter");
-            return;
-        }
-        
-        [getAdManager() setRewardedInterstitialAdLocalExtraParameterForAdUnitIdentifier: NSSTRING(adUnitIdentifier)
-                                                                                    key: NSSTRING(key)
-                                                                                  value: (__bridge id)value];
-    }
-
-    void _MaxSetRewardedInterstitialAdLocalExtraParameterJSON(const char *adUnitIdentifier, const char *key, const char *json)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxSetRewardedInterstitialAdLocalExtraParameter");
-            return;
-        }
-        
-        id value = getLocalExtraParameterValue(json);
-        [getAdManager() setRewardedInterstitialAdLocalExtraParameterForAdUnitIdentifier: NSSTRING(adUnitIdentifier)
-                                                                                    key: NSSTRING(key)
-                                                                                  value: value];
-    }
-
-    bool _MaxIsRewardedInterstitialAdReady(const char *adUnitIdentifier)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxIsRewardedInterstitialAdReady");
-            return false;
-        }
-        
-        return [getAdManager() isRewardedInterstitialAdReadyWithAdUnitIdentifier: NSSTRING(adUnitIdentifier)];
-    }
-    
-    void _MaxShowRewardedInterstitialAd(const char *adUnitIdentifier, const char *placement, const char *customData)
-    {
-        if ( !_initializeSdkCalled )
-        {
-            logUninitializedAccessError("_MaxShowRewardedInterstitialAd");
-            return;
-        }
-        
-        [getAdManager() showRewardedInterstitialAdWithAdUnitIdentifier: NSSTRING(adUnitIdentifier) placement: NSSTRING(placement) customData: NSSTRING(customData)];
-    }
-    
     void _MaxTrackEvent(const char *event, const char *parameters)
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxTrackEvent");
+            max_unity_log_uninitialized_access_error("_MaxTrackEvent");
             return;
         }
         
@@ -1045,11 +966,6 @@ extern "C"
         return [UIScreen.mainScreen nativeScale];
     }
     
-    const char * _MaxGetAdInfo(const char *adUnitIdentifier)
-    {
-        return cStringCopy([getAdManager() adInfoForAdUnitIdentifier: NSSTRING(adUnitIdentifier)]);
-    }
-    
     const char * _MaxGetAdValue(const char *adUnitIdentifier, const char *key)
     {
         return cStringCopy([getAdManager() adValueForAdUnitIdentifier: NSSTRING(adUnitIdentifier) withKey: NSSTRING(key)]);
@@ -1069,7 +985,7 @@ extern "C"
     {
         if ( _initializeSdkCalled )
         {
-            e(@"Test device advertising IDs must be set before MAX SDK is initialized");
+            max_unity_log_error(@"Test device advertising IDs must be set before MAX SDK is initialized");
             return;
         }
         
@@ -1086,7 +1002,7 @@ extern "C"
     {
         if ( _initializeSdkCalled )
         {
-            e(@"Exception handler must be enabled/disabled before MAX SDK is initialized");
+            max_unity_log_error(@"Exception handler must be enabled/disabled before MAX SDK is initialized");
             return;
         }
         
@@ -1099,7 +1015,7 @@ extern "C"
         if ( ![stringKey al_isValidString] )
         {
             NSString *message = [NSString stringWithFormat:@"Failed to set extra parameter for nil or empty key: %@", stringKey];
-            e(message);
+            max_unity_log_error(message);
             return;
         }
         
@@ -1124,7 +1040,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxShowCmpForExistingUser");
+            max_unity_log_uninitialized_access_error("_MaxShowCmpForExistingUser");
             return;
         }
         
@@ -1135,7 +1051,7 @@ extern "C"
     {
         if ( !_initializeSdkCalled )
         {
-            logUninitializedAccessError("_MaxHasSupportedCmp");
+            max_unity_log_uninitialized_access_error("_MaxHasSupportedCmp");
             return false;
         }
         
@@ -1147,13 +1063,13 @@ extern "C"
         return [MAUnityAdManager adaptiveBannerHeightForWidth: width];
     }
 
-    void logUninitializedAccessError(const char *callingMethod)
+    void max_unity_log_uninitialized_access_error(const char *callingMethod)
     {
         NSString *message = [NSString stringWithFormat:@"Failed to execute: %s - please ensure the AppLovin MAX Unity Plugin has been initialized by calling 'MaxSdk.InitializeSdk();'!", callingMethod];
-        e(message);
+        max_unity_log_error(message);
     }
 
-    void e(NSString *message)
+    void max_unity_log_error(NSString *message)
     {
         if (_disableAllLogs) return;
         

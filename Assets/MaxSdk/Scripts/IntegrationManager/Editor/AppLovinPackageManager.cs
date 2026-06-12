@@ -23,29 +23,22 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
     public interface IPackageManagerClient
     {
-        List<string> GetInstalledMediationNetworks();
         IEnumerator AddNetwork(Network network, bool showImport);
         void RemoveNetwork(Network network);
     }
 
     public static class AppLovinPackageManager
     {
-#if UNITY_2019_2_OR_NEWER
-        private static readonly IPackageManagerClient _upmPackageManager = new AppLovinUpmPackageManager();
-#endif
-        private static readonly IPackageManagerClient _assetsPackageManager = new AppLovinAssetsPackageManager();
+        private const string AppLovinMediationAmazonAdapterDependenciesPath = "Amazon/Scripts/Mediations/AppLovinMediation/Editor/Dependencies.xml";
 
-        private static bool _migrationPromptShown;
+        private static readonly IPackageManagerClient _upmPackageManager = new AppLovinUpmPackageManager();
+        private static readonly IPackageManagerClient _assetsPackageManager = new AppLovinAssetsPackageManager();
 
         private static IPackageManagerClient PackageManagerClient
         {
             get
             {
-#if UNITY_2019_2_OR_NEWER
                 return AppLovinIntegrationManager.IsPluginInPackageManager ? _upmPackageManager : _assetsPackageManager;
-#else
-                return _assetsPackageManager;
-#endif
             }
         }
 
@@ -107,8 +100,14 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// <returns>A list of the installed mediation network names.</returns>
         internal static List<string> GetInstalledMediationNetworks()
         {
-            var installedNetworks = PackageManagerClient.GetInstalledMediationNetworks();
-            if (AppLovinSettings.Instance.AddApsSkAdNetworkIds)
+            var installedNetworks = new List<string>();
+            var installedNetworksInAssets = AppLovinAssetsPackageManager.GetInstalledMediationNetworks();
+            installedNetworks.AddRange(installedNetworksInAssets);
+
+            var installedNetworksInPackages = AppLovinUpmPackageManager.GetInstalledMediationNetworks();
+            installedNetworks.AddRange(installedNetworksInPackages);
+
+            if (IsAmazonAppLovinAdapterInstalled())
             {
                 installedNetworks.Add("AmazonAdMarketplace");
             }
@@ -148,7 +147,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// <returns>The exported path of the MAX plugin asset or an empty list if the asset is not found.</returns>
         private static List<string> GetAssetPathListForExportPath(string exportPath)
         {
-            var assetLabelToFind = "l:al_max_export_path-" + exportPath.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            var assetLabelToFind = "l:al_max_export_path-" + MaxSdkUtils.NormalizeToUnityPath(exportPath);
             var assetGuids = AssetDatabase.FindAssets(assetLabelToFind);
 
             var assetPaths = new List<string>();
@@ -167,6 +166,11 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         internal static void UpdateCurrentVersions(Network network)
         {
             var assetPaths = GetAssetPathListForExportPath(network.DependenciesFilePath);
+            if (HasDuplicateAdapters(assetPaths))
+            {
+                ShowDeleteDuplicateAdapterPrompt(network);
+            }
+
             var currentVersions = GetCurrentVersions(assetPaths);
             network.CurrentVersions = currentVersions;
 
@@ -204,12 +208,12 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             {
                 // If adapter is indeed installed, compare the current (installed) and the latest (from db) versions, so that we can determine if the publisher is on an older, current or a newer version of the adapter.
                 // If the publisher is on a newer version of the adapter than the db version, that means they are on a beta version.
-                if (!string.IsNullOrEmpty(currentVersions.Unity))
+                if (MaxSdkUtils.IsValidString(currentVersions.Unity))
                 {
                     network.CurrentToLatestVersionComparisonResult = AppLovinIntegrationManagerUtils.CompareUnityMediationVersions(currentVersions.Unity, network.LatestVersions.Unity);
                 }
 
-                if (!string.IsNullOrEmpty(network.CurrentVersions.Unity) && AppLovinAutoUpdater.MinAdapterVersions.ContainsKey(network.Name))
+                if (MaxSdkUtils.IsValidString(network.CurrentVersions.Unity) && AppLovinAutoUpdater.MinAdapterVersions.ContainsKey(network.Name))
                 {
                     var comparisonResult = AppLovinIntegrationManagerUtils.CompareUnityMediationVersions(network.CurrentVersions.Unity, AppLovinAutoUpdater.MinAdapterVersions[network.Name]);
                     // Requires update if current version is lower than the min required version.
@@ -221,6 +225,64 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                     network.RequiresUpdate = false;
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks whether a network has duplicate adapters installed in both the Assets folder and via UPM.
+        /// </summary>
+        /// <param name="dependencyPaths">The list of paths to the dependencies.xml files</param>
+        /// <returns><c>True</c> if there are adapters in both the Assets folder and installed via UPM</returns>
+        private static bool HasDuplicateAdapters(List<string> dependencyPaths)
+        {
+            var inPackagesFolder = dependencyPaths.Any(path => path.Contains("Packages"));
+            var inAssetsFolder = dependencyPaths.Any(path => path.Contains("Assets"));
+
+            return inPackagesFolder && inAssetsFolder;
+        }
+
+        /// <summary>
+        /// Displays a prompt informing the user that duplicate adapters were detected
+        /// and allows them to choose which version to keep.
+        /// </summary>
+        /// <param name="network">The network that has duplicate adapters installed.</param>
+        private static void ShowDeleteDuplicateAdapterPrompt(Network network)
+        {
+            var keepAssetsAdapter = EditorUtility.DisplayDialog("Duplicate Adapters Detected",
+                "The " + network.DisplayName + " adapter is installed in both the Assets folder and via UPM. Please choose which version to keep.",
+                "Keep Assets Folder Version",
+                "Keep UPM Version");
+            DeleteDuplicateAdapter(network, keepAssetsAdapter);
+        }
+
+        /// <summary>
+        /// Removes a duplicate adapter by either deleting it from the Assets folder
+        /// or uninstalling it from the Unity Package Manager (UPM).
+        /// </summary>
+        /// <param name="network">The network for which the duplicate adapter is being removed.</param>
+        /// <param name="keepAssetsAdapter">If <c>true</c>, retains the adapter in the Assets folder and removes the UPM version;
+        /// otherwise, deletes the adapter from the Assets folder.</param>
+        internal static void DeleteDuplicateAdapter(Network network, bool keepAssetsAdapter)
+        {
+            // Skip duplicate removal logic for our plugin.
+            if (network.Name.Equals("APPLOVIN_NETWORK")) return;
+
+            if (keepAssetsAdapter)
+            {
+                var appLovinManifest = AppLovinUpmManifest.Load();
+                AppLovinUpmPackageManager.RemovePackages(network, appLovinManifest);
+                appLovinManifest.Save();
+            }
+            else
+            {
+                foreach (var pluginFilePath in network.PluginFilePaths)
+                {
+                    var filePath = Path.Combine(AppLovinIntegrationManager.MediationDirectory, pluginFilePath.Replace("MaxSdk/Mediation/", ""));
+                    FileUtil.DeleteFileOrDirectory(filePath);
+                    FileUtil.DeleteFileOrDirectory(filePath + ".meta");
+                }
+            }
+
+            AppLovinUpmPackageManager.ResolvePackageManager();
         }
 
         /// <summary>
@@ -327,24 +389,19 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             }
         }
 
-#if UNITY_2019_2_OR_NEWER
         /// <summary>
-        /// Show the adapter migration prompt if it hasn't been shown yet.
+        /// Check for the Amazon AppLovin adapter in the project.
         /// </summary>
-        private static void ShowAdapterMigrationPrompt()
+        /// <returns>Whether the AppLovin Adapter is installed through the Amazon SDK.</returns>
+        private static bool IsAmazonAppLovinAdapterInstalled()
         {
-            if (_migrationPromptShown) return;
+            string[] dependenciesFiles = AssetDatabase.FindAssets("t:TextAsset Dependencies", new[] {"Assets"})
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .ToArray();
 
-            _migrationPromptShown = true;
-            var migrateAdapters = EditorUtility.DisplayDialog("Adapter Detected in Mediation Folder",
-                "It appears that you have an adapter in the Mediation folder while AppLovin's plugin is installed via UPM. This could potentially break the integration or cause unexpected errors. Would you like to automatically migrate all your adapters to UPM?", "Yes", "No");
-
-            if (migrateAdapters)
-            {
-                AppLovinPluginMigrationHelper.MigrateAdapters(PluginData, AppLovinUpmManifest.Load());
-            }
+            // Use regex to search for Amazon and then AppLovin in the file paths of the dependencies.xml files.
+            return dependenciesFiles.Any(filePath => filePath.Contains(AppLovinMediationAmazonAdapterDependenciesPath));
         }
-#endif
 
         /// <summary>
         /// Refresh assets and update current versions after a slight delay to allow for Client.Resolve to finish.
@@ -360,7 +417,6 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         #endregion
     }
 
-#if UNITY_2019_2_OR_NEWER
     public class AppLovinUpmPackageManager : IPackageManagerClient
     {
         public const string PackageNamePrefixAppLovin = "com.applovin.mediation.ads";
@@ -374,7 +430,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         private static MethodInfo packageManagerResolveMethod;
 #endif
 
-        public List<string> GetInstalledMediationNetworks()
+        public static List<string> GetInstalledMediationNetworks()
         {
             // Return empty list if we failed to get the package list
             var packageCollection = GetPackageCollectionSync(TimeoutFetchPackageCollectionSeconds);
@@ -396,6 +452,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var appLovinManifest = AppLovinUpmManifest.Load();
             AddPackages(network, appLovinManifest);
             appLovinManifest.Save();
+
+            // Remove any versions of the adapter in the Assets folder
+            AppLovinPackageManager.DeleteDuplicateAdapter(network, false);
             ResolvePackageManager();
 
             yield break;
@@ -428,7 +487,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// </summary>
         /// <param name="network">The network to add.</param>
         /// <param name="appLovinManifest">The AppLovinUpmManifest instance to edit</param>
-        private static void RemovePackages(Network network, AppLovinUpmManifest appLovinManifest)
+        internal static void RemovePackages(Network network, AppLovinUpmManifest appLovinManifest)
         {
             foreach (var packageInfo in network.Packages)
             {
@@ -526,13 +585,11 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         }
     }
 
-#endif
-
     public class AppLovinAssetsPackageManager : IPackageManagerClient
     {
-        public List<string> GetInstalledMediationNetworks()
+        public static List<string> GetInstalledMediationNetworks()
         {
-            var maxMediationDirectory = Path.Combine(AppLovinIntegrationManager.PluginParentDirectory, "MaxSdk/Mediation/");
+            var maxMediationDirectory = AppLovinIntegrationManager.MediationDirectory;
             if (!Directory.Exists(maxMediationDirectory)) return new List<string>();
 
             var mediationNetworkDirectories = Directory.GetDirectories(maxMediationDirectory);

@@ -250,35 +250,27 @@ public class MaxSdkiOS : MaxSdkBase
     #region Banners
 
     [DllImport("__Internal")]
-    private static extern void _MaxCreateBanner(string adUnitIdentifier, string bannerPosition);
+    private static extern void _MaxCreateBanner(string adUnitIdentifier, string bannerPosition, bool isAdaptive);
+
+    [DllImport("__Internal")]
+    private static extern void _MaxCreateBannerXY(string adUnitIdentifier, float x, float y, bool isAdaptive);
 
     /// <summary>
     /// Create a new banner.
     /// </summary>
     /// <param name="adUnitIdentifier">Ad unit identifier of the banner to create. Must not be null.</param>
-    /// <param name="bannerPosition">Banner position. Must not be null.</param>
-    public static void CreateBanner(string adUnitIdentifier, BannerPosition bannerPosition)
+    /// <param name="configuration">The configuration for the banner</param>
+    public static void CreateBanner(string adUnitIdentifier, AdViewConfiguration configuration)
     {
         ValidateAdUnitIdentifier(adUnitIdentifier, "create banner");
-        _MaxCreateBanner(adUnitIdentifier, bannerPosition.ToSnakeCaseString());
-    }
-
-    [DllImport("__Internal")]
-    private static extern void _MaxCreateBannerXY(string adUnitIdentifier, float x, float y);
-
-    /// <summary>
-    /// Create a new banner with a custom position.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the banner to create. Must not be null.</param>
-    /// <param name="x">The X coordinate (horizontal position) of the banner relative to the top left corner of the screen.</param>
-    /// <param name="y">The Y coordinate (vertical position) of the banner relative to the top left corner of the screen.</param>
-    /// <seealso cref="GetBannerLayout">
-    /// The banner is placed within the safe area of the screen. You can use this to get the absolute position of the banner on screen.
-    /// </seealso>
-    public static void CreateBanner(string adUnitIdentifier, float x, float y)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "create banner");
-        _MaxCreateBannerXY(adUnitIdentifier, x, y);
+        if (configuration.UseCoordinates)
+        {
+            _MaxCreateBannerXY(adUnitIdentifier, configuration.XCoordinate, configuration.YCoordinate, configuration.IsAdaptive);
+        }
+        else
+        {
+            _MaxCreateBanner(adUnitIdentifier, configuration.Position.ToSnakeCaseString(), configuration.IsAdaptive);
+        }
     }
 
     [DllImport("__Internal")]
@@ -344,7 +336,7 @@ public class MaxSdkiOS : MaxSdkBase
     /// </summary>
     /// <param name="adUnitIdentifier">The ad unit identifier of the banner for which to update the position. Must not be null.</param>
     /// <param name="bannerPosition">A new position for the banner. Must not be null.</param>
-    public static void UpdateBannerPosition(string adUnitIdentifier, BannerPosition bannerPosition)
+    public static void UpdateBannerPosition(string adUnitIdentifier, AdViewPosition bannerPosition)
     {
         ValidateAdUnitIdentifier(adUnitIdentifier, "update banner position");
         _MaxUpdateBannerPosition(adUnitIdentifier, bannerPosition.ToSnakeCaseString());
@@ -514,33 +506,25 @@ public class MaxSdkiOS : MaxSdkBase
     [DllImport("__Internal")]
     private static extern void _MaxCreateMRec(string adUnitIdentifier, string mrecPosition);
 
-    /// <summary>
-    /// Create a new MREC.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the MREC to create. Must not be null.</param>
-    /// <param name="mrecPosition">MREC position. Must not be null.</param>
-    public static void CreateMRec(string adUnitIdentifier, AdViewPosition mrecPosition)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "create MREC");
-        _MaxCreateMRec(adUnitIdentifier, mrecPosition.ToSnakeCaseString());
-    }
-
     [DllImport("__Internal")]
     private static extern void _MaxCreateMRecXY(string adUnitIdentifier, float x, float y);
 
     /// <summary>
-    /// Create a new MREC with a custom position.
+    /// Create a new MREC.
     /// </summary>
     /// <param name="adUnitIdentifier">Ad unit identifier of the MREC to create. Must not be null.</param>
-    /// <param name="x">The X coordinate (horizontal position) of the MREC relative to the top left corner of the screen.</param>
-    /// <param name="y">The Y coordinate (vertical position) of the MREC relative to the top left corner of the screen.</param>
-    /// <seealso cref="GetMRecLayout">
-    /// The MREC is placed within the safe area of the screen. You can use this to get the absolute position Rect of the MREC on screen.
-    /// </seealso>
-    public static void CreateMRec(string adUnitIdentifier, float x, float y)
+    /// <param name="configuration">The configuration for the MREC.</param>
+    public static void CreateMRec(string adUnitIdentifier, AdViewConfiguration configuration)
     {
         ValidateAdUnitIdentifier(adUnitIdentifier, "create MREC");
-        _MaxCreateMRecXY(adUnitIdentifier, x, y);
+        if (configuration.UseCoordinates)
+        {
+            _MaxCreateMRecXY(adUnitIdentifier, configuration.XCoordinate, configuration.YCoordinate);
+        }
+        else
+        {
+            _MaxCreateMRec(adUnitIdentifier, configuration.Position.ToSnakeCaseString());
+        }
     }
 
     [DllImport("__Internal")]
@@ -1031,102 +1015,6 @@ public class MaxSdkiOS : MaxSdkBase
 
     #endregion
 
-    #region Rewarded Interstitials
-
-    [DllImport("__Internal")]
-    private static extern void _MaxLoadRewardedInterstitialAd(string adUnitIdentifier);
-
-    /// <summary>
-    /// Start loading an rewarded interstitial ad.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the rewarded interstitial ad to load. Must not be null.</param>
-    public static void LoadRewardedInterstitialAd(string adUnitIdentifier)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "load rewarded interstitial ad");
-        _MaxLoadRewardedInterstitialAd(adUnitIdentifier);
-    }
-
-    [DllImport("__Internal")]
-    private static extern bool _MaxIsRewardedInterstitialAdReady(string adUnitIdentifier);
-
-    /// <summary>
-    /// Check if rewarded interstitial ad ad is loaded and ready to be displayed.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the rewarded interstitial ad to check if it's ready to be displayed. Must not be null.</param>
-    /// <returns>True if the ad is ready to be displayed</returns>
-    public static bool IsRewardedInterstitialAdReady(string adUnitIdentifier)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "check rewarded interstitial ad loaded");
-        return _MaxIsRewardedInterstitialAdReady(adUnitIdentifier);
-    }
-
-    [DllImport("__Internal")]
-    private static extern void _MaxShowRewardedInterstitialAd(string adUnitIdentifier, string placement, string customData);
-
-    /// <summary>
-    /// Present loaded rewarded interstitial ad for a given placement to tie ad events to. Note: if the rewarded interstitial ad is not ready to be displayed nothing will happen.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the rewarded interstitial to show. Must not be null.</param>
-    /// <param name="placement">The placement to tie the showing ad's events to</param>
-    /// <param name="customData">The custom data to tie the showing ad's events to. Maximum size is 8KB.</param>
-    public static void ShowRewardedInterstitialAd(string adUnitIdentifier, string placement = null, string customData = null)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "show rewarded interstitial ad");
-
-        if (IsRewardedInterstitialAdReady(adUnitIdentifier))
-        {
-            _MaxShowRewardedInterstitialAd(adUnitIdentifier, placement, customData);
-        }
-        else
-        {
-            MaxSdkLogger.UserWarning("Not showing MAX Ads rewarded interstitial ad: ad not ready");
-        }
-    }
-
-    [DllImport("__Internal")]
-    private static extern void _MaxSetRewardedInterstitialAdExtraParameter(string adUnitIdentifier, string key, string value);
-
-    /// <summary>
-    /// Set an extra parameter for the ad.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the rewarded interstitial ad to set the extra parameter for. Must not be null.</param>
-    /// <param name="key">The key for the extra parameter. Must not be null.</param>
-    /// <param name="value">The value for the extra parameter.</param>
-    public static void SetRewardedInterstitialAdExtraParameter(string adUnitIdentifier, string key, string value)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "set rewarded interstitial extra parameter");
-        _MaxSetRewardedInterstitialAdExtraParameter(adUnitIdentifier, key, value);
-    }
-
-    [DllImport("__Internal")]
-    private static extern void _MaxSetRewardedInterstitialAdLocalExtraParameter(string adUnitIdentifier, string key, IntPtr value);
-
-    [DllImport("__Internal")]
-    private static extern void _MaxSetRewardedInterstitialAdLocalExtraParameterJSON(string adUnitIdentifier, string key, string json);
-
-    /// <summary>
-    /// Set a local extra parameter for the ad.
-    /// </summary>
-    /// <param name="adUnitIdentifier">Ad unit identifier of the rewarded interstitial ad to set the local extra parameter for. Must not be null.</param>
-    /// <param name="key">The key for the local extra parameter. Must not be null.</param>
-    /// <param name="value">The value for the local extra parameter. Accepts the following types: <see cref="IntPtr"/>, <c>null</c>, <c>IList</c>, <c>IDictionary</c>, <c>string</c>, primitive types</param>
-    public static void SetRewardedInterstitialAdLocalExtraParameter(string adUnitIdentifier, string key, object value)
-    {
-        ValidateAdUnitIdentifier(adUnitIdentifier, "set rewarded interstitial ad local extra parameter");
-
-        if (value == null || value is IntPtr)
-        {
-            var intPtrValue = value == null ? IntPtr.Zero : (IntPtr) value;
-            _MaxSetRewardedInterstitialAdLocalExtraParameter(adUnitIdentifier, key, intPtrValue);
-        }
-        else
-        {
-            _MaxSetRewardedInterstitialAdLocalExtraParameterJSON(adUnitIdentifier, key, SerializeLocalExtraParameterValue(value));
-        }
-    }
-
-    #endregion
-
     #region Event Tracking
 
     [DllImport("__Internal")]
@@ -1139,7 +1027,9 @@ public class MaxSdkiOS : MaxSdkBase
     /// <param name="parameters">A dictionary containing key-value pairs further describing this event.</param>
     public static void TrackEvent(string name, IDictionary<string, string> parameters = null)
     {
-        _MaxTrackEvent(name, Json.Serialize(parameters));
+        // Convert null to "{}" to avoid Unity sending the literal "null" to iOS.
+        var jsonString = ( parameters == null ) ? EmptyJson : Json.Serialize(parameters);
+        _MaxTrackEvent(name, jsonString);
     }
 
     #endregion
@@ -1294,6 +1184,38 @@ public class MaxSdkiOS : MaxSdkBase
 
     #region Obsolete
 
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use CreateBanner(string adUnitIdentifier, AdViewConfiguration configuration) instead.")]
+    public static void CreateBanner(string adUnitIdentifier, BannerPosition bannerPosition)
+    {
+        // AdViewPosition and BannerPosition share identical enum values, so casting is safe
+        CreateBanner(adUnitIdentifier, new AdViewConfiguration((AdViewPosition) bannerPosition));
+    }
+
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use CreateBanner(string adUnitIdentifier, AdViewConfiguration configuration) instead.")]
+    public static void CreateBanner(string adUnitIdentifier, float x, float y)
+    {
+        CreateBanner(adUnitIdentifier, new AdViewConfiguration(x, y));
+    }
+
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use UpdateBannerPosition(string adUnitIdentifier, AdViewPosition bannerPosition) instead.")]
+    public static void UpdateBannerPosition(string adUnitIdentifier, BannerPosition bannerPosition)
+    {
+        // AdViewPosition and BannerPosition share identical enum values, so casting is safe
+        UpdateBannerPosition(adUnitIdentifier, (AdViewPosition) bannerPosition);
+    }
+
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use CreateMRec(string adUnitIdentifier, AdViewConfiguration configuration) instead.")]
+    public static void CreateMRec(string adUnitIdentifier, AdViewPosition mrecPosition)
+    {
+        CreateMRec(adUnitIdentifier, new AdViewConfiguration(mrecPosition));
+    }
+
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use CreateMRec(string adUnitIdentifier, AdViewConfiguration configuration) instead.")]
+    public static void CreateMRec(string adUnitIdentifier, float x, float y)
+    {
+        CreateMRec(adUnitIdentifier, new AdViewConfiguration(x, y));
+    }
+
     [DllImport("__Internal")]
     private static extern void _MaxSetSdkKey(string sdkKey);
 
@@ -1302,35 +1224,6 @@ public class MaxSdkiOS : MaxSdkBase
     {
         _MaxSetSdkKey(sdkKey);
         Debug.LogWarning("MaxSdk.SetSdkKey() has been deprecated and will be removed in a future release. Please set your SDK key in the AppLovin Integration Manager.");
-    }
-
-    [DllImport("__Internal")]
-    private static extern int _MaxConsentDialogState();
-
-    [Obsolete("This method has been deprecated. Please use `GetSdkConfiguration().ConsentDialogState`")]
-    public static ConsentDialogState GetConsentDialogState()
-    {
-        if (!IsInitialized())
-        {
-            MaxSdkLogger.UserWarning(
-                "MAX Ads SDK has not been initialized yet. GetConsentDialogState() may return ConsentDialogState.Unknown");
-        }
-
-        return (ConsentDialogState) _MaxConsentDialogState();
-    }
-
-    [DllImport("__Internal")]
-    private static extern string _MaxGetAdInfo(string adUnitIdentifier);
-
-    [Obsolete("This method has been deprecated. The AdInfo object is returned with ad callbacks.")]
-    public static AdInfo GetAdInfo(string adUnitIdentifier)
-    {
-        var adInfoString = _MaxGetAdInfo(adUnitIdentifier);
-
-        if (string.IsNullOrEmpty(adInfoString)) return null;
-
-        var adInfoDictionary = Json.Deserialize(adInfoString) as Dictionary<string, object>;
-        return new AdInfo(adInfoDictionary);
     }
 
     #endregion

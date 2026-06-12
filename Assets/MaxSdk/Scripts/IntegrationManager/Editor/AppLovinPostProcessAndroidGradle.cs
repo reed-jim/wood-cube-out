@@ -22,20 +22,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         {
             if (!AppLovinSettings.Instance.QualityServiceEnabled) return;
 
-#if UNITY_2019_3_OR_NEWER
-            // On Unity 2019.3+, the path returned is the path to the unityLibrary's module.
-            // The AppLovin Quality Service buildscript closure related lines need to be added to the root build.gradle file.
-            var rootGradleBuildFilePath = Path.Combine(path, "../build.gradle");
-            var rootSettingsGradleFilePath = Path.Combine(path, "../settings.gradle");
-
-            // For 2022.2 and newer and 2021.3.41+
-            var qualityServiceAdded = AddPluginToRootGradleBuildFile(rootGradleBuildFilePath);
-            var appLovinRepositoryAdded = AddAppLovinRepository(rootSettingsGradleFilePath);
-
-            // For 2021.3.40 and older and 2022.0 - 2022.1.x
-            var buildScriptChangesAdded = AddQualityServiceBuildScriptLines(rootGradleBuildFilePath);
-
-            var failedToAddPlugin = !buildScriptChangesAdded && !(qualityServiceAdded && appLovinRepositoryAdded);
+            var failedToAddPlugin = !AddQualityServiceToRootGradleFile(path);
             if (failedToAddPlugin)
             {
                 MaxSdkLogger.UserWarning("Failed to add AppLovin Quality Service plugin to the gradle project.");
@@ -44,12 +31,6 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
             // The plugin needs to be added to the application module (named launcher)
             var applicationGradleBuildFilePath = Path.Combine(path, "../launcher/build.gradle");
-#else
-            // If Gradle template is enabled, we would have already updated the plugin.
-            if (AppLovinIntegrationManager.GradleTemplateEnabled) return;
-
-            var applicationGradleBuildFilePath = Path.Combine(path, "build.gradle");
-#endif
 
             if (!File.Exists(applicationGradleBuildFilePath))
             {
@@ -62,7 +43,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
 
         public int callbackOrder
         {
-            get { return int.MaxValue; }
+            get { return CallbackOrder; }
         }
     }
 }

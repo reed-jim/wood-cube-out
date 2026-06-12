@@ -14,6 +14,8 @@ using System.Runtime.InteropServices;
 
 public abstract class MaxSdkBase
 {
+    protected const string EmptyJson = "{}";
+
     /// <summary>
     /// This enum represents the user's geography used to determine the type of consent flow shown to the user.
     /// </summary>
@@ -42,7 +44,7 @@ public abstract class MaxSdkBase
     public enum AppTrackingStatus
     {
         /// <summary>
-        /// Device is on < iOS14, AppTrackingTransparency.framework is not available.
+        /// Device is on &lt; iOS14, AppTrackingTransparency.framework is not available.
         /// </summary>
         Unavailable,
 
@@ -68,6 +70,42 @@ public abstract class MaxSdkBase
     }
 #endif
 
+    /// <summary>
+    /// An enum describing the adapter's initialization status.
+    /// </summary>
+    public enum InitializationStatus
+    {
+        /// <summary>
+        /// The adapter is not initialized. Note: networks need to be enabled for an ad unit id to be initialized.
+        /// </summary>
+        NotInitialized = -4,
+
+        /// <summary>
+        /// The 3rd-party SDK does not have an initialization callback with status.
+        /// </summary>
+        DoesNotApply = -3,
+
+        /// <summary>
+        /// The 3rd-party SDK is currently initializing.
+        /// </summary>
+        Initializing = -2,
+
+        /// <summary>
+        /// The 3rd-party SDK explicitly initialized, but without a status.
+        /// </summary>
+        InitializedUnknown = -1,
+
+        /// <summary>
+        /// The 3rd-party SDK initialization failed.
+        /// </summary>
+        InitializedFailure = 0,
+
+        /// <summary>
+        /// The 3rd-party SDK initialization was successful.
+        /// </summary>
+        InitializedSuccess = 1
+    }
+
     public enum AdViewPosition
     {
         TopLeft,
@@ -81,17 +119,53 @@ public abstract class MaxSdkBase
         BottomRight
     }
 
-    public enum BannerPosition
+    public class AdViewConfiguration
     {
-        TopLeft,
-        TopCenter,
-        TopRight,
-        Centered,
-        CenterLeft,
-        CenterRight,
-        BottomLeft,
-        BottomCenter,
-        BottomRight
+        /// <summary>
+        /// The position of the ad.
+        /// </summary>
+        public AdViewPosition Position { get; private set; }
+
+        /// <summary>
+        /// The horizontal (X) position of the banner, relative to the top-left corner of the screen's safe area.
+        /// </summary>
+        public float XCoordinate { get; private set; }
+
+        /// <summary>
+        /// The vertical (Y) position of the banner, relative to the top-left corner of the screen's safe area.
+        /// </summary>
+        public float YCoordinate { get; private set; }
+
+        /// <summary>
+        /// Whether to use adaptive banners. Has no effect on MREC ads.
+        /// </summary>
+        public bool IsAdaptive { get; set; }
+
+        internal bool UseCoordinates { get; private set; }
+
+        /// <summary>
+        /// Creates an AdViewConfiguration with the given AdViewPosition.
+        /// </summary>
+        /// <param name="position">The position of the ad. Must not be null.</param>
+        public AdViewConfiguration(AdViewPosition position)
+        {
+            Position = position;
+            IsAdaptive = true;
+            UseCoordinates = false;
+        }
+
+        /// <summary>
+        /// Creates an AdViewConfiguration with the given x and y coordinates.
+        /// </summary>
+        /// <param name="x">The horizontal (X) position of the banner, relative to the top-left corner of the screen's safe area.</param>
+        /// <param name="y">The vertical (Y) position of the banner, relative to the top-left corner of the screen's safe area.</param>
+        public AdViewConfiguration(float x, float y)
+        {
+            XCoordinate = x;
+            YCoordinate = y;
+            IsAdaptive = true;
+            UseCoordinates = true;
+        }
     }
 
     public class SdkConfiguration
@@ -478,6 +552,7 @@ public abstract class MaxSdkBase
         public string AdapterClassName { get; private set; }
         public string AdapterVersion { get; private set; }
         public string SdkVersion { get; private set; }
+        public InitializationStatus InitializationStatus { get; private set; }
 
         public MediatedNetworkInfo(IDictionary<string, object> mediatedNetworkDictionary)
         {
@@ -486,6 +561,8 @@ public abstract class MaxSdkBase
             AdapterClassName = MaxSdkUtils.GetStringFromDictionary(mediatedNetworkDictionary, "adapterClassName", "");
             AdapterVersion = MaxSdkUtils.GetStringFromDictionary(mediatedNetworkDictionary, "adapterVersion", "");
             SdkVersion = MaxSdkUtils.GetStringFromDictionary(mediatedNetworkDictionary, "sdkVersion", "");
+            var initializationStatusInt = MaxSdkUtils.GetIntFromDictionary(mediatedNetworkDictionary, "initializationStatus", (int) InitializationStatus.NotInitialized);
+            InitializationStatus = InitializationStatusFromCode(initializationStatusInt);
         }
 
         public override string ToString()
@@ -493,7 +570,20 @@ public abstract class MaxSdkBase
             return "[MediatedNetworkInfo name: " + Name +
                    ", adapterClassName: " + AdapterClassName +
                    ", adapterVersion: " + AdapterVersion +
-                   ", sdkVersion: " + SdkVersion + "]";
+                   ", sdkVersion: " + SdkVersion +
+                   ", initializationStatus: " + InitializationStatus + "]";
+        }
+
+        private static InitializationStatus InitializationStatusFromCode(int code)
+        {
+            if (Enum.IsDefined(typeof(InitializationStatus), code))
+            {
+                return (InitializationStatus) code;
+            }
+            else
+            {
+                return InitializationStatus.NotInitialized;
+            }
         }
     }
 
@@ -671,6 +761,22 @@ public abstract class MaxSdkBase
         return Json.Serialize(data);
     }
 
+    #region Obsolete
+
+    [Obsolete("This API has been deprecated and will be removed in a future release. Please use AdViewPosition instead.")]
+    public enum BannerPosition
+    {
+        TopLeft,
+        TopCenter,
+        TopRight,
+        Centered,
+        CenterLeft,
+        CenterRight,
+        BottomLeft,
+        BottomCenter,
+        BottomRight
+    }
+
     [Obsolete("This API has been deprecated and will be removed in a future release.")]
     public enum ConsentDialogState
     {
@@ -678,6 +784,8 @@ public abstract class MaxSdkBase
         Applies,
         DoesNotApply
     }
+
+    #endregion
 }
 
 /// <summary>
@@ -685,46 +793,6 @@ public abstract class MaxSdkBase
 /// </summary>
 internal static class AdPositionExtenstion
 {
-    public static string ToSnakeCaseString(this MaxSdkBase.BannerPosition position)
-    {
-        if (position == MaxSdkBase.BannerPosition.TopLeft)
-        {
-            return "top_left";
-        }
-        else if (position == MaxSdkBase.BannerPosition.TopCenter)
-        {
-            return "top_center";
-        }
-        else if (position == MaxSdkBase.BannerPosition.TopRight)
-        {
-            return "top_right";
-        }
-        else if (position == MaxSdkBase.BannerPosition.Centered)
-        {
-            return "centered";
-        }
-        else if (position == MaxSdkBase.BannerPosition.CenterLeft)
-        {
-            return "center_left";
-        }
-        else if (position == MaxSdkBase.BannerPosition.CenterRight)
-        {
-            return "center_right";
-        }
-        else if (position == MaxSdkBase.BannerPosition.BottomLeft)
-        {
-            return "bottom_left";
-        }
-        else if (position == MaxSdkBase.BannerPosition.BottomCenter)
-        {
-            return "bottom_center";
-        }
-        else // position == MaxSdkBase.BannerPosition.BottomRight
-        {
-            return "bottom_right";
-        }
-    }
-
     public static string ToSnakeCaseString(this MaxSdkBase.AdViewPosition position)
     {
         if (position == MaxSdkBase.AdViewPosition.TopLeft)

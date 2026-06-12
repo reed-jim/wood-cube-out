@@ -9,18 +9,14 @@
 #if UNITY_IOS || UNITY_IPHONE
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
+using AppLovinMax.Internal;
 using UnityEditor;
 using UnityEditor.Callbacks;
-#if UNITY_2019_3_OR_NEWER
 using UnityEditor.iOS.Xcode.Extensions;
-#endif
 using UnityEditor.iOS.Xcode;
-using UnityEditor.PackageManager;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -36,9 +32,6 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
     {
         private const string OutputFileName = "AppLovinQualityServiceSetup.rb";
 
-#if !UNITY_2019_3_OR_NEWER
-        private const string UnityMainTargetName = "Unity-iPhone";
-#endif
         // Use a priority of 90 to have AppLovin embed frameworks after Pods are installed (EDM finishes installing Pods at priority 60) and before Firebase Crashlytics runs their scripts (at priority 100).
         private const int AppLovinEmbedFrameworksPriority = 90;
 
@@ -61,6 +54,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         private const string KeyConsentFlowEnabled = "ConsentFlowEnabled";
         private const string KeyConsentFlowTermsOfService = "ConsentFlowTermsOfService";
         private const string KeyConsentFlowPrivacyPolicy = "ConsentFlowPrivacyPolicy";
+        private const string KeyConsentFlowShowTermsAndPrivacyPolicyAlertInGDPR = "ConsentFlowShowTermsAndPrivacyPolicyAlertInGDPR";
         private const string KeyConsentFlowDebugUserGeography = "ConsentFlowDebugUserGeography";
 
         private const string KeyAppLovinSdkKeyToRemove = "AppLovinSdkKey";
@@ -73,7 +67,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
         /// 1. Downloads the Quality Service ruby script.
         /// 2. Runs the script using Ruby which integrates AppLovin Quality Service to the project.
         /// </summary>
-        [PostProcessBuild(int.MaxValue)] // We want to run Quality Service script last.
+        [PostProcessBuild(AppLovinPreProcess.CallbackOrder)] // We want to run Quality Service script last.
         public static void OnPostProcessBuild(BuildTarget buildTarget, string buildPath)
         {
             if (!AppLovinSettings.Instance.QualityServiceEnabled) return;
@@ -94,49 +88,40 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 return;
             }
 
-            // Download the ruby script needed to install Quality Service
-            var downloadHandler = new DownloadHandlerFile(outputFilePath);
-            var postJson = string.Format("{{\"sdk_key\" : \"{0}\"}}", sdkKey);
-            var bodyRaw = Encoding.UTF8.GetBytes(postJson);
-            var uploadHandler = new UploadHandlerRaw(bodyRaw);
-            uploadHandler.contentType = "application/json";
-
-            using (var unityWebRequest = new UnityWebRequest("https://api2.safedk.com/v1/build/ios_setup2"))
+            var webRequestConfig = new WebRequestConfig()
             {
-                unityWebRequest.method = UnityWebRequest.kHttpVerbPOST;
-                unityWebRequest.downloadHandler = downloadHandler;
-                unityWebRequest.uploadHandler = uploadHandler;
-                var operation = unityWebRequest.SendWebRequest();
+                DownloadHandler = new DownloadHandlerFile(outputFilePath),
+                JsonString = string.Format("{{\"sdk_key\" : \"{0}\"}}", sdkKey),
+                EndPoint = "https://api2.safedk.com/v1/build/ios_setup2",
+                RequestType = WebRequestType.Post,
+            };
 
-                // Wait for the download to complete or the request to timeout.
-                while (!operation.isDone) { }
+            webRequestConfig.Headers.Add("Content-Type", "application/json");
 
-#if UNITY_2020_1_OR_NEWER
-                if (unityWebRequest.result != UnityWebRequest.Result.Success)
-#else
-                if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
-#endif
-                {
-                    MaxSdkLogger.UserError("AppLovin Quality Service installation failed. Failed to download script with error: " + unityWebRequest.error);
-                    return;
-                }
+            var maxWebRequest = new MaxWebRequest(webRequestConfig);
 
-                // Check if Ruby is installed
-                var rubyVersion = AppLovinCommandLine.Run("ruby", "--version", buildPath);
-                if (rubyVersion.ExitCode != 0)
-                {
-                    MaxSdkLogger.UserError("AppLovin Quality Service installation requires Ruby. Please install Ruby, export it to your system PATH and re-export the project.");
-                    return;
-                }
-
-                // Ruby is installed, run `ruby AppLovinQualityServiceSetup.rb`
-                var result = AppLovinCommandLine.Run("ruby", OutputFileName, buildPath);
-
-                // Check if we have an error.
-                if (result.ExitCode != 0) MaxSdkLogger.UserError("Failed to set up AppLovin Quality Service");
-
-                MaxSdkLogger.UserDebug(result.Message);
+            var webResponse = maxWebRequest.SendSync();
+            if (!webResponse.IsSuccess)
+            {
+                MaxSdkLogger.UserError("AppLovin Quality Service installation failed. Failed to download script with error: " + webResponse.ErrorMessage);
+                return;
             }
+
+            // Check if Ruby is installed
+            var rubyVersion = AppLovinCommandLine.Run("ruby", "--version", buildPath);
+            if (rubyVersion.ExitCode != 0)
+            {
+                MaxSdkLogger.UserError("AppLovin Quality Service installation requires Ruby. Please install Ruby, export it to your system PATH and re-export the project.");
+                return;
+            }
+
+            // Ruby is installed, run `ruby AppLovinQualityServiceSetup.rb`
+            var result = AppLovinCommandLine.Run("ruby", OutputFileName, buildPath);
+
+            // Check if we have an error.
+            if (result.ExitCode != 0) MaxSdkLogger.UserError("Failed to set up AppLovin Quality Service");
+
+            MaxSdkLogger.UserDebug(result.Message);
         }
 
         [PostProcessBuild(AppLovinEmbedFrameworksPriority)]
@@ -146,13 +131,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var project = new PBXProject();
             project.ReadFromFile(projectPath);
 
-#if UNITY_2019_3_OR_NEWER
             var unityMainTargetGuid = project.GetUnityMainTargetGuid();
             var unityFrameworkTargetGuid = project.GetUnityFrameworkTargetGuid();
-#else
-            var unityMainTargetGuid = project.TargetGuidByName(UnityMainTargetName);
-            var unityFrameworkTargetGuid = project.TargetGuidByName(UnityMainTargetName);
-#endif
+
             EmbedDynamicLibrariesIfNeeded(buildPath, project, unityMainTargetGuid);
 
             LocalizeUserTrackingDescriptionIfNeeded(AppLovinInternalSettings.Instance.UserTrackingUsageDescriptionDe, "de", buildPath, project, unityMainTargetGuid);
@@ -179,23 +160,11 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var dynamicLibraryPathsToEmbed = GetDynamicLibraryPathsToEmbed(podsDirectory, buildPath);
             if (dynamicLibraryPathsToEmbed == null || dynamicLibraryPathsToEmbed.Count == 0) return;
 
-#if UNITY_2019_3_OR_NEWER
             foreach (var dynamicLibraryPath in dynamicLibraryPathsToEmbed)
             {
                 var fileGuid = project.AddFile(dynamicLibraryPath, dynamicLibraryPath);
                 project.AddFileToEmbedFrameworks(targetGuid, fileGuid);
             }
-#else
-            string runpathSearchPaths;
-            runpathSearchPaths = project.GetBuildPropertyForAnyConfig(targetGuid, "LD_RUNPATH_SEARCH_PATHS");
-            runpathSearchPaths += string.IsNullOrEmpty(runpathSearchPaths) ? "" : " ";
-
-            // Check if runtime search paths already contains the required search paths for dynamic libraries.
-            if (runpathSearchPaths.Contains("@executable_path/Frameworks")) return;
-
-            runpathSearchPaths += "@executable_path/Frameworks";
-            project.SetBuildProperty(targetGuid, "LD_RUNPATH_SEARCH_PATHS", runpathSearchPaths);
-#endif
         }
 
         /// <summary>
@@ -255,7 +224,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var pluginData = AppLovinIntegrationManager.LoadPluginDataSync();
             if (pluginData == null)
             {
-                MaxSdkLogger.E("Failed to load plugin data. Dynamic libraries will not be embedded.");
+                MaxSdkLogger.UserError("Failed to load plugin data. Dynamic libraries will not be embedded.");
                 return null;
             }
 
@@ -315,13 +284,7 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var currentIosVersion = network.CurrentVersions.Ios;
             if (string.IsNullOrEmpty(currentIosVersion)) return false;
 
-            var minIosVersion = libraryToEmbed.MinVersion;
-            var maxIosVersion = libraryToEmbed.MaxVersion;
-
-            var greaterThanOrEqualToMinVersion = string.IsNullOrEmpty(minIosVersion) || MaxSdkUtils.CompareVersions(currentIosVersion, minIosVersion) != MaxSdkUtils.VersionComparisonResult.Lesser;
-            var lessThanOrEqualToMaxVersion = string.IsNullOrEmpty(maxIosVersion) || MaxSdkUtils.CompareVersions(currentIosVersion, maxIosVersion) != MaxSdkUtils.VersionComparisonResult.Greater;
-
-            return greaterThanOrEqualToMinVersion && lessThanOrEqualToMaxVersion;
+            return MaxSdkUtils.IsVersionInRange(currentIosVersion, libraryToEmbed.MinVersion, libraryToEmbed.MaxVersion);
         }
 
         private static List<string> GetDynamicLibraryPathsInProjectToEmbed(string podsDirectory, List<string> dynamicLibrariesToEmbed)
@@ -446,9 +409,19 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
                 project.SetBuildProperty(unityFrameworkTargetGuid, "SWIFT_VERSION", "5.0");
             }
 
-            // Enable Swift modules
-            project.AddBuildProperty(unityFrameworkTargetGuid, "CLANG_ENABLE_MODULES", "YES");
-            project.AddBuildProperty(unityMainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+            // Some publishers may configure these settings in their own post-processing scripts.
+            // Only set them if they haven't already been defined to avoid overwriting publisher-defined values.
+            var enableModules = project.GetBuildPropertyForAnyConfig(unityFrameworkTargetGuid, "CLANG_ENABLE_MODULES");
+            if (string.IsNullOrEmpty(enableModules))
+            {
+                project.SetBuildProperty(unityFrameworkTargetGuid, "CLANG_ENABLE_MODULES", "YES");
+            }
+
+            var alwaysEmbedSwiftLibraries = project.GetBuildPropertyForAnyConfig(unityMainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES");
+            if (string.IsNullOrEmpty(alwaysEmbedSwiftLibraries))
+            {
+                project.SetBuildProperty(unityMainTargetGuid, "ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES", "YES");
+            }
         }
 
         private static void CreateSwiftFile(string swiftFilePath)
@@ -466,14 +439,14 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             }
         }
 
-        [PostProcessBuild(int.MaxValue)]
+        [PostProcessBuild(AppLovinPreProcess.CallbackOrder)]
         public static void MaxPostProcessPlist(BuildTarget buildTarget, string path)
         {
             var plistPath = Path.Combine(path, "Info.plist");
             var plist = new PlistDocument();
             plist.ReadFromFile(plistPath);
 
-            SetAttributionReportEndpointIfNeeded(plist);
+            RemoveAttributionReportEndpointIfNeeded(plist);
 
             EnableVerboseLoggingIfNeeded(plist);
             AddGoogleApplicationIdIfNeeded(plist);
@@ -485,23 +458,16 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             plist.WriteToFile(plistPath);
         }
 
-        private static void SetAttributionReportEndpointIfNeeded(PlistDocument plist)
+        private static void RemoveAttributionReportEndpointIfNeeded(PlistDocument plist)
         {
-            if (AppLovinSettings.Instance.SetAttributionReportEndpoint)
-            {
-                plist.root.SetString("NSAdvertisingAttributionReportEndpoint", AppLovinAdvertisingAttributionEndpoint);
-            }
-            else
-            {
-                PlistElement attributionReportEndPoint;
-                plist.root.values.TryGetValue("NSAdvertisingAttributionReportEndpoint", out attributionReportEndPoint);
+            PlistElement attributionReportEndPoint;
+            plist.root.values.TryGetValue("NSAdvertisingAttributionReportEndpoint", out attributionReportEndPoint);
 
-                // Check if we had previously set the attribution endpoint and un-set it.
-                if (attributionReportEndPoint != null && AppLovinAdvertisingAttributionEndpoint.Equals(attributionReportEndPoint.AsString()))
-                {
-                    plist.root.values.Remove("NSAdvertisingAttributionReportEndpoint");
-                }
-            }
+            // We no longer support this feature. Check if we had previously set the attribution endpoint and un-set it.
+            if (attributionReportEndPoint == null || !AppLovinAdvertisingAttributionEndpoint.Equals(attributionReportEndPoint.AsString())) return;
+
+            MaxSdkLogger.UserWarning("Global SKAdNetwork postback forwarding is no longer supported by AppLovin. Removing AppLovin Advertising Attribution Endpoint from Info.plist.");
+            plist.root.values.Remove("NSAdvertisingAttributionReportEndpoint");
         }
 
         private static void EnableVerboseLoggingIfNeeded(PlistDocument plist)
@@ -569,13 +535,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var project = new PBXProject();
             project.ReadFromFile(projectPath);
 
-#if UNITY_2019_3_OR_NEWER
             var unityMainTargetGuid = project.GetUnityMainTargetGuid();
-#else
-            var unityMainTargetGuid = project.TargetGuidByName(UnityMainTargetName);
-#endif
 
-            var guid = project.AddFile(AppLovinSettingsPlistFileName, AppLovinSettingsPlistFileName, PBXSourceTree.Source);
+            var guid = project.AddFile(AppLovinSettingsPlistFileName, AppLovinSettingsPlistFileName);
             project.AddFileToBuild(unityMainTargetGuid, guid);
             project.WriteToFile(projectPath);
         }
@@ -605,6 +567,9 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             {
                 consentFlowInfoRoot.SetString(KeyConsentFlowTermsOfService, termsOfServiceUrl);
             }
+
+            var shouldShowTermsAndPrivacyPolicyAlertInGdpr = AppLovinInternalSettings.Instance.ShouldShowTermsAndPrivacyPolicyAlertInGDPR;
+            consentFlowInfoRoot.SetBoolean(KeyConsentFlowShowTermsAndPrivacyPolicyAlertInGDPR, shouldShowTermsAndPrivacyPolicyAlertInGdpr);
 
             var debugUserGeography = AppLovinInternalSettings.Instance.DebugUserGeography;
             if (debugUserGeography == MaxSdkBase.ConsentFlowUserGeography.Gdpr)
@@ -679,36 +644,33 @@ namespace AppLovinMax.Scripts.IntegrationManager.Editor
             var installedNetworks = AppLovinPackageManager.GetInstalledMediationNetworks();
             var uriBuilder = new UriBuilder("https://unity.applovin.com/max/1.0/skadnetwork_ids");
             var adNetworks = string.Join(",", installedNetworks.ToArray());
-            if (!string.IsNullOrEmpty(adNetworks))
+            if (MaxSdkUtils.IsValidString(adNetworks))
             {
                 uriBuilder.Query += string.Format("ad_networks={0}", adNetworks);
             }
 
-            using (var unityWebRequest = UnityWebRequest.Get(uriBuilder.ToString()))
+            var webRequestConfig = new WebRequestConfig()
             {
-                var operation = unityWebRequest.SendWebRequest();
-                // Wait for the download to complete or the request to timeout.
-                while (!operation.isDone) { }
+                EndPoint = uriBuilder.ToString()
+            };
 
-#if UNITY_2020_1_OR_NEWER
-                if (unityWebRequest.result != UnityWebRequest.Result.Success)
-#else
-                if (unityWebRequest.isNetworkError || unityWebRequest.isHttpError)
-#endif
-                {
-                    MaxSdkLogger.UserError("Failed to retrieve SKAdNetwork IDs with error: " + unityWebRequest.error);
-                    return new SkAdNetworkData();
-                }
+            var maxWebRequest = new MaxWebRequest(webRequestConfig);
+            var webResponse = maxWebRequest.SendSync();
 
-                try
-                {
-                    return JsonUtility.FromJson<SkAdNetworkData>(unityWebRequest.downloadHandler.text);
-                }
-                catch (Exception exception)
-                {
-                    MaxSdkLogger.UserError("Failed to parse data '" + unityWebRequest.downloadHandler.text + "' with exception: " + exception);
-                    return new SkAdNetworkData();
-                }
+            if (!webResponse.IsSuccess)
+            {
+                MaxSdkLogger.UserError("Failed to retrieve SKAdNetwork IDs with error: " + webResponse.ErrorMessage);
+                return new SkAdNetworkData();
+            }
+
+            try
+            {
+                return JsonUtility.FromJson<SkAdNetworkData>(webResponse.ResponseMessage);
+            }
+            catch (Exception exception)
+            {
+                MaxSdkLogger.UserError("Failed to parse data '" + webResponse.ResponseMessage + "' with exception: " + exception);
+                return new SkAdNetworkData();
             }
         }
 

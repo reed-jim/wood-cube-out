@@ -12,7 +12,7 @@ using UnityEditor;
 
 #endif
 
-public class MaxSdkUtils
+public static class MaxSdkUtils
 {
     /// <summary>
     /// An Enum to be used when comparing two versions.
@@ -488,6 +488,13 @@ public class MaxSdkUtils
         }
     }
 
+    public static bool IsVersionInRange(string currentVersion, string minVersion, string maxVersion)
+    {
+        var greaterThanOrEqualToMin = string.IsNullOrEmpty(minVersion) || MaxSdkUtils.CompareVersions(currentVersion, minVersion) != MaxSdkUtils.VersionComparisonResult.Lesser;
+        var lessThanOrEqualToMax = string.IsNullOrEmpty(maxVersion) || MaxSdkUtils.CompareVersions(currentVersion, maxVersion) != MaxSdkUtils.VersionComparisonResult.Greater;
+        return greaterThanOrEqualToMin && lessThanOrEqualToMax;
+    }
+
     /// <summary>
     /// Compares its two arguments for order.  Returns <see cref="VersionComparisonResult.Lesser"/>, <see cref="VersionComparisonResult.Equal"/>,
     /// or <see cref="VersionComparisonResult.Greater"/> as the first version is less than, equal to, or greater than the second.
@@ -573,6 +580,16 @@ public class MaxSdkUtils
         return !string.IsNullOrEmpty(toCheck);
     }
 
+    /// <summary>
+    /// Check if the given array is null or empty.
+    /// </summary>
+    /// <param name="array">The array to be checked.</param>
+    /// <returns><c>true</c> if the given array is <c>null</c> or has zero length.</returns>
+    public static bool IsNullOrEmpty<T>(T[] array)
+    {
+        return array == null || array.Length == 0;
+    }
+
 #if UNITY_EDITOR
     /// <summary>
     /// Gets the path of the asset in the project for a given MAX plugin export path.
@@ -581,11 +598,36 @@ public class MaxSdkUtils
     /// <returns>The exported path of the MAX plugin asset or the default export path if the asset is not found.</returns>
     public static string GetAssetPathForExportPath(string exportPath)
     {
-        var defaultPath = Path.Combine("Assets", exportPath);
-        var assetLabelToFind = "l:al_max_export_path-" + exportPath.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        var assetGuids = AssetDatabase.FindAssets(assetLabelToFind);
+        var assetLabelToFind = "al_max_export_path-" + NormalizeToUnityPath(exportPath);
+        var labelSearchQuery = "l:" + assetLabelToFind;
+        var assetGuids = AssetDatabase.FindAssets(labelSearchQuery);
 
-        return assetGuids.Length < 1 ? defaultPath : AssetDatabase.GUIDToAssetPath(assetGuids[0]);
+        // Search all assets returned from the label query (may include partial matches)
+        foreach (var guid in assetGuids)
+        {
+            var path = AssetDatabase.GUIDToAssetPath(guid);
+            var asset = AssetDatabase.LoadMainAssetAtPath(path);
+            if (asset == null) continue;
+
+            var labels = AssetDatabase.GetLabels(asset);
+
+            // Check if any label exactly matches
+            if (labels.Any(label => label == assetLabelToFind)) return path;
+        }
+
+        // Fall back to the default path if no exact label match is found
+        return Path.Combine("Assets", exportPath);
+    }
+
+    /// <summary>
+    /// Turns a path into a Unity compatible path by replacing backslashes with forward slashes.
+    /// This is important when dealing with Unity's AssetDatabase, which expects paths to use forward slashes.
+    /// </summary>
+    /// <param name="path">The path to normalize</param>
+    /// <returns>A Unity compatible normalized path with only forward slashes.</returns>
+    public static string NormalizeToUnityPath(string path)
+    {
+        return path.Replace(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     }
 #endif
 }
