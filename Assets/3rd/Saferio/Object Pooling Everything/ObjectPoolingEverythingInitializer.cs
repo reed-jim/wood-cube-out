@@ -41,6 +41,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
     [SerializeField] private GameObject cubeEatSoundPrefab;
     [SerializeField] private GameObject cubeLandSoundPrefab;
     [SerializeField] private GameObject slotDoneSoundPrefab;
+    [SerializeField] private GameObject tileHitGroundSoundPrefab;
+    [SerializeField] private GameObject startFreezeSoundPrefab;
+    [SerializeField] private GameObject iceBreakSoundPrefab;
+    [SerializeField] private GameObject boosterAppearSoundPrefab;
 
     [Header("VFXs")]
     [SerializeField] private GameObject destroyObjectPartFxPrefab;
@@ -134,6 +138,10 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.cubeEatSound, cubeEatSoundPrefab, 24);
         RegisterPool<AudioSource>(GameConstants.cubeLandSound, cubeLandSoundPrefab, 24);
         RegisterPool<AudioSource>(GameConstants.slotDoneSound, slotDoneSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.tileHitGroundSound, tileHitGroundSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.startFreezeSound, startFreezeSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 24);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);

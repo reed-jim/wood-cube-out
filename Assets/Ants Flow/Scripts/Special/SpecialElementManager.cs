@@ -27,14 +27,7 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
     public void SpawnAntBoxLink()
     {
-        if (specialElementConfig.doubleAntBoxConfig.num <= 0)
-        {
-            return;
-        }
-
-        int random = Random.Range(0, 10);
-
-        if (random > 2)
+        if (!specialElementConfig.doubleAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
         {
             return;
         }
@@ -75,31 +68,26 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
 
             antBoxLinks.Add(antBoxLink);
 
-            specialElementConfig.doubleAntBoxConfig.num--;
+            specialElementConfig.doubleAntBoxConfig.RemoveOneSpecialElementInPool();
         }
     }
 
     public void RandomizeNextLevelElement()
     {
-        int random = Random.Range(0, 10);
-
-        if (random < 5)
+        if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
         {
-            if (specialElementConfig.hiddenAntBoxConfig.num > 0)
-            {
-                nextLevelElement = LevelElement.HiddenAntBox;
+            nextLevelElement = LevelElement.HiddenAntBox;
 
-                specialElementConfig.hiddenAntBoxConfig.num--;
-            }
-            else if (specialElementConfig.frozenAntBoxConfig.num > 0)
-            {
-                nextLevelElement = LevelElement.FreezedAntBox;
+            specialElementConfig.hiddenAntBoxConfig.RemoveOneSpecialElementInPool();
+        }
+        else if (specialElementConfig.frozenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+        {
+            nextLevelElement = LevelElement.FreezedAntBox;
 
-                nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-                specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+            nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
+            specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
 
-                specialElementConfig.frozenAntBoxConfig.num--;
-            }
+            specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
         }
         else
         {

@@ -76,6 +76,7 @@ public class BoosterUI : MonoBehaviour
         AntsFlow.BaseTile.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
+        BoosterTutorial.useTutorialBoosterEvent += UseBooster;
         ScrewSelectionInput.breakObjectEvent += UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent += EnableBooster;
         ScrewManager.enableBoosterEvent += EnableBoosterWithoutWarningPopup;
@@ -110,6 +111,7 @@ public class BoosterUI : MonoBehaviour
         AntsFlow.BaseTile.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
+        BoosterTutorial.useTutorialBoosterEvent -= UseBooster;
         ScrewSelectionInput.breakObjectEvent -= UseBreakObjectBooster;
         ScrewBoxManager.enableBoosterEvent -= EnableBooster;
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
@@ -228,6 +230,8 @@ public class BoosterUI : MonoBehaviour
 
         skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[boosterIndex], boosterAttachments[boosterIndex]);
 
+        GamePersistentVariable.isPreventSelectAntBox = true;
+
         Tween.Delay(0.667f).OnComplete(() =>
         {
             skeletonGraphic.AnimationState.SetAnimation(0, ideaAnim, false);
@@ -236,13 +240,21 @@ public class BoosterUI : MonoBehaviour
             {
                 Tween.Alpha(skeletonGraphic, 0, duration: 0.3f).OnComplete(() =>
                 {
+                    skeletonGraphic.Skeleton.SetToSetupPose();
+                    skeletonGraphic.AnimationState.Apply(skeletonGraphic.Skeleton);
+                    skeletonGraphic.AnimationState.ClearTracks();
+
                     skeletonGraphic.color = Color.white;
                     skeletonGraphic.gameObject.SetActive(false);
+
+                    GamePersistentVariable.isPreventSelectAntBox = false;
 
                     onCompleteAction?.Invoke();
                 });
             });
         });
+
+        SoundManager.Instance.PlaySound(GameConstants.boosterAppearSound);
     }
 
     private void AddMoreScrewPort()

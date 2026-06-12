@@ -21,6 +21,7 @@ namespace AntsFlow
         public List<Color> poolFaction;
         public bool isTutorialLevel;
         public int difficulty;
+        public int numStartAntBoxed = 6;
         public SpecialElementConfig specialElementConfig;
 
         public Vector3 spawnPosition = new Vector3(0, 3, 0);
@@ -631,7 +632,27 @@ public class SpecialElementConfig
 [Serializable]
 public class SpecialElementItemConfig
 {
-    public int num;
+    public List<int> spawnOrder;
+
+    public int GetNumLeft()
+    {
+        return spawnOrder.Count;
+    }
+
+    public void RemoveOneSpecialElementInPool()
+    {
+        spawnOrder.RemoveAt(0);
+    }
+
+    public bool IsCorrectOrder(int numAntBoxesSpawned)
+    {
+        return spawnOrder[0] == numAntBoxesSpawned;
+    }
+
+    public bool IsValidToSpawn(int numAntBoxesSpawned)
+    {
+        return GetNumLeft() > 0 && IsCorrectOrder(numAntBoxesSpawned);
+    }
 }
 
 [Serializable]

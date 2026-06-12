@@ -108,7 +108,10 @@ public class GameVariableInitializer : MonoBehaviour
     {
         await gameSetting.LoadAsync();
 
-        gameSettingLoadedEvent?.Invoke();
+        Tween.Delay(1).OnComplete(() =>
+        {
+            SoundManager.Instance.OnGameSettingLoaded();
+        });
 
         GamePersistentVariable.IsVibrate = gameSetting.IsVibrate;
     }

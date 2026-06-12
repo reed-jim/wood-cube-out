@@ -2080,6 +2080,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5151096936456332560, guid: 3e5dd30e3b1bf11468baa316755f3303, type: 3}
+      propertyPath: isLocked
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8343831630302930101, guid: 3e5dd30e3b1bf11468baa316755f3303, type: 3}
       propertyPath: m_Name
       value: Washing Machine Slot (4)
@@ -8134,6 +8138,7 @@ MonoBehaviour:
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
       num: 0
+  nextFreezeAntBoxRequiredNumber: 0
   antBoxLinks: []
 --- !u!4 &1552864237
 Transform:
@@ -11856,7 +11861,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -134.7
+      value: -320
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -12153,6 +12158,10 @@ PrefabInstance:
     - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_Name
       value: Add More Screw Port Button
+      objectReference: {fileID: 0}
+    - target: {fileID: 2803360258022319673, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5339193976586966690, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -12710,7 +12719,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 387.3
+      value: 320
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -12947,7 +12956,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 129.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -13009,6 +13018,75 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1001 &8779043976519746290
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3882482620061423132, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'boosterTutorialLevels.Array.data[1]'
+      value: 99
+      objectReference: {fileID: 0}
+    - target: {fileID: 4596035502661380212, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: 'boosterTutorialLevels.Array.data[3]'
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 7799966238309539232, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_Name
+      value: Booster Tutorial
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7823532251093443539, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 83a6562dd7aadbf4ea4ce1b8071dccd7, type: 3}
 --- !u!222 &8914315990271841473
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -13047,3 +13125,4 @@ SceneRoots:
   - {fileID: 532833301}
   - {fileID: 147474143}
   - {fileID: 5878951817078968737}
+  - {fileID: 8779043976519746290}

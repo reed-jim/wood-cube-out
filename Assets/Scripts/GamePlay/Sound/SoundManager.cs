@@ -367,6 +367,18 @@ public class SoundManager : MonoBehaviour
 
         sound.Play();
     }
+
+    public void PlaySound(string soundKey)
+    {
+        if (!_isEnableGameSound)
+        {
+            return;
+        }
+
+        AudioSource sound = ObjectPoolingEverything.GetFromPool<AudioSource>(soundKey);
+
+        sound.Play();
+    }
     #endregion
 
     private void FadeOutBackgroundMusic()
@@ -397,7 +409,7 @@ public class SoundManager : MonoBehaviour
         _tweens.Add(Tween.Delay(5).OnComplete(() => FadeInBackgroundMusic()));
     }
 
-    private void OnGameSettingLoaded()
+    public void OnGameSettingLoaded()
     {
         EnableBackgroundMusic(gameSetting.IsTurnOnBackgroundMusic);
         EnableGameSound(gameSetting.IsTurnOnSound);

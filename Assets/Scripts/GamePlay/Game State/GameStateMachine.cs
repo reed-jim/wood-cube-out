@@ -42,6 +42,7 @@ namespace NamPhuThuy.GamePlay
             SituationManager.loseLevelEvent += EnterLoseState;
             TileManager.loseLevelEvent += EnterLoseState;
             WashingMachineManager.loseLevelEvent += EnterLoseState;
+            WashingMachineItem.loseLevelEvent += EnterLoseState;
             RevivePopup.reviveEvent += OnRevived;
 
             ChangeState(new GameStatePlaying());
@@ -57,6 +58,7 @@ namespace NamPhuThuy.GamePlay
             SituationManager.loseLevelEvent -= EnterLoseState;
             TileManager.loseLevelEvent -= EnterLoseState;
             WashingMachineManager.loseLevelEvent -= EnterLoseState;
+            WashingMachineItem.loseLevelEvent -= EnterLoseState;
             RevivePopup.reviveEvent -= OnRevived;
         }
 
