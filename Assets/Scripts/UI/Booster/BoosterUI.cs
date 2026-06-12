@@ -327,7 +327,7 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 1);
+        ConsumeBooster(boosterIndex: 2);
 
         WashingMachineManager.Ins.UseBoosterShuffle();
 
@@ -432,7 +432,7 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 2);
+        ConsumeBooster(boosterIndex: 1);
 
         HideBooster();
 
