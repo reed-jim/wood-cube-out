@@ -42,7 +42,7 @@ public class GameController : MonoBehaviour
         useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
 
        
-        iapController.Init();
+       // iapController.Init();
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         ResetDay();

@@ -90,11 +90,12 @@ public static class UserData
     {
         get
         {
-            return DataUtility.Load(GameConstants.IS_REMOVE_ADS, false);
+            return PlayerPrefs.GetInt(StringHelper.REMOVE_ADS, 0) == 1;
         }
         set
         {
-            DataUtility.SaveAsync(GameConstants.IS_REMOVE_ADS, value);
+            GPlayerPrefs.SetInt(StringHelper.REMOVE_ADS, value ? 1 : 0);
+            GPlayerPrefs.Save();
         }
     }
 

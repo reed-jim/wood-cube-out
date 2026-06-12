@@ -26,9 +26,9 @@ public class AdmobAdsMax
     private const string MaxSdkKey =
         "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "4dec3a272f533458";
-    private const string RewardedAdUnitId = "cb024cb6279767b8";
-    private const string BanerAdUnitId = "5e65a04d1e14efd3";
+    private const string InterstitialAdUnitId = "040ac39c872e76f3";
+    private const string RewardedAdUnitId = "1cf078100bda612e";
+    private const string BanerAdUnitId = "b15d9760f47aa099";
 #elif UNITY_IOS
     private const string MaxSdkKey =
 "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
@@ -226,7 +226,7 @@ public class AdmobAdsMax
 #if TESTER
     private const string MRecAdUnitId = "6fb959c7b9a69602";
 #elif UNITY_ANDROID
-    private const string MRecAdUnitId = "802c865561f1039d";
+    private const string MRecAdUnitId = "543735570341644f";
 #elif UNITY_IOS
     private const string MRecAdUnitId = "6fb959c7b9a69602";
 #endif
