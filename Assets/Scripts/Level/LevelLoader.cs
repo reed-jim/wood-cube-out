@@ -78,9 +78,9 @@ namespace NamPhuThuy.GamePlay
         private void Awake()
         {
             PausePopup.replayLevelEvent += Replay;
-
             LosePopup.replayLevelEvent += Replay;
             ReplayPopup.replayLevelEvent += Replay;
+            SettingPopup.replayLevelEvent += Replay;
             DebugPopup.toLevelEvent += GoLevel;
             DebugPopup.nextLevelEvent += NextLevel;
             DebugPopup.prevLevelEvent += PrevLevel;
@@ -115,6 +115,7 @@ namespace NamPhuThuy.GamePlay
             PausePopup.replayLevelEvent -= Replay;
             LosePopup.replayLevelEvent -= Replay;
             ReplayPopup.replayLevelEvent -= Replay;
+            SettingPopup.replayLevelEvent -= Replay;
             DebugPopup.toLevelEvent -= GoLevel;
             DebugPopup.nextLevelEvent -= NextLevel;
             DebugPopup.prevLevelEvent -= PrevLevel;

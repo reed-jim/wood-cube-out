@@ -982,7 +982,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Rate Us
+  m_text: Restart
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cb98b4286e28c484bbf80f3afacd8bbf, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: 836a87490146d4e42b6c1914c9f0fa17, type: 2}
@@ -1065,7 +1065,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  translationName: Rate Us
+  translationName: Restart
   FallbackText: New Text
 --- !u!1 &1611529936172350044
 GameObject:
@@ -1962,7 +1962,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5022744955213631300
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3444,7 +3444,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &7015593223606106523
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4592,6 +4592,7 @@ MonoBehaviour:
   turnMusicToggle: {fileID: 7808898565072294813}
   turnSoundToggle: {fileID: 5221842098409974568}
   vibrationToggle: {fileID: 6860544827417722549}
+  replayButton: {fileID: 1862818383041113755}
   openCompensatePopupButton: {fileID: 928379821926261936}
   openBackupPopupButton: {fileID: 8243657212716442833}
   adPreferencesButton: {fileID: 2806799454414341471}
@@ -4614,7 +4615,10 @@ MonoBehaviour:
   - {fileID: 835189479643306055}
   - {fileID: 2015056044473696798}
   rateButton: {fileID: 1862818383041113755}
+  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   gameSetting: {fileID: 11400000, guid: a2c6756a77a053e48bc88637f241a4a1, type: 2}
+  levelObserver: {fileID: 11400000, guid: d1d258141f78251439ab25819f9f78ba, type: 2}
+  levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
 --- !u!114 &2397504283092880233
 MonoBehaviour:
   m_ObjectHideFlags: 0

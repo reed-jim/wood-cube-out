@@ -49,9 +49,10 @@ namespace AntsFlow
         public float noiseMagnitude = 2f;
         private float randomNoiseOffset;
 
-
         void Awake()
         {
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
 
@@ -82,6 +83,11 @@ namespace AntsFlow
             }, 0.15f);
 
             GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
+        }
+
+        void OnDestroy()
+        {
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
         }
 
         void Update()
@@ -166,6 +172,12 @@ namespace AntsFlow
             }
         }
 
+        private void Reset()
+        {
+            isMovingToTile = false;
+            isMovingToNest = false;
+        }
+
         private void OnAntMovedToNest()
         {
             stuckTime = 0;
@@ -205,9 +217,15 @@ namespace AntsFlow
             navMeshAgent.enabled = false;
         }
 
+        private void OnLevelReplayed()
+        {
+            Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
+        }
+
         public void Init(Color faction)
         {
-            // spriteRenderer.color = faction;
             materialPropertyBlock.SetColor("_Color", faction);
             antRenderer.SetPropertyBlock(materialPropertyBlock);
 

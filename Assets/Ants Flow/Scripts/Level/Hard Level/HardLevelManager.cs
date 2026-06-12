@@ -49,6 +49,7 @@ namespace AntsFlow
                 canvasGroup.alpha = 1;
 
                 hardLevelSpine.gameObject.SetActive(true);
+                hardLevelSpine.color = Color.white;
                 hardLevelSpine.Skeleton.SetToSetupPose();
                 hardLevelSpine.AnimationState.ClearTracks();
                 hardLevelSpine.Skeleton.SetSkin(hardSkin);
