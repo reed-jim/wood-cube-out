@@ -67,6 +67,7 @@ public class GameController : MonoBehaviour
     {
         segmentController.Init();
         admobAds.Init();
+        ActionLimitQueue.Init();
         gameLoading.Init();
     }
 

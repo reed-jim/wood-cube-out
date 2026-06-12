@@ -40,10 +40,11 @@ public class ActionLimitQueue : MonoBehaviour
     }
 
     public Dictionary<NameAction, ActionLimit> Actions;
-   
+    private bool isInited;
     public void Init()
     {
         Actions = new Dictionary<NameAction, ActionLimit>();
+        isInited = true;
     }    
 
     public void AddAction(NameAction nameAction, ActionLimit act)
@@ -75,6 +76,9 @@ public class ActionLimitQueue : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isInited)
+            return;
+
         foreach (var act in Actions)
         {
             act.Value.CheckCallAction();
