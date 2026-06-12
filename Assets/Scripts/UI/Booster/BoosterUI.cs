@@ -224,7 +224,10 @@ public class BoosterUI : MonoBehaviour
         skeletonGraphic.gameObject.SetActive(true);
         skeletonGraphic.Skeleton.SetToSetupPose();
         skeletonGraphic.AnimationState.ClearTracks();
-        skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+        TrackEntry entry = skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
+        entry.TrackTime = 0;
+        skeletonGraphic.AnimationState.Apply(skeletonGraphic.Skeleton);
+        skeletonGraphic.Skeleton.UpdateWorldTransform();
 
         for (int i = 0; i < boosterAttachments.Length; i++)
         {

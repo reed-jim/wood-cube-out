@@ -173,8 +173,11 @@ public class SceneTransition : MonoBehaviour
         yield return new WaitUntil(() => _isLevelLoaded);
 
         loadingSpine.gameObject.SetActive(true);
+        loadingSpine.Skeleton.SetToSetupPose();
+        loadingSpine.AnimationState.ClearTracks();
         TrackEntry entry = loadingSpine.AnimationState.SetAnimation(0, appearAnimation, false);
-        entry.TrackTime = 0f;
+        loadingSpine.AnimationState.Apply(loadingSpine.Skeleton);
+        loadingSpine.Skeleton.UpdateWorldTransform();
         loadingSpine.AnimationState.Complete += OnAnimationComplete;
 
         void OnAnimationComplete(TrackEntry trackEntry)
