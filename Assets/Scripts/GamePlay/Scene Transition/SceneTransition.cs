@@ -50,6 +50,8 @@ public class SceneTransition : MonoBehaviour
     private bool _isLevelLoaded;
     private Coroutine _waitForLevelLoadedCoroutine;
 
+    public static event Action levelSceneTransitionCompleteEvent;
+
 
     #region MonoBehaviour Callbacks
 
@@ -153,6 +155,7 @@ public class SceneTransition : MonoBehaviour
         {
             yield return new WaitForEndOfFrame();
         }
+
         ShowBlackScreenImmediately();
 
         yield return new WaitUntil(() => _isLevelLoaded);
@@ -271,6 +274,8 @@ public class SceneTransition : MonoBehaviour
                     loadLevelInProgressContainer.gameObject.SetActive(false);
                     loadingSpine.AnimationState.ClearTracks();
                     loadingSpine.color = Color.white;
+
+                    levelSceneTransitionCompleteEvent?.Invoke();
                 })
             );
             Tween.Alpha(loadingSpine, 0, duration: 0.3f);
