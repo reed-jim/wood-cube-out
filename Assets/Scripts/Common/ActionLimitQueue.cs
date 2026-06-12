@@ -8,7 +8,7 @@ public class ActionLimitQueue : MonoBehaviour
     public enum NameAction
     {
         None = 0,
-        FxAntComeToNest = 0
+        FxAntComeToNest = 1
     }    
 
     public class ActionLimit
@@ -25,7 +25,7 @@ public class ActionLimitQueue : MonoBehaviour
             this.spaceDelayTime = spaceDelayTime;
         }
 
-        public void CheckCallAction()
+        public void CheckResetAction()
         {
             if(isActiving)
             {
@@ -49,9 +49,6 @@ public class ActionLimitQueue : MonoBehaviour
 
     public void AddAction(NameAction nameAction, ActionLimit act)
     {
-        if (Actions == null)
-            Actions = new Dictionary<NameAction,ActionLimit>();
-
         if(!Actions.ContainsKey(nameAction))
         {
             
@@ -81,7 +78,7 @@ public class ActionLimitQueue : MonoBehaviour
 
         foreach (var act in Actions)
         {
-            act.Value.CheckCallAction();
+            act.Value.CheckResetAction();
         }    
     }
 
