@@ -49,6 +49,7 @@ namespace AntsFlow
                 canvasGroup.alpha = 1;
 
                 hardLevelSpine.gameObject.SetActive(true);
+                hardLevelSpine.Skeleton.SetToSetupPose();
                 hardLevelSpine.AnimationState.ClearTracks();
                 hardLevelSpine.Skeleton.SetSkin(hardSkin);
 
@@ -63,12 +64,8 @@ namespace AntsFlow
                     localizedHardLevelText.TranslationName = "Super Hard";
                 }
 
-                hardLevelSpine.color = ColorUtil.WithAlpha(Color.white, 0);
-                Tween.Alpha(hardLevelSpine, 1, duration: 0.3f).OnComplete(() =>
-                {
-                    hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
-                    hardLevelSpine.AnimationState.Complete += OnAnimationComplete;
-                });
+                hardLevelSpine.AnimationState.SetAnimation(0, appearAnimation, false);
+                hardLevelSpine.AnimationState.Complete += OnAnimationComplete;
 
                 SaferioTween.AlphaShow(blackOverlay, endAlpha: 0.9f);
             }

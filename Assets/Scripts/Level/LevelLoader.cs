@@ -247,7 +247,6 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
-                HardLevelManager.Ins.Setup(levelItem);
 
                 navMeshSurface.BuildNavMesh();
 

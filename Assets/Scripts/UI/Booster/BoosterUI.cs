@@ -219,6 +219,8 @@ public class BoosterUI : MonoBehaviour
     private void PlayPreBoosterAnimation(BoosterType boosterType, Action onCompleteAction)
     {
         skeletonGraphic.gameObject.SetActive(true);
+        skeletonGraphic.Skeleton.SetToSetupPose();
+        skeletonGraphic.AnimationState.ClearTracks();
         skeletonGraphic.AnimationState.SetAnimation(0, appearAnim, false);
 
         for (int i = 0; i < boosterAttachments.Length; i++)

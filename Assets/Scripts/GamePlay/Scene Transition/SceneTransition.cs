@@ -25,6 +25,8 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private TMP_Text loadingText;
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
+    [SerializeField] private RectTransform[] scrollingAntBoxes;
+
 
     [SpineAnimation] public string idleAnimation;
     [SpineAnimation] public string appearAnimation;
@@ -161,6 +163,7 @@ public class SceneTransition : MonoBehaviour
         yield return new WaitUntil(() => _isLevelLoaded);
 
         progressBarFill.fillAmount = 0;
+        loadingText.text = "0%";
 
         BlackScreenTransition(0.3f * blackScreenStartDelay, onCompletedAction: () =>
         {
@@ -228,7 +231,7 @@ public class SceneTransition : MonoBehaviour
             StopCoroutine(_loadingLevelInProgressCoroutine);
         }
 
-        _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
+        _loadingLevelInProgressCoroutine = StartCoroutine(ScrollingBackground());
 
         GameController.Instance.admobAds.ShowMRec();
 
@@ -242,23 +245,24 @@ public class SceneTransition : MonoBehaviour
         _tweens.Add(Tween.Custom(0, 1, duration: minWaitTime, onValueChange: newVal =>
         {
             progressBarFill.fillAmount = newVal;
+            loadingText.text = $"{(int)(newVal * 100)}%";
         }));
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-             GameController.Instance.admobAds.HideMRec();
+            GameController.Instance.admobAds.HideMRec();
 
             // double inter
             if (!_isFirstTimeEnterScene)
             {
                 blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                 GameController.Instance.admobAds.ShowInterstitial(
-                   actionIniterClose : () =>
-                    {
-                        blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                    }
-                );
+                GameController.Instance.admobAds.ShowInterstitial(
+                  actionIniterClose: () =>
+                   {
+                       blackBackgroundToPassPolicy.gameObject.SetActive(false);
+                   }
+               );
             }
             else
             {
@@ -291,6 +295,34 @@ public class SceneTransition : MonoBehaviour
         while (true)
         {
             rotatingLoadingIcon.eulerAngles -= new Vector3(0, 0, 8);
+
+            yield return waitForSeconds;
+        }
+    }
+    private IEnumerator ScrollingBackground()
+    {
+        WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 60f);
+
+        float moveSpeed = 200f;
+        Vector2 resetOffset = scrollingAntBoxes[0].sizeDelta;
+        Vector2 direction = new Vector2(1f, 1f).normalized;
+
+        while (true)
+        {
+            for (int i = 0; i < scrollingAntBoxes.Length; i++)
+            {
+                RectTransform box = scrollingAntBoxes[i];
+
+                // Move toward top-right
+                box.anchoredPosition += direction * moveSpeed * Time.deltaTime;
+
+                // If it has moved too far, wrap it back
+                if (box.anchoredPosition.x > resetOffset.x ||
+                    box.anchoredPosition.y > resetOffset.y)
+                {
+                    box.anchoredPosition -= resetOffset;
+                }
+            }
 
             yield return waitForSeconds;
         }
