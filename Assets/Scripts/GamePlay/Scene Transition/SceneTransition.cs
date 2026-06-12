@@ -1,15 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using NamPhuThuy;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
-using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SceneTransition : MonoBehaviour
@@ -56,7 +53,6 @@ public class SceneTransition : MonoBehaviour
 
 
     #region MonoBehaviour Callbacks
-
     private void Awake()
     {
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
@@ -67,15 +63,12 @@ public class SceneTransition : MonoBehaviour
 
         _canvasSize = canvas.sizeDelta;
 
-        // progressBar.value = 0;
-        // progressBarFill.color = ColorUtil.WithAlpha(progressBarFill.color, 0);
-
         _isFirstTimeEnterScene = true;
         _isFirstTimeOpenApp = DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true);
 
         if (!_isFirstTimeOpenApp)
         {
-            // BlackScreenTransition();
+
         }
         else
         {
@@ -95,8 +88,13 @@ public class SceneTransition : MonoBehaviour
 
         CommonUtil.StopAllTweens(_tweens);
     }
-
     #endregion
+
+    private void Reset()
+    {
+        loadLevelInProgressCanvasGroup.alpha = 1;
+        loadingSpine.color = Color.white;
+    }
 
     private void BlackScreenTransition(float delay, Action onCompletedAction)
     {
@@ -130,17 +128,8 @@ public class SceneTransition : MonoBehaviour
 
     private void TransitionOnLevelStarted()
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     _isFirstTimeEnterScene = false;
+        Reset();
 
-        //     return;
-        // }
-
-        // if (GamePersistentVariable.remoteConfigIsShowMREC && SceneManager.GetActiveScene().name != "Loading")
-        // {
-        //     LoadingLevelInProgress();
-        // }
         loadingSpine.gameObject.SetActive(false);
 
         if (_waitForLevelLoadedCoroutine != null)
@@ -217,15 +206,6 @@ public class SceneTransition : MonoBehaviour
     #region LOADING LEVEL IN PROGRESS
     private void LoadingLevelInProgress()
     {
-        // if (_isFirstTimeEnterScene)
-        // {
-        //     loadLevelInProgressContainer.gameObject.SetActive(false);
-
-        //     _isFirstTimeEnterScene = false;
-
-        //     return;
-        // }
-
         loadLevelInProgressContainer.gameObject.SetActive(true);
 
         loadLevelInProgressCanvasGroup.alpha = 1;
@@ -273,8 +253,6 @@ public class SceneTransition : MonoBehaviour
             .OnComplete(() =>
                 {
                     loadLevelInProgressContainer.gameObject.SetActive(false);
-                    loadingSpine.AnimationState.ClearTracks();
-                    loadingSpine.color = Color.white;
 
                     levelSceneTransitionCompleteEvent?.Invoke();
                 })

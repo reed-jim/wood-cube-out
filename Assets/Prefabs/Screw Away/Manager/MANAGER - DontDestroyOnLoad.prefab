@@ -2250,7 +2250,7 @@ MonoBehaviour:
   container: {fileID: 1676761650030170320}
   poolSize: 16
   resourceSprites:
-  - {fileID: 21300000, guid: 32fdd9b490f40ee44b9ec18a16dd295e, type: 3}
+  - {fileID: 21300000, guid: 1e2c125206e7a5c44be36bd7d15196ef, type: 3}
   - {fileID: 21300000, guid: 81e66c65763eeca4fa9ad4b51d33c3b5, type: 3}
 --- !u!1 &1692791396152133296
 GameObject:
@@ -8435,13 +8435,13 @@ MonoBehaviour:
         banner:
           minimumLevel: 0
         interstitials:
-          minimumLevel: 3
+          minimumLevel: 10
           minimumInterval: 70
           showAfterDefeat: 1
           showAfterQuit: 1
           showOnAppResume: 1
           appResumedThreshold: 60
-          showBeforeLevel: 1
+          showBeforeLevel: 0
         reward:
           minimumLevel: 0
           isRewardedGetMoreLivesEnabled: 1
@@ -9129,9 +9129,9 @@ MonoBehaviour:
     adsNewData:
       config:
         mrec:
-          minimumLevel: 0
+          minimumLevel: 10000
           isActive: 0
-          activeLoading: 1
+          activeLoading: 0
           activeWin: 0
           fakeBannerMrec: 0
         duppInter:

@@ -262,15 +262,17 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         int coinQuantity = multiplier * productData.CoinQuantity;
 
-                        int[] boosterQuantites = new int[3] {
+                        int[] boosterQuantites = new int[4] {
                             multiplier * productData.AddHoleBoosterQuantity,
                             multiplier * productData.BreakObjectBoosterQuantity,
-                            multiplier * productData.ClearHolesBoosterQuantity
+                            multiplier * productData.ClearHolesBoosterQuantity,
+                            multiplier * productData.ClearOneColorBoosterQuantity
                         };
 
                         userResourcesObserver.ChangeBoosterQuantity(0, boosterQuantites[0]);
                         userResourcesObserver.ChangeBoosterQuantity(1, boosterQuantites[1]);
                         userResourcesObserver.ChangeBoosterQuantity(2, boosterQuantites[2]);
+                        userResourcesObserver.ChangeBoosterQuantity(3, boosterQuantites[3]);
 
                         userResourcesObserver.ChangeCoin(coinQuantity);
 
