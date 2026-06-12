@@ -60,7 +60,9 @@ public class BoosterTutorial : MonoBehaviour
             useBoosterButtons[i].gameObject.SetActive(false);
         }
 
-        useBoosterButtons[(int)boosterType].gameObject.SetActive(true);
+        int boosterIndex = GetBoosterIndex(boosterType);
+
+        useBoosterButtons[boosterIndex].gameObject.SetActive(true);
 
         while (step < maxStep)
         {
@@ -82,7 +84,9 @@ public class BoosterTutorial : MonoBehaviour
             useBoosterButtons[i].gameObject.SetActive(false);
         }
 
-        useBoosterButtons[(int)boosterType].gameObject.SetActive(true);
+        int boosterIndex = GetBoosterIndex(boosterType);
+
+        useBoosterButtons[boosterIndex].gameObject.SetActive(true);
 
         while (step < maxStep)
         {
@@ -123,17 +127,20 @@ public class BoosterTutorial : MonoBehaviour
             useBoosterButtons[i].gameObject.SetActive(false);
         }
 
-        useBoosterButtons[(int)boosterType].gameObject.SetActive(true);
+        int boosterIndex = GetBoosterIndex(boosterType);
+
+        useBoosterButtons[boosterIndex].gameObject.SetActive(true);
 
         while (step < maxStep)
         {
             if (step == 1)
             {
-                description.text = "Now, you can select any ant box!";
+                description.text = "Select a color to all tiles of that color";
 
                 SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
                 Tween.Position(worldTutorialHand.transform,
-                    TileManager.Ins.tiles[0].transform.position.AddZ(-5f), duration: 0.3f);
+                    AntsFlow.TileManager.Ins.tiles[0].transform.position.AddZ(-5f), duration: 0.3f);
+                SaferioTween.AlphaHide(canvasGroup);
 
                 step++;
             }
@@ -172,14 +179,16 @@ public class BoosterTutorial : MonoBehaviour
     {
         foreach (var boosterType in allboosterTypes)
         {
-            if (currentLevel.Value == boosterTutorialLevels[GetBoosterIndex(boosterType)])
+            int boosterIndex = GetBoosterIndex(boosterType);
+
+            if (currentLevel.Value == boosterTutorialLevels[boosterIndex])
             {
                 this.boosterType = boosterType;
 
-                Transform boosterButton = useBoosterButtons[(int)boosterType].transform;
+                Transform boosterButton = useBoosterButtons[boosterIndex].transform;
 
                 tutorialHand.transform.SetParent(boosterButton);
-                tutorialHand.transform.localPosition = Vector3.zero;
+                tutorialHand.transform.localPosition = Vector3.zero.AddY(-40);
 
                 break;
             }
@@ -192,6 +201,10 @@ public class BoosterTutorial : MonoBehaviour
         if (boosterType == BoosterType.BreakObject)
         {
             StartCoroutine(RunEnableAllAntBoxesBoosterTutorial());
+        }
+        else if (boosterType == BoosterType.ClearOneColor)
+        {
+            StartCoroutine(RunClearOneColorBoosterTutorial());
         }
         else
         {

@@ -27,6 +27,7 @@ namespace AntsFlow
         public AnimationCurve difficultyCurve;
 
         private int totalTile;
+        public int numAntBoxSpawned;
         public List<WashingMachineItem> ghostAntBoxes;
 
         public static event Action winLevelEvent;
@@ -67,6 +68,7 @@ namespace AntsFlow
             this.levelItem = levelItem;
 
             difficultyLevel = levelItem.difficulty;
+            numAntBoxSpawned = 0;
 
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
@@ -184,6 +186,8 @@ namespace AntsFlow
                 GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                numAntBoxSpawned++;
             }
 
             return washingMachineItems;
@@ -278,6 +282,8 @@ namespace AntsFlow
                     washingMachineStartSlot.washingMachine = washingMachineItem;
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
+
+                    numAntBoxSpawned++;
 
                     SpecialElementManager.Ins.SpawnAntBoxLink();
 
@@ -464,10 +470,12 @@ namespace AntsFlow
 
                 Vector3 initialPosition = tile.transform.position;
 
-                Tween.PositionY(tile.transform, tile.transform.position.y + 1f, duration: 0.3f)
+                Tween.ScaleY(tile.transform, 1.5f, duration: 0.3f);
+                Tween.PositionY(tile.transform, tile.transform.position.y + 1.5f, duration: 0.3f)
                 .OnComplete(() =>
                 {
-                    Tween.Position(tile.transform, initialPosition, duration: 0.2f)
+                    Tween.ScaleY(tile.transform, 1, duration: 0.15f);
+                    Tween.Position(tile.transform, initialPosition, duration: 0.15f)
                     .OnComplete(() =>
                     {
                         SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
@@ -477,6 +485,8 @@ namespace AntsFlow
                     });
                 });
             }
+
+            // add sound
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
         }
