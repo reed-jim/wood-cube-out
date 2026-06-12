@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
+using DG.Tweening;
 
 public class RevivePopup : BasePopup
 {
@@ -20,6 +21,7 @@ public class RevivePopup : BasePopup
     [Header("SPRITE")]
     [SerializeField] private Sprite unlockBoxSprite;
     [SerializeField] private Sprite clearHolesSprite;
+    [SerializeField] private CanvasGroup popupCG;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -192,6 +194,8 @@ public class RevivePopup : BasePopup
          GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
+    
+
     private void OnRewaredAdCompleted()
     {
         base.Hide(onCompletedAction: () =>
@@ -236,4 +240,35 @@ public class RevivePopup : BasePopup
         // }
     }
     #endregion
+
+
+    private float timmerHold;
+    private bool isBoardApla;
+
+    public void OnHoldSeeBoard()
+    {
+        Debug.Log("Hold==== " + isBoardApla);
+        if (isBoardApla)
+            return;
+       
+        timmerHold += Time.deltaTime;
+        if(timmerHold >= 1.2f)
+        {
+            popupCG.DOKill();
+            popupCG.alpha = 1;
+            popupCG.DOFade(0, 0.3f);
+            isBoardApla = true;
+        }    
+    }
+
+    public void OnEndHoldSeeBoard()
+    {
+        if (!isBoardApla)
+            return;
+        popupCG.DOKill();
+        popupCG.alpha = 0;
+        popupCG.DOFade(1, 0.3f);
+        isBoardApla = false;
+        timmerHold = 0;
+    }
 }
