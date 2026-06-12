@@ -177,6 +177,8 @@ namespace AntsFlow
                     ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, washingMachineStartSlot.washingMachine.gameObject);
                 }
 
+                numAntBoxSpawned++;
+
                 WashingMachineItem washingMachineItem = GetAntBoxFromPool();
 
                 washingMachineItems.Add(washingMachineItem);
@@ -186,8 +188,6 @@ namespace AntsFlow
                 GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
-
-                numAntBoxSpawned++;
             }
 
             return washingMachineItems;
@@ -271,6 +271,8 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine == null)
                 {
+                    numAntBoxSpawned++;
+
                     WashingMachineItem washingMachineItem = GetAntBoxFromPool();
 
                     washingMachineItem.gameObject.SetActive(true);
@@ -283,8 +285,6 @@ namespace AntsFlow
 
                     washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
 
-                    numAntBoxSpawned++;
-
                     SpecialElementManager.Ins.SpawnAntBoxLink();
 
                     break;
@@ -296,7 +296,7 @@ namespace AntsFlow
         {
             string key = GameConstants.washingMachine;
 
-            LevelElement levelElement = SpecialElementManager.Ins.nextLevelElement;
+            LevelElement levelElement = SpecialElementManager.Ins.GetNextLevelElement();
 
             if (levelElement == LevelElement.NormalAntBox)
             {
@@ -310,8 +310,6 @@ namespace AntsFlow
             {
                 key = GameConstants.freezedAntBox;
             }
-
-            SpecialElementManager.Ins.RandomizeNextLevelElement();
 
             WashingMachineItem antBox = ObjectPoolingEverything.GetFromPool<WashingMachineItem>(key);
 

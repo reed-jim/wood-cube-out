@@ -94,4 +94,27 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
             nextLevelElement = LevelElement.NormalAntBox;
         }
     }
+
+    public LevelElement GetNextLevelElement()
+    {
+        if (specialElementConfig.hiddenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+        {
+            specialElementConfig.hiddenAntBoxConfig.RemoveOneSpecialElementInPool();
+
+            return LevelElement.HiddenAntBox;
+        }
+        else if (specialElementConfig.frozenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+        {
+            nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
+            specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+
+            specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
+
+            return LevelElement.FreezedAntBox;
+        }
+        else
+        {
+            return LevelElement.NormalAntBox;
+        }
+    }
 }

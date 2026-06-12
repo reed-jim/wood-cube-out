@@ -2,6 +2,7 @@ using System;
 using System.Threading.Tasks;
 using Lean.Localization;
 using NamPhuThuy;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using TMPro;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class SettingPopup : BasePopup
     [SerializeField] private SettingItemUI turnMusicToggle;
     [SerializeField] private SettingItemUI turnSoundToggle;
     [SerializeField] private SettingItemUI vibrationToggle;
+    [SerializeField] private Button replayButton;
     [SerializeField] private Button openCompensatePopupButton;
     [SerializeField] private Button openBackupPopupButton;
     [SerializeField] private Button adPreferencesButton;
@@ -27,11 +29,15 @@ public class SettingPopup : BasePopup
     [SerializeField] private Button rateButton;
     #endregion
 
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
+    [SerializeField] private LevelObserver levelObserver;
+    [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     public static event Action<bool> enableBackgroundMusicEvent;
     public static event Action<bool> enableGameSoundEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
+    public static event Action replayLevelEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -50,12 +56,13 @@ public class SettingPopup : BasePopup
         turnSoundToggle.RegisterOnSwitchedEvent(SettingGameSound);
         vibrationToggle.RegisterOnSwitchedEvent(EnableVibration);
 
-        rateButton.onClick.AddListener(Rate);
-        openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
-        openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
-        adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
-        openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
-        openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
+        replayButton.onClick.AddListener(Replay);
+        // rateButton.onClick.AddListener(Rate);
+        // openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
+        // openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
+        // adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
+        // openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        // openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
         {
@@ -176,17 +183,44 @@ public class SettingPopup : BasePopup
     }
     #endregion
 
+    private void Replay()
+    {
+        bool isShowInterReplayLevel = RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_REPLAY_LEVEL, false);
+
+        if (isShowInterReplayLevel)
+        {
+            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+        }
+        else
+        {
+            ActualReplay();
+        }
+
+        Hide();
+    }
+
+    private void OnInterstitialAdToReplayCompleted()
+    {
+        SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "replay");
+
+        ActualReplay();
+    }
+
+    private void ActualReplay()
+    {
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
+
+        replayLevelEvent?.Invoke();
+    }
+
     private void OpenBackupPopup()
     {
-        DebugLogger.LogSimple();
         switchRouteEvent?.Invoke(ScreenRoute.Backup);
-        // switchRouteChannel.Invoke(ScreenRoute.Backup, nameof(SettingPopup));
     }
 
     private void OpenUserConsentPopup()
     {
         switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
-        // switchRouteChannel.Invoke(ScreenRoute.UserConsent, nameof(SettingPopup));
     }
 
     private void OpenFacebookGroup()

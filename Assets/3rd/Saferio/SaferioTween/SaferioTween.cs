@@ -708,7 +708,7 @@ namespace Saferio.Util.SaferioTween
         {
             Vector3 initialPosition = target.position;
 
-            Tween.ScaleY(target, 1.8f, duration: 0.3f);
+            Tween.ScaleY(target, 1.6f, duration: 0.3f);
             Tween.PositionY(target, target.position.y + moveDistance, duration: 0.3f)
             .OnComplete(() =>
             {

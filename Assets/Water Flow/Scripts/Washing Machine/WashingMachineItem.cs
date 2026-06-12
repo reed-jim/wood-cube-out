@@ -61,7 +61,7 @@ public class WashingMachineItem : MonoBehaviour
         antBoxDoneEvent += OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent += OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
-        // RevivePopup.reviveEvent += OnRevive;
+        SettingPopup.replayLevelEvent += OnLevelReplayed;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
@@ -77,7 +77,7 @@ public class WashingMachineItem : MonoBehaviour
         antBoxDoneEvent -= OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
-        // RevivePopup.reviveEvent -= OnRevive;
+        SettingPopup.replayLevelEvent -= OnLevelReplayed;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
 
         ExtendOnDestroy();
@@ -544,6 +544,11 @@ public class WashingMachineItem : MonoBehaviour
         loseLevelEvent?.Invoke();
 
         GamePersistentVariable.isLevelLost = true;
+    }
+
+    private void OnLevelReplayed()
+    {
+        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)
