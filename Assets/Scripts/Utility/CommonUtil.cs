@@ -380,6 +380,23 @@ public static class CommonUtil
         }
     }
 
+    public static void AddValueOfDictionary<T1, T2>(Dictionary<T1, List<T2>> dictionary, T1 key, T2 value)
+    {
+        if (dictionary == null)
+        {
+            dictionary = new Dictionary<T1, List<T2>>();
+        }
+
+        if (dictionary.ContainsKey(key))
+        {
+            dictionary[key].Add(value);
+        }
+        else
+        {
+            dictionary.Add(key, new List<T2>() { value });
+        }
+    }
+
     public static Color GetHighContrastComplementary(Color color)
     {
         Color.RGBToHSV(color, out float h, out float s, out float v);

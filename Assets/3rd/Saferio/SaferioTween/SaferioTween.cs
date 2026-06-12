@@ -702,6 +702,25 @@ namespace Saferio.Util.SaferioTween
             return (int)(second * 1000);
         }
         #endregion
+
+        #region Common Animation
+        public static void MoveUpThenDown(Transform target, float moveDistance, Action onCompleteAction = null)
+        {
+            Vector3 initialPosition = target.position;
+
+            Tween.ScaleY(target, 1.8f, duration: 0.3f);
+            Tween.PositionY(target, target.position.y + moveDistance, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                Tween.ScaleY(target, 1, duration: 0.15f);
+                Tween.Position(target, initialPosition, duration: 0.15f)
+                .OnComplete(() =>
+                {
+                    onCompleteAction?.Invoke();
+                });
+            });
+        }
+        #endregion
     }
 
     public static class SaferioVector3Extension

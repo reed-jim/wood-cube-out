@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AntsFlow;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using UnityEngine;
@@ -40,6 +41,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private LevelBoosterObserver levelBoosterObserver;
 
     [Header("Booster Anim")]
+    [SerializeField] private Image blackOverlay;
     [SerializeField] private SkeletonGraphic skeletonGraphic;
     [SpineAnimation] public string appearAnim;
     [SpineAnimation] public string ideaAnim;
@@ -102,6 +104,7 @@ public class BoosterUI : MonoBehaviour
         _initialbreakObjectButtonPosition = breakModeButtonRT.localPosition;
         _initialClearAllScrewPortsButtonPosition = clearAllScrewPortsButtonRT.localPosition;
 
+        blackOverlay.gameObject.SetActive(false);
         skeletonGraphic.gameObject.SetActive(false);
     }
 
@@ -232,6 +235,8 @@ public class BoosterUI : MonoBehaviour
 
         skeletonGraphic.Skeleton.SetAttachment(boosterAttachments[boosterIndex], boosterAttachments[boosterIndex]);
 
+        SaferioTween.AlphaShow(blackOverlay, 0.9f);
+
         GamePersistentVariable.isPreventSelectAntBox = true;
 
         Tween.Delay(0.667f).OnComplete(() =>
@@ -253,6 +258,8 @@ public class BoosterUI : MonoBehaviour
 
                     onCompleteAction?.Invoke();
                 });
+
+                SaferioTween.AlphaHide(blackOverlay);
             });
         });
 
@@ -363,6 +370,8 @@ public class BoosterUI : MonoBehaviour
         .OnComplete(() =>
         {
             WaterFlowGameInput.Ins.inputMode = AntsFlowInputMode.SelectTile;
+
+            AntsFlow.TileManager.Ins.StartHightlightEachFactionSequentially();
 
             _isInTransition = false;
         });

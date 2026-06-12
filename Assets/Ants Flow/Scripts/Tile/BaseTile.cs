@@ -19,6 +19,7 @@ namespace AntsFlow
         public NavMeshModifierVolume navMeshModifierVolume;
 
         public bool isAntApproaching;
+        public bool isAnimating;
         public bool isLocked;
         public List<BaseTile> blockages;
         public List<BaseTile> actualBlockages;

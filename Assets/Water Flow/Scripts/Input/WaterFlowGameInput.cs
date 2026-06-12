@@ -36,7 +36,7 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
                 {
                     AntsFlow.BaseTile tile = hit.collider.GetComponent<AntsFlow.BaseTile>();
 
-                    if (tile != null)
+                    if (tile != null && !tile.isAnimating)
                     {
                         tile.ClearAllTilesOfTheSameColor();
 
