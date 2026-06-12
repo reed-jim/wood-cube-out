@@ -99,28 +99,30 @@ public class SettingPopup : BasePopup
     #region LANGUAGE
     private void OpenLanguageDropdown()
     {
-        chooseLanguageContainer.gameObject.SetActive(true);
+        switchRouteEvent?.Invoke(ScreenRoute.Language);
 
-        chooseLanguageContainer.localScale = new Vector3(1, 0, 1);
+        // chooseLanguageContainer.gameObject.SetActive(true);
 
-        Tween.ScaleY(chooseLanguageContainer, 1, duration: 0.3f);
+        // chooseLanguageContainer.localScale = new Vector3(1, 0, 1);
 
-        openLanguageDropdownButton.onClick.RemoveListener(OpenLanguageDropdown);
-        openLanguageDropdownButton.onClick.AddListener(CloseLanguageDropdown);
+        // Tween.ScaleY(chooseLanguageContainer, 1, duration: 0.3f);
 
-        for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
-        {
-            if (GameConstants.AvailableLanguages[i] == gameSetting.CurrentLanguage)
-            {
-                chooseLanguageButtonBackground[i].enabled = true;
-            }
-            else
-            {
-                chooseLanguageButtonBackground[i].enabled = false;
-            }
-        }
+        // openLanguageDropdownButton.onClick.RemoveListener(OpenLanguageDropdown);
+        // openLanguageDropdownButton.onClick.AddListener(CloseLanguageDropdown);
 
-        isAbleToHideOnClickOutside = false;
+        // for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)
+        // {
+        //     if (GameConstants.AvailableLanguages[i] == gameSetting.CurrentLanguage)
+        //     {
+        //         chooseLanguageButtonBackground[i].enabled = true;
+        //     }
+        //     else
+        //     {
+        //         chooseLanguageButtonBackground[i].enabled = false;
+        //     }
+        // }
+
+        // isAbleToHideOnClickOutside = false;
     }
 
     private void CloseLanguageDropdown()
