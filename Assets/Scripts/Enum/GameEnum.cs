@@ -69,7 +69,8 @@ public class GameEnum : MonoBehaviour
         UserConsent,
         SpecialLevelTutorial,
         FacebookGroup,
-        ChangeTheme
+        ChangeTheme,
+        Language
     }
 
     public enum GameFaction

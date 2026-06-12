@@ -177,6 +177,8 @@ public class BoosterTutorial : MonoBehaviour
 
     private void OnLevelStarted()
     {
+        bool isTutorial = false;
+
         foreach (var boosterType in allboosterTypes)
         {
             int boosterIndex = GetBoosterIndex(boosterType);
@@ -190,8 +192,17 @@ public class BoosterTutorial : MonoBehaviour
                 tutorialHand.transform.SetParent(boosterButton);
                 tutorialHand.transform.localPosition = Vector3.zero.AddY(-40);
 
+                isTutorial = true;
+
                 break;
             }
+        }
+
+        if (!isTutorial)
+        {
+            EndTutorial();
+            
+            return;
         }
 
         worldTutorialHand.gameObject.SetActive(false);

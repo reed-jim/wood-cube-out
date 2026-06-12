@@ -126,8 +126,14 @@ public class TMPWarpText : MonoBehaviour
 
         for (int i = 0; i < textInfo.meshInfo.Length; i++)
         {
-            textInfo.meshInfo[i].mesh.vertices =
-                textInfo.meshInfo[i].vertices;
+            try
+            {
+                textInfo.meshInfo[i].mesh.vertices = textInfo.meshInfo[i].vertices;
+            }
+            catch (System.Exception)
+            {
+                
+            }
         }
 
         tmp.UpdateVertexData(TMP_VertexDataUpdateFlags.Vertices);
