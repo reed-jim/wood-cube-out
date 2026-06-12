@@ -188,7 +188,9 @@ public class BuyBoosterPopup : BasePopup
 
             Hide(onCompletedAction: () =>
             {
-                useBoosterEvent?.Invoke(_boosterType);
+                InvokeShowResourcesEarnPopupPopupEvent(0, GetBoosterQuantities(_boosterType, 3), false);
+
+                // useBoosterEvent?.Invoke(_boosterType);
             });
         }
         else
@@ -225,7 +227,9 @@ public class BuyBoosterPopup : BasePopup
 
         Hide(onCompletedAction: () =>
         {
-            useBoosterEvent?.Invoke(_boosterType);
+            InvokeShowResourcesEarnPopupPopupEvent(0, GetBoosterQuantities(_boosterType, 1), false);
+
+            // useBoosterEvent?.Invoke(_boosterType);
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{_boosterType}");
         });
@@ -319,6 +323,29 @@ public class BuyBoosterPopup : BasePopup
 
         //     coinBalanceText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
         // }
+    }
+    #endregion
+
+    #region Util
+    private int[] GetBoosterQuantities(BoosterType boosterType, int boosterQuantity)
+    {
+        int[] boosterQuantites = new int[4];
+
+        int boosterIndex = GetBoosterIndex(boosterType);
+
+        for (int i = 0; i < boosterQuantites.Length; i++)
+        {
+            if (i == boosterIndex)
+            {
+                boosterQuantites[i] = boosterQuantity;
+            }
+            else
+            {
+                boosterQuantites[i] = 0;
+            }
+        }
+
+        return boosterQuantites;
     }
     #endregion
 }
