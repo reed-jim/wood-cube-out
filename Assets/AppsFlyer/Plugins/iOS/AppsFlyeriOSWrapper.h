@@ -10,10 +10,8 @@
 #import "AppsFlyerAttribution.h"
 #if __has_include(<AppsFlyerLib/AppsFlyerLib.h>)
 #import <AppsFlyerLib/AppsFlyerLib.h>
-#import "AppsFlyerLib/AppsFlyerLib-Swift.h"
 #else
 #import "AppsFlyerLib.h"
-#import "AppsFlyerLib-Swift.h"
 #endif
 
 @interface AppsFlyeriOSWarpper : NSObject <AppsFlyerLibDelegate, AppsFlyerDeepLinkDelegate>

@@ -189,7 +189,7 @@ public class RevivePopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
         }
 
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

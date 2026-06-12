@@ -197,7 +197,7 @@ public class GameEventManager : MonoBehaviour
             {
                 nextChest = GamePersistentVariable.chestQueue.Dequeue();
 
-                AdmobAdsMax.Instance.ResetAdsCooldown();
+                //GameController.Instance.admobAds.ResetAdsCooldown();
 
                 if (nextChest == "Star Chest")
                 {

@@ -22,15 +22,11 @@ using System.Collections.Generic;
 
 public class AppOpenAdManager
 {
-    // #if UNITY_ANDROID
-    //     private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/3614647346";
-    // #elif UNITY_IOS
-    //     private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/5619876469";
-    // #else
+
 #if UNITY_ANDROID
-    private string AD_UNIT_ID = "ca-app-pub-8467610367562059/6385633925";
-#elif UNITY_IPHONE
-    string AD_UNIT_ID = "ca-app-pub-8467610367562059/8456506291";
+    private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/3614647346";
+#elif UNITY_IOS
+    private const string AD_UNIT_ID = "ca-app-pub-9457878244675693/5619876469";
 #else
     private const string AD_UNIT_ID = "unexpected_platform";
 #endif
@@ -93,18 +89,13 @@ public class AppOpenAdManager
 
     public void ShowAdIfAvailable()
     {
-        if (UserData.IsRemoveAds)
-        {
+        if (GameController.Instance.useProfile.IsRemoveAds)
             return;
-        }
-
         if (!IsAdAvailable || isShowingAd)
         {
             LoadAd();
-
             return;
         }
-
         ad.OnAdFullScreenContentClosed += HandleAdDidDismissFullScreenContent;
         ad.OnAdFullScreenContentFailed += HandleAdFailedToPresentFullScreenContent;
         ad.OnAdFullScreenContentOpened += HandleAdDidPresentFullScreenContent;
@@ -146,13 +137,33 @@ public class AppOpenAdManager
 
     private void HandlePaidEvent(AdValue adValue)
     {
-        var revenue = adValue.Value / 1000000d;
+        Debug.LogFormat("Received paid event. (currency: {0}, value: {1}",
+            adValue.CurrencyCode, adValue.Value);
 
-        AppFlyerGplay.LogRevenue("app_open", "admob", "app_open_ads", "app_open_ads", revenue, "USD");
+        //try
+        //{
+        //    if (adValue == null) return;
+        //    double value = adValue.Value * 0.000001f;
 
-        AnalyticsController.LogAdsRevenue("ad_impression", GamePersistentVariable.currentLevel, "admob", "app_open_ads",
-            "app_open_ads", revenue, "USD");
-        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", GamePersistentVariable.currentLevel, "admob".ToLower(),
-            "app_open_ads", "app_open_ads", revenue, "USD");
+        //    Firebase.Analytics.Parameter[] adParameters =
+        //    {
+        //             new Firebase.Analytics.Parameter("ad_source", "admob"),
+        //             new Firebase.Analytics.Parameter("ad_format", "app_open_ads"),
+        //             new Firebase.Analytics.Parameter("currency","USD"),
+        //             new Firebase.Analytics.Parameter("value", value)
+        //        };
+        //    FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+
+        //    var dic = new Dictionary<string, string>
+        //        {
+        //            { "ad_format", "app_open_ads" }
+        //        };
+        //    AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob, value, "USD", dic);
+        //}
+        //catch
+        //{
+
+        //}
+
     }
 }

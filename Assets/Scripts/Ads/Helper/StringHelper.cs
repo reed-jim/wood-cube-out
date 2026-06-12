@@ -404,55 +404,6 @@ public class KeyPref
 
 public class FirebaseConfig
 {
-    #region SAFERIO
-    public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
-    public const string specialLevelDifficultyMultiplier = "special_level_difficulty_multiplier";
-    public const string ENABLE_JOINT = "enable_joint";
-    public const string IS_ENABLE_HINGE_JOINT = "is_enable_hinge_joint";
-    public const string IS_SHOW_BANNER = "is_show_banner";
-    public const string IS_SHOW_MREC = "is_show_mrec";
-    public const string IS_SHOW_SKIP_LEVEL_BUTTON = "is_show_skip_level_button";
-    public const string IS_SHOW_INTER_REPLAY_LEVEL = "is_show_inter_replay_level";
-    public const string IS_SHOW_INTER_LOSE_LEVEL = "is_show_inter_lose_level";
-    public const string MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP = "min_time_lose_level_to_allow_skip";
-    public const string IS_COLLECT_COIN_WIN_LEVEL = "is_collect_coin_win_level";
-    public const string MULTIPLIER_COIN_WIN_LEVEL = "multiplier_coin_win_level";
-    public const string IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD = "is_reduce_difficulty_after_rewarded_ad";
-    public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
-    public const string LEVEL_4_VARIANT = "level_4_variant";
-    public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
-    public const string IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION = "is_show_double_screw_boxes_suggestion";
-    public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
-    public const string IS_SHOW_TUTORIAL_LEVEL_1 = "is_show_tutorial_level_1";
-    public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
-    public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
-    public const string IAP_SUGGESTION_PACKAGE_INDEX = "iap_suggestion_package_index";
-    public const string MIN_FREE_LEVEL = "min_free_level";
-    public const string REMOVE_ADS_CODE = "remove_ads_code";
-    public const string BIG_REWARD_CODE = "big_reward_code";
-    public const string VALID_DEVICE_UNIQUE_IDENTIFIERS = "valid_device_unique_identifiers";
-    public const string TARGET_FPS = "target_fps";
-    public const string IS_PLAY_BOX_COMPLETE_FX = "is_play_box_complete_fx";
-    public const string IS_ENABLE_LOAD_LEVEL_PROGRESS = "is_enable_load_level_progress";
-    public const string REMOTE_CONFIG_LEVEL_LIST = "remote_config_level_list";
-    public const string DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS = "difficulty_weight_group_of_five_levels";
-    public const string BANNER_COOLDOWN = "banner_cooldown";
-    public const string MAX_LIVES = "max_lives";
-    public const string REPLENISH_LIFE_TIME = "replenish_life_time";
-    public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads";
-    public const string MIN_LEVEL_DISABLE_REWARDED_ADS = "min_level_disable_rewarded_ads";
-    public const string STAR_CHEST_CONFIG = "star_chest_config";
-    public const string DOUBLE_INTER_ADS_CONFIG = "double_inter_ads_config";
-    public const string LIVES_SYSTEM_CONFIG = "lives_system_config";
-    public const string DAILY_REWARD_CONFIG = "daily_reward_config";
-    public const string COIN_CHALLENGE_CONFIG = "coin_challenge_config";
-    public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
-    public const string SCREW_HOLE_LEFT_TO_LOSE = "screw_hole_left_to_lose";
-    public const string longTermUserDifficultyConfig = "long_term_user_difficulty_config";
-    public const string specialLevelConfig = "special_level_config";
-    public const string isDisableLoopLevel = "isTester";
-    public const string gameplayBackgroundConfig = "gameplay_background_config";
-    #endregion
 
     public const string DELAY_SHOW_INITSTIALL = "delay_show_initi_ads";//Thời gian giữa 2 lần show inital 30
     public const string LEVEL_START_SHOW_INITSTIALL = "level_start_show_initstiall";//Level bắt đầu show initial//3
@@ -505,22 +456,95 @@ public class FirebaseConfig
     public const string DEFAULT_NUM_ADD_STAND = "default_num_add_stand";
     public const string TIME_COOL_DOWN_PVP1_TICKET = "time_cool_down_pvp1_ticket";
 
+    //Tripple Match
+    public const string DEFAULT_NUM_ITEM = "default_num_{0}_item";
+    public const string BONUS_TIME_ITEM = "bonus_time_item";
+
+    public const string REVIEW_IAP_VERSION = "review_iap_version";
+    public const string REVIEW_FUNC_VERSION = "review_func_version";
+
+    public const string IS_TEST_LEVEL = "is_test_level";
+
+    public const string DEFAULT_NUM_ADD_BRANCH = "default_num_add_branch";//2
+    public const string DEFAULT_NUM_REMOVE_BOMB = "default_num_remove_bomb";//0
+    public const string DEFAULT_NUM_REMOVE_EGG = "default_num_remove_egg";//0
+    public const string DEFAULT_NUM_REMOVE_JAIL = "default_num_remove_jail";//0
+    public const string DEFAULT_NUM_REMOVE_SLEEP = "default_num_remove_sleep";//0
+    public const string DEFAULT_NUM_REMOVE_CAGE = "default_num_remove_cage";//0
+    public const string NUM_RETURN_CLAIM_VIDEO_REWARD = "num_return_claim_video_reward";//3
+    public const string DEFAULT_NUM_RETURN = "default_num_return";//2
+
+    public const string CONFERI_MUTIL_TIME_LEVEL = "conferi_mutil_time_level";
+    public const string START_LEVEL_BACK_TO_HOME = "start_level_back_to_home";
+
     //Banner Collap
-    public const string ENABLE_ADMOB_BANNER = "enable_banner_admob";
+    public const string ENABLE_ADMOB_BANNER = "enable_banner_admob1";
     public const string ENABLE_ADMOB_COLLAPSE_BANNER = "enable_collapse_banner_admob";
     public const string COOLDOWN_ADMOB_REFRESH = "cooldown_admob_refresh";
     public const string MINIMUM_TIME_SHOW_COLLAPSE = "minimum_time_show_collapse";
 
     public const string RELOAD_BANNER_COLLAPSE_TIME = "reload_banner_collapse_time";
-    public const string ENABLE_ADMOB_BANNER_COLLAP = "enable_admob_banner_collap";
+    public const string ENABLE_ADMOB_BANNER_COLLAP = "enable_admob_banner_collap3";
     public const string COOL_DOWN_SHOW_COLLAP_BANNER = "cool_down_show_collap_banner";
+    public const string DELAY_SHOW_INTER_IMAGE = "delay_show_inter_image";
 
-    // Interstitial
-    public const string ENABLE_INTERSTITIAL = "enable_interstitial";
-    public const string ENABLE_APP_OPEN_ADS = "enable_app_open_ads";
+    public const string FIRST_COUNTDOWN = "first_countdown";
+
+    public const string COME_BACK_HOME_WHEN_END_CHALLENGE = "come_back_home_when_end_challenge";
+
 
     //Controll level
     public const string ENABLE_HARD_LEVEL_SET = "enable_hard_level_set";
+
+    //NINH
+    public const string DIFFICULTY_MULTIPLIER = "difficulty_multiplier";
+    public const string specialLevelDifficultyMultiplier = "special_level_difficulty_multiplier";
+    public const string ENABLE_JOINT = "enable_joint";
+    public const string IS_ENABLE_HINGE_JOINT = "is_enable_hinge_joint";
+    public const string IS_SHOW_BANNER = "is_show_banner";
+    public const string IS_SHOW_MREC = "is_show_mrec";
+    public const string IS_SHOW_SKIP_LEVEL_BUTTON = "is_show_skip_level_button";
+    public const string IS_SHOW_INTER_REPLAY_LEVEL = "is_show_inter_replay_level";
+    public const string IS_SHOW_INTER_LOSE_LEVEL = "is_show_inter_lose_level";
+    public const string MIN_TIME_LOSE_LEVEL_TO_ALLOW_SKIP = "min_time_lose_level_to_allow_skip";
+    public const string IS_COLLECT_COIN_WIN_LEVEL = "is_collect_coin_win_level";
+    public const string MULTIPLIER_COIN_WIN_LEVEL = "multiplier_coin_win_level";
+    public const string IS_REDUCE_DIFFICULTY_AFTER_REWARDED_AD = "is_reduce_difficulty_after_rewarded_ad";
+    public const string SCREW_PORT_FACTION_DIFFICULTY_MODIFIER = "screw_port_faction_difficulty_modifier";
+    public const string LEVEL_4_VARIANT = "level_4_variant";
+    public const string IS_SHOW_BOOSTER_SUGGESTION = "is_show_booster_suggestion";
+    public const string IS_SHOW_DOUBLE_SCREW_BOXES_SUGGESTION = "is_show_double_screw_boxes_suggestion";
+    public const string IS_SHOW_IAP_SUGGESTION = "is_show_iap_suggestion";
+    public const string IS_SHOW_TUTORIAL_LEVEL_1 = "is_show_tutorial_level_1";
+    public const string MIN_LEVEL_SHOW_IAP_SUGGESTION = "min_level_show_iap_suggestion";
+    public const string LEVEL_INTERVAL_SHOW_BOOSTER_SUGGESTION = "level_interval_show_booster_suggestion";
+    public const string IAP_SUGGESTION_PACKAGE_INDEX = "iap_suggestion_package_index";
+    public const string MIN_FREE_LEVEL = "min_free_level";
+    public const string REMOVE_ADS_CODE = "remove_ads_code";
+    public const string BIG_REWARD_CODE = "big_reward_code";
+    public const string VALID_DEVICE_UNIQUE_IDENTIFIERS = "valid_device_unique_identifiers";
+    public const string TARGET_FPS = "target_fps";
+    public const string IS_PLAY_BOX_COMPLETE_FX = "is_play_box_complete_fx";
+    public const string IS_ENABLE_LOAD_LEVEL_PROGRESS = "is_enable_load_level_progress";
+    public const string REMOTE_CONFIG_LEVEL_LIST = "remote_config_level_list";
+    public const string DIFFICULTY_WEIGHT_GROUP_OF_FIVE_LEVELS = "difficulty_weight_group_of_five_levels";
+    public const string BANNER_COOLDOWN = "banner_cooldown";
+    public const string MAX_LIVES = "max_lives";
+    public const string REPLENISH_LIFE_TIME = "replenish_life_time";
+    public const string ENABLE_REWARDED_ADS = "enable_rewarded_ads";
+    public const string MIN_LEVEL_DISABLE_REWARDED_ADS = "min_level_disable_rewarded_ads";
+    public const string STAR_CHEST_CONFIG = "star_chest_config";
+    public const string DOUBLE_INTER_ADS_CONFIG = "double_inter_ads_config";
+    public const string LIVES_SYSTEM_CONFIG = "lives_system_config";
+    public const string DAILY_REWARD_CONFIG = "daily_reward_config";
+    public const string COIN_CHALLENGE_CONFIG = "coin_challenge_config";
+    public const string IS_ENABLE_LEADERBOARD = "is_enable_leaderboard";
+    public const string SCREW_HOLE_LEFT_TO_LOSE = "screw_hole_left_to_lose";
+    public const string longTermUserDifficultyConfig = "long_term_user_difficulty_config";
+    public const string specialLevelConfig = "special_level_config";
+    public const string isDisableLoopLevel = "isTester";
+    public const string gameplayBackgroundConfig = "gameplay_background_config";
+
 }
 
 

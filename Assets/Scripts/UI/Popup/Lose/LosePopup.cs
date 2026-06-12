@@ -150,7 +150,7 @@ public class LosePopup : BasePopup
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
-            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
         else
         {
@@ -174,7 +174,7 @@ public class LosePopup : BasePopup
 
     private void SkipLevel()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(
+         GameController.Instance.admobAds.ShowVideoReward(
             OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
     }
 

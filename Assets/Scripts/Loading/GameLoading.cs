@@ -51,7 +51,9 @@ public class GameLoading : MonoBehaviour
 
     #region MonoBehaviour Callbacks
 
-    private void Awake()
+   
+
+    public void Init()
     {
         SceneManager.sceneLoaded += OnSceneLoaded;
 
@@ -61,11 +63,7 @@ public class GameLoading : MonoBehaviour
 
         GamePersistentVariable.hasAppJustLaunched = true;
 
-        // blackBackgroundToPassPolicy.gameObject.SetActive(false);
-    }
 
-    void Start()
-    {
         SceneManager.LoadScene(3);
 
         return;
@@ -207,7 +205,7 @@ public class GameLoading : MonoBehaviour
                 {
                     // blackBackground.gameObject.SetActive(false);
 
-                    // AdmobAdsMax.Instance.ShowInterstitialAdmob();
+                    //  GameController.Instance.admobAds.ShowInterstitialAdmob();
 
                     // blackBackgroundToPassPolicy.gameObject.SetActive(true);
 

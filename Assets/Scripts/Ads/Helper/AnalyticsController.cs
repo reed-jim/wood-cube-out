@@ -1,4 +1,6 @@
 using AppsFlyerSDK;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.Analytics;
 using System;
 using System.Collections.Generic;
@@ -57,99 +59,40 @@ public class AnalyticsController : MonoBehaviour
         }
     }
 
-    //     public static void LogEventFacebook(string eventName, Dictionary<string, object> parameters)
-    //     {
-    //         if (FB.IsInitialized)
-    //         {
-    // #if !ENV_PROD
-    //             parameters["test"] = true;
-    // #endif
-    //             //FB.LogAppEvent(eventName, null, parameters);
-    //         }
-    //     }
+    //    public static void LogEventFacebook(string eventName, Dictionary<string, object> parameters)
+    //    {
+    //        if (FB.IsInitialized)
+    //        {
+    //#if !ENV_PROD
+    //            parameters["test"] = true;
+    //#endif
+    //            //FB.LogAppEvent(eventName, null, parameters);
+    //        }
+    //    }
 
     public static void SetUserProperties()
     {
         if (!firebaseInitialized) return;
 
-        FirebaseAnalytics.SetUserProperty(StringHelper.RETENTION_D, UserData.RetentionD.ToString());
-        FirebaseAnalytics.SetUserProperty(StringHelper.DAYS_PLAYED, UserData.DaysPlayed.ToString());
-        FirebaseAnalytics.SetUserProperty(StringHelper.PAYING_TYPE, UserData.PayingType.ToString());
-        FirebaseAnalytics.SetUserProperty(StringHelper.LEVEL, UserData.CurrentLevel.ToString());
+        FirebaseAnalytics.SetUserProperty(StringHelper.RETENTION_D, UseProfile.RetentionD.ToString());
+        FirebaseAnalytics.SetUserProperty(StringHelper.DAYS_PLAYED, UseProfile.DaysPlayed.ToString());
+        FirebaseAnalytics.SetUserProperty(StringHelper.PAYING_TYPE, UseProfile.PayingType.ToString());
+        FirebaseAnalytics.SetUserProperty(StringHelper.LEVEL, UseProfile.CurrentLevel.ToString());
     }
 
     #region Event
-    public static void LogAdsRevenue(string name_event, int level, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
-    {
-        Parameter[] AdRevenueParameters =
-        {
-                new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
-                new Parameter("play_mode", "normal"),
-                new Parameter("ad_source", ad_source),
-                new Parameter("ad_unit_name", ad_unit_name),
-                new Parameter("ad_format",  ad_format ?? ""),
-                new Parameter(FirebaseAnalytics.ParameterValue, value),
-                new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
-        };
-
-        FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
-
-        // try
-        // {
-        //     Parameter[] AdRevenueParameters =
-        //         {
-        //             new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
-        //             new Parameter("play_mode", "normal"),
-        //             new Parameter("ad_source", ad_source),
-        //             new Parameter("ad_unit_name", ad_unit_name),
-        //             new Parameter("ad_format",  ad_format ?? ""),
-        //             new Parameter(FirebaseAnalytics.ParameterValue, value),
-        //             new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
-
-        //         };
-
-        //     FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
-        // }
-        // catch (Exception e)
-        // {
-        // }
-    }
-
-    public static void TryLogAdsRevenue(string name_event, int level, string ad_source, string ad_unit_name, string ad_format, double value, string currency)
-    {
-        try
-        {
-            Parameter[] AdRevenueParameters =
-        {
-                new Parameter(FirebaseAnalytics.ParameterLevel, level.ToString()),
-                new Parameter("play_mode", "normal"),
-                new Parameter("ad_source", ad_source),
-                new Parameter("ad_unit_name", ad_unit_name),
-                new Parameter("ad_format",  ad_format ?? ""),
-                new Parameter(FirebaseAnalytics.ParameterValue, value),
-                new Parameter(FirebaseAnalytics.ParameterCurrency, currency)
-        };
-
-            FirebaseAnalytics.LogEvent(name_event, AdRevenueParameters);
-        }
-        catch (System.Exception)
-        {
-
-        }
-    }
-
     public void LogWatchVideo(ActionWatchVideo action, bool isHasVideo, bool isHasInternet, string level)
     {
         if (!firebaseInitialized) return;
-        // Parameter[] parameters = new Parameter[4]
-        // {
-        //     new Parameter("actionWatch", action.ToString()) ,
+        //Parameter[] parameters = new Parameter[4]
+        //{
+        //    new Parameter("actionWatch", action.ToString()) ,
         //     new Parameter("has_ads", isHasVideo.ToString()) ,
-        //     new Parameter("has_internet", isHasInternet.ToString()) ,
-        //     new Parameter("level", level)
-        // };
+        //      new Parameter("has_internet", isHasInternet.ToString()) ,
+        //       new Parameter("level", level)
+        //};
 
-        // FirebaseAnalytics.LogEvent("watch_video_game", parameters);
+        //FirebaseAnalytics.LogEvent("watch_video_game", parameters);
     }
 
     public void LogWatchInter(string action, bool isHasVideo, bool isHasInternet, string level)
@@ -213,7 +156,7 @@ public class AnalyticsController : MonoBehaviour
         }
     }
 
-    public void LogLevelComplet(int level, int timePlayLevel)
+    public void LogLevelComplet(int level, int timePlayLevel, int idHardMode)
     {
         try
         {
@@ -259,6 +202,21 @@ public class AnalyticsController : MonoBehaviour
         {
             //DWHLog.Log.LevelLog(UseProfile.CurrentLevel, UseProfile.CurrentLevel, timePlayLevel, 0, "", LevelStatus.pass);//Gọi khi pass level
             //Debug.Log
+            string hardType = "";
+            switch (idHardMode)
+            {
+                case 0:
+                    hardType = "normal";
+                    break;
+                case 1:
+                    hardType = "hard";
+                    break;
+                case 2:
+                    hardType = "super_hard";
+                    break;
+            }
+            new FLevelLog(level, hardType, LevelStatus.Pass, TimeSpan.FromSeconds(timePlayLevel), 0).Send();
+            Debug.Log(level + "_" + TimeSpan.FromSeconds(timePlayLevel));
         }
         catch
         {
@@ -453,10 +411,8 @@ public class AnalyticsController : MonoBehaviour
     {
         try
         {
-            if (firebaseInitialized)
-            {
-                FirebaseAnalytics.LogEvent("ad_inter_show");
-            }
+            //if (firebaseInitialized)
+            //    FirebaseAnalytics.LogEvent("ad_inter_show");
 
         }
         catch
@@ -468,6 +424,16 @@ public class AnalyticsController : MonoBehaviour
         {
             Dictionary<string, string> paramas = new Dictionary<string, string>();
             AppsFlyer.sendEvent("af_inters_displayed", paramas);
+        }
+        catch
+        {
+
+        }
+
+        try
+        {
+            //DWHLog.Log.AdsLog("", AdsType.Interstitial.ToString(), AdmobAds.InterstitialAdUnitId.ToString(), "", "", actionWatchLog, StateAds.Show.ToString());
+            //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.interstitial, actionWatchLog);
         }
         catch
         {
@@ -548,15 +514,15 @@ public class AnalyticsController : MonoBehaviour
 
     public void LogRevenueDay01(float revenue)
     {
-        if (UserData.RetentionD <= 1)
+        if (UseProfile.RetentionD <= 1)
         {
-            UserData.RevenueD0_D1 += revenue;
-            int cents = (int)(UserData.RevenueD0_D1 * 100);
+            UseProfile.RevenueD0_D1 += revenue;
+            int cents = (int)(UseProfile.RevenueD0_D1 * 100);
             if (cents >= 1 && cents <= 60)
             {
-                if (cents != UserData.PreviousRevenueD0_D1)
+                if (cents != UseProfile.PreviousRevenueD0_D1)
                 {
-                    UserData.PreviousRevenueD0_D1 = cents;
+                    UseProfile.PreviousRevenueD0_D1 = cents;
                     try
                     {
                         if (firebaseInitialized)
@@ -584,15 +550,15 @@ public class AnalyticsController : MonoBehaviour
     }
     public void LogDisplayedInterstitialDay01()
     {
-        if (UserData.RetentionD <= 1)
+        if (UseProfile.RetentionD <= 1)
         {
-            if (UserData.NumberOfDisplayedInterstitialD0_D1 >= 3 && UserData.NumberOfDisplayedInterstitialD0_D1 <= 30)
+            if (UseProfile.NumberOfDisplayedInterstitialD0_D1 >= 3 && UseProfile.NumberOfDisplayedInterstitialD0_D1 <= 30)
             {
                 try
                 {
                     if (firebaseInitialized)
                     {
-                        Firebase.Analytics.FirebaseAnalytics.LogEvent(string.Format("D0+D1_{0}_Interstitals", UserData.NumberOfDisplayedInterstitialD0_D1));
+                        Firebase.Analytics.FirebaseAnalytics.LogEvent(string.Format("D0+D1_{0}_Interstitals", UseProfile.NumberOfDisplayedInterstitialD0_D1));
                     }
                 }
                 catch
@@ -600,7 +566,7 @@ public class AnalyticsController : MonoBehaviour
                 try
                 {
                     Dictionary<string, string> paramas = new Dictionary<string, string>();
-                    AppsFlyer.sendEvent(string.Format("D0+D1_{0}_Interstitals", UserData.NumberOfDisplayedInterstitialD0_D1), paramas);
+                    AppsFlyer.sendEvent(string.Format("D0+D1_{0}_Interstitals", UseProfile.NumberOfDisplayedInterstitialD0_D1), paramas);
                 }
                 catch
                 { }
@@ -613,49 +579,11 @@ public class AnalyticsController : MonoBehaviour
         }
     }
 
-    // public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
-    // {
-    //     AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
-    // }
-    // public static void LogAdRevenueAppsflyer(MaxSdk.AdInfo impressionData)
-    // {
-    //     Dictionary<string, string> afParams = new Dictionary<string, string>
-    //     {
-    //         { "ad_unit_name", impressionData.AdUnitIdentifier },
-    //         { "ad_format", impressionData.AdFormat }
-    //     };
-
-    //     AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
-    // }
-    // public static void LogAdMaxRevenueAppsflyer(MaxSdk.AdInfo impressionData)
-    // {
-    //     Dictionary<string, string> afParams = new Dictionary<string, string>
-    //     {
-    //         { "ad_unit_name", impressionData.AdUnitIdentifier },
-    //         { "ad_format", impressionData.AdFormat }
-    //     };
-
-    //     AppsFlyerAdRevenue.logAdRevenue(impressionData.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.Revenue, "USD", afParams);
-    // }
+    public static void LogAdRevenueAppsflyer(string monetizationNetwork, AppsFlyerAdRevenueMediationNetworkType mediationNetwork, double revenue, string revenueCurrency, Dictionary<string, string> parameters)
+    {
+        AppsFlyerAdRevenue.logAdRevenue(monetizationNetwork, mediationNetwork, revenue, revenueCurrency, parameters);
+    }
     //public static void LogAdRevenueAppsflyer(IronSourceImpressionData impressionData)
-    //{
-    //    Dictionary<string, string> afParams = new Dictionary<string, string>
-    //    {
-    //        { "country", impressionData.country },
-    //        { "ad_unit", impressionData.instanceName },
-    //        { "ad_type", impressionData.adUnit}
-    //    };
-    //    // if (impressionData.adUnit == IronSourceAdUnits.REWARDED_VIDEO)
-    //    //     adType = "rewarded_video";
-    //    // else if(impressionData.adUnit == IronSourceAdUnits.INTERSTITIAL)
-    //    //     adType = "interstitial";
-    //    // else if (impressionData.adUnit == IronSourceAdUnits.BANNER)
-    //    //     adType = "banner";
-    //    // if(adType != "")
-    //    //     afParams.Add("ad_type", adType);
-    //    AppsFlyerAdRevenue.logAdRevenue(impressionData.adNetwork, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeIronSource, impressionData.revenue.Value, "USD", afParams);
-    //}
-    //public static void LogAdMaxRevenueAppsflyer(IronSourceImpressionData impressionData)
     //{
     //    Dictionary<string, string> afParams = new Dictionary<string, string>
     //    {

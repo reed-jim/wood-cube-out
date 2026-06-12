@@ -5,66 +5,44 @@ using System.Collections.Generic;
 using UnityEngine.Events;
 using GoogleMobileAds.Api;
 using GoogleMobileAds.Common;
+//using com.adjust.sdk;
 using Firebase.Analytics;
+using Newtonsoft.Json;
 using UnityEngine.SceneManagement;
 using AppsFlyerSDK;
-using GoogleMobileAds.Ump.Api;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon;
+using static MaxSdkBase;
+using EventDispatcher;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 
-public class AdmobAdsMax : MonoBehaviour
+public class AdmobAdsMax
+    : MonoBehaviour
 {
-    #region SAFERIO
-    private int _loadBannerRetryTime;
-    private bool _isBannerLoaded;
-
-
-    private InterstitialAd _interstitialAdmob;
-    #endregion
-
-
-
-
-
-    public static AdmobAdsMax Instance;
-
-    [Header("SCRIPTABLE OBJECT")]
-    [SerializeField] private IntVariable currentLevel;
-
     public static bool isAdmobInitDone;
+    public static bool isMaxInitDone;
 
 #if UNITY_ANDROID
     private const string MaxSdkKey =
-        "eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
+        "M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
 
-    private const string InterstitialAdUnitId = "948e190d8c5cd11d"; // check here
-    private const string RewardedAdUnitId = "34ea7232532db3db"; // check here
-    private const string BanerAdUnitId = "efc1069b84f4656f"; // check here
-    private const string mrecAdUnitId = "195ff2a11b92285d"; // check here
+    private const string InterstitialAdUnitId = "4dec3a272f533458";
+    private const string RewardedAdUnitId = "cb024cb6279767b8";
+    private const string BanerAdUnitId = "5e65a04d1e14efd3";
 #elif UNITY_IOS
     private const string MaxSdkKey =
-"eQt0q3679KmUyKeNcSzqC01eB-lILmfTnJoufGxpSn__n1NVhHLeMgxZOaICke451El4ZBfuZum9Qw4WxzpW52";
-    private const string InterstitialAdUnitId = "1ed3f17c4c1cb176";
-    private const string RewardedAdUnitId = "5a5d29ce1c57f419";
-    private const string BanerAdUnitId = "515e33c5e1389ee4";
-    private const string mrecAdUnitId = "f28550c606ced4ca";
+"M4GLwqezVT2WDo75OWFGOV873pVg6-3S3Kpz8Rxe_-9CnHI9oXPB2TI5LpnRnqvr8hpH8kw7i4KTMcc891KCad";
+    private const string InterstitialAdUnitId = "c8d31e48f08ed31e";
+    private const string RewardedAdUnitId = "02932bb866cbb369";
+    private const string BanerAdUnitId = "ff665c0a75cadcc4";
 #endif
-    // #if UNITY_ANDROID
-    //     private string _adUnitIdHigh = "ca-app-pub-8467610367562059/9656627420";
-    //     private string _adUnitIdMedium = "ca-app-pub-8467610367562059/2324932310";
-    //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/8893924685";
-    // #elif UNITY_IPHONE
-    //     private string _adUnitIdHigh = "ca-app-pub-3940256099942544/6978759866";
-    //     private string _adUnitIdMedium = "ca-app-pub-3940256099942544/6978759866";
-    //     private string REWARD_INTER_ID = "ca-app-pub-8467610367562059/4180939469";
-    private string REWARD_INTER_ID = "test";
-    // #else
-    //   private string _adUnitId = "unused";
-    // #endif
-    private RewardedInterstitialAd rewardedInterstitialAd;
+
     public float countdownAds;
     bool isShowingAds;
     private bool _isInited;
     private IEnumerator reloadBannerCoru;
     public UnityAction actionInterstitialClose;
+    public UnityAction actionShortInterstitialClose;
     private bool _isLoading;
     private UnityAction _actionClose;
     private UnityAction _actionRewardVideo;
@@ -72,170 +50,66 @@ public class AdmobAdsMax : MonoBehaviour
     private ActionWatchVideo actionWatchVideo;
     public Coroutine coroutineShowAppOpen;
 
-    // private APSBannerAdRequest bannerAdRequest;
-    // private const string SlotBannerId = "da89158c-1a1b-423d-bfd1-e5e2fbde42af";
-    // private const string SlotIpadLeaderId = "aad4cd1a-4473-4ad0-90bb-6947d6c79e73";
-    // private const string amazonAppId = "4fb1e5b9-4be3-4da2-9ab0-a5106875f7d4";
+    public bool enableMrec;
+    public GameObject blackImage;
 
-    private void OnSceneSwitched(Scene scene, LoadSceneMode loadSceneMode)
+    public void Init()
     {
-        _loadBannerRetryTime = 0;
-        _isBannerLoaded = false;
-
-        // RefreshAdmobBanner();
-    }
-
-    void Awake()
-    {
-        SceneManager.sceneLoaded += OnSceneSwitched;
-
-        if (Instance != null && Instance != this)
+        bool firstCoundown = RemoteConfigController.GetBoolConfig(FirebaseConfig.FIRST_COUNTDOWN, false);
+        if (firstCoundown)
         {
-            Destroy(gameObject);
-
-            return;
+            countdownAds = 1000;
         }
-        else
-        {
-            Instance = this;
-
-            DontDestroyOnLoad(gameObject);
-        }
-
-        // StartCoroutine(Init());
-
-        countdownAds = int.MaxValue;
-    }
-
-    void OnDestroy()
-    {
-        SceneManager.sceneLoaded -= OnSceneSwitched;
-    }
-
-    public IEnumerator Init()
-    {
-        yield return new WaitForSeconds(8);
-
         //countdownAds = 0;
-
-        // CostCenter setup
-        System.Threading.Tasks.Task<string> task = Firebase.Analytics.FirebaseAnalytics.GetAnalyticsInstanceIdAsync();
-
-        WaitForSeconds waitForSeconds = new WaitForSeconds(1);
-
-        int totalSecondWaiting = 0;
-
-        while (!task.IsCompleted && totalSecondWaiting < 20)
-        {
-            totalSecondWaiting++;
-
-            yield return waitForSeconds;
-        }
-
-        if (task.IsCompleted)
-        {
-            try
-            {
-                string firebaseAppInstanceId = task.Result;
-
-                MaxSdk.SetUserId(firebaseAppInstanceId);
-            }
-            catch (System.Exception)
-            {
-
-            }
-        }
-        //
-
+        #region Amazon
+        // InitAmazon();
+        #endregion
         #region Applovin Ads
+
+        countdownAdsInterImage = 0;
+
         MaxSdkCallbacks.OnSdkInitializedEvent += (MaxSdkBase.SdkConfiguration sdkConfiguration) =>
         {
-            // Debug.Log("LongTH_ MAX SDK Initialized");
+            Debug.Log("LongTH_ MAX SDK Initialized");
             InitInterstitial();
             InitRewardVideo();
             //InitializeBannerAds();
-
+            isMaxInitDone = true;
             // MaxSdk.ShowMediationDebugger();
             InitializeBannerMax();
-            InitializeMRecAds();
+            MaxSdk.SetCreativeDebuggerEnabled(false);
+            enableMrec = EnableMrec();
+            if (enableMrec)
+            {
+                InitializeMRecAds();
+            }
         };
-
-        SetupUserConsentUMP();
-
-        bool isConsent = GamePersistentVariable.isUMPPersonalizedAdsConsent;
-
-        if (DataUtility.Load("Is User Customized Consent", false))
-        {
-            isConsent = DataUtility.Load("User Consent", true);
-        }
-
-        MaxSdk.SetHasUserConsent(isConsent);
-        // MaxSdk.SetVerboseLogging(true);
+        MaxSdk.SetHasUserConsent(UseProfile.IsTrackedPremission);
+        //MaxSdk.SetVerboseLogging(true);
         MaxSdk.SetSdkKey(MaxSdkKey);
-        // MaxSdk.SetTestDeviceAdvertisingIdentifiers(new string[] { "a48c99cb-6de5-4884-9eb2-09547c185f4f" });
         MaxSdk.InitializeSdk();
+
         #endregion
 
         _isInited = true;
 
-        // //#if !UNITY_EDITOR
-        List<string> testDeviceIds = new List<string>();
-
-        testDeviceIds.Add("EFC077ABD1A90039A1AA9986094B4F5C");
-
-        MobileAds.SetRequestConfiguration(new RequestConfiguration
+        //#if !UNITY_EDITOR
+        Debug.Log("===== Init Admob ====");
+        MobileAds.Initialize((initStatus) =>
         {
-            TestDeviceIds = testDeviceIds
-        });
-
-        if (ConsentInformation.CanRequestAds())
-        {
-            MobileAds.Initialize((initStatus) =>
+            Debug.Log("===== Init Admob Done ====");
+            AppOpenAdManager.Instance.LoadAd(() =>
             {
-                AppOpenAdManager.Instance.LoadAd(() =>
-                {
-                    //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
-                });
-
-                InitBannerAdmob();
-                LoadInterstitialAdmob();
-
-                AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
-                isAdmobInitDone = true;
-                //nativeAdsManager.Instance.OnInitAdmobDone();
-                //LoadRewardedInterstitialAd();
+                //coroutineShowAppOpen = StartCoroutine(ShowAppOpenAds()); 
             });
-        }
+            InitBannerAdmob();
+            AppStateEventNotifier.AppStateChanged += OnAppStateChanged;
+            LoadInterstitialAd();
+            isAdmobInitDone = true;
+            //nativeAdsManager.Instance.OnInitAdmobDone();
+            //LoadRewardedInterstitialAd();
+        });
         //#endif
-    }
-
-    private void SetupUserConsentUMP()
-    {
-        GoogleMobileAds.Ump.Api.ConsentStatus status = ConsentInformation.ConsentStatus;
-
-        switch (status)
-        {
-            case GoogleMobileAds.Ump.Api.ConsentStatus.Obtained:
-                // User gave consent
-                GamePersistentVariable.isUMPPersonalizedAdsConsent = true;
-                break;
-
-            case GoogleMobileAds.Ump.Api.ConsentStatus.NotRequired:
-                // Not required (e.g., not in GDPR region)
-                GamePersistentVariable.isUMPPersonalizedAdsConsent = true;
-                break;
-
-            case GoogleMobileAds.Ump.Api.ConsentStatus.Required:
-                // Consent required but not yet obtained
-                GamePersistentVariable.isUMPPersonalizedAdsConsent = false;
-                break;
-
-            case GoogleMobileAds.Ump.Api.ConsentStatus.Unknown:
-            default:
-                // Unknown status, assume no consent
-                GamePersistentVariable.isUMPPersonalizedAdsConsent = false;
-                break;
-        }
     }
 
     //public IEnumerator ShowAppOpenAds()
@@ -246,31 +120,233 @@ public class AdmobAdsMax : MonoBehaviour
     //        AppOpenAdManager.Instance.ShowAdIfAvailable();
     //    }
     //}
+    #region Max Mrec
+#if TESTER_BANNER
+    private const string BANNER_MREC_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
+#else
+    private const string BANNER_MREC_ADMOB_ID = "ca-app-pub-9457878244675693/1639161209";
+#endif
+    private BannerView _bannerViewFakeMrec;
+    private GoogleMobileAds.Api.AdRequest bannerMrecRequest;
+    public bool isMrecFail = false;
+    public bool isMrecFakeShow = false;
+    private double _cooldownMrecBannerTimer;
+    public void LoadBannerMrecAdmob()
+    {
+        //GoogleMobileAds.Api.AdSize adaptiveSize =
+        //     GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
+        _bannerViewFakeMrec?.Destroy();
+        _bannerViewFakeMrec = new BannerView(BANNER_MREC_ADMOB_ID, GoogleMobileAds.Api.AdSize.MediumRectangle, AdPosition.Top);
+        _bannerViewFakeMrec.Hide();
+        bannerMrecRequest = new GoogleMobileAds.Api.AdRequest();
+        _bannerViewFakeMrec.LoadAd(bannerMrecRequest);
 
+        _bannerViewFakeMrec.OnBannerAdLoaded += OnBannerAdLoaded;
+
+        _bannerViewFakeMrec.OnAdPaid += OnAdPaid;
+
+        _bannerViewFakeMrec.OnBannerAdLoadFailed += OnBannerAdLoadFailed;
+
+        void OnBannerAdLoaded()
+        {
+            Debug.Log("load admob Mrec banner success=====");
+            _cooldownMrecBannerTimer =
+    RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
+            _bannerViewFakeMrec?.Hide();
+        }
+
+        void OnAdPaid(AdValue adValue)
+        {
+            if (adValue == null) return;
+            double value = adValue.Value * 0.000001f;
+
+            Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_source", "admob"),
+        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", value)
+    };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+
+            //nếu dùng Appsflyer
+            var dic = new Dictionary<string, string>
+    {
+        { "ad_format", "collapsible_banner" }
+    };
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //                value, "USD", dic);
+            //#endif
+        }
+
+        void OnBannerAdLoadFailed(LoadAdError error)
+        {
+            Debug.LogError("load admob banner fail=====");
+            _bannerViewFakeMrec?.Hide();
+        }
+    }
+
+    private void RefreshAdmobBannerFakeMrec()
+    {
+        Debug.Log("refresh banner fake mrec admob =====");
+        ShowMRec();
+    }
+
+    public bool EnableMrec()
+    {
+        return GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.None);
+    }
+
+    private bool IsAvaiableAdsMrec()
+    {
+        return isLoadedMrec;
+    }
+
+    public bool IsShowMrec()
+    {
+        return EnableMrec() && IsAvaiableAdsMrec();
+    }
+
+    public bool IsCanShowMrec()
+    {
+        if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+        {
+            if (IsShowMrec())
+            {
+                return IsShowMrec();
+            }
+            return isMrecFakeShow;
+        }
+        else
+        {
+            return IsShowMrec();
+        }
+    }
+
+#if TESTER
+    private const string MRecAdUnitId = "6fb959c7b9a69602";
+#elif UNITY_ANDROID
+    private const string MRecAdUnitId = "802c865561f1039d";
+#elif UNITY_IOS
+    private const string MRecAdUnitId = "6fb959c7b9a69602";
+#endif
+
+    bool isLoadedMrec;
+    public bool isShowMrec;
+    public void InitializeMRecAds()
+    {
+        if (GameController.Instance.useProfile.IsRemoveAds || !enableMrec)
+            return;
+        // Attach Callbacks
+        MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecAdLoadedEvent;
+        MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdFailedEvent;
+        MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecAdClickedEvent;
+        //MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent +=
+        //    OnAdRevenuePaidEvent; // MRECs are automatically sized to 300x250. show bottom trên banner ads khoảng 50px vì banner ads có height là 50px
+        //var density = MaxSdkUtils.GetScreenDensity();
+        //float mrecWidth = 300f;
+        //float mrecHeight = 250f;
+        //float bannerHeight = Screen.width / 6.4f;
+        //float mrecPosX = (Screen.width / density - mrecWidth) / 2f;
+
+        //float mrecPosY = Screen.safeArea.height / density - bannerHeight / density - mrecHeight - 10f;
+        //MaxSdk.CreateMRec(MRecAdUnitId, mrecPosX,
+        //    mrecPosY);
+        MaxSdk.CreateMRec(MRecAdUnitId, MaxSdk.AdViewPosition.TopCenter);
+    }
+
+    public void ShowMRec()
+    {
+        Debug.Log("MREC=============call show mrec" + EnableMrec());
+        if (GameController.Instance.useProfile.IsRemoveAds || !EnableMrec())
+            return;
+
+        if (isLoadedMrec)
+        {
+            if (isShowingCollap) return;
+            isShowMrec = true;
+            isMrecFail = false;
+            _bannerViewFakeMrec?.Hide();
+            MaxSdk.ShowMRec(MRecAdUnitId);
+            this.PostEvent(EventID.SHOW_MREC);
+            Debug.Log("MREC============= show mrec" + EnableMrec());
+        }
+        else
+        {
+            Debug.Log("MREC============= not loaded mrec");
+            if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+            {
+                _bannerViewFakeMrec?.Show();
+                isMrecFail = true;
+                isMrecFakeShow = true;
+            }
+        }
+    }
+    public void HideMRec()
+    {
+        if (!EnableMrec())
+            return;
+        //Debug.Log("MREC=============hide mrec");
+        isShowMrec = false;
+        isMrecFail = false;
+        MaxSdk.HideMRec(MRecAdUnitId);
+        _bannerViewFakeMrec?.Hide();
+    }
+
+    private void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+    {
+        isLoadedMrec = true;
+        isMrecFail = false;
+        // MRec ad is ready to be shown.
+        // If you have already called MaxSdk.ShowMRec(MRecAdUnitId) it will automatically be shown on the next MRec refresh.
+        Debug.Log("MREC=============MRec ad loaded");
+        if (isShowMrec) ShowMRec();
+    }
+
+    private void OnMRecAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
+    {
+        isLoadedMrec = false;
+        if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+        {
+            _bannerViewFakeMrec?.Show();
+            isMrecFail = true;
+            isMrecFakeShow = true;
+        }
+        this.RemoveListener(EventID.SHOW_MREC, null);
+        // MRec ad failed to load. MAX will automatically try loading a new ad internally.
+        Debug.Log("MREC=============MRec ad failed to load with error code: " + errorInfo.Code);
+    }
+
+    private void OnMRecAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
+    {
+        Debug.Log("MREC=============MRec ad clicked");
+    }
+
+    #endregion
     #region Admob Banner
+
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/2446388915"; // check here
+    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/1908612182";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    // private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/2014213617";
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/8079118845"; // check here
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9348118506";
 #endif
 #elif UNITY_IOS
 #if TESTER
-        private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-        private const string BANNER_ADMOB_ID = "ca-app-pub-8467610367562059/4521130713";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/6063245506";
 #endif
 #if TESTER
-        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-        private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-8467610367562059/7255105261";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9507666490";
 #endif
 #endif
     private bool _isShowAdmobBanner;
@@ -308,9 +384,9 @@ public class AdmobAdsMax : MonoBehaviour
     private void InitBannerAdmob()
     {
         LoadBannerAdmob();
+        LoadBannerMrecAdmob();
         LoadBannerCollap();
     }
-
     #region Collap Banner
     private BannerView _bannerViewCollap;
     private bool isReloadBannerCollap;
@@ -325,13 +401,12 @@ public class AdmobAdsMax : MonoBehaviour
     {
         _bannerViewCollap?.LoadAd(bannerCollapLoadRequest);
     }
-
     private void LoadBannerCollap()
     {
-        GoogleMobileAds.Api.AdSize adaptiveSize =
-            GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
+        //GoogleMobileAds.Api.AdSize adaptiveSize =
+        //    GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
         _bannerViewCollap?.Destroy();
-        _bannerViewCollap = new BannerView(BANNER_COLLAPSE_ADMOB_ID, adaptiveSize, AdPosition.Bottom);
+        _bannerViewCollap = new BannerView(BANNER_COLLAPSE_ADMOB_ID, GoogleMobileAds.Api.AdSize.Banner, AdPosition.Bottom);
         _bannerViewCollap.Hide();
         bannerCollapLoadRequest = new GoogleMobileAds.Api.AdRequest();
         //Admob request
@@ -349,35 +424,48 @@ public class AdmobAdsMax : MonoBehaviour
         timerReloadBannerCollap = 0;
         isReloadBannerCollap = false;
         timeReloadBannerCollap = RemoteConfigController.GetFloatConfig(FirebaseConfig.RELOAD_BANNER_COLLAPSE_TIME, 15);
+#if TEST_BANNER
+        _isShowAdmobCollap = true;
+#else
+        _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, true);
+#endif
 
-        _isShowAdmobCollap = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER_COLLAP, false);
+        Debug.Log($"Is show ads collap banner {_isShowAdmobCollap}");
 
         void OnBannerAdLoaded()
         {
             isReloadBannerCollap = false;
             isLoadedCollap = true;
+            Debug.Log("load admob banner collap  success=====");
         }
 
         void OnAdPaid(AdValue adValue)
         {
             if (adValue == null) return;
-            var revenue = adValue.Value / 1000000d;
-            try
-            {
-                AppFlyerGplay.LogRevenue("collapsible", "admob", "collapsible", "collapsible", revenue, "USD");
+            double value = adValue.Value * 0.000001f;
 
-                AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
-                AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
-                AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "collapsible", "collapsible", revenue, adValue.CurrencyCode);
-            }
-            catch (Exception e)
-            {
-                // ignored
-            }
+            Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_source", "admob"),
+        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", value)
+    };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+
+            //nếu dùng Appsflyer
+            var dic = new Dictionary<string, string>
+    {
+        { "ad_format", "collapsible_banner" }
+    };
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //                value, "USD", dic);
+            //#endif
         }
 
         void OnBannerAdLoadFailed(LoadAdError error)
         {
+            Debug.LogError("load admob banner collap fail=====");
             isLoadedCollap = false;
             isReloadBannerCollap = true;
             timerReloadBannerCollap = 0;
@@ -390,13 +478,14 @@ public class AdmobAdsMax : MonoBehaviour
     {
         if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
         {
-            if (UserData.IsRemoveAds)
+            if (GameController.Instance.useProfile.IsRemoveAds)
                 return;
 
             if (_isShowAdmobCollap)
             {
                 if (isLoadedCollap)
                 {
+                    Debug.Log("show banner collap===========");
                     _bannerView?.Hide();
                     MaxSdk.HideBanner(BanerAdUnitId);
                     _bannerViewCollap?.Show();
@@ -408,6 +497,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     public void DestroyBannerCollap()
     {
+        Debug.Log("destroy banner admob collap========");
         isShowingCollap = false;
         timerCooldownDestroyCollap = 0;
         _bannerViewCollap?.Hide();
@@ -432,35 +522,22 @@ public class AdmobAdsMax : MonoBehaviour
         bannerHomeLoadRequest.Extras["collapsible_request_id"] = Guid.NewGuid().ToString();
         _bannerViewHome.LoadAd(bannerHomeLoadRequest);
     }*/
-
     private bool isLoadedAdBanner;
 
     private void RefreshAdmobBanner()
     {
-        if (UserData.IsRemoveAds)
-        {
-            return;
-        }
-
-        if (!GamePersistentVariable.isShowBanner)
-        {
-            return;
-        }
-
+        Debug.Log("refresh banner admob =====");
+        _cooldownAdmobBannerTimer = RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
         _isTryLoadAdmobBanner = true;
-
-        if (_bannerView != null)
-        {
-            _bannerView.LoadAd(bannerHomeLoadRequest);
-        }
+        _bannerView.LoadAd(bannerHomeLoadRequest);
     }
 
     public void LoadBannerAdmob()
     {
-        GoogleMobileAds.Api.AdSize adaptiveSize =
-             GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
+        //GoogleMobileAds.Api.AdSize adaptiveSize =
+        //     GoogleMobileAds.Api.AdSize.GetCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(GoogleMobileAds.Api.AdSize.FullWidth);
         _bannerView?.Destroy();
-        _bannerView = new BannerView(BANNER_ADMOB_ID, adaptiveSize, AdPosition.Bottom);
+        _bannerView = new BannerView(BANNER_ADMOB_ID, GoogleMobileAds.Api.AdSize.Banner, AdPosition.Bottom);
         _bannerView.Hide();
         bannerHomeLoadRequest = new GoogleMobileAds.Api.AdRequest();
         lastRefreshCollapseBanner = DateTime.Now;
@@ -480,11 +557,16 @@ public class AdmobAdsMax : MonoBehaviour
 
         void OnBannerAdLoaded()
         {
-            // Debug.Log("load admob banner success=====");
+            Debug.Log("load admob banner success=====");
             _isTryLoadAdmobBanner = false;
+#if TEST_BANNER_MAX
+            var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, false);
+#elif TEST_BANNER
+            var isEnableAdmobBanner = true;
+#else
             var isEnableAdmobBanner = RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_ADMOB_BANNER, true);
-
-            // Debug.Log($"Is show ads admob banner {isEnableAdmobBanner}");
+#endif
+            Debug.Log($"Is show ads admob banner {isEnableAdmobBanner}");
             _isShowAdmobBanner = isEnableAdmobBanner;
             _cooldownAdmobBannerTimer =
                 RemoteConfigController.GetFloatConfig(FirebaseConfig.COOLDOWN_ADMOB_REFRESH, 30);
@@ -494,15 +576,30 @@ public class AdmobAdsMax : MonoBehaviour
 
         void OnAdPaid(AdValue adValue)
         {
-            var revenue = adValue.Value / 1000000d;
+            if (adValue == null) return;
+            double value = adValue.Value * 0.000001f;
 
+            Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_source", "admob"),
+        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", value)
+    };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+
+            //nếu dùng Appsflyer
+            var dic = new Dictionary<string, string>
+    {
+        { "ad_format", "collapsible_banner" }
+    };
+            //#if APPSFLYER_BANNER
+            //            AppsFlyerAdRevenue.logAdRevenue("Admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //                value, "USD", dic);
+            //#endif
             try
             {
-                AppFlyerGplay.LogRevenue("banner", "admob", "banner", "banner", revenue, "USD");
-
-                AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
-                AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
-                AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "banner", "banner", revenue, adValue.CurrencyCode);
+                BannerLogStatistic.Instance.Log("GamePlay_Bottom", adValue.Precision.ToString(), adValue.CurrencyCode,
+        adValue.Value, "Admob", "Admob");
             }
             catch (Exception e)
             {
@@ -512,14 +609,16 @@ public class AdmobAdsMax : MonoBehaviour
 
         void OnBannerAdLoadFailed(LoadAdError error)
         {
-            // Debug.LogError("load admob banner fail=====");
+            Debug.LogError("load admob banner fail=====");
             isLoadedAdBanner = false;
             _isTryLoadAdmobBanner = true;
             _cooldownAdmobBannerTimer = 15;
             ShowBanner();
         }
     }
+
     #endregion
+
 
     public void InitializeBannerMax()
     {
@@ -534,16 +633,11 @@ public class AdmobAdsMax : MonoBehaviour
         ShowBanner();
     }
 
-    private void CreateMaxBannerAd()
-    {
-        MaxSdk.CreateBanner(BanerAdUnitId, MaxSdkBase.BannerPosition.BottomCenter);
-        MaxSdk.SetBannerPlacement(BanerAdUnitId, "MY_BANNER_PLACEMENT");
-    }
 
     private void OnBannerAdLoadedEvent(string obj, MaxSdk.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Banner - OnBannerAdLoadedEvent ++ {adInfo} \n");
-        // Debug.Log("Request success");
+        Debug.Log($"LongTH_ Banner - OnBannerAdLoadedEvent ++ {adInfo} \n");
+        Debug.Log("Request success");
         if (reloadBannerCoru != null)
         {
             StopCoroutine(reloadBannerCoru);
@@ -554,13 +648,13 @@ public class AdmobAdsMax : MonoBehaviour
     private void OnBannerAdClickedEvent(string obj, MaxSdk.AdInfo adInfo)
     {
         //inter click
-        // Debug.Log($"LongTH_ Banner - OnBannerAdClickedEvent ++ {adInfo} \n");
-        // Debug.Log("Click Baner !!!");
+        Debug.Log($"LongTH_ Banner - OnBannerAdClickedEvent ++ {adInfo} \n");
+        Debug.Log("Click Baner !!!");
     }
 
     private void OnBannerAdLoadFailedEvent(string arg1, MaxSdk.ErrorInfo errInfo)
     {
-        // Debug.Log($"LongTH_ Banner - OnBannerAdLoadFailedEvent ++ {errInfo} \n");
+        Debug.Log($"LongTH_ Banner - OnBannerAdLoadFailedEvent ++ {errInfo} \n");
         if (reloadBannerCoru != null)
         {
             StopCoroutine(reloadBannerCoru);
@@ -576,272 +670,18 @@ public class AdmobAdsMax : MonoBehaviour
         InitializeRewardedAds();
     }
 
-    #region Double Inter
-    bool interOneFinished = false;
-    bool interSecondFinished = false;
-    private bool _isShowingAds;
-
-    UnityAction _actionTwoIniterClose;
-    UnityAction _actionShowSecondInterAd;
-
-    public void ShowDoubleInterstitialAds(UnityAction onDoubleInterClosed, bool isShowBreakAds = true, string actionWatchLog = "other", bool isShowImmediatly = false)
-    {
-        if (UserData.IsRemoveAds)
-        {
-            onDoubleInterClosed?.Invoke();
-
-            interOneFinished = true;
-            interSecondFinished = true;
-            _isShowingAds = false;
-
-            return;
-        }
-
-        interOneFinished = false;
-        interSecondFinished = false;
-        _isShowingAds = true;
-
-        _actionTwoIniterClose = onDoubleInterClosed;
-        _actionShowSecondInterAd = () =>
-        {
-            ShowInterstitialAdmob(
-                onAdClosed: () =>
-                {
-                    interSecondFinished = true;
-
-                    CheckAllAdsClosed();
-                },
-                isShowAdBreak: false,
-                isIgnoreCooldown: true
-            );
-        };
-
-        if (isShowImmediatly)
-        {
-            //     GameController.Instance.AdsController.ShowInterstitial(
-            //    isShowImmediatly, actionWatchLog, () =>
-            //    {
-            //        interOneFinished = true;
-            //        CheckAllAdsClosed();
-            //    }, null, isShowBreakAds
-            //    );
-
-            //     if (!isShowBreakAds)
-            //     {
-            //         _actionIniterAd?.Invoke();
-            //     }
-        }
-        else
-        {
-            if (countdownAds > GamePersistentVariable.doubleInterAdsConfig.cooldown)
-            {
-                if (isShowBreakAds)
-                {
-                    AdsBreakScreen.Instance.Show(() =>
-                    {
-                        StartShowDoubleInter();
-                    });
-                }
-                else
-                {
-                    StartShowDoubleInter();
-                }
-
-                countdownAds = 0;
-            }
-            else
-            {
-                onDoubleInterClosed?.Invoke();
-
-                AdsBreakScreen.Instance.Hide();
-
-                interOneFinished = true;
-                interSecondFinished = true;
-                _isShowingAds = false;
-            }
-        }
-
-        void StartShowDoubleInter()
-        {
-            ShowInterstitial(
-                true,
-                actionWatchLog,
-                actionIniterClose: () =>
-                {
-                    interOneFinished = true;
-
-                    CheckAllAdsClosed();
-
-                    _actionShowSecondInterAd?.Invoke();
-                },
-                isShowAdBreak: false
-            );
-
-            // _actionShowSecondInterAd?.Invoke();
-        }
-    }
-
-    void CheckAllAdsClosed()
-    {
-        if (interOneFinished && interSecondFinished)
-        {
-            _actionTwoIniterClose?.Invoke();
-
-            _isShowingAds = false;
-        }
-    }
-    #endregion
-
-    #region Admob Inter
-#if UNITY_ANDROID
-    private string _adUnitId = "ca-app-pub-8467610367562059/2389863144"; // check here
-#elif UNITY_IPHONE
-  private string _adUnitId = "ca-app-pub-8467610367562059/3541554484";
-#else
-  private string _adUnitId = "unused";
-#endif
-
-    private Action _actionInterAdmobClosed;
-
-    public void LoadInterstitialAdmob()
-    {
-        if (_interstitialAdmob != null)
-        {
-            _interstitialAdmob.Destroy();
-            _interstitialAdmob = null;
-        }
-
-        var adRequest = new AdRequest();
-
-        InterstitialAd.Load(_adUnitId, adRequest,
-            (InterstitialAd ad, LoadAdError error) =>
-            {
-                if (error != null || ad == null)
-                {
-                    Debug.LogError("interstitial ad failed to load an ad " +
-                                   "with error : " + error);
-                    return;
-                }
-
-                Debug.Log("Interstitial ad loaded with response : "
-                          + ad.GetResponseInfo());
-
-                _interstitialAdmob = ad;
-
-                RegisterEventHandlers(_interstitialAdmob);
-            });
-    }
-
-    public void ShowInterstitialAdmob(Action onAdClosed = null, bool isShowAdBreak = true, bool isIgnoreCooldown = false)
-    {
-        if (UserData.IsRemoveAds)
-        {
-            onAdClosed?.Invoke();
-
-            return;
-        }
-
-        bool isInCooldown = countdownAds <= GamePersistentVariable.doubleInterAdsConfig.cooldown && !isIgnoreCooldown;
-
-        if (!isInCooldown)
-        {
-            _actionInterAdmobClosed = onAdClosed;
-
-            if (_interstitialAdmob != null && _interstitialAdmob.CanShowAd())
-            {
-                if (isShowAdBreak)
-                {
-                    AdsBreakScreen.Instance.Show(onCompleteAction: () =>
-                    {
-                        _interstitialAdmob.Show();
-                    });
-                }
-                else
-                {
-                    _interstitialAdmob.Show();
-                }
-            }
-            else
-            {
-                onAdClosed?.Invoke();
-            }
-
-            countdownAds = 0;
-        }
-        else
-        {
-            onAdClosed?.Invoke();
-        }
-    }
-
-    private void RegisterEventHandlers(InterstitialAd interstitialAd)
-    {
-        interstitialAd.OnAdPaid += (AdValue adValue) =>
-        {
-            try
-            {
-                var revenue = adValue.Value / 1000000d;
-
-                try
-                {
-                    AppFlyerGplay.LogRevenue("inter", "admob", "inter", "inter", revenue, "USD");
-
-                    AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
-                    AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
-                    AnalyticsController.LogAdsRevenue("sub_revenue", currentLevel.Value, "admob", "inter", "inter", revenue, adValue.CurrencyCode);
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-            catch (System.Exception)
-            {
-
-            }
-        };
-        interstitialAd.OnAdImpressionRecorded += () =>
-        {
-            Debug.Log("Interstitial ad recorded an impression.");
-        };
-        interstitialAd.OnAdClicked += () =>
-        {
-            Debug.Log("Interstitial ad was clicked.");
-        };
-        interstitialAd.OnAdFullScreenContentOpened += () =>
-        {
-            Debug.Log("Interstitial ad full screen content opened.");
-        };
-        interstitialAd.OnAdFullScreenContentClosed += () =>
-        {
-            _actionInterAdmobClosed?.Invoke();
-
-            AdsBreakScreen.Instance.HideAnim();
-
-            LoadInterstitialAdmob();
-        };
-        interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
-        {
-            _actionInterAdmobClosed?.Invoke();
-
-            AdsBreakScreen.Instance.HideAnim();
-
-            LoadInterstitialAdmob();
-        };
-    }
-    #endregion
-
     #region Interstitial
+
     private void OnInterstitialLoadedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
         _isLoading = true;
         GameController.Instance.AnalyticsController.LogInterReady();
     }
 
     private void OnInterstitialFailedEvent(string adUnitId, MaxSdk.ErrorInfo errInfo)
     {
-        // Debug.Log($"LongTH_ Interstitial - OnInterstitialFailedEvent ++ {errInfo} \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialFailedEvent ++ {errInfo} \n");
         _isLoading = false;
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
@@ -864,7 +704,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void InterstitialFailedToDisplayEvent(string adUnitId, MaxSdk.ErrorInfo errInfo, MaxSdk.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Interstitial - InterstitialFailedToDisplayEvent ++ {errInfo} ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Interstitial - InterstitialFailedToDisplayEvent ++ {errInfo} ++ {adInfo} \n");
         _isLoading = false;
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
@@ -874,7 +714,7 @@ public class AdmobAdsMax : MonoBehaviour
     private void OnInterstitialHiddenEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
         _isLoading = false;
-        // Debug.Log($"LongTH_ Interstitial - OnInterstitialHiddenEvent  ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Interstitial - OnInterstitialHiddenEvent  ++ {adInfo} \n");
         Time.timeScale = 1;
 
         _actionRewardVideo?.Invoke();
@@ -885,19 +725,11 @@ public class AdmobAdsMax : MonoBehaviour
 
         actionInterstitialClose?.Invoke();
         actionInterstitialClose = null;
-
+        countdownAdsInterImage = 0;
         countdownAds = 0;
         RequestInterstitial();
         //RefeshCloseAds();
         Invoke("RefeshCloseAds", 1);
-
-        // Ad Duration
-        TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
-
-        if (adDuration.TotalSeconds < 1000)
-        {
-            AdsDurationObserver.duration += adDuration.TotalSeconds;
-        }
 
         //if (GamePlayControl.Instance != null)
         //{
@@ -907,58 +739,53 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void MaxSdkCallbacks_OnInterstitialDisplayedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialDisplayedEvent  ++ {adInfo} \n");
-        // Debug.Log("InterstitialAdOpenedEvent");
+        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialDisplayedEvent  ++ {adInfo} \n");
+        Debug.Log("InterstitialAdOpenedEvent");
         _isLoading = false;
         Time.timeScale = 0;
     }
 
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialClickedEvent  ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialClickedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogInterClick();
         _isLoading = false;
     }
 
     public bool ShowInterstitial(bool isShowImmediatly = false, string actionWatchLog = "other",
-        UnityAction actionIniterClose = null, UnityAction actionIniterShow = null, string level = null,
-        bool isInGame = true, bool isShowAdBreak = true)
+        UnityAction actionIniterClose = null, string level = null)
     {
-        // Debug.Log("show inter ========" + countdownAds);
+        blackImage.gameObject.SetActive(true);
+        actionIniterClose += () => { blackImage.gameObject.SetActive(false); };
 
-        if (UserData.IsRemoveAds)
+        adWhere = actionWatchLog;
+
+        Debug.Log("show inter ========" + countdownAds);
+        if (GameController.Instance.useProfile.IsRemoveAds)
         {
-            // Debug.Log("show inter ======== is RemoveAds ");
-
+            Debug.Log("show inter ======== is RemoveAds ");
             //if (!isInGame)
-
             actionIniterClose?.Invoke();
-
             return false;
         }
 
-        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_INTERSTITIAL, false))
-        {
-            actionIniterClose?.Invoke();
+#if UNITY_EDITOR
+        actionIniterClose?.Invoke();
+        return true;
+#endif
 
-            return false;
-        }
-
-        if ((UserData.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config
-                .interstitials.minimumLevel && countdownAds > GameController.Instance.segmentController
-                .GetCurrentSegment().adsData.config.interstitials.minimumInterval) ||
-            isShowImmediatly)
+        if (UseProfile.CurrentLevel > RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 3))
         {
-            if (isShowAdBreak)
+            GameController.Instance.AnalyticsController.LoadInterEligible();
+            if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 90))
             {
-                AdsBreakScreen.Instance.Show(() =>
-                {
-                    ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
-                });
+                Debug.Log("show inter ========" + countdownAds);
+                ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose);
             }
             else
             {
-                ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose, isInGame: isInGame);
+                if (actionIniterClose != null)
+                    actionIniterClose();
             }
         }
         else
@@ -976,63 +803,36 @@ public class AdmobAdsMax : MonoBehaviour
     }
 
     private void ShowInterstitialHandle(bool isShowImmediatly = false, string actionWatchLog = "other",
-        UnityAction actionIniterClose = null, string level = null, bool isInGame = false)
+        UnityAction actionIniterClose = null, string level = null)
     {
-        actionIniterClose += () =>
+        actionIniterClose += () => { IsCooldownAdmobBanner = true; };
+        if (UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
         {
-            AdsBreakScreen.Instance.Hide();
-
-            IsCooldownAdmobBanner = true;
-        };
+            var close = actionIniterClose;
+            actionIniterClose = () => { ShowInterstitialAd(true, actionIniterClose: close); };
+        }
 
         if (IsLoadedInterstitial())
         {
             isShowingAds = true;
             oldTime = DateTime.Now;
 
-            if (isInGame)
+            Debug.Log("show inter ======");
+            actionInterstitialClose = actionIniterClose;
+            IsCooldownAdmobBanner = false;
+            MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
+            countdownAds = 0;
+            GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+            try
             {
-                // Debug.Log("show inter ======");
-                // AdBreakBox.Setup().Show(() =>
-                // {
-                //     actionInterstitialClose = actionIniterClose;
-                //     IsCooldownAdmobBanner = false;
-                //     MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-                //     countdownAds = 0;
-                //     GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-
-                //     UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
-                //     UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-                // });
-
-                actionInterstitialClose = actionIniterClose;
-                IsCooldownAdmobBanner = false;
-
-                AdsDurationObserver.startTime = DateTime.Now;
-
-                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-
-                countdownAds = 0;
-                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-
-                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
-                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
+                //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Interstitial, actionWatchLog);
             }
-            else
+            catch (Exception e)
             {
-                actionInterstitialClose = actionIniterClose;
-                IsCooldownAdmobBanner = false;
-
-                AdsDurationObserver.startTime = DateTime.Now;
-
-                MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
-
-                countdownAds = 0;
-                GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
-
-                UserData.NumberOfAdsInDay = UserData.NumberOfAdsInDay + 1;
-                UserData.NumberOfAdsInPlay = UserData.NumberOfAdsInPlay + 1;
+                Debug.LogError(e.Message);
             }
+            UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+            UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
         }
         else
         {
@@ -1066,7 +866,203 @@ public class AdmobAdsMax : MonoBehaviour
 
     #endregion
 
-    #region Rewarded
+    #region Inter admob
+
+    // These ad units are configured to always serve test ads.
+#if TESTER
+    private string _adUnitIdInter = "ca-app-pub-3940256099942544/1033173712";
+#elif UNITY_ANDROID
+    private string _adUnitIdInter = "ca-app-pub-9457878244675693/8113070216";
+#elif UNITY_IPHONE
+  private string _adUnitIdInter = "ca-app-pub-8467610367562059/5655666608";
+#endif
+
+    private InterstitialAd _interstitialAd;
+
+    /// <summary>
+    /// Loads the interstitial ad.
+    /// </summary>
+    public void LoadInterstitialAd()
+    {
+        // Clean up the old ad before loading a new one.
+        if (_interstitialAd != null)
+        {
+            _interstitialAd.Destroy();
+            _interstitialAd = null;
+        }
+
+        Debug.Log("Loading the interstitial ad.");
+        GameController.Instance.AnalyticsController.LogInterLoad();
+        // create our request used to load the ad.
+        var adRequest = new AdRequest();
+
+        // send the request to load the ad.
+        InterstitialAd.Load(_adUnitIdInter, adRequest,
+            (InterstitialAd ad, LoadAdError error) =>
+            {
+                // if error is not null, the load request failed.
+                if (error != null || ad == null)
+                {
+                    Debug.LogError("interstitial ad failed to load an ad " +
+                                   "with error : " + error);
+                    return;
+                }
+
+                Debug.Log("Interstitial ad loaded with response : "
+                          + ad.GetResponseInfo());
+
+                _interstitialAd = ad;
+                RegisterEventHandlers(_interstitialAd);
+            });
+    }
+
+    public bool CheckCanShowShortInter()
+    {
+        if (_interstitialAd == null || !_interstitialAd.CanShowAd())
+        {
+            LoadInterstitialAd();
+        }
+
+        return (!GameController.Instance.useProfile.IsRemoveAds && _interstitialAd != null && _interstitialAd.CanShowAd()
+            && UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
+                                        && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
+    }
+
+    /// <summary>
+    /// Shows the interstitial ad.
+    /// </summary>
+    public float countdownAdsInterImage;
+    public bool ShowInterstitialAd(bool isShowImmediatly, UnityAction actionIniterClose = null)
+    {
+        blackImage.gameObject.SetActive(true);
+        Debug.Log("Check Enable Short Inter:" +
+                       GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
+        if (GameController.Instance.useProfile.IsRemoveAds)
+        {
+            actionIniterClose?.Invoke();
+            return false;
+        }
+
+        if (isShowImmediatly || countdownAdsInterImage >
+            GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.delayShow)
+        {
+            if (CheckCanShowShortInter())
+            {
+                Debug.Log("Showing interstitial ad.");
+                UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
+                UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
+                GameController.Instance.AnalyticsController.LogInterShow("LoadingInter");
+                actionShortInterstitialClose = actionIniterClose;
+                _interstitialAd.Show();
+            }
+            else
+            {
+                Debug.LogError("Interstitial ad is not ready yet.");
+                if (_interstitialAd == null || !_interstitialAd.CanShowAd())
+                {
+                    LoadInterstitialAd();
+                }
+                if (actionIniterClose != null)
+                    actionIniterClose();
+            }
+        }
+        else
+        {
+            if (actionIniterClose != null)
+                actionIniterClose();
+        }
+        // if (actionIniterClose != null)
+        //     actionIniterClose();
+
+        return true;
+    }
+
+    private void RegisterEventHandlers(InterstitialAd interstitialAd)
+    {
+        // Raised when the ad is estimated to have earned money.
+        interstitialAd.OnAdPaid += (AdValue adValue) =>
+        {
+            Debug.Log(String.Format("Interstitial ad paid {0} {1}.",
+                adValue.Value,
+                adValue.CurrencyCode));
+
+            if (adValue == null) return;
+            double value = adValue.Value * 0.000001f;
+
+            Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_source", "admob"),
+        new Firebase.Analytics.Parameter("ad_format", "collapsible_banner"),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", value)
+    };
+            FirebaseAnalytics.LogEvent("ad_impression", adParameters);
+
+            var dic = new Dictionary<string, string>
+    {
+        { "ad_format", "dup_inter" }
+    };
+            //        AppsFlyerAdRevenue.logAdRevenue("admob", AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeGoogleAdMob,
+            //value, "USD", dic);
+            try
+            {
+                new FAdLog(AdType.Interstitial, adWhere, adValue.Precision.ToString(),
+                    "", value, "Admob", "Admob").Send();
+            }
+            catch
+            {
+
+            }
+        };
+        // Raised when an impression is recorded for an ad.
+        interstitialAd.OnAdImpressionRecorded += () => { Debug.Log("Interstitial ad recorded an impression."); };
+        // Raised when a click is recorded for an ad.
+        interstitialAd.OnAdClicked += () => { Debug.Log("Interstitial ad was clicked."); };
+        // Raised when an ad opened full screen content.
+        interstitialAd.OnAdFullScreenContentOpened += () =>
+        {
+            isShowingAds = true;
+            Time.timeScale = 0;
+            Debug.Log("Interstitial ad full screen content opened.");
+        };
+        // Raised when the ad closed full screen content.
+        interstitialAd.OnAdFullScreenContentClosed += () =>
+        {
+            StartCoroutine(OnAdFullScreenContentClosed());
+        };
+        // Raised when the ad failed to open full screen content.
+        interstitialAd.OnAdFullScreenContentFailed += (AdError error) =>
+        {
+            Debug.LogError("Interstitial ad failed to open full screen content " +
+                           "with error : " + error);
+            StartCoroutine(OnAdFullScreenContentClosed());
+            LoadInterstitialAd();
+        };
+    }
+
+    private IEnumerator OnAdFullScreenContentClosed()
+    {
+        yield return null;
+        try
+        {
+            this.actionShortInterstitialClose?.Invoke();
+            actionShortInterstitialClose = null;
+            isShowingAds = false;
+            Time.timeScale = 1;
+            countdownAdsInterImage = 0;
+            Debug.Log("Interstitial ad full screen content closed.");
+            LoadInterstitialAd();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    #endregion
+
+    #region Video Reward
+
     private void LoadRewardedAd()
     {
         MaxSdk.LoadRewardedAd(RewardedAdUnitId);
@@ -1074,13 +1070,13 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
         GameController.Instance.AnalyticsController.LogVideoRewardReady();
     }
 
     private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo)
     {
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
         Invoke("LoadRewardedAd", 15);
         GameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
             errInfo.Message.ToString());
@@ -1088,7 +1084,7 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnRewardedAdFailedToDisplayEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo, MaxSdkBase.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedToDisplayEvent  ++ {errInfo} ++ {adInfo} \n");
         isVideoDone = false;
 
         //if (IsLoadedInterstitial())
@@ -1104,12 +1100,13 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnRewardedAdDisplayedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDisplayedEvent ++ {adInfo} \n");
         isVideoDone = false;
     }
 
     private void OnRewardedAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
         GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
@@ -1122,7 +1119,7 @@ public class AdmobAdsMax : MonoBehaviour
         //}
 
         // Rewarded ad is hidden. Pre-load the next ad
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdDismissedEvent ++ {adInfo} \n");
         _actionClose?.Invoke();
         _actionClose = null;
         if (_actionRewardVideo != null)
@@ -1130,14 +1127,6 @@ public class AdmobAdsMax : MonoBehaviour
         _actionRewardVideo = null;
         LoadRewardedAd();
         Invoke("RefeshCloseAds", 1);
-
-        // Ad Duration
-        TimeSpan adDuration = DateTime.Now - AdsDurationObserver.startTime;
-
-        if (adDuration.TotalSeconds < 1000)
-        {
-            AdsDurationObserver.duration += adDuration.TotalSeconds;
-        }
     }
 
     bool isVideoDone;
@@ -1145,7 +1134,7 @@ public class AdmobAdsMax : MonoBehaviour
     private void OnRewardedAdReceivedRewardEvent(string adUnitId, MaxSdk.Reward reward, MaxSdkBase.AdInfo adInfo)
     {
         // Rewarded ad was displayed and user should receive the reward
-        // Debug.Log($"LongTH_ Rewarded - OnRewardedAdReceivedRewardEvent ++ {adInfo} ++ {reward} \n");
+        Debug.Log($"LongTH_ Rewarded - OnRewardedAdReceivedRewardEvent ++ {adInfo} ++ {reward} \n");
         isVideoDone = true;
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
@@ -1165,7 +1154,6 @@ public class AdmobAdsMax : MonoBehaviour
         MaxSdkCallbacks.Rewarded.OnAdReceivedRewardEvent += OnRewardedAdReceivedRewardEvent;
         MaxSdkCallbacks.Rewarded.OnAdRevenuePaidEvent += OnAdRevenuePaidEvent;
         // Load the first RewardedAd
-
         LoadRewardedAd();
     }
 
@@ -1186,16 +1174,23 @@ public class AdmobAdsMax : MonoBehaviour
     /// <param name="actionReward">Hành động khi xem xong Video và nhận thưởng </param>
     /// <param name="actionNotLoadedVideo"> Hành động báo lỗi không có video để xem </param>
     /// <param name="actionClose"> Hành động khi đóng video (Đóng lúc đang xem dở hoặc đã xem hết) </param>
-    public bool ShowVideoReward(UnityAction actionReward, UnityAction actionNotLoadedVideo, UnityAction actionClose,
-        ActionWatchVideo actionType = ActionWatchVideo.None, string adWhere = "")
+    public void ShowVideoReward(UnityAction actionReward, UnityAction actionNotLoadedVideo, UnityAction actionClose,
+        ActionWatchVideo actionType = ActionWatchVideo.None, string level = null, string adWhere = "")
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             actionNotLoadedVideo?.Invoke();
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
-                UserData.CurrentLevel.ToString());
-            return false;
+                UseProfile.CurrentLevel.ToString());
+            return;
         }
+
+        this.adWhere = adWhere;
+
+#if UNITY_EDITOR
+        actionReward?.Invoke();
+        return;
+#endif
 
         actionWatchVideo = actionType;
         GameController.Instance.AnalyticsController.LogRequestVideoReward(actionType.ToString());
@@ -1209,12 +1204,17 @@ public class AdmobAdsMax : MonoBehaviour
             this._actionClose = actionClose;
             this._actionRewardVideo = actionReward;
 
-            AdsDurationObserver.startTime = DateTime.Now;
-
             MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
-
+            try
+            {
+                //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e.Message);
+            }
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                UserData.CurrentLevel.ToString());
+                UseProfile.CurrentLevel.ToString());
             GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
@@ -1227,75 +1227,53 @@ public class AdmobAdsMax : MonoBehaviour
 
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                    UserData.CurrentLevel.ToString());
-
+                    UseProfile.CurrentLevel.ToString());
+                Debug.Log("ShowInterstitial !!!");
                 countdownAds = 0;
                 try
                 {
-                    // DWHLog.Log.AdsLog(UserData.CurrentLevel, AdType.Reward, adWhere);
+                    DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
                 }
                 catch (Exception e)
                 {
                     Debug.LogError(e.Message);
                 }
-                return true;
             }
             else
             {
                 //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
-                // Debug.Log("No ads !!!");
+                Debug.Log("No ads !!!");
                 actionNotLoadedVideo?.Invoke();
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
-                    UserData.CurrentLevel.ToString());
-                return false;
+                    UseProfile.CurrentLevel.ToString());
             }
         }
-
-        return true;
     }
+
     #endregion
 
     #region Banner
+
     public void ShowBanner()
     {
-        if (UserData.IsRemoveAds)
-        {
+        if (GameController.Instance.useProfile.IsRemoveAds)
             return;
-        }
-
-        if (!GamePersistentVariable.isShowBanner)
-        {
-            return;
-        }
-
-        if (SceneManager.GetActiveScene().name == GameConstants.LOADING_SCENE)
-        {
-            return;
-        }
-
         if (isAdmobInitDone)
         {
             if (_isShowAdmobBanner)
-            {
                 ShowBannerAdmob();
-            }
             else
-            {
-                // ShowBannerMax();
-            }
+                ShowBannerMax();
         }
         else
-        {
-            // ShowBannerMax();
-        }
+            ShowBannerMax();
     }
 
     public void ShowBannerAdmob()
     {
         MaxSdk.HideBanner(BanerAdUnitId);
         _bannerView?.Show();
-
-        TryHideBannerCollap();
+        _bannerViewCollap.Hide();
     }
 
     public void ShowBannerMax()
@@ -1303,181 +1281,71 @@ public class AdmobAdsMax : MonoBehaviour
         MaxSdk.ShowBanner(BanerAdUnitId);
         // RequestBanner();
         _bannerView?.Hide();
-
-        TryHideBannerCollap();
-    }
-
-    public void HideBanner()
-    {
-        MaxSdk.HideBanner(BanerAdUnitId);
-        _bannerView?.Hide();
-
-        TryHideBannerCollap();
+        _bannerViewCollap.Hide();
     }
 
     public void DestroyBanner()
     {
-        MaxSdk.DestroyBanner(BanerAdUnitId);
-
-        // Admob
-        if (_bannerView != null)
-        {
-            _bannerView.Destroy();
-            _bannerView = null;
-        }
-
-        DestroyMRec();
+        Debug.Log("destroy banner");
+        MaxSdk.HideBanner(BanerAdUnitId);
+        _bannerView?.Hide();
+        _bannerViewCollap.Hide();
     }
 
-    private void TryHideBannerCollap()
-    {
-        if (_bannerViewCollap != null)
-        {
-            _bannerViewCollap.Hide();
-        }
-    }
     #endregion
 
-    #region MREC
-    public void InitializeMRecAds()
-    {
-        // MRECs are sized to 300x250 on phones and tablets
-        MaxSdk.CreateMRec(mrecAdUnitId, MaxSdkBase.AdViewPosition.TopCenter);
-
-        MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecAdLoadedEvent;
-        MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdLoadFailedEvent;
-        MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecAdClickedEvent;
-        MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent += OnMRecAdRevenuePaidEvent;
-        MaxSdkCallbacks.MRec.OnAdExpandedEvent += OnMRecAdExpandedEvent;
-        MaxSdkCallbacks.MRec.OnAdCollapsedEvent += OnMRecAdCollapsedEvent;
-    }
-
-    public void ShowMRec()
-    {
-        if (UserData.IsRemoveAds)
-        {
-            return;
-        }
-
-        if (!GamePersistentVariable.remoteConfigIsShowMREC)
-        {
-            return;
-        }
-
-        if (!GamePersistentVariable.doubleInterAdsConfig.isEnableMrec)
-        {
-            return;
-        }
-
-        MaxSdk.ShowMRec(mrecAdUnitId);
-    }
-
-    public void HideMRec()
-    {
-        MaxSdk.HideMRec(mrecAdUnitId);
-    }
-
-    public void DestroyMRec()
-    {
-        MaxSdk.DestroyMRec(mrecAdUnitId);
-    }
-
-    public void OnMRecAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-    {
-
-    }
-
-    public void OnMRecAdLoadFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo error) { }
-
-    public void OnMRecAdClickedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
-
-    public void OnMRecAdRevenuePaidEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
-    {
-        try
-        {
-            if (adInfo == null) return;
-            if (adInfo.Revenue < 0) return;
-
-            double revenue = adInfo.Revenue;
-
-            AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
-                adInfo.AdFormat, revenue, "USD");
-
-            AnalyticsController.TryLogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
-                adInfo.AdFormat, revenue, "USD");
-            AnalyticsController.TryLogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
-                adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
-        }
-        catch (System.Exception)
-        {
-
-        }
-    }
-
-    public void OnMRecAdExpandedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
-
-    public void OnMRecAdCollapsedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo) { }
-    #endregion  
-
     #region Open App Ads
+
     DateTime oldTime = DateTime.MinValue;
 
     public void OnAppStateChanged(AppState state)
     {
-        if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.ENABLE_APP_OPEN_ADS, false))
-        {
-            return;
-        }
-
-        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "Gameplay")
-        {
+        if (isAdmobInitDone && SceneManager.GetActiveScene().name != "LoadingScene")
             if (state == AppState.Foreground && TimeManager.CaculateTime(oldTime, DateTime.Now) > 30 && !isShowingAds)
             {
                 // COMPLETE: Show an app open ad if available.
-
-                GamePersistentVariable.currentLevel = currentLevel.Value;
-
                 AppOpenAdManager.Instance.ShowAdIfAvailable();
                 oldTime = DateTime.Now;
                 countdownAds = 0;
             }
-        }
     }
+
     #endregion
 
     #region Reward Inter
-    public void LoadRewardedInterstitialAd()
-    {
-        // Clean up the old ad before loading a new one.
-        if (rewardedInterstitialAd != null)
-        {
-            rewardedInterstitialAd.Destroy();
-            rewardedInterstitialAd = null;
-        }
 
-        Debug.Log("Loading the rewarded interstitial ad.");
-        // create our request used to load the ad.
-        var adRequest = new GoogleMobileAds.Api.AdRequest();
-        // send the request to load the ad.
-        RewardedInterstitialAd.Load(REWARD_INTER_ID, adRequest,
-            (RewardedInterstitialAd ad, LoadAdError error) =>
-            {
-                // if error is not null, the load request failed.
-                if (error != null || ad == null)
-                {
-                    Debug.LogError("rewarded interstitial ad failed to load an ad " +
-                                   "with error : " + error);
-                    //LoadMoreRewardInter(_adUnitIdMedium);
-                    return;
-                }
+    //public void LoadRewardedInterstitialAd()
+    //{
+    //    // Clean up the old ad before loading a new one.
+    //    if (rewardedInterstitialAd != null)
+    //    {
+    //        rewardedInterstitialAd.Destroy();
+    //        rewardedInterstitialAd = null;
+    //    }
 
-                Debug.Log("Rewarded interstitial ad loaded with response : "
-                          + ad.GetResponseInfo());
+    //    Debug.Log("Loading the rewarded interstitial ad.");
+    //    // create our request used to load the ad.
+    //    var adRequest = new GoogleMobileAds.Api.AdRequest();
+    //    // send the request to load the ad.
+    //    RewardedInterstitialAd.Load(REWARD_INTER_ID, adRequest,
+    //        (RewardedInterstitialAd ad, LoadAdError error) =>
+    //        {
+    //            // if error is not null, the load request failed.
+    //            if (error != null || ad == null)
+    //            {
+    //                Debug.LogError("rewarded interstitial ad failed to load an ad " +
+    //                               "with error : " + error);
+    //                //LoadMoreRewardInter(_adUnitIdMedium);
+    //                return;
+    //            }
 
-                rewardedInterstitialAd = ad;
-                //InitRegister(ad);
-            });
-    }
+    //            Debug.Log("Rewarded interstitial ad loaded with response : "
+    //                      + ad.GetResponseInfo());
+
+    //            rewardedInterstitialAd = ad;
+    //            //InitRegister(ad);
+    //        });
+    //}
 
     private UnityAction actionRewardInter;
     private UnityAction actionCloseRewardInter;
@@ -1536,11 +1404,11 @@ public class AdmobAdsMax : MonoBehaviour
 
     private void OnAdContentclose()
     {
-        // Debug.Log("=======close");
+        Debug.Log("=======close");
         Invoke("CloseAdReward", 0.1f);
         if (actionCloseRewardInter != null)
             actionCloseRewardInter.Invoke();
-        LoadRewardedInterstitialAd();
+        //LoadRewardedInterstitialAd();
     }
 
     void CloseAdReward()
@@ -1554,59 +1422,97 @@ public class AdmobAdsMax : MonoBehaviour
 
         isRewardInter = false;
     }
-
+    private const string InterstitialMax = "INTER";
+    private const string RewardedVideoMax = "REWARDED";
+    private const string BannerMax = "BANNER";
+    private string adWhere;
     private void OnAdRevenuePaidEvent(string message, MaxSdkBase.AdInfo adInfo)
     {
         if (adInfo == null) return;
         if (adInfo.Revenue < 0) return;
 
-        double revenue = adInfo.Revenue;
+        Firebase.Analytics.Parameter[] adParameters = {
+        new Firebase.Analytics.Parameter("ad_platform", "Applovin"),
+        new Firebase.Analytics.Parameter("ad_source", adInfo.NetworkName),
+        new Firebase.Analytics.Parameter("ad_unit_name", adInfo.AdUnitIdentifier),
+        new Firebase.Analytics.Parameter("ad_format", adInfo.AdFormat),
+        new Firebase.Analytics.Parameter("currency","USD"),
+        new Firebase.Analytics.Parameter("value", adInfo.Revenue)
+    };
+        FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
-        AppFlyerGplay.LogRevenue(adInfo.NetworkName, "max", adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
+        //nếu dùng Appsflyer                
+        var dic = new Dictionary<string, string>
+    {
+        { "ad_unit_name", adInfo.AdUnitIdentifier },
+        { "ad_format", adInfo.AdFormat }
+    };
+        AppsFlyerAdRevenue.logAdRevenue(adInfo.NetworkName, AppsFlyerAdRevenueMediationNetworkType.AppsFlyerAdRevenueMediationNetworkTypeApplovinMax,
+            adInfo.Revenue, "USD", dic);
+        try
+        {
+            AdType type;
+            switch (adInfo.AdFormat)
+            {
+                // private const string InterstitialMax = "INTER";
+                case InterstitialMax:
+                    type = AdType.Interstitial;
+                    break;
+                //private const string RewardedVideoMax = "REWARDED";
+                case RewardedVideoMax:
+                    type = AdType.Reward;
+                    break;
+                //private const string BannerMax = "BANNER";
+                case BannerMax:
+                    type = AdType.Banner;
+                    break;
+                default:
+                    return;
+            }
 
-        AnalyticsController.LogAdsRevenue("ad_impression", currentLevel.Value, adInfo.NetworkName, adInfo.AdUnitIdentifier,
-            adInfo.AdFormat, revenue, "USD");
-        AnalyticsController.LogAdsRevenue("ad_revenue_sdk", currentLevel.Value, adInfo.NetworkName.ToLower(),
-            adInfo.AdUnitIdentifier.ToLower(), adInfo.AdFormat.ToLower(), revenue, "USD");
+            //Trong game cần lưu vị trí gọi quảng cáo hiện tại,
+            //ta giả sử GameManager sẽ lưu vị trí đó
+
+            if (type == AdType.Banner)
+            {
+                BannerLogStatistic.Instance.Log(adWhere, adInfo.RevenuePrecision, "",
+                    adInfo.Revenue, adInfo.NetworkName, "Max");
+                return;
+            }
+
+            new FAdLog(type, adWhere, adInfo.RevenuePrecision,
+                "", adInfo.Revenue, adInfo.NetworkName, "Max").Send();
+        }
+        catch
+        {
+
+        }
     }
+
     #endregion
 
     private void Update()
     {
-        if (!_isBannerLoaded)
+        if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
         {
-            if (_isShowAdmobBanner || _isTryLoadAdmobBanner)
+            if (IsCooldownAdmobBanner)
             {
-                if (IsCooldownAdmobBanner)
+                _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
+                if (_cooldownAdmobBannerTimer <= 0)
                 {
-                    _cooldownAdmobBannerTimer -= Time.unscaledDeltaTime;
-                    if (_cooldownAdmobBannerTimer <= 0)
-                    {
-                        RefreshAdmobBanner();
-                        _cooldownAdmobBannerTimer = GamePersistentVariable.bannerCooldown;
-
-                        _loadBannerRetryTime++;
-
-                        if (_loadBannerRetryTime >= 2)
-                        {
-                            _isBannerLoaded = true;
-                        }
-                    }
+                    RefreshAdmobBanner();
                 }
-            }
-
-            if (!_isShowAdmobBanner)
-            {
-                if (GamePersistentVariable.isShowBanner)
-                {
-                    ShowBannerMax();
-                }
-
-                _isBannerLoaded = true;
             }
         }
-
+        if (isMrecFail && EnableMrec())
+        {
+            _cooldownMrecBannerTimer -= Time.unscaledDeltaTime;
+            if (_cooldownMrecBannerTimer <= 0)
+            {
+                RefreshAdmobBannerFakeMrec();
+                _cooldownMrecBannerTimer = 30;
+            }
+        }
         if (isReloadBannerCollap)
         {
             timerReloadBannerCollap += Time.deltaTime;
@@ -1616,7 +1522,6 @@ public class AdmobAdsMax : MonoBehaviour
                 timerReloadBannerCollap = 0;
             }
         }
-
         if (isShowingCollap)
         {
             IsCooldownAdmobBanner = false;
@@ -1626,14 +1531,7 @@ public class AdmobAdsMax : MonoBehaviour
                 DestroyBannerCollap();
             }
         }
-
         countdownAds += Time.unscaledDeltaTime;
+        countdownAdsInterImage += Time.deltaTime;
     }
-
-    #region CALLBACK
-    public void ResetAdsCooldown()
-    {
-        countdownAds = 0;
-    }
-    #endregion
 }

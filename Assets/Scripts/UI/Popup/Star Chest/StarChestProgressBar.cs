@@ -132,7 +132,7 @@ public class StarChestProgressBar : SaferioTweenBehaviour
                     // }
                     // else
                     // {
-                    //     AdmobAdsMax.Instance.ResetAdsCooldown();
+                    //      GameController.Instance.admobAds.ResetAdsCooldown();
 
                     //     openStarChestPopupEvent?.Invoke();
                     // }

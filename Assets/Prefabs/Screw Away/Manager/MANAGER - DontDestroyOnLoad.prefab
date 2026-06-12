@@ -1664,7 +1664,12 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 7134206557431485260}
+  - {fileID: 1299083260138567664}
+  - {fileID: 8526841068916573000}
+  - {fileID: 3177865497692612213}
+  - {fileID: 330429040761909539}
   m_Father: {fileID: 6629955821744465093}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6041947459616754546
@@ -1682,6 +1687,12 @@ MonoBehaviour:
   admobAds: {fileID: 1936242247148629763}
   AnalyticsController: {fileID: 2239023448640468914}
   segmentController: {fileID: 1448366303307356327}
+  ActionLimitQueue: {fileID: 8358997688083236498}
+  useProfile: {fileID: 8131226214487292696}
+  iapController: {fileID: 148851646747661108}
+  dataContain: {fileID: 4581752521961539694}
+  moneyEffectController: {fileID: 3182590657058669889}
+  gameLoading: {fileID: 0}
   currentScene: 0
   openFeatureBox: 0
 --- !u!1 &1273913627103953827
@@ -4542,6 +4553,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: Fallido
     Object: {fileID: 0}
+--- !u!1 &3208417433034009727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8526841068916573000}
+  - component: {fileID: 8131226214487292696}
+  m_Layer: 0
+  m_Name: UseProfile
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8526841068916573000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3208417433034009727}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7084406448650777634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8131226214487292696
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3208417433034009727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7b99be1c462c224aad22d131b1b2736, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UseProfile
 --- !u!1 &3334727521343460239
 GameObject:
   m_ObjectHideFlags: 0
@@ -4764,6 +4819,50 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Ingrese su c\xF3digo de redimir ..."
     Object: {fileID: 0}
+--- !u!1 &3502473340523002516
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1299083260138567664}
+  - component: {fileID: 8358997688083236498}
+  m_Layer: 0
+  m_Name: ActionLimitQueue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1299083260138567664
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502473340523002516}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7084406448650777634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8358997688083236498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3502473340523002516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a392249f34eeba042b9dbc9d840688bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActionLimitQueue
 --- !u!1 &3516342123622071916
 GameObject:
   m_ObjectHideFlags: 0
@@ -7005,6 +7104,52 @@ MonoBehaviour:
   - Language: Spanish
     Text: Respaldo
     Object: {fileID: 0}
+--- !u!1 &4942880180812117566
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 330429040761909539}
+  - component: {fileID: 4581752521961539694}
+  m_Layer: 0
+  m_Name: DataContain
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &330429040761909539
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942880180812117566}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7084406448650777634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4581752521961539694
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942880180812117566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b86340e278b6b8641a42ca0792eb5247, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DataContain
+  giftDatabase: {fileID: 11400000, guid: 77ccaf745c663fc4e8da1bbe8e238ce5, type: 2}
+  dailyLoginDatabase: {fileID: 11400000, guid: 596d3f5bc2c877e4cab2cd76f0ab6ac0, type: 2}
 --- !u!1 &5026895855422176380
 GameObject:
   m_ObjectHideFlags: 0
@@ -8158,6 +8303,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         removeAdsPack:
           version: 0
           version_accept: 0
@@ -8170,6 +8326,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         bigRemoveAdsPack:
           version: 0
           version_accept: 0
@@ -8182,6 +8349,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         pickOneChoicePack:
           version: 0
           version_accept: 0
@@ -8194,6 +8372,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         saleCoinPack:
           version: 0
           version_accept: 0
@@ -8206,6 +8395,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         weeklySalePack:
           version: 0
           version_accept: 0
@@ -8218,6 +8418,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         dailyOfferPack:
           version: 0
           version_accept: 0
@@ -8230,6 +8441,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         itemSalePack:
           version: 0
           version_accept: 0
@@ -8242,6 +8464,17 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         coinSalePack:
           version: 0
           version_accept: 0
@@ -8254,6 +8487,155 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        masterOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        megaOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        giantOfferPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        starterPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        proBundle:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        utralBundle:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
         noelSalePack:
           version: 0
           version_accept: 0
@@ -8266,6 +8648,158 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        blackFridaySmallPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        blackFridayBigPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        noelSmallPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+        noelBigPack:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+      endlessSaleConfig:
+        halloweenSale:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          startDate: 2025/1/1 00:00:00
+          endDate: 2025/12/31 00:00:00
+          rewardData: []
+          percentSpawnItems: []
+        XmasSale:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          startDate: 2025/1/1 00:00:00
+          endDate: 2025/12/31 00:00:00
+          rewardData: []
+          percentSpawnItems: []
+        NewYearSale:
+          version: 0
+          version_accept: 0
+          is_active: 0
+          time_start: 
+          time_end: 
+          level_unlock: 0
+          time_delay_show: 0
+          str_start_date: 
+          str_end_date: 
+          is_video_x_reward: 0
+          num_x_reward: 0
+          startDate: 2025/1/1 00:00:00
+          endDate: 2025/12/31 00:00:00
+          rewardData: []
+          percentSpawnItems: []
     saleVideoData:
       config:
         videoGirl:
@@ -8280,6 +8814,18 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+          rewards: []
         xCoinWinLevel:
           version: 0
           version_accept: 0
@@ -8292,6 +8838,18 @@ MonoBehaviour:
           str_end_date: 
           is_video_x_reward: 0
           num_x_reward: 0
+          lifeTime: -1
+          AllWeek: 1
+          Monday: 0
+          Tuesday: 0
+          Wednesday: 0
+          Thursday: 0
+          Friday: 0
+          Saturday: 0
+          Sunday: 0
+          salePercent: 0
+          parmaExtral: []
+          rewards: []
     challengeData:
       config:
         weeklyChallenge:
@@ -8408,6 +8966,22 @@ MonoBehaviour:
         isHasBuyVideo: 0
         isHasBuyCoin: 0
         percentDiscount: 0
+    adsNewData:
+      config:
+        mrec:
+          minimumLevel: 0
+          isActive: 0
+          activeLoading: 1
+          activeWin: 0
+          fakeBannerMrec: 0
+        duppInter:
+          minimumLevel: 0
+          isActive: 1
+          delayShow: 15
+    challengeModeData:
+      config:
+        isActive: 1
+        levelStart: 15
 --- !u!1 &5728701555887145294
 GameObject:
   m_ObjectHideFlags: 0
@@ -8525,8 +9099,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9df7135512cf1f6408ab4b22a0c26561, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   countdownAds: 0
+  enableMrec: 0
+  blackImage: {fileID: 0}
+  isMrecFail: 0
+  isMrecFakeShow: 0
+  isShowMrec: 0
+  countdownAdsInterImage: 0
 --- !u!1 &5788298453354204480
 GameObject:
   m_ObjectHideFlags: 0
@@ -11532,6 +12111,52 @@ MonoBehaviour:
   - Language: Spanish
     Text: "Tu nivel est\xE1 en progreso. \xBFTe gustar\xEDa continuar o reiniciar?"
     Object: {fileID: 0}
+--- !u!1 &7725241648440617524
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3177865497692612213}
+  - component: {fileID: 148851646747661108}
+  m_Layer: 0
+  m_Name: IapController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3177865497692612213
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7725241648440617524}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7084406448650777634}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &148851646747661108
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7725241648440617524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bcb59b947ce9a408f919be9a9ce666, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IapController
+  isInited: 0
+  inappDatabase: {fileID: 11400000, guid: 068bf4fdd44c8a14cb1bcde6b23e4d01, type: 2}
 --- !u!1 &7826624952946173288
 GameObject:
   m_ObjectHideFlags: 0
@@ -14130,6 +14755,119 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 1527055450098318974, guid: adef00e2be323654ca5fa825a2cc3c72, type: 3}
   m_PrefabInstance: {fileID: 2659971076719092289}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2660697958213690293
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7084406448650777634}
+    m_Modifications:
+    - target: {fileID: 5182932485349601508, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Name
+      value: MoneyEffectController
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+--- !u!114 &3182590657058669889 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 632307031048103668, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+  m_PrefabInstance: {fileID: 2660697958213690293}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59982fec0b0a5a040ba98f9702b354af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!224 &7134206557431485260 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5182932485349601529, guid: 30a99fa53e0057548adaaa3cedca9638, type: 3}
+  m_PrefabInstance: {fileID: 2660697958213690293}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4384762527666061027
 PrefabInstance:

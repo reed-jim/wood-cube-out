@@ -76,8 +76,8 @@ public class ResourceEarnPopup : BasePopup
 
             _isRemoveAds = false;
 
-            // AdmobAdsMax.Instance.HideBanner();
-            // AdmobAdsMax.Instance.DestroyBanner();
+            //  GameController.Instance.admobAds.HideBanner();
+            //  GameController.Instance.admobAds.DestroyBanner();
         }
     }
 

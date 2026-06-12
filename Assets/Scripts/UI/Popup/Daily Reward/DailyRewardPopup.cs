@@ -52,7 +52,7 @@ public class DailyRewardPopup : BasePopup
 
         if (isRewardAvailable)
         {
-            AdmobAdsMax.Instance.ResetAdsCooldown();
+             //GameController.Instance.admobAds.ResetAdsCooldown();
         }
 
         base.Show(onCompletedAction);

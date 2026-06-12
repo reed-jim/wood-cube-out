@@ -69,7 +69,7 @@ public class WinPopup : BasePopup
 
     private async void OnLevelWinAsync()
     {
-        AdmobAdsMax.Instance.ShowBannerCollap();
+         GameController.Instance.admobAds.ShowBannerCollap();
 
         coinText.text = $"{0}";
         starText.text = $"{0}";
@@ -213,14 +213,14 @@ public class WinPopup : BasePopup
 
             if (doubleInterAdsConfig.IsValidDoubleInter() && currentLevel.Value >= doubleInterAdsConfig.minLevel)
             {
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds
+                 GameController.Instance.admobAds.ShowInterstitial
                 (
-                    OnInterstitialAdCompleted, isShowBreakAds: true
+                   actionIniterClose:  OnInterstitialAdCompleted
                 );
             }
             else
             {
-                AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+                 GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
             }
         }
     }
@@ -248,7 +248,7 @@ public class WinPopup : BasePopup
     #region X5 Coin
     private void X5Coin()
     {
-        AdmobAdsMax.Instance.ShowVideoReward(
+         GameController.Instance.admobAds.ShowVideoReward(
             OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.MultiplyCoinWinLevel);
     }
 

@@ -76,8 +76,8 @@ public class CompensatePopup : BasePopup
             {
                 isRemoveAd = true;
 
-                AdmobAdsMax.Instance.HideBanner();
-                AdmobAdsMax.Instance.DestroyBanner();
+                 //GameController.Instance.admobAds.HideBanner();
+                 //GameController.Instance.admobAds.DestroyBanner();
 
                 UserData.IsRemoveAds = true;
 

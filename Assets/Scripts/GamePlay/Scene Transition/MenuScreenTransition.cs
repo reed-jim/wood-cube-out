@@ -81,13 +81,7 @@ public class MenuScreenTransition : MonoBehaviour
             yield return waitForSeconds;
         }
 
-        AdmobAdsMax.Instance.ShowInterstitialAdmob(
-            onAdClosed: () =>
-            {
-                blackBackgroundToPassPolicy.gameObject.SetActive(false);
-            },
-            isShowAdBreak: false
-        );
+       
     }
 
     private void FakeLoadingForAds()
@@ -105,7 +99,7 @@ public class MenuScreenTransition : MonoBehaviour
 
         _fakeLoadingCoroutine = StartCoroutine(RotatingIcon());
 
-        AdmobAdsMax.Instance.ShowMRec();
+       GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 2;
 
@@ -116,20 +110,19 @@ public class MenuScreenTransition : MonoBehaviour
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            AdmobAdsMax.Instance.HideMRec();
+            GameController.Instance.admobAds.HideMRec();
 
             blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-            AdmobAdsMax.Instance.ShowInterstitialAdmob(
-                onAdClosed: () =>
+            GameController.Instance.admobAds.ShowInterstitial(
+                actionIniterClose: () =>
                 {
                     blackBackgroundToPassPolicy.gameObject.SetActive(false);
 
                     SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "Switch to Menu");
 
                     GamePersistentVariable.isMenuLoading = false;
-                },
-                isShowAdBreak: true
+                }
             );
 
             _tweens.Add(Tween.Custom(1, 0, duration: 0.3f, onValueChange: newVal =>

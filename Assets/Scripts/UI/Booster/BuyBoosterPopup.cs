@@ -211,7 +211,7 @@ public class BuyBoosterPopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.AddHole; break;
         }
 
-        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()
@@ -232,7 +232,7 @@ public class BuyBoosterPopup : BasePopup
     {
         isAbleToHideOnClickOutside = false;
 
-        AdmobAdsMax.Instance.ShowVideoReward(
+         GameController.Instance.admobAds.ShowVideoReward(
             OnRewaredAdCompletedToUnlockBox, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.UnlockScrewBox);
     }
 

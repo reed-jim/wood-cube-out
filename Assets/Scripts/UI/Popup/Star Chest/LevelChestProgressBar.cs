@@ -136,7 +136,7 @@ public class LevelChestProgressBar : SaferioTweenBehaviour
 
         yield return new WaitForSeconds(0.8f);
 
-        // AdmobAdsMax.Instance.ResetAdsCooldown();
+        //  GameController.Instance.admobAds.ResetAdsCooldown();
 
         // openLevelChestPopupEvent?.Invoke();
 

@@ -563,8 +563,8 @@ public class MenuScreen : MonoBehaviour
         {
             openRemoveAdPopupButton.gameObject.SetActive(false);
 
-            AdmobAdsMax.Instance.HideBanner();
-            AdmobAdsMax.Instance.DestroyBanner();
+             //GameController.Instance.admobAds.HideBanner();
+             GameController.Instance.admobAds.DestroyBanner();
         }
     }
 

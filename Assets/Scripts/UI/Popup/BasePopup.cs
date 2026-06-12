@@ -191,7 +191,7 @@ public class BasePopup : MonoBehaviour
 
         // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
         // {
-        //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
+        //      GameController.Instance.admobAds.ShowInterstitialAdmob(onAdClosed: () => ActualShowAfterAd(onCompletedAction), isShowAdBreak: true);
         // }
         // else
         // {
@@ -250,7 +250,7 @@ public class BasePopup : MonoBehaviour
 
             // if (isShowingInterAdOnInteract && GamePersistentVariable.doubleInterAdsConfig.IsValidShowInterInteractPopup())
             // {
-            //     AdmobAdsMax.Instance.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
+            //      GameController.Instance.admobAds.ShowInterstitialAdmob(onAdClosed: () => ActualHideAfterAd(onCompletedAction), isShowAdBreak: true);
             // }
             // else
             // {

@@ -208,7 +208,7 @@ public class SceneTransition : MonoBehaviour
 
         _loadingLevelInProgressCoroutine = StartCoroutine(RotatingIcon());
 
-        AdmobAdsMax.Instance.ShowMRec();
+        GameController.Instance.admobAds.ShowMRec();
 
         float minWaitTime = 1;
 
@@ -224,19 +224,18 @@ public class SceneTransition : MonoBehaviour
 
         _tweens.Add(Tween.Delay(minWaitTime).OnComplete(() =>
         {
-            AdmobAdsMax.Instance.HideMRec();
+             GameController.Instance.admobAds.HideMRec();
 
             // double inter
             if (!_isFirstTimeEnterScene)
             {
                 blackBackgroundToPassPolicy.gameObject.SetActive(true);
 
-                AdmobAdsMax.Instance.ShowDoubleInterstitialAds(
-                    onDoubleInterClosed: () =>
+                 GameController.Instance.admobAds.ShowInterstitial(
+                   actionIniterClose : () =>
                     {
                         blackBackgroundToPassPolicy.gameObject.SetActive(false);
-                    },
-                    isShowBreakAds: true
+                    }
                 );
             }
             else

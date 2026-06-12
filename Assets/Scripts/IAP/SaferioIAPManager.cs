@@ -275,8 +275,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         if (productData.IsRemoveAd)
                         {
-                            AdmobAdsMax.Instance.HideBanner();
-                            AdmobAdsMax.Instance.DestroyBanner();
+                             //GameController.Instance.admobAds.Hi();
+                             GameController.Instance.admobAds.DestroyBanner();
 
                             UserData.IsRemoveAds = true;
                         }

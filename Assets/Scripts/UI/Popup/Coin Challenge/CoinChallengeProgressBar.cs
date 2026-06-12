@@ -205,7 +205,7 @@ public class CoinChallengeProgressBar : SaferioTweenBehaviour
                 {
                     // if (!GamePersistentVariable.isStarChestClaimable && !GamePersistentVariable.isLevelChestClaimable)
                     // {
-                    //     AdmobAdsMax.Instance.ResetAdsCooldown();
+                    //      GameController.Instance.admobAds.ResetAdsCooldown();
 
                     //     openCoinChallengePopupEvent?.Invoke();
                     // }

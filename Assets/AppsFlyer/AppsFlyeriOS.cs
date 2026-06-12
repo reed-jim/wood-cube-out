@@ -215,24 +215,7 @@ public void startSDK(bool shouldCallback, string CallBackObjectName)
         public void setConsentData(AppsFlyerConsent appsFlyerConsent)
         {
 #if !UNITY_EDITOR
-           string isUserSubjectToGDPR = appsFlyerConsent.isUserSubjectToGDPR?.ToString().ToLower() ?? "null";
-           string hasConsentForDataUsage = appsFlyerConsent.hasConsentForDataUsage?.ToString().ToLower() ?? "null";
-           string hasConsentForAdsPersonalization = appsFlyerConsent.hasConsentForAdsPersonalization?.ToString().ToLower() ?? "null";
-           string hasConsentForAdStorage = appsFlyerConsent.hasConsentForAdStorage?.ToString().ToLower() ?? "null";
-
-           _setConsentData(isUserSubjectToGDPR, hasConsentForDataUsage, hasConsentForAdsPersonalization, hasConsentForAdStorage);
-#endif
-         }
-
-        /// <summary>
-        /// Logs ad revenue data along with additional parameters if provided.
-        /// </summary>
-        /// <param name = "adRevenueData" >instance of AFAdRevenueData containing ad revenue information.</param>
-        /// <param name = "additionalParameters" >An optional map of additional parameters to be logged with ad revenue data. This can be null if there are no additional parameters.</param>
-        public void logAdRevenue(AFAdRevenueData adRevenueData, Dictionary<string, string> additionalParameters)
-        {
-#if !UNITY_EDITOR
-            _logAdRevenue(adRevenueData.monetizationNetwork, adRevenueData.mediationNetwork, adRevenueData.currencyIso4217Code, adRevenueData.eventRevenue, AFMiniJSON.Json.Serialize(additionalParameters));
+            _setConsentData(appsFlyerConsent.isUserSubjectToGDPR, appsFlyerConsent.hasConsentForDataUsage, appsFlyerConsent.hasConsentForAdsPersonalization);
 #endif
          }
 
@@ -765,14 +748,7 @@ public void startSDK(bool shouldCallback, string CallBackObjectName)
 #elif UNITY_STANDALONE_OSX
         [DllImport("AppsFlyerBundle")]
 #endif
-        private static extern void _setConsentData(string isUserSubjectToGDPR, string hasConsentForDataUsage, string hasConsentForAdsPersonalization, string hasConsentForAdStorage);
-
-#if UNITY_IOS
-    [DllImport("__Internal")]
-#elif UNITY_STANDALONE_OSX
-        [DllImport("AppsFlyerBundle")]
-#endif
-        private static extern void _logAdRevenue(string monetizationNetwork, MediationNetwork mediationNetwork, string currencyIso4217Code, double eventRevenue, string additionalParameters);
+        private static extern void _setConsentData(bool isUserSubjectToGDPR, bool hasConsentForDataUsage, bool hasConsentForAdsPersonalization);
 
 #if UNITY_IOS
     [DllImport("__Internal")]

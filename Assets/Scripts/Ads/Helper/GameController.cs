@@ -1,7 +1,17 @@
-﻿using UnityEngine;
-// #if UNITY_IOS
-// using Unity.Advertisement.IosSupport;
-// #endif
+﻿//using MoreMountains.NiceVibrations;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Falcon.FalconCore.Scripts;
+using GPlay.GplayGoogleUMP;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using UnityEngine.SceneManagement;
+using Falcon.FalconCore.Scripts.Logs;
+
+
+#if UNITY_IOS
+using Unity.Advertisement.IosSupport;
+#endif
 
 public class GameController : MonoBehaviour
 {
@@ -11,10 +21,14 @@ public class GameController : MonoBehaviour
     public AnalyticsController AnalyticsController;
     public SegmentController segmentController;
     public ActionLimitQueue ActionLimitQueue;
+    public UseProfile useProfile;
+    public IapController iapController;
+    public DataContain dataContain;
+    public MoneyEffectController moneyEffectController;
+    public GameLoading gameLoading;
     [HideInInspector] public SceneType currentScene;
 
     [HideInInspector] public bool openFeatureBox = false;
-
     public static bool isFirstLoadLevel = false;
     protected void Start()
     {
@@ -24,78 +38,94 @@ public class GameController : MonoBehaviour
     }
     public void Init()
     {
-        UserData.CurrentLevelPlay = UserData.CurrentLevel;
+        Application.targetFrameRate = 60;
+        useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
 
-        //notificationController.Initialize();
-        ActionLimitQueue.Init();
+       
+        iapController.Init();
         //MMVibrationManager.SetHapticsActive(useProfile.OnVibration);
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
-//         ResetDay();
-//         UseProfile.NumPlayedInDay++;
-
-//         GplayUMP.ShowConsentForm((consert) =>
-//         {
-//             UseProfile.GDPRContentValue = consert;
-// #if UNITY_IOS
-//  if(ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
-//             {
-//                 ATTrackingStatusBinding.RequestAuthorizationTracking();
-//             }
-// #endif
-//             InitLoadScene();
-//         });
-//         //notificationController.Initialize();
-
+        ResetDay();
+        UseProfile.NumPlayedInDay++;
+        GplayUMP.ShowConsentForm((consert) =>
+        {
+            UseProfile.GDPRContentValue = consert;
+#if UNITY_IOS
+            if (ATTrackingStatusBinding.GetAuthorizationTrackingStatus() == ATTrackingStatusBinding.AuthorizationTrackingStatus.NOT_DETERMINED)
+            {
+                ATTrackingStatusBinding.RequestAuthorizationTracking();
+            }
+#endif
+            InitLoadScene();
+        });
+       
+        FalconMain.Init();
     }
+   
+
     public void InitLoadScene()
     {
         segmentController.Init();
         admobAds.Init();
+        gameLoading.Init();
     }
 
-    // public static void SetUserProperties()
-    // {
-    //     if (UseProfile.IsFirstTimeInstall)
-    //     {
-    //         UseProfile.FirstTimeOpenGame = UnbiasedTime.Instance.Now();
-    //         UseProfile.LastTimeOpenGame = UseProfile.FirstTimeOpenGame;
-    //         UseProfile.IsFirstTimeInstall = false;
+    public static void SetUserProperties()
+    {
+        if (UseProfile.IsFirstTimeInstall)
+        {
+            UseProfile.FirstTimeOpenGame = UnbiasedTime.Instance.Now();
+            UseProfile.LastTimeOpenGame = UseProfile.FirstTimeOpenGame;
+            UseProfile.IsFirstTimeInstall = false;
 
-    //         //AnalyticsController.LogFirstOpen(0);
-    //     }
+            //AnalyticsController.LogFirstOpen(0);
+        }
 
-    //     var lastTimeOpen = UseProfile.LastTimeOpenGame;
-    //     UseProfile.RetentionD = (UnbiasedTime.Instance.Now() - UseProfile.FirstTimeOpenGame).Days;
+        var lastTimeOpen = UseProfile.LastTimeOpenGame;
+        UseProfile.RetentionD = (UnbiasedTime.Instance.Now() - UseProfile.FirstTimeOpenGame).Days;
 
-    //     var dayPlayerd = (TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()) - TimeManager.ParseTimeStartDay(UseProfile.LastTimeOpenGame)).Days;
-    //     if (dayPlayerd >= 1)
-    //     {
-    //         UseProfile.LastTimeOpenGame = UnbiasedTime.Instance.Now();
-    //         UseProfile.DaysPlayed++;
+        var dayPlayerd = (TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()) - TimeManager.ParseTimeStartDay(UseProfile.LastTimeOpenGame)).Days;
+        if (dayPlayerd >= 1)
+        {
+            UseProfile.LastTimeOpenGame = UnbiasedTime.Instance.Now();
+            UseProfile.DaysPlayed++;
 
-    //         // AnalyticsController.LogFirstOpen(UseProfile.DaysPlayed);
-    //     }
+            // AnalyticsController.LogFirstOpen(UseProfile.DaysPlayed);
+        }
 
-    //     AnalyticsController.SetUserProperties();
-    // }
+        AnalyticsController.SetUserProperties();
 
-    // public void ResetDay()
-    // {
-    //     ///Các loại ResetDay ở đây
-    //     long time = TimeManager.CaculateTime(TimeManager.ParseTimeStartDay(UseProfile.LastTimeOnline), TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()));
-    //     if (time >= 86400)
-    //     {
-    //         UseProfile.LastTimeOnline = UnbiasedTime.Instance.Now();
-    //         ShopItemVideoCoin.NumTurnVideoCoinInDay = 0;
 
-    //         UseProfile.NumberLoseLevelInDay = 0;
+    }
 
-    //         UseProfile.NumPlayedInDay = 0;
+    public void ResetDay()
+    {
+        ///Các loại ResetDay ở đây
+        long time = TimeManager.CaculateTime(TimeManager.ParseTimeStartDay(UseProfile.LastTimeOnline), TimeManager.ParseTimeStartDay(UnbiasedTime.Instance.Now()));
+        if (time >= 86400)
+        {
+            UseProfile.LastTimeOnline = UnbiasedTime.Instance.Now();
 
-    //         UseProfile.ResetDayMiniGame();
+            UseProfile.NumberLoseLevelInDay = 0;
 
-    //     }
-    // }
+
+
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.SuggetItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ReturnItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.ShuffleItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.IceItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BreakTheRule_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddTimeItem_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.BlockBrand_BirdSort, 0);
+            UseProfile.SetTurnSuggetBuyItemVideo(GiftType.AddBrandItem_BirdSort, 0);
+
+           
+            UseProfile.NumPlayedInDay = 0;
+
+            UseProfile.ResetDayMiniGame();
+
+        }
+    }
 
     private void OnApplicationQuit()
     {
