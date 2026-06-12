@@ -62,6 +62,7 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.loseLevelEvent += OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
         SettingPopup.replayLevelEvent += OnLevelReplayed;
+        RevivePopup.reviveEvent += OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
@@ -78,6 +79,7 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        RevivePopup.reviveEvent -= OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
 
         ExtendOnDestroy();
@@ -327,6 +329,11 @@ public class WashingMachineItem : MonoBehaviour
 
     public void CheckAntsPath()
     {
+        if (remainingNumber <= 0)
+        {
+            return;
+        }
+
         if (isMoving || GamePersistentVariable.isLevelLost || isGhostMode || WashingMachineManager.Ins.IsAnyGhostAntBox())
         {
             return;
@@ -627,7 +634,12 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnRevive(BoosterType boosterType)
     {
-        CheckAntsPath();
+        if (isInSlot)
+        {
+            CheckAntsPath();
+
+            skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        }
     }
 
     private void OnAllGhostAntBoxesCompleted()
