@@ -253,6 +253,8 @@ public class BoosterUI : MonoBehaviour
                 });
             });
         });
+
+        SoundManager.Instance.PlaySound(GameConstants.boosterAppearSound);
     }
 
     private void AddMoreScrewPort()

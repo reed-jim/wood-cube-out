@@ -466,12 +466,16 @@ namespace AntsFlow
 
             for (int i = 0; i < tilesToClear.Count; i++)
             {
+                int index = i;
+
                 BaseTile tile = tilesToClear[i];
 
                 Vector3 initialPosition = tile.transform.position;
 
-                Tween.ScaleY(tile.transform, 1.5f, duration: 0.3f);
-                Tween.PositionY(tile.transform, tile.transform.position.y + 1.5f, duration: 0.3f)
+                tile.isAntApproaching = true;
+
+                Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
+                Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
                 .OnComplete(() =>
                 {
                     Tween.ScaleY(tile.transform, 1, duration: 0.15f);
@@ -482,11 +486,14 @@ namespace AntsFlow
                         {
                             tile.Complete();
                         });
+
+                        if (index == tilesToClear.Count - 1)
+                        {
+                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+                        }
                     });
                 });
             }
-
-            // add sound
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
         }
@@ -497,6 +504,8 @@ namespace AntsFlow
             {
                 return;
             }
+
+            Color factionToClear = tilesToClear[0].Faction;
 
             List<WashingMachineItem> antBoxes = new List<WashingMachineItem>();
 
@@ -559,7 +568,7 @@ namespace AntsFlow
             {
                 var indices = poolFaction
                     .Select((item, index) => new { item, index })
-                    .Where(x => x.item == tilesToClear[0].Faction)
+                    .Where(x => x.item == factionToClear)
                     .Take(numToClear)
                     .Select(x => x.index)
                     .OrderByDescending(i => i);

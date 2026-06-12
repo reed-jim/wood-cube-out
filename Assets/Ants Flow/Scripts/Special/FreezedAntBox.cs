@@ -48,6 +48,8 @@ public class FreezedAntBox : WashingMachineItem
         });
 
         SaferioTween.AlphaShow(numAntBoxToUnfreezeText);
+
+        SoundManager.Instance.PlaySound(GameConstants.startFreezeSound);
     }
 
     public override bool IsValidToSelect()
@@ -117,6 +119,8 @@ public class FreezedAntBox : WashingMachineItem
                 });
             }
         }
+
+        SoundManager.Instance.PlaySound(GameConstants.iceBreakSound);
 
         SetState();
     }

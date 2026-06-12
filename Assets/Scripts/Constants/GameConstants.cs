@@ -82,6 +82,10 @@ public static class GameConstants
     public static string cubeEatSound = "cubeEatSound";
     public static string cubeLandSound = "cubeLandSound";
     public static string slotDoneSound = "slotDoneSound";
+    public static string tileHitGroundSound = "tileHitGroundSound";
+    public static string startFreezeSound = "startFreezeSound";
+    public static string iceBreakSound = "iceBreakSound";
+    public static string boosterAppearSound = "boosterAppearSound";
     #endregion
 
     #region ANIMATION
