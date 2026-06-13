@@ -102,7 +102,7 @@ namespace AntsFlow
             Tween.Alpha(outline, 0.75f, duration: 0.3f)
             .OnComplete(() =>
             {
-                Tween.Alpha(outline, 0, duration: 0.7f)
+                Tween.Alpha(outline, 0, duration: 0.5f)
                 .OnComplete(() =>
                 {
                     outline.gameObject.SetActive(false);

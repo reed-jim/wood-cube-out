@@ -186,7 +186,7 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: GetCurrentLevelDifficulty(), out nextFaction, out numAnt);
+                GetNextAntSpawnByDifficulty(difficultyLevel: i / 3, out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
@@ -554,11 +554,11 @@ namespace AntsFlow
 
                 if (antBox.number > 0 && antBox.faction == tilesToClear[0].Faction)
                 {
-                    int numToRemove = Mathf.Min(antBox.number, numToClear);
+                    int numToRemove = Mathf.Min(antBox.number, numToClear) - antBox.tilesToMove.Count;
                     antBox.number -= numToRemove;
                     numToClear -= numToRemove;
 
-                    if (numToClear >= antBox.number)
+                    if (numToRemove >= antBox.number)
                     {
                         if (antBox.isInSlot)
                         {

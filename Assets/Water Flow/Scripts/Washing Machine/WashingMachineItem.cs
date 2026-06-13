@@ -54,6 +54,7 @@ public class WashingMachineItem : MonoBehaviour
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
+    public static event Action spawnAntEvent;
     public static event Action loseLevelEvent;
 
     public List<AntsFlow.BaseTile> tilesToMove;
@@ -68,6 +69,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
         RevivePopup.reviveEvent += OnRevive;
+        spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
         washingMachineStartSlot = transform.parent.GetComponent<WashingMachineStartSlot>();
@@ -87,6 +89,7 @@ public class WashingMachineItem : MonoBehaviour
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
         RevivePopup.reviveEvent -= OnRevive;
+        spawnAntEvent -= OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
 
         ExtendOnDestroy();
@@ -470,16 +473,13 @@ public class WashingMachineItem : MonoBehaviour
                     isAnimating = true;
                 }
 
-                if (isPlayingWarningLoseAnimation)
-                {
-                    TurnOffWarningLoseAnimation();
-                }
-
                 tilesToMove.RemoveAt(currentAntIndex);
 
                 currentAntIndex = 0;
 
                 GamePersistentVariable.numActiveAnt++;
+
+                spawnAntEvent?.Invoke();
 
                 yield return waitForSeconds;
             }
@@ -672,6 +672,14 @@ public class WashingMachineItem : MonoBehaviour
             CheckAntsPath();
 
             skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+        }
+    }
+
+    private void OnAntSpawned()
+    {
+        if (isPlayingWarningLoseAnimation)
+        {
+            TurnOffWarningLoseAnimation();
         }
     }
 
