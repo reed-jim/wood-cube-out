@@ -129,19 +129,19 @@ namespace AntsFlow
             blockages.Remove(tile);
 
             // faster ant spawning
-            // if (actualBlockages.Contains(tile))
-            // {
-            //     actualBlockages.Remove(tile);
-            // }
+            if (actualBlockages.Contains(tile))
+            {
+                actualBlockages.Remove(tile);
+            }
         }
 
         private void OnTileMoveToAnt(BaseTile tile)
         {
             // more accurate but slower ant spawning
-            if (actualBlockages.Contains(tile))
-            {
-                actualBlockages.Remove(tile);
-            }
+            // if (actualBlockages.Contains(tile))
+            // {
+            //     actualBlockages.Remove(tile);
+            // }
         }
 
         public void ClearAllTilesOfTheSameColor()
