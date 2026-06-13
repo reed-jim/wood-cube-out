@@ -218,19 +218,11 @@ namespace AntsFlow
 
         private IEnumerator HightlightEachFactionSequentially()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1.1f);
 
             Dictionary<Color, List<BaseTile>> tilesOfFaction = new Dictionary<Color, List<BaseTile>>();
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
-
-                if (!tile.isAntApproaching)
-                {
-                    CommonUtil.AddValueOfDictionary(tilesOfFaction, tile.Faction, tile);
-                }
-            }
+            GroupTiles();
 
             int currentFactionIndex = 0;
 
@@ -246,25 +238,57 @@ namespace AntsFlow
 
                     tile.isAnimating = true;
 
-                    SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
+                    tile.Highlight(onComplete: () =>
                     {
                         tile.isAnimating = false;
 
                         if (index == item.Value.Count - 1)
                         {
-                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-
                             currentFactionIndex++;
 
-                            if (currentFactionIndex >= item.Value.Count)
+                            if (currentFactionIndex >= tilesOfFaction.Count)
                             {
+                                GroupTiles();
+
                                 currentFactionIndex = 0;
                             }
                         }
                     });
+
+                    // SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
+                    // {
+                    //     tile.isAnimating = false;
+
+                    //     if (index == item.Value.Count - 1)
+                    //     {
+                    //         SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+
+                    //         currentFactionIndex++;
+
+                    //         if (currentFactionIndex >= item.Value.Count)
+                    //         {
+                    //             currentFactionIndex = 0;
+                    //         }
+                    //     }
+                    // });
                 }
 
                 yield return waitForSeconds;
+            }
+
+            void GroupTiles()
+            {
+                tilesOfFaction = new Dictionary<Color, List<BaseTile>>();
+
+                for (int i = 0; i < tiles.Count; i++)
+                {
+                    BaseTile tile = tiles[i];
+
+                    if (!tile.isAntApproaching)
+                    {
+                        CommonUtil.AddValueOfDictionary(tilesOfFaction, tile.Faction, tile);
+                    }
+                }
             }
         }
 
