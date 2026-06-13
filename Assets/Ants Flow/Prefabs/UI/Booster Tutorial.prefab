@@ -865,13 +865,13 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5910807804060385085}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5632855477226629754}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
@@ -953,6 +953,7 @@ GameObject:
   - component: {fileID: 3379664075358706483}
   - component: {fileID: 9210962882485354205}
   - component: {fileID: 68588657452154923}
+  - component: {fileID: 8035242863008021282}
   m_Layer: 5
   m_Name: Description
   m_TagString: Untagged
@@ -1078,6 +1079,20 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!114 &8035242863008021282
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6916378830060184866}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dbf51be86e70d7941bd40914206e4ddc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization.TMP::Lean.Localization.LeanLocalizedTextMeshProUGUI
+  translationName: 
+  FallbackText: Select the ant box to spawn ants
 --- !u!1 &7799966238309539232
 GameObject:
   m_ObjectHideFlags: 0
@@ -1125,6 +1140,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::BoosterTutorial
   canvasGroup: {fileID: 9097711329966665084}
   description: {fileID: 68588657452154923}
+  localizedDescription: {fileID: 8035242863008021282}
   tutorialHand: {fileID: 3564333673811680497}
   worldTutorialHand: {fileID: 3068293091090523255}
   useBoosterButtons:
@@ -1258,6 +1274,14 @@ PrefabInstance:
     - target: {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: translationName
       value: Shuffle
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_text
+      value: Level {level}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -1404,7 +1428,9 @@ PrefabInstance:
       value: 31.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8586933709773755580, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+    - {fileID: 7498301575461477913, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       insertIndex: 1
@@ -1498,6 +1524,14 @@ PrefabInstance:
     - target: {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: translationName
       value: Magic Pick
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_text
+      value: Level {level}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_IsActive
@@ -1648,7 +1682,9 @@ PrefabInstance:
       value: 31.05
       objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8586933709773755580, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+    - {fileID: 7498301575461477913, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       insertIndex: 1
@@ -1742,6 +1778,14 @@ PrefabInstance:
     - target: {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: translationName
       value: Magic Pick
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_text
+      value: Level {level}
+      objectReference: {fileID: 0}
+    - target: {fileID: 3893055939344813108, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+      propertyPath: m_fontSize
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 4596260091198830909, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       propertyPath: m_IsActive
@@ -1905,7 +1949,9 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 3857345280886117483, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
-    m_RemovedGameObjects: []
+    m_RemovedGameObjects:
+    - {fileID: 8586933709773755580, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
+    - {fileID: 7498301575461477913, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 7643315751019044431, guid: 1db6b43edf64adf4caac8313382dad69, type: 3}
       insertIndex: 1

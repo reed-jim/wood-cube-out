@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using CandyCoded.HapticFeedback;
 using EPOOutline;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -39,6 +40,8 @@ namespace AntsFlow
                 faction = value;
             }
         }
+
+        public GameSetting gameSetting;
 
         public static event Action<BaseTile> removeTileAsBlockageEvent;
         public static event Action<BaseTile> tileCompleteEvent;
@@ -89,6 +92,11 @@ namespace AntsFlow
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
+
+            if (gameSetting.IsVibrate)
+            {
+                HapticFeedback.LightFeedback();
+            }
 
             tileMoveToAntEvent?.Invoke(this);
         }

@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using AntsFlow;
+using Lean.Localization;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -15,6 +16,7 @@ public class BoosterTutorial : MonoBehaviour
 {
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text description;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;
     [SerializeField] private SkeletonGraphic tutorialHand;
     [SerializeField] private SkeletonAnimation worldTutorialHand;
     [SerializeField] private Button[] useBoosterButtons;
@@ -92,7 +94,7 @@ public class BoosterTutorial : MonoBehaviour
         {
             if (step == 1)
             {
-                description.text = "Now, you can select any ant box!";
+                localizedDescription.TranslationName = "Now, you can select any ant box!";
 
                 SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
                 Tween.Position(worldTutorialHand.transform,
@@ -135,7 +137,7 @@ public class BoosterTutorial : MonoBehaviour
         {
             if (step == 1)
             {
-                description.text = "Select a color to all tiles of that color";
+                localizedDescription.TranslationName = "Select a color to clear all matching tiles.";
 
                 SaferioTween.ScaleUpWithPunch(worldTutorialHand.transform, 1.1f);
                 Tween.Position(worldTutorialHand.transform,
@@ -190,7 +192,7 @@ public class BoosterTutorial : MonoBehaviour
                 Transform boosterButton = useBoosterButtons[boosterIndex].transform;
 
                 tutorialHand.transform.SetParent(boosterButton);
-                tutorialHand.transform.localPosition = Vector3.zero.AddY(-40);
+                tutorialHand.transform.localPosition = Vector3.zero.AddY(60);
 
                 isTutorial = true;
 
@@ -201,7 +203,7 @@ public class BoosterTutorial : MonoBehaviour
         if (!isTutorial)
         {
             EndTutorial();
-            
+
             return;
         }
 

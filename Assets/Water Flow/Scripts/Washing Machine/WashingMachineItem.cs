@@ -51,6 +51,8 @@ public class WashingMachineItem : MonoBehaviour
     private Vector3 numberTextInitialPosition;
     private Coroutine spawningAntCoroutine;
 
+    public GameSetting gameSetting;
+
     public static event Action<WashingMachineItem> selectWashingMachineEvent;
     public static event Action<WashingMachineItem> antBoxDoneEvent;
     public static event Action<WashingMachineItem> moveUpEvent;
@@ -223,6 +225,11 @@ public class WashingMachineItem : MonoBehaviour
 
         OnSelectTrueCompleted();
 
+        if (gameSetting.IsVibrate)
+        {
+            HapticFeedback.MediumFeedback();
+        }
+
         // entry = skeletonAnimation.AnimationState.SetAnimation(0, selectTrueAnimation, false);
         // entry.Complete += OnSelectTrueCompleted;
     }
@@ -252,7 +259,10 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
-        HapticFeedback.HeavyFeedback();
+        if (gameSetting.IsVibrate)
+        {
+            HapticFeedback.MediumFeedback();
+        }
     }
 
     public void TurnOnWarningLoseAnimation()
