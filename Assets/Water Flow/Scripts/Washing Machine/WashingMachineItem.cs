@@ -260,7 +260,7 @@ public class WashingMachineItem : MonoBehaviour
     {
         skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
 
-        isPlayingWarningLoseAnimation = true;
+        isPlayingWarningLoseAnimation = false;
     }
 
     private void SwitchShadow()
@@ -379,6 +379,11 @@ public class WashingMachineItem : MonoBehaviour
 
         tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
 
+        if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
+        {
+            TurnOffWarningLoseAnimation();
+        }
+
         if (tilesToMove.Count > 0)
         {
             if (spawningAntCoroutine == null)
@@ -464,9 +469,7 @@ public class WashingMachineItem : MonoBehaviour
 
                 if (isPlayingWarningLoseAnimation)
                 {
-                    skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
-
-                    isPlayingWarningLoseAnimation = false;
+                    TurnOffWarningLoseAnimation();
                 }
 
                 tilesToMove.RemoveAt(currentAntIndex);

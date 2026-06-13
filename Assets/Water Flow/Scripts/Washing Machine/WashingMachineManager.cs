@@ -661,6 +661,8 @@ namespace AntsFlow
                 }
 
                 StartCoroutine(PendingLoseLevel());
+
+                GamePersistentVariable.isPendingLoseLevel = true;
             }
 
             return isLose;
@@ -683,15 +685,17 @@ namespace AntsFlow
             }
             else
             {
-                List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
+                List<WashingMachineItem> antBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
 
-                for (int i = 0; i < stuckAntBoxes.Count; i++)
+                for (int i = 0; i < antBoxes.Count; i++)
                 {
-                    WashingMachineItem antBox = stuckAntBoxes[i];
+                    WashingMachineItem antBox = antBoxes[i];
 
                     antBox.TurnOffWarningLoseAnimation();
                 }
             }
+
+            GamePersistentVariable.isPendingLoseLevel = false;
         }
 
         public bool IsNoSlotAvailable()
