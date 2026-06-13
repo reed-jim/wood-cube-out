@@ -186,7 +186,14 @@ namespace AntsFlow
 
                 washingMachineStartSlot.washingMachine = washingMachineItem;
 
-                GetNextAntSpawnByDifficulty(difficultyLevel: i / 3, out nextFaction, out numAnt);
+                int difficulty = i / 3;
+
+                if (levelItem.overrideInitialDifficulty)
+                {
+                    difficulty = levelItem.initialDifficulty;
+                }
+
+                GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt);
 
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
@@ -807,7 +814,9 @@ namespace AntsFlow
             //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
             // }
 
-            for (int j = difficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
+            int clampedDifficultyLevel = Mathf.Min(difficultyLevel, numSpawnPerFactionOrderByDifficulty.Count - 1);
+
+            for (int j = clampedDifficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
             {
                 if (numSpawnPerFactionOrderByDifficulty.ElementAt(j).Value > 0)
                 {

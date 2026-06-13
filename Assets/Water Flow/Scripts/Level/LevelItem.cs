@@ -21,6 +21,8 @@ namespace AntsFlow
         public List<Color> poolFaction;
         public bool isTutorialLevel;
         public int difficulty;
+        public int initialDifficulty;
+        public bool overrideInitialDifficulty;
         public int numStartAntBoxes = 6;
         public SpecialElementConfig specialElementConfig;
 
