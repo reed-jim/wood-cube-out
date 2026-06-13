@@ -70,6 +70,7 @@ public class WashingMachineItem : MonoBehaviour
         LevelLoader.startLevelEvent += OnLevelStarted;
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
+        WashingMachineManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
         spawnAntEvent += OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
@@ -90,6 +91,7 @@ public class WashingMachineItem : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
+        WashingMachineManager.winLevelEvent -= OnLevelWon;
         RevivePopup.reviveEvent -= OnRevive;
         spawnAntEvent -= OnAntSpawned;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
@@ -604,6 +606,11 @@ public class WashingMachineItem : MonoBehaviour
     }
 
     private void OnLevelReplayed()
+    {
+        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
+    }
+
+    private void OnLevelWon()
     {
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }

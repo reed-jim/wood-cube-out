@@ -56,6 +56,7 @@ MonoBehaviour:
   mainCamera: {fileID: 0}
   gameplayCanvas: {fileID: 0}
   toSelectWashingMachines: []
+  numAntBoxToSelectLeft: 0
   step: 0
 --- !u!1 &1594235371147141314
 GameObject:
@@ -71,6 +72,7 @@ GameObject:
   - component: {fileID: 8386519426509379603}
   - component: {fileID: 7120051829306389116}
   - component: {fileID: 2817891085664480371}
+  - component: {fileID: 7269451547102899231}
   m_Layer: 5
   m_Name: Continue Button
   m_TagString: Untagged
@@ -205,6 +207,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SaferioButton
   isPlaySound: 1
+--- !u!114 &7269451547102899231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594235371147141314}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5baaa49823bfc7949afe16a06131c3be, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LoopScaleAnimation
+  clickButton: {fileID: 7120051829306389116}
 --- !u!1 &2747053729697912573
 GameObject:
   m_ObjectHideFlags: 0
