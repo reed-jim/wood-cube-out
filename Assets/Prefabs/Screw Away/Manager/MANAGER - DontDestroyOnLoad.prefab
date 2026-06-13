@@ -6020,6 +6020,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Parte del objeto protegido
     Object: {fileID: 0}
+--- !u!1 &4100564401918148596
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3183211217840251112}
+  - component: {fileID: 5004970426065675152}
+  m_Layer: 0
+  m_Name: UnlockAtLevel
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3183211217840251112
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4100564401918148596}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5004970426065675152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4100564401918148596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Unlock at Level {level}
+    Object: {fileID: 0}
+  - Language: French
+    Text: "D\xE9bloquer au niveau {level}"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Auf Level {level} freischalten
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Sblocca al livello {level}
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30EC\u30D9\u30EB {level} \u3067\u30ED\u30C3\u30AF\u3092\u89E3\u9664\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB808\uBCA8 {level}\uC5D0\uC11C \uC7A0\uAE08 \uD574\uC81C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Desbloquear no n\xEDvel {level}"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0420\u0430\u0437\u0431\u043B\u043E\u043A\u0438\u0440\u043E\u0432\u0430\u0442\u044C
+      \u043D\u0430 \u0443\u0440\u043E\u0432\u043D\u0435 {level}"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Desbloquear en el nivel {level}
+    Object: {fileID: 0}
 --- !u!1 &4152760848891183343
 GameObject:
   m_ObjectHideFlags: 0
@@ -8404,6 +8478,7 @@ Transform:
   - {fileID: 4283626987842615071}
   - {fileID: 1065321322405062062}
   - {fileID: 2543567671225514696}
+  - {fileID: 3183211217840251112}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -8418,7 +8493,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 806f0696300aeac44a0e17efee222854, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentLanguage: English
+  currentLanguage: French
   detectLanguage: 1
   defaultLanguage: English
   saveLoad: 1
@@ -15658,11 +15733,12 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_text
-      value: Relax for a while before the next screw challenge.
+      value: "D\xE9tendez-vous pendant un certain temps avant le prochain d\xE9fi
+        \xE0 la vis."
       objectReference: {fileID: 0}
     - target: {fileID: 5108324775543430, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_fontSize
-      value: 62.15
+      value: 49.4
       objectReference: {fileID: 0}
     - target: {fileID: 86361256264644276, guid: 7565b5c913de8af4a8dc663465b28dbf, type: 3}
       propertyPath: m_Pivot.x

@@ -60,6 +60,7 @@ public class BoosterUI : MonoBehaviour
     public static event Action<int> updateBoosterQuantityEvent;
     public static event Action shakeScrewPortsEvent;
     public static event Action<string, string> showNotificationEvent;
+    public static event Action<string, string, string, string> showNotificationWithParamEvent;
 
     private List<Tween> _tweens;
     private int _numScrewPortsAdded;
@@ -162,6 +163,15 @@ public class BoosterUI : MonoBehaviour
             {
                 showNotificationEvent?.Invoke(GameConstants.WARNING, GameConstants.TOO_FAST_ACTION);
             }
+
+            return;
+        }
+
+        int levelToUnlockBooster = GameConstants.GetLevelToUnlockBooster(boosterType);
+
+        if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
+        {
+            showNotificationWithParamEvent?.Invoke(GameConstants.TIPS, "UnlockAtLevel", "level", $"{levelToUnlockBooster}");
 
             return;
         }

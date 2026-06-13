@@ -61,7 +61,7 @@ public class SettingPopup : BasePopup
         // openCompensatePopupButton.onClick.AddListener(OpenCompensatePopup);
         // openBackupPopupButton.onClick.AddListener(OpenBackupPopup);
         // adPreferencesButton.onClick.AddListener(OpenUserConsentPopup);
-        // openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
+        openLanguageDropdownButton.onClick.AddListener(OpenLanguageDropdown);
         // openFacebookGroupButton.onClick.AddListener(OpenFacebookGroup);
 
         for (int i = 0; i < GameConstants.AvailableLanguages.Length; i++)

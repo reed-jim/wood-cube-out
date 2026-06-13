@@ -26,6 +26,7 @@ public class NotificationPopup : BasePopup
         BackupPopup.showNotificationEvent += ShowNotification;
         MenuScreen.showNotificationEvent += ShowNotification;
         MenuScreen.showNotificationWithParamEvent += ShowNotification;
+        BoosterUI.showNotificationWithParamEvent += ShowNotification;
 
         showNotificationEvent += ShowNotification;
 
@@ -44,7 +45,8 @@ public class NotificationPopup : BasePopup
         BackupPopup.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationEvent -= ShowNotification;
         MenuScreen.showNotificationWithParamEvent -= ShowNotification;
-
+        BoosterUI.showNotificationWithParamEvent -= ShowNotification;
+        
         showNotificationEvent -= ShowNotification;
     }
 
