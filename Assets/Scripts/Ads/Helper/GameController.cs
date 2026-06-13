@@ -39,7 +39,7 @@ public class GameController : MonoBehaviour
     public void Init()
     {
         Application.targetFrameRate = 60;
-        useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
+         // GameController.Instance.useProfile.CurrentLevel =  GameController.Instance.useProfile;
 
        
        // iapController.Init();
