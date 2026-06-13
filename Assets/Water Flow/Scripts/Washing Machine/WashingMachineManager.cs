@@ -971,7 +971,7 @@ namespace AntsFlow
                 int maxValue = maxAntRequiredPerFaction[faction];
                 maxValue = Mathf.Min(maxValue, maxAntNumberThreshold);
 
-                if (maxValue < minAntNumberThreshold)
+                if (maxValue <= minAntNumberThreshold)
                 {
                     CommonUtil.SumValueOfDictionary(result, faction, maxValue);
                 }
