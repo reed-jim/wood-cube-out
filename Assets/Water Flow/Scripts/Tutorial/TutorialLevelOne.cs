@@ -22,6 +22,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     private int initialGameplayCanvasSortingOrder;
 
     public List<WashingMachineItem> toSelectWashingMachines;
+    public int numAntBoxToSelectLeft;
 
     public int step;
 
@@ -52,6 +53,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         SaferioTween.AlphaShow(blackOverlay, 230f / 255);
 
         toSelectWashingMachines = washingMachines.Take(2).ToList();
+        numAntBoxToSelectLeft = 2;
 
         StartCoroutine(ProgressingTutorial());
     }
@@ -77,7 +79,7 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
         {
             if (step == 0)
             {
-                if (toSelectWashingMachines.Count == 0)
+                if (numAntBoxToSelectLeft <= 0)
                 {
                     NextStep();
                     StartStepTwo();
@@ -93,6 +95,8 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
     private void StartStepTwo()
     {
         description.text = $"Repeat the process until no items remain.";
+
+        GamePersistentVariable.isPreventSelectAntBox = true;
 
         continueButton.interactable = false;
 
@@ -119,6 +123,8 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
     private void OnWashingMachineSelected(WashingMachineItem washingMachine)
     {
+        numAntBoxToSelectLeft--;
+
         toSelectWashingMachines.Remove(washingMachine);
 
         if (toSelectWashingMachines.Count == 0)
@@ -141,6 +147,8 @@ public class TutorialLevelOne : Singleton<TutorialLevelOne>
 
         gameplayCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
         gameplayCanvas.sortingOrder = initialGameplayCanvasSortingOrder;
+
+        GamePersistentVariable.isPreventSelectAntBox = false;
     }
 }
 
