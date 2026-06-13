@@ -483,7 +483,7 @@ public class AdsNewSegmentData : BaseDataSegemnt
         {
             if (isActive)
             {
-                if (UseProfile.CurrentLevel <= minimumLevel)
+                if (GameController.Instance.useProfile.CurrentLevel <= minimumLevel)
                 {
                     return false;
                 }

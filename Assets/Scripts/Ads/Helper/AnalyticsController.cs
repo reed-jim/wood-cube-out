@@ -77,7 +77,7 @@ public class AnalyticsController : MonoBehaviour
         FirebaseAnalytics.SetUserProperty(StringHelper.RETENTION_D, UseProfile.RetentionD.ToString());
         FirebaseAnalytics.SetUserProperty(StringHelper.DAYS_PLAYED, UseProfile.DaysPlayed.ToString());
         FirebaseAnalytics.SetUserProperty(StringHelper.PAYING_TYPE, UseProfile.PayingType.ToString());
-        FirebaseAnalytics.SetUserProperty(StringHelper.LEVEL, UseProfile.CurrentLevel.ToString());
+        FirebaseAnalytics.SetUserProperty(StringHelper.LEVEL, GameController.Instance.useProfile.CurrentLevel.ToString());
     }
 
     #region Event
@@ -200,7 +200,7 @@ public class AnalyticsController : MonoBehaviour
 
         try
         {
-            //DWHLog.Log.LevelLog(UseProfile.CurrentLevel, UseProfile.CurrentLevel, timePlayLevel, 0, "", LevelStatus.pass);//Gọi khi pass level
+            //DWHLog.Log.LevelLog( GameController.Instance.useProfile,  GameController.Instance.useProfile, timePlayLevel, 0, "", LevelStatus.pass);//Gọi khi pass level
             //Debug.Log
             string hardType = "";
             switch (idHardMode)
@@ -359,7 +359,7 @@ public class AnalyticsController : MonoBehaviour
         try
         {
             //DWHLog.Log.AdsLog("", AdsType.VideoReward.ToString(), AdmobAds.RewardedAdUnitId.ToString(), "", "", placement, StateAds.Rewarded.ToString());
-            //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.reward, placement);
+            //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.reward, placement);
         }
         catch
         {
@@ -433,7 +433,7 @@ public class AnalyticsController : MonoBehaviour
         try
         {
             //DWHLog.Log.AdsLog("", AdsType.Interstitial.ToString(), AdmobAds.InterstitialAdUnitId.ToString(), "", "", actionWatchLog, StateAds.Show.ToString());
-            //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.interstitial, actionWatchLog);
+            //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.interstitial, actionWatchLog);
         }
         catch
         {

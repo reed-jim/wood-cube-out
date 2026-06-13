@@ -124,9 +124,9 @@ public class GiftDatabase : SerializedScriptableObject
         {
             if (amount == 0 || currency.Equals("")|| type.Equals("")) return;
             if (amount > 0)
-                new FResourceLog(FlowType.Source, type, currency, giftType.ToString(), amount, UseProfile.CurrentLevel).Send();
+                new FResourceLog(FlowType.Source, type, currency, giftType.ToString(), amount, GameController.Instance.useProfile.CurrentLevel).Send();
             else
-                new FResourceLog(FlowType.Sink, type, currency, giftType.ToString(),Math.Abs(amount), UseProfile.CurrentLevel).Send();
+                new FResourceLog(FlowType.Sink, type, currency, giftType.ToString(),Math.Abs(amount), GameController.Instance.useProfile.CurrentLevel).Send();
         }
         catch
         {
