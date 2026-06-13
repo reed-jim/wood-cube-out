@@ -23,6 +23,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
 
+    [Header("Game Speed")]
+    [SerializeField] private Button increaseGameSpeedButton;
+    [SerializeField] private Button decreaseGameSpeedButton;
+    [SerializeField] private TMP_Text gameSpeedText;
+
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
 
@@ -50,6 +55,9 @@ public class GameplayScreen : Singleton<GameplayScreen>
         openShopPopupButton.onClick.AddListener(OpenShopPopupButton);
         openDebugPopupButton.onClick.AddListener(OpenDebugPopupButton);
 
+        increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
+        decreaseGameSpeedButton.onClick.AddListener(DecreaseGameSpeed);
+
         if (UserData.IsRemoveAds)
         {
             noAdsButton.gameObject.SetActive(false);
@@ -59,6 +67,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             openDebugPopupButton.gameObject.SetActive(false);
         }
+
+        gameSpeedText.text = $"x{(int)Time.timeScale}";
     }
 
     void OnDestroy()
@@ -175,6 +185,38 @@ public class GameplayScreen : Singleton<GameplayScreen>
         hardModeCanvasGroup.alpha = 0;
 
         Tween.Alpha(hardModeCanvasGroup, 1, duration: 0.3f);
+    }
+    #endregion
+
+    #region Game Speed
+    private void IncreaseGameSpeed()
+    {
+        ChangeGameSpeed(true);
+    }
+
+    private void DecreaseGameSpeed()
+    {
+        ChangeGameSpeed(false);
+    }
+
+    private void ChangeGameSpeed(bool isIncrease)
+    {
+        if (isIncrease)
+        {
+            if (Time.timeScale < 5)
+            {
+                Time.timeScale++;
+            }
+        }
+        else
+        {
+            if (Time.timeScale > 1)
+            {
+                Time.timeScale--;
+            }
+        }
+
+        gameSpeedText.text = $"x{(int)Time.timeScale}";
     }
     #endregion      
 }
