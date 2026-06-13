@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 3028384448401907426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.9895606, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: -9.587484, y: 0, z: 0}
+  m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 4170975748839295170}
@@ -849,13 +849,15 @@ MonoBehaviour:
   - {r: 0.7882353, g: 0.92156863, b: 0.078431375, a: 1}
   isTutorialLevel: 0
   difficulty: 0
+  initialDifficulty: 0
+  overrideInitialDifficulty: 0
   numStartAntBoxes: 6
   specialElementConfig:
     hiddenAntBoxConfig:
-      spawnOrder: 07000000090000000e0000000f0000000c0000001400000015000000
-    frozenAntBoxConfig:
       spawnOrder: 
-      numBoxToUnfreeze: 
+    frozenAntBoxConfig:
+      spawnOrder: 02000000060000000a0000000c0000001200000014000000
+      numBoxToUnfreeze: 020000000400000003000000030000000200000002000000
     doubleAntBoxConfig:
       spawnOrder: 
   spawnPosition: {x: 0, y: 0.5, z: 0}

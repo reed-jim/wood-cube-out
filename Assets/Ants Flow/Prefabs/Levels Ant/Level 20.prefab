@@ -26,8 +26,8 @@ Transform:
   m_GameObject: {fileID: 3028384448401907426}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.449273, y: 0.5, z: 0}
-  m_LocalScale: {x: 0.423, y: 0.423, z: 0.423}
+  m_LocalPosition: {x: -9.987326, y: 0, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7901387010755925540}
@@ -1299,6 +1299,8 @@ MonoBehaviour:
   - {r: 0.99607843, g: 0.8666667, b: 0.011764706, a: 1}
   isTutorialLevel: 0
   difficulty: 0
+  initialDifficulty: 0
+  overrideInitialDifficulty: 0
   numStartAntBoxes: 6
   specialElementConfig:
     hiddenAntBoxConfig:
@@ -1307,7 +1309,7 @@ MonoBehaviour:
       spawnOrder: 
       numBoxToUnfreeze: 
     doubleAntBoxConfig:
-      spawnOrder: 070000000c0000000e00000015000000190000001e000000
+      spawnOrder: 0300000005000000080000000e000000190000001e000000
   spawnPosition: {x: 0, y: 3, z: 0}
   spawnScale: {x: 0.423, y: 0.423, z: 0.423}
   factions:
