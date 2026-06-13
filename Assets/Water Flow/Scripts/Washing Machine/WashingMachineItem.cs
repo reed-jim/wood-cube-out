@@ -11,6 +11,7 @@ using Spine;
 using Spine.Unity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.AI;
 using static GameEnum;
 
 public class WashingMachineItem : MonoBehaviour
@@ -671,7 +672,32 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
+        Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), tile.transform.position.ChangeZ(0));
+
+        return Vector2.Distance(furthestPoint, tile.transform.position) < 1;
+
         return tile.actualBlockages.Count < 4;
+    }
+
+    public static Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition)
+    {
+        NavMeshPath path = new NavMeshPath();
+
+        NavMesh.CalculatePath(startPosition, targetPosition, NavMesh.AllAreas, path);
+
+        if (path.corners == null || path.corners.Length == 0)
+        {
+            return startPosition;
+        }
+
+        // Fully reachable
+        if (path.status == NavMeshPathStatus.PathComplete)
+        {
+            return targetPosition;
+        }
+
+        // Partial path → last corner is furthest reachable point
+        return path.corners[path.corners.Length - 1];
     }
 
     private void OnLevelLose()

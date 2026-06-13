@@ -41,6 +41,18 @@ namespace AntsFlow
             }
         }
 
+        public Vector2 GetWorldSize()
+        {
+            Vector2 spriteSize = outline.sprite.bounds.size;
+
+            Vector2 worldSize = new Vector2(
+                spriteSize.x * outline.transform.lossyScale.x,
+                spriteSize.y * outline.transform.lossyScale.y
+            );
+
+            return worldSize;
+        }
+
         public GameSetting gameSetting;
 
         public static event Action<BaseTile> removeTileAsBlockageEvent;
