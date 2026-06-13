@@ -207,9 +207,13 @@ public class BoosterTutorial : MonoBehaviour
             return;
         }
 
+        canvasGroup.gameObject.SetActive(true);
+        canvasGroup.alpha = 1;
         worldTutorialHand.gameObject.SetActive(false);
 
-        description.text = "Press the booster button!";
+        localizedDescription.TranslationName = "Press the booster button!";
+
+        step = 0;
 
         if (boosterType == BoosterType.BreakObject)
         {
@@ -221,6 +225,8 @@ public class BoosterTutorial : MonoBehaviour
         }
         else
         {
+            localizedDescription.TranslationName = "Use the booster to shuffle all ant boxes";
+
             StartCoroutine(RunTutorial());
         }
     }

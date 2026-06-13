@@ -814,7 +814,17 @@ namespace AntsFlow
             //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
             // }
 
-            int clampedDifficultyLevel = Mathf.Min(difficultyLevel, numSpawnPerFactionOrderByDifficulty.Count - 1);
+            int maxValidIndex = 0;
+
+            for (int j = 0; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
+            {
+                if (numSpawnPerFactionOrderByDifficulty.ElementAt(j).Value > 0)
+                {
+                    maxValidIndex = j;
+                }
+            }
+
+            int clampedDifficultyLevel = Mathf.Min(difficultyLevel, maxValidIndex);
 
             for (int j = clampedDifficultyLevel; j < numSpawnPerFactionOrderByDifficulty.Count; j++)
             {

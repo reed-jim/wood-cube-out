@@ -209,8 +209,8 @@ namespace NamPhuThuy.GamePlay
 
             setLevelNumberEvent?.Invoke();
 
-            nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
-            nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
+            // nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndexInGroup(nextLevel);
+            // nextLevel = RemoteConfigLevelManager.GetReplacedLevelIndex(nextLevel);
 
             GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
 

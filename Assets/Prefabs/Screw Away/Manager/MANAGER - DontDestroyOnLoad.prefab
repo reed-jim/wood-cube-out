@@ -4265,6 +4265,82 @@ MonoBehaviour:
   - Language: Spanish
     Text: Sonido
     Object: {fileID: 0}
+--- !u!1 &2962832078119332070
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5190775915596138753}
+  - component: {fileID: 2649691262308842508}
+  m_Layer: 0
+  m_Name: Use the booster to shuffle all ant boxes
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5190775915596138753
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2962832078119332070}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2649691262308842508
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2962832078119332070}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Use the booster to shuffle all ant boxes!
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Utilisez le booster pour m\xE9langer toutes les bo\xEEtes \xE0 fourmis\_!"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Benutze den Booster, um alle Ameisenk\xE4sten zu mischen!"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Usa il booster per mescolare tutte le scatole delle formiche!
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30D6\u30FC\u30B9\u30BF\u30FC\u3092\u4F7F\u3063\u3066\u3059\u3079\u3066\u306E\u30A2\u30EA\u30DC\u30C3\u30AF\u30B9\u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3057\u307E\u3057\u3087\u3046\uFF01"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uBD80\uC2A4\uD130\uB97C \uC0AC\uC6A9\uD558\uC5EC \uBAA8\uB4E0 \uAC1C\uBBF8
+      \uC0C1\uC790\uB97C \uC11E\uC73C\uC138\uC694!"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Use o refor\xE7o para embaralhar todas as caixas de formigas!"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0418\u0441\u043F\u043E\u043B\u044C\u0437\u0443\u0439\u0442\u0435 \u0431\u0443\u0441\u0442\u0435\u0440,
+      \u0447\u0442\u043E\u0431\u044B \u043F\u0435\u0440\u0435\u0442\u0430\u0441\u043E\u0432\u0430\u0442\u044C
+      \u0432\u0441\u0435 \u044F\u0449\u0438\u043A\u0438 \u0441 \u043C\u0443\u0440\u0430\u0432\u044C\u044F\u043C\u0438!"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "\xA1Usa el refuerzo para barajar todas las cajas de hormigas!"
+    Object: {fileID: 0}
 --- !u!1 &3047062466952997462
 GameObject:
   m_ObjectHideFlags: 0
@@ -8632,6 +8708,7 @@ Transform:
   - {fileID: 2615236712183214521}
   - {fileID: 6704971298914194204}
   - {fileID: 64539145307072565}
+  - {fileID: 5190775915596138753}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269

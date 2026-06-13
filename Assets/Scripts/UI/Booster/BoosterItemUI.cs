@@ -136,6 +136,12 @@ public class BoosterItemUI : MonoBehaviour
                 quantityTextContainer.gameObject.SetActive(false);
                 addButtonRT.gameObject.SetActive(true);
             }
+
+            if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
+            {
+                quantityTextContainer.gameObject.SetActive(false);
+                addButtonRT.gameObject.SetActive(false);
+            }
         }
     }
 
