@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 using DG.Tweening;
+using Spine.Unity;
 
 public class RevivePopup : BasePopup
 {
@@ -22,6 +23,7 @@ public class RevivePopup : BasePopup
     [SerializeField] private Sprite unlockBoxSprite;
     [SerializeField] private Sprite clearHolesSprite;
     [SerializeField] private CanvasGroup popupCG;
+    [SerializeField] private SkeletonGraphic animTut;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -244,31 +246,51 @@ public class RevivePopup : BasePopup
 
     private float timmerHold;
     private bool isBoardApla;
+    private bool isClickBoard;
 
     public void OnHoldSeeBoard()
     {
         Debug.Log("Hold==== " + isBoardApla);
-        if (isBoardApla)
-            return;
-       
-        timmerHold += Time.deltaTime;
-        if(timmerHold >= 1.2f)
-        {
-            popupCG.DOKill();
-            popupCG.alpha = 1;
-            popupCG.DOFade(0, 0.3f);
-            isBoardApla = true;
-        }    
+        isClickBoard = true;
     }
 
     public void OnEndHoldSeeBoard()
     {
-        if (!isBoardApla)
-            return;
+        isClickBoard = false;
+
         popupCG.DOKill();
         popupCG.alpha = 0;
         popupCG.DOFade(1, 0.3f);
+
+        animTut.DOKill();
+        animTut.color = new Color(animTut.color.r, animTut.color.g, animTut.color.b, 0);
+        animTut.DOFade(1, 0.3f);
+
         isBoardApla = false;
         timmerHold = 0;
+    }
+
+    private void Update()
+    {
+        if (!isClickBoard)
+            return;
+
+        if (isBoardApla)
+            return;
+
+        timmerHold += Time.deltaTime;
+        if (timmerHold >= 0.3f)
+        {
+            popupCG.DOKill();
+            popupCG.alpha = 1;
+            popupCG.DOFade(0, 0.3f);
+
+            animTut.DOKill();
+            animTut.color = new Color(animTut.color.r, animTut.color.g, animTut.color.b, 1);
+            animTut.DOFade(0, 0.3f);
+
+
+            isBoardApla = true;
+        }
     }
 }

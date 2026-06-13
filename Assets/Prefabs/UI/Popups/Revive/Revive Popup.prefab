@@ -919,6 +919,7 @@ MonoBehaviour:
   unlockBoxSprite: {fileID: 21300000, guid: 89444f33358b03b489df6bd3bed79c14, type: 3}
   clearHolesSprite: {fileID: 21300000, guid: 096caeb98c6c6ce4faa082e87df3d1a6, type: 3}
   popupCG: {fileID: 6496339139206500968}
+  animTut: {fileID: 3535228353841239906}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   userResourcesObserver: {fileID: 11400000, guid: 9f7c1dbaae3ef634e8295c3cc55ef7cf, type: 2}
   boosterDataObserver: {fileID: 11400000, guid: 08938125d62ca854e8a5ab1cb58d04bb, type: 2}
@@ -1040,13 +1041,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
   m_Delegates:
-  - eventID: 0
+  - eventID: 3
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 6226128690227000318}
           m_TargetAssemblyTypeName: RevivePopup, Assembly-CSharp
-          m_MethodName: OnHoldSeeBoard
+          m_MethodName: OnEndHoldSeeBoard
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1056,13 +1057,13 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
-  - eventID: 3
+  - eventID: 2
     callback:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 6226128690227000318}
           m_TargetAssemblyTypeName: RevivePopup, Assembly-CSharp
-          m_MethodName: OnEndHoldSeeBoard
+          m_MethodName: OnHoldSeeBoard
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1207,7 +1208,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
