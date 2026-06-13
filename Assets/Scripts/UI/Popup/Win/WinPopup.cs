@@ -244,13 +244,15 @@ public class WinPopup : BasePopup
         {
             HideImmediately();
         }));
+        
+        // bool isBackHome = HandleSuggestFeature();
 
-        bool isBackHome = HandleSuggestFeature();
+        // if (!isBackHome)
+        // {
+        //     goLevelEvent?.Invoke(currentLevel.Value);
+        // }
 
-        if (!isBackHome)
-        {
-            goLevelEvent?.Invoke(currentLevel.Value);
-        }
+        goLevelEvent?.Invoke(currentLevel.Value);
 
         SaferioTracking.TrackInterstitialAdCompleted(currentLevel.Value, "next_level");
 
