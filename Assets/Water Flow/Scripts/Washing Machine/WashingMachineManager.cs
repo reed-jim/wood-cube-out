@@ -560,10 +560,17 @@ namespace AntsFlow
 
                     if (numToClear >= antBox.number)
                     {
-                        if (!antBox.isInSlot)
+                        if (antBox.isInSlot)
+                        {
+                            antBox.washingMachineSlot.washingMachineItem = null;
+                        }
+                        else
                         {
                             antBox.washingMachineStartSlot.washingMachine = null;
                         }
+
+                        antBox.washingMachineSlot = null;
+                        antBox.washingMachineStartSlot = null;
                     }
                 }
             }
@@ -610,7 +617,7 @@ namespace AntsFlow
         #endregion
 
         #region Check Lose
-        public bool CheckLoseLevel()
+        public bool IsLose()
         {
             int numAntBoxLeft = washingMachineSlots.Count;
 
@@ -635,6 +642,13 @@ namespace AntsFlow
 
             bool isLose = numAntBoxLeft == 0;
 
+            return isLose;
+        }
+
+        public bool CheckLoseLevel()
+        {
+            bool isLose = IsLose();
+
             if (isLose)
             {
                 List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
@@ -643,7 +657,7 @@ namespace AntsFlow
                 {
                     WashingMachineItem antBox = stuckAntBoxes[i];
 
-                    antBox.PlaySelectFalseAnimationLoop();
+                    antBox.TurnOnWarningLoseAnimation();
                 }
 
                 StartCoroutine(PendingLoseLevel());
@@ -661,9 +675,23 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            loseLevelEvent?.Invoke();
+            if (IsLose())
+            {
+                loseLevelEvent?.Invoke();
 
-            GamePersistentVariable.isLevelLost = true;
+                GamePersistentVariable.isLevelLost = true;
+            }
+            else
+            {
+                List<WashingMachineItem> stuckAntBoxes = washingMachineSlots.Where(item => item.washingMachineItem != null).Select(item => item.washingMachineItem).ToList();
+
+                for (int i = 0; i < stuckAntBoxes.Count; i++)
+                {
+                    WashingMachineItem antBox = stuckAntBoxes[i];
+
+                    antBox.TurnOffWarningLoseAnimation();
+                }
+            }
         }
 
         public bool IsNoSlotAvailable()

@@ -10,11 +10,15 @@ public class PopupFadeBackground : MonoBehaviour
     [SerializeField] private float transitionDuration;
 
     private Tween _transitionTween;
+    private Color _initialColor;
 
     void Awake()
     {
         BasePopup.popupShowEvent += OnPopupShow;
         BasePopup.popupHideEvent += OnPopupClose;
+        RevivePopup.fadeBlackOverlayEvent += Fade;
+
+        _initialColor = fadeBackground.color;
 
         fadeBackground.gameObject.SetActive(false);
     }
@@ -23,6 +27,7 @@ public class PopupFadeBackground : MonoBehaviour
     {
         BasePopup.popupShowEvent -= OnPopupShow;
         BasePopup.popupHideEvent -= OnPopupClose;
+        RevivePopup.fadeBlackOverlayEvent -= Fade;
 
         CommonUtil.StopTween(_transitionTween);
     }
@@ -61,5 +66,17 @@ public class PopupFadeBackground : MonoBehaviour
         {
             fadeBackground.gameObject.SetActive(false);
         });
+    }
+
+    private void Fade(bool isFadeIn)
+    {
+        if (isFadeIn)
+        {
+            Tween.Color(fadeBackground, _initialColor, 0.3f);
+        }
+        else
+        {
+            Tween.Color(fadeBackground, ColorUtil.WithAlpha(_initialColor, 0), 0.3f);
+        }
     }
 }

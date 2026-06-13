@@ -43,6 +43,7 @@ public class RevivePopup : BasePopup
     public static event Action<BoosterType> reviveEvent;
     public static event Action reviveRefusedEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
+    public static event Action<bool> fadeBlackOverlayEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -268,6 +269,8 @@ public class RevivePopup : BasePopup
 
         isBoardApla = false;
         timmerHold = 0;
+
+        fadeBlackOverlayEvent?.Invoke(true);
     }
 
     private void Update()
@@ -289,8 +292,9 @@ public class RevivePopup : BasePopup
             animTut.color = new Color(animTut.color.r, animTut.color.g, animTut.color.b, 1);
             animTut.DOFade(0, 0.3f);
 
-
             isBoardApla = true;
+
+            fadeBlackOverlayEvent?.Invoke(false);
         }
     }
 }

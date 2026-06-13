@@ -31,9 +31,12 @@ public class HiddenAntBox : WashingMachineItem
 
     private void Hide()
     {
-        SaferioTween.AlphaShow(questionMark);
-        SaferioTween.AlphaShow(hiddenContainer);
-        SaferioTween.AlphaHide(numberText);
+        questionMark.gameObject.SetActive(true);
+        hiddenContainer.gameObject.SetActive(true);
+        numberText.gameObject.SetActive(false);
+
+        questionMark.color = Color.white;
+        hiddenContainer.color = Color.white;
     }
 
     public void Reveal()
