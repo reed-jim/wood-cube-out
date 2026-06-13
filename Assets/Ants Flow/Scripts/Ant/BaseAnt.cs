@@ -54,6 +54,7 @@ namespace AntsFlow
             // LevelLoader.startLevelEvent += OnLevelStarted;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
+            WashingMachineManager.winLevelEvent += OnLevelWon;
 
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
@@ -78,6 +79,7 @@ namespace AntsFlow
             // LevelLoader.startLevelEvent -= OnLevelStarted;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
+            WashingMachineManager.winLevelEvent -= OnLevelWon;
         }
 
         private void Start()
@@ -234,6 +236,13 @@ namespace AntsFlow
         }
 
         private void OnLevelStarted()
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
+
+            Reset();
+        }
+
+        private void OnLevelWon()
         {
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
 
