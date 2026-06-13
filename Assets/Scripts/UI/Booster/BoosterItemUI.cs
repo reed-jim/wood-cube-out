@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Lean.Localization;
 using Spine;
 using Spine.Unity;
 using TMPro;
@@ -22,10 +23,16 @@ public class BoosterItemUI : MonoBehaviour
     [SerializeField] private Button pressButton;
     [SerializeField] private Button addButton;
 
+    [Header("Lock State")]
+    [SerializeField] private CanvasGroup lockCanvasGroup;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelToUnlock;
+
     [Header("CUSTOMIZE")]
     [SerializeField] private int boosterIndex;
+    [SerializeField] private BoosterType boosterType;
 
     [Header("SCRIPTABLE OBJECT")]
+    [SerializeField] private IntVariable currentLevel;
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
@@ -65,6 +72,21 @@ public class BoosterItemUI : MonoBehaviour
         else
         {
             quantityTextContainer.gameObject.SetActive(false);
+            addButtonRT.gameObject.SetActive(true);
+        }
+
+        if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
+        {
+            lockCanvasGroup.gameObject.SetActive(true);
+            quantityTextContainer.gameObject.SetActive(false);
+            addButtonRT.gameObject.SetActive(false);
+
+            localizedLevelToUnlock.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GameConstants.GetLevelToUnlockBooster(boosterType)}");
+        }
+        else
+        {
+            lockCanvasGroup.gameObject.SetActive(false);
+            quantityTextContainer.gameObject.SetActive(true);
             addButtonRT.gameObject.SetActive(true);
         }
     }

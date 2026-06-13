@@ -774,10 +774,10 @@ public class AdmobAdsMax
         return true;
 #endif
 
-        if (UseProfile.CurrentLevel > RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 3))
+        if (GameController.Instance.useProfile.CurrentLevel > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumLevel)
         {
             GameController.Instance.AnalyticsController.LoadInterEligible();
-            if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 90))
+            if (countdownAds > GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.minimumInterval)
             {
                 Debug.Log("show inter ========" + countdownAds);
                 ShowInterstitialHandle(isShowImmediatly, actionWatchLog, actionIniterClose);
@@ -806,7 +806,7 @@ public class AdmobAdsMax
         UnityAction actionIniterClose = null, string level = null)
     {
         actionIniterClose += () => { IsCooldownAdmobBanner = true; };
-        if (UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
+        if (GameController.Instance.useProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
         {
             var close = actionIniterClose;
             actionIniterClose = () => { ShowInterstitialAd(true, actionIniterClose: close); };
@@ -825,7 +825,7 @@ public class AdmobAdsMax
             GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
             try
             {
-                //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Interstitial, actionWatchLog);
+                //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.Interstitial, actionWatchLog);
             }
             catch (Exception e)
             {
@@ -924,7 +924,7 @@ public class AdmobAdsMax
         }
 
         return (!GameController.Instance.useProfile.IsRemoveAds && _interstitialAd != null && _interstitialAd.CanShowAd()
-            && UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
+            && GameController.Instance.useProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
                                         && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
     }
 
@@ -1181,7 +1181,7 @@ public class AdmobAdsMax
         {
             actionNotLoadedVideo?.Invoke();
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
-                UseProfile.CurrentLevel.ToString());
+                 GameController.Instance.useProfile.CurrentLevel.ToString());
             return;
         }
 
@@ -1207,14 +1207,14 @@ public class AdmobAdsMax
             MaxSdk.ShowRewardedAd(RewardedAdUnitId, actionType.ToString());
             try
             {
-                //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
+                //DWHLog.Log.AdsLog( GameController.Instance.useProfile, AdType.Reward, adWhere);
             }
             catch (Exception e)
             {
                 Debug.LogError(e.Message);
             }
             GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                UseProfile.CurrentLevel.ToString());
+                 GameController.Instance.useProfile.CurrentLevel.ToString());
             GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
@@ -1227,12 +1227,12 @@ public class AdmobAdsMax
 
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
-                    UseProfile.CurrentLevel.ToString());
+                     GameController.Instance.useProfile.CurrentLevel.ToString());
                 Debug.Log("ShowInterstitial !!!");
                 countdownAds = 0;
                 try
                 {
-                    DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Reward, adWhere);
+                    DWHLog.Log.AdsLog(GameController.Instance.useProfile.CurrentLevel, AdType.Reward, adWhere);
                 }
                 catch (Exception e)
                 {
@@ -1245,7 +1245,7 @@ public class AdmobAdsMax
                 Debug.Log("No ads !!!");
                 actionNotLoadedVideo?.Invoke();
                 GameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
-                    UseProfile.CurrentLevel.ToString());
+                      GameController.Instance.useProfile.CurrentLevel.ToString());
             }
         }
     }

@@ -246,6 +246,7 @@ namespace NamPhuThuy.GamePlay
                 AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
 
                 GamePersistentVariable.levelItem = levelItem;
+                GamePersistentVariable.isLevelLost = false;
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
@@ -388,8 +389,6 @@ namespace NamPhuThuy.GamePlay
 
                 CoinChallengeGameplayUI.Instance.SetNumber();
                 #endregion
-
-                GamePersistentVariable.isLevelLost = false;
 
                 startLevelCompletedEvent?.Invoke();
             }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using AntsFlow;
 using CandyCoded.HapticFeedback;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Spine;
@@ -42,6 +43,8 @@ public class WashingMachineItem : MonoBehaviour
     public bool isDouble;
     public bool isGhostMode;
     public bool isStucking;
+    public bool isPlayingWarningLoseAnimation;
+
     public WashingMachineStartSlot washingMachineStartSlot;
     public WashingMachineSlot washingMachineSlot;
 
@@ -61,7 +64,8 @@ public class WashingMachineItem : MonoBehaviour
         antBoxDoneEvent += OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent += OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
-        SettingPopup.replayLevelEvent += OnLevelReplayed;
+        LevelLoader.startLevelEvent += OnLevelStarted;
+        // SettingPopup.replayLevelEvent += OnLevelReplayed;
         RevivePopup.reviveEvent += OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -78,7 +82,8 @@ public class WashingMachineItem : MonoBehaviour
         antBoxDoneEvent -= OnAntBoxCompleted;
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
-        SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        LevelLoader.startLevelEvent -= OnLevelStarted;
+        // SettingPopup.replayLevelEvent -= OnLevelReplayed;
         RevivePopup.reviveEvent -= OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
 
@@ -244,9 +249,18 @@ public class WashingMachineItem : MonoBehaviour
         HapticFeedback.HeavyFeedback();
     }
 
-    public void PlaySelectFalseAnimationLoop()
+    public void TurnOnWarningLoseAnimation()
     {
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, true);
+
+        isPlayingWarningLoseAnimation = true;
+    }
+
+    public void TurnOffWarningLoseAnimation()
+    {
+        skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
+
+        isPlayingWarningLoseAnimation = false;
     }
 
     private void SwitchShadow()
@@ -312,10 +326,13 @@ public class WashingMachineItem : MonoBehaviour
     {
         Tween.LocalPositionY(numberText.transform, numberText.transform.localPosition.y - 1f, duration: 0.3f);
 
+        doubleAntBoxHole.gameObject.SetActive(true);
+        doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(faction);
+
         if (isDouble)
         {
-            doubleAntBoxHole.gameObject.SetActive(true);
-            doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(faction);
+            // doubleAntBoxHole.gameObject.SetActive(true);
+            // doubleAntBoxHole.sprite = FactionMapper.Ins.GetDoubleAntHoleSprite(faction);
 
             skeletonAnimation.AnimationState.SetAnimation(0, doubleBoxAnimation, false);
         }
@@ -323,8 +340,6 @@ public class WashingMachineItem : MonoBehaviour
         {
             skeletonAnimation.AnimationState.SetAnimation(0, idleAnimation, false);
         }
-
-        // CheckAntsPath();
     }
 
     public void CheckAntsPath()
@@ -363,6 +378,11 @@ public class WashingMachineItem : MonoBehaviour
         remainingNumber -= addedTile;
 
         tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
+
+        if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
+        {
+            TurnOffWarningLoseAnimation();
+        }
 
         if (tilesToMove.Count > 0)
         {
@@ -445,6 +465,11 @@ public class WashingMachineItem : MonoBehaviour
                     });
 
                     isAnimating = true;
+                }
+
+                if (isPlayingWarningLoseAnimation)
+                {
+                    TurnOffWarningLoseAnimation();
                 }
 
                 tilesToMove.RemoveAt(currentAntIndex);
@@ -558,6 +583,11 @@ public class WashingMachineItem : MonoBehaviour
         loseLevelEvent?.Invoke();
 
         GamePersistentVariable.isLevelLost = true;
+    }
+
+    private void OnLevelStarted()
+    {
+        ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
     private void OnLevelReplayed()

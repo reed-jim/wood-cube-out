@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 
 public class UseProfile : MonoBehaviour
 {
+    [SerializeField] private IntVariable currentLevel;
     public static bool IsLoggedInByFBorGG
     {
         get
@@ -16,12 +17,14 @@ public class UseProfile : MonoBehaviour
             return IsLoggedIn;
         }
     }
-    public static int CurrentLevel
+    public  int CurrentLevel
     {
         get
         {
-            return PlayerPrefs.GetInt(StringHelper.CURRENT_LEVEL, 1);
-        }
+            // return PlayerPrefs.GetInt(StringHelper.CURRENT_LEVEL, 1);
+
+            return currentLevel.Value;
+}
         set
         {
             GPlayerPrefs.SetInt(StringHelper.CURRENT_LEVEL, value);

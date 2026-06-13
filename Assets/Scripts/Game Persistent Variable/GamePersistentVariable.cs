@@ -59,6 +59,7 @@ public static class GamePersistentVariable
     public static bool isPendingReplay;
     public static bool isPendingReturnHome;
     public static bool isPendingStartLevel;
+    public static bool isPendingLoseLevel;
     public static bool isMenuLoading;
     public static bool hasPlayerReachedGameplay;
     public static bool isLevelLost;

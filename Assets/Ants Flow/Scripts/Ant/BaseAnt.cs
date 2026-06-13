@@ -51,7 +51,8 @@ namespace AntsFlow
 
         void Awake()
         {
-            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LevelLoader.startLevelEvent += OnLevelStarted;
+            // SettingPopup.replayLevelEvent += OnLevelReplayed;
 
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
@@ -71,6 +72,12 @@ namespace AntsFlow
             stuckNoReachDestinationThreshold = 0.2f;
         }
 
+        void OnDestroy()
+        {
+            LevelLoader.startLevelEvent -= OnLevelStarted;
+            // SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        }
+
         private void Start()
         {
             ActionLimitQueue.ActionLimit actionAntToNest = new ActionLimitQueue.ActionLimit(() =>
@@ -85,11 +92,6 @@ namespace AntsFlow
             }, 0.15f);
 
             GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
-        }
-
-        void OnDestroy()
-        {
-            SettingPopup.replayLevelEvent -= OnLevelReplayed;
         }
 
         void Update()
@@ -219,6 +221,13 @@ namespace AntsFlow
             isDroppingTile = true;
 
             navMeshAgent.enabled = false;
+        }
+
+        private void OnLevelStarted()
+        {
+            Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
         private void OnLevelReplayed()
