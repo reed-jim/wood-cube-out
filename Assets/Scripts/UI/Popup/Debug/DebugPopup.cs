@@ -21,6 +21,9 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button changeBackgroundColorButton;
     [SerializeField] private Button startAutoTestLevelButton;
     [SerializeField] private Button clearAddressablesCacheButton;
+    [SerializeField] private Button increaseGameSpeedButton;
+    [SerializeField] private Button decreaseGameSpeedButton;
+    [SerializeField] private TMP_Text gameSpeedText;
     [SerializeField] private TMP_Text debugAdsText;
 
     [SerializeField] private UserResourcesObserver userResourcesObserver;
@@ -40,10 +43,13 @@ public class DebugPopup : BasePopup
         debugAdsButton.onClick.AddListener(DebugAdsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
+        increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
+        decreaseGameSpeedButton.onClick.AddListener(DecreaseGameSpeed);
         startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
-
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
+
+        gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
 
     protected override void MoreActionInAwake()
@@ -149,5 +155,35 @@ public class DebugPopup : BasePopup
     private void ClearAddressablesCache()
     {
         Caching.ClearCache();
+    }
+
+    private void IncreaseGameSpeed()
+    {
+        ChangeGameSpeed(true);
+    }
+
+    private void DecreaseGameSpeed()
+    {
+        ChangeGameSpeed(false);
+    }
+
+    private void ChangeGameSpeed(bool isIncrease)
+    {
+        if (isIncrease)
+        {
+            if (Time.timeScale < 5)
+            {
+                Time.timeScale++;
+            }
+        }
+        else
+        {
+            if (Time.timeScale > 1)
+            {
+                Time.timeScale--;
+            }
+        }
+
+        gameSpeedText.text = $"Game Speed: x{(int)Time.timeScale}";
     }
 }
