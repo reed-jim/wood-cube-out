@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
+using Saferio.Util.SaferioTween;
 using Spine;
 using Spine.Unity;
 using TMPro;
@@ -58,6 +59,7 @@ public class SceneTransition : MonoBehaviour
         LevelLoader.showSceneTransitionEvent += TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
+        SettingPopup.replayLevelEvent += ShowStaticSceneTransition;
 
         _tweens = new List<Tween>();
 
@@ -85,6 +87,7 @@ public class SceneTransition : MonoBehaviour
         LevelLoader.showSceneTransitionEvent -= TransitionOnLevelStarted;
         ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
+        SettingPopup.replayLevelEvent -= ShowStaticSceneTransition;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -126,6 +129,17 @@ public class SceneTransition : MonoBehaviour
         almostThereBackground.gameObject.SetActive(true);
 
         almostThereBackground.alpha = 1;
+    }
+
+    public void ShowStaticSceneTransition()
+    {
+        loadingSpine.gameObject.SetActive(false);
+
+        progressBarFill.fillAmount = 0;
+        loadingText.text = "0%";
+
+        loadLevelInProgressCanvasGroup.alpha = 0;
+        SaferioTween.AlphaShow(loadLevelInProgressCanvasGroup);
     }
 
     private void TransitionOnLevelStarted()

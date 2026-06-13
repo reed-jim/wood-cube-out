@@ -51,8 +51,9 @@ namespace AntsFlow
 
         void Awake()
         {
-            LevelLoader.startLevelEvent += OnLevelStarted;
-            // SettingPopup.replayLevelEvent += OnLevelReplayed;
+            // LevelLoader.startLevelEvent += OnLevelStarted;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
 
             navMeshAgent.updateRotation = false;
             navMeshAgent.updateUpAxis = false;
@@ -74,8 +75,9 @@ namespace AntsFlow
 
         void OnDestroy()
         {
-            LevelLoader.startLevelEvent -= OnLevelStarted;
-            // SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            // LevelLoader.startLevelEvent -= OnLevelStarted;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent -= OnLevelReplayed;
         }
 
         private void Start()
@@ -133,7 +135,10 @@ namespace AntsFlow
                 {
                     stuckTime = 0;
 
-                    tile.MoveToAnt(this);
+                    if (tile != null)
+                    {
+                        tile.MoveToAnt(this);
+                    }
 
                     MoveToNest();
                 }
@@ -180,6 +185,11 @@ namespace AntsFlow
         {
             isMovingToTile = false;
             isMovingToNest = false;
+
+            if (tile != null)
+            {
+                LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
+            }
         }
 
         private void OnAntMovedToNest()
@@ -225,16 +235,16 @@ namespace AntsFlow
 
         private void OnLevelStarted()
         {
-            Reset();
-
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
+
+            Reset();
         }
 
         private void OnLevelReplayed()
         {
-            Reset();
-
             ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
+
+            Reset();
         }
 
         public void Init(Color faction)
@@ -325,7 +335,10 @@ namespace AntsFlow
             Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
-                tile.MoveToAnt(this);
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
 
                 direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
                 distance = direction.magnitude;

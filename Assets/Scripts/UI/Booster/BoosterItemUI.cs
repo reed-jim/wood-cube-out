@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Lean.Localization;
+using NamPhuThuy.GamePlay;
 using Spine;
 using Spine.Unity;
 using TMPro;
@@ -42,6 +43,7 @@ public class BoosterItemUI : MonoBehaviour
         BuyBoosterPopup.updateBoosterQuantityEvent += UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent += UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+        LevelLoader.startLevelEvent += Setup;
 
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
         pressButton.onClick.AddListener(Press);
@@ -54,6 +56,7 @@ public class BoosterItemUI : MonoBehaviour
         BuyBoosterPopup.updateBoosterQuantityEvent -= UpdateQuantityText;
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
+        LevelLoader.startLevelEvent -= Setup;
     }
 
     private void Setup()

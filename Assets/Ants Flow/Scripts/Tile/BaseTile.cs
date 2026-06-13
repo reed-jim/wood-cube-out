@@ -93,6 +93,25 @@ namespace AntsFlow
             tileMoveToAntEvent?.Invoke(this);
         }
 
+        public void Highlight(Action onComplete)
+        {
+            outline.gameObject.SetActive(true);
+
+            outline.color = ColorUtil.WithAlpha(Color.white, 0);
+
+            Tween.Alpha(outline, 0.75f, duration: 0.3f)
+            .OnComplete(() =>
+            {
+                Tween.Alpha(outline, 0, duration: 0.7f)
+                .OnComplete(() =>
+                {
+                    outline.gameObject.SetActive(false);
+
+                    onComplete?.Invoke();
+                });
+            });
+        }
+
         public void Complete()
         {
             gameObject.SetActive(false);

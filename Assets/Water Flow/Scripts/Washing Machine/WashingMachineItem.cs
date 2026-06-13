@@ -65,7 +65,8 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.loseLevelEvent += OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent += OnTileCompleted;
         LevelLoader.startLevelEvent += OnLevelStarted;
-        // SettingPopup.replayLevelEvent += OnLevelReplayed;
+        SettingPopup.replayLevelEvent += OnLevelReplayed;
+        LosePopup.replayLevelEvent += OnLevelReplayed;
         RevivePopup.reviveEvent += OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent += OnAllGhostAntBoxesCompleted;
 
@@ -83,7 +84,8 @@ public class WashingMachineItem : MonoBehaviour
         WashingMachineManager.loseLevelEvent -= OnLevelLose;
         AntsFlow.BaseTile.tileCompleteEvent -= OnTileCompleted;
         LevelLoader.startLevelEvent -= OnLevelStarted;
-        // SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        SettingPopup.replayLevelEvent -= OnLevelReplayed;
+        LosePopup.replayLevelEvent -= OnLevelReplayed;
         RevivePopup.reviveEvent -= OnRevive;
         WashingMachineManager.ghostAntBoxesClearedEvent -= OnAllGhostAntBoxesCompleted;
 
@@ -138,6 +140,7 @@ public class WashingMachineItem : MonoBehaviour
         isGhostMode = false;
         isDouble = false;
         remainingNumber = number;
+        spawningAntCoroutine = null;
     }
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
