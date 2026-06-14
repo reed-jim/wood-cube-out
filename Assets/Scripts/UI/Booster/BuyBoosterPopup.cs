@@ -111,7 +111,7 @@ public class BuyBoosterPopup : BasePopup
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {
-            if (_boosterType == BoosterType.BreakObject)
+            if (_boosterType == BoosterType.Hint)
             {
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
 

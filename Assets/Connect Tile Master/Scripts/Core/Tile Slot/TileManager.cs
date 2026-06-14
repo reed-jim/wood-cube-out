@@ -1005,6 +1005,49 @@ public class TileManager : Singleton<TileManager>
         }
     }
 
+    public void UseHintBooster()
+    {
+        TileSlotContainer activeContainer = null;
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            if (!tileSlotContainers[i].isLocked && !tileSlotContainers[i].isHidden && !tileSlotContainers[i].isMoving && !tileSlotContainers[i].isCompleted && tileSlotContainers[i].GetAvailableTileSlot() != null)
+            {
+                activeContainer = tileSlotContainers[i];
+                break;
+            }
+        }
+
+        if (activeContainer != null)
+        {
+            activeContainer.SetHighlight(true);
+
+            List<BaseTile> highlightedTiles = new List<BaseTile>();
+            foreach (var tile in tiles)
+            {
+                if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == activeContainer.ItemCategory)
+                {
+                    tile.SetHighlight(true);
+                    highlightedTiles.Add(tile);
+                }
+            }
+
+            Tween.Delay(2f).OnComplete(() =>
+            {
+                if (activeContainer != null)
+                {
+                    activeContainer.SetHighlight(false);
+                }
+                foreach (var tile in highlightedTiles)
+                {
+                    if (tile != null)
+                    {
+                        tile.SetHighlight(false);
+                    }
+                }
+            });
+        }
+    }
+
     public bool CanUseShuffleBooster()
     {
         return tiles.Any(tile => !tile.IsOnSlot && !tile.IsOutside);

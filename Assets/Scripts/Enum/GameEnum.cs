@@ -115,11 +115,14 @@ public class GameEnum : MonoBehaviour
 
     public enum BoosterType
     {
-        AddScrewPort,
+        Hint,
         BreakObject,
-        ClearScrewPorts,
+        FreezeTime,
         UnlockScrewBox,
-        FreezeTime
+
+        AddScrewPort,
+        ClearScrewPorts,
+        
     }
 
 

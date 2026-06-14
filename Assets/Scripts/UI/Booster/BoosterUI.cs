@@ -20,6 +20,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button clearAllScrewPortsButton;
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
     [SerializeField] private Button freezeTimeButton;
+    [SerializeField] private Button hintButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -88,6 +89,10 @@ public class BoosterUI : MonoBehaviour
         if (freezeTimeButton != null)
         {
             freezeTimeButton.onClick.AddListener(() => UseBooster(BoosterType.FreezeTime));
+        }
+        if (hintButton != null)
+        {
+            hintButton.onClick.AddListener(() => UseBooster(BoosterType.Hint));
         }
 
         _tweens = new List<Tween>();
@@ -182,6 +187,10 @@ public class BoosterUI : MonoBehaviour
         {
             UseFreezeTime();
         }
+        else if (boosterType == BoosterType.Hint)
+        {
+            UseHint();
+        }
 
         useBoosterEvent?.Invoke(boosterType);
     }
@@ -262,7 +271,7 @@ public class BoosterUI : MonoBehaviour
 
     private void UseFreezeTime()
     {
-        if (!IsBoosterAvailable(boosterIndex: 4))
+        if (!IsBoosterAvailable(boosterIndex: 2))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.FreezeTime);
 
@@ -278,10 +287,38 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 4);
+        ConsumeBooster(boosterIndex: 2);
 
         // Freeze time for 15 seconds
         TileManager.Ins.UseFreezeTimeBooster(15f);
+
+        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
+    }
+
+    private void UseHint()
+    {
+        if (!IsBoosterAvailable(boosterIndex: 0))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.Hint);
+
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        ConsumeBooster(boosterIndex: 0);
+
+        TileManager.Ins.UseHintBooster();
 
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {

@@ -245,4 +245,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
         IsOutside = true;
     }
+
+    public void SetHighlight(bool isHighlight)
+    {
+        if (glow != null)
+        {
+            glow.gameObject.SetActive(isHighlight);
+        }
+    }
 }

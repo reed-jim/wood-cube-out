@@ -20,6 +20,7 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private TMP_Text currentTileText;
     [SerializeField] private TMP_Text fakeTileText;
     public Image lockImage;
+    [SerializeField] private Image glow;
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
@@ -334,5 +335,13 @@ public class TileSlotContainer : MonoBehaviour
                 });
             });
         });
+    }
+
+    public void SetHighlight(bool isHighlight)
+    {
+        if (glow != null)
+        {
+            glow.gameObject.SetActive(isHighlight);
+        }
     }
 }
