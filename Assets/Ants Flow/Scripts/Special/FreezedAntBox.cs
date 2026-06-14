@@ -18,6 +18,7 @@ public class FreezedAntBox : WashingMachineItem
 
     public int numAntBoxToUnfreeze;
     public int totalNumAntBoxToUnfreeze;
+    public bool isFreezed;
 
     private MaterialPropertyBlock materialPropertyBlock;
     private bool isPlayingIceBreakFx;
@@ -35,6 +36,7 @@ public class FreezedAntBox : WashingMachineItem
 
         totalNumAntBoxToUnfreeze = SpecialElementManager.Ins.nextFreezeAntBoxRequiredNumber;
         numAntBoxToUnfreeze = totalNumAntBoxToUnfreeze;
+        isFreezed = true;
 
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
@@ -85,18 +87,20 @@ public class FreezedAntBox : WashingMachineItem
         });
         SaferioTween.AlphaHide(numAntBoxToUnfreezeText);
         SaferioTween.AlphaShow(numberText);
+
+        isFreezed = false;
     }
 
     protected override void OnAntBoxCompleted(WashingMachineItem antBox)
     {
         base.OnAntBoxCompleted(antBox);
 
-        if (numAntBoxToUnfreeze <= 0)
+        if (!isFreezed)
         {
             return;
         }
 
-        if (antBox.washingMachineStartSlot != null && antBox.washingMachineStartSlot.row > 1)
+        if (washingMachineStartSlot == null || washingMachineStartSlot.row > 1)
         {
             return;
         }

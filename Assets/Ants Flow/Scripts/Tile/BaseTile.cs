@@ -29,6 +29,7 @@ namespace AntsFlow
         public int priority;
 
         [SerializeField] private Color faction;
+        public float worldSize;
 
         public Color Faction
         {
@@ -41,14 +42,16 @@ namespace AntsFlow
             }
         }
 
-        public Vector2 GetWorldSize()
+        public float GetWorldSize()
         {
-            Vector2 spriteSize = outline.sprite.bounds.size;
+            // Vector2 spriteSize = outline.sprite.bounds.size;
 
-            Vector2 worldSize = new Vector2(
-                spriteSize.x * outline.transform.lossyScale.x,
-                spriteSize.y * outline.transform.lossyScale.y
-            );
+            // Vector2 worldSize = new Vector2(
+            //     spriteSize.x * outline.transform.lossyScale.x,
+            //     spriteSize.y * outline.transform.lossyScale.y
+            // );
+
+            // return worldSize;
 
             return worldSize;
         }
@@ -70,6 +73,15 @@ namespace AntsFlow
 
             actualBlockages = new List<BaseTile>();
             actualBlockages.AddRange(blockages);
+
+            Vector2 spriteSize = outline.sprite.bounds.size;
+
+            Vector2 worldSize = new Vector2(
+                spriteSize.x * outline.transform.lossyScale.x,
+                spriteSize.y * outline.transform.lossyScale.y
+            );
+
+            this.worldSize = worldSize.x;
 
             Init();
         }

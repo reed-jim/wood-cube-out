@@ -684,14 +684,33 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
-        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), tile.transform.position.ChangeZ(0));
+        float tileSize = tile.GetWorldSize();
 
-        // return Vector2.Distance(furthestPoint, tile.transform.position) < 1;
+        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tile.coordinate.transform.position.ChangeZ(0), 0.6f * tileSize);
+        Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint, tile);
 
-        return tile.actualBlockages.Count < 4;
+        return Vector2.Distance(furthestPoint, nearestMovablePoint) < 0.6f * tileSize;
+
+        // return tile.actualBlockages.Count < 4;
     }
 
-    public static Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition)
+    public static Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
+    {
+        NavMeshHit hit;
+
+        if (NavMesh.SamplePosition(
+            targetPosition,
+            out hit,
+            maxDistance,
+            NavMesh.AllAreas))
+        {
+            return hit.position;
+        }
+
+        return targetPosition;
+    }
+
+    public static Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition, AntsFlow.BaseTile tile)
     {
         NavMeshPath path = new NavMeshPath();
 

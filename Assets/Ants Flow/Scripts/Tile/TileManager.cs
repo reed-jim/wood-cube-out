@@ -33,7 +33,7 @@ namespace AntsFlow
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
-
+            
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
             // BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;

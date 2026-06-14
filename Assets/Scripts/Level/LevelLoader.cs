@@ -20,9 +20,6 @@ namespace NamPhuThuy.GamePlay
 {
     public class LevelLoader : MonoBehaviour
     {
-        [SerializeField] private NavMeshSurface navMeshSurface;
-        [SerializeField] private AstarPath pathfinder;
-
         [Header("Clone to calculate level rotation")]
         [SerializeField] private Transform cloneToCalculateRotation;
 
@@ -247,7 +244,7 @@ namespace NamPhuThuy.GamePlay
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
-                navMeshSurface.BuildNavMesh();
+                AntsFlow.TileManager.Ins.UpdateNavMesh();
 
                 Tween.Delay(1).OnComplete(() =>
                 {
