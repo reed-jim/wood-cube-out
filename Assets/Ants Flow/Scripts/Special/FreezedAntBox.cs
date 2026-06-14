@@ -106,7 +106,7 @@ public class FreezedAntBox : WashingMachineItem
 
         numAntBoxToUnfreezeText.text = $"{numAntBoxToUnfreeze}";
 
-        if (numAntBoxToUnfreeze == 0)
+        if (numAntBoxToUnfreeze <= 0)
         {
             Unfreeze();
 

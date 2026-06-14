@@ -878,6 +878,7 @@ namespace AntsFlow
 
             return result;
         }
+
         public Dictionary<Color, int> GetNumTileWithNoAntPerFaction()
         {
             Dictionary<Color, int> result = GetMaxAntRequiredPerFaction();
@@ -908,7 +909,7 @@ namespace AntsFlow
 
                 if (washingMachineSlot.washingMachineItem != null)
                 {
-                    CommonUtil.SumValueOfDictionary(result, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+                    CommonUtil.SumValueOfDictionary(result, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
                 }
             }
 
@@ -968,7 +969,7 @@ namespace AntsFlow
 
                 if (washingMachineSlot.washingMachineItem != null)
                 {
-                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.number);
+                    CommonUtil.SumValueOfDictionary(sortedPoolFaction, washingMachineSlot.washingMachineItem.faction, -washingMachineSlot.washingMachineItem.remainingNumber);
                 }
             }
 

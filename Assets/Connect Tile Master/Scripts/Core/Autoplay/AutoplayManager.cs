@@ -29,7 +29,7 @@ namespace AntsFlow
                 {
                     WashingMachineStartSlot washingMachineStartSlot = WashingMachineManager.Ins.washingMachineStartSlots[i];
 
-                    if (washingMachineStartSlot.washingMachine != null)
+                    if (washingMachineStartSlot.row == 0 && washingMachineStartSlot.washingMachine != null)
                     {
                         poolAntBox.Add(washingMachineStartSlot.washingMachine);
                     }

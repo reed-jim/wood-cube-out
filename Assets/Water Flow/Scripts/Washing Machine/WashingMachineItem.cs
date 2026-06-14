@@ -37,7 +37,7 @@ public class WashingMachineItem : MonoBehaviour
     public bool isTemporarilyEnabled;
     public int numSlotRequired = 1;
     public int number;
-    private int remainingNumber;
+    public int remainingNumber;
     public bool isMoving;
     public bool isAnimating;
     public bool isInSlot;
@@ -624,7 +624,7 @@ public class WashingMachineItem : MonoBehaviour
     {
 
         Reset();
-        
+
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
