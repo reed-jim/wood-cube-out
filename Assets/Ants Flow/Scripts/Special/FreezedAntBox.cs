@@ -64,9 +64,16 @@ public class FreezedAntBox : WashingMachineItem
 
     protected override void PlayInvalidSelectAnimation()
     {
-        Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
+        if (numAntBoxToUnfreeze > 0)
+        {
+            Tween.ShakeScale(transform, strength: 0.2f * Vector3.one, duration: 0.3f);
 
-        iceBreakFx.Play();
+            iceBreakFx.Play();
+        }
+        else
+        {
+            base.PlayInvalidSelectAnimation();
+        }
     }
 
     private void Unfreeze()

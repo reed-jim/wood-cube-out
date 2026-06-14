@@ -151,6 +151,11 @@ public class WashingMachineItem : MonoBehaviour
         spawningAntCoroutine = null;
     }
 
+    private void Reset()
+    {
+        doubleAntBoxHole.gameObject.SetActive(false);
+    }
+
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)
     {
         isDisable = !(washingMachineStartSlot.row == 0);
@@ -603,16 +608,23 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnLevelStarted()
     {
+        Reset();
+
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
     private void OnLevelReplayed()
     {
+        Reset();
+
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
     private void OnLevelWon()
     {
+
+        Reset();
+        
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
     }
 
@@ -672,9 +684,9 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
-        Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), tile.transform.position.ChangeZ(0));
+        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), tile.transform.position.ChangeZ(0));
 
-        return Vector2.Distance(furthestPoint, tile.transform.position) < 1;
+        // return Vector2.Distance(furthestPoint, tile.transform.position) < 1;
 
         return tile.actualBlockages.Count < 4;
     }

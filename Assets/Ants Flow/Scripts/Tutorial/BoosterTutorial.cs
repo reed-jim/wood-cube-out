@@ -200,6 +200,11 @@ public class BoosterTutorial : MonoBehaviour
             }
         }
 
+        if (isTutorial)
+        {
+            isTutorial = DataUtility.Load($"is tutorial {boosterType} done", false);
+        }
+
         if (!isTutorial)
         {
             EndTutorial();
