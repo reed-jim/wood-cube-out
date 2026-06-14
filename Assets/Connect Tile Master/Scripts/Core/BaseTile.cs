@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerDownHandler
 {
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
@@ -27,6 +27,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
 
     public static event Action<BaseTile> selectTileEvent;
+    public Action onInteract;
 
     public ItemCategory ItemCategory
     {
@@ -168,6 +169,13 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
 
     public void Select()
     {
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        SetHighlight(false);
+        onInteract?.Invoke();
+        onInteract = null;
     }
 
     public void OnBeginDrag(PointerEventData eventData)

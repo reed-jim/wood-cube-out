@@ -1021,30 +1021,37 @@ public class TileManager : Singleton<TileManager>
         {
             activeContainer.SetHighlight(true);
 
-            List<BaseTile> highlightedTiles = new List<BaseTile>();
+            BaseTile highlightedTile = null;
             foreach (var tile in tiles)
             {
                 if (!tile.IsOnSlot && !tile.IsOutside && !tile.IsDone && tile.ItemCategory == activeContainer.ItemCategory)
                 {
                     tile.SetHighlight(true);
-                    highlightedTiles.Add(tile);
+                    highlightedTile = tile;
+                    break;
                 }
             }
 
-            Tween.Delay(2f).OnComplete(() =>
+            if (highlightedTile != null)
             {
-                if (activeContainer != null)
+                highlightedTile.onInteract = () =>
                 {
-                    activeContainer.SetHighlight(false);
-                }
-                foreach (var tile in highlightedTiles)
-                {
-                    if (tile != null)
+                    if (activeContainer != null)
                     {
-                        tile.SetHighlight(false);
+                        activeContainer.SetHighlight(false);
                     }
-                }
-            });
+                };
+            }
+            else
+            {
+                Tween.Delay(2f).OnComplete(() =>
+                {
+                    if (activeContainer != null)
+                    {
+                        activeContainer.SetHighlight(false);
+                    }
+                });
+            }
         }
     }
 
