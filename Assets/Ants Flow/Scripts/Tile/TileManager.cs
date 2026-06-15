@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
@@ -18,7 +19,22 @@ namespace AntsFlow
 
         [SerializeField] private TMP_Text tileCountText;
 
+
+
+        #region Custom Pathfinding
         public List<BaseTile> tiles;
+        private Dictionary<Vector2Int, BaseTile> tileMap;
+
+        private static readonly Vector2Int[] dirs =
+        {
+            Vector2Int.up,
+            Vector2Int.down,
+            Vector2Int.left,
+            Vector2Int.right
+        };
+        #endregion
+
+
 
         public Transform antNest;
 
@@ -33,7 +49,7 @@ namespace AntsFlow
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();
-            
+
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
             // BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
@@ -45,6 +61,91 @@ namespace AntsFlow
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
             // BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
         }
+
+        #region Grid
+        public void BuildMap(List<BaseTile> tiles)
+        {
+            tileMap = new Dictionary<Vector2Int, BaseTile>();
+
+            foreach (var t in tiles)
+            {
+                tileMap[t.GridPos] = t;
+            }
+        }
+
+        List<BaseTile> GetNeighbors(BaseTile tile)
+        {
+            List<BaseTile> result = new List<BaseTile>();
+
+            foreach (var d in dirs)
+            {
+                Vector2Int pos = tile.GridPos + d;
+
+                if (tileMap.TryGetValue(pos, out BaseTile neighbor))
+                {
+                    if (!neighbor.gameObject.activeInHierarchy || neighbor.isAntApproaching)
+                        result.Add(neighbor);
+                }
+            }
+
+            return result;
+        }
+
+        public List<BaseTile> GetPath(BaseTile target)
+        {
+            BaseTile start = tiles[0];
+
+            Queue<BaseTile> queue = new Queue<BaseTile>();
+            Dictionary<BaseTile, BaseTile> cameFrom = new Dictionary<BaseTile, BaseTile>();
+            HashSet<BaseTile> visited = new HashSet<BaseTile>();
+
+            queue.Enqueue(start);
+            visited.Add(start);
+
+            while (queue.Count > 0)
+            {
+                BaseTile current = queue.Dequeue();
+
+                if (current == target)
+                    return ReconstructPath(cameFrom, start, target);
+
+                foreach (var neighbor in GetNeighbors(current))
+                {
+                    if (visited.Contains(neighbor))
+                        continue;
+
+                    visited.Add(neighbor);
+                    cameFrom[neighbor] = current;
+                    queue.Enqueue(neighbor);
+                }
+            }
+
+            return null;
+        }
+
+        List<BaseTile> ReconstructPath(
+        Dictionary<BaseTile, BaseTile> cameFrom,
+        BaseTile start,
+        BaseTile end)
+        {
+            List<BaseTile> path = new List<BaseTile>();
+
+            BaseTile current = end;
+
+            while (current != start)
+            {
+                path.Add(current);
+
+                if (!cameFrom.TryGetValue(current, out current))
+                    return null;
+            }
+
+            path.Add(start);
+            path.Reverse();
+
+            return path;
+        }
+        #endregion
 
         public void CalculateLevelCenter()
         {

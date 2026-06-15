@@ -32,6 +32,7 @@ public class DebugPopup : BasePopup
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
+    public static event Action switchLevelEvent;
     public static event Action startAutoTestLevelEvent;
 
     protected override void RegisterMoreEvent()
@@ -69,6 +70,7 @@ public class DebugPopup : BasePopup
         int level = int.Parse(levelInput.text);
 
         toLevelEvent?.Invoke(level);
+        switchLevelEvent?.Invoke();
 
         Hide();
     }
@@ -76,6 +78,7 @@ public class DebugPopup : BasePopup
     private void NextLevel()
     {
         nextLevelEvent?.Invoke();
+        switchLevelEvent?.Invoke();
 
         Hide();
     }
@@ -83,7 +86,8 @@ public class DebugPopup : BasePopup
     private void PrevLevel()
     {
         prevLevelEvent?.Invoke();
-
+        switchLevelEvent?.Invoke();
+        
         Hide();
     }
 

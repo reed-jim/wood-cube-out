@@ -19,11 +19,13 @@ namespace AntsFlow
         public BoxCollider2D boxCollider;
         public NavMeshModifierVolume navMeshModifierVolume;
 
+        public Vector2Int GridPos;
         public bool isAntApproaching;
         public bool isAnimating;
         public bool isLocked;
         public List<BaseTile> blockages;
         public List<BaseTile> actualBlockages;
+        public List<BaseTile> path;
 
         public int ring;
         public int priority;
@@ -198,6 +200,17 @@ namespace AntsFlow
         public void ClearAllTilesOfTheSameColor()
         {
             useClearOneColorBoosterEvent?.Invoke(Faction);
+        }
+
+        public bool IsBlocked()
+        {
+            Vector2 pos = transform.position;
+
+            return
+                Physics2D.Raycast(pos, Vector2.up) &&
+                Physics2D.Raycast(pos, Vector2.down) &&
+                Physics2D.Raycast(pos, Vector2.left) &&
+                Physics2D.Raycast(pos, Vector2.right);
         }
     }
 }

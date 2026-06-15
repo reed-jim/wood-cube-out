@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
@@ -53,11 +55,12 @@ namespace AntsFlow
 
         void Awake()
         {
-            speedMove = 9;
+            speedMove = 6;
 
             // LevelLoader.startLevelEvent += OnLevelStarted;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
             WashingMachineManager.winLevelEvent += OnLevelWon;
 
             navMeshAgent.updateRotation = false;
@@ -83,6 +86,7 @@ namespace AntsFlow
             // LevelLoader.startLevelEvent -= OnLevelStarted;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
             WashingMachineManager.winLevelEvent -= OnLevelWon;
         }
 
@@ -105,6 +109,7 @@ namespace AntsFlow
         void Update()
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+            return;
 
             if (!isMovingToSideTile)
             {
@@ -284,6 +289,100 @@ namespace AntsFlow
         public void EnableNavmesh(bool isEnable)
         {
             navMeshAgent.enabled = isEnable;
+        }
+
+        public void MoveTo(BaseTile tile)
+        {
+            List<BaseTile> path = tile.path;
+
+            StartCoroutine(MovingTo(path, 1));
+
+            this.tile = tile;
+        }
+
+        public void MoveTo(List<BaseTile> path)
+        {
+            StartCoroutine(MovingTo(path, 2));
+        }
+
+        private IEnumerator MovingTo(List<BaseTile> path, int count)
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+
+            bool isMoving = false;
+
+            List<BaseTile> reversePath = new List<BaseTile>();
+
+            for (int i = path.Count - 1; i >= 0; i--)
+            {
+                reversePath.Add(path[i]);
+            }
+
+            Vector2 direction;
+
+            while (path.Count > 0)
+            {
+                float speed = 6;
+                float duration;
+
+                if (!isMoving)
+                {
+                    BaseTile node = path[0];
+
+                    duration = Vector2.Distance(transform.position, node.transform.position) / speed;
+
+                    direction = node.transform.position - transform.position;
+                    Rotate(direction);
+
+                    Tween.Position(transform, node.transform.position, duration: duration)
+                    .OnComplete(() =>
+                    {
+                        isMoving = false;
+                    });
+
+                    path.RemoveAt(0);
+
+                    isMoving = true;
+                }
+
+                yield return waitForSeconds;
+            }
+
+            if (count < 2)
+            {
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
+
+                MoveTo(reversePath);
+            }
+            else
+            {
+                float speed = 6;
+                float duration = Vector2.Distance(transform.position, TileManager.Ins.antNest.position.AddY(0.3f)) / speed;
+
+                direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
+                Rotate(direction);
+
+                Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration)
+                .OnComplete(() =>
+                {
+                    OnAntMovedToNest();
+                });
+            }
+
+            void Rotate(Vector2 direction)
+            {
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = targetRotation;
+                }
+            }
         }
 
         public void MoveToTile(BaseTile tile)

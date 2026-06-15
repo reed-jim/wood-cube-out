@@ -72,6 +72,7 @@ public class WashingMachineItem : MonoBehaviour
         LevelLoader.startLevelEvent += OnLevelStarted;
         SettingPopup.replayLevelEvent += OnLevelReplayed;
         LosePopup.replayLevelEvent += OnLevelReplayed;
+        DebugPopup.switchLevelEvent += OnLevelReplayed;
         WashingMachineManager.winLevelEvent += OnLevelWon;
         RevivePopup.reviveEvent += OnRevive;
         spawnAntEvent += OnAntSpawned;
@@ -95,6 +96,7 @@ public class WashingMachineItem : MonoBehaviour
         LevelLoader.startLevelEvent -= OnLevelStarted;
         SettingPopup.replayLevelEvent -= OnLevelReplayed;
         LosePopup.replayLevelEvent -= OnLevelReplayed;
+        DebugPopup.switchLevelEvent -= OnLevelReplayed;
         WashingMachineManager.winLevelEvent -= OnLevelWon;
         RevivePopup.reviveEvent -= OnRevive;
         spawnAntEvent -= OnAntSpawned;
@@ -485,7 +487,7 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveToTile(tilesToMove[currentAntIndex]);
+                ant.MoveTo(tilesToMove[currentAntIndex]);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -633,7 +635,6 @@ public class WashingMachineItem : MonoBehaviour
 
     private void OnLevelWon()
     {
-
         Reset();
 
         ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
@@ -704,6 +705,16 @@ public class WashingMachineItem : MonoBehaviour
         // return !AntsFlow.TileManager.Ins.IsBlocked(tile);
 
         // return tile.IsBlocked();
+
+        List<AntsFlow.BaseTile> path = AntsFlow.TileManager.Ins.GetPath(tile);
+
+        if (path == null)
+        {
+            return false;
+        }
+
+        tile.path = path;
+
         return tile.actualBlockages.Count < 4;
     }
 
