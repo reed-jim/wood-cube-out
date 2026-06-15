@@ -193,6 +193,12 @@ namespace AntsFlow
 
                 GetNextAntSpawnByDifficulty(difficultyLevel: difficulty, out nextFaction, out numAnt);
 
+                if (levelItem.isUseManualFactionSetupForFirstAntBoxes)
+                {
+                    nextFaction = levelItem.levelFactionConfig.items[i].faction;
+                    numAnt = levelItem.levelFactionConfig.items[i].numAnt;
+                }
+
                 washingMachineItem.Init(washingMachineStartSlot, nextFaction, numAnt);
             }
 

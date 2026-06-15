@@ -20,6 +20,8 @@ namespace AntsFlow
 
         public List<Color> poolFaction;
         public bool isTutorialLevel;
+        public bool isUseManualFactionSetupForFirstAntBoxes;
+        public LevelFactionConfig levelFactionConfig;
         public int difficulty;
         public int initialDifficulty;
         public bool overrideInitialDifficulty;
@@ -47,6 +49,7 @@ namespace AntsFlow
         private float colorGroupThreshold = 0.05f;
         public float difficulty;
         public float moveTilesCloserFactor = 0.9f;
+        public FactionMapper factionMapper;
 
         public override void OnInspectorGUI()
         {
@@ -64,6 +67,7 @@ namespace AntsFlow
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
             colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
             moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
+            factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
 
             GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
 
@@ -117,6 +121,13 @@ namespace AntsFlow
             if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
             {
                 MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            }
+
+            GUILayout.Label("Preview Level", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("Preview Level"))
+            {
+                PreviewLevel(levelItem);
             }
         }
 
@@ -618,6 +629,16 @@ namespace AntsFlow
             EditorUtility.SetDirty(level);
         }
 
+        public void PreviewLevel(LevelItem level)
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+
+            foreach (BaseTile tile in tiles)
+            {
+                tile.spriteRenderer.sprite = factionMapper.GetAntBoxSprite(tile.Faction);
+            }
+        }
+
         private Color HexToColor(string hex)
         {
             Color color;
@@ -647,6 +668,19 @@ namespace AntsFlow
         }
     }
 #endif
+}
+
+[Serializable]
+public class LevelFactionConfig
+{
+    public List<LevelFactionItemConfig> items;
+}
+
+[Serializable]
+public class LevelFactionItemConfig
+{
+    public Color faction;
+    public int numAnt;
 }
 
 [Serializable]
