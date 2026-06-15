@@ -202,7 +202,14 @@ public class BoosterTutorial : MonoBehaviour
 
         if (isTutorial)
         {
-            isTutorial = DataUtility.Load($"is tutorial {boosterType} done", false);
+            if (DataUtility.Load($"is tutorial {boosterType} done", false))
+            {
+                isTutorial = false;
+            }
+            else
+            {
+                DataUtility.Save($"is tutorial {boosterType} done", true);
+            }
         }
 
         if (!isTutorial)
