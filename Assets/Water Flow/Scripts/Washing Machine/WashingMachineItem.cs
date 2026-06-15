@@ -12,6 +12,7 @@ using Spine.Unity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
+using static AntsFlow.TileManager;
 using static GameEnum;
 
 public class WashingMachineItem : MonoBehaviour
@@ -487,7 +488,7 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveTo(tilesToMove[currentAntIndex]);
+                ant.MoveToTile(tilesToMove[currentAntIndex]);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -706,14 +707,16 @@ public class WashingMachineItem : MonoBehaviour
 
         // return tile.IsBlocked();
 
-        List<AntsFlow.BaseTile> path = AntsFlow.TileManager.Ins.GetPath(tile);
+        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile);
 
-        if (path == null)
-        {
-            return false;
-        }
+        // if (path == null || path.Count == 0)
+        // {
+        //     return false;
+        // }
 
-        tile.path = path;
+        // tile.path = path;
+
+        // return true;
 
         return tile.actualBlockages.Count < 4;
     }

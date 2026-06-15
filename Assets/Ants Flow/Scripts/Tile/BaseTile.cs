@@ -25,7 +25,7 @@ namespace AntsFlow
         public bool isLocked;
         public List<BaseTile> blockages;
         public List<BaseTile> actualBlockages;
-        public List<BaseTile> path;
+        public List<Node> path;
 
         public int ring;
         public int priority;

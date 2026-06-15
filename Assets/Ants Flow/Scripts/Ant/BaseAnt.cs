@@ -109,7 +109,6 @@ namespace AntsFlow
         void Update()
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
-            return;
 
             if (!isMovingToSideTile)
             {
@@ -293,25 +292,30 @@ namespace AntsFlow
 
         public void MoveTo(BaseTile tile)
         {
-            List<BaseTile> path = tile.path;
+            List<Node> path = tile.path;
+
+            navMeshAgent.enabled = false;
 
             StartCoroutine(MovingTo(path, 1));
+
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
 
             this.tile = tile;
         }
 
-        public void MoveTo(List<BaseTile> path)
+        public void MoveTo(List<Node> path)
         {
             StartCoroutine(MovingTo(path, 2));
         }
 
-        private IEnumerator MovingTo(List<BaseTile> path, int count)
+        private IEnumerator MovingTo(List<Node> path, int count)
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
             bool isMoving = false;
 
-            List<BaseTile> reversePath = new List<BaseTile>();
+            List<Node> reversePath = new List<Node>();
 
             for (int i = path.Count - 1; i >= 0; i--)
             {
@@ -327,14 +331,14 @@ namespace AntsFlow
 
                 if (!isMoving)
                 {
-                    BaseTile node = path[0];
+                    Node node = path[0];
 
-                    duration = Vector2.Distance(transform.position, node.transform.position) / speed;
+                    duration = Vector2.Distance(transform.position, node.initialPosition) / speed;
 
-                    direction = node.transform.position - transform.position;
+                    direction = node.initialPosition - transform.position;
                     Rotate(direction);
 
-                    Tween.Position(transform, node.transform.position, duration: duration)
+                    Tween.Position(transform, node.initialPosition, duration: duration, ease: Ease.Linear)
                     .OnComplete(() =>
                     {
                         isMoving = false;
@@ -365,7 +369,7 @@ namespace AntsFlow
                 direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
                 Rotate(direction);
 
-                Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration)
+                Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();

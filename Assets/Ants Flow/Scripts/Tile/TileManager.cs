@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Dreamteck.Splines;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
@@ -12,6 +13,19 @@ using UnityEngine.AI;
 
 namespace AntsFlow
 {
+    [Serializable]
+    public class Node
+    {
+        public Vector3 initialPosition;
+        public List<Node> neighbors;
+        public BaseTile tile;
+
+        public Node Parent;
+        public int GCost;
+        public float HCost;
+        public float FCost => GCost + HCost;
+    }
+
     public class TileManager : Singleton<TileManager>
     {
         [SerializeField] private NavMeshSurface navMeshSurface;
@@ -23,6 +37,7 @@ namespace AntsFlow
 
         #region Custom Pathfinding
         public List<BaseTile> tiles;
+        public List<Node> nodes;
         private Dictionary<Vector2Int, BaseTile> tileMap;
 
         private static readonly Vector2Int[] dirs =
@@ -32,8 +47,10 @@ namespace AntsFlow
             Vector2Int.left,
             Vector2Int.right
         };
-        #endregion
 
+        public Node bottomLeftMostNode;
+        public Node bottomRightMostNode;
+        #endregion
 
 
         public Transform antNest;
@@ -65,82 +82,164 @@ namespace AntsFlow
         #region Grid
         public void BuildMap(List<BaseTile> tiles)
         {
-            tileMap = new Dictionary<Vector2Int, BaseTile>();
+            int yMin = tiles.Min(tile => (int)tile.transform.position.y);
+            int yMax = tiles.Max(tile => (int)tile.transform.position.y);
+            int xMin = tiles.Min(tile => (int)tile.transform.position.x);
+            int xMax = tiles.Max(tile => (int)tile.transform.position.x);
 
-            foreach (var t in tiles)
+            nodes = new List<Node>();
+
+            for (int i = 0; i < tiles.Count; i++)
             {
-                tileMap[t.GridPos] = t;
+                BaseTile tile = tiles[i];
+
+                Node node = new Node();
+                node.initialPosition = tile.transform.position;
+                node.tile = tile;
+
+                nodes.Add(node);
             }
-        }
 
-        List<BaseTile> GetNeighbors(BaseTile tile)
-        {
-            List<BaseTile> result = new List<BaseTile>();
-
-            foreach (var d in dirs)
+            for (int i = 0; i < nodes.Count; i++)
             {
-                Vector2Int pos = tile.GridPos + d;
+                Node node = nodes[i];
 
-                if (tileMap.TryGetValue(pos, out BaseTile neighbor))
+                node.neighbors = new List<Node>();
+
+                for (int j = i + 1; j < nodes.Count; j++)
                 {
-                    if (!neighbor.gameObject.activeInHierarchy || neighbor.isAntApproaching)
-                        result.Add(neighbor);
+                    if (nodes[i].tile.blockages.Contains(nodes[j].tile))
+                    {
+                        node.neighbors.Add(nodes[j]);
+                    }
                 }
             }
 
-            return result;
+            for (int i = 0; i < nodes.Count; i++)
+            {
+                Node nodeFromTile = nodes[i];
+
+                if ((int)nodeFromTile.initialPosition.y == yMin)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddY(-0.5f * nodeFromTile.tile.worldSize);
+                    node.neighbors = new List<Node>();
+                    node.neighbors.Add(node);
+                }
+                else if ((int)nodeFromTile.initialPosition.y == yMax)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddY(0.5f * nodeFromTile.tile.worldSize);
+                    node.neighbors = new List<Node>();
+                    node.neighbors.Add(node);
+                }
+                else if ((int)nodeFromTile.initialPosition.x == xMin)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(-0.5f * nodeFromTile.tile.worldSize);
+                    node.neighbors = new List<Node>();
+                    node.neighbors.Add(node);
+                }
+                else
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(0.5f * nodeFromTile.tile.worldSize);
+                    node.neighbors = new List<Node>();
+                    node.neighbors.Add(node);
+                }
+            }
+
+            bottomLeftMostNode = nodes.OrderBy(tile => tile.initialPosition.y).ThenBy(tile => tile.initialPosition.x).First();
+            bottomRightMostNode = nodes.OrderBy(tile => tile.initialPosition.y).ThenByDescending(tile => tile.initialPosition.x).First();
         }
 
-        public List<BaseTile> GetPath(BaseTile target)
+        private float Heuristic(Node a, Node b)
         {
-            BaseTile start = tiles[0];
+            // Manhattan distance (4-direction grid)
+            return Mathf.Abs(a.initialPosition.x - b.initialPosition.x) +
+                   Mathf.Abs(a.initialPosition.y - b.initialPosition.y);
+        }
 
-            Queue<BaseTile> queue = new Queue<BaseTile>();
-            Dictionary<BaseTile, BaseTile> cameFrom = new Dictionary<BaseTile, BaseTile>();
-            HashSet<BaseTile> visited = new HashSet<BaseTile>();
+        public List<Node> FindPath(BaseTile target)
+        {
+            Node start = bottomLeftMostNode;
+            Node targetNode = nodes.First(node => node.tile == target);
 
-            queue.Enqueue(start);
-            visited.Add(start);
-
-            while (queue.Count > 0)
+            if (target.transform.position.x > 0)
             {
-                BaseTile current = queue.Dequeue();
+                start = bottomRightMostNode;
+            }
 
-                if (current == target)
-                    return ReconstructPath(cameFrom, start, target);
+            var openSet = new List<Node>();
+            var closedSet = new HashSet<Node>();
 
-                foreach (var neighbor in GetNeighbors(current))
+            openSet.Add(start);
+
+            start.GCost = 0;
+            start.HCost = Heuristic(start, targetNode);
+            start.Parent = null;
+
+            while (openSet.Count > 0)
+            {
+                Node current = openSet
+                    .OrderBy(n => n.FCost)
+                    .ThenBy(n => n.HCost)
+                    .First();
+
+                if (current.tile == target)
+                    return RetracePath(start, targetNode);
+
+                openSet.Remove(current);
+                closedSet.Add(current);
+
+                foreach (var neighbor in current.neighbors)
                 {
-                    if (visited.Contains(neighbor))
+                    if (closedSet.Contains(neighbor))
                         continue;
 
-                    visited.Add(neighbor);
-                    cameFrom[neighbor] = current;
-                    queue.Enqueue(neighbor);
+                    int tentativeG = current.GCost + 1;
+
+                    bool inOpen = openSet.Contains(neighbor);
+
+                    if (!inOpen || tentativeG < neighbor.GCost)
+                    {
+                        neighbor.Parent = current;
+                        neighbor.GCost = tentativeG;
+                        neighbor.HCost = Heuristic(neighbor, targetNode);
+
+                        if (!inOpen)
+                            openSet.Add(neighbor);
+                    }
                 }
             }
 
             return null;
         }
 
-        List<BaseTile> ReconstructPath(
-        Dictionary<BaseTile, BaseTile> cameFrom,
-        BaseTile start,
-        BaseTile end)
+        private List<Node> RetracePath(Node start, Node end)
         {
-            List<BaseTile> path = new List<BaseTile>();
+            var path = new List<Node>();
 
-            BaseTile current = end;
+            Node current = end;
 
             while (current != start)
             {
                 path.Add(current);
-
-                if (!cameFrom.TryGetValue(current, out current))
-                    return null;
+                current = current.Parent;
             }
 
             path.Add(start);
+
+            if (end.initialPosition.x < 0 && !path.Contains(bottomLeftMostNode))
+            {
+                path.Add(bottomLeftMostNode);
+            }
+
+            if (end.initialPosition.x >= 0 && !path.Contains(bottomRightMostNode))
+            {
+                path.Add(bottomRightMostNode);
+            }
+
             path.Reverse();
 
             return path;
