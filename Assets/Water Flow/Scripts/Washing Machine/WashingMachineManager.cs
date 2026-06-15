@@ -652,6 +652,11 @@ namespace AntsFlow
 
         public bool CheckLoseLevel()
         {
+            if (GamePersistentVariable.isPendingLoseLevel)
+            {
+                return false;
+            }
+
             bool isLose = IsLose();
 
             if (isLose)
