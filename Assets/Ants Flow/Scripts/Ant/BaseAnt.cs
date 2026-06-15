@@ -458,10 +458,6 @@ namespace AntsFlow
                 // Optional: continue moving somewhere
                 // agent.SetDestination(target.position);
             }
-            else
-            {
-                Debug.LogWarning("No NavMesh found nearby.");
-            }
         }
 
         public bool ReachedDestination(float threshold = 1f)

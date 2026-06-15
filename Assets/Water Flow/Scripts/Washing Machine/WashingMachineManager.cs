@@ -72,6 +72,8 @@ namespace AntsFlow
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
             TileManager.Ins.CalculateLevelCenter();
+            TileManager.Ins.BuildGrid();
+            TileManager.Ins.Recalculate();
 
             SpecialElementManager.Ins.Setup(levelItem);
 
@@ -658,11 +660,6 @@ namespace AntsFlow
 
         public bool CheckLoseLevel()
         {
-            if (GamePersistentVariable.isPendingLoseLevel)
-            {
-                return false;
-            }
-
             bool isLose = IsLose();
 
             if (isLose)
@@ -693,7 +690,7 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            if (IsLose())
+            if (IsLose() && !GamePersistentVariable.isLevelLost)
             {
                 loseLevelEvent?.Invoke();
 

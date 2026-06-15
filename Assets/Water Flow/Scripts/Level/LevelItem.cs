@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using static GameEnum;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,6 +128,13 @@ namespace AntsFlow
             if (GUILayout.Button("Preview Level"))
             {
                 PreviewLevel(levelItem);
+            }
+
+            GUILayout.Label("Manual Level Setup", EditorStyles.boldLabel);
+
+            if (GUILayout.Button("FillTheRestOfLevel"))
+            {
+                FillTheRestOfLevel(levelItem);
             }
         }
 
@@ -639,6 +646,34 @@ namespace AntsFlow
             }
         }
 
+        #region Manual Level Setup
+        private void FillTheRestOfLevel(LevelItem levelItem)
+        {
+            List<Color> poolFaction = levelItem.poolFaction;
+
+            Dictionary<Color, int> numAntPerFaction = new Dictionary<Color, int>();
+
+            for (int i = 0; i < poolFaction.Count; i++)
+            {
+                CommonUtil.SumValueOfDictionary(numAntPerFaction, poolFaction[i], 1);
+            }
+
+            for (int i = 0; i < levelItem.levelFactionConfig.items.Count; i++)
+            {
+                LevelFactionItemConfig item = levelItem.levelFactionConfig.items[i];
+
+                CommonUtil.SumValueOfDictionary(numAntPerFaction, item.faction, item.numAnt);
+            }
+
+            foreach (var item in numAntPerFaction)
+            {
+                levelItem.levelFactionConfig.items.Add(new LevelFactionItemConfig(item.Key, item.Value));
+            }
+
+            EditorUtility.SetDirty(levelItem);
+        }
+        #endregion
+
         private Color HexToColor(string hex)
         {
             Color color;
@@ -681,6 +716,12 @@ public class LevelFactionItemConfig
 {
     public Color faction;
     public int numAnt;
+
+    public LevelFactionItemConfig(Color faction, int numAnt)
+    {
+        this.faction = faction;
+        this.numAnt = numAnt;
+    }
 }
 
 [Serializable]

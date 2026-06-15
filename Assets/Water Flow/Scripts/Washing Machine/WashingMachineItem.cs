@@ -61,6 +61,7 @@ public class WashingMachineItem : MonoBehaviour
     public static event Action loseLevelEvent;
 
     public List<AntsFlow.BaseTile> tilesToMove;
+    private int walkableMask;
 
     void Awake()
     {
@@ -81,6 +82,8 @@ public class WashingMachineItem : MonoBehaviour
         ExtendAwake();
 
         numberTextInitialPosition = numberText.transform.localPosition;
+
+        walkableMask = 1 << NavMesh.GetAreaFromName("Walkable");
     }
 
     void OnDestroy()
@@ -401,7 +404,15 @@ public class WashingMachineItem : MonoBehaviour
 
         remainingNumber -= addedTile;
 
-        tilesToMove = tilesToMove.OrderBy(tile => Vector2.Distance(transform.position, (Vector2)tile.transform.position)).ToList();
+        var left = tilesToMove
+            .Where(t => t.transform.position.x < 0)
+            .OrderBy(t => t.transform.position.x);
+
+        var right = tilesToMove
+            .Where(t => t.transform.position.x >= 0)
+            .OrderByDescending(t => t.transform.position.x);
+
+        tilesToMove = left.Concat(right).ToList();
 
         if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
         {
@@ -684,17 +695,19 @@ public class WashingMachineItem : MonoBehaviour
 
     private bool IsMovable(AntsFlow.BaseTile tile)
     {
-        float tileSize = tile.GetWorldSize();
+        // float tileSize = tile.GetWorldSize();
 
-        Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tile.coordinate.transform.position.ChangeZ(0), 0.6f * tileSize);
-        Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint, tile);
+        // Vector3 nearestMovablePoint = GetNearestMovableNavMeshPoint(tile.coordinate.transform.position, 0.5f * tileSize).ChangeZ(0);
+        // Vector3 furthestPoint = GetFurthestReachablePoint(transform.position.ChangeZ(0), nearestMovablePoint, tile);
 
-        return Vector2.Distance(furthestPoint, nearestMovablePoint) < 0.6f * tileSize;
+        // return Vector2.Distance(furthestPoint, nearestMovablePoint) < 0.5f * tileSize;
+        // return !AntsFlow.TileManager.Ins.IsBlocked(tile);
 
-        // return tile.actualBlockages.Count < 4;
+        // return tile.IsBlocked();
+        return tile.actualBlockages.Count < 4;
     }
 
-    public static Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
+    public Vector3 GetNearestMovableNavMeshPoint(Vector3 targetPosition, float maxDistance)
     {
         NavMeshHit hit;
 
@@ -702,7 +715,7 @@ public class WashingMachineItem : MonoBehaviour
             targetPosition,
             out hit,
             maxDistance,
-            NavMesh.AllAreas))
+            walkableMask))
         {
             return hit.position;
         }
@@ -710,11 +723,11 @@ public class WashingMachineItem : MonoBehaviour
         return targetPosition;
     }
 
-    public static Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition, AntsFlow.BaseTile tile)
+    public Vector3 GetFurthestReachablePoint(Vector3 startPosition, Vector3 targetPosition, AntsFlow.BaseTile tile)
     {
         NavMeshPath path = new NavMeshPath();
 
-        NavMesh.CalculatePath(startPosition, targetPosition, NavMesh.AllAreas, path);
+        NavMesh.CalculatePath(startPosition, targetPosition, walkableMask, path);
 
         if (path.corners == null || path.corners.Length == 0)
         {
