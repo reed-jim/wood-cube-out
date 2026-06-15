@@ -49,8 +49,12 @@ namespace AntsFlow
         public float noiseMagnitude = 2f;
         private float randomNoiseOffset;
 
+        private float speedMove;
+
         void Awake()
         {
+            speedMove = 9;
+
             // LevelLoader.startLevelEvent += OnLevelStarted;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
@@ -501,6 +505,34 @@ namespace AntsFlow
                 float angle = Mathf.Atan2(finalVelocity.y, finalVelocity.x) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, 0f, angle);
             }
+        }
+
+
+
+        private void OnEnable()
+        {
+            navMeshAgent.speed = speedMove;
+            EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
+            EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
+        }
+
+        private void OnDisable()
+        {
+            EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
+            EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
+        }
+
+
+        private void UpSpeed(float value)
+        {
+            //navMeshAgent.speed = speedMove * value;
+            Time.timeScale = value;
+        }
+
+        private void EndUpSpeed()
+        {
+            Time.timeScale = 1;
+            // navMeshAgent.speed = speedMove;
         }
     }
 }
