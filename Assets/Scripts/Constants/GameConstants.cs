@@ -94,8 +94,9 @@ public static class GameConstants
     public static string UNSCREW_TASK_TRANSLATION_NAME = "Unscrew Task Description";
     public static string COMPLETE_LEVEL_TRANSLATION_NAME = "Complete Level Task Description";
     public static string LEVEL_COMPLETED = "Level Completed";
-    public static string LEVEL_PARAMETER = "level";
+    public static string LEVEL_PARAMETER = "LV";
     public static string VALUE_PARAMETER = "value";
+
     #endregion
 
     #region IAP
@@ -163,7 +164,7 @@ public static class GameConstants
             //case BoosterType.BreakObject: return 6;
             //case BoosterType.ClearScrewPorts: return 9;
             case BoosterType.AddScrewPort: return 1;
-            case BoosterType.BreakObject: return 1;
+            case BoosterType.Shuffle: return 1;
             case BoosterType.ClearScrewPorts: return 1;
             case BoosterType.FreezeTime: return 1;
             //default: return 3;

@@ -11,7 +11,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private RectTransform container;
     [SerializeField] private Button selectButton;
     [SerializeField] private Image containerImage;
-    [SerializeField] private Image glow;
+    [SerializeField] public Image glow;
     [SerializeField] public Image icon;
     [SerializeField] public TMP_Text category;
 

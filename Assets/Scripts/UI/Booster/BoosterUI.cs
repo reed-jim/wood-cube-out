@@ -21,6 +21,7 @@ public class BoosterUI : MonoBehaviour
     [SerializeField] private Button disableBreakObjectModeEarlyButton;
     [SerializeField] private Button freezeTimeButton;
     [SerializeField] private Button hintButton;
+    [SerializeField] private Button unlockThemeButton;
 
     [Header("SCRIPTABLE OBJECT")]
     [SerializeField] private IntVariable currentLevel;
@@ -80,7 +81,7 @@ public class BoosterUI : MonoBehaviour
         RevivePopup.reviveEvent += OnRevived;
 
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
-        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.BreakObject));
+        breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.Shuffle));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
         if (disableBreakObjectModeEarlyButton != null)
         {
@@ -93,6 +94,10 @@ public class BoosterUI : MonoBehaviour
         if (hintButton != null)
         {
             hintButton.onClick.AddListener(() => UseBooster(BoosterType.Hint));
+        }
+        if (unlockThemeButton != null)
+        {
+            unlockThemeButton.onClick.AddListener(() => UseBooster(BoosterType.UnlockTheme));
         }
 
         _tweens = new List<Tween>();
@@ -123,10 +128,10 @@ public class BoosterUI : MonoBehaviour
     {
         InitializePositions();
 
-        Tween.LocalPosition(boosterContainer, _initialBoosterContainerPosition, duration: transitionTime);
-        Tween.LocalPosition(addMoreScrewPortButtonRT, _initialAddMoreScrewPortButtonPosition, duration: transitionTime);
-        Tween.LocalPosition(breakModeButtonRT, _initialbreakObjectButtonPosition, duration: transitionTime);
-        Tween.LocalPosition(clearAllScrewPortsButtonRT, _initialClearAllScrewPortsButtonPosition, duration: transitionTime);
+        //Tween.LocalPosition(boosterContainer, _initialBoosterContainerPosition, duration: transitionTime);
+        //Tween.LocalPosition(addMoreScrewPortButtonRT, _initialAddMoreScrewPortButtonPosition, duration: transitionTime);
+        //Tween.LocalPosition(breakModeButtonRT, _initialbreakObjectButtonPosition, duration: transitionTime);
+        //Tween.LocalPosition(clearAllScrewPortsButtonRT, _initialClearAllScrewPortsButtonPosition, duration: transitionTime);
 
         breakModeContainer.gameObject.SetActive(false);
 
@@ -175,7 +180,7 @@ public class BoosterUI : MonoBehaviour
         {
             AddMoreScrewPort();
         }
-        else if (boosterType == BoosterType.BreakObject)
+        else if (boosterType == BoosterType.Shuffle)
         {
             Shuffle();
         }
@@ -191,13 +196,17 @@ public class BoosterUI : MonoBehaviour
         {
             UseHint();
         }
+        else if (boosterType == BoosterType.UnlockTheme)
+        {
+            UseUnlockTheme();
+        }
 
         useBoosterEvent?.Invoke(boosterType);
     }
 
     private void AddMoreScrewPort()
     {
-        if (!IsBoosterAvailable(boosterIndex: 0))
+        if (!IsBoosterAvailable(boosterIndex: (int)BoosterType.AddScrewPort))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.AddScrewPort);
 
@@ -213,7 +222,7 @@ public class BoosterUI : MonoBehaviour
             _isInTransition = true;
         }
 
-        ConsumeBooster(boosterIndex: 0);
+        ConsumeBooster(boosterIndex: (int)BoosterType.AddScrewPort);
 
         TileManager.Ins.UseAddHoleBooster();
         // addMoreScrewPortEvent?.Invoke();
@@ -245,7 +254,7 @@ public class BoosterUI : MonoBehaviour
 
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.Shuffle);
 
             return;
         }
@@ -326,6 +335,39 @@ public class BoosterUI : MonoBehaviour
         });
     }
 
+    private void UseUnlockTheme()
+    {
+        if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
+        {
+            // Không có theme nào bị khóa
+            return;
+        }
+
+        if (!IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme))
+        {
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockTheme);
+            return;
+        }
+
+        if (_isInTransition)
+        {
+            return;
+        }
+        else
+        {
+            _isInTransition = true;
+        }
+
+        ConsumeBooster(boosterIndex: (int)BoosterType.UnlockTheme);
+
+        TileManager.Ins.UseUnlockThemeBooster();
+
+        Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
+        {
+            _isInTransition = false;
+        });
+    }
+
     private void EnableBooster(bool isEnable)
     {
         _isEnable = isEnable;
@@ -341,7 +383,7 @@ public class BoosterUI : MonoBehaviour
     {
         if (!IsBoosterAvailable(boosterIndex: 1))
         {
-            showBuyBoosterPopupEvent?.Invoke(BoosterType.BreakObject);
+            showBuyBoosterPopupEvent?.Invoke(BoosterType.Shuffle);
 
             return;
         }

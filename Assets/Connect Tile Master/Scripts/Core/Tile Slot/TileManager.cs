@@ -6,6 +6,7 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 using static GameEnum;
 
 public class TileManager : Singleton<TileManager>
@@ -15,6 +16,7 @@ public class TileManager : Singleton<TileManager>
     [SerializeField] public List<BaseTile> tiles;
     [SerializeField] private Grid[] grids;
     [SerializeField] private TileIconContainer tileIconContainer;
+    [SerializeField] private Image upToAll;
 
     public RectTransform tileContainer;
     public TMP_Text setCountText;
@@ -67,6 +69,7 @@ public class TileManager : Singleton<TileManager>
             }
         }
     }
+
 
     protected virtual void MoreActionOnDestroy()
     {
@@ -125,7 +128,12 @@ public class TileManager : Singleton<TileManager>
         }
         else
         {
-            TutorialLevelOne.Ins.HideTutorial();
+            //TutorialLevelOne.Ins.HideTutorial();
+        }
+
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            tileSlotContainers[i].SetOriginalLockState(i >= 2);
         }
 
         SpawnSlots();
@@ -201,12 +209,13 @@ public class TileManager : Singleton<TileManager>
                 tileSlotContainer.Init();
             }
 
-            float initialPositionY = tileSlotContainer.transform.localPosition.y;
+            float initialPositionY = tileSlotContainer.originalPositionY;
 
             Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY + 1600, duration: 0.7f)
             .OnComplete(() =>
             {
                 tileSlotContainer.ClearTiles();
+                tileSlotContainer.UpdateCountText();
 
                 Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
             });
@@ -214,6 +223,18 @@ public class TileManager : Singleton<TileManager>
             if (categories.Count > 0)
             {
                 categories.RemoveAt(0);
+            }
+        }
+    }
+
+    public void UseUnlockThemeBooster()
+    {
+        for (int i = 0; i < tileSlotContainers.Count; i++)
+        {
+            if (tileSlotContainers[i].isLocked)
+            {
+                tileSlotContainers[i].Unlock();
+                break;
             }
         }
     }
@@ -783,10 +804,11 @@ public class TileManager : Singleton<TileManager>
     {
         int col = levelItem.initColumn;
         int row = levelItem.initRow;
-        float tileSpacing = 1.05f * 195;
+        float tileSpacingWidth = 1f * 210;
+        float tileSpacingHeight = 1f * 266;
 
-        float totalWidth = (col - 1) * tileSpacing;
-        float totalHeight = (row - 1) * tileSpacing;
+        float totalWidth = (col - 1) * tileSpacingWidth;
+        float totalHeight = (row - 1) * tileSpacingHeight;
 
         int currentCategoryIndex;
 
@@ -865,8 +887,8 @@ public class TileManager : Singleton<TileManager>
 
             CategoryIconSet categoryIconSet = tileIconContainer.categoryIconSets.First(item => item.itemCategory == currentCategory);
 
-            float xPos = xIndex * tileSpacing - totalWidth / 2f;
-            float yPos = yIndex * tileSpacing - totalHeight / 2f;
+            float xPos = xIndex * tileSpacingWidth - totalWidth / 2f;
+            float yPos = yIndex * tileSpacingHeight - totalHeight / 2f;
 
             Vector3 spawnPos = new Vector3(xPos, yPos, 0);
 
@@ -1032,6 +1054,50 @@ public class TileManager : Singleton<TileManager>
                 }
             }
 
+            Transform originalContainerParent = null;
+            Transform originalTileParent = null;
+            int originalContainerSiblingIndex = -1;
+            int originalTileSiblingIndex = -1;
+
+            if (upToAll != null)
+            {
+                upToAll.gameObject.SetActive(true);
+                Tween.Alpha(upToAll, 0.7f, duration: 0.3f);
+                originalContainerParent = activeContainer.transform.parent;
+                originalContainerSiblingIndex = activeContainer.transform.GetSiblingIndex();
+                activeContainer.transform.SetParent(upToAll.transform, true);
+
+                if (highlightedTile != null)
+                {
+                    originalTileParent = highlightedTile.transform.parent;
+                    originalTileSiblingIndex = highlightedTile.transform.GetSiblingIndex();
+                    highlightedTile.transform.SetParent(upToAll.transform, true);
+                }
+            }
+
+            Action restoreParents = () =>
+            {
+                if (upToAll != null)
+                {
+                    Tween.Alpha(upToAll, 0, duration: 0.3f).OnComplete(() =>
+                    {
+                        upToAll.gameObject.SetActive(false);
+                    });
+
+                    if (originalContainerParent != null && activeContainer != null)
+                    {
+                        activeContainer.transform.SetParent(originalContainerParent, true);
+                        activeContainer.transform.SetSiblingIndex(originalContainerSiblingIndex);
+                    }
+
+                    if (originalTileParent != null && highlightedTile != null)
+                    {
+                        highlightedTile.transform.SetParent(originalTileParent, true);
+                        highlightedTile.transform.SetSiblingIndex(originalTileSiblingIndex);
+                    }
+                }
+            };
+
             if (highlightedTile != null)
             {
                 highlightedTile.onInteract = () =>
@@ -1040,6 +1106,7 @@ public class TileManager : Singleton<TileManager>
                     {
                         activeContainer.SetHighlight(false);
                     }
+                    restoreParents();
                 };
             }
             else
@@ -1050,6 +1117,7 @@ public class TileManager : Singleton<TileManager>
                     {
                         activeContainer.SetHighlight(false);
                     }
+                    restoreParents();
                 });
             }
         }

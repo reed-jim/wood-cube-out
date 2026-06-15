@@ -21,7 +21,8 @@ public class TileSlotContainer : MonoBehaviour
     [SerializeField] private TMP_Text fakeTileText;
     public Image lockImage;
     [SerializeField] private Image glow;
-
+    [SerializeField] private Image lockObject;
+    [SerializeField] private Image unlockObject;
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isActive;
     public bool isLocked;
@@ -54,11 +55,20 @@ public class TileSlotContainer : MonoBehaviour
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
 
+    public float originalPositionY;
+    private bool originalIsLocked;
+
     void Awake()
     {
+        originalPositionY = transform.localPosition.y;
+        originalIsLocked = isLocked;
         BuyBoosterPopup.unlockScrewBoxEvent += Unlock;
+    }
 
-        unlockButton.onClick.AddListener(ClickButtonUnlockByAds);
+    public void SetOriginalLockState(bool locked)
+    {
+        isLocked = locked;
+        originalIsLocked = locked;
     }
 
     void OnDestroy()
@@ -73,10 +83,28 @@ public class TileSlotContainer : MonoBehaviour
         this.itemCategory = itemCategory;
         this.maxTile = targetCardAmount;
         this.isCompleted = false;
+        this.isHidden = false;
+        this.isMoving = false;
+        this.isLocked = originalIsLocked;
         category.text = "???";
+        if (category != null) category.alpha = 1f;
 
-        lockImage.gameObject.SetActive(isLocked);
+        if (lockImage != null)
+        {
+            lockImage.gameObject.SetActive(isLocked);
+            Color c = lockImage.color;
+            c.a = 1f;
+            lockImage.color = c;
+        }
+
         categoryContainer.gameObject.SetActive(!isLocked);
+
+        if (unlockObject != null)
+        {
+            unlockObject.gameObject.SetActive(!isLocked);
+        }
+
+        if (lockObject != null) lockObject.gameObject.SetActive(isLocked);
 
         if (tileSlots != null && tileSlots.Length > 0)
         {
@@ -254,6 +282,14 @@ public class TileSlotContainer : MonoBehaviour
         }
     }
 
+    public void UpdateCountText()
+    {
+        if (tileCountText != null)
+        {
+            tileCountText.text = $"{tiles.Count}/{maxTile}";
+        }
+    }
+
     private void ClickButtonUnlockByAds()
     {
         if (isLocked)
@@ -279,6 +315,8 @@ public class TileSlotContainer : MonoBehaviour
             {
                 lockImage.gameObject.SetActive(false);
                 categoryContainer.gameObject.SetActive(true);
+                unlockObject.gameObject.SetActive(true);
+                lockObject.gameObject.SetActive(false);
             });
 
             isLocked = false;
@@ -296,7 +334,7 @@ public class TileSlotContainer : MonoBehaviour
             category.text = this.itemCategory.ToString().Replace("_", " ");
             Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
             {
-                float initialPositionY = transform.localPosition.y;
+                float initialPositionY = originalPositionY;
 
                 Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
                 .OnComplete(() =>
@@ -325,7 +363,7 @@ public class TileSlotContainer : MonoBehaviour
             category.text = this.itemCategory.ToString().Replace("_", " ");
             Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
             {
-                float initialPositionY = transform.localPosition.y;
+                float initialPositionY = originalPositionY;
 
                 Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
                 .OnComplete(() =>
@@ -341,7 +379,18 @@ public class TileSlotContainer : MonoBehaviour
     {
         if (glow != null)
         {
-            glow.gameObject.SetActive(isHighlight);
+            if (isHighlight)
+            {
+                glow.gameObject.SetActive(true);
+                Tween.Alpha(glow, 1f, duration: 0.3f);
+            }
+            else
+            {
+                Tween.Alpha(glow, 0f, duration: 0.3f).OnComplete(() =>
+                {
+                    glow.gameObject.SetActive(false);
+                });
+            }
         }
     }
 }

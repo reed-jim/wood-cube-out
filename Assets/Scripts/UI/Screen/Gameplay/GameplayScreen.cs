@@ -19,10 +19,9 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button openInventoryPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
-
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
-
+    [SerializeField] private TMP_Text timerText;
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
 
@@ -111,7 +110,24 @@ public class GameplayScreen : Singleton<GameplayScreen>
     }
 
     #endregion
+    private void Update()
+    {
+        if (TileManager.Ins != null && TileManager.Ins.isLevelActive)
+        {
+            UpdateTimerDisplay(TileManager.Ins.currentLevelTime);
+        }
+    }
+    private void UpdateTimerDisplay(float timeToDisplay)
+    {
+        if (timeToDisplay < 0) timeToDisplay = 0;
+        int minutes = Mathf.FloorToInt(timeToDisplay / 60);
+        int seconds = Mathf.FloorToInt(timeToDisplay % 60);
 
+        if (timerText != null)
+        {
+            timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+    }
     private void OpenDebugPopupButton()
     {
         switchRouteEvent?.Invoke(ScreenRoute.Debug);

@@ -116,13 +116,14 @@ public class GameEnum : MonoBehaviour
     public enum BoosterType
     {
         Hint,
-        BreakObject,
+        Shuffle,
         FreezeTime,
-        UnlockScrewBox,
+        UnlockTheme,
 
+        UnlockScrewBox,
         AddScrewPort,
         ClearScrewPorts,
-        
+
     }
 
 

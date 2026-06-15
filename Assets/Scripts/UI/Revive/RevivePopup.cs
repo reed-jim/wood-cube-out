@@ -179,7 +179,7 @@ public class RevivePopup : BasePopup
         switch (_currentBoosterOnRevive)
         {
             case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.BreakObject; break;
             case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
             case BoosterType.UnlockScrewBox: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;

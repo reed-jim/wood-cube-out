@@ -11,12 +11,16 @@ public class BoosterItemUI : MonoBehaviour
 {
     [SerializeField] private RectTransform quantityTextContainer;
     [SerializeField] private RectTransform quantityTextRT;
-    [SerializeField] private RectTransform addButtonRT;
+    //[SerializeField] private RectTransform addButtonRT;
 
     [SerializeField] private TMP_Text quantityText;
     [SerializeField] private Button addButton;
+    [Header("UNLOCK")]
+    [SerializeField] private CanvasGroup unlockCanvasGroup;
+
 
     [Header("LOCK")]
+
     [SerializeField] private CanvasGroup lockCanvasGroup;
     [SerializeField] private TMP_Text levelToUnlockText;
     [SerializeField] private int levelToUnlock;
@@ -57,14 +61,14 @@ public class BoosterItemUI : MonoBehaviour
         if (quantity > 0)
         {
             quantityTextContainer.gameObject.SetActive(true);
-            addButtonRT.gameObject.SetActive(false);
+            addButton.gameObject.SetActive(false);
 
             quantityText.text = $"{quantity}";
         }
         else
         {
             quantityTextContainer.gameObject.SetActive(false);
-            addButtonRT.gameObject.SetActive(true);
+            addButton.gameObject.SetActive(true);
         }
 
         #region Lock
@@ -72,7 +76,7 @@ public class BoosterItemUI : MonoBehaviour
         {
             SaferioTween.AlphaShow(lockCanvasGroup);
 
-            levelToUnlockText.text = $"Level {levelToUnlock}";
+            levelToUnlockText.text = $"LEVEL {levelToUnlock}";
 
             quantityTextContainer.gameObject.SetActive(false);
             addButton.gameObject.SetActive(false);
@@ -81,8 +85,16 @@ public class BoosterItemUI : MonoBehaviour
         {
             SaferioTween.AlphaHide(lockCanvasGroup);
 
-            quantityTextContainer.gameObject.SetActive(true);
-            addButton.gameObject.SetActive(true);
+            if (quantity > 0)
+            {
+                quantityTextContainer.gameObject.SetActive(true);
+                addButton.gameObject.SetActive(false);
+            }
+            else
+            {
+                quantityTextContainer.gameObject.SetActive(false);
+                addButton.gameObject.SetActive(true);
+            }
         }
         #endregion
     }
@@ -103,14 +115,14 @@ public class BoosterItemUI : MonoBehaviour
             if (quantity > 0)
             {
                 quantityTextContainer.gameObject.SetActive(true);
-                addButtonRT.gameObject.SetActive(false);
+                addButton.gameObject.SetActive(false);
 
                 quantityText.text = $"{quantity}";
             }
             else
             {
                 quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(true);
+                addButton.gameObject.SetActive(true);
             }
         }
     }
@@ -126,14 +138,14 @@ public class BoosterItemUI : MonoBehaviour
             if (quantity > 0)
             {
                 quantityTextContainer.gameObject.SetActive(true);
-                addButtonRT.gameObject.SetActive(false);
+                addButton.gameObject.SetActive(false);
 
                 quantityText.text = $"{quantity}";
             }
             else
             {
                 quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(true);
+                addButton.gameObject.SetActive(true);
             }
         }
     }

@@ -111,18 +111,7 @@ public class BuyBoosterPopup : BasePopup
 
         if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts[boosterIndex])
         {
-            if (_boosterType == BoosterType.Hint)
-            {
-                userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 1);
-
-                updateBoosterQuantityEvent?.Invoke(boosterIndex);
-
-                _isBoughtBreakObjectBoosterByCoin = true;
-
-                SaferioTracking.TrackResourceSource(
-                    currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
-            }
-            else if (_boosterType == BoosterType.UnlockScrewBox)
+            if (_boosterType == BoosterType.UnlockScrewBox)
             {
                 userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
 
@@ -146,14 +135,6 @@ public class BuyBoosterPopup : BasePopup
                     currentLevel.Value, "Coin",
                     boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
 
-                // // WARNING: DO NOT change User Resource by property more than 1 time. The last one will overwrite the previous one.
-                // UserResources adjustedUserResources = userResourcesObserver.UserResources;
-
-                // adjustedUserResources.CoinQuantity -= boosterDataObserver.BoosterCosts[boosterIndex];
-                // adjustedUserResources.BoosterQuantities[boosterIndex]++;
-
-                // userResourcesObserver.UserResources = adjustedUserResources;
-
                 updateBoosterQuantityEvent?.Invoke(boosterIndex);
 
                 SaferioTracking.TrackResourceSource(
@@ -164,7 +145,7 @@ public class BuyBoosterPopup : BasePopup
 
             Hide(onCompletedAction: () =>
             {
-                useBoosterEvent?.Invoke(_boosterType);
+                // useBoosterEvent?.Invoke(_boosterType); // Remove auto-use
             });
         }
         else
@@ -183,7 +164,7 @@ public class BuyBoosterPopup : BasePopup
         switch (_boosterType)
         {
             case BoosterType.AddScrewPort: actionWatchVideo = ActionWatchVideo.AddHole; break;
-            case BoosterType.BreakObject: actionWatchVideo = ActionWatchVideo.BreakObject; break;
+            case BoosterType.Shuffle: actionWatchVideo = ActionWatchVideo.BreakObject; break;
             case BoosterType.ClearScrewPorts: actionWatchVideo = ActionWatchVideo.ClearHoles; break;
             default: actionWatchVideo = ActionWatchVideo.AddHole; break;
         }
@@ -199,7 +180,7 @@ public class BuyBoosterPopup : BasePopup
 
         Hide(onCompletedAction: () =>
         {
-            useBoosterEvent?.Invoke(_boosterType);
+            // useBoosterEvent?.Invoke(_boosterType); // Remove auto-use
 
             SaferioTracking.TrackRewardedAdCompleted(currentLevel.Value, $"Booster_{_boosterType}");
         });
