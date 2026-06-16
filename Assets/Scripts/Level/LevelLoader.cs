@@ -193,6 +193,8 @@ namespace NamPhuThuy.GamePlay
                 switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
                 setLevelNumberEvent?.Invoke();
 
+                GamePersistentVariable.levelItem = null;
+
                 return;
             }
             // NOT LOOP

@@ -20,6 +20,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     private RectTransform[] _rewards;
     private Image[] _rewardImages;
 
+    bool isCompleted;
+
     #region EVENT
     public static event Action<float> addCoinEvent;
     public static event Action<float> updateCoinTextEvent;
@@ -150,6 +152,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         float maxDuration = 0;
 
+        isCompleted = false;
+
         for (int i = 0; i < poolSize; i++)
         {
             int index = i;
@@ -172,11 +176,13 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                 {
                     float valueLeft = (poolSize - index - 1) * unitValue;
 
-                    if (duration == maxDuration)
+                    if (!isCompleted && duration == maxDuration)
                     {
                         valueLeft = 0;
 
                         collectCoinCompleteEvent?.Invoke();
+
+                        isCompleted = true;
                     }
 
                     onCompleteAction?.Invoke();
