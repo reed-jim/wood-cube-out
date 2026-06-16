@@ -23,11 +23,18 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
     public void Setup(AntsFlow.LevelItem levelItem)
     {
         specialElementConfig = levelItem.specialElementConfig;
+
+        antBoxLinks.Clear();
     }
 
     public void SpawnAntBoxLink()
     {
         if (!specialElementConfig.doubleAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
+        {
+            return;
+        }
+
+        if (antBoxLinks.Count >= 5)
         {
             return;
         }

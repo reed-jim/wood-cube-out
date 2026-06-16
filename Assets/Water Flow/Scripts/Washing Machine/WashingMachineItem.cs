@@ -498,7 +498,7 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveTo(tilesToMove[currentAntIndex], currentAntIndex);
+                ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
                 SoundManager.Instance.PlaySoundAntPop();
 

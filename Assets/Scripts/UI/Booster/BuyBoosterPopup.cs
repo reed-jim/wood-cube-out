@@ -46,6 +46,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action<int> updateBoosterQuantityEvent;
+    public static event Action updateCoinTextEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -148,8 +149,6 @@ public class BuyBoosterPopup : BasePopup
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
-                userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
-
                 SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     boosterDataObserver.BoosterCosts[boosterIndex], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");
@@ -163,7 +162,6 @@ public class BuyBoosterPopup : BasePopup
             }
             else
             {
-                userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
                 userResourcesObserver.ChangeBoosterQuantity(boosterIndex, 3);
 
                 SaferioTracking.TrackResourceSink(
@@ -183,6 +181,9 @@ public class BuyBoosterPopup : BasePopup
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
             }
+
+            userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
+            updateCoinTextEvent?.Invoke();
 
             userResourcesObserver.Save();
 
@@ -259,8 +260,6 @@ public class BuyBoosterPopup : BasePopup
     {
         if (_isBoughtBreakObjectBoosterByCoin)
         {
-            userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[(int)_boosterType]);
-
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
                     boosterDataObserver.BoosterCosts[1], (int)userResourcesObserver.UserResources.CoinQuantity, $"Buy_Booster_{_boosterType}");

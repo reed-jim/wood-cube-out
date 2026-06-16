@@ -348,7 +348,7 @@ namespace AntsFlow
 
             Vector2 destination;
             Vector2 direction;
-            Vector3 offset = index % 2 == 0 ? 0.5f * transform.right : -0.5f * transform.right;
+            Vector3 offset = index % 2 == 0 ? 0.8f * transform.right : -0.8f * transform.right;
 
             while (path.Count > 0 || isMoving)
             {
