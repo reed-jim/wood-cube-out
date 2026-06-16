@@ -32,6 +32,11 @@ public class AntBoxLink : MonoBehaviour
 
     public void Setup(WashingMachineItem[] antBoxes)
     {
+        leftHalf.gameObject.SetActive(true);
+        rightHalf.gameObject.SetActive(true);
+        leftHalf.color = Color.white;
+        rightHalf.color = Color.white;
+
         for (int i = 0; i < antBoxes.Length; i++)
         {
             WashingMachineItem antBox = antBoxes[i];
@@ -51,11 +56,6 @@ public class AntBoxLink : MonoBehaviour
         }
 
         this.antBoxes = antBoxes;
-
-        // materialPropertyBlock.SetColor("_ColorLeft", antBoxes[0].faction);
-        // materialPropertyBlock.SetColor("_ColorRight", antBoxes[1].faction);
-
-        // link.SetPropertyBlock(materialPropertyBlock);
 
         PlaceTheLink();
     }
@@ -134,6 +134,7 @@ public class AntBoxLink : MonoBehaviour
         {
             rightHalf.color = Color.white;
         });
+        antBoxes = new WashingMachineItem[0];
     }
 
     private void OnAntBoxSelected(WashingMachineItem antBox)

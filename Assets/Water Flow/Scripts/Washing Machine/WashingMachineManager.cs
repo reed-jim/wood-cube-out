@@ -695,8 +695,6 @@ namespace AntsFlow
 
             while (GamePersistentVariable.numActiveAnt > 0)
             {
-                Debug.Log($"PendingLoseLevel {GamePersistentVariable.numActiveAnt} {GamePersistentVariable.isLevelLost}");
-
                 yield return waitForSeconds;
             }
 

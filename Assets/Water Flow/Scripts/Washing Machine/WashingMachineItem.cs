@@ -126,6 +126,7 @@ public class WashingMachineItem : MonoBehaviour
         numberText.text = $"{number}";
 
         this.washingMachineStartSlot = washingMachineStartSlot;
+        washingMachineSlot = null;
 
         doubleAntBoxHole.gameObject.SetActive(false);
 
@@ -135,10 +136,7 @@ public class WashingMachineItem : MonoBehaviour
         numberText.transform.localPosition = numberTextInitialPosition;
 
         Tween.Scale(transform, 2.3f, duration: 0.3f);
-        // SaferioTween.AlphaShow(lid);
 
-        // spriteRenderer.sprite = FactionMapper.Ins.GetAntBoxSprite(faction);
-        // lid.sprite = FactionMapper.Ins.GetAntBoxLidSprite(faction);
         shadow.sprite = shadows[0];
 
         skeletonAnimation.Skeleton.SetSkin(FactionMapper.Ins.GetAntBoxSkin(faction));
@@ -155,6 +153,8 @@ public class WashingMachineItem : MonoBehaviour
         isDouble = false;
         remainingNumber = number;
         spawningAntCoroutine = null;
+
+        numSlotRequired = 1;
     }
 
     private void Reset()
@@ -165,6 +165,9 @@ public class WashingMachineItem : MonoBehaviour
         isAnimating = false;
         isInSlot = false;
         isStucking = false;
+
+        washingMachineStartSlot = null;
+        washingMachineSlot = null;
 
         tilesToMove = new List<AntsFlow.BaseTile>();
     }
