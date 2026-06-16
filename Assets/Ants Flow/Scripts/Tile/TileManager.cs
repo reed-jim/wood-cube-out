@@ -119,38 +119,61 @@ namespace AntsFlow
             {
                 Node nodeFromTile = nodes[i];
 
+                float tileSize = nodeFromTile.tile.worldSize;
+
                 if ((int)nodeFromTile.initialPosition.y == yMin)
                 {
                     Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddY(-0.5f * nodeFromTile.tile.worldSize);
+                    node.initialPosition = nodeFromTile.initialPosition.AddY(-tileSize);
                     node.neighbors = new List<Node>();
                     node.neighbors.Add(nodeFromTile);
                 }
                 else if ((int)nodeFromTile.initialPosition.y == yMax)
                 {
                     Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddY(0.5f * nodeFromTile.tile.worldSize);
+                    node.initialPosition = nodeFromTile.initialPosition.AddY(tileSize);
                     node.neighbors = new List<Node>();
                     node.neighbors.Add(nodeFromTile);
                 }
                 else if ((int)nodeFromTile.initialPosition.x == xMin)
                 {
                     Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddX(-0.5f * nodeFromTile.tile.worldSize);
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize);
                     node.neighbors = new List<Node>();
                     node.neighbors.Add(nodeFromTile);
                 }
                 else
                 {
                     Node node = new Node();
-                    node.initialPosition = nodeFromTile.initialPosition.AddX(0.5f * nodeFromTile.tile.worldSize);
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize);
                     node.neighbors = new List<Node>();
                     node.neighbors.Add(nodeFromTile);
                 }
+
+                if ((int)nodeFromTile.initialPosition.x == xMin && (int)nodeFromTile.initialPosition.y == yMin)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(-tileSize);
+                }
+                if ((int)nodeFromTile.initialPosition.x == xMax && (int)nodeFromTile.initialPosition.y == yMin)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(-tileSize);
+                }
+                if ((int)nodeFromTile.initialPosition.x == xMin && (int)nodeFromTile.initialPosition.y == yMax)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(-tileSize).AddY(tileSize);
+                }
+                if ((int)nodeFromTile.initialPosition.x == xMax && (int)nodeFromTile.initialPosition.y == yMax)
+                {
+                    Node node = new Node();
+                    node.initialPosition = nodeFromTile.initialPosition.AddX(tileSize).AddY(tileSize);
+                }
             }
 
-            bottomLeftMostNode = nodes.OrderBy(tile => tile.initialPosition.y).ThenBy(tile => tile.initialPosition.x).First();
-            bottomRightMostNode = nodes.OrderBy(tile => tile.initialPosition.y).ThenByDescending(tile => tile.initialPosition.x).First();
+            bottomLeftMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenBy(node => node.initialPosition.x).First();
+            bottomRightMostNode = nodes.OrderBy(node => node.initialPosition.y).ThenByDescending(node => node.initialPosition.x).First();
         }
 
         private float Heuristic(Node a, Node b)
@@ -299,6 +322,7 @@ namespace AntsFlow
                     if (neighbor.tile != null)
                     {
                         if (
+                            !neighbor.tile.isAntApproaching &&
                             neighbor.tile.gameObject.activeInHierarchy &&
                             neighbor.tile != target
                         )
@@ -446,6 +470,8 @@ namespace AntsFlow
 
         public void UpdateNavMesh(BaseTile tile)
         {
+            return;
+
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
             {
                 if (delayedUpdateNavmeshCoroutine != null)
@@ -470,6 +496,8 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
+            return;
+
             if (isUpdatingNavMesh)
             {
                 return;
