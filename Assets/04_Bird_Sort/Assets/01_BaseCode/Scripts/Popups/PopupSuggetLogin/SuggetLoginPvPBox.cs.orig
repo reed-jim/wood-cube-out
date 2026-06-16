@@ -1,0 +1,132 @@
+using System;
+using PlayFab;
+using PlayFab.ClientModels;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SuggetLoginPvPBox : BaseBox
+{
+    public void Init()
+    {
+        btnClose.onClick.AddListener(() => ClosePopUp(null));
+        btnLoginFB.onClick.AddListener(() => GameController.Instance.loginController.Login(TypeLogin.FB));
+        btnLoginGG.onClick.AddListener(() => GameController.Instance.loginController.Login(TypeLogin.GG));
+        btnConfirm.onClick.AddListener(() => HandleButtonConfirm());
+        if (UseProfile.NamePlayer == "Bird#" + GetLastFiveCharOfId(UseProfile.PlayFabId))
+        {
+            ipfName.gameObject.SetActive(true);
+            btnConfirm.gameObject.SetActive(true);
+        }
+        else
+        {
+            ipfName.gameObject.SetActive(false);
+            btnConfirm.gameObject.SetActive(false);
+        }
+    }
+
+
+    public void InitState(Action close)
+    {
+        EvtClose = null;
+        EvtClose = close;
+
+        actionCloseEvent = ClosePopUp;
+        EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.ON_LOGIN_GG_OR_FB_COMPLETE, actionCloseEvent);
+    }
+
+    private void ClosePopUp(object param)
+    {
+        EvtClose?.Invoke();
+        Close();
+<<<<<<< HEAD
+      //  GamePlayController.Instance.gameScene.lableInfo.InitState();
+        EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.ON_LOGIN_GG_OR_FB_COMPLETE, actionCloseEvent);
+ 
+=======
+        //  GamePlayController.Instance.gameScene.lableInfo.InitState();
+        EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.ON_LOGIN_FACEBOOK_COMPLETE, actionCloseEvent);
+>>>>>>> LamAnh_PhotonPvp
+    }
+
+    public void InputName(string param)
+    {
+        inputString = param;
+    }
+
+    private void HandleButtonConfirm()
+    {
+        if (inputString == null || inputString == "")
+        {
+            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            (
+                transform.position,
+                "Pls enter your name!",
+                Color.white,
+                true
+            );
+        }
+        else
+        {
+            PlayFabClientAPI.UpdateUserTitleDisplayName(
+                new UpdateUserTitleDisplayNameRequest { DisplayName = inputString }, s =>
+                {
+                    UseProfile.NamePlayer = inputString;
+                    ipfName.gameObject.SetActive(false);
+                    btnConfirm.gameObject.SetActive(false);
+                    ClosePopUp(null);
+                }, e =>
+                {
+                    Debug.Log(e);
+                    GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
+                        transform.position,"Name already taken!",Color.red,true);
+                });
+            PlayFabClientAPI.UpdateAvatarUrl(new UpdateAvatarUrlRequest { ImageUrl = UseProfile.AvatarLink }, s => { },
+                e => { });
+        }
+    }
+
+    private string GetLastFiveCharOfId(string param)
+    {
+        var a = "";
+
+        for (var i = 1; i < 6; i++) a += param[param.Length - i];
+
+
+        return a;
+    }
+
+    #region instance
+
+    private static SuggetLoginPvPBox instance;
+
+    public static SuggetLoginPvPBox Setup(bool isSaveBox = false, Action actionOpenBoxSave = null)
+    {
+        if (instance == null)
+        {
+            instance = Instantiate(Resources.Load<SuggetLoginPvPBox>(PathPrefabs.SUGGET_LOGIN_PVP_BOX));
+            instance.Init();
+        }
+
+        instance.InitState(actionOpenBoxSave);
+
+
+        return instance;
+    }
+
+    #endregion
+
+    #region Variable
+
+    [SerializeField] private Button btnClose;
+    [SerializeField] private Button btnLoginFB;
+    [SerializeField] private Button btnLoginGG;
+    [SerializeField] private GameObject ipfName;
+    [SerializeField] private Button btnConfirm;
+
+    private Action EvtClose;
+    private string inputString;
+
+    private Action<object> actionCloseEvent;
+
+    #endregion
+}

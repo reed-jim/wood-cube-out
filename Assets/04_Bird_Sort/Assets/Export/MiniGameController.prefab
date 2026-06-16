@@ -1,0 +1,165 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1581942482107009123
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1350234930066732289}
+  - component: {fileID: 7904266157434421364}
+  m_Layer: 0
+  m_Name: ConnectBirdMGController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1350234930066732289
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581942482107009123}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5670602666827468827}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7904266157434421364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1581942482107009123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d9c9e0190a4146468bc05fb3e3c5c0f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  coolDownTxt: {fileID: 0}
+  openBtn: {fileID: 0}
+  notiObj: {fileID: 0}
+  LIMIT_NUMB_WATCH_VIDEO_IN_DAY: limit_numb_watch_video_in_day
+  FIRST_SHOW_HAND: first_show_hand
+  CURRENT_NUM_WATCH_VIDEO_IN_DAY_MINI_GAME_CONNECT_BIRD: current_num_watch_video_in_day_mini_game_connect_bird
+  DATA_TO_RESET_MINI_GAME_CONNECT_BIRD: data_to_reset_mini_game_connect_bird
+  FIRST_WEEK: first_week
+  hand: {fileID: 0}
+  lsRewardConnectBirdMNGOfPlayer: 
+  wasChoose: 0
+--- !u!1 &6203697985765764106
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5670602666827468827}
+  - component: {fileID: 4282782861597086857}
+  m_Layer: 0
+  m_Name: MiniGameController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5670602666827468827
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203697985765764106}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1350234930066732289}
+  - {fileID: 6646865061188896157}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4282782861597086857
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6203697985765764106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3f2b2a6436b03b84d976c76a66a03dfb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  connectBirdMG: {fileID: 7904266157434421364}
+  tripleBirdMG: {fileID: 352661932592263393}
+  testConfig: 1
+--- !u!1 &8732733184647565066
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6646865061188896157}
+  - component: {fileID: 352661932592263393}
+  m_Layer: 0
+  m_Name: TripleBirdMGController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6646865061188896157
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8732733184647565066}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5670602666827468827}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &352661932592263393
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8732733184647565066}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 781b2d1d3b090cd42b79c76c7e02fef4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ID: 0
+  coolDownTxt: {fileID: 0}
+  openBtn: {fileID: 0}
+  notiObj: {fileID: 0}
+  CONFIG_MINI_GAME_TRIPLE_BIRD: config_mini_game_triple_bird
+  TRIPLE_BIRD_TURN_BUY: triple_bird_turn_buy
+  LIMIT_NUMB_WATCH_VIDEO_IN_DAY_TRIPLE_BIRD: limit_numb_watch_video_in_day_triple_bird
+  FIRST_SHOW_HAND_TRIPLE_BIRD: first_show_hand_triple_bird
+  CURRENT_NUM_WATCH_VIDEO_IN_DAY_MINI_GAME_TRIPLE_BIRD: current_num_watch_video_in_day_mini_game_triple_bird
+  DATA_TO_RESET_MINI_GAME_TRIPLE_BIRD: data_to_reset_mini_game_triple_bird
+  FIRST_WEEK_TRIPLE_BIRD: first_week_triple_bird
+  hand: {fileID: 0}
+  lsRewardTripleBirdMNGOfPlayer: 
+  wasChoose: 0

@@ -1,0 +1,42 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e7b1c3aa2b25a6458583f58e3ed33ec, type: 3}
+  m_Name: NotificationDatabase
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 0
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  notifications:
+  - id: 1
+    title: s_local_noti_comeback_game_title_{0}
+    text: s_local_noti_comeback_game_{0}
+    notificationChannel: 1
+    shouldAutoCancel: 1
+    isRepeat: 1
+    isCustomIcon: 0
+    smallIcon: 
+    largeIcon: 
+  - id: 2
+    title: s_local_full_lives_title
+    text: s_local_full_lives
+    notificationChannel: 0
+    shouldAutoCancel: 1
+    isRepeat: 0
+    isCustomIcon: 0
+    smallIcon: 
+    largeIcon: 
