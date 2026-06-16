@@ -498,7 +498,7 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveToTile(tilesToMove[currentAntIndex]);
+                ant.MoveTo(tilesToMove[currentAntIndex]);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -719,16 +719,16 @@ public class WashingMachineItem : MonoBehaviour
 
         // return tile.IsBlocked();
 
-        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile);
+        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile);
 
-        // if (path == null || path.Count == 0)
-        // {
-        //     return false;
-        // }
+        if (path == null || path.Count == 0)
+        {
+            return false;
+        }
 
-        // tile.path = path;
+        tile.path = path;
 
-        // return true;
+        return true;
 
         return tile.actualBlockages.Count < 4;
     }

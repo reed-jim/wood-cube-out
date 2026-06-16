@@ -21,9 +21,9 @@ namespace AntsFlow
         public BaseTile tile;
 
         public Node Parent;
-        public int GCost;
-        public float HCost;
-        public float FCost => GCost + HCost;
+        // public int GCost;
+        // public float HCost;
+        // public float FCost => GCost + HCost;
     }
 
     public class TileManager : Singleton<TileManager>
@@ -124,28 +124,28 @@ namespace AntsFlow
                     Node node = new Node();
                     node.initialPosition = nodeFromTile.initialPosition.AddY(-0.5f * nodeFromTile.tile.worldSize);
                     node.neighbors = new List<Node>();
-                    node.neighbors.Add(node);
+                    node.neighbors.Add(nodeFromTile);
                 }
                 else if ((int)nodeFromTile.initialPosition.y == yMax)
                 {
                     Node node = new Node();
                     node.initialPosition = nodeFromTile.initialPosition.AddY(0.5f * nodeFromTile.tile.worldSize);
                     node.neighbors = new List<Node>();
-                    node.neighbors.Add(node);
+                    node.neighbors.Add(nodeFromTile);
                 }
                 else if ((int)nodeFromTile.initialPosition.x == xMin)
                 {
                     Node node = new Node();
                     node.initialPosition = nodeFromTile.initialPosition.AddX(-0.5f * nodeFromTile.tile.worldSize);
                     node.neighbors = new List<Node>();
-                    node.neighbors.Add(node);
+                    node.neighbors.Add(nodeFromTile);
                 }
                 else
                 {
                     Node node = new Node();
                     node.initialPosition = nodeFromTile.initialPosition.AddX(0.5f * nodeFromTile.tile.worldSize);
                     node.neighbors = new List<Node>();
-                    node.neighbors.Add(node);
+                    node.neighbors.Add(nodeFromTile);
                 }
             }
 
@@ -160,56 +160,162 @@ namespace AntsFlow
                    Mathf.Abs(a.initialPosition.y - b.initialPosition.y);
         }
 
+        // public List<Node> FindPath(BaseTile target)
+        // {
+        //     // reset
+        //     foreach (var node in nodes)
+        //     {
+        //         node.GCost = int.MaxValue;
+        //         node.HCost = 0;
+        //         node.Parent = null;
+        //     }
+
+        //     Node start = bottomLeftMostNode;
+
+        //     if (target.transform.position.x > 0)
+        //     {
+        //         start = bottomRightMostNode;
+        //     }
+
+        //     Node targetNode = nodes.First(node => node.tile == target);
+
+        //     var openSet = new List<Node>();
+        //     var closedSet = new HashSet<Node>();
+
+        //     openSet.Add(start);
+
+        //     start.GCost = 0;
+        //     start.HCost = Heuristic(start, targetNode);
+        //     start.Parent = null;
+
+        //     while (openSet.Count > 0)
+        //     {
+        //         Node current = openSet
+        //             .OrderBy(n => n.FCost)
+        //             .ThenBy(n => n.HCost)
+        //             .First();
+
+        //         if (current.tile == target)
+        //             return RetracePath(start, targetNode);
+
+        //         openSet.Remove(current);
+        //         closedSet.Add(current);
+
+        //         foreach (var neighbor in current.neighbors)
+        //         {
+        //             // blocked
+        //             if (neighbor == null || neighbor.tile.isAntApproaching || !neighbor.tile.gameObject.activeInHierarchy)
+        //             {
+        //                 continue;
+        //             }
+
+        //             if (closedSet.Contains(neighbor))
+        //                 continue;
+
+        //             int tentativeG = current.GCost + 1;
+
+        //             bool inOpen = openSet.Contains(neighbor);
+
+        //             if (!inOpen || tentativeG < neighbor.GCost)
+        //             {
+        //                 neighbor.Parent = current;
+        //                 neighbor.GCost = tentativeG;
+        //                 neighbor.HCost = Heuristic(neighbor, targetNode);
+
+        //                 if (!inOpen)
+        //                     openSet.Add(neighbor);
+        //             }
+        //         }
+        //     }
+
+        //     return null;
+        // }
+
+        // private List<Node> RetracePath(Node start, Node end)
+        // {
+        //     var path = new List<Node>();
+
+        //     Node current = end;
+
+        //     while (current != start)
+        //     {
+        //         path.Add(current);
+        //         current = current.Parent;
+        //     }
+
+        //     path.Add(start);
+
+        //     if (end.initialPosition.x < 0 && !path.Contains(bottomLeftMostNode))
+        //     {
+        //         path.Add(bottomLeftMostNode);
+        //     }
+
+        //     if (end.initialPosition.x >= 0 && !path.Contains(bottomRightMostNode))
+        //     {
+        //         path.Add(bottomRightMostNode);
+        //     }
+
+        //     path.Reverse();
+
+        //     return path;
+        // }
+
+        #region BFS
         public List<Node> FindPath(BaseTile target)
         {
             Node start = bottomLeftMostNode;
+
+            // if (target.transform.position.x > 0)
+            // {
+            //     start = bottomRightMostNode;
+            // }
+
             Node targetNode = nodes.First(node => node.tile == target);
 
-            if (target.transform.position.x > 0)
+            // Reset state
+            foreach (var node in nodes)
             {
-                start = bottomRightMostNode;
+                node.Parent = null;
             }
 
-            var openSet = new List<Node>();
-            var closedSet = new HashSet<Node>();
+            var queue = new Queue<Node>();
+            var visited = new HashSet<Node>();
 
-            openSet.Add(start);
+            queue.Enqueue(start);
+            visited.Add(start);
 
-            start.GCost = 0;
-            start.HCost = Heuristic(start, targetNode);
-            start.Parent = null;
-
-            while (openSet.Count > 0)
+            while (queue.Count > 0)
             {
-                Node current = openSet
-                    .OrderBy(n => n.FCost)
-                    .ThenBy(n => n.HCost)
-                    .First();
+                Node current = queue.Dequeue();
 
-                if (current.tile == target)
+                if (current == targetNode)
+                {
                     return RetracePath(start, targetNode);
-
-                openSet.Remove(current);
-                closedSet.Add(current);
+                }
 
                 foreach (var neighbor in current.neighbors)
                 {
-                    if (closedSet.Contains(neighbor))
-                        continue;
-
-                    int tentativeG = current.GCost + 1;
-
-                    bool inOpen = openSet.Contains(neighbor);
-
-                    if (!inOpen || tentativeG < neighbor.GCost)
+                    // blocked
+                    if (neighbor.tile != null)
                     {
-                        neighbor.Parent = current;
-                        neighbor.GCost = tentativeG;
-                        neighbor.HCost = Heuristic(neighbor, targetNode);
-
-                        if (!inOpen)
-                            openSet.Add(neighbor);
+                        if (
+                            neighbor.tile.gameObject.activeInHierarchy &&
+                            neighbor.tile != target
+                        )
+                        {
+                            continue;
+                        }
                     }
+
+                    if (visited.Contains(neighbor))
+                    {
+                        continue;
+                    }
+
+                    visited.Add(neighbor);
+                    neighbor.Parent = current;
+
+                    queue.Enqueue(neighbor);
                 }
             }
 
@@ -222,28 +328,20 @@ namespace AntsFlow
 
             Node current = end;
 
-            while (current != start)
+            while (current != null)
             {
                 path.Add(current);
+
+                if (current == start)
+                    break;
+
                 current = current.Parent;
             }
 
-            path.Add(start);
-
-            if (end.initialPosition.x < 0 && !path.Contains(bottomLeftMostNode))
-            {
-                path.Add(bottomLeftMostNode);
-            }
-
-            if (end.initialPosition.x >= 0 && !path.Contains(bottomRightMostNode))
-            {
-                path.Add(bottomRightMostNode);
-            }
-
             path.Reverse();
-
             return path;
         }
+        #endregion
         #endregion
 
         public void CalculateLevelCenter()

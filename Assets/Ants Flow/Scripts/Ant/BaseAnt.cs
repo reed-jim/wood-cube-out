@@ -115,6 +115,8 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
+            return;
+
             if (!isMovingToSideTile)
             {
                 Vector2 direction = navMeshAgent.velocity;
@@ -346,7 +348,7 @@ namespace AntsFlow
 
             Vector2 direction;
 
-            while (path.Count > 0)
+            while (path.Count > 0 || isMoving)
             {
                 float speed = 6;
                 float duration;
