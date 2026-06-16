@@ -179,10 +179,6 @@ public class RevivePopup : BasePopup
             return;
         }
 
-        OnRewaredAdCompleted();
-
-        return;
-
         ActionWatchVideo actionWatchVideo;
 
         switch (_currentBoosterOnRevive)
@@ -194,10 +190,8 @@ public class RevivePopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
         }
 
-         GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+        GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
-
-    
 
     private void OnRewaredAdCompleted()
     {

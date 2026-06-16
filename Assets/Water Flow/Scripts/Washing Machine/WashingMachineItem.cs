@@ -160,6 +160,13 @@ public class WashingMachineItem : MonoBehaviour
     private void Reset()
     {
         doubleAntBoxHole.gameObject.SetActive(false);
+
+        isMoving = false;
+        isAnimating = false;
+        isInSlot = false;
+        isStucking = false;
+
+        tilesToMove = new List<AntsFlow.BaseTile>();
     }
 
     public virtual void Setup(WashingMachineStartSlot washingMachineStartSlot)

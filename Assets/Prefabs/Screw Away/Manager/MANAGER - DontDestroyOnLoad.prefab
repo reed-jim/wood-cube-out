@@ -1021,6 +1021,80 @@ Transform:
   - {fileID: 3960666977441167762}
   m_Father: {fileID: 2382114561705044355}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &682895274778751118
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5250490845608636609}
+  - component: {fileID: 5502893846623212361}
+  m_Layer: 0
+  m_Name: Clear all Blocks of one color
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5250490845608636609
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682895274778751118}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5502893846623212361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 682895274778751118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Clear all Blocks of one color
+    Object: {fileID: 0}
+  - Language: French
+    Text: Effacer tous les blocs d'une couleur
+    Object: {fileID: 0}
+  - Language: German
+    Text: "L\xF6sche alle Bl\xF6cke einer Farbe"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cancella tutti i blocchi di un colore
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "1 \u3064\u306E\u8272\u306E\u30D6\u30ED\u30C3\u30AF\u3092\u3059\u3079\u3066\u6D88\u53BB\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uD55C \uAC00\uC9C0 \uC0C9\uC0C1\uC758 \uBAA8\uB4E0 \uBE14\uB85D \uC9C0\uC6B0\uAE30"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Limpe todos os blocos de uma cor
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u0432\u0441\u0435 \u0431\u043B\u043E\u043A\u0438
+      \u043E\u0434\u043D\u043E\u0433\u043E \u0446\u0432\u0435\u0442\u0430"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Borrar todos los bloques de un color
+    Object: {fileID: 0}
 --- !u!1 &696996957944424940
 GameObject:
   m_ObjectHideFlags: 0
@@ -8709,6 +8783,9 @@ Transform:
   - {fileID: 6704971298914194204}
   - {fileID: 64539145307072565}
   - {fileID: 5190775915596138753}
+  - {fileID: 5091744374612608339}
+  - {fileID: 1201730073043283461}
+  - {fileID: 5250490845608636609}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -8895,7 +8972,7 @@ MonoBehaviour:
         banner:
           minimumLevel: 0
         interstitials:
-          minimumLevel: 10
+          minimumLevel: 5
           minimumInterval: 70
           showAfterDefeat: 1
           showAfterQuit: 1
@@ -11044,6 +11121,81 @@ MonoBehaviour:
   - Language: Spanish
     Text: Consejos
     Object: {fileID: 0}
+--- !u!1 &6715828839335917079
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1201730073043283461}
+  - component: {fileID: 2379825695415454885}
+  m_Layer: 0
+  m_Name: Shuffle the Ant Box in queue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1201730073043283461
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6715828839335917079}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2379825695415454885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6715828839335917079}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Shuffle the Ant Box in queue
+    Object: {fileID: 0}
+  - Language: French
+    Text: "M\xE9langez la bo\xEEte \xE0 fourmis dans la file d'attente"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Mische die Ameisenbox in der Warteschlange
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Mescola la scatola delle formiche in coda
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AD\u30E5\u30FC\u5185\u306E Ant Box \u3092\u30B7\u30E3\u30C3\u30D5\u30EB\u3059\u308B"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB300\uAE30\uC5F4\uC5D0 \uC788\uB294 \uAC1C\uBBF8 \uC0C1\uC790\uB97C
+      \uC11E\uC73C\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Embaralhe a caixa de formigas na fila
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041F\u0435\u0440\u0435\u0442\u0430\u0441\u0443\u0439\u0442\u0435 \u044F\u0449\u0438\u043A
+      \u0441 \u043C\u0443\u0440\u0430\u0432\u044C\u044F\u043C\u0438 \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Mezcla la caja de hormigas en la cola
+    Object: {fileID: 0}
 --- !u!1 &6718364352364057570
 GameObject:
   m_ObjectHideFlags: 0
@@ -12981,6 +13133,81 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::IapController
   isInited: 0
   inappDatabase: {fileID: 11400000, guid: 068bf4fdd44c8a14cb1bcde6b23e4d01, type: 2}
+--- !u!1 &7763294458232701993
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5091744374612608339}
+  - component: {fileID: 164603665309769477}
+  m_Layer: 0
+  m_Name: Pick any Ant Box in queue
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5091744374612608339
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7763294458232701993}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &164603665309769477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7763294458232701993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Pick any Ant Box in queue
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Choisissez n'importe quelle bo\xEEte \xE0 fourmis dans la file d'attente"
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xE4hlen Sie eine beliebige Ameisenbox in der Warteschlange aus"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scegli qualsiasi formicaio in coda
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AD\u30E5\u30FC\u5185\u306E\u4EFB\u610F\u306E Ant Box \u3092\u9078\u629E\u3057\u307E\u3059"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB300\uAE30\uC5F4\uC5D0 \uC788\uB294 \uAC1C\uBBF8 \uC0C1\uC790\uB97C
+      \uC120\uD0DD\uD558\uC138\uC694."
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Escolha qualquer Ant Box na fila
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u043E\u0439
+      Ant Box \u0432 \u043E\u0447\u0435\u0440\u0435\u0434\u0438."
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Elige cualquier Ant Box en la cola
+    Object: {fileID: 0}
 --- !u!1 &7826624952946173288
 GameObject:
   m_ObjectHideFlags: 0

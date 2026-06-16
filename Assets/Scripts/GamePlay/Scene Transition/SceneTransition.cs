@@ -60,6 +60,8 @@ public class SceneTransition : MonoBehaviour
         ScrewManager.levelSetupCompletedEvent += SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent += SetIsLevelLoaded;
         SettingPopup.replayLevelEvent += ShowStaticSceneTransition;
+        WinPopup.goLevelEvent += OnSwitchLevel;
+        DebugPopup.switchLevelEvent += ShowStaticSceneTransition;
 
         _tweens = new List<Tween>();
 
@@ -88,6 +90,8 @@ public class SceneTransition : MonoBehaviour
         ScrewManager.levelSetupCompletedEvent -= SetIsLevelLoaded;
         LevelLoader.setIsLevelLoadedEvent -= SetIsLevelLoaded;
         SettingPopup.replayLevelEvent -= ShowStaticSceneTransition;
+        WinPopup.goLevelEvent -= OnSwitchLevel;
+        DebugPopup.switchLevelEvent -= ShowStaticSceneTransition;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -140,6 +144,11 @@ public class SceneTransition : MonoBehaviour
 
         loadLevelInProgressCanvasGroup.alpha = 0;
         SaferioTween.AlphaShow(loadLevelInProgressCanvasGroup);
+    }
+
+    private void OnSwitchLevel(int level)
+    {
+        ShowStaticSceneTransition();
     }
 
     private void TransitionOnLevelStarted()
