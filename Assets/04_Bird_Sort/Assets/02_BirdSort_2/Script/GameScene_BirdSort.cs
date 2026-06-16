@@ -118,7 +118,7 @@ namespace BirdSort2
                 removeADSBtn.gameObject.SetActive(false);
 
             itemsUI = new Dictionary<GiftType, ItemUI>();
-            //GameController.Instance.musicManager.PlayBGMusic();
+            //BirdSortGameController.Instance.musicManager.PlayBGMusic();
             actionOpenShop = (sender) => { OpenShop(); };
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.OPEN_SHOP, actionOpenShop);
         }
@@ -132,7 +132,7 @@ namespace BirdSort2
         private void HandlePauseButton()
         {
             PasueBox.Setup().Show();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
 
         public void OnClickFullSkin()
@@ -140,7 +140,7 @@ namespace BirdSort2
         }
         public void OnClickClearData()
         {
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
             PlayerPrefs.DeleteAll();
             Scene scene = SceneManager.GetActiveScene();
             SceneManager.LoadScene(scene.name);
@@ -164,7 +164,7 @@ namespace BirdSort2
         {
             UseProfile.CurrentLevelPlay++;
             UseProfile.CurrentLevel++;
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         }
 
         private void OnBuyRemoveAds()
@@ -175,24 +175,24 @@ namespace BirdSort2
         public void OnClickReplay()
         {
             string scene = SceneManager.GetActiveScene().name;
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
             //ReplayBox.Setup2().Show();
-            if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterQuit)
+            if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterQuit)
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+                BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                 {
-                    GameController.Instance.LoadScene(scene);
+                    BirdSortGameController.Instance.LoadScene(scene);
                 }, actionWatchLog: AdsPlacement.Interstitials.REPLAY_LEVEL_CAMPAIN);
             }
             else
             {
-                GameController.Instance.LoadScene(scene);
+                BirdSortGameController.Instance.LoadScene(scene);
             }
         }
 
         public void OnClickRemoveAds()
         {
-            // GameController.Instance.iapController.BuyProduct(TypePackIAP.NoAdsPack);
+            // BirdSortGameController.Instance.iapController.BuyProduct(TypePackIAP.NoAdsPack);
         }
 
         public override void OnEscapeWhenStackBoxEmpty()
@@ -218,7 +218,7 @@ namespace BirdSort2
 
                 throw;
             }
-            var config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+            var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
             ThemeDataModle themeData = null;
             bool changeTheme = false;
             if (config != null && (config.end - UnbiasedTime.Instance.Now()).TotalSeconds > 0)

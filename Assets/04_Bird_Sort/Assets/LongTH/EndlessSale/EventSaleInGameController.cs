@@ -15,7 +15,7 @@ public class EventSaleInGameController : SerializedMonoBehaviour
     public List<BirdSort2.BirdBase> lsBird;
     internal void SpawnItems()
     {
-        saleItems = new Dictionary<EventSaleType, List<EventSaleItem>>(GameController.Instance.eventSaleController.SpawnEventSaleGamePlay(parentItem));
+        saleItems = new Dictionary<EventSaleType, List<EventSaleItem>>(BirdSortGameController.Instance.eventSaleController.SpawnEventSaleGamePlay(parentItem));
 
         lsBird = new List<BirdSort2.BirdBase>();
         var tempLsStand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real;
@@ -117,12 +117,12 @@ public class EventSaleInGameController : SerializedMonoBehaviour
         {
             if (it.Value > 0)
             {
-                var eve = GameController.Instance.eventSaleController.GetEventSales(it.Key);
+                var eve = BirdSortGameController.Instance.eventSaleController.GetEventSales(it.Key);
                 if (eve != null)
                 {
                     var index = 1;
 #if TESTER
-                    if (GameController.Instance.useProfile.IsRemoveAds)
+                    if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
                     {
                         index = 3;
                     }

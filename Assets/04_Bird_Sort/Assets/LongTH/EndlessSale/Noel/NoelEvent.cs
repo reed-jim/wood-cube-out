@@ -186,7 +186,7 @@ public class NoelEvent : HalloweenEvent
     //        for (int i = 0; i < rewards.Count; i++)
     //            if (rewards[i].typeItem != GiftType.None)
     //            {
-    //                GameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount,
+    //                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount,
     //                    reasonClaimReward, rewards[i].isUnlimited);
     //            }
     //    }

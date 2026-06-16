@@ -43,19 +43,19 @@ public class TripleBirdMGBox : BaseBox
     public void OpenPlushEgg()
     {
         TripleBirdMiniGameShopBox.Setup(miniGameLogic).Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void OpenShopEgg()
     {
         TripleBirdMiniGameShopBox.Setup(miniGameLogic).Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void HandleClose()
     {
         HomeController.Instance.miniGameController.tripleBirdMG.hand.gameObject.SetActive(false);
         Close();
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.admobAds.ShowInterstitial(actionWatchLog:"Video_CloseMinigame");
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.admobAds.ShowInterstitial(actionWatchLog:"Video_CloseMinigame");
     }
     protected override void OnDisable()
     {

@@ -22,7 +22,7 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
 
     public void SpawnItems()
     {
-        itemsChallenge = new Dictionary<ChallengeType, List<ItemChallenge>>(GameController.Instance.challengeController.SpawnChallengeGamePlay(parentItem));
+        itemsChallenge = new Dictionary<ChallengeType, List<ItemChallenge>>(BirdSortGameController.Instance.challengeController.SpawnChallengeGamePlay(parentItem));
 
         lsBird = new List<BirdSort2.BirdBase>();
         var tempLsStand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real;
@@ -126,7 +126,7 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
         {
             if (it.Value > 0)
             {
-                var chall = GameController.Instance.challengeController.GetChallenges(it.Key);
+                var chall = BirdSortGameController.Instance.challengeController.GetChallenges(it.Key);
                 if (chall != null)
                 {
                     chall.AddItem(it.Value);
@@ -134,7 +134,7 @@ public class ChallengeGameplayController : SerializedMonoBehaviour
             }
         }
 
-        var raceChallenge = GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+        var raceChallenge = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
         if (raceChallenge != null)
         {
             if (raceChallenge.IsChallengeActive() && RaceSpaceChallenge.IsRacing)

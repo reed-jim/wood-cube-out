@@ -164,7 +164,7 @@ public class Board : MonoBehaviour
         {
             Debug.LogWarning("ERROR: You loaded an empty board data !");
         }
-        //Anhtusz  GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut,controller.gameAssets.birdFlyOutClip);
+        //Anhtusz  BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut,controller.gameAssets.birdFlyOutClip);
     }
 
    
@@ -579,7 +579,7 @@ public class Board : MonoBehaviour
         RemoveCell(p1);
         RemoveCell(p2);
 
-      //  GameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.Connect);
+      //  BirdSortGameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.Connect);
 
         //row col moving
         if (p1.x == p2.x)

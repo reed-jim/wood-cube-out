@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,19 +33,19 @@ public class BoardUserInput : MonoBehaviour
      
         if (enableClickOnCell)
         {
-            //Chưa chọn ô nào => chọn ô đó làm ô đầu tiên, highlight
+            //Chua ch?n � n�o => ch?n � d� l�m � d?u ti�n, highlight
             if (isNoCellSelected)
             {
                 firstCell = cellClicked;
                 isNoCellSelected = false;
 
-             //   GameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 1);
+             //   BirdSortGameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 1);
                 HighlightCat(cellClicked);
 
                 //GameplayController.Instance.handTutorialController.InvokeHighlightCat(cellClicked);
                 return;
             }
-            //Chọn vào chính ô vừa được chọn => Bỏ chọn ô đó, un-highlight
+            //Ch?n v�o ch�nh � v?a du?c ch?n => B? ch?n � d�, un-highlight
             if (!isNoCellSelected && cellClicked == firstCell)
             {
                 UnhighlightCat(firstCell);
@@ -54,7 +54,7 @@ public class BoardUserInput : MonoBehaviour
                 return;
             }
            // Debug.LogError("FC:" + firstCell + " CC:" + cellClicked);
-            //Chọn vào 1 ô khác loại với ô ban đầu được chọn => Chọn ô vừa click làm ô đầu, highlight ô click
+            //Ch?n v�o 1 � kh�c lo?i v?i � ban d?u du?c ch?n => Ch?n � v?a click l�m � d?u, highlight � click
             if (!isNoCellSelected && !controller.board.CheckTwoCellsSameAnimalType(firstCell, cellClicked))
             {
                 UnhighlightCat(firstCell);
@@ -66,13 +66,13 @@ public class BoardUserInput : MonoBehaviour
                     HomeController.Instance.miniGameController.connectBirdMG.wasChoose = false;
                 }
 
-                    // GameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 1);
+                    // BirdSortGameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 1);
                     HighlightCat(cellClicked);
 
            //     GamePlayController.Instance.handTutorialController.InvokeHighlightCat(cellClicked);
                 return;
             }
-            //Chọn vào 1 ô cùng loại với ô ban đầu được chọn => check nối, được thì xóa 2 ô => hủy chọn cả hai, un-highlight
+            //Ch?n v�o 1 � c�ng lo?i v?i � ban d?u du?c ch?n => check n?i, du?c th� x�a 2 � => h?y ch?n c? hai, un-highlight
             if (!isNoCellSelected && controller.board.CheckTwoCellsSameAnimalType(firstCell, cellClicked))
             {
                 secondCell = cellClicked;
@@ -80,7 +80,7 @@ public class BoardUserInput : MonoBehaviour
                 //Neu co the ket noi
                 if (controller.board.CheckTwoCellsCanBeConnected(firstCell, secondCell))
                 {
-                    //     GameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 2);
+                    //     BirdSortGameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CatMewSound, 2);
                     //     GameplayController.Instance.gameplayUIController.hand.gameObject.SetActive(false);
                     isNoCellSelected = true;
                     HighlightCat(secondCell);
@@ -101,7 +101,7 @@ public class BoardUserInput : MonoBehaviour
                 }
                 else
                 {
-                    //  GameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CannotConnect);
+                    //  BirdSortGameController.Instance.soundController.PlaySound(AUDIO_CLIP_TYPE.CannotConnect);
                    
                     UnhighlightCat(firstCell);
                     //MMVibrationManager.Haptic(HapticTypes.Selection, false, true, this);

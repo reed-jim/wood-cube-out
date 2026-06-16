@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using Spine;
     using Spine.Unity;
@@ -86,7 +86,7 @@
         {
             yield return new WaitForSeconds(0.05f);
             PlayAnimEnd();
-            //Post Event check lại StandSuccess cả map
+            //Post Event check l?i StandSuccess c? map
         }
         protected override void ReturnExtralHandle()
         {
@@ -114,7 +114,7 @@
             {
                 body.gameObject.SetActive(true);
                 skeGrade.AnimationState.SetAnimation(0, IDLE, true);
-                GameController.Instance.musicManager.PlayOneShot(hidenCatClip, audioMysterySource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(hidenCatClip, audioMysterySource);
                 transform.SetAsFirstSibling();
                 GamePlayController_BirdSort.Instance.tutorialController.ActiveTutExtral(this);
                 GamePlayController_BirdSort.Instance.tutorialController.ActiveHintLockBird();
@@ -127,9 +127,9 @@
 
         protected override void PlayAnimEnd()
         {
-            //=> anim chìa khoá bay mở cửa
+            //=> anim ch�a kho� bay m? c?a
             skeGrade.AnimationState.ClearTracks();
-            GameController.Instance.musicManager.PlayOneShot(revealCatClip, audioMysterySource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(revealCatClip, audioMysterySource);
             float scale = skeGrade.transform.localScale.y;
             if (side != 1)
             {
@@ -164,27 +164,27 @@
 
             //if (this.data.birdParent.body == null || skeGrade == null) return;
 
-            //// 1. Lấy thông tin track hiện tại của Object gốc (thường là Track 0)
+            //// 1. L?y th�ng tin track hi?n t?i c?a Object g?c (thu?ng l� Track 0)
             //var originalTrack = this.data.birdParent.body.AnimationState.GetCurrent(0);
 
             //if (originalTrack != null)
             //{
-            //    // 2. Lấy thông tin track hiện tại của Object bắt chước
+            //    // 2. L?y th�ng tin track hi?n t?i c?a Object b?t chu?c
             //    var targetTrack = skeGrade.AnimationState.GetCurrent(0);
 
-            //    // Kiểm tra nếu Object bắt chước đang chơi sai Animation hoặc đã kết thúc
+            //    // Ki?m tra n?u Object b?t chu?c dang choi sai Animation ho?c d� k?t th�c
             //    if (targetTrack == null || targetTrack.Animation != originalTrack.Animation)
             //    {
             //        skeGrade.AnimationState.SetAnimation(0, originalTrack.Animation, originalTrack.Loop);
             //        targetTrack = skeGrade.AnimationState.GetCurrent(0);
             //    }
 
-            //    // 3. ĐỒNG BỘ QUAN TRỌNG: Ép thời gian của Target bằng đúng Original
+            //    // 3. �?NG B? QUAN TR?NG: �p th?i gian c?a Target b?ng d�ng Original
             //    targetTrack.TrackTime = originalTrack.TrackTime;
             //}
             //else
             //{
-            //    // Nếu gốc không có anim, Target cũng nên về trạng thái trống
+            //    // N?u g?c kh�ng c� anim, Target cung n�n v? tr?ng th�i tr?ng
             //    skeGrade.AnimationState.ClearTrack(0);
             //}
         }

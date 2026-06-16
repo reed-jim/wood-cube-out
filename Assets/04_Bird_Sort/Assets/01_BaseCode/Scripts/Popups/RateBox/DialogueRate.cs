@@ -69,11 +69,11 @@ public class DialogueRate : BaseBox
         {
             lstImgStar[i].sprite = lstSprStar[1];
         }
-        //GameController.Instance.musicManager.Pla();
+        //BirdSortGameController.Instance.musicManager.Pla();
     }
     public void RateAction()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         if (countStar <= 0)
             return;
         if (countStar == 5)
@@ -122,7 +122,7 @@ public class DialogueRate : BaseBox
     }
     public void CloseAction()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         Close();
     }
 
@@ -130,7 +130,7 @@ public class DialogueRate : BaseBox
     {
         //StartCoroutine(Helper.StartAction(() =>
         //{
-        GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+        BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
     (
        btnConfirm.transform.position,
         "Thank you for the review!",

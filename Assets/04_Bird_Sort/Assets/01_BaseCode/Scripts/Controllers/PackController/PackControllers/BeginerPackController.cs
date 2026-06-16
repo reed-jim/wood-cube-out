@@ -39,7 +39,7 @@ public class BeginerPackController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.BeginnerPack);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.BeginnerPack);
     }
 
     public override void ResetDataNewDay()

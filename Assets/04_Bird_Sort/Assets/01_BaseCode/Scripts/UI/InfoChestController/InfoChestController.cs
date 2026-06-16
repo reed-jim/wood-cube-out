@@ -33,7 +33,7 @@ public class InfoChestController : MonoBehaviour
         ClearPool();
         for (int i = 0; i < rewards.Count; i++)
         {
-            if (GameController.Instance.dataContain.giftDatabase.GetGift(rewards[i].typeItem, out Gift gtf))
+            if (BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(rewards[i].typeItem, out Gift gtf))
             {
                 var rw = GetElement();
                 rw.Init(gtf.getGiftSprite, rewards[i].amount, isUnlimitedItem: rewards[i].isUnlimited, isAnim: false);

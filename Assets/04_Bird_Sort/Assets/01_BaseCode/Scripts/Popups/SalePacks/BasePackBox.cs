@@ -18,8 +18,8 @@ public class BasePackBox : BaseBox
 
     public virtual void InitState()
     {
-        priceTxt.text = GameController.Instance.iapController.GetPrice(typePack);
-        pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
+        priceTxt.text = BirdSortGameController.Instance.iapController.GetPrice(typePack);
+        pack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
 
         actionBuyPackSuccess = (sender) => OnBuyPackSuccessHandle((TypePackIAP)sender);
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.BUY_PRODUCT_SUCCESS, actionBuyPackSuccess);
@@ -27,8 +27,8 @@ public class BasePackBox : BaseBox
 
     protected virtual void OnClickBuy()
     {
-        GameController.Instance.iapController.BuyProduct(typePack, buyBtn.gameObject);
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.iapController.BuyProduct(typePack, buyBtn.gameObject);
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     private void OnBuyPackSuccessHandle(TypePackIAP typePack)
     {

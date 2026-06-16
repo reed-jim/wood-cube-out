@@ -400,7 +400,7 @@ public class RaceSpaceChallenge : ChallengeBase
                                     var reward = config.rewards[i].rewardData[z];
                                     if (reward.typeItem != GiftType.None)
                                     {
-                                        GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount,
+                                        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount,
                                             reasonClaimReward, reward.isUnlimited);
                                     }
                                 }

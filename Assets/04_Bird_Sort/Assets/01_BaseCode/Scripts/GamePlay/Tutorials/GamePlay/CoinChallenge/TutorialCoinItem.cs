@@ -24,7 +24,7 @@ public class TutorialCoinItem : TutorialBase
     }
     public override bool IsCanShowTut()
     {
-        if (UseProfile.CurrentLevel != GameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(ChallengeType.CoinChallenge).level_unlock)
+        if (UseProfile.CurrentLevel != BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(ChallengeType.CoinChallenge).level_unlock)
             return false;
         return base.IsCanShowTut();
     }

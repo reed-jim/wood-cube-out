@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -34,10 +34,10 @@ public class SalePackDataModel : BaseDataButtonEvent
     public PopupItemBase shopPopup;
     public TypePackIAP typePackIAP;
     public TypeSale typeSale;
-    public bool isOnlyActiveOnShop;//Chỉ xuất hiện trong Shop
-    public bool isCanShowPopup; // Xuất hiện gợi ý gói
-    public bool isShowShop;//Xuất hiện cả icon home + shop
-    public bool isShowInPopup;//Xuất hiện gói nhỏ ở dưới các popup (QuitLevel, BuyItem, WinLevel)
+    public bool isOnlyActiveOnShop;//Ch? xu?t hi?n trong Shop
+    public bool isCanShowPopup; // Xu?t hi?n g?i � g�i
+    public bool isShowShop;//Xu?t hi?n c? icon home + shop
+    public bool isShowInPopup;//Xu?t hi?n g�i nh? ? du?i c�c popup (QuitLevel, BuyItem, WinLevel)
     public int delayShowHome;
 
     [ShowIf("typeSale", TypeSale.Weekday)] public TypeWeekday typeWeekday;
@@ -62,7 +62,7 @@ public class SalePackDataModel : BaseDataButtonEvent
     {
         get
         {
-            return GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(typePackIAP).level_unlock;
+            return BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(typePackIAP).level_unlock;
         }
     }
     public bool IsPurchased
@@ -336,7 +336,7 @@ public class SalePackDataModel : BaseDataButtonEvent
                 if (remainTime <= 0)
                 {
                     IsActivated = false;
-                    GameController.Instance.packController.CheckSalePack();
+                    BirdSortGameController.Instance.packController.CheckSalePack();
                 }
             }
         }
@@ -374,7 +374,7 @@ public class PackController : MonoBehaviour
     public void Init()
     {
         activeSalePacks = new List<PackBaseController>();
-        saleData = GameController.Instance.segmentController.GetCurrentSegment().saleData;
+        saleData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData;
 
         for (int i = 0; i < allPacksInGame.Count; i++)
         {

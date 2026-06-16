@@ -26,8 +26,8 @@ public class MasterOfferPackController : PackBaseController
 
     public override bool CheckActive()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
-        var segementItem = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.SaleItem);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
+        var segementItem = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.SaleItem);
 
         if (segement.IsPackReady())
         {
@@ -41,8 +41,8 @@ public class MasterOfferPackController : PackBaseController
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
-        var segementItem = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.SaleItem);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
+        var segementItem = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.SaleItem);
 
         if (!segement.IsPackReady())
         {
@@ -74,7 +74,7 @@ public class MasterOfferPackController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MasterOffer);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MasterOffer);
     }
 
     public override void ResetDataNewDay()

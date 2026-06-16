@@ -23,7 +23,7 @@ public class TutorialCampainBox : TutorialBase
         parentTut.gameObject.SetActive(false);
         tutObj.gameObject.SetActive(false);
 
-        bootConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
+        bootConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
 
         for (int i = 0; i < continueBtns.Length; i++)
         {

@@ -42,7 +42,7 @@ public class ChoicePageUI : MonoBehaviour
     {
         Debug.Log(controller.idPage);
         HomeController.Instance.pageController.ChangePage((int)controller.idPage);
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }    
 
     public void OnChoicePage()

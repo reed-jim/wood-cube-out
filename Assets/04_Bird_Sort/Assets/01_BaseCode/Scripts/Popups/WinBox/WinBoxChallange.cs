@@ -117,16 +117,16 @@ namespace BirdSort2
                 rewardParent.localPosition = pos7.localPosition;
             }
 
-            levelChestData = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig;
+            levelChestData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig;
         }
 
         public void InitState()
         {
             firstCompleteContentY = completeContent.anchoredPosition.y;
-            //if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
+            //if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
             //{
             //    this.RegisterListener(EventID.SHOW_MREC, (param) => MoveDownCompleteContentMRec());
-            //    GameController.Instance.admobAds.ShowMRec();
+            //    BirdSortGameController.Instance.admobAds.ShowMRec();
             //}
             //else
             //{
@@ -136,7 +136,7 @@ namespace BirdSort2
             //}
             GConnection.UpdateDataTableBackground(GDataTable.PlayerData, isFromDisk: true);
 
-            GameController.Instance.admobAds.ShowBannerCollap();
+            BirdSortGameController.Instance.admobAds.ShowBannerCollap();
         }
 
         public Text iqScoreText;
@@ -249,7 +249,7 @@ namespace BirdSort2
                 var reward = levelChestData.rewards[i].GetReward();
                 if (reward.typeItem != GiftType.None)
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_level);
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_level);
                     rewards.Add(reward);
                 }
             }
@@ -312,7 +312,7 @@ namespace BirdSort2
             {
                 if (it.Value > 0)
                 {
-                    rewardClaim.Add(new RewardRandom() { typeItem = GameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
+                    rewardClaim.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
                 }
             }
 
@@ -331,7 +331,7 @@ namespace BirdSort2
                 for (int i = 0; i < rewardClaim.Count; i++)
                 {
                     var itemMiss = GetItemYouClaimed();
-                    itemMiss.Init(GameController.Instance.dataContain.giftDatabase.GetIconItem(rewardClaim[i].typeItem), rewardClaim[i].amount);
+                    itemMiss.Init(BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(rewardClaim[i].typeItem), rewardClaim[i].amount);
                 }
             }
             else
@@ -376,7 +376,7 @@ namespace BirdSort2
                     }
                     else
                     {
-                        if (GameController.Instance.CheckEndLevelChallenge() || GameController.Instance.CheckHomeIsHasReward())
+                        if (BirdSortGameController.Instance.CheckEndLevelChallenge() || BirdSortGameController.Instance.CheckHomeIsHasReward())
                         {
                             sceneLoad = SceneName.HOME_SCENE;
 
@@ -386,12 +386,12 @@ namespace BirdSort2
                             sceneLoad = SceneName.GAME_PLAY_CHALLENGE;
                         }
                     }
-                    GameController.Instance.LoadScene(sceneLoad);
+                    BirdSortGameController.Instance.LoadScene(sceneLoad);
                 };
 
-                if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
+                if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
                 {
-                    GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+                    BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                     {
                         actionNext?.Invoke();
                     }, actionWatchLog: AdsPlacement.Interstitials.NEXT_LEVEL_CAMPAIN);
@@ -404,7 +404,7 @@ namespace BirdSort2
 
             WaitCloseDoneToStartAction(() => { GamePlayController_BirdSort.Instance.OnSuggetEndLevel(actionAfterSuggetSale); });
 
-            //GameController.Instance.admobAds.HideBannerCollap();
+            //BirdSortGameController.Instance.admobAds.HideBannerCollap();
         }
 
         protected void WaitCloseDoneToStartAction(UnityAction actionDone)
@@ -424,26 +424,26 @@ namespace BirdSort2
         public void OnClickClose()
         {
 
-            if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
+            if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+                BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                 {
                     Close();
-                    GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                    BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
                 }, actionWatchLog: AdsPlacement.Interstitials.NEXT_LEVEL_CAMPAIN);
             }
             else
             {
                 Close();
-                GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
             }
-            //GameController.Instance.admobAds.HideBannerCollap();
+            //BirdSortGameController.Instance.admobAds.HideBannerCollap();
         }
 
         public override void Close()
         {
-            //if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
-            //    GameController.Instance.admobAds.HideMRec();
+            //if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
+            //    BirdSortGameController.Instance.admobAds.HideMRec();
             base.Close();
         }
 
@@ -454,15 +454,15 @@ namespace BirdSort2
             int starWin = BirdSort2.GamePlayController_BirdSort.Instance.level.starWin;
             if (starWin == 1)
             {
-                bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
+                bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
             }
             else if (starWin == 2)
             {
-                bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
+                bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
             }
             else
             {
-                bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
+                bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
             }
 
             iqScoreLast = (BirdSort2.GamePlayController_BirdSort.Instance.scoreController.currentScore + bonusIQ);

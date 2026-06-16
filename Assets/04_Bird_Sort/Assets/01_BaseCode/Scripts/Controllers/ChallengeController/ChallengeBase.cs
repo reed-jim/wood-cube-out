@@ -192,13 +192,13 @@ public abstract class ChallengeBase : MonoBehaviour
     public virtual void Init()
     {
         data = new DataChallenge(typeChallenge);
-        config = GameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(typeChallenge);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(typeChallenge);
     }
 
     public virtual void InitHome()
     {
         isCoolDownEnd = false;
-        config = GameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(typeChallenge);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(typeChallenge);
         priovitySugget = SuggetPopupHomeController.PriovitySugget.Special;
         if (IsChallengeActive())
         {
@@ -293,7 +293,7 @@ public abstract class ChallengeBase : MonoBehaviour
             var reward = config.rewards[i].GetReward();
             if (reward.typeItem != GiftType.None)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, reasonClaimReward, reward.isUnlimited);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, reasonClaimReward, reward.isUnlimited);
                 rewards.Add(reward);
             }
         }

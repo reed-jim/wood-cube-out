@@ -33,7 +33,7 @@ public class ItemDecorProgess : MonoBehaviour
     public void InitState()
     {
 
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
 
         SetUp(giftData.GetIconItem(dataGiftMiniGame.reward.giftType), dataGiftMiniGame.thumnailDecor, dataGiftMiniGame.reward.amount.ToString());
 
@@ -44,7 +44,7 @@ public class ItemDecorProgess : MonoBehaviour
     
     public void SetUp(Sprite paramThumnail, Sprite paramBg, string numb)
     {
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         bgThumnail.gameObject.SetActive(true);
         unFireFireWork();
         thumnail.gameObject.SetActive(true);

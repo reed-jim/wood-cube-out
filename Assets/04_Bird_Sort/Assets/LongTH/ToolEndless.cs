@@ -1,4 +1,4 @@
-﻿using EnhancedScrollerDemos.SnappingDemo;
+using EnhancedScrollerDemos.SnappingDemo;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,8 +23,8 @@ public class ToolEndless : MonoBehaviour
         gameObject.SetActive(false);
 #endif
 
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
-        eventSaleController = GameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+        eventSaleController = BirdSortGameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
 
         btn.onClick.AddListener(() => AddItem());
         reset.onClick.AddListener(() => ResetItem());
@@ -67,10 +67,10 @@ public class ToolEndless : MonoBehaviour
         } 
         else
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                      btn.transform.position,
-                    "Nhập số vào bạn ei :>",
+                    "Nh?p s? v�o b?n ei :>",
                     Color.white,
                     isSpawnItemPlayer: false
                     );

@@ -28,7 +28,7 @@ public class ReplayBox : LoseBox
     {
         if (adsData.config.interstitials.showAfterQuit)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
                 //  BirdSort2.GamePlayController_BirdSort.Instance.countDownController.ContinueCollDown();

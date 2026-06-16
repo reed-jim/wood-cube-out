@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -37,7 +37,7 @@ public class PlayCampainBox : BaseBox
             itemsUI[i].Init(itemsUI[i].typeItem);
         }
 
-        adsData = GameController.Instance.segmentController.GetCurrentSegment().adsData;
+        adsData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData;
 
         if (tutUseItemController != null)
         {
@@ -52,7 +52,7 @@ public class PlayCampainBox : BaseBox
             itemsUI[i].InitState();
         }
 
-        levelTxt.text = string.Format(Localization.Get("s_level"), GameController.Instance.useProfile.CurrentLevelPlay);
+        levelTxt.text = string.Format(Localization.Get("s_level"), BirdSortGameController.Instance.useProfile.CurrentLevelPlay);
         itemX2WeeklyUI.InitState();
     }  
 
@@ -102,13 +102,13 @@ public class PlayCampainBox : BaseBox
         if(isCanPlay)
         {
             Close();
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         }    
         else
         {
-            //Hiện popup mua Health
+            //Hi?n popup mua Health
             OutOfHealthBox.Setup().Show();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }    
 
         

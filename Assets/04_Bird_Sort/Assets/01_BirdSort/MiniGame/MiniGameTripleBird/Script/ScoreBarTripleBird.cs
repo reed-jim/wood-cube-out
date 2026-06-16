@@ -50,7 +50,7 @@ public class ScoreBarTripleBird : MonoBehaviour
         lsRewardShow.Clear();
         actionCallBack = null;
         var data = HomeController.Instance.miniGameController.tripleBirdMG;
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         if (data.lsRewardTripleBirdMNGOfPlayer.Count == 0) // nếu list = null thì lấy ra thằng đầu tiên  = 0
         {
             temp = 0;
@@ -73,7 +73,7 @@ public class ScoreBarTripleBird : MonoBehaviour
         {
             case GiftType.EventTripleBirdBranch:
                 claimGiftMiniGame.SetUp(giftData.GetIconItem(currentGirt.reward.giftType), currentGirt.thumnail, "New Branch");
-                var oldBranchData = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedBranchSkin);
+                var oldBranchData = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedBranchSkin);
                 if (oldBranchData == null)
                 {
                     oldBranchData = new List<int>();
@@ -89,7 +89,7 @@ public class ScoreBarTripleBird : MonoBehaviour
                 break;
             case GiftType.EventTripleBirdTheme:
                 claimGiftMiniGame.SetUp(giftData.GetIconItem(currentGirt.reward.giftType), currentGirt.thumnail, "New Theme");
-                var oldThemeData = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedThemeSkin);
+                var oldThemeData = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedThemeSkin);
 
                 if (oldThemeData == null)
                 {
@@ -154,7 +154,7 @@ public class ScoreBarTripleBird : MonoBehaviour
     {
         completeV.SetActive(true);
         completeFeather.SetActive(false);
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         claimGiftMiniGame.SetUp(giftData.GetIconItem(GiftType.Coin)/*Anhtusz giftData.GetIconItem(GiftType.BirdSkin_8_3)*/, controler.giftMiniGame.GetGift(9).thumnail, "New Bird Skin");
         tvPoint.text = "Complete";
         progessBar.fillAmount = 1;

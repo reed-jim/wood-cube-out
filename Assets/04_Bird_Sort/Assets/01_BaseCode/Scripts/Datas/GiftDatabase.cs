@@ -1,4 +1,4 @@
-﻿using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,8 +61,8 @@ public class GiftDatabase : SerializedScriptableObject
                 type = "health";
                 break;
             case GiftType.RemoveAds:
-                GameController.Instance.useProfile.IsRemoveAds = true;
-                GameController.Instance.admobAds.DestroyBanner();
+                BirdSortGameController.Instance.useProfile.IsRemoveAds = true;
+                BirdSortGameController.Instance.admobAds.DestroyBanner();
                 currency = "special_items";
                 type = "remove_ads";
                 break;
@@ -327,6 +327,6 @@ public class ListRewardContent
 
 public enum ActionGiftType
 {
-    Source = 0,//Nhận
-    Sink = 1,//Tiêu
+    Source = 0,//Nh?n
+    Sink = 1,//Ti�u
 }

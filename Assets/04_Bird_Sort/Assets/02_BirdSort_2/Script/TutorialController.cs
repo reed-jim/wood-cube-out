@@ -260,7 +260,7 @@ namespace BirdSort2
                 var stand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real[0];
                 m_handTutGamePlay.gameObject.SetActive(true);
                 m_handTutGamePlay.transform.position = stand.posTut.position;
-                //GameController.Instance.AnalyticsController.LogTutLevelStart(currentLevelPlay);
+                //BirdSortGameController.Instance.AnalyticsController.LogTutLevelStart(currentLevelPlay);
                 if (UseProfile.CurrentLevel == 1)
                 {
                     LogFunnelController.LogFunnel("start_game", "start_tutorial", 1, UseProfile.CurrentLevel);
@@ -444,7 +444,7 @@ namespace BirdSort2
             int currentLevelPlay = UseProfile.CurrentLevelPlay;
             if (currentLevelPlay == 1 || currentLevelPlay == 2)
             {
-                //  GameController.Instance.AnalyticsController.LogTutLevelEnd(currentLevelPlay);
+                //  BirdSortGameController.Instance.AnalyticsController.LogTutLevelEnd(currentLevelPlay);
             }
 
             if (UseProfile.CurrentLevel == 1)

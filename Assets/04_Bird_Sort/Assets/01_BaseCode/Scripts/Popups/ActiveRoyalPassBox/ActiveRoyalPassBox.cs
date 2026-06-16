@@ -26,7 +26,7 @@ public class ActiveRoyalPassBox : BasePackBox
     public override void InitState()
     {
         base.InitState();
-        var challengeController = GameController.Instance.challengeController.GetChallenges(ChallengeType.RoyalPass);
+        var challengeController = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RoyalPass);
         timerCoolDownEnd = TimeManager.CaculateTime(challengeController.data.TimeEndChallenge, UnbiasedTime.Instance.Now());
         if (timerCoolDownEnd <= 0)
         {

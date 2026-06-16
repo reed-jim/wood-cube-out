@@ -26,7 +26,7 @@ public class Createlevel2 : MonoBehaviour
     {
         jsonLevel = jsonLevelInp.text;
         ConnectBridge.IsLaunchedFromBirdSort = true;
-        ConnectBridge.BirdSortLevelOnEnterConnect = GameController.Instance.useProfile.CurrentLevelPlay;
+        ConnectBridge.BirdSortLevelOnEnterConnect = BirdSortGameController.Instance.useProfile.CurrentLevelPlay;
         UnityEngine.SceneManagement.SceneManager.LoadScene("Loading");
     }
 
@@ -602,7 +602,7 @@ public class Createlevel2 : MonoBehaviour
                 int indexLevel = i;
                 GamePlayController.Instance = null;
                 UseProfile.CurrentLevel = indexLevel;
-                GameController.Instance.useProfile.CurrentLevelPlay = indexLevel;
+                BirdSortGameController.Instance.useProfile.CurrentLevelPlay = indexLevel;
                 if (gamePlay != null)
                     Destroy(gamePlay);
 

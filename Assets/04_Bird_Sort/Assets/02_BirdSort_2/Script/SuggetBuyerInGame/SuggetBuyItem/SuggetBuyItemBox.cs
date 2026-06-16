@@ -47,8 +47,8 @@ namespace BirdSort2
         private IEnumerator showBtnClaimIE;
         public void Init()
         {
-            config = GameController.Instance.segmentController.GetCurrentSegment().suggetBuyItemSegmentData.config;
-            bootsConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
+            config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().suggetBuyItemSegmentData.config;
+            bootsConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
 
             coinTopUI.Init();
 
@@ -73,7 +73,7 @@ namespace BirdSort2
             claimNoThankCG.alpha = 0;
 
             numItemTxt.text = config.amountItem.ToString();
-            if (GameController.Instance.dataContain.giftDatabase.GetGift(this.typeItem, out Gift gift))
+            if (BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(this.typeItem, out Gift gift))
             {
                 iconItemImg.sprite = gift.getGiftSprite;
                 detailTxt.text = string.Format(Localization.Get("get_extral_item_in_sugget"), Localization.Get(gift.nameGift));
@@ -115,16 +115,16 @@ namespace BirdSort2
             if (priceCoin > UseProfile.Coin)
             {
                 ShopBox.Setup();
-                GameController.Instance.musicManager.PlayClickSound();
+                BirdSortGameController.Instance.musicManager.PlayClickSound();
             }
             else
             {
                 UseProfile.Coin -= priceCoin;
                 //// tru coin
-                //GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -priceCoin, Reason.buy_item);
+                //BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -priceCoin, Reason.buy_item);
                 ////---------------
-                GameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, config.amountItem, Reason.in_sugget_start_level);
-                GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, config.amountItem, Reason.in_sugget_start_level);
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                    buyCoinBtn.transform.position,
                   this.typeItem,
                     config.amountItem,
@@ -146,12 +146,12 @@ namespace BirdSort2
 
         private void OnClickBuyVideo()
         {
-            GameController.Instance.admobAds.ShowVideoReward(
+            BirdSortGameController.Instance.admobAds.ShowVideoReward(
              actionReward: () =>
              {
-                 // GameController.Instance.admobAds.ShowVideoReward()
-                 GameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, config.amountItem, Reason.in_sugget_start_level);
-                 GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                 // BirdSortGameController.Instance.admobAds.ShowVideoReward()
+                 BirdSortGameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, config.amountItem, Reason.in_sugget_start_level);
+                 BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                     buyVideoBtn.transform.position,
                    this.typeItem,
                      config.amountItem,
@@ -164,14 +164,14 @@ namespace BirdSort2
              },
              actionNotLoadedVideo: () =>
              {
-                 GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                 BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                   (
                   buyVideoBtn.transform.position,
                   "No video at the moment!",
                   Color.white,
                   isSpawnItemPlayer: true
                   );
-                 GameController.Instance.musicManager.PlayClickSound();
+                 BirdSortGameController.Instance.musicManager.PlayClickSound();
              },
              actionClose: null,ActionWatchVideo.None,
             AdsPlacement.VideoReward.BUY_ITEM_IN_POPUP_SUGGET);

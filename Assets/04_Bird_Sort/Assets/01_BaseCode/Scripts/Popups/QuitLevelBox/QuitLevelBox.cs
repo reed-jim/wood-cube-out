@@ -40,7 +40,7 @@ public class QuitLevelBox : BaseBox
         quitBtn.onClick.AddListener(OnClickQuit);
         closeBtn.onClick.AddListener(OnClickStay);
 
-        //adsData = GameController.Instance.segmentController.GetCurrentSegment().adsData;
+        //adsData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData;
     }
 
     public void InitState()
@@ -54,18 +54,18 @@ public class QuitLevelBox : BaseBox
         for (int i = 0; i < this.rewardMiss.Count; i++)
         {
             var itemMiss = GetItemYouMissUI();
-            itemMiss.Init(GameController.Instance.dataContain.giftDatabase.GetIconItem(this.rewardMiss[i].typeItem), this.rewardMiss[i].amount);
+            itemMiss.Init(BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(this.rewardMiss[i].typeItem), this.rewardMiss[i].amount);
         }
         Show();
     }
    
     public void OnClickStay()
     {
-        var adsData = GameController.Instance.segmentController.GetCurrentSegment().adsData;
+        var adsData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData;
 
         if (adsData.config.interstitials.showOnAppResume)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
                 ///GamePlayController.Instance.level.PauseLevel(false);
@@ -84,22 +84,22 @@ public class QuitLevelBox : BaseBox
     {
         Close();
         UseProfile.NumberLoseLevelInDay++;
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterQuit)
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterQuit)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
-                GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
             }, actionWatchLog: AdsPlacement.Interstitials.QUIT_LEVEL_CAMPAIN);
         }
         else
         {
-            GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+            BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
         }
 
 
-        GameController.Instance.musicManager.PlayLoseSound();
+        BirdSortGameController.Instance.musicManager.PlayLoseSound();
         if (GamePlayController_BirdSort.Instance != null)
-            GameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
+            BirdSortGameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
     }
 
     private void ResetPool()

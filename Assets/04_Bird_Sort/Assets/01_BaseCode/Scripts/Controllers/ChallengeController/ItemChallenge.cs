@@ -1,4 +1,4 @@
-﻿
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -52,7 +52,7 @@ public class ItemChallenge : SerializedMonoBehaviour
 
      
         //this.body.gameObject.SetActive(false);
-        //Diễn FX
+        //Di?n FX
 
         var itemFX = BirdSort2.GamePlayController_BirdSort.Instance.itemController.view.GetItemFX();
         itemFX.transform.position = this.transform.position;
@@ -76,7 +76,7 @@ public class ItemChallenge : SerializedMonoBehaviour
             isTime: false, destinationFollow: itemFarme.iconItemImg.transform, timeDelay: 0.05f, isJump: true, timeJump: 0.7f);
 
 
-        if (GameController.Instance.useProfile.OnVibration)
+        if (BirdSortGameController.Instance.useProfile.OnVibration)
         {
            // MMVibrationManager.Haptic(HapticTypes.Selection, false, true, this);
         }

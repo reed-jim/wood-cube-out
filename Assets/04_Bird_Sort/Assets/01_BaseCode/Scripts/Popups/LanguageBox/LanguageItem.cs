@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,7 +41,7 @@ public class LanguageItem : MonoBehaviour
     public void OnClickFlagButton() {
         if (_clickAction != null) _clickAction(this);
 
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void ActiveSelected(bool isSelect) {

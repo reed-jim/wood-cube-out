@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,15 +39,15 @@ public class HomeScene : BaseScene
     public void OnClickSetting()
     {
         SettingBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     /// <summary>
-    /// Hàm gọi khi stack Box = 0
+    /// H�m g?i khi stack Box = 0
     /// </summary>
     public override void OnEscapeWhenStackBoxEmpty()
     {
-        //Hiển thị popup bạn có muốn thoát game ko?
+        //Hi?n th? popup b?n c� mu?n tho�t game ko?
     }
 
     private void OnDestroy()
@@ -56,10 +56,10 @@ public class HomeScene : BaseScene
     }
     public void OnClickBtnConnectBirdMNGame()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
             (
                 btnConnectMiniGame.transform.position,
                 Localization.Get(LocalizationKey.PLEASE_CONNECT_INTERNET),

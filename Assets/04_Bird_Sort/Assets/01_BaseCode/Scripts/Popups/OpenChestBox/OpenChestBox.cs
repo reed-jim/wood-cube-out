@@ -1,4 +1,4 @@
-﻿using Spine.Unity;
+using Spine.Unity;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -119,7 +119,7 @@ public class OpenChestBox : BaseBox
             OnChestAppearDone();
         });
 
-        GameController.Instance.musicManager.PlayOneShot(appearChestClip, appearChestSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(appearChestClip, appearChestSource);
     }
     private void SetUpTween()
     {
@@ -157,14 +157,14 @@ public class OpenChestBox : BaseBox
             });
         });
         StartCoroutine(ShowRewards(this.rewards));
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private IEnumerator ShowRewards(List<RewardRandom> rewards)
     {
-        yield return new WaitForSeconds(1.28f);//Căn chỉnh theo frame Open chest anim
+        yield return new WaitForSeconds(1.28f);//Can ch?nh theo frame Open chest anim
         int indexPos = rewards.Count - 1;
-        GameController.Instance.musicManager.PlayOneShot(openChestClip, openChestSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(openChestClip, openChestSource);
         for (int i = 0; i < rewards.Count; i++)
         {
             //Appear
@@ -203,7 +203,7 @@ public class OpenChestBox : BaseBox
         for (int i = 0; i < gruopPosResults[indexPos].gruopPos.Length; i++)
         {
             int index = i;
-            GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
               gruopPosResults[indexPos].gruopPos[index].transform.position,
               rewards[index].typeItem,
               rewards[index].amount,

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -73,7 +73,7 @@
             set
             {
                 GPlayerPrefs.SetInt(StringHelper.ONOFF_SOUND, value ? 1 : 0);
-                GameController.Instance.musicManager.SetSoundVolume(value ? 1 : 0);
+                BirdSortGameController.Instance.musicManager.SetSoundVolume(value ? 1 : 0);
                 GPlayerPrefs.Save();
             }
         }
@@ -84,7 +84,7 @@
             set
             {
                 GPlayerPrefs.SetInt(StringHelper.ONOFF_MUSIC, value ? 1 : 0);
-                GameController.Instance.musicManager.SetMusicVolume(value ? 0.7f : 0);
+                BirdSortGameController.Instance.musicManager.SetMusicVolume(value ? 0.7f : 0);
                 GPlayerPrefs.Save();
             }
         }

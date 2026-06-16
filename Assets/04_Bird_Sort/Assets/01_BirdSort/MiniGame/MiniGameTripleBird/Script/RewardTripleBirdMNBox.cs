@@ -43,7 +43,7 @@ public class RewardTripleBirdMNBox : BaseBox
         limit = 0;
         if (numb > 0)
         {
-            GameController.Instance.moneyEffectController.SpawnEffect_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp
                    (
                   btnClose.gameObject.transform.position,
                   GiftType.pointTripleBirdMNG,
@@ -58,8 +58,8 @@ public class RewardTripleBirdMNBox : BaseBox
         controller.tut.OffTut();
         Close();
         wasClose = true;
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.admobAds.ShowInterstitial(actionWatchLog:"Video_CloseRewardMinigame");
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.admobAds.ShowInterstitial(actionWatchLog:"Video_CloseRewardMinigame");
     }
     protected override void OnDisable()
     {

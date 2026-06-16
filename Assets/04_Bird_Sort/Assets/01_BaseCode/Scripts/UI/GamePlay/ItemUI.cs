@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -39,14 +39,14 @@ public class ItemUI : MonoBehaviour
         actionReloadItem = (s) => ReloadItem((GiftType)s);
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.BUYED_ITEM, actionReloadItem);
 
-        var data = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
+        var data = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
         if (data != null)
         {
             levelUnlock = data.unlockLevel;
         }
 
         this.typeItem = typeItem;
-        iconItemImg.sprite = GameController.Instance.dataContain.giftDatabase.GetIconItem(typeItem);
+        iconItemImg.sprite = BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(typeItem);
         useBtn.onClick.AddListener(UseItem);
         //addBtn.onClick.AddListener(OpenShop);
         InitState();
@@ -99,7 +99,7 @@ public class ItemUI : MonoBehaviour
             if (BirdSort2.GamePlayController_BirdSort.Instance.itemController.UseItem(typeItem))
             {
                 if (typeItem != GiftType.BreakTheRule_BirdSort)
-                    GameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(typeItem, -1, Reason.in_campain_level);
 
                 InitState();
 
@@ -113,10 +113,10 @@ public class ItemUI : MonoBehaviour
         }
         else
         {
-            //Mở shop
+            //M? shop
             OpenShop();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     protected virtual void OpenShop()

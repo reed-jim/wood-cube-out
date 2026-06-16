@@ -27,7 +27,7 @@ public class ChestStarInfoBox : BaseBox
 
     public void InitState()
     {
-        progessTxt.text = StartChestController.CurrentStar + "/" + GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
-        progessImg.fillAmount = (float)StartChestController.CurrentStar / GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
+        progessTxt.text = StartChestController.CurrentStar + "/" + BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
+        progessImg.fillAmount = (float)StartChestController.CurrentStar / BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
     }
 }

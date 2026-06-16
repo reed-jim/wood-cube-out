@@ -117,7 +117,7 @@ public class SpaceRaceElement : MonoBehaviour
         if (rank <= 2)
         {
             infoChestController.gameObject.SetActive(true);
-            var challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+            var challengeController = (RaceSpaceChallenge)BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
             var rewards = challengeController.config.rewards[rank].rewardData;
             infoChestController.Init(rewards, "");
         }
@@ -151,7 +151,7 @@ public class SpaceRaceElement : MonoBehaviour
             {
                 if (rank <= 2)
                 {
-                    var challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+                    var challengeController = (RaceSpaceChallenge)BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
                     var rewards = challengeController.config.rewards[rank].rewardData;
 
                     TypeChest typeChest = TypeChest.RaceSpaceRank_1;

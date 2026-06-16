@@ -80,7 +80,7 @@ public class DailyLoginController : MonoBehaviour
     private bool isInited;
     public void Init()
     {
-        dailyLoginConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
+        dailyLoginConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
         isHasReward = CheckRewardLogin();
 
         if (UseProfile.CurrentLevel > dailyLoginConfig.unlockLevel)
@@ -158,7 +158,7 @@ public class DailyLoginController : MonoBehaviour
         LastTimeClaimReward = UnbiasedTime.Instance.Now();
         IsClaimRewardToDay = true;
         CurrentReward++;
-        if (CurrentReward >= GameController.Instance.dataContain.dailyLoginDatabase.rewardDays.Length)
+        if (CurrentReward >= BirdSortGameController.Instance.dataContain.dailyLoginDatabase.rewardDays.Length)
         {
             CurrentReward = 0;
             CurrentWeekReward++;
@@ -170,18 +170,18 @@ public class DailyLoginController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            var data = GameController.Instance.dataContain.dailyLoginDatabase.rewardDays[6];
+            var data = BirdSortGameController.Instance.dataContain.dailyLoginDatabase.rewardDays[6];
             List<RewardRandom> rewardsShow = new List<RewardRandom>();
             for (int i = 0; i < data.rewards.Length; i++)
             {
                 int index = i;
-                //GameController.Instance.dataContain.giftDatabase.Claim(data.rewards[index].typeItem, data.rewards[index].amount, Reason.daily_login, isUnlimited: data.rewards[index].isUnlimited);
+                //BirdSortGameController.Instance.dataContain.giftDatabase.Claim(data.rewards[index].typeItem, data.rewards[index].amount, Reason.daily_login, isUnlimited: data.rewards[index].isUnlimited);
                 rewardsShow.Add(data.rewards[index]);
             }
 
             GPlayFuntPuzzle.GPopupRewardChest.Setup().Show(TypeChest.DailyLoginChest, rewardsShow, Reason.daily_login, 
-                GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig.is_video_x_reward, 
-                GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig.num_x_reward);
+                BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig.is_video_x_reward, 
+                BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig.num_x_reward);
             //OpenChestBox.Setup().Show(TypeChest.DailyLoginChest, rewardsShow);
         }    
     }

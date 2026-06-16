@@ -50,7 +50,7 @@ namespace BirdSort2
 
         public void Init()
         {
-            config = GameController.Instance.segmentController.GetCurrentSegment().suggetBuyerInGameSegmentData.config;
+            config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().suggetBuyerInGameSegmentData.config;
             actionClosePopup = (sender) => { GamePlayController_BirdSort.Instance.state = StateGame.Playing; };
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.CLOSE_POPUP, actionClosePopup);
 
@@ -167,7 +167,7 @@ namespace BirdSort2
         #region Sugget Buyer Model
         private SuggetBuyerModel GetSuggetVideoGirl()
         {
-            var packVideoGirl = GameController.Instance.videoPackController.GetPack(TypePackVideo.VideoGirl);
+            var packVideoGirl = BirdSortGameController.Instance.videoPackController.GetPack(TypePackVideo.VideoGirl);
 
             SuggetBuyerModel result = new SuggetBuyerModel();
             result.id = 1;
@@ -193,7 +193,7 @@ namespace BirdSort2
 
         private SuggetBuyerModel GetSuggetBigRemoveAds()
         {
-            var pack = GameController.Instance.packController.GetPack(TypePackIAP.BigRemoveAdsPack);
+            var pack = BirdSortGameController.Instance.packController.GetPack(TypePackIAP.BigRemoveAdsPack);
 
             SuggetBuyerModel result = new SuggetBuyerModel();
             result.id = 2;

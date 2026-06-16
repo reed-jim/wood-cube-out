@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using BirdSort2;
 using UnityEngine;
@@ -37,7 +37,7 @@ public class BlockBrandItem_BirdSort : ItemBase
 
     protected override bool ActiveItemHandle()
     {
-        //Diễn FX
+        //Di?n FX
         var currentBrand = randomTranformBrand;
     
         var post = currentBrand.icon.transform.position;
@@ -92,7 +92,7 @@ public class BlockBrandItem_BirdSort : ItemBase
                     currentBrand.HandleBlockBrand();
                     itemVFX.thumbnail.color = new Color32(0, 0, 0, 0);
                     
-                    GameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
                     itemVFX.transform.DOKill();
                     itemVFX.transform.DOScale(0, 0.3f).SetEase(Ease.InBack);
                     itemVFX.transform.DOKill();

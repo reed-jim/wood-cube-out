@@ -203,8 +203,8 @@ public abstract class BaseBox : MonoBehaviour
         if (isPostEventPopupClose)
             EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CLOSE_POPUP);
 
-        if (GameController.Instance != null && GameController.Instance.musicManager != null)
-            GameController.Instance.musicManager.PlayClickSound();
+        if (BirdSortGameController.Instance != null && BirdSortGameController.Instance.musicManager != null)
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public virtual void CloseToPoint(Transform point)
     {

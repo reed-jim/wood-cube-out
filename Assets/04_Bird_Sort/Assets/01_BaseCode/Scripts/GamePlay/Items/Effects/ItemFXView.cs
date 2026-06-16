@@ -28,7 +28,7 @@ public class ItemFXView : MonoBehaviour
 
     public virtual void Show(GiftType typeItem, int value, Vector3 posMove, float speedMove, UnityAction actionCome, bool isTime = false, bool isUnlimited = false, Transform destinationFollow = null, float timeDelay = 0, float scale = 1, bool isJump = false, float timeJump =1)
     {
-        iconImg.sprite = GameController.Instance.dataContain.giftDatabase.GetIconItem(typeItem);
+        iconImg.sprite = BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(typeItem);
          scaleP = scale;
 
         ShowHandle(value, posMove, speedMove, actionCome, isTime, isUnlimited, destinationFollow, timeDelay, isJump, timeJump);
@@ -85,7 +85,7 @@ public class ItemFXView : MonoBehaviour
             valueTxt.text = "";
         }
 
-        GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.AppearItem, appearClip, appearSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.AppearItem, appearClip, appearSource);
     }    
 
     public virtual void MoveItem(Vector3 posMove, float speedMove, UnityAction actionCome, Transform destinationFollow = null, float timeDelay = 0, bool isJump = false, float timeJump = 1)
@@ -164,6 +164,6 @@ public class ItemFXView : MonoBehaviour
         }
       
 
-        GameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.MoveItem, moveClip, moveSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(BirdSort2.NameMusic.MoveItem, moveClip, moveSource);
     }    
 }

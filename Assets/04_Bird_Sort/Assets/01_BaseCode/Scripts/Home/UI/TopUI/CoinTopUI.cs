@@ -32,7 +32,7 @@ public class CoinTopUI : BaseTopButtonGUI
     {
         //Open Shop
         EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.OPEN_SHOP);
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private void OnUpdateValueEvent()

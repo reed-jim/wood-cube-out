@@ -226,7 +226,7 @@ namespace BirdSort2
             {
                 if (it.Value > 0)
                 {
-                    rewardMiss.Add(new RewardRandom() { typeItem = GameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
+                    rewardMiss.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
                 }
             }
 
@@ -261,7 +261,7 @@ namespace BirdSort2
             if (UseProfile.CurrentLevel > Context.MAX_LEVEL)
                 return;
 
-            //  GameController.Instance.useProfile.CurrentLevelPlay = 10;
+            //  BirdSortGameController.Instance.useProfile.CurrentLevelPlay = 10;
 
 
             standsInLevel = new List<StandingBase>();
@@ -404,7 +404,7 @@ namespace BirdSort2
                     //     standsInLevel_Real[i].rectTrans.anchoredPosition = standsInLevel[i].rectTrans.anchoredPosition;
                     // }    
 
-                    //GameController.Instance.AnalyticsController.LogStartLevel(UseProfile
+                    //BirdSortGameController.Instance.AnalyticsController.LogStartLevel(UseProfile
                     //    .CurrentLevelPlay);
                     StartCoroutine(Helper.StartAction(() => { GamePlayController_BirdSort.Instance.tutorialController.Init(); },
                         1.2f));
@@ -489,11 +489,11 @@ namespace BirdSort2
             GamePlayController_BirdSort.Instance.challengeGameplayController.SpawnItems();
             try
             {
-                var config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+                var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
                 if (config != null && (config.end - UnbiasedTime.Instance.Now()).TotalSeconds > 0)
                 {
-                    var eventSaleController = GameController.Instance.eventSaleController.GetEventSales(
-                    GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive()
+                    var eventSaleController = BirdSortGameController.Instance.eventSaleController.GetEventSales(
+                    BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive()
                     .gameTheme);
                     if (eventSaleController.data.CurrentIndexReward < eventSaleController.config.rewardData.Count)
                     {
@@ -558,8 +558,8 @@ namespace BirdSort2
             GamePlayController_BirdSort.Instance.eventSaleController.WinLevel();
             StartCoroutine(WinHandle());
             StartCoroutine(RemoveBranchEndGame());
-            GameController.Instance.AnalyticsController.LogLevelComplet(UseProfile.CurrentLevel - 1, (int)timePlayLevel);
-            GameController.Instance.musicManager.PauseCoolDownSoundSource();
+            BirdSortGameController.Instance.AnalyticsController.LogLevelComplet(UseProfile.CurrentLevel - 1, (int)timePlayLevel);
+            BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
             if (UseProfile.CurrentLevel - 1 == 1)
             {
                 LogFunnelController.LogFunnel("start_game", "finish_level_1", 3, UseProfile.CurrentLevel);
@@ -587,7 +587,7 @@ namespace BirdSort2
             isBirdFlying = true;
             yield return new WaitForSeconds(0.75f);
             //Hiện popup win
-            GameController.Instance.musicManager.PlayWinSound();
+            BirdSortGameController.Instance.musicManager.PlayWinSound();
             float percentTimeRemming = ((timePlayRequire - timePlayLevel) / timePlayRequire);
             int star = 3;
             if (percentTimeRemming >= 0.7f)//Segment
@@ -626,7 +626,7 @@ namespace BirdSort2
                 UseProfile.CurrentLevel = Context.MAX_LEVEL;
             UseProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
 
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         }
 
         public virtual void BackLevel()
@@ -636,7 +636,7 @@ namespace BirdSort2
                 UseProfile.CurrentLevel = Context.MAX_LEVEL;
             UseProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
 
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         }
 
         public void ShowWinTest()
@@ -866,7 +866,7 @@ namespace BirdSort2
                 //    return;
 
                 GamePlayController_BirdSort.Instance.state = StateGame.Pause;
-                GameController.Instance.musicManager.PauseCoolDownSoundSource();
+                BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
             }
             else
             {
@@ -876,7 +876,7 @@ namespace BirdSort2
                 GamePlayController_BirdSort.Instance.state = StateGame.Playing;
                 if (Mathf.Abs(timePlayRequire - timePlayLevel) <= 10)
                 {
-                    GameController.Instance.musicManager.PlayCoolDownSoundSource();
+                    BirdSortGameController.Instance.musicManager.PlayCoolDownSoundSource();
                 }
             }
         }
@@ -884,7 +884,7 @@ namespace BirdSort2
         public IEnumerator WaringTime()
         {
             yield return new WaitUntil(() => Mathf.Abs(timePlayRequire - timePlayLevel) <= 10);
-            //GameController.Instance.musicManager.PlayCoolDownSoundSource();
+            //BirdSortGameController.Instance.musicManager.PlayCoolDownSoundSource();
         }
 
         public void Revive(bool isAddTime, bool isResetSlot, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
@@ -925,7 +925,7 @@ namespace BirdSort2
             if (reviveCorutine != null)
                 StopCoroutine(reviveCorutine);
 
-            GameController.Instance.musicManager.PauseCoolDownSoundSource();
+            BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
         }
     }
 

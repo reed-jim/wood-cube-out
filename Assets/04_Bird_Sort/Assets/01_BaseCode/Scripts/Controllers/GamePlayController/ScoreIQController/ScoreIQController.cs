@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -24,8 +24,8 @@ public class DataScoreLevelJsonModel
 [Serializable]
 public class DataScore
 {
-    public float timeAdd; //Thời điểm tăng điểm
-    public int score; //Score trong thời điểm đó
+    public float timeAdd; //Th?i di?m tang di?m
+    public int score; //Score trong th?i di?m d�
 }
 
 public class ScoreIQController : MonoBehaviour
@@ -115,12 +115,12 @@ public class ScoreIQController : MonoBehaviour
 
         view.AddCombo(comboData[currentIndexCombo]);
 
-        if (GameController.Instance.modeGame == ModeGame.PvP1)
+        if (BirdSortGameController.Instance.modeGame == ModeGame.PvP1)
         {
            // PUNController.Singleton.SyncScore(score);
         }
 
-        GameController.Instance.musicManager.PlayOneShotWithPitch(comboClip, comboAudioSource, comboData[currentIndexCombo].pitchSound);
+        BirdSortGameController.Instance.musicManager.PlayOneShotWithPitch(comboClip, comboAudioSource, comboData[currentIndexCombo].pitchSound);
     }
 
     public ComboData GetCurrentComboData()

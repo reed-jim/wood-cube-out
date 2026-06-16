@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -56,7 +56,7 @@ public class RewardElementRoyalPass : MonoBehaviour
 
         rewardElementFree.Init
            (
-           GameController.Instance.dataContain.giftDatabase.GetIconItem(rewardFree.typeItem),
+           BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(rewardFree.typeItem),
            rewardFree.amount < 0 ? 0 : rewardFree.amount,
            isUnlimitedItem: rewardFree.isUnlimited,
            isX2Item: rewardFree.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,
@@ -67,7 +67,7 @@ public class RewardElementRoyalPass : MonoBehaviour
         {
             rewardElementRoyal.Init
               (
-              GameController.Instance.dataContain.giftDatabase.GetIconItem(rewardIAP.typeItem),
+              BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(rewardIAP.typeItem),
               rewardIAP.amount < 0 ? 0 : rewardIAP.amount,
               isUnlimitedItem: rewardIAP.isUnlimited,
               isX2Item: rewardIAP.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,
@@ -151,10 +151,10 @@ public class RewardElementRoyalPass : MonoBehaviour
             {
                 if (reward.typeItem != GiftType.None)
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.royal_pass_free, reward.isUnlimited);
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.royal_pass_free, reward.isUnlimited);
                 }
 
-                GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                  rewardElementFree.iconImg.transform.position,
                  reward.typeItem,
                  reward.amount,
@@ -168,7 +168,7 @@ public class RewardElementRoyalPass : MonoBehaviour
                 var rewards = boxRoyal.royalPassChestData.GetChest(indexReward, 0).rewards;
                 for (int i = 0; i < rewards.Count; i++)
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount, Reason.royal_pass_free, rewards[i].isUnlimited);
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount, Reason.royal_pass_free, rewards[i].isUnlimited);
                 }
 
                 GPlayFuntPuzzle.GPopupRewardChest.Setup().Show(TypeChest.ChestFreeRoyalPass, rewards, Reason.royal_pass_free, boxRoyal.config.is_video_x_reward, boxRoyal.config.num_x_reward);
@@ -182,10 +182,10 @@ public class RewardElementRoyalPass : MonoBehaviour
                 {
                     if (reward.typeItem != GiftType.None)
                     {
-                        GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.royal_pass_iap, reward.isUnlimited);
+                        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.royal_pass_iap, reward.isUnlimited);
                     }
 
-                    GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                    BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                      rewardElementRoyal.iconImg.transform.position,
                      reward.typeItem,
                      reward.amount,
@@ -199,14 +199,14 @@ public class RewardElementRoyalPass : MonoBehaviour
                     var rewards = boxRoyal.royalPassChestData.GetChest(indexReward, 1).rewards;
                     for (int i = 0; i < rewards.Count; i++)
                     {
-                        GameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount, Reason.royal_pass_free, rewards[i].isUnlimited);
+                        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount, Reason.royal_pass_free, rewards[i].isUnlimited);
                     }
 
                     GPlayFuntPuzzle.GPopupRewardChest.Setup().Show(TypeChest.ChestIAPRoyalPass, rewards, Reason.royal_pass_iap, boxRoyal.config.is_video_x_reward, boxRoyal.config.num_x_reward);
                 }
             }
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         if(isSide == 0)
         {
             doneObjFree.gameObject.SetActive(true);
@@ -226,7 +226,7 @@ public class RewardElementRoyalPass : MonoBehaviour
 
 
     /// <summary>
-    /// Diễn hoàn thành mốc quà (Mốc quà cũ diễn chuyển)
+    /// Di?n ho�n th�nh m?c qu� (M?c qu� cu di?n chuy?n)
     /// </summary>
     public void OnCompleteIndexReward(UnityAction actionDone)
     {
@@ -236,7 +236,7 @@ public class RewardElementRoyalPass : MonoBehaviour
         var imgFarme = fxcurrentFarme.GetComponent<Image>();
         imgFarme.color = new Color(1, 1, 1, 1);
 
-        //Diễn anim disable mốc cũ
+        //Di?n anim disable m?c cu
         //..
 
         imgFarme.DOKill();
@@ -253,7 +253,7 @@ public class RewardElementRoyalPass : MonoBehaviour
     }
 
     /// <summary>
-    /// Diễn Show mốc quà mới
+    /// Di?n Show m?c qu� m?i
     /// </summary>
     public void OnCompleteShowNewAppear(UnityAction actionDone)
     {
@@ -263,7 +263,7 @@ public class RewardElementRoyalPass : MonoBehaviour
         imgFarme.color = new Color(1, 1, 1, 0);
 
 
-        //Diễn anim active mốc mới
+        //Di?n anim active m?c m?i
         //...
         imgFarme.DOKill();
         imgFarme.DOFade(1, 0.5f).SetEase(Ease.Linear);

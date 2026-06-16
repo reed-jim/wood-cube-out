@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -63,7 +63,7 @@ public class WeeklyChallegenView : ChallengeViewBase
         currentRewardShow.gameObject.SetActive(true);
         currentRewardShow.Init
             (
-            GameController.Instance.dataContain.giftDatabase.GetIconItem(currentReward.typeItem),
+            BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(currentReward.typeItem),
             currentReward.amount,
             isUnlimitedItem: currentReward.isUnlimited,
             isX2Item: currentReward.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,
@@ -106,7 +106,7 @@ public class WeeklyChallegenView : ChallengeViewBase
                 {
                     int indexRewardBefore = controller.data.CurrentIndexReward - 1 > 0 ? controller.data.CurrentIndexReward - 1 : 0;
                     int currentProgessShow = controller.data.CurrentIndexReward > 0 ? Mathf.Abs(controller.data.CurrentNumItem - controller.config.rewards[indexRewardBefore].numItemRequire) : controller.data.CurrentNumItem;
-                    //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+                    //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
                     int targetShow = Mathf.Abs(controller.CurrentItemRequirement - controller.config.rewards[indexRewardBefore].numItemRequire);
                     if (targetShow == 0)
                         targetShow = controller.config.rewards[indexRewardBefore].numItemRequire;
@@ -119,8 +119,8 @@ public class WeeklyChallegenView : ChallengeViewBase
                         controller.actionOpenBox?.Invoke();
                     });
 
-                    GameController.Instance.musicManager.PlayOneShot(eggComeClip, eggComeSource);
-                    var fx = GameController.Instance.fXController.GetFX(FXController.TypeFX.ClaimStarChestHome);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(eggComeClip, eggComeSource);
+                    var fx = BirdSortGameController.Instance.fXController.GetFX(FXController.TypeFX.ClaimStarChestHome);
                     fx.transform.position = eggPosProgess.transform.position;
 
                 }, isTime: false, destinationFollow: eggPosProgess.transform, timeDelay: 0, scale: 0.75f, isJump: true, timeJump: 0.7f);

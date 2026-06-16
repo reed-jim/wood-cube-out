@@ -9,7 +9,7 @@ public class DailySaleButton : BaseButtonEvent
     public override void InitState(BaseDataButtonEvent data)
     {
         base.InitState(data);
-        pack = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.DailyOffer);
+        pack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.DailyOffer);
     }
     protected override void Update()
     {

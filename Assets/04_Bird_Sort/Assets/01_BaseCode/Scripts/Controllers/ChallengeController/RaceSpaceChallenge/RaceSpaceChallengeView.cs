@@ -114,7 +114,7 @@ public class RaceSpaceChallengeView : ChallengeViewBase
         if (RaceSpaceChallenge.IsRacing)
         {
             controller.OpenBox();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
         else
         {

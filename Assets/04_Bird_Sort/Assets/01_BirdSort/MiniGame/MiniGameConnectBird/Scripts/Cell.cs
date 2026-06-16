@@ -59,7 +59,7 @@ public class Cell : MonoBehaviour
             }
 
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
 
         //    }
         //    else
@@ -101,7 +101,7 @@ public class Cell : MonoBehaviour
                 controller.numbPoint += 1;
                 controller.numbPointToReset += 1;
                 controller.queueScore.Enqueue(controller.numbPoint);
-                GameController.Instance.musicManager.PlayOneShot(controller.gameAssets.claimSound);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(controller.gameAssets.claimSound);
                 point.HandleMovePointToPost(controller.iconFeather.transform.position, delegate
                 {
                     HomeController.Instance.miniGameController.connectBirdMG.PointConnectBirdMiniGame += 1;
@@ -162,7 +162,7 @@ public class Cell : MonoBehaviour
             {
 
                 miniGameBird.transform.SetParent(controller.gameAssets.panelGame);
-                //Anhtusz GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, controller.gameAssets.birdFlyOutClip);
+                //Anhtusz BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, controller.gameAssets.birdFlyOutClip);
                 miniGameBird.FlyOut(miniGameBird.idLeftRight ? controller.gameAssets.post2.transform.position : controller.gameAssets.post1.transform.position, delegate
                     {
                         SimplePool2.Despawn(miniGameBird.gameObject);

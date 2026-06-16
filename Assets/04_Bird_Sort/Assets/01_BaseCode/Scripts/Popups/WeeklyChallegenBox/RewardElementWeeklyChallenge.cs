@@ -47,7 +47,7 @@ public class RewardElementWeeklyChallenge : MonoBehaviour
         indexRewardTxt.text = indexReward.ToString();
         rewardElement.Init
            (
-           GameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
+           BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
            reward.amount,
            isUnlimitedItem: reward.isUnlimited,
            isX2Item: reward.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,

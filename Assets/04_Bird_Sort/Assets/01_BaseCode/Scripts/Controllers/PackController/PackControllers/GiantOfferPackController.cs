@@ -29,8 +29,8 @@ public class GiantOfferPackController : PackBaseController
 
     public override bool CheckActive()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.GiantOffer);
-        var segementWeekly = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.GiantOffer);
+        var segementWeekly = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
 
         if (segement.IsPackReady())
         {
@@ -54,8 +54,8 @@ public class GiantOfferPackController : PackBaseController
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.GiantOffer);
-        var segementWeekly = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.GiantOffer);
+        var segementWeekly = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
 
         if (!segement.IsPackReady())
         {
@@ -87,7 +87,7 @@ public class GiantOfferPackController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.GiantOffer);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.GiantOffer);
     }
 
     public override void ResetDataNewDay()

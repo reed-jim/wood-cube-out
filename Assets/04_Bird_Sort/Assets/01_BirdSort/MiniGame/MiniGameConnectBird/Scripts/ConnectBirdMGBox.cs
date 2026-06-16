@@ -106,13 +106,13 @@ public class ConnectBirdMGBox : BaseBox
     public void OpenPlushEgg()
     {
         ConnectBirdMiniGameShopBox.Setup(miniGameLogic).Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OpenShopEgg()
     {
         ConnectBirdMiniGameShopBox.Setup(miniGameLogic).Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void HandleClose()
@@ -123,8 +123,8 @@ public class ConnectBirdMGBox : BaseBox
         miniGameLogic.tut.OffTut();
         HomeController.Instance.miniGameController.connectBirdMG.hand.gameObject.SetActive(false);
         Close();
-        GameController.Instance.musicManager.PlayClickSound();
-        //GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: "Video_CloseMinigame");
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        //BirdSortGameController.Instance.admobAds.ShowInterstitial(actionWatchLog: "Video_CloseMinigame");
         
       
     }
@@ -148,8 +148,8 @@ public class ConnectBirdMGBox : BaseBox
         base.Close();
         UseProfile.LastTimeOpenMinigame = DateTime.Now;
         isClosing = true;
-        GameController.Instance.musicManager.PlayClickSound();
-        //GameController.Instance.admobAds.ShowInterstitial(actionWatchLog: "Video_CloseMinigame");
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        //BirdSortGameController.Instance.admobAds.ShowInterstitial(actionWatchLog: "Video_CloseMinigame");
 
         try
         {

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniRx;
@@ -31,8 +31,8 @@ public class InappBox : BaseBox
     public override void Show()
     {
         base.Show();
-        GameController.Instance.admobAds.DestroyBanner();
-        OnCloseBox = () => { GameController.Instance.admobAds.ShowBanner(); OnCloseBox = null; };
+        BirdSortGameController.Instance.admobAds.DestroyBanner();
+        OnCloseBox = () => { BirdSortGameController.Instance.admobAds.ShowBanner(); OnCloseBox = null; };
     }
 
     private void InitData()

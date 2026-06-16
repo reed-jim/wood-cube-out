@@ -123,7 +123,7 @@ public class WeeklyChallegen : ChallengeBase
         var reward = config.rewards[data.CurrentIndexReward].GetReward();
         if (reward.typeItem != GiftType.None)
         {
-            GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, reasonClaimReward, reward.isUnlimited);
+            BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, reasonClaimReward, reward.isUnlimited);
             rewards.Add(reward);
         }
 

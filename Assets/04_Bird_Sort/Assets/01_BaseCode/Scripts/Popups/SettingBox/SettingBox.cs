@@ -82,20 +82,20 @@ public class SettingBox : BaseBox
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
                     privacyOptionBtn.transform.position, Localization.Get("s_no_internet"), Color.white, isSpawnItemPlayer: true);
             }
             else
             {
                 GplayUMP.ShowPrivacyOptionsForm(() =>
                 {
-                    GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
+                    BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
                     privacyOptionBtn.transform.position, "Error Show Privacy Options!", Color.white, isSpawnItemPlayer: true);
                 });
             }
         });
 
-        notificationBtn.gameObject.SetActive(GameController.Instance.segmentController.GetCurrentSegment().notificationData.config.isActive);
+        notificationBtn.gameObject.SetActive(BirdSortGameController.Instance.segmentController.GetCurrentSegment().notificationData.config.isActive);
 
 #if UNITY_ANDROID
         restorePurchaseBtn.gameObject.SetActive(false);
@@ -131,7 +131,7 @@ public class SettingBox : BaseBox
 
     public void InitState()
     {
-        if (GameController.Instance.useProfile.OnVibration)
+        if (BirdSortGameController.Instance.useProfile.OnVibration)
         {
             vibrationImg.sprite = vibrationSprt_On;
         }
@@ -140,7 +140,7 @@ public class SettingBox : BaseBox
             vibrationImg.sprite = vibrationSprt_Off;
         }
 
-        if (GameController.Instance.useProfile.OnSound)
+        if (BirdSortGameController.Instance.useProfile.OnSound)
         {
             soundImg.sprite = soundSprt_On;
         }
@@ -149,7 +149,7 @@ public class SettingBox : BaseBox
             soundImg.sprite = soundSprt_Off;
         }
 
-        if (GameController.Instance.useProfile.OnMusic)
+        if (BirdSortGameController.Instance.useProfile.OnMusic)
         {
             musicImg.sprite = musicSprt_On;
         }
@@ -162,9 +162,9 @@ public class SettingBox : BaseBox
 
     public void OnClickVibration()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.useProfile.OnVibration = !GameController.Instance.useProfile.OnVibration;
-        if (GameController.Instance.useProfile.OnVibration)
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.useProfile.OnVibration = !BirdSortGameController.Instance.useProfile.OnVibration;
+        if (BirdSortGameController.Instance.useProfile.OnVibration)
         {
             vibrationImg.sprite = vibrationSprt_On;
           //  MMVibrationManager.Haptic(HapticTypes.Success, false, true, this);
@@ -177,8 +177,8 @@ public class SettingBox : BaseBox
 
     public void OnClickSound()
     {
-        GameController.Instance.useProfile.OnSound = !GameController.Instance.useProfile.OnSound;
-        if (GameController.Instance.useProfile.OnSound)
+        BirdSortGameController.Instance.useProfile.OnSound = !BirdSortGameController.Instance.useProfile.OnSound;
+        if (BirdSortGameController.Instance.useProfile.OnSound)
         {
             soundImg.sprite = soundSprt_On;
         }
@@ -187,14 +187,14 @@ public class SettingBox : BaseBox
             soundImg.sprite = soundSprt_Off;
         }
 
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OnClickMusic()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.useProfile.OnMusic = !GameController.Instance.useProfile.OnMusic;
-        if (GameController.Instance.useProfile.OnMusic)
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.useProfile.OnMusic = !BirdSortGameController.Instance.useProfile.OnMusic;
+        if (BirdSortGameController.Instance.useProfile.OnMusic)
         {
             musicImg.sprite = musicSprt_On;
         }
@@ -206,7 +206,7 @@ public class SettingBox : BaseBox
 
     private void OnClickNotification()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         NotificationController.IsActive = !NotificationController.IsActive;
         notificationImg.sprite = NotificationController.IsActive ? notificationOn : notificationOff;
     }
@@ -214,36 +214,36 @@ public class SettingBox : BaseBox
     public void OnClickLanguage()
     {
         LanguageBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OnClickSupport()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         Application.OpenURL(Config.LinkFeedback);
     }
 
     public void OnClickTermOfUse()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         Application.OpenURL(Config.LinkTermOfSerice);
     }
 
     public void OnClickPrivacy()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         Application.OpenURL(Config.LinkPolicy);
     }
 
     public void OnClickRateUs()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         DialogueRate.Setup().Show();
     }
 
     public void OnClickRestorePurchase()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.iapController.RestorePurchases();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.iapController.RestorePurchases();
     }
 }

@@ -103,10 +103,10 @@ public class ReviewIAPController : MonoBehaviour
 
         if (packs.Count > 0)
         {
-            var packData = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
+            var packData = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
             if (packData.productType == ProductType.NonConsumable)
             {
-                if (GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought)
+                if (BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought)
                 {
                     buyBtn.interactable = false;
                 }
@@ -130,9 +130,9 @@ public class ReviewIAPController : MonoBehaviour
 
     public void SetBuy(TypePackIAP typePack)
     {
-        priceTxt.text = GameController.Instance.iapController.GetPrice(typePack);
+        priceTxt.text = BirdSortGameController.Instance.iapController.GetPrice(typePack);
         buyBtn.onClick.RemoveAllListeners();
-        buyBtn.onClick.AddListener(() => GameController.Instance.iapController.BuyProduct(typePack));
+        buyBtn.onClick.AddListener(() => BirdSortGameController.Instance.iapController.BuyProduct(typePack));
     }
 
     public void SetIndex(int index)
@@ -162,12 +162,12 @@ public class ReviewIAPController : MonoBehaviour
             nextBtn.gameObject.SetActive(true);
         }
 
-        // var packData = GameController
+        // var packData = BirdSortGameController
 
-        var packData = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
+        var packData = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
         if (packData.productType == ProductType.NonConsumable)
         {
-            var statePackage = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
+            var statePackage = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
             if (statePackage)
             {
                 buyBtn.interactable = false;
@@ -205,10 +205,10 @@ public class ReviewIAPController : MonoBehaviour
             nextBtn.gameObject.SetActive(true);
         }
 
-        var packData = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
+        var packData = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
         if (packData.productType == ProductType.NonConsumable)
         {
-            var statePackage = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
+            var statePackage = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
             if (statePackage)
             {
                 buyBtn.interactable = false;
@@ -226,12 +226,12 @@ public class ReviewIAPController : MonoBehaviour
 
     protected void OnIAPSuccesEventReal(GameEvent.OnIAPSucsses obj)
     {
-        var packData = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
+        var packData = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack);
         if (packData.productType == ProductType.NonConsumable)
         {
             if (packs != null && packs.Count > 0)
             {
-                var statePackage = GameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
+                var statePackage = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(packs[currentIndex].typePack).IsBought;
                 if (statePackage)
                 {
                     buyBtn.interactable = false;

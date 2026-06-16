@@ -28,7 +28,7 @@ public class TutorialRoyalPassItem : TutorialBase
 
     public override bool IsCanShowTut()
     {
-        if (UseProfile.CurrentLevel != GameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(challengeType).level_unlock)
+        if (UseProfile.CurrentLevel != BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(challengeType).level_unlock)
             return false;
 
         return base.IsCanShowTut();

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using BirdSort2;
 using UnityEngine;
@@ -58,7 +58,7 @@ public class IceItem_BirdSort : ItemBase
     {
         if (isActive)
         {
-            //Diễn FX
+            //Di?n FX
           
             var itemUI = BirdSort2.GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem];
 
@@ -86,7 +86,7 @@ public class IceItem_BirdSort : ItemBase
                         iceFXObj.gameObject.SetActive(true);
                         iceFXObj.DOKill();
                         iceFXObj.DOFade(1, 0.5f);
-                      //  GameController.Instance.musicManager.PlayOneShot(iceClip, iceSource);
+                      //  BirdSortGameController.Instance.musicManager.PlayOneShot(iceClip, iceSource);
                     });
 
                 },
@@ -121,7 +121,7 @@ public class IceItem_BirdSort : ItemBase
     public override bool IsCanUseItem()
     {
         if (UseProfile.CurrentLevel
-            < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.IceItem_BirdSort).unlockLevel)
+            < BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.IceItem_BirdSort).unlockLevel)
             return false;
 
         if (UseProfile.GetNumItem(typeItem) <= 0)

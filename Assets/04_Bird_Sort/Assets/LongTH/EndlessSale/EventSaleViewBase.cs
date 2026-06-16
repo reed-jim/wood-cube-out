@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +22,7 @@ public class EventSaleViewBase : MonoBehaviour
 
     public void AwakeHomeSetup()
     {
-        this.controller = GameController.Instance.eventSaleController.GetEventSales(typeEventSale);
+        this.controller = BirdSortGameController.Instance.eventSaleController.GetEventSales(typeEventSale);
         this.controller.view = this;
     }
 
@@ -35,7 +35,7 @@ public class EventSaleViewBase : MonoBehaviour
             {
                 int indexRewardBefore = controller.data.CurrentIndexReward - 1 > 0 ? controller.data.CurrentIndexReward - 1 : 0;
                 int currentProgessShow = controller.data.CurrentIndexReward > 0 ? Mathf.Abs(controller.data.RememberCurrentNumItem - controller.config.rewardData[indexRewardBefore].requireToken) : controller.data.RememberCurrentNumItem;
-                //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+                //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
                
                 int targetShow = Mathf.Abs(controller.CurrentItemRequirement - controller.config.rewardData[indexRewardBefore].requireToken);
                 if (targetShow == 0)

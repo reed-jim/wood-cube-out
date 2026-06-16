@@ -23,7 +23,7 @@ public class WeekendSaleBox : BasePackBox
     public override void InitState()
     {
         base.InitState();
-        SaleText.text = string.Format(Localization.Get("s_sale_off"), GameController.Instance.segmentController.GetCurrentSegment().saleData.config.weeklySalePack.salePercent.ToString("0.##"));
+        SaleText.text = string.Format(Localization.Get("s_sale_off"), BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.config.weeklySalePack.salePercent.ToString("0.##"));
     }
 
     protected override void OnBuyPackSuccess()

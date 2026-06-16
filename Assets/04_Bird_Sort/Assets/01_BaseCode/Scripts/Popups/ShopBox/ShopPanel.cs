@@ -71,9 +71,9 @@ public class ShopPanel : MonoBehaviour
             coinPacks[i].gameObject.SetActive(true);
         }
         ResetPack();
-        if (GameController.Instance.packController.HasPackSale())
+        if (BirdSortGameController.Instance.packController.HasPackSale())
         {
-            var packActiveSale = GameController.Instance.packController.activeSalePacks;
+            var packActiveSale = BirdSortGameController.Instance.packController.activeSalePacks;
 
             for (int i = 0; i < packActiveSale.Count; i++)
             {

@@ -44,7 +44,7 @@ public class LoseBox : PlayCampainBox
             itemsUI[i].InitState();
         }
 
-        levelTxt.text = string.Format(Localization.Get("s_level"), GameController.Instance.useProfile.CurrentLevelPlay);
+        levelTxt.text = string.Format(Localization.Get("s_level"), BirdSortGameController.Instance.useProfile.CurrentLevelPlay);
 
         UseProfile.Health -= 1;
         if (!UseProfile.IsRefillHealth)
@@ -54,16 +54,16 @@ public class LoseBox : PlayCampainBox
         }
 
         itemX2WeeklyUI.InitState();
-        var useItemCondition = GameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem);
+        var useItemCondition = BirdSortGameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem);
         if (useItemCondition != null)
             useItemCondition.EndCondition();
 
-        GameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.NumberLoseLevel, 1);
-        GameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.LoseLevelWithTime, 1);
+        BirdSortGameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.NumberLoseLevel, 1);
+        BirdSortGameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.LoseLevelWithTime, 1);
         LoseLevelWithTimeCondition.isLosed = true;
 
         if (GamePlayController_BirdSort.Instance != null)
-            GameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
+            BirdSortGameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
     }
 
     // ── Connect Scene Integration ─────────────────────────────────
@@ -85,18 +85,18 @@ public class LoseBox : PlayCampainBox
     {
         if (adsData.config.interstitials.showAfterQuit)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
               //  GamePlayController.Instance.level.ResetPoolBird();
-                GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
             }, actionWatchLog: AdsPlacement.Interstitials.QUIT_LEVEL_CAMPAIN);
         }
         else
         {
             Close();
           //  GamePlayController.Instance.level.ResetPoolBird();
-            GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+            BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
         }
     }
 
@@ -125,25 +125,25 @@ public class LoseBox : PlayCampainBox
         {
             if (adsData.config.interstitials.showBeforeLevel)
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+                BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                 {
                     Close();
                   //  GamePlayController.Instance.level.ResetPoolBird();
-                    GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+                    BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
                 }, actionWatchLog: AdsPlacement.Interstitials.REPLAY_LEVEL_CAMPAIN);
             }
             else
             {
                 Close();
                // GamePlayController.Instance.level.ResetPoolBird();
-                GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+                BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
             }
         }
         else
         {
             //Hiện popup mua Health
             OutOfHealthBox.Setup().Show();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
 
 

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -164,7 +164,7 @@
         {
             yield return new WaitUntil(() => bird.isFlyOut);
             FlyKey(keyElement, isEnd);
-            //Post Event check lại StandSuccess cả map
+            //Post Event check l?i StandSuccess c? map
         }
 
         protected override void ReturnExtralHandle()
@@ -201,7 +201,7 @@
                 {
                     currentPrison.doorObj.DOAnchorPosY(11.21f, 0.1f).OnComplete(() =>
                         {
-                            GameController.Instance.musicManager.PlayOneShot(cageLockClip, audioCageSource);
+                            BirdSortGameController.Instance.musicManager.PlayOneShot(cageLockClip, audioCageSource);
 
                             for (int i = 0; i < keyElements.Count; i++)
                             {
@@ -228,7 +228,7 @@
                                 //float timeMove = Vector2.Distance(birdHasKey.transform.position, key.transform.position) / 3.5f;
                                 key.transform.DOMove(keyElements[index].birdHasKey.transform.position, timeMove).OnComplete(() =>
                                     {
-                                        GameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
+                                        BirdSortGameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
                                         key.transform.parent = keyElements[index].birdHasKey.transform;
 
 
@@ -248,7 +248,7 @@
                                     key.transform.DOScale(1f, timeMove * 0.95f).SetDelay(0.3f);
 
                                     if (index == 0)
-                                        GameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
+                                        BirdSortGameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
                                 }).SetEase(Ease.OutBack);
                             }
 
@@ -282,7 +282,7 @@
             key.transform.DOScale(1.5f, 0.35f).OnComplete(() =>
             {
                 // key.transform.DOScale(0.8f, 0.3f);
-                GameController.Instance.musicManager.PlayOneShot(getKeyClip, keySource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(getKeyClip, keySource);
             });
 
             float timeMoveKey = Vector2.Distance(key.transform.position, lockObj.transform.position) / 4.5f;
@@ -296,7 +296,7 @@
 
                     if (isEnd)
                     {
-                        GameController.Instance.musicManager.PlayOneShot(cageOpenClip, audioCageSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(cageOpenClip, audioCageSource);
                         currentPrison.doorObj.DOAnchorPosY(137f, 0.1f).OnComplete(() =>
                         {
                             body.gameObject.SetActive(false);

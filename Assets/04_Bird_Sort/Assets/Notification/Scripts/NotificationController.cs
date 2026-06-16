@@ -26,7 +26,7 @@ namespace Gplay.Notifications
         public bool _initialized;
         public void Initialize()
         {
-            if (!GameController.Instance.segmentController.GetCurrentSegment().notificationData.config.isActive)
+            if (!BirdSortGameController.Instance.segmentController.GetCurrentSegment().notificationData.config.isActive)
             {
                 return;
             }
@@ -264,14 +264,14 @@ namespace Gplay.Notifications
                 case NotificationID.Default:
                     break;
                 case NotificationID.ComebackGame:
-                    int comeBackSeconds = GameController.Instance.segmentController.GetCurrentSegment().notificationData.config.comeBackSeconds;
+                    int comeBackSeconds = BirdSortGameController.Instance.segmentController.GetCurrentSegment().notificationData.config.comeBackSeconds;
                     fireTime = DateTime.Now.AddSeconds(comeBackSeconds);
                     repeatInterval = TimeSpan.FromSeconds(comeBackSeconds);
                     Schedule(() => Random.Range(1, 4).ToString());
                     //Debug.LogError("ComebackGame ");
                     break;
                 case NotificationID.FullLives:
-                    int timeRefill = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config
+                    int timeRefill = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config
                         .healthConfig.timeReFillHealth;
                     int currentHealth = PlayerPrefs.GetInt(StringHelper.HEALTH, GiftDatabase.DefaultItem[GiftType.Health]);
                     var timeLastOverHealth = UseProfile.TimeLastOverHealth;

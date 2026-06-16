@@ -1,4 +1,4 @@
-ï»¿//using System;
+//using System;
 //using System.Collections;
 //using System.Collections.Generic;
 //using System.Threading.Tasks;
@@ -88,7 +88,7 @@
 //    #region REWARDED CALLBACKS
 
 //    /************* RewardedVideo AdInfo Delegates *************/
-//    // Indicates that thereâ€™s an available ad.
+//    // Indicates that there’s an available ad.
 //    // The adInfo object includes information about the ad that was loaded successfully
 //    // This replaces the RewardedVideoAvailabilityChangedEvent(true) event
 //    void RewardedVideoOnAdAvailable(IronSourceAdInfo adInfo)
@@ -128,7 +128,7 @@
 
 //    // Invoked when the video ad was clicked.
 //    // This callback is not supported by all networks, and we recommend using it only if
-//    // itâ€™s supported by all networks you included in your build.
+//    // it’s supported by all networks you included in your build.
 //    void RewardedVideoOnAdClickedEvent(IronSourcePlacement placement, IronSourceAdInfo adInfo)
 //    {
 //    }
@@ -188,7 +188,7 @@
 //            UseProfile.NumberOfDisplayedInterstitialD1++;
 //        }
 
-//        GameController.Instance.AnalyticsController.LogDisplayedInterstitialDay01();
+//        BirdSortGameController.Instance.AnalyticsController.LogDisplayedInterstitialDay01();
 //    }
 
 //    #endregion
@@ -278,7 +278,7 @@
 //            Firebase.Analytics.FirebaseAnalytics.LogEvent("ad_impression", AdParameters);
 
 
-//            GameController.Instance.AnalyticsController.LogRevenueDay01((float)revenue);
+//            BirdSortGameController.Instance.AnalyticsController.LogRevenueDay01((float)revenue);
 
 //        }
 //        Dictionary<string, object> paramas = new Dictionary<string, object>();
@@ -389,7 +389,7 @@
 //        {
 //            if (IronSource.Agent.isInterstitialReady())
 //            {
-//                //GameController.Instance.dataContains.questDatabase.UpdateQuest(QuestEnum.Watch_X_Video, 1);
+//                //BirdSortGameController.Instance.dataContains.questDatabase.UpdateQuest(QuestEnum.Watch_X_Video, 1);
 //                IronSource.Agent.showInterstitial();
 //                return true;
 //            }
@@ -408,7 +408,7 @@
 
 //    public void ShowBanner()
 //    {
-//        if (GameController.Instance.useProfile.IsRemoveAds)
+//        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
 //            return;
 
 //        IronSource.Agent.displayBanner();

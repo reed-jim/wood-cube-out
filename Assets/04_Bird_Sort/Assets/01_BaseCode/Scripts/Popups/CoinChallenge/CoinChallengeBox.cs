@@ -53,7 +53,7 @@ public class CoinChallengeBox : BaseBox
         closeBtn.onClick.AddListener(Close);
         continueBtn.onClick.AddListener(OnClickPlay);
 
-        challengeController = GameController.Instance.challengeController.GetChallenges(ChallengeType.CoinChallenge);
+        challengeController = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.CoinChallenge);
         config = challengeController.config;
     }
 
@@ -124,7 +124,7 @@ public class CoinChallengeBox : BaseBox
     private void OnClickPlay()
     {
         Close();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public override void CreateInstance()

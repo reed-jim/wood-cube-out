@@ -60,7 +60,7 @@ public class MoneyEffect : MonoBehaviour
 
     public void SetSpriteIcon(GiftType itemType)
     {
-        if (GameController.Instance.dataContain.giftDatabase.GetGift(itemType, out Gift gift))
+        if (BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(itemType, out Gift gift))
         {
             iconItem.sprite = gift.getGiftSprite;
             iconItem.gameObject.SetActive(true);

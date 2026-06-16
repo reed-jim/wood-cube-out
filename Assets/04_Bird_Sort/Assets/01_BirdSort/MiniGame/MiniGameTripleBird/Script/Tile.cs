@@ -38,9 +38,9 @@ public class Tile : MonoBehaviour
                     anim.SetAnimation(IDLE, true);
                     var valueScale = anim.transform.localScale.x;
                     anim.transform.DOScale(valueScale + 0.1f, 0.5f).SetEase(Ease.InOutQuad).SetDelay(0.5f);
-                    egg.transform.SetParent(controller.levelManager.CellParent.transform);
-                    controller.levelManager.lsEgg.Add(egg.gameObject);
-                    GameController.Instance.musicManager.PlayOneShot(controller.levelManager.eggBroken, audioSourceEgg);
+                    egg.transform.SetParent(controller.TripleBirdLevelManager.CellParent.transform);
+                    controller.TripleBirdLevelManager.lsEgg.Add(egg.gameObject);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(controller.TripleBirdLevelManager.eggBroken, audioSourceEgg);
                     egg.SetAnimation(BREAK, false, () =>
                     {
                         Destroy(egg.gameObject);
@@ -85,7 +85,7 @@ public class Tile : MonoBehaviour
         {
             bool wasFind = false;
             int temp = 0;
-            var lvMng = controller.levelManager;
+            var lvMng = controller.TripleBirdLevelManager;
             for (int i = lvMng.lsSort.Count - 1; i >= 0; i--)
             {
                 if (lvMng.lsSort[i].id == this.id)
@@ -142,8 +142,8 @@ public class Tile : MonoBehaviour
     }
     public void PlaySound()
     {
-        GameController.Instance.musicManager.PlayOneShot(controller.levelManager.flySound, audioSourceFly);
-        GameController.Instance.musicManager.PlayOneShot(birdSound, audioSourceBird);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(controller.TripleBirdLevelManager.flySound, audioSourceFly);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(birdSound, audioSourceBird);
     }
     public void SetFly()
     {
@@ -176,16 +176,16 @@ public class Tile : MonoBehaviour
     #endregion
     private void HandleOnClick()
     {
-        var lvMng = controller.levelManager;
+        var lvMng = controller.TripleBirdLevelManager;
 
-        if (_typeTile == TypeTile.CanClick & controller.levelManager.canClickBird)
+        if (_typeTile == TypeTile.CanClick & controller.TripleBirdLevelManager.canClickBird)
         {
             if (controller.isLose)
             {
                 controller.gameAssets.SpawnXObject(anim.transform.position);
                 return;
             }
-            if (controller.levelManager.lsSort.Count < 6 && controller.levelManager.birdWaiting.Count == 0)
+            if (controller.TripleBirdLevelManager.lsSort.Count < 6 && controller.TripleBirdLevelManager.birdWaiting.Count == 0)
             {
                 this._typeTile = TypeTile.CanNotClick;
                 CheckAround(this);
@@ -208,13 +208,13 @@ public class Tile : MonoBehaviour
                 {
                     anim.transform.localScale = new Vector3(-valueScaleX, anim.transform.localScale.y, anim.transform.localScale.z);
                 }
-                float timeMove = Vector2.Distance(this.transform.position, temp.position) / controller.levelManager.speedMove;
+                float timeMove = Vector2.Distance(this.transform.position, temp.position) / controller.TripleBirdLevelManager.speedMove;
                 isFlying = true;
                 this.transform.DOMove(temp.position, timeMove).OnComplete(() =>
                 {
                     anim.SetAnimation(GROUNDING, false);
                     var tempNest = temp.parent.transform.position;
-                    float timeGround = Vector2.Distance(this.transform.position, tempNest) / controller.levelManager.speedMove;
+                    float timeGround = Vector2.Distance(this.transform.position, tempNest) / controller.TripleBirdLevelManager.speedMove;
                     this.transform.DOMove(tempNest, timeGround).OnComplete(() =>
                      {
                          isFlying = false;
@@ -228,7 +228,7 @@ public class Tile : MonoBehaviour
             }
             else
             {
-                if (controller.levelManager.birdWaiting.Count < 6 && controller.levelManager.CheckCanClear())
+                if (controller.TripleBirdLevelManager.birdWaiting.Count < 6 && controller.TripleBirdLevelManager.CheckCanClear())
                 {
 
                     for (int i = 0; i < lvMng.lsPosWait.Count; i++)
@@ -237,7 +237,7 @@ public class Tile : MonoBehaviour
                         {
                             lvMng.lsPosWait[i].hasBird = true;
                             posWait = lvMng.lsPosWait[i];
-                            controller.levelManager.birdWaiting.Enqueue(this);
+                            controller.TripleBirdLevelManager.birdWaiting.Enqueue(this);
                             this._typeTile = TypeTile.CanNotClick;
                             CheckAround(this);
                             PlaySound();
@@ -254,10 +254,10 @@ public class Tile : MonoBehaviour
                             {
                                 anim.transform.localScale = new Vector3(-valueScaleX, anim.transform.localScale.y, anim.transform.localScale.z);
                             }
-                            float timeMove = Vector2.Distance(this.transform.position, temp) / controller.levelManager.speedMoveToWait;
-                            if (controller.levelManager.birdWaiting.Count >= 6)
+                            float timeMove = Vector2.Distance(this.transform.position, temp) / controller.TripleBirdLevelManager.speedMoveToWait;
+                            if (controller.TripleBirdLevelManager.birdWaiting.Count >= 6)
                             {
-                                controller.levelManager.canClickBird = false;
+                                controller.TripleBirdLevelManager.canClickBird = false;
                             }
                             this.transform.DOMove(temp, timeMove);
                             break;
@@ -266,7 +266,7 @@ public class Tile : MonoBehaviour
                 }
                 else
                 {
-                    if (!controller.levelManager.CheckCanClear())
+                    if (!controller.TripleBirdLevelManager.CheckCanClear())
                     {
                         controller.CheckWinLose();
                     }
@@ -277,7 +277,7 @@ public class Tile : MonoBehaviour
     }
     public void CheckThatTile()
     {
-        var lvMng = controller.levelManager;
+        var lvMng = controller.TripleBirdLevelManager;
         anim.SetAnimation(IDLE, true);
         StopFlySound();
         lvMng.AddListComplete(this);
@@ -285,7 +285,7 @@ public class Tile : MonoBehaviour
     }
     public void MoveToPos()
     {
-        var lvMng = controller.levelManager;
+        var lvMng = controller.TripleBirdLevelManager;
         var temp = lvMng.lsPost[SortTitle].gameObject.transform;
         controller.CheckWinLose();
         if (posWait != null)
@@ -293,7 +293,7 @@ public class Tile : MonoBehaviour
             posWait.hasBird = false;
             posWait = null;
         }
-        controller.levelManager.canClickBird = true;
+        controller.TripleBirdLevelManager.canClickBird = true;
         if (!TripleBirdMGController.FirstOpenTripleBirdMNGame)
         {
             controller.tut.MoveToAnotherBird();
@@ -307,15 +307,15 @@ public class Tile : MonoBehaviour
         {
             anim.transform.localScale = new Vector3(-valueScaleX, anim.transform.localScale.y, anim.transform.localScale.z);
         }
-        float timeMove = Vector2.Distance(this.transform.position, temp.position) / controller.levelManager.speedMove;
-        controller.levelManager.canClickBird = true;
+        float timeMove = Vector2.Distance(this.transform.position, temp.position) / controller.TripleBirdLevelManager.speedMove;
+        controller.TripleBirdLevelManager.canClickBird = true;
         this.transform.DOKill();
         isFlying = true;
         this.transform.DOMove(temp.position, timeMove).OnComplete(() =>
         {
             anim.SetAnimation(GROUNDING, false);
             var tempNest = temp.parent.transform.position;
-            float timeGround = Vector2.Distance(this.transform.position, tempNest) / controller.levelManager.speedMove;
+            float timeGround = Vector2.Distance(this.transform.position, tempNest) / controller.TripleBirdLevelManager.speedMove;
             this.transform.DOMove(tempNest, timeGround).OnComplete(() =>
             {
                 isFlying = false;

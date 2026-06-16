@@ -117,7 +117,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
     public void OpenInfoMiniGame()
     {
         TutorialConnectBirdBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OnBlindPanelObject()
@@ -197,7 +197,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
         {
             playAction.Invoke();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void LoadBoardData()
     {
@@ -327,7 +327,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
         board.Initialize();
         boardUserInput.Initialize();
         OffButton();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
 
@@ -338,7 +338,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
         buttonPlay.gameObject.SetActive(false);
         try
         {
-            coolDown = TimeSpan.Parse(GameController.Instance.segmentController.GetCurrentSegment()
+            coolDown = TimeSpan.Parse(BirdSortGameController.Instance.segmentController.GetCurrentSegment()
                 .minigameConnectSegmentData.config.time_play);
         }
         catch (Exception e)
@@ -466,7 +466,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
         numbPoint = 0;
         tvFeather.text = "" + numbPoint;
         CurrentLevelMiniGame = 1;
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     // public List<int> lstest = new List<int>() { 1, 2, 3 };
     private void OnButton()
@@ -491,7 +491,7 @@ public class ConnectBirdMGLogic : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Escape) && isPlaying)
         {
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
             OnCloseBlindPanel();
         }
         if (controTime)

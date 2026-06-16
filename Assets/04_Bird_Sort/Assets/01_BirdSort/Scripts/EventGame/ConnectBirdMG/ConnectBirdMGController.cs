@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -38,14 +38,14 @@ public class ConnectBirdMGController : MiniGameRegister
         set
         {
             UseProfile.PointConnectBirdMiniGame = value;
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
 
-    // List chứa id những phần quà người chơi đã nhận được
+    // List ch?a id nh?ng ph?n qu� ngu?i choi d� nh?n du?c
     public List<int> lsRewardConnectBirdMNGOfPlayer;
 
-    //Các phương thức xử dụng list data id
+    //C�c phuong th?c x? d?ng list data id
     public void AddAndSaveDataReward(int id)
     {
         lsRewardConnectBirdMNGOfPlayer.Add(id);
@@ -114,7 +114,7 @@ public class ConnectBirdMGController : MiniGameRegister
 
 
 
-    //Số lượt quay còn lại trong ngày
+    //S? lu?t quay c�n l?i trong ng�y
     public int ConnectBirdTurnFree
     {
         get
@@ -124,12 +124,12 @@ public class ConnectBirdMGController : MiniGameRegister
         set
         {
             UseProfile.ConnectBirdTurnFree = value;
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
 
    
-  // Giới hạn xem quảng cáo
+  // Gi?i h?n xem qu?ng c�o
     public int LimitNumbWatchVideoInDay
     {
         get
@@ -153,7 +153,7 @@ public class ConnectBirdMGController : MiniGameRegister
 
             UseProfile.FirstOpenConnectBirdMNGame = value ? 1 : 0;
             PlayerPrefs.Save();
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     // first show home
@@ -174,7 +174,7 @@ public class ConnectBirdMGController : MiniGameRegister
     public bool wasChoose;
 
 
-    //Số lần đã xem video để mua thêm lượt chơi trong ngày
+    //S? l?n d� xem video d? mua th�m lu?t choi trong ng�y
     public int CurrentNumWatchVideoInDay
     {
         get
@@ -195,7 +195,7 @@ public class ConnectBirdMGController : MiniGameRegister
         {
             if (this.config != null)
                 return this.config;
-            this.config = GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
+            this.config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
                 .config;
             return this.config;
         }

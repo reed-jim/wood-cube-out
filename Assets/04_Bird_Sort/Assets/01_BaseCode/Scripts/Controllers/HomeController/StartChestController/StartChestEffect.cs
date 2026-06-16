@@ -39,11 +39,11 @@ public class StartChestEffect : MonoBehaviour
             fxStarClaim.gameObject.SetActive(true);
             canvasGruop.DOFade(0, 0.2f);
             actionStarDone?.Invoke();
-            GameController.Instance.musicManager.PlayOneShot(comeClip, comeSource);
-            var fx = GameController.Instance.fXController.GetFX(FXController.TypeFX.ClaimStarChestHome);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(comeClip, comeSource);
+            var fx = BirdSortGameController.Instance.fXController.GetFX(FXController.TypeFX.ClaimStarChestHome);
             fx.transform.position = this.transform.position;
         }).SetEase(Ease.InBack);
 
-        GameController.Instance.musicManager.PlayOneShot(appearStarClip, appearStarSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(appearStarClip, appearStarSource);
     }
 }

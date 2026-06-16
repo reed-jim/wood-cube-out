@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -67,7 +67,7 @@ public class BoomExtral : ExtralPlayBase
         {
             if (bird != null && data.birdParent.id == bird.id && !data.birdParent.isBirdInGadern)
             {
-                //Phá boom thành công, hiển thị effect phá boom
+                //Ph� boom th�nh c�ng, hi?n th? effect ph� boom
                 state = StateExtral.Success;
 
                 if (m_ExtralSuccess != null)
@@ -88,7 +88,7 @@ public class BoomExtral : ExtralPlayBase
     private void ActiveCoolDown()
     {
         timeCoolDown--;
-        GameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
 
         if (timeCoolDown <= 0)
         {
@@ -120,7 +120,7 @@ public class BoomExtral : ExtralPlayBase
         base.EndExtral(isDone);
         if (!isDone)
         {
-            //Gọi hiệu ứng nổ, show popup lose
+            //G?i hi?u ?ng n?, show popup lose
             Debug.Log("============= Boom Lose");
             fxFuse.gameObject.SetActive(false);
             fxExplosion.gameObject.SetActive(true);
@@ -130,9 +130,9 @@ public class BoomExtral : ExtralPlayBase
             //this.data.birdParent.DisableBody();
             body.gameObject.SetActive(false);
             this.data.birdParent.DisableBody();
-            GameController.Instance.musicManager.PlayOneShot(explosionClip, audioBoomSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(explosionClip, audioBoomSource);
             //EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.FLY_OUT_RANDOM, this.data.birdParent);
-            if (GameController.Instance.modeGame == ModeGame.Campaign)
+            if (BirdSortGameController.Instance.modeGame == ModeGame.Campaign)
             {
                 StartCoroutine(Helper.StartAction(() =>
                 {
@@ -169,7 +169,7 @@ public class BoomExtral : ExtralPlayBase
             this.transform.DOKill();
             this.transform.localScale = 3 * Vector3.one;
 
-            GameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
             boomSke.AnimationState.ClearTracks();
 
             var track = boomSke.AnimationState.SetAnimation(0, "start", false);
@@ -185,7 +185,7 @@ public class BoomExtral : ExtralPlayBase
                 float timeMove = 0.25f;
                 this.transform.DOMove(this.data.birdParent.transform.position, timeMove).OnComplete(() =>
                 {
-                    if (GameController.Instance.modeGame == ModeGame.Campaign)
+                    if (BirdSortGameController.Instance.modeGame == ModeGame.Campaign)
                     {
 
                         //GamePlayController.Instance.tutorialController.ActiveTutExtral(this);

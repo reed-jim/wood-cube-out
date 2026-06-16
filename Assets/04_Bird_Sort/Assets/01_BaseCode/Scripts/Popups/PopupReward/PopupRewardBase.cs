@@ -145,7 +145,7 @@ public class PopupRewardBase : BaseBox
             parslayer[i].sortingOrder = popupCanvas.sortingOrder + 1;
         }
 
-        GameController.Instance.musicManager.PlayOneShot(rewardClip);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(rewardClip);
         return this;
     }
 
@@ -180,7 +180,7 @@ public class PopupRewardBase : BaseBox
             return;
 
         ClaimSuccess();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     IEnumerator ClaimWithDelay()
@@ -205,11 +205,11 @@ public class PopupRewardBase : BaseBox
 
     private Sprite GetIcon(GiftType type)
     {
-        return GameController.Instance.dataContain.giftDatabase.GetIconItem(type);
+        return BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(type);
     }
     private GameObject GetAnim(GiftType type)
     {
-        return GameController.Instance.dataContain.giftDatabase.GetAnimItem(type);
+        return BirdSortGameController.Instance.dataContain.giftDatabase.GetAnimItem(type);
     }
 }
 

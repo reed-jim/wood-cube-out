@@ -25,7 +25,7 @@ public class JoinSpaceRaceBox : BaseBox
 
     private void Init()
     {
-        challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+        challengeController = (RaceSpaceChallenge)BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
         joinRaceBtn.onClick.AddListener(OnClickJoinRace);
     }
 
@@ -38,7 +38,7 @@ public class JoinSpaceRaceBox : BaseBox
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                      joinRaceBtn.transform.position,
                     Localization.Get("s_no_internet"),
@@ -51,11 +51,11 @@ public class JoinSpaceRaceBox : BaseBox
         challengeController.StartRace(actionSuccess: ()=> {
             Close();
             SpaceRaceChallengeBox.Setup().Show();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }, 
         ()=> 
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                      joinRaceBtn.transform.position,
                     Localization.Get("s_join_race_fail"),

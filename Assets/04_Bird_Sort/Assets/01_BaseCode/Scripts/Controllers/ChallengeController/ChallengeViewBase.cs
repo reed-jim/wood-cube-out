@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,7 +22,7 @@ public class ChallengeViewBase : MonoBehaviour
 
     public void AwakeHomeSetup()
     {
-        this.controller = GameController.Instance.challengeController.GetChallenges(typeChallenge);
+        this.controller = BirdSortGameController.Instance.challengeController.GetChallenges(typeChallenge);
         this.controller.view = this;
     }
 
@@ -35,7 +35,7 @@ public class ChallengeViewBase : MonoBehaviour
             {
                 int indexRewardBefore = controller.data.CurrentIndexReward - 1 > 0 ? controller.data.CurrentIndexReward - 1 : 0;
                 int currentProgessShow = controller.data.CurrentIndexReward > 0 ? Mathf.Abs(controller.data.RememberCurrentNumItem - controller.config.rewards[indexRewardBefore].numItemRequire) : controller.data.RememberCurrentNumItem;
-                //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+                //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
                
                 int targetShow = Mathf.Abs(controller.CurrentItemRequirement - controller.config.rewards[indexRewardBefore].numItemRequire);
                 if (targetShow == 0)

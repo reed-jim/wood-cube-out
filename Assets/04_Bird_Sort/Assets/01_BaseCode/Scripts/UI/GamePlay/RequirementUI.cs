@@ -77,7 +77,7 @@ public class RequirementUI : MonoBehaviour
 
         //FX
         //...
-        var fx = GameController.Instance.fXController.GetFX(FXController.TypeFX.DoneRequiremnent);
+        var fx = BirdSortGameController.Instance.fXController.GetFX(FXController.TypeFX.DoneRequiremnent);
         if (fx != null)
         {
             fx.transform.position = iconImg.transform.position;
@@ -95,7 +95,7 @@ public class RequirementUI : MonoBehaviour
             });
         });
 
-  //      GameController.Instance.musicManager.PlayOneShot(doneClip, MusicManager.SourceAudio.UI);
+  //      BirdSortGameController.Instance.musicManager.PlayOneShot(doneClip, MusicManager.SourceAudio.UI);
     }
 
     public void ResortRequirement(Vector3 pos)

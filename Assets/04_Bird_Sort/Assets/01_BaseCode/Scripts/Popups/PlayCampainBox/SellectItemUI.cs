@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -62,7 +62,7 @@ public class SellectItemUI : ItemUI
         }
         else
         {
-            //Mở shop
+            //M? shop
             OpenShop();
         }
 
@@ -70,7 +70,7 @@ public class SellectItemUI : ItemUI
         {
             PlayCampainBox.instance.tutUseItemController.NextTut();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
        
     }
 

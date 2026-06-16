@@ -38,12 +38,12 @@ public class StartChestController : MonoBehaviour
 
     public static bool IsHasChest()
     {
-        return CurrentStar >= GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
+        return CurrentStar >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.startRequirement;
     }
 
     public void Init()
     {
-        startChestData = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig;
+        startChestData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig;
         view.Init(this);
         actionOpenChest = null;
         CheckStarChest();
@@ -86,7 +86,7 @@ public class StartChestController : MonoBehaviour
             var reward = startChestData.rewards[i].GetReward();
             if (reward.typeItem != GiftType.None)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_star);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_star);
                 rewards.Add(reward);
             }
         }
@@ -106,8 +106,8 @@ public class StartChestController : MonoBehaviour
                 
                 RememberCurrentStar = CurrentStar;
                 GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.StarChest, rewards, Reason.open_chest_star,
-GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.is_video_x_reward,
-GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.num_x_reward);
+BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.is_video_x_reward,
+BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.num_x_reward);
                 //OpenChestBox.Setup(true).Show(TypeChest.StarChest, rewards);
                 view.OnOpenChestDone();
             },
@@ -125,7 +125,7 @@ GameController.Instance.segmentController.GetCurrentSegment().coreGameData.confi
             CurrentStar = 0;
 
         RememberCurrentStar = CurrentStar;
-        GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.StarChest, rewards, Reason.open_chest_level, GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.is_video_x_reward, GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.num_x_reward);
+        GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.StarChest, rewards, Reason.open_chest_level, BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.is_video_x_reward, BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.starChestConfig.num_x_reward);
         view.OnOpenChestDone();
     }    
 }

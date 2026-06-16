@@ -1,4 +1,4 @@
-﻿using Crystal;
+using Crystal;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -34,11 +34,11 @@ public class Createlevel : MonoBehaviour
         //AnalyticLevel();
 
         UseProfile.CurrentLevel = level;
-        GameController.Instance.useProfile.CurrentLevelPlay = level;
+        BirdSortGameController.Instance.useProfile.CurrentLevelPlay = level;
         if (isTestAnim)
         {
             //UseProfile.CurrentLevel = 10000;
-            GameController.Instance.useProfile.CurrentLevelPlay = 10000;
+            BirdSortGameController.Instance.useProfile.CurrentLevelPlay = 10000;
             StartCoroutine(Helper.StartAction(() =>
             {
                 GamePlayController.Instance.level.map.flockController.isLockFlock = true;
@@ -131,9 +131,9 @@ public class Createlevel : MonoBehaviour
             }
         }
 
-        Debug.Log("Tổng số loại: " + itemsDict.Count);
-        Debug.Log("TB số lượng element / level: " + numElemt / 500);
-        Debug.Log("TB số loại / level: " + numTypeInlevel / 500);
+        Debug.Log("T?ng s? lo?i: " + itemsDict.Count);
+        Debug.Log("TB s? lu?ng element / level: " + numElemt / 500);
+        Debug.Log("TB s? lo?i / level: " + numTypeInlevel / 500);
     }
 
     private void Update()

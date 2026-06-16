@@ -96,9 +96,9 @@ public class BuyItemBox : BaseBox
 
     public void Show(GiftType typeItem)
     {
-        bootsConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
+        bootsConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
         this.typeItem = typeItem;
-        if (GameController.Instance.dataContain.giftDatabase.GetGift(typeItem, out Gift gift))
+        if (BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(typeItem, out Gift gift))
         {
             iconImg.sprite = gift.getGiftSprite;
             nameItemTxt.text = Localization.Get(gift.nameGift);   
@@ -149,9 +149,9 @@ public class BuyItemBox : BaseBox
 
     public void Show(GiftType typeItem, Sprite customIcon, string customName, string customDetail)
     {
-        bootsConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
+        bootsConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(typeItem);
         this.typeItem = typeItem;
-        if (GameController.Instance.dataContain.giftDatabase.GetGift(typeItem, out Gift gift))
+        if (BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(typeItem, out Gift gift))
         {
             iconImg.sprite = customIcon != null ? customIcon : gift.getGiftSprite;
             nameItemTxt.text = !string.IsNullOrEmpty(customName) ? customName : Localization.Get(gift.nameGift);   
@@ -205,7 +205,7 @@ public class BuyItemBox : BaseBox
         {
             UseProfile.Coin -= bootsConfig.price;
             //// tru coin
-            //GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -bootsConfig.price, Reason.buy_item);
+            //BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -bootsConfig.price, Reason.buy_item);
             ////---------------
             if (isCustomClaim)
             {
@@ -213,8 +213,8 @@ public class BuyItemBox : BaseBox
             }
             else
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, bootsConfig.packAmount, Reason.in_campain_level);
-                GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, bootsConfig.packAmount, Reason.in_campain_level);
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                    buyBtn.transform.position,
                   this.typeItem,
                     bootsConfig.packAmount,
@@ -227,14 +227,14 @@ public class BuyItemBox : BaseBox
         else
         {
             ShopBox.Setup();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
     }
 
     public void OnClickBuyItemVideo()
     {
         var watchVideoAction = isCustomClaim ? customActionWatchVideo : ActionWatchVideo.None;
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
                   if (isCustomClaim)
@@ -243,9 +243,9 @@ public class BuyItemBox : BaseBox
                   }
                   else
                   {
-                      // GameController.Instance.admobAds.ShowVideoReward()
-                      GameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, bootsConfig.numItemAddBuyVideo, Reason.in_campain_level);
-                      GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                      // BirdSortGameController.Instance.admobAds.ShowVideoReward()
+                      BirdSortGameController.Instance.dataContain.giftDatabase.Claim(this.typeItem, bootsConfig.numItemAddBuyVideo, Reason.in_campain_level);
+                      BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                          buyBtn.transform.position,
                         this.typeItem,
                           bootsConfig.numItemAddBuyVideo,
@@ -264,14 +264,14 @@ public class BuyItemBox : BaseBox
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    buyVideoBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,
               watchVideoAction);
@@ -307,6 +307,6 @@ public class BuyItemBox : BaseBox
 
     public void DebugTest()
     {
-        GameController.Instance.dataContain.giftDatabase.Claim(this.typeItem,10, Reason.in_campain_level);
+        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(this.typeItem,10, Reason.in_campain_level);
     }    
 }

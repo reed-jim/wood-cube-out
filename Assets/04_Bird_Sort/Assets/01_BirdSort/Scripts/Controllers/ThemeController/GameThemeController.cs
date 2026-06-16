@@ -36,7 +36,7 @@ public class GameThemeController : MonoBehaviour
                 return this.config;
             try
             {
-                var config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+                var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
                 if (config != null && (config.end - UnbiasedTime.Instance.Now()).TotalSeconds > 0)
                 {
                     switch (config.gameTheme)

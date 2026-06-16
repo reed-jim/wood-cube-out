@@ -51,14 +51,14 @@ public class IQScorePlayerBadge : MonoBehaviour
         {
             ava.texture = a;
         }
-        SetUpFlag(GameController.Instance.playerData.flagLink);
+        SetUpFlag(BirdSortGameController.Instance.playerData.flagLink);
         iqScore.text = "IQ: 0";
     }
     public void SetCurrPlayer()
     {
         iqScore.text = "IQ: "+ UseProfile.IQScore.ToString();
-        SetUpAvatar(GameController.Instance.playerData.linkAvatar);
-        SetUpFlag(GameController.Instance.playerData.flagLink);
+        SetUpAvatar(BirdSortGameController.Instance.playerData.linkAvatar);
+        SetUpFlag(BirdSortGameController.Instance.playerData.flagLink);
     }
     private Tween tween1;
     private int tempPercent;

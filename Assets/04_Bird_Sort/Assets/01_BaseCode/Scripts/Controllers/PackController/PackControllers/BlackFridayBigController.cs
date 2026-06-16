@@ -23,7 +23,7 @@ public class BlackFridayBigController : PackBaseController
 
     public override bool CheckActive()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.BlackFriday_2);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.BlackFriday_2);
 
         if (segement.IsPackReady())
         {
@@ -36,7 +36,7 @@ public class BlackFridayBigController : PackBaseController
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.BlackFriday_2);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.BlackFriday_2);
 
         if (!segement.IsPackReady())
         {
@@ -67,7 +67,7 @@ public class BlackFridayBigController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.BlackFriday_2);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.BlackFriday_2);
     }
 
     public override void ResetDataNewDay()

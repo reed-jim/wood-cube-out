@@ -41,7 +41,7 @@ public class OutOfHealthBox : BaseBox
 
     public void Init()
     {
-        coreGameData = GameController.Instance.segmentController.GetCurrentSegment().coreGameData;
+        coreGameData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData;
 
         refillBtn.onClick.AddListener(OnClickAddHealthByCoin);
         watchVideoAddHealthBtn.onClick.AddListener(OnClickAddHealthByVideo);
@@ -49,12 +49,12 @@ public class OutOfHealthBox : BaseBox
 
     public void InitState()
     {
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward.isRewardedGetMoreLivesEnabled)
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward.isRewardedGetMoreLivesEnabled)
             videoObj.gameObject.SetActive(true);
         else
             videoObj.gameObject.SetActive(false);
 
-        var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
+        var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
         coolDownRefill = TimeManager.CaculateTime(timeRefill, UnbiasedTime.Instance.Now());
         if (UnbiasedTime.Instance.Now() > timeRefill)
         {
@@ -114,11 +114,11 @@ public class OutOfHealthBox : BaseBox
 
             //UseProfile.Coin -= coreGameData.config.healthConfig.priceCoinReFillHeath;
             // tru coin
-            GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -coreGameData.config.healthConfig.priceCoinReFillHeath, Reason.buy_health);
+            BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -coreGameData.config.healthConfig.priceCoinReFillHeath, Reason.buy_health);
             //---------------
             int oldHealth = UseProfile.Health;
             UseProfile.Health = GiftDatabase.DefaultItem[GiftType.Health];
-            GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                 refillBtn.transform.position,
                 GiftType.Health,
                Mathf.Abs(GiftDatabase.DefaultItem[GiftType.Health] - oldHealth),
@@ -138,7 +138,7 @@ public class OutOfHealthBox : BaseBox
 
     public void OnClickAddHealthByVideo()
     {
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
                   UseProfile.Health += coreGameData.config.healthConfig.addHeathVideo;
@@ -146,7 +146,7 @@ public class OutOfHealthBox : BaseBox
                       UseProfile.IsRefillHealth = false;
 
                   Close();
-                  GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                watchVideoAddHealthBtn.transform.position,
                GiftType.Health,
                 coreGameData.config.healthConfig.addHeathVideo,
@@ -156,14 +156,14 @@ public class OutOfHealthBox : BaseBox
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    watchVideoAddHealthBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,
              ActionWatchVideo.None);

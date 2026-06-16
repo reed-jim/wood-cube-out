@@ -37,12 +37,12 @@ public class LevelChestController : MonoBehaviour
 
     public static bool IsHasChest()
     {
-        return CurrentLevelChest >= GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.levelSpacing - 1;
+        return CurrentLevelChest >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.levelSpacing - 1;
     }
 
     public void Init()
     {
-        levelChestData = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig;
+        levelChestData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig;
         view.Init(this);
        
         CheckLevelChest();
@@ -85,7 +85,7 @@ public class LevelChestController : MonoBehaviour
             var reward = levelChestData.rewards[i].GetReward();
             if (reward.typeItem != GiftType.None)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_level);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(reward.typeItem, reward.amount, Reason.open_chest_level);
                 rewards.Add(reward);
             }
         }
@@ -105,10 +105,10 @@ public class LevelChestController : MonoBehaviour
                
                 RememberLevelChest = CurrentLevelChest;
                 view.OnOpenChestDone();
-                Debug.Log("Chest Rewards" + GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward);
+                Debug.Log("Chest Rewards" + BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward);
                 GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.LevelChest, rewards, Reason.open_chest_level,
-    GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
-    GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
+    BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
+    BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
                 //OpenChestBox.Setup(true).Show(TypeChest.LevelChest, rewards); 
             },
             priovity = SuggetPopupHomeController.PriovitySugget.Special
@@ -127,8 +127,8 @@ public class LevelChestController : MonoBehaviour
         RememberLevelChest = CurrentLevelChest;
         view.OnOpenChestDone();
         GPlayFuntPuzzle.GPopupRewardChest.Setup(true).Show(TypeChest.LevelChest, rewards, Reason.open_chest_level,
-GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
-GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
+BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.is_video_x_reward,
+BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.num_x_reward);
         //OpenChestBox.Setup(true).Show(TypeChest.LevelChest, rewards); 
     }
 }

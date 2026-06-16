@@ -28,7 +28,7 @@ public class TutorialWeeklyItem : TutorialBase
 
     public override bool IsCanShowTut()
     {
-        if (UseProfile.CurrentLevel != GameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(ChallengeType.WeeklyChallenge).level_unlock)
+        if (UseProfile.CurrentLevel != BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeData.GetChallengeConfig(ChallengeType.WeeklyChallenge).level_unlock)
         
         return false;
 

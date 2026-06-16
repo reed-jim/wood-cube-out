@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +40,7 @@ public abstract class MiniGameRegister : MonoBehaviour
     {
         CheckEventActive();
         ReloadConfig();
-        ///Viết ResetDay vào đây
+        ///Vi?t ResetDay v�o d�y
         ///
     }
 
@@ -212,7 +212,7 @@ public abstract class MiniGameRegister : MonoBehaviour
 
     private void OnClickOpenButton()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         //if (ValidateUser())
         //    OpenBox();
     }

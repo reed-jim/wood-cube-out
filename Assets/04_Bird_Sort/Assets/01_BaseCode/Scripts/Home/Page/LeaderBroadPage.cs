@@ -55,7 +55,7 @@ public class LeaderBroadPage : PageBase
     public void ShowWorld()
     {
         //this.InitState();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         comingSoonText.gameObject.SetActive(false);
         worldTabIcon.sprite = activateTabIcon;
         localTabIcon.sprite = deactivateTabIcon;
@@ -73,7 +73,7 @@ public class LeaderBroadPage : PageBase
     }
     public void ShowLocal()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         comingSoonText.gameObject.SetActive(true);
         scrollContent.SetActive(false);
         localTabIcon.sprite = activateTabIcon;

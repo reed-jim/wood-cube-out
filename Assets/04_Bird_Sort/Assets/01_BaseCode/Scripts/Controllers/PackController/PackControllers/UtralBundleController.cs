@@ -39,7 +39,7 @@ public class UtralBundleController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.UtralBundle);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.UtralBundle);
     }
 
     public override void ResetDataNewDay()

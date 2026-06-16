@@ -153,7 +153,7 @@ public class Level : MonoBehaviour
         if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_TEST_LEVEL, true))
             pathLevel = StringHelper.PATH_CONFIG_LEVEL_EASY;
 
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
+        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, BirdSortGameController.Instance.useProfile.CurrentLevelPlay));
         if (lvJson != null)
         {
             levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
@@ -179,7 +179,7 @@ public class Level : MonoBehaviour
                 map.InitState();
 
                 //Current Skill User
-                var currentSkillUser = GameController.Instance.skillUserController.GetCurrentSkillData();
+                var currentSkillUser = BirdSortGameController.Instance.skillUserController.GetCurrentSkillData();
 
                 checkPoints = new List<CheckPointTran>(map.checkPoints);
                 Dictionary<int, List<BirdBase>> requireBirds = new Dictionary<int, List<BirdBase>>();
@@ -537,7 +537,7 @@ public class Level : MonoBehaviour
                 waringTimePlayCorutine = WaringTime();
                 StartCoroutine(waringTimePlayCorutine);
 
-                GameController.Instance.AnalyticsController.LogStartLevel(GameController.Instance.useProfile.CurrentLevelPlay);
+                BirdSortGameController.Instance.AnalyticsController.LogStartLevel(BirdSortGameController.Instance.useProfile.CurrentLevelPlay);
             }
         }
 
@@ -556,7 +556,7 @@ public class Level : MonoBehaviour
         string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
         //string pathLevel = StringHelper.PATH_CONFIG_LEVEL_BIRD1;
         //--------------------------------------------------------------------------
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
+        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, BirdSortGameController.Instance.useProfile.CurrentLevelPlay));
         if (lvJson != null)
         {
             levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
@@ -584,7 +584,7 @@ public class Level : MonoBehaviour
 
     protected void SetUpSpawnBird(BirdBase bird, CheckPointTran checkPoint, bool isFlyIn, float delayTimeFlyOut = 0)
     {
-        // var bird = GameController.Instance.poolController.poolBirds.GetBird(idBird);
+        // var bird = BirdSortGameController.Instance.poolController.poolBirds.GetBird(idBird);
         bird.gameObject.SetActive(true);
         checkPoint.birdOn = bird;
         bird.checkPointIn = checkPoint;
@@ -749,14 +749,14 @@ public class Level : MonoBehaviour
             if (currentCombo != null)
             {
 
-                //  GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                //  BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                 //lstB[1].transform.position,
                 //GiftType.IQ,
                 // currentCombo.score,
                 // Color.yellow
                 //);
 
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                      lstB[1].transform.position,
                     "+" + currentCombo.score + " IQ",
@@ -929,26 +929,26 @@ public class Level : MonoBehaviour
 
         if (UseProfile.CurrentLevel > Context.MAX_LEVEL)
             UseProfile.CurrentLevel = Context.MAX_LEVEL;
-        GameController.Instance.useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
+        BirdSortGameController.Instance.useProfile.CurrentLevelPlay = UseProfile.CurrentLevel;
         isHasBeenWinLevel = true;
         GamePlayController.Instance.challengeGameplayController.WinLevel();
         StartCoroutine(WinHandle());
-        GameController.Instance.AnalyticsController.LogLevelComplet(UseProfile.CurrentLevel - 1, (int)timePlayLevel);
-       // GameController.Instance.musicManager.PauseCoolDownSoundSource();
+        BirdSortGameController.Instance.AnalyticsController.LogLevelComplet(UseProfile.CurrentLevel - 1, (int)timePlayLevel);
+       // BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
         StartCoroutine(AllBirdsFlyOut());
 
         if (!GamePlayController.Instance.itemController.isUsedItem)
         {
-            GameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem, 1);
+            BirdSortGameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem, 1);
         }
         else
         {
-            var useItemCondition = GameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem);
+            var useItemCondition = BirdSortGameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.WinLevelNoUseItem);
             if (useItemCondition != null)
                 useItemCondition.EndCondition();
         }
 
-        GameController.Instance.skillUserController.CheckReDefaultCurrentSkill();
+        BirdSortGameController.Instance.skillUserController.CheckReDefaultCurrentSkill();
     }
 
     public virtual IEnumerator WinHandle()
@@ -960,16 +960,16 @@ public class Level : MonoBehaviour
         yield return new WaitForSeconds(1f);
         //Hiện popup win
 
-        GameController.Instance.musicManager.PlayWinSound();
+        BirdSortGameController.Instance.musicManager.PlayWinSound();
         //if (GamePlayController.Instance.IsShowRate())
         //{
         //    var rateBox = DialogueRate.Setup();
         //    rateBox.Show();
         //    rateBox.OnCloseBox = () =>
         //    {
-        //        GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+        //        BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
         //        {
-        //            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+        //            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         //        }, actionWatchLog: "Next_Level");
 
         //        rateBox.OnCloseBox = null;
@@ -996,17 +996,17 @@ public class Level : MonoBehaviour
         StartChestController.CurrentStar += star;
         LevelChestController.CurrentLevelChest++;
         WinBox.Setup().Show(star, (int)Mathf.Abs(timePlayRequire - timePlayLevel));
-        GameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.StarAfterPassLevel, star);
+        BirdSortGameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.StarAfterPassLevel, star);
 
 
         //Reset conditions Lose
-        var loseLevelWithTime = GameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.LoseLevelWithTime);
+        var loseLevelWithTime = BirdSortGameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.LoseLevelWithTime);
         if (loseLevelWithTime != null)
             loseLevelWithTime.EndCondition();
-        var numberLoseLevel = GameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.NumberLoseLevel);
+        var numberLoseLevel = BirdSortGameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.NumberLoseLevel);
         if (numberLoseLevel != null)
             numberLoseLevel.EndCondition();
-        var timeWaitingLevel = GameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.TimeWaitingLevel);
+        var timeWaitingLevel = BirdSortGameController.Instance.skillUserController.GetCondition(ConditionChangeSkill.TypeCondition.TimeWaitingLevel);
         if (timeWaitingLevel != null)
             timeWaitingLevel.EndCondition();
         LoseLevelWithTimeCondition.isLosed = false;
@@ -1022,10 +1022,10 @@ public class Level : MonoBehaviour
         GamePlayController.Instance.state = StateGame.Lose;
 
 
-        GameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
-      //  GameController.Instance.musicManager.PauseCoolDownSoundSource();
+        BirdSortGameController.Instance.AnalyticsController.LogLevelFail(UseProfile.CurrentLevel);
+      //  BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
 
-        GameController.Instance.musicManager.PlayLoseSound();
+        BirdSortGameController.Instance.musicManager.PlayLoseSound();
 
         StartCoroutine(Helper.StartAction(() => { ReviveBox.Setup().Show(type, GetItemYouMiss(), isLoseExtral); }, 0.45f));
     }
@@ -1058,7 +1058,7 @@ public class Level : MonoBehaviour
     public IEnumerator WaringTime()
     {
         yield return new WaitUntil(() => Mathf.Abs(timePlayRequire - timePlayLevel) <= 10);
-      //  GameController.Instance.musicManager.PlayCoolDownSoundSource();
+      //  BirdSortGameController.Instance.musicManager.PlayCoolDownSoundSource();
     }
 
     public void Revive(bool isAddTime, bool isResetSlot, bool isReviveLoseExtral = false, bool isUseElectric = false, int numElectricUse = 3)
@@ -1099,7 +1099,7 @@ public class Level : MonoBehaviour
             {
                 if (GamePlayController.Instance.itemController.UseItem(GiftType.AddBrandItem_BirdSort))
                 {
-                    //  GameController.Instance.dataContain.giftDatabase.Claim(GiftType.LightElectricItem, -1, Reason.in_campain_level);
+                    //  BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.LightElectricItem, -1, Reason.in_campain_level);
                 }
             }
 
@@ -1116,7 +1116,7 @@ public class Level : MonoBehaviour
             //    return;
 
             GamePlayController.Instance.state = StateGame.Pause;
-          //  GameController.Instance.musicManager.PauseCoolDownSoundSource();
+          //  BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
         }
         else
         {
@@ -1126,7 +1126,7 @@ public class Level : MonoBehaviour
             GamePlayController.Instance.state = StateGame.Playing;
             if (Mathf.Abs(timePlayRequire - timePlayLevel) <= 10)
             {
-           //     GameController.Instance.musicManager.PlayCoolDownSoundSource();
+           //     BirdSortGameController.Instance.musicManager.PlayCoolDownSoundSource();
             }
         }
     }
@@ -1164,7 +1164,7 @@ public class Level : MonoBehaviour
         {
             if(it.Value > 0)
             {
-                rewardMiss.Add(new RewardRandom() { typeItem = GameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
+                rewardMiss.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
             }    
         }    
 
@@ -1283,7 +1283,7 @@ public class Level : MonoBehaviour
         //{
         //    for (int i = 0; i < item.Value.Count; i++)
         //    {
-        //        GameController.Instance.poolController.poolBirds.BackToPool(item.Value[i]);
+        //        BirdSortGameController.Instance.poolController.poolBirds.BackToPool(item.Value[i]);
         //    }
         //}
     }

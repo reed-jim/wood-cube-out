@@ -72,10 +72,10 @@ public class WinBox : BaseBox
 
         xCoinWinGame.Init();
 
-        var configVideoXCoin = GameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoXCoinWinGame);
+        var configVideoXCoin = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoXCoinWinGame);
         int numSpaceShowXVideoCoin = configVideoXCoin.parmaExtral != null && configVideoXCoin.parmaExtral.Length > 0 ? (int)configVideoXCoin.parmaExtral[0] : 1;
 
-        int coinEndLevel = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.coinEndLevel;
+        int coinEndLevel = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.coinEndLevel;
         if (XCoinWinGame.isWinSpace < 0)
             XCoinWinGame.isWinSpace = numSpaceShowXVideoCoin;
         XCoinWinGame.isWinSpace++;
@@ -87,7 +87,7 @@ public class WinBox : BaseBox
             && coinEndLevel > 0;
 
         if (coinEndLevel > 0)
-            GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, coinEndLevel, Reason.x_coin_end_level);
+            BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, coinEndLevel, Reason.x_coin_end_level);
 
         if (isHasVideoXCoin)
         {
@@ -104,7 +104,7 @@ public class WinBox : BaseBox
 
                 }, () =>
                 {
-                    //GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, coinEndLevel, Reason.x_coin_end_level);
+                    //BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, coinEndLevel, Reason.x_coin_end_level);
                     OnClickNextLevel();
 
                 });
@@ -133,10 +133,10 @@ public class WinBox : BaseBox
     public void InitState()
     {
         firstCompleteContentY = completeContent.anchoredPosition.y;
-        //if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
+        //if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
             //{
             //    this.RegisterListener(EventID.SHOW_MREC, (param) => MoveDownCompleteContentMRec());
-            //    GameController.Instance.admobAds.ShowMRec();
+            //    BirdSortGameController.Instance.admobAds.ShowMRec();
             //}
             //else
             //{
@@ -145,7 +145,7 @@ public class WinBox : BaseBox
         //}
         GConnection.UpdateDataTableBackground(GDataTable.PlayerData, isFromDisk: true);
 
-        GameController.Instance.admobAds.ShowBannerCollap();
+        BirdSortGameController.Instance.admobAds.ShowBannerCollap();
     }
 
     public void Show(int star, int time)
@@ -165,7 +165,7 @@ public class WinBox : BaseBox
             {
                 if (it.Value > 0)
                 {
-                    rewardClaim.Add(new RewardRandom() { typeItem = GameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
+                    rewardClaim.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
                 }
             }
 
@@ -189,7 +189,7 @@ public class WinBox : BaseBox
             for (int i = 0; i < rewardClaim.Count; i++)
             {
                 var itemMiss = GetItemYouClaimed();
-                itemMiss.Init(GameController.Instance.dataContain.giftDatabase.GetIconItem(rewardClaim[i].typeItem), rewardClaim[i].amount);
+                itemMiss.Init(BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(rewardClaim[i].typeItem), rewardClaim[i].amount);
             }
         }
         else
@@ -228,9 +228,9 @@ public class WinBox : BaseBox
         {
             UnityAction actionNext = () =>
             {
-                if (!GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.loadGameConfig.isComeHomeWhenEndLevel)
+                if (!BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.loadGameConfig.isComeHomeWhenEndLevel)
                 {
-                    if (GameController.Instance.CheckHomeIsHasReward())
+                    if (BirdSortGameController.Instance.CheckHomeIsHasReward())
                     {
                         sceneLoad = SceneName.HOME_SCENE;
 
@@ -248,12 +248,12 @@ public class WinBox : BaseBox
                         sceneLoad = SceneName.HOME_SCENE;
                 }
 
-                GameController.Instance.LoadScene(sceneLoad);
+                BirdSortGameController.Instance.LoadScene(sceneLoad);
             };
 
-            if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
+            if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
             {
-                GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+                BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                 {
                     actionNext?.Invoke();
                 }, actionWatchLog: AdsPlacement.Interstitials.NEXT_LEVEL_CAMPAIN);
@@ -266,7 +266,7 @@ public class WinBox : BaseBox
 
         WaitCloseDoneToStartAction(() => { GamePlayController_BirdSort.Instance.OnSuggetEndLevel(actionAfterSuggetSale); });
 
-        //GameController.Instance.admobAds.HideBannerCollap();
+        //BirdSortGameController.Instance.admobAds.HideBannerCollap();
     }
 
     protected void WaitCloseDoneToStartAction(UnityAction actionDone)
@@ -286,26 +286,26 @@ public class WinBox : BaseBox
     public void OnClickClose()
     {
 
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showBeforeLevel)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
-                GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
             }, actionWatchLog: AdsPlacement.Interstitials.NEXT_LEVEL_CAMPAIN);
         }
         else
         {
             Close();
-            GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+            BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
         }
-        //GameController.Instance.admobAds.HideBannerCollap();
+        //BirdSortGameController.Instance.admobAds.HideBannerCollap();
     }
 
     public override void Close()
     {
-        //if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
-        //    GameController.Instance.admobAds.HideMRec();
+        //if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
+        //    BirdSortGameController.Instance.admobAds.HideMRec();
         base.Close();
     }
 
@@ -322,15 +322,15 @@ public class WinBox : BaseBox
 
         if (starWin == 1)
         {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
+            bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ1Star;
         }
         else if (starWin == 2)
         {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
+            bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ2Star;
         }
         else
         {
-            bonusIQ = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
+            bonusIQ = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelConfig.bonusIQ3Star;
         }
 
         int currentScore = 0;

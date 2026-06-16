@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
@@ -19,7 +19,7 @@ public class AddTimeItem_BirdSort : ItemBase
     protected override bool ActiveItemHandle()
     {
 
-        //Diễn FX
+        //Di?n FX
         var textTime = BirdSort2.GamePlayController_BirdSort.Instance.gameScene.timePlayLevelTxt;
         var itemFX = BirdSort2.GamePlayController_BirdSort.Instance.itemController.view.GetItemFX();
         itemFX.transform.position = Vector3.zero;
@@ -44,9 +44,9 @@ public class AddTimeItem_BirdSort : ItemBase
                     //PlayTweenTimeText((int)endTime);
 
                 });
-                //Gọi FX
+                //G?i FX
                 //..
-                GameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(addTimeClip, addTimeSource);
             },
             isTime: true
             );

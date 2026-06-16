@@ -1,12 +1,12 @@
-﻿using System.Linq;
+using System.Linq;
 
 public enum TypeStand
 {
-    Slot_4 = 0,//Có 4 Slot
-    Slot_5 = 1,//Có 5 Slot
-    Slot_6 = 2,//Có 6 Slot
-    Slot_7 = 3,//Có 7 Slot
-    Slot_8 = 4//Có 8 Slot
+    Slot_4 = 0,//C� 4 Slot
+    Slot_5 = 1,//C� 5 Slot
+    Slot_6 = 2,//C� 6 Slot
+    Slot_7 = 3,//C� 7 Slot
+    Slot_8 = 4//C� 8 Slot
 }
 
 namespace BirdSort2
@@ -189,7 +189,7 @@ namespace BirdSort2
         }
 
         /// <summary>
-        /// Lấy ra các chim cuối hàng giống nhau
+        /// L?y ra c�c chim cu?i h�ng gi?ng nhau
         /// </summary>
         /// <returns></returns>
         public virtual List<BirdBase> GetBirdSameEnd(bool isGetLockMove = true)
@@ -239,7 +239,7 @@ namespace BirdSort2
 
         public virtual void OnChoiceStand()
         {
-            //Out Line các chim có thể bay
+            //Out Line c�c chim c� th? bay
             List<BirdBase> birdsEnd = GetBirdSameEnd();
             if (birdsEnd.Count > 0)
             {
@@ -268,8 +268,8 @@ namespace BirdSort2
             {
                 if (birdsOn.Count >= data.numSlot)
                 {
-                    //Chim đậu full slot
-                    //Hiển thị lỗi
+                    //Chim d?u full slot
+                    //Hi?n th? l?i
                     GamePlayController_BirdSort.Instance.level.standChosing = this;
                     OnChoiceStand();
                     GamePlayController_BirdSort.Instance.tutorialController.ActiveCanHint(this);
@@ -285,18 +285,18 @@ namespace BirdSort2
                     List<BirdBase> birdsEnd_this = this.GetBirdSameEnd(isGetLockMove: false);
                     int numBirdEnd_this = birdsEnd_this.Count;
 
-                    if (numBirdEnd_this > 0)//Cành this đang có chim
+                    if (numBirdEnd_this > 0)//C�nh this dang c� chim
                     {
-                        if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                        if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                         {
-                            if (data.numSlot > birdsOn.Count)//Cành this còn chỗ cho chim đậu
+                            if (data.numSlot > birdsOn.Count)//C�nh this c�n ch? cho chim d?u
                             {
                                 //if (IsFreeBrand())
                                 {
-                                    if (birdsEnd_this[0].id == -100 || birdsEnd_this[0].id == birdsEnd_currentStand[0].id)//2 con chim khớp nhau
+                                    if (birdsEnd_this[0].id == -100 || birdsEnd_this[0].id == birdsEnd_currentStand[0].id)//2 con chim kh?p nhau
                                     {
-                                        //Đậu...
-                                        int numSlotLeft = data.numSlot - birdsOn.Count;//Số slot còn lại chim có thể đậu
+                                        //�?u...
+                                        int numSlotLeft = data.numSlot - birdsOn.Count;//S? slot c�n l?i chim c� th? d?u
                                         int numBirdFly = 0;
                                         if (numBirdEnd_currentStand >= numSlotLeft)
                                         {
@@ -352,7 +352,7 @@ namespace BirdSort2
                                     }
                                     else
                                     {
-                                        //Hiển thị lỗi không khớp
+                                        //Hi?n th? l?i kh�ng kh?p
                                         //..
                                         ErrorSortHandle();
                                         yield return null;
@@ -361,7 +361,7 @@ namespace BirdSort2
                             }
                             else
                             {
-                                //Hiển thị lỗi full chỗ
+                                //Hi?n th? l?i full ch?
                                 //..
                                 ErrorSortHandle();
                                 yield return null;
@@ -369,7 +369,7 @@ namespace BirdSort2
                         }
                         else
                         {
-                            //Hiển thị lỗi cành đang chọn không có chim
+                            //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                             //..
                             ErrorSortHandle();
                             yield return null;
@@ -377,7 +377,7 @@ namespace BirdSort2
                     }
                     else
                     {
-                        if (this.birdsOn.Count > 0)//Cành this có chim bị khoá
+                        if (this.birdsOn.Count > 0)//C�nh this c� chim b? kho�
                         {
                             if (IsFreeBrand())
                             {
@@ -395,13 +395,13 @@ namespace BirdSort2
 
                                 if (isCanChangeStand)
                                 {
-                                    if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                                    if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                                     {
                                         int numLeftThis = data.numSlot - this.birdsOn.Count;
-                                        if (numLeftThis >= numBirdEnd_currentStand)//Số chim ít mang đi hơn số slot còn lại của cành bị khoá
+                                        if (numLeftThis >= numBirdEnd_currentStand)//S? chim �t mang di hon s? slot c�n l?i c?a c�nh b? kho�
                                         {
-                                            //Đậu hết lên cành
-                                            //Đậu...
+                                            //�?u h?t l�n c�nh
+                                            //�?u...
                                             DataReturn dataReturn = new DataReturn();
                                             List<BirdBase> birdsFly = new List<BirdBase>();
                                             for (int i = 0; i < numBirdEnd_currentStand; i++)
@@ -441,9 +441,9 @@ namespace BirdSort2
                                                 yield return new WaitForSeconds(delayFly);
                                             }
                                         }
-                                        else//Ko đủ chỗ chứa hết chim => chỉ chứa tối đa là data.numSlot (con chim) --- Số chim nhiều hơn số slot
+                                        else//Ko d? ch? ch?a h?t chim => ch? ch?a t?i da l� data.numSlot (con chim) --- S? chim nhi?u hon s? slot
                                         {
-                                            //Đậu...
+                                            //�?u...
                                             DataReturn dataReturn = new DataReturn();
                                             List<BirdBase> birdsFly = new List<BirdBase>();
                                             for (int i = 0; i < numLeftThis; i++)
@@ -486,7 +486,7 @@ namespace BirdSort2
                                     }
                                     else
                                     {
-                                        //Hiển thị lỗi cành đang chọn không có chim
+                                        //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                                         //..
                                         ErrorSortHandle();
                                         yield return null;
@@ -499,16 +499,16 @@ namespace BirdSort2
                                 }
                             }
                         }
-                        else//Cành this đang ko có chim
+                        else//C�nh this dang ko c� chim
                         {
                             if (IsFreeBrand())
                             {
-                                if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                                if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                                 {
-                                    if (data.numSlot >= numBirdEnd_currentStand)//Số chim ít hơn số slot
+                                    if (data.numSlot >= numBirdEnd_currentStand)//S? chim �t hon s? slot
                                     {
-                                        //Đậu hết lên cành
-                                        //Đậu...
+                                        //�?u h?t l�n c�nh
+                                        //�?u...
                                         DataReturn dataReturn = new DataReturn();
                                         List<BirdBase> birdsFly = new List<BirdBase>();
                                         for (int i = 0; i < numBirdEnd_currentStand; i++)
@@ -549,9 +549,9 @@ namespace BirdSort2
                                             yield return new WaitForSeconds(delayFly);
                                         }
                                     }
-                                    else//Ko đủ chỗ chứa hết chim => chỉ chứa tối đa là data.numSlot (con chim) --- Số chim nhiều hơn số slot
+                                    else//Ko d? ch? ch?a h?t chim => ch? ch?a t?i da l� data.numSlot (con chim) --- S? chim nhi?u hon s? slot
                                     {
-                                        //Đậu...
+                                        //�?u...
                                         DataReturn dataReturn = new DataReturn();
                                         List<BirdBase> birdsFly = new List<BirdBase>();
                                         for (int i = 0; i < data.numSlot; i++)
@@ -595,7 +595,7 @@ namespace BirdSort2
                                 }
                                 else
                                 {
-                                    //Hiển thị lỗi cành đang chọn không có chim
+                                    //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                                     //..
                                     ErrorSortHandle();
 
@@ -676,7 +676,7 @@ namespace BirdSort2
 
             var standChosing = GamePlayController_BirdSort.Instance.level.standChosing;
 
-            if (standChosing != null)//Ấn vào 1 cành khác
+            if (standChosing != null)//?n v�o 1 c�nh kh�c
             {
 
                 if (!standChosing.isBreakBranchCode)
@@ -716,7 +716,7 @@ namespace BirdSort2
                     GamePlayController_BirdSort.Instance.level.standChosing = null;
                 }    
             }
-            else//Chọn Stand
+            else//Ch?n Stand
             {
 
                 OnChoiceStand();
@@ -740,7 +740,7 @@ namespace BirdSort2
             //var standChosing = GamePlayController.Instance.level.standChosing;
             //if (standChosing != null)
             //{
-            //    if (standChosing != this)//Kéo vào 1 cành khác
+            //    if (standChosing != this)//K�o v�o 1 c�nh kh�c
             //    {
             //        StartCoroutine(OnCheckBirdChangeStand(standChosing));
             //    }
@@ -766,7 +766,7 @@ namespace BirdSort2
             if (lst_birdsOn != null)
             {
                 int numBird = lst_birdsOn.Length;
-                if (numBird >= data.numSlot)//Cành đã full chim
+                if (numBird >= data.numSlot)//C�nh d� full chim
                 {
                     int idBirdOn = -100;
                     for (int i = 0; i < numBird; i++)
@@ -778,13 +778,13 @@ namespace BirdSort2
                         }
                         if (idBirdOn != lst_birdsOn[i].id)
                         {
-                            //Có 1 chim không giống trên cành
+                            //C� 1 chim kh�ng gi?ng tr�n c�nh
                             isCanFly = false;
                             break;
                         }
                         //if (lst_birdsOn[i].isLockMove)
                         //{
-                        //    //Có 1 chim bị lock
+                        //    //C� 1 chim b? lock
                         //    isCanFly = false;
                         //    break;
                         //}
@@ -802,7 +802,7 @@ namespace BirdSort2
             isLockStand = true;
             if (isCanFly)
             {
-                //Tất cả chim trên cành đều giống nhau => bay đi
+                //T?t c? chim tr�n c�nh d?u gi?ng nhau => bay di
                 var nearSave = GamePlayController_BirdSort.Instance.returnController.stackReturn.Pop();
                 int numBirds = birdsOn.Count;
                 int slot = numBirds - 1;
@@ -835,7 +835,7 @@ namespace BirdSort2
         }
 
         /// <summary>
-        /// Check cành cây đã full chim giống nhau => hoàn thành
+        /// Check c�nh c�y d� full chim gi?ng nhau => ho�n th�nh
         /// </summary>
         public virtual IEnumerator CheckStandSuccess()
         {
@@ -880,7 +880,7 @@ namespace BirdSort2
                                 animBrand.SetActive(true);
                                 if (UseProfile.OnSound)
                                 {
-                                    GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
+                                    BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
                                 }
                                 if (UseProfile.OnVibration)
                                 {
@@ -923,7 +923,7 @@ namespace BirdSort2
                 {
                     if (!level.ListStandRightDone)
                     {
-                        GameController.Instance.musicManager.PlayOneShot(NameMusic.BranchDrop, level.audioClipDrop, level.dropAudioRight);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.BranchDrop, level.audioClipDrop, level.dropAudioRight);
                     }
 
                 }
@@ -931,7 +931,7 @@ namespace BirdSort2
                 {
                     if (!level.ListStandLeftDone)
                     {
-                        GameController.Instance.musicManager.PlayOneShot(NameMusic.BranchDrop, level.audioClipDrop,
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.BranchDrop, level.audioClipDrop,
                             level.dropAudioLeft);
                     }
                 }
@@ -955,7 +955,7 @@ namespace BirdSort2
                     animBrand.SetActive(true);
                     if (UseProfile.OnSound)
                     {
-                        GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
                     }
                     if (UseProfile.OnVibration)
                     {
@@ -982,7 +982,7 @@ namespace BirdSort2
                 animBrand.SetActive(true);
                 if (UseProfile.OnSound)
                 {
-                    GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, audioClipBreakBranch, audioSource);
                 }
                 if (UseProfile.OnVibration)
                 {
@@ -1030,7 +1030,7 @@ namespace BirdSort2
             if (!isWin)
                 GamePlayController_BirdSort.Instance.returnController.IsLockReturn = false;
 
-            //   GameController.Instance.musicManager.PlaySingle(completeStandClip, MusicManager.SourceAudio.Effect);
+            //   BirdSortGameController.Instance.musicManager.PlaySingle(completeStandClip, MusicManager.SourceAudio.Effect);
             //MMVibrationManager.Haptic(HapticTypes.Selection, false, true, this);
             if (isWin)
                 GamePlayController_BirdSort.Instance.tutorialController.OnWinLevel();
@@ -1085,7 +1085,7 @@ namespace BirdSort2
             //{
             //    Destroy(child.gameObject);
             //}
-            //if (GameController.Instance.useProfile.CurrentBranchSkin == 14)
+            //if (BirdSortGameController.Instance.useProfile.CurrentBranchSkin == 14)
             //{
             //    frontBird.gameObject.SetActive(true);
             //}
@@ -1093,7 +1093,7 @@ namespace BirdSort2
             //{
             //    frontBird.gameObject.SetActive(false);
             //}
-            //BranchSkinData branch = GameController.Instance.dataContain.branchSkinDatabase.GetBranchSkinData(GameController.Instance.useProfile.CurrentBranchSkin);
+            //BranchSkinData branch = BirdSortGameController.Instance.dataContain.branchSkinDatabase.GetBranchSkinData(BirdSortGameController.Instance.useProfile.CurrentBranchSkin);
             //if (data.type == TypeStand.Slot_4)
             //{
             //    if (branch.branch4.prefab != null)
@@ -1222,7 +1222,7 @@ namespace BirdSort2
             bool isComplete = false;
             var standChosing = GamePlayController_BirdSort.Instance.level.standChosing;
 
-            if (standChosing != null)//Ấn vào 1 cành khác
+            if (standChosing != null)//?n v�o 1 c�nh kh�c
             {
                 if (standChosing != this)
                 {
@@ -1233,7 +1233,7 @@ namespace BirdSort2
                     if(isComplete )
                     {
                         breakRuleController.OffPanelAndBool();
-                        GameController.Instance.dataContain.giftDatabase.Claim(GiftType.BreakTheRule_BirdSort, -1, Reason.in_campain_level);
+                        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.BreakTheRule_BirdSort, -1, Reason.in_campain_level);
                         breakRuleController.standCurrentClick = null;
                         EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.BUYED_ITEM, GiftType.BreakTheRule_BirdSort);
                     }    
@@ -1257,7 +1257,7 @@ namespace BirdSort2
                 }
             
             }
-            else//Chọn Stand
+            else//Ch?n Stand
             {
                 OnChoiceStandByBreakRuleBooster();
                 GamePlayController_BirdSort.Instance.tutorialController.ActiveTutGamePlay(this);
@@ -1278,8 +1278,8 @@ namespace BirdSort2
             {
                 if (birdsOn.Count >= data.numSlot)
                 {
-                    //Chim đậu full slot
-                    //Hiển thị lỗi
+                    //Chim d?u full slot
+                    //Hi?n th? l?i
                     GamePlayController_BirdSort.Instance.level.standChosing = this;
                     OnChoiceStand();
                     GamePlayController_BirdSort.Instance.tutorialController.ActiveCanHint(this);
@@ -1299,15 +1299,15 @@ namespace BirdSort2
                     int numBirdEnd_this = birdsEnd_this.Count;
 
 
-                    if (numBirdEnd_this > 0)//Cành this đang có chim
+                    if (numBirdEnd_this > 0)//C�nh this dang c� chim
                     {
-                        if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                        if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                         {
-                            if (data.numSlot > birdsOn.Count)//Cành this còn chỗ cho chim đậu
+                            if (data.numSlot > birdsOn.Count)//C�nh this c�n ch? cho chim d?u
                             {
 
-                                //Đậu...
-                                int numSlotLeft = data.numSlot - birdsOn.Count;//Số slot còn lại chim có thể đậu
+                                //�?u...
+                                int numSlotLeft = data.numSlot - birdsOn.Count;//S? slot c�n l?i chim c� th? d?u
                                 int numBirdFly = 0;
                                 if (numBirdEnd_currentStand >= numSlotLeft)
                                 {
@@ -1370,7 +1370,7 @@ namespace BirdSort2
                             }
                             else
                             {
-                                //Hiển thị lỗi full chỗ
+                                //Hi?n th? l?i full ch?
                                 //..
                                 ErrorSortHandle();
                                 return false;
@@ -1378,7 +1378,7 @@ namespace BirdSort2
                         }
                         else
                         {
-                            //Hiển thị lỗi cành đang chọn không có chim
+                            //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                             //..
                             ErrorSortHandle();
                             return false;
@@ -1386,7 +1386,7 @@ namespace BirdSort2
                     }
                     else
                     {
-                        if (this.birdsOn.Count > 0)//Cành this có chim bị khoá
+                        if (this.birdsOn.Count > 0)//C�nh this c� chim b? kho�
                         {
                             List<BirdBase> birds_c = currentStand.GetBirdSameEnd();
                             List<BirdBase> birds_t = this.GetBirdSameEnd();
@@ -1402,13 +1402,13 @@ namespace BirdSort2
 
                             if (isCanChangeStand)
                             {
-                                if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                                if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                                 {
                                     int numLeftThis = data.numSlot - this.birdsOn.Count;
-                                    if (numLeftThis >= numBirdEnd_currentStand)//Số chim ít mang đi hơn số slot còn lại của cành bị khoá
+                                    if (numLeftThis >= numBirdEnd_currentStand)//S? chim �t mang di hon s? slot c�n l?i c?a c�nh b? kho�
                                     {
-                                        //Đậu hết lên cành
-                                        //Đậu...
+                                        //�?u h?t l�n c�nh
+                                        //�?u...
                                         DataReturn dataReturn = new DataReturn();
                                         List<BirdBase> birdsFly = new List<BirdBase>();
                                         for (int i = 0; i < numBirdEnd_currentStand; i++)
@@ -1451,9 +1451,9 @@ namespace BirdSort2
                                             // yield return new WaitForSeconds(delayFly);
                                         }
                                     }
-                                    else//Ko đủ chỗ chứa hết chim => chỉ chứa tối đa là data.numSlot (con chim) --- Số chim nhiều hơn số slot
+                                    else//Ko d? ch? ch?a h?t chim => ch? ch?a t?i da l� data.numSlot (con chim) --- S? chim nhi?u hon s? slot
                                     {
-                                        //Đậu...
+                                        //�?u...
                                         DataReturn dataReturn = new DataReturn();
                                         List<BirdBase> birdsFly = new List<BirdBase>();
                                         for (int i = 0; i < numLeftThis; i++)
@@ -1499,7 +1499,7 @@ namespace BirdSort2
                                 }
                                 else
                                 {
-                                    //Hiển thị lỗi cành đang chọn không có chim
+                                    //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                                     //..
                                     ErrorSortHandle();
                                     return false;
@@ -1511,14 +1511,14 @@ namespace BirdSort2
                                 return false;
                             }
                         }
-                        else//Cành this đang ko có chim
+                        else//C�nh this dang ko c� chim
                         {
-                            if (numBirdEnd_currentStand > 0)//Cành đang chọn có chim mang theo
+                            if (numBirdEnd_currentStand > 0)//C�nh dang ch?n c� chim mang theo
                             {
-                                if (data.numSlot >= numBirdEnd_currentStand)//Số chim ít hơn số slot
+                                if (data.numSlot >= numBirdEnd_currentStand)//S? chim �t hon s? slot
                                 {
-                                    //Đậu hết lên cành
-                                    //Đậu...
+                                    //�?u h?t l�n c�nh
+                                    //�?u...
                                     DataReturn dataReturn = new DataReturn();
                                     List<BirdBase> birdsFly = new List<BirdBase>();
                                     for (int i = 0; i < numBirdEnd_currentStand; i++)
@@ -1565,9 +1565,9 @@ namespace BirdSort2
                                         //yield return new WaitForSeconds(delayFly);
                                     }
                                 }
-                                else//Ko đủ chỗ chứa hết chim => chỉ chứa tối đa là data.numSlot (con chim) --- Số chim nhiều hơn số slot
+                                else//Ko d? ch? ch?a h?t chim => ch? ch?a t?i da l� data.numSlot (con chim) --- S? chim nhi?u hon s? slot
                                 {
-                                    //Đậu...
+                                    //�?u...
                                     DataReturn dataReturn = new DataReturn();
                                     List<BirdBase> birdsFly = new List<BirdBase>();
                                     for (int i = 0; i < data.numSlot; i++)
@@ -1616,7 +1616,7 @@ namespace BirdSort2
                             }
                             else
                             {
-                                //Hiển thị lỗi cành đang chọn không có chim
+                                //Hi?n th? l?i c�nh dang ch?n kh�ng c� chim
                                 //..
                                 ErrorSortHandle();
 
@@ -1647,7 +1647,7 @@ namespace BirdSort2
         }
         public virtual void OnChoiceStandByBreakRuleBooster()
         {
-            //Out Line các chim có thể bay
+            //Out Line c�c chim c� th? bay
             List<BirdBase> birdsEnd = GetBirdSameEnd();
             if (birdsEnd.Count > 0)
             {

@@ -38,6 +38,6 @@ public class StarWinObj : MonoBehaviour
            
             showDone?.Invoke(); 
         });
-        GameController.Instance.musicManager.PlayOneShot(appearClip, appearSource, 0.3f);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(appearClip, appearSource, 0.3f);
     }
 }

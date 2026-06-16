@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
 	using UnityEngine;
 
@@ -9,7 +9,7 @@
 
 		private void OnEnable()
 		{
-			GameController.Instance.musicManager.PlayOneShot(audioClip);
+			BirdSortGameController.Instance.musicManager.PlayOneShot(audioClip);
 		}
 
 	}

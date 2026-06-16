@@ -126,7 +126,7 @@ public class LableInfo : MonoBehaviour
     {
         var sprite = (Texture)Resources.Load("UI/Sprite/Avatars/Avatar0", typeof(Texture));
         thumnail.texture = sprite;
-        //frames.sprite = GameController.Instance.rankController.GetRankData(UseProfile.ScorePvP).frames;
+        //frames.sprite = BirdSortGameController.Instance.rankController.GetRankData(UseProfile.ScorePvP).frames;
         //if (wasNativeSize)
         //    return;
         //frames.SetNativeSize();
@@ -164,12 +164,12 @@ public class LableInfo : MonoBehaviour
             btnConfirm.gameObject.SetActive(false);
             Debug.LogError("HandleButtonConfirm");
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     private void HandleShowPopupSuggetLogin()
     {
         SuggetLoginPvPBox.Setup(false, () => SetUp()).Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     private string GetLastFiveCharOfId(string param)
     {

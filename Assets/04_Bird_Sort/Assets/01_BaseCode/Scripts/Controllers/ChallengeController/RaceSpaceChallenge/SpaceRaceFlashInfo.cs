@@ -23,7 +23,7 @@ public class SpaceRaceFlashInfo : MonoBehaviour
 
     public void Init(PlayCampainBox box)
     {
-        challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+        challengeController = (RaceSpaceChallenge)BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
         this.box = box;
 
         joinRaceBtn.onClick.RemoveAllListeners();
@@ -31,7 +31,7 @@ public class SpaceRaceFlashInfo : MonoBehaviour
         {
             if (Application.internetReachability == NetworkReachability.NotReachable)
             {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                         (
                          joinRaceBtn.transform.position,
                         Localization.Get("s_no_internet"),
@@ -49,7 +49,7 @@ public class SpaceRaceFlashInfo : MonoBehaviour
             },
         () =>
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                      joinRaceBtn.transform.position,
                     Localization.Get("s_join_race_fail"),
@@ -57,7 +57,7 @@ public class SpaceRaceFlashInfo : MonoBehaviour
                     isSpawnItemPlayer: false
                     );
         });
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         });
     }
 

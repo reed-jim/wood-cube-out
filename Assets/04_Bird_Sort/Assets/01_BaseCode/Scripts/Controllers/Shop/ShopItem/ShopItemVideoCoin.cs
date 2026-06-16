@@ -32,7 +32,7 @@ public class ShopItemVideoCoin : MonoBehaviour
 
     public void Init()
     {
-        rewardConfig = GameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward;
+        rewardConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.reward;
         buyBtn.onClick.AddListener(Buy);
     }
 
@@ -74,14 +74,14 @@ public class ShopItemVideoCoin : MonoBehaviour
 
     public virtual void Buy()
     {
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
              actionReward: () =>
              {
                  UseProfile.Coin += rewardConfig.amountRV;
                  ShopItemVideoCoin.NumTurnVideoCoinInDay++;
                  InitState();
 
-                 GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                 BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                 buyBtn.transform.position,
                 GiftType.Coin,
                 rewardConfig.amountRV,
@@ -90,7 +90,7 @@ public class ShopItemVideoCoin : MonoBehaviour
              },
              actionNotLoadedVideo: () =>
              {
-                 GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                 BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                   (
                   buyBtn.transform.position,
                   "No video at the moment!",

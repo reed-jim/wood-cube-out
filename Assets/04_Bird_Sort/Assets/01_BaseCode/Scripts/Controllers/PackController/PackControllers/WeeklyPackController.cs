@@ -25,7 +25,7 @@ public class WeeklyPackController : PackBaseController
 
     public override bool CheckActive()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
 
         if (segement.IsPackReady())
         {
@@ -48,7 +48,7 @@ public class WeeklyPackController : PackBaseController
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.WeeklySale);
 
         if (!segement.IsPackReady())
         {
@@ -80,7 +80,7 @@ public class WeeklyPackController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.WeeklySale);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.WeeklySale);
     }
 
     public override void ResetDataNewDay()

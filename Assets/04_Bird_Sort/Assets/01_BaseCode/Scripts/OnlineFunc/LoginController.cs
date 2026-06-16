@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using PlayFab;
 using PlayFab.ClientModels;
 using System;
@@ -26,13 +26,13 @@ public class LoginController : MonoBehaviour
 
     [Header("Info")] public string PlayFabTitleId;
 
-    public static bool isSyncingData => GameController.Instance.playerData.isSyncData;
+    public static bool isSyncingData => BirdSortGameController.Instance.playerData.isSyncData;
 
     public void Init()
     {
         _isTryLogin = false;
 
-        GameController.Instance.playerData.isSyncData = false;
+        BirdSortGameController.Instance.playerData.isSyncData = false;
         //LoginPlayFab();
         //facebookAndPlayFabManager.Init();
     }
@@ -184,7 +184,7 @@ public class LoginController : MonoBehaviour
         if (UseProfile.FlagLink == "")
             Helper.GetCountryByIP();
 
-        //Nếu lần này là đăng kí tài khoản
+        //N?u l?n n�y l� dang k� t�i kho?n
         if (result.NewlyCreated)
         {
             bool isRun = false;
@@ -193,19 +193,19 @@ public class LoginController : MonoBehaviour
                 if (isRun)
                     return;
                 isRun = true;
-                GameController.Instance.playerData.isSyncData = true;
+                BirdSortGameController.Instance.playerData.isSyncData = true;
                 LoginSuccessHandle(onLoginSuccess);
             }
 
 
             SaveName(UseProfile.NamePlayer.Insert(UseProfile.NamePlayer.Length - 5, Random.Range(0, 9).ToString()));
-            GameController.Instance.playerData.SaveData(OnDone, OnDone, true, true);
+            BirdSortGameController.Instance.playerData.SaveData(OnDone, OnDone, true, true);
         }
         else
         {
             //if (UseProfile.IsReInstallSyncData)
             {
-                if (!GameController.Instance.playerData.isSyncData)
+                if (!BirdSortGameController.Instance.playerData.isSyncData)
                 {
                     GConnection.GetData(result.PlayFabId, data =>
                     {
@@ -220,21 +220,21 @@ public class LoginController : MonoBehaviour
                         }
                         else
                         {
-                            //Chưa từng đẩy data lên hoặc data mới
+                            //Chua t?ng d?y data l�n ho?c data m?i
                             if (data == null || PlayerData.IsLocalDataNew(data))
                             {
-                                //Đẩy data mới lên
-                                GameController.Instance.playerData.SaveData(isFromDisk: true, isForce: true);
-                                GameController.Instance.playerData.isSyncData = true;
+                                //�?y data m?i l�n
+                                BirdSortGameController.Instance.playerData.SaveData(isFromDisk: true, isForce: true);
+                                BirdSortGameController.Instance.playerData.isSyncData = true;
                                 UseProfile.IsReInstallSyncData = false;
                             }
                             else
                             {
-                                //Lấy data theo Server
-                                GameController.Instance.playerData.SetDataSync(data);
+                                //L?y data theo Server
+                                BirdSortGameController.Instance.playerData.SetDataSync(data);
                                 if (UseProfile.CurrentLevel > 1)
-                                    GameController.Instance.LoadScene(SceneName.HOME_SCENE);
-                                GameController.Instance.playerData.isSyncData = true;
+                                    BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
+                                BirdSortGameController.Instance.playerData.isSyncData = true;
                                 UseProfile.IsReInstallSyncData = false;
                             }
                         }

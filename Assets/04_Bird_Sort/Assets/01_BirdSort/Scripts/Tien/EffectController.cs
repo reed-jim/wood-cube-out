@@ -35,7 +35,7 @@ public class EffectController : MonoBehaviour
                 {
                     if(!soundPlayed)
                     {
-                        GameController.Instance.musicManager.PlayOneShot(collectSound);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(collectSound);
                         soundPlayed = true;
                     }
                     obj.GetComponent<SpriteRenderer>().sortingLayerName = "FXUI";
@@ -66,7 +66,7 @@ public class EffectController : MonoBehaviour
         //    obj.transform.DOScale(Vector3.one * 0.2f, 0.5f).SetDelay(r);
         //    obj.transform.DOMove(scoreHappyPos.position, 0.5f).SetDelay(r).OnComplete(() =>
         //    {
-        //        GameController.Instance.musicManager.PlayOneShot(singleCollectSound);
+        //        BirdSortGameController.Instance.musicManager.PlayOneShot(singleCollectSound);
         //    });
         //    obj.GetComponent<SpriteRenderer>().sortingLayerName = "FXUI";
         //    scoreHappyPos.DOKill();

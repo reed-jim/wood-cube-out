@@ -141,7 +141,7 @@ namespace BirdSort2
             this.transform.DOMove(posOut, timeMove).OnComplete(() => { actionCome?.Invoke(); });
 
             if (isSoundFlyOut)
-                GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, birdFlyOutClip, audioFlySource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, birdFlyOutClip, audioFlySource);
 
                 this.transform.parent = GamePlayController_BirdSort.Instance.level.birdParent;
             isFlyOut = true;
@@ -195,7 +195,7 @@ namespace BirdSort2
                 body.transform.localScale = new Vector3(-valueScaleX, body.transform.localScale.y, body.transform.localScale.z);
             }
 
-            GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
             isInStand = false;
         
         }
@@ -257,7 +257,7 @@ namespace BirdSort2
                 body.transform.localScale = new Vector3(-valueScaleX, body.transform.localScale.y, body.transform.localScale.z);
             }
 
-            GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
             isInStand = false;
           
         }
@@ -310,7 +310,7 @@ namespace BirdSort2
 
             if (timmerCallSound >= 1)
             {
-                GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdCallClip, audioCallSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdCallClip, audioCallSource);
                 timmerCallSound = 0;
             }
 
@@ -352,7 +352,7 @@ namespace BirdSort2
             if (timmerSoundIdle >= timmerDelayIdle)
             {
                 timmerSoundIdle = 0;
-                GameController.Instance.musicManager.PlayOneShot(NameMusic.Idle, birdCallClip, audioSourceIdle);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Idle, birdCallClip, audioSourceIdle);
                 timmerDelayIdle = UnityEngine.Random.Range(5, 7);
             }
         }
@@ -394,7 +394,7 @@ namespace BirdSort2
             this.transform.DOKill();
             this.transform.DOMove(posOut, timeMove).OnComplete(() => { });
 
-            GameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, birdFlyOutClip, audioFlySource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.FlyOut, birdFlyOutClip, audioFlySource);
 
             this.transform.parent = GamePlayController_BirdSort.Instance.level.birdParent;
             isFlyOut = true;

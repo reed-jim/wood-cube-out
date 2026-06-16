@@ -70,7 +70,7 @@ public class EventSaleController : MonoBehaviour
         for (int i = 0; i < lstEventSales.Count; i++)
         {
             int index = i;
-            if (!GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(lstEventSales[index].typeEvent).IsActive)
+            if (!BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(lstEventSales[index].typeEvent).IsActive)
             {
                 continue;
             }

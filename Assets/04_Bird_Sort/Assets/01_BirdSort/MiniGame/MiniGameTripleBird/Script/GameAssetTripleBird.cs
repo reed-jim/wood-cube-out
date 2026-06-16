@@ -33,7 +33,7 @@ public class GameAssetTripleBird : MonoBehaviour
     public void SpawnXObject(Vector3 post)
     {
         var XObject = SimplePool2.Spawn(xObject, new Vector3(post.x, post.y + 0.3f, post.z), Quaternion.identity);
-        XObject.transform.SetParent(controller.levelManager.Top.transform);
+        XObject.transform.SetParent(controller.TripleBirdLevelManager.Top.transform);
         XObject.GetComponent<XObject>().ScaleInOut();
     }
 }

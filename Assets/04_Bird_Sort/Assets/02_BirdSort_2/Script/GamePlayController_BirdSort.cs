@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using Crystal;
     using DG.Tweening;
@@ -61,7 +61,7 @@
         protected override void OnAwake()
         {
             //
-            //GameController.Instance.currentScene = SceneType.GamePlay;
+            //BirdSortGameController.Instance.currentScene = BirdSortSceneType.GamePlay;
 
             Init();
 
@@ -90,11 +90,11 @@
 
             if (gameThemeController != null) gameThemeController.Init();
 
-            if (!GameController.isFirstLoadLevel)
+            if (!BirdSortGameController.isFirstLoadLevel)
             {
-                //GameController.Instance.admobAds.DestroyBanner();
-                GameController.Instance.admobAds.ShowBanner();
-                GameController.isFirstLoadLevel = true;
+                //BirdSortGameController.Instance.admobAds.DestroyBanner();
+                BirdSortGameController.Instance.admobAds.ShowBanner();
+                BirdSortGameController.isFirstLoadLevel = true;
 
                 //isBannerShow = true;
             }
@@ -122,7 +122,7 @@
         {
             if (!UseProfile.CanShowRate)
                 return false;
-            int X = GameController.Instance.useProfile.CurrentLevelPlay - 1;
+            int X = BirdSortGameController.Instance.useProfile.CurrentLevelPlay - 1;
             if (X < RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_RATE, 5))
                 return false;
             if (X == RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_RATE, 5) || (X <= RemoteConfigController.GetIntConfig(FirebaseConfig.MAX_LEVEL_SHOW_RATE, 31) && X % 10 == 1))

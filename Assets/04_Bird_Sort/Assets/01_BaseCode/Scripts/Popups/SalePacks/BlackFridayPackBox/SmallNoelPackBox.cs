@@ -34,10 +34,10 @@ public class SmallNoelPackBox : BasePackBox
     {
         base.InitState();
         isPlayAnime = false;
-        //SaleText.text = string.Format(Localization.Get("s_sale_off"), GameController.Instance.segmentController.GetCurrentSegment().saleData.config.dailyOfferPack.salePercent.ToString("0.##"));
+        //SaleText.text = string.Format(Localization.Get("s_sale_off"), BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.config.dailyOfferPack.salePercent.ToString("0.##"));
 
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
-        eventSaleController = GameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+        eventSaleController = BirdSortGameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
 
         isCounting = true;
     }

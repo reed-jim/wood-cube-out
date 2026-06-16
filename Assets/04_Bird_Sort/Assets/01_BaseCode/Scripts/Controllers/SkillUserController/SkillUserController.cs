@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static SkillUserSegemntData;
@@ -8,8 +8,8 @@ public class SkillUserController : MonoBehaviour
     [System.Serializable]
     public class SkillUserData
     {
-        public float coNumber;//Hệ số nhân số lượng object trong level
-        public float coPercentCover;//% giảm độ che phủ
+        public float coNumber;//H? s? nh�n s? lu?ng object trong level
+        public float coPercentCover;//% gi?m d? che ph?
     }
 
     public static int CurrentSkill
@@ -43,7 +43,7 @@ public class SkillUserController : MonoBehaviour
             conditions[i].Init();
         }
 
-        config = GameController.Instance.segmentController.GetCurrentSegment().skillUserData.config;
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().skillUserData.config;
 
         conditions = Helper.SelectionSortListMono(conditions, (a, b) =>
         {
@@ -63,7 +63,7 @@ public class SkillUserController : MonoBehaviour
         }    
 
         if (CurrentSkill <= 0)
-            CurrentSkill = 5;//For sync data lỗi
+            CurrentSkill = 5;//For sync data l?i
 
         if (CurrentSkill >= config.datas.Length)
             CurrentSkill = config.datas.Length - 1;
@@ -103,7 +103,7 @@ public class SkillUserController : MonoBehaviour
 
 
     /// <summary>
-    /// Gọi khi bắt đầu vào level
+    /// G?i khi b?t d?u v�o level
     /// </summary>
     public void CheckCurrentSkill()
     {
@@ -135,7 +135,7 @@ public class SkillUserController : MonoBehaviour
     }
 
     /// <summary>
-    /// Gọi khi win level
+    /// G?i khi win level
     /// </summary>
     public void CheckReDefaultCurrentSkill()
     {

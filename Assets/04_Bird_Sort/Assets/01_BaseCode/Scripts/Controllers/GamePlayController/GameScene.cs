@@ -45,8 +45,8 @@ public class GameScene : BaseScene
 
     public void Init()
     {
-        // levelTxt.text = string.Format(Localization.Get("s_level"), GameController.Instance.useProfile.CurrentLevelPlay.ToString());
-        levelTxt.text = string.Format(Localization.Get("s_level"),  GameController.Instance.useProfile.CurrentLevelPlay.ToString());
+        // levelTxt.text = string.Format(Localization.Get("s_level"), BirdSortGameController.Instance.useProfile.CurrentLevelPlay.ToString());
+        levelTxt.text = string.Format(Localization.Get("s_level"),  BirdSortGameController.Instance.useProfile.CurrentLevelPlay.ToString());
         timePlayLevelTxt.text = "";
 
         requirementsUI = new Dictionary<int, RequirementUI>();
@@ -73,7 +73,7 @@ public class GameScene : BaseScene
             return;
 
         PasueBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OpenShop()
@@ -231,11 +231,11 @@ public class GameScene : BaseScene
     }
     public void UpdateNumAddBranch()
     {
-        //if (GameController.Instance.useProfile.CurrentNumAddBranch > 0)
+        //if (BirdSortGameController.Instance.useProfile.CurrentNumAddBranch > 0)
         {
             //iconVideoBuyStand.gameObject.SetActive(false);
             //numAddBranchObj.gameObject.SetActive(true);
-            //numAddBranchVideoTxt.text = GameController.Instance.useProfile.CurrentNumAddBranch.ToString();
+            //numAddBranchVideoTxt.text = BirdSortGameController.Instance.useProfile.CurrentNumAddBranch.ToString();
         }
         //else
         {

@@ -39,7 +39,7 @@ public class ProBundleController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.ProBundle);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.ProBundle);
     }
 
     public override void ResetDataNewDay()

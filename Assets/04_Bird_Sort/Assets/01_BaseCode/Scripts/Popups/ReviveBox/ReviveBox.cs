@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -136,7 +136,7 @@ public class ReviveBox : BaseBox
             close2Btn[index].onClick.AddListener(OnClickClose2);
         }
 
-        reviveData = GameController.Instance.segmentController.GetCurrentSegment().reviveData;
+        reviveData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().reviveData;
         numTurnedRevie = 0;
 
         healthTopUI.Init();
@@ -283,7 +283,7 @@ public class ReviveBox : BaseBox
         {
             //UseProfile.Coin -= priceCoinRevive;
             // tru coin
-            GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, - priceCoinRevive, Reason.revive);
+            BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, - priceCoinRevive, Reason.revive);
             //---------------
             //Logic Revive
             ReviveHandle(isVideo: false);
@@ -291,19 +291,19 @@ public class ReviveBox : BaseBox
         }
         else
         {
-            //Hiện Shop Coin
+            //Hi?n Shop Coin
             EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.OPEN_SHOP);
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
         
     }
 
     public void OnClickReviveVideo()
     {
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
-                  // GameController.Instance.admobAds.ShowVideoReward()
+                  // BirdSortGameController.Instance.admobAds.ShowVideoReward()
                   ReviveHandle(isVideo: true);
 
                   CurrentTurnSuggetReviveVideo++;
@@ -316,14 +316,14 @@ public class ReviveBox : BaseBox
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    reviveVideoBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,
             ActionWatchVideo.None);
@@ -336,7 +336,7 @@ public class ReviveBox : BaseBox
         bool _isUseElectric = false;
         if (numElectricLightBonnus > 0)
         {
-            //GameController.Instance.dataContain.giftDatabase.Claim(GiftType.LightElectricItem, numElectricLightBonnus, Reason.reward_revive_box);
+            //BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.LightElectricItem, numElectricLightBonnus, Reason.reward_revive_box);
             _isUseElectric = true;
         }
 
@@ -373,7 +373,7 @@ public class ReviveBox : BaseBox
         for (int i = 0; i < this.rewardMiss.Count; i++)
         {
             var itemMiss = GetItemYouMissUI();
-            itemMiss.Init(GameController.Instance.dataContain.giftDatabase.GetIconItem(this.rewardMiss[i].typeItem), this.rewardMiss[i].amount);
+            itemMiss.Init(BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(this.rewardMiss[i].typeItem), this.rewardMiss[i].amount);
         }
 
         for (int i = 0; i < close1Btn.Length; i++)
@@ -386,19 +386,19 @@ public class ReviveBox : BaseBox
             close2Btn[i].gameObject.SetActive(true);
             close2Btn[i].interactable = false;
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public void OnClickClose2()
     {
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat)
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData.config.interstitials.showAfterDefeat)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+            BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
             {
                 Close();
                 LoseBox.SetupLegacy().Show();
                 UseProfile.NumberLoseLevelInDay++;
-                GameController.Instance.musicManager.PlayLoseSound();
+                BirdSortGameController.Instance.musicManager.PlayLoseSound();
             }, actionWatchLog: AdsPlacement.Interstitials.LEVEL_CAMPAIN_FAIL);
         }
         else
@@ -406,7 +406,7 @@ public class ReviveBox : BaseBox
             Close();
             LoseBox.SetupLegacy().Show();
             UseProfile.NumberLoseLevelInDay++;
-            GameController.Instance.musicManager.PlayLoseSound();
+            BirdSortGameController.Instance.musicManager.PlayLoseSound();
         }
     }
 

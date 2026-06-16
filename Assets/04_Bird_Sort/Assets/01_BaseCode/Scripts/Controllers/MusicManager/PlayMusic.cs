@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 public class PlayMusic : MonoBehaviour {
 
@@ -6,7 +6,7 @@ public class PlayMusic : MonoBehaviour {
 
 	private void Start()
 	{
-		GameController.Instance.musicManager.PlayMusic(musicClip);
+		BirdSortGameController.Instance.musicManager.PlayMusic(musicClip);
 	}
 
 }

@@ -1,4 +1,4 @@
-﻿using Sirenix.OdinInspector;
+using Sirenix.OdinInspector;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -14,14 +14,14 @@ public class SalePackVideoDataModel : BaseDataButtonEvent
     {
         get
         {
-            return GameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(typePack).level_unlock;
+            return BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(typePack).level_unlock;
         }
     }
 
     public bool isCanShowIconHome;//
-    public bool isOnlyActiveOnShop;//Chỉ xuất hiện trong Shop
+    public bool isOnlyActiveOnShop;//Ch? xu?t hi?n trong Shop
     public bool isCanShowPopup;
-    public bool isShowShop;//Xuất hiện cả icon home + shop
+    public bool isShowShop;//Xu?t hi?n c? icon home + shop
     public int delayShowHome;
     public int prioritySale;
 
@@ -123,7 +123,7 @@ public class SaleVideoController : MonoBehaviour
     public void Init()
     {
         activeSalePacks = new List<PackVideoBase>();
-        packVideoData = GameController.Instance.segmentController.GetCurrentSegment().saleVideoData;
+        packVideoData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleVideoData;
 
         for (int i = 0; i < allPacksInGame.Count; i++)
         {

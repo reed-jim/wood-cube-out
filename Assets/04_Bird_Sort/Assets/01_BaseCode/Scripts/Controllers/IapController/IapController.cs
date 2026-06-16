@@ -313,7 +313,7 @@ public class IapController : MonoBehaviour, IStoreListener
         // FunctionHelper.ShowDebug("Purchase failed: " + item.definition.id);
         //FunctionHelper.ShowDebug(r);
 
-        //GameController.instance.loadingTimeOut.OpenLoading(false);
+        //BirdSortGameController.instance.loadingTimeOut.OpenLoading(false);
 
         m_PurchaseInProgress = false;
     }
@@ -464,7 +464,7 @@ public class IapController : MonoBehaviour, IStoreListener
             //        actBuyFault();
             //    }
             //});
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                      (
                      //new Vector3(540f, 840, 0),
                      //Camera.main.ScreenToWorldPoint(new Vector2(350, 420)),
@@ -507,7 +507,7 @@ public class IapController : MonoBehaviour, IStoreListener
                     // ... report the product look-up failure situation  
                     //FunctionHelper.ShowDebug("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
                     //WaitingBox.Setup().HideWaiting();
-                    // GameController.instance.loadingTimeOut.OpenLoading(false);
+                    // BirdSortGameController.instance.loadingTimeOut.OpenLoading(false);
                 }
             }
             // Otherwise ...
@@ -524,7 +524,7 @@ public class IapController : MonoBehaviour, IStoreListener
                 //      }
                 //  });
 
-                //GameController.instance.loadingTimeOut.OpenLoading(false);
+                //BirdSortGameController.instance.loadingTimeOut.OpenLoading(false);
                 //WaitingBox.Setup().HideWaiting();
             }
         }
@@ -533,7 +533,7 @@ public class IapController : MonoBehaviour, IStoreListener
         {
             // ... by reporting any unexpected exception for later diagnosis.
             // FunctionHelper.ShowDebug("BuyProductID: FAIL. Exception during purchase. " + e);
-            //GameController.instance.loadingTimeOut.OpenLoading(false);
+            //BirdSortGameController.instance.loadingTimeOut.OpenLoading(false);
             //WaitingBox.Setup().HideWaiting();
         }
         finally
@@ -578,7 +578,7 @@ public class IapController : MonoBehaviour, IStoreListener
 
             if (myCoin >= item.price)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -item.price);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, -item.price);
                 item.Claim();
                 this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
 
@@ -596,7 +596,7 @@ public class IapController : MonoBehaviour, IStoreListener
         }
         else if (item.typeBuy == TypeBuy.Video)
         {
-            GameController.Instance.admobAds.ShowVideoReward(actionReward: () =>
+            BirdSortGameController.Instance.admobAds.ShowVideoReward(actionReward: () =>
             {
                 item.Claim();
                 this.PostEvent(EventID.BUY_PRODUCT_SUCCESS, typePack);
@@ -605,7 +605,7 @@ public class IapController : MonoBehaviour, IStoreListener
             },
             actionNotLoadedVideo: () =>
             {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                 (
                Camera.main.ScreenToWorldPoint(Input.mousePosition),
                 "No video at the moment!",
@@ -634,14 +634,14 @@ public class IapController : MonoBehaviour, IStoreListener
         {
             var pack = inappDatabase.lstPacksInapp[i];
             //purchasedPacks.Add(pack.type);
-            //GameController.Instance.useProfile.PurchasedPack = JsonConvert.SerializeObject(purchasedPacks);
+            //BirdSortGameController.Instance.useProfile.PurchasedPack = JsonConvert.SerializeObject(purchasedPacks);
             if (pack != null)
             {
                 if (pack.ProductID.CompareTo(product.definition.id) == 0 || (pack.isSale && (string.Format("{0}.{1}.{2}", pack.ProductID, StringHelper.SALE_IAP, pack.idSale).CompareTo(product.definition.id) == 0)))
                 {
                     pack.ActClaimDone = actBuySuccess;
                     pack.Claim(isInited);
-                    GameController.Instance.packController.OnBuyIAPSuccess(pack.type);
+                    BirdSortGameController.Instance.packController.OnBuyIAPSuccess(pack.type);
                     if (EventDispatcher.EventDispatcher.Instance.HasListener(EventID.RELOAD_SALE_POPUP))
                     {
                         EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.RELOAD_SALE_POPUP);

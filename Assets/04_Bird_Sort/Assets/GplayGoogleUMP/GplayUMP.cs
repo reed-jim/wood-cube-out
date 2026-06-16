@@ -70,7 +70,7 @@ namespace GPlay.GplayGoogleUMP
                         }
 
                         if (timeOutCrountine != null)
-                            GameController.Instance.StopCoroutine(timeOutCrountine);
+                            BirdSortGameController.Instance.StopCoroutine(timeOutCrountine);
 
                     }, () => RemoteConfigController.isFetchDone);
 
@@ -78,12 +78,12 @@ namespace GPlay.GplayGoogleUMP
                     {
                         onConsentValidated?.Invoke(true);
                         if (loadConfigCrountine != null)
-                            GameController.Instance.StopCoroutine(loadConfigCrountine);
+                            BirdSortGameController.Instance.StopCoroutine(loadConfigCrountine);
                     }, 3);
 
 
-                    GameController.Instance.StartCoroutine(loadConfigCrountine);
-                    GameController.Instance.StartCoroutine(timeOutCrountine);
+                    BirdSortGameController.Instance.StartCoroutine(loadConfigCrountine);
+                    BirdSortGameController.Instance.StartCoroutine(timeOutCrountine);
                 }
             }
         }

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -51,7 +51,7 @@
             {
                 int idStandKey = (int)data.extralValues[2];
 
-                //Hiện chìa khoá ở chân chim idBirdHasKey
+                //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
                 var stand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real[idStandKey];
 
                 birdHasKey = stand.birdsOnArray[idBirdHasKey];
@@ -60,7 +60,7 @@
             }
             else
             {
-                //Hiện chìa khoá ở chân chim idBirdHasKey
+                //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
                 var birdsInGame = GameObject.FindObjectsOfType<BirdBase>();
                 if (birdsInGame != null)
                 {
@@ -108,7 +108,7 @@
         {
             yield return new WaitUntil(() => birdHasKey.isFlyOut);
             PlayAnimEnd();
-            //Post Event check lại StandSuccess cả map
+            //Post Event check l?i StandSuccess c? map
         }
 
         protected override void ReturnExtralHandle()
@@ -123,7 +123,7 @@
             {
                 body.gameObject.SetActive(true);
                 skeEgg.AnimationState.ClearTracks();
-                GameController.Instance.musicManager.PlayOneShot(eggLockClip, audioCageSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(eggLockClip, audioCageSource);
                 var track = skeEgg.AnimationState.SetAnimation(0, "1-fall", false);
                 track.Complete += (s) =>
                 {
@@ -140,7 +140,7 @@
                     //float timeMove = Vector2.Distance(birdHasKey.transform.position, key.transform.position) / 3.5f;
                     hammer.transform.DOMove(birdHasKey.transform.position, timeMove).OnComplete(() =>
                         {
-                            GameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
+                            BirdSortGameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
                             hammer.transform.parent = birdHasKey.transform;
                             GamePlayController_BirdSort.Instance.tutorialController.ActiveTutExtral(this);
                                 GamePlayController_BirdSort.Instance.tutorialController.ActiveHintLockBird();
@@ -149,7 +149,7 @@
                             GamePlayController_BirdSort.Instance.returnController.IsLockReturn = false;
                         }).SetDelay(0.3f);
                         hammer.transform.DOScale(1f, timeMove * 0.95f).SetDelay(0.3f);
-                        GameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
                     }).SetEase(Ease.OutBack);
 
                     skeEgg.AnimationState.SetAnimation(0, "2-idle", true);
@@ -160,7 +160,7 @@
 
         protected override void PlayAnimEnd()
         {
-            //=> anim chìa khoá bay mở cửa
+            //=> anim ch�a kho� bay m? c?a
             hammer.transform.parent = GamePlayController_BirdSort.Instance.level.birdParent;
 
             hammer.gameObject.SetActive(true);
@@ -169,7 +169,7 @@
             hammer.transform.DOScale(1.5f, 0.35f).OnComplete(() =>
             {
                 //key.transform.DOScale(0.8f, 0.3f);
-                GameController.Instance.musicManager.PlayOneShot(getHammerClip, hammerSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(getHammerClip, hammerSource);
             });
 
             float timeMoveKey = Vector2.Distance(hammer.transform.position, posLock.transform.position) / 4.5f;
@@ -179,7 +179,7 @@
             {
                 skeEgg.AnimationState.ClearTracks();
                 data.birdParent.ActiveBody();
-                GameController.Instance.musicManager.PlayOneShot(eggOpenClip, audioCageSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(eggOpenClip, audioCageSource);
                 var track = skeEgg.AnimationState.SetAnimation(0, "3-break", false);
                 track.Complete += (s) =>
                 {

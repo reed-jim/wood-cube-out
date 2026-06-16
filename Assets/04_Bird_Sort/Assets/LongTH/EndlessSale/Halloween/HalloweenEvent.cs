@@ -112,10 +112,10 @@ public class HalloweenEvent : EventBase
         if (EndlessEnd)
             return false;
 
-        if (GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive() != null)
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive() != null)
         {
-            DateTime startDate = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().start;
-            DateTime endDate = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
+            DateTime startDate = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().start;
+            DateTime endDate = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
             if ((UnbiasedTime.Instance.Now() - endDate).TotalSeconds >= 0 || (UnbiasedTime.Instance.Now() - startDate).TotalSeconds < 0)
                 return false;
         }
@@ -191,7 +191,7 @@ public class HalloweenEvent : EventBase
             for (int i = 0; i < rewards.Count; i++)
                 if (rewards[i].typeItem != GiftType.None)
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount,
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[i].typeItem, rewards[i].amount,
                         reasonClaimReward, rewards[i].isUnlimited);
                 }
         }
@@ -239,14 +239,14 @@ public class HalloweenEvent : EventBase
     public override void ResetSeason()
     {
         base.ResetSeason();
-        data.TimeEndEvent = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
+        data.TimeEndEvent = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
         StartCoroutine(ReloadHome());
     }
 
     IEnumerator ReloadHome()
     {
         yield return new WaitForSecondsRealtime(3f);
-        GameController.Instance.packController.InitState();
+        BirdSortGameController.Instance.packController.InitState();
         HomeController.Instance.eventBaseView.Init();
         EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.RELOAD_SALE_HOME);
     }

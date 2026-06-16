@@ -101,7 +101,7 @@ public class TutorialTripleBirdBox : BaseBox
             }
 
         }
-        //Anhtusz GameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
+        //Anhtusz BirdSortGameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
     }
     private void ZoomLsTut2()
     {
@@ -124,7 +124,7 @@ public class TutorialTripleBirdBox : BaseBox
             }
 
         }
-        //Anhtusz GameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
+        //Anhtusz BirdSortGameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
     }
     private void ZoomLsTut3()
     {
@@ -139,7 +139,7 @@ public class TutorialTripleBirdBox : BaseBox
                 lsTut3[i].transform.DOScale(new Vector3(1, 1, 1), 0.25f);
             }
         }
-        //Anhtusz GameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
+        //Anhtusz BirdSortGameController.Instance.musicManager.PlayOneShot(appearClip, MusicManager.SourceAudio.Effect);
     }
 
 
@@ -149,7 +149,7 @@ public class TutorialTripleBirdBox : BaseBox
         {
             base.Close();
             limitClickClose = true;
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
     }
 

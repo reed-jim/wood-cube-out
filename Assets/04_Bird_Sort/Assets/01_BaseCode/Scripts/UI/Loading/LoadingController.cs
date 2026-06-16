@@ -19,11 +19,11 @@ public class LoadingController : MonoBehaviour
     void Start()
     {
         isLoad = false;
-        if (SceneLoader.showMrec) GameController.Instance.admobAds.ShowMRec();
+        if (SceneLoader.showMrec) BirdSortGameController.Instance.admobAds.ShowMRec();
         StartCoroutine(FadeOutScene(SceneLoader.nextScene, SceneLoader.onLoaded));
 
         next.onClick.AddListener(()=>StartCoroutine(FadeOutScene(SceneLoader.nextScene, SceneLoader.onLoaded)));
-        load.onClick.AddListener(()=> GameController.Instance.admobAds.ShowMRec());
+        load.onClick.AddListener(()=> BirdSortGameController.Instance.admobAds.ShowMRec());
 
     }
     IEnumerator FadeInScene(Action action = null)
@@ -48,11 +48,11 @@ public class LoadingController : MonoBehaviour
         canvas.alpha = isShowOpen ? 0 : 1;
         canvas.DOFade(1, 0.4f);
         canvas.gameObject.SetActive(true);
-        float timerPro = (GameController.Instance.admobAds.IsCanShowMrec()) ? 3 : 1 ;
+        float timerPro = (BirdSortGameController.Instance.admobAds.IsCanShowMrec()) ? 3 : 1 ;
         while (timerPro > 0)
         {
             timerPro -= Time.fixedDeltaTime;
-            slider.fillAmount += Time.fixedDeltaTime / ((GameController.Instance.admobAds.IsCanShowMrec()) ? 6 : 2) ;
+            slider.fillAmount += Time.fixedDeltaTime / ((BirdSortGameController.Instance.admobAds.IsCanShowMrec()) ? 6 : 2) ;
             loadingText.text = ((int)Mathf.Round(slider.fillAmount * 100)) + "%";
             yield return new WaitForFixedUpdate();
         }
@@ -66,7 +66,7 @@ public class LoadingController : MonoBehaviour
         async.allowSceneActivation = false;
         while (!async.isDone)
         {
-            slider.fillAmount = sliderValue + async.progress / ((GameController.Instance.admobAds.IsCanShowMrec()) ? 4 : 2);
+            slider.fillAmount = sliderValue + async.progress / ((BirdSortGameController.Instance.admobAds.IsCanShowMrec()) ? 4 : 2);
             loadingText.text = ((int)Mathf.Round(slider.fillAmount * 100)) + "%";
             yield return null;
             if (async.progress >= 0.9f)
@@ -74,7 +74,7 @@ public class LoadingController : MonoBehaviour
                 slider.fillAmount = 1f;
                 loadingText.text = "100%";
                 async.allowSceneActivation = true;
-                GameController.Instance.admobAds.HideMRec();
+                BirdSortGameController.Instance.admobAds.HideMRec();
             }
         }
 
@@ -95,11 +95,11 @@ public class LoadingController : MonoBehaviour
         //{
         //    if (scene.Equals(SceneName.GAME_PLAY))
         //    {
-        //        GameController.Instance.musicManager.PlayGameplaySceneBackgroundMusic();
+        //        BirdSortGameController.Instance.musicManager.PlayGameplaySceneBackgroundMusic();
         //    }
         //    else
         //    {
-        //        GameController.Instance.musicManager.PlayHomeSceneBackgroundMusic();
+        //        BirdSortGameController.Instance.musicManager.PlayHomeSceneBackgroundMusic();
         //    }
         //}
     }

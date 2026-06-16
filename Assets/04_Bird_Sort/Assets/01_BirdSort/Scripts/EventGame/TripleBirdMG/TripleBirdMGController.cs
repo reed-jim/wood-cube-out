@@ -68,7 +68,7 @@ public class TripleBirdMGController : MiniGameRegister
         set
         {
             PlayerPrefs.SetInt(POINT_MINIGAME_TRIPLE_BIRD, value);
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
 
@@ -80,7 +80,7 @@ public class TripleBirdMGController : MiniGameRegister
         lsRewardTripleBirdMNGOfPlayer.Add(id);
         string data = JsonConvert.SerializeObject(lsRewardTripleBirdMNGOfPlayer);
         PlayerPrefs.SetString(LIST_REWARD_MINI_GAME_TRIPLE_BIRD, data);
-        // GameController.Instance.playerData.SaveData();
+        // BirdSortGameController.Instance.playerData.SaveData();
     }
     public void LoadDataRewardTripleBirdMiniGame()
     {
@@ -154,7 +154,7 @@ public class TripleBirdMGController : MiniGameRegister
         set
         {
             PlayerPrefs.SetInt(TRIPLE_BIRD_TURN_FREE, value);
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
 
@@ -193,7 +193,7 @@ public class TripleBirdMGController : MiniGameRegister
         {
             PlayerPrefs.SetInt(FIRST_OPEN_TRIPLE_BIRD_MINI_GAME, value ? 1 : 0);
             PlayerPrefs.Save();
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     // first show home

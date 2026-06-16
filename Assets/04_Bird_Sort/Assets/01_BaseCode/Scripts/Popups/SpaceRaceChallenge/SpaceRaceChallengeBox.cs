@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,7 +38,7 @@ public class SpaceRaceChallengeBox : BaseBox
 
     private void Init()
     {
-        challengeController = (RaceSpaceChallenge)GameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
+        challengeController = (RaceSpaceChallenge)BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RaceSpaceChallenge);
         config = challengeController.config;
 
         InitRaceMemeber();
@@ -103,7 +103,7 @@ public class SpaceRaceChallengeBox : BaseBox
     private void OnClickContinueRace()
     {
         string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
+        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, BirdSortGameController.Instance.useProfile.CurrentLevelPlay));
         if (lvJson != null)
         {
             var levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
@@ -134,18 +134,18 @@ public class SpaceRaceChallengeBox : BaseBox
                 if (isCanPlay)
                 {
                     Close();
-                    GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+                    BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
                 }
                 else
                 {
-                    //Hiện popup mua Health
+                    //Hi?n popup mua Health
                     OutOfHealthBox.Setup().Show();
-                    GameController.Instance.musicManager.PlayClickSound();
+                    BirdSortGameController.Instance.musicManager.PlayClickSound();
                 }
             }
             else
             {
-                GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                        (
                        continueBtn.transform.position,
                        Localization.Get("s_comming_soon"),
@@ -153,25 +153,25 @@ public class SpaceRaceChallengeBox : BaseBox
                        isSpawnItemPlayer: true
                        );
             }
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
         else
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                       (
                       continueBtn.transform.position,
                       Localization.Get("s_comming_soon"),
                       Color.white,
                       isSpawnItemPlayer: true
                       );
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
     }    
 
     public void OnClickTut()
     {
         SpaceRaceTutBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }    
 
     public void OnMeFinishRace()

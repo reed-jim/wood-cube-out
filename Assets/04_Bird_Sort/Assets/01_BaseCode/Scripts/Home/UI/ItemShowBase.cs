@@ -14,7 +14,7 @@ public class ItemShowBase : MonoBehaviour
 
     public virtual void Init(RewardRandom reward)
     {
-        iconImg.sprite = GameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem);
+        iconImg.sprite = BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem);
         amountTxt.text = reward.amount.ToString();
 
         if (fxXValueObj != null)

@@ -49,7 +49,7 @@ public class GamePlayController : Singleton<GamePlayController>
 
     protected override void OnAwake()
     {
-        GameController.Instance.currentScene = SceneType.GamePlay;
+        BirdSortGameController.Instance.currentScene = BirdSortSceneType.GamePlay;
         cameraFit.Init();
     }
 
@@ -66,8 +66,8 @@ if (safeArea != null)
             safeArea.enabled = true;
 #endif
         //! WARNING: KHÔNG THAY ĐỔI THỨ TỰ INIT
-        GameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.TimeWaitingLevel, 1);
-        GameController.Instance.skillUserController.CheckCurrentSkill();
+        BirdSortGameController.Instance.skillUserController.AddValueCondition(ConditionChangeSkill.TypeCondition.TimeWaitingLevel, 1);
+        BirdSortGameController.Instance.skillUserController.CheckCurrentSkill();
         playerContain.Init();
         gameScene.Init();
         InitLevel();
@@ -85,13 +85,13 @@ if (safeArea != null)
         tutExtralController.Init();
         tutWeeklyChallengeController.Init();
 
-        GameController.Instance.admobAds.DestroyBanner();
-        GameController.Instance.admobAds.ShowBanner();
+        BirdSortGameController.Instance.admobAds.DestroyBanner();
+        BirdSortGameController.Instance.admobAds.ShowBanner();
 
 
         isBannerShow = true;
 
-        //GameController.Instance.musicManager.PlayBGMusicLevel();
+        //BirdSortGameController.Instance.musicManager.PlayBGMusicLevel();
     }
 
     public void InitState()
@@ -116,9 +116,9 @@ if (safeArea != null)
     }
     private void CheckShowFeatureBox()
     {
-        if (GameController.Instance.openFeatureBox)
+        if (BirdSortGameController.Instance.openFeatureBox)
         {
-            GameController.Instance.openFeatureBox = false;
+            BirdSortGameController.Instance.openFeatureBox = false;
 
         }
     }
@@ -127,7 +127,7 @@ if (safeArea != null)
     {
         if (!UseProfile.CanShowRate)
             return false;
-        int X = GameController.Instance.useProfile.CurrentLevelPlay - 1;
+        int X = BirdSortGameController.Instance.useProfile.CurrentLevelPlay - 1;
         if (X < RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_RATE, 5))
             return false;
         if (X == RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_RATE, 5) || (X <= RemoteConfigController.GetIntConfig(FirebaseConfig.MAX_LEVEL_SHOW_RATE, 31) && X % 10 == 1))

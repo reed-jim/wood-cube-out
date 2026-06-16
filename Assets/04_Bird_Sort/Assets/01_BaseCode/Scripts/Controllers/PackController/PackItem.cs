@@ -68,7 +68,7 @@ public class PackItem : MonoBehaviour
     }
     public void OnClickShowPack()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         if(currentSalePack != null)
         {
             switch (currentSalePack.typePackIAP)

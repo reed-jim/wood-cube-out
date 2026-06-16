@@ -22,7 +22,7 @@ public class TutorialItemInGame : TutorialBase
         parentTut.gameObject.SetActive(false);
         tutObj.gameObject.SetActive(false);
 
-        bootConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
+        bootConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
     }
 
     public override bool IsCanShowTut()

@@ -17,17 +17,17 @@ public class ShopItemBase : MonoBehaviour
     {
         buyBtn.onClick.AddListener(Buy);
 
-        priceTxt.text = GameController.Instance.iapController.GetPrice(typePack);
-        pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
+        priceTxt.text = BirdSortGameController.Instance.iapController.GetPrice(typePack);
+        pack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(typePack);
 
-        actionIAPInited = (s) => { priceTxt.text = GameController.Instance.iapController.GetPrice(typePack); };
+        actionIAPInited = (s) => { priceTxt.text = BirdSortGameController.Instance.iapController.GetPrice(typePack); };
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.IAP_INIT_DONE, actionIAPInited);
     }    
 
     public virtual void Buy()
     {
-        GameController.Instance.iapController.BuyProduct(typePack, buyBtn.gameObject);
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.iapController.BuyProduct(typePack, buyBtn.gameObject);
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }    
 
     protected virtual void OnDestroy()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -81,7 +81,7 @@ public class WeeklyChallegenBox : BaseBox
 
     public void Init()
     {
-        challengeController = GameController.Instance.challengeController.GetChallenges(ChallengeType.WeeklyChallenge);
+        challengeController = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.WeeklyChallenge);
         config = challengeController.config;
 
         for (int i = config.rewards.Count - 1; i >= 0; i--)
@@ -127,7 +127,7 @@ public class WeeklyChallegenBox : BaseBox
         {
              int indexRewardBefore = challengeController.data.CurrentIndexReward - 1 > 0 ? challengeController.data.CurrentIndexReward - 1 : 0;
              currentProgessShow = challengeController.data.CurrentIndexReward > 0 ? Mathf.Abs(challengeController.data.RememberCurrentNumItem - challengeController.config.rewards[indexRewardBefore].numItemRequire) : challengeController.data.RememberCurrentNumItem;
-            //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+            //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
              targetShow = Mathf.Abs(challengeController.CurrentItemRequirement - challengeController.config.rewards[indexRewardBefore].numItemRequire);
             if (targetShow == 0)
                 targetShow = challengeController.config.rewards[indexRewardBefore].numItemRequire;
@@ -149,7 +149,7 @@ public class WeeklyChallegenBox : BaseBox
         rewardElement.gameObject.SetActive(true);
         rewardElement.Init
                (
-               GameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
+               BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
                reward.amount,
                isUnlimitedItem: reward.isUnlimited,
                isX2Item: reward.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,
@@ -169,7 +169,7 @@ public class WeeklyChallegenBox : BaseBox
         var rewardEnd = config.rewards[config.rewards.Count - 1].GetReward();
         grandPrize.Init
                (
-               GameController.Instance.dataContain.giftDatabase.GetIconItem(rewardEnd.typeItem),
+               BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(rewardEnd.typeItem),
                rewardEnd.amount,
                isUnlimitedItem: rewardEnd.isUnlimited,
                isX2Item: rewardEnd.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,

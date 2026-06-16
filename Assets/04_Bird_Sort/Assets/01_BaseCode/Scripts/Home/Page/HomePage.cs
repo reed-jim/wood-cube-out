@@ -33,8 +33,8 @@ public class HomePage : PageBase
 
     public override void Init(PageController controller)
     {
-        GameController.Instance.challengeController.InitHome();
-        GameController.Instance.eventSaleController.InitHome();
+        BirdSortGameController.Instance.challengeController.InitHome();
+        BirdSortGameController.Instance.eventSaleController.InitHome();
         saleHomeController.Init();
         startChestController.Init();
         levelChestController.Init();
@@ -51,11 +51,11 @@ public class HomePage : PageBase
         //if (!RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_TEST_LEVEL, true))
         //pathLevel = StringHelper.PATH_CONFIG_LEVEL_TEST;
 
-        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, GameController.Instance.useProfile.CurrentLevelPlay));
+        TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel, BirdSortGameController.Instance.useProfile.CurrentLevelPlay));
         if (lvJson != null)
         {
             levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
-            levelTxt.text = Localization.Get("s_level_tile") + " " + GameController.Instance.useProfile.CurrentLevelPlay.ToString();
+            levelTxt.text = Localization.Get("s_level_tile") + " " + BirdSortGameController.Instance.useProfile.CurrentLevelPlay.ToString();
             int idHardMode = levelConfig.idHardMode;
 
             if (idHardMode > 0)
@@ -101,8 +101,8 @@ public class HomePage : PageBase
 
     public override void InitState()
     {
-        GameController.Instance.challengeController.InitStateHome();
-        GameController.Instance.eventSaleController.InitStateHome();
+        BirdSortGameController.Instance.challengeController.InitStateHome();
+        BirdSortGameController.Instance.eventSaleController.InitStateHome();
         saleHomeController.InitSate();
         startChestController.InitState();
         levelChestController.InitState();
@@ -121,13 +121,13 @@ public class HomePage : PageBase
         {
             handTutPlayLevel.gameObject.SetActive(false);
         }
-        if (!GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.isActive)
+        if (!BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.isActive)
         {
             hardBtn.gameObject.SetActive(false);
         }
         else
         {
-            if (UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart)
+            if (UseProfile.CurrentLevel >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart)
             {
                 hardBtn.GetComponent<Image>().sprite = challengeUnlockImg;
                 Lock.SetActive(false);
@@ -138,14 +138,14 @@ public class HomePage : PageBase
                     UseProfile.IsChallengeModeEnable = true;
                 }
                 handTutPlayLevel.gameObject.SetActive(false);
-                if (GameController.Instance.CheckEndLevelChallenge())
+                if (BirdSortGameController.Instance.CheckEndLevelChallenge())
                 {
                     NumLevel.text = Localization.Get("s_comming_soon");
 
                 }
                 else
                 {
-                    NumLevel.text = Localization.Get("s_level_tile") + " " + GameController.Instance.useProfile.CurrentHardLevel;
+                    NumLevel.text = Localization.Get("s_level_tile") + " " + BirdSortGameController.Instance.useProfile.CurrentHardLevel;
                 }
 
                 hardBtn.onClick.AddListener(OnHardPlay);
@@ -155,7 +155,7 @@ public class HomePage : PageBase
                 hardBtn.GetComponent<Image>().sprite = challengeLockImg;
                 Unlock.SetActive(false);
                 Lock.SetActive(true);
-                LockText.text = string.Format(Localization.Get("s_unlock_at"), GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart);
+                LockText.text = string.Format(Localization.Get("s_unlock_at"), BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart);
                 hardBtn.onClick.AddListener(UnlockAt);
             }
         }
@@ -163,10 +163,10 @@ public class HomePage : PageBase
 
     private void UnlockAt()
     {
-        GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+        BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                   (
                   hardBtn.transform.position,
-                  string.Format(Localization.Get("s_unlock_at"), GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart),
+                  string.Format(Localization.Get("s_unlock_at"), BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart),
                   Color.white,
                   isSpawnItemPlayer: true
                   );
@@ -180,12 +180,12 @@ public class HomePage : PageBase
             UseProfile.IsClickTutPlayHome = true;
 
             ConnectBridge.IsLaunchedFromBirdSort = true;
-            ConnectBridge.BirdSortLevelOnEnterConnect = GameController.Instance.useProfile.CurrentLevelPlay;
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            ConnectBridge.BirdSortLevelOnEnterConnect = BirdSortGameController.Instance.useProfile.CurrentLevelPlay;
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
         }
         else
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    playBtn.transform.position,
                    Localization.Get("s_comming_soon"),
@@ -193,25 +193,25 @@ public class HomePage : PageBase
                    isSpawnItemPlayer: true
                    );
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private void OnHardPlay()
     {
         string pathLevel = StringHelper.PATH_CONFIG_LEVEL;
         TextAsset lvJson = Resources.Load<TextAsset>(string.Format(pathLevel,
-            GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart +
-            GameController.Instance.useProfile.CurrentHardLevel * 5));
+            BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart +
+            BirdSortGameController.Instance.useProfile.CurrentHardLevel * 5));
 
         if (lvJson != null)
         {
             levelConfig = JsonUtility.FromJson<LevelConfig>(lvJson.ToString());
             UseProfile.IsClickTutPlayHome = true;
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
         }
         else
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    hardBtn.transform.position,
                    Localization.Get("s_comming_soon"),
@@ -219,7 +219,7 @@ public class HomePage : PageBase
                    isSpawnItemPlayer: true
                    );
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
 

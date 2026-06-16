@@ -18,7 +18,7 @@ public class ShopSuggetPanel : ShopPanel
     {
         base.InitState();
         moreOffer.gameObject.SetActive(true);
-        var iapController = GameController.Instance.iapController;
+        var iapController = BirdSortGameController.Instance.iapController;
 
         foreach (var item in saleItems)
         {
@@ -70,7 +70,7 @@ public class ShopSuggetPanel : ShopPanel
             actionReloadScroll = ReloadScroll();
             StartCoroutine(actionReloadScroll);
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         //contentVerticalLayoutGroup.CalculateLayoutInputVertical();
     }
 

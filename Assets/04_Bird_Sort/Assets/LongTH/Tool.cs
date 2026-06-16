@@ -24,7 +24,7 @@ public class Tool : MonoBehaviour
         btnJump.onClick.AddListener(() => changeLevel());
         btnChallenge.onClick.AddListener(() => changeChallenge());
         btnPopup.onClick.AddListener(() => openPopup());
-        IsRemoveAds.isOn = GameController.Instance.useProfile.IsRemoveAds;
+        IsRemoveAds.isOn = BirdSortGameController.Instance.useProfile.IsRemoveAds;
     }
 
     void changeLevel()
@@ -34,7 +34,7 @@ public class Tool : MonoBehaviour
         if (level != 0)
         {
             UseProfile.CurrentLevel = level;
-            GameController.Instance.useProfile.CurrentLevelPlay = level;
+            BirdSortGameController.Instance.useProfile.CurrentLevelPlay = level;
         }
         else
         {
@@ -44,7 +44,7 @@ public class Tool : MonoBehaviour
         UseProfile.AddItem(GiftType.AddBrandItem_BirdSort, 100);
         UseProfile.AddItem(GiftType.ShuffleItem_BirdSort, 100);
         UseProfile.AddItem(GiftType.BreakTheRule_BirdSort, 100);
-        GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+        BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
     }
 
     void changeChallenge()
@@ -53,7 +53,7 @@ public class Tool : MonoBehaviour
 
         if (level!=0)
         {
-            GameController.Instance.useProfile.CurrentHardLevel = level;
+            BirdSortGameController.Instance.useProfile.CurrentHardLevel = level;
         }
         else
         {
@@ -63,7 +63,7 @@ public class Tool : MonoBehaviour
         UseProfile.AddItem(GiftType.AddBrandItem_BirdSort,100);
         UseProfile.AddItem(GiftType.ShuffleItem_BirdSort,100);
         UseProfile.AddItem(GiftType.BreakTheRule_BirdSort,100);
-        GameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
+        BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
     }
 
     void openPopup()
@@ -105,7 +105,7 @@ public class Tool : MonoBehaviour
 
     public void setRemoveAds()
     {
-        GameController.Instance.useProfile.IsRemoveAds = IsRemoveAds.isOn;
+        BirdSortGameController.Instance.useProfile.IsRemoveAds = IsRemoveAds.isOn;
     }
 
     // Update is called once per frame

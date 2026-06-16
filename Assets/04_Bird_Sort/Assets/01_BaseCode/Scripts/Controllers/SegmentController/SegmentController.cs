@@ -27,7 +27,7 @@ public class SegmentController : MonoBehaviour
 
     public List<SegmentData> segments;
 
-    //Call by GameController or firebase InitDone
+    //Call by BirdSortGameController or firebase InitDone
     public void Init()
     {
         for (int i = 0; i < segments.Count; i++)

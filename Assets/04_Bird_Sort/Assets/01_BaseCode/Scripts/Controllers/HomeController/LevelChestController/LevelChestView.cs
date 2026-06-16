@@ -76,6 +76,6 @@ public class LevelChestView : MonoBehaviour
         {
             controller.OpenChestByButton();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 }

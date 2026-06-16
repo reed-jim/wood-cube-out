@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,17 +52,17 @@ public class ConnectBirdMiniGameShopBox : BaseBox
     {
         SetText(true);
         SetPrice();
-        GameController.Instance.iapController.onInitSuccess += SetPrice;
+        BirdSortGameController.Instance.iapController.onInitSuccess += SetPrice;
         wasClose = false;
     }
 
     private void SetPrice()
     {
-        IAPPack currentBannerSalePack1 = GameController.Instance.iapController.inappDatabase.GetPack(TypePackIAP.ConnectBirdMiniGame_Pack_1);
-        IAPPack currentBannerSalePack2 = GameController.Instance.iapController.inappDatabase.GetPack(TypePackIAP.ConnectBirdMiniGame_Pack_2);
+        IAPPack currentBannerSalePack1 = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(TypePackIAP.ConnectBirdMiniGame_Pack_1);
+        IAPPack currentBannerSalePack2 = BirdSortGameController.Instance.iapController.inappDatabase.GetPack(TypePackIAP.ConnectBirdMiniGame_Pack_2);
 
-        tv_buttn_IAP_Pack_1.text = "" + GameController.Instance.iapController.GetPrice(currentBannerSalePack1.ProductID);
-        tv_buttn_IAP_Pack_2.text = "" + GameController.Instance.iapController.GetPrice(currentBannerSalePack2.ProductID);
+        tv_buttn_IAP_Pack_1.text = "" + BirdSortGameController.Instance.iapController.GetPrice(currentBannerSalePack1.ProductID);
+        tv_buttn_IAP_Pack_2.text = "" + BirdSortGameController.Instance.iapController.GetPrice(currentBannerSalePack2.ProductID);
 
 
 
@@ -109,14 +109,14 @@ public class ConnectBirdMiniGameShopBox : BaseBox
         //{
         //    return;
         //}
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
                actionReward: () =>
                {
                    UseProfile.ConnectBirdTurnBuy += param;
                    data.CurrentNumWatchVideoInDay -= 1;
                    lsRewardShow.Clear();
-                   lsRewardShow.Add(new GiftRewardShow { icon = GameController.Instance.dataContain.giftDatabase.GetIconItem(GiftType.ConnectBirdMiniGame_Egg), amount = 1, type = GiftType.ConnectBirdMiniGame_Egg });
+                   lsRewardShow.Add(new GiftRewardShow { icon = BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(GiftType.ConnectBirdMiniGame_Egg), amount = 1, type = GiftType.ConnectBirdMiniGame_Egg });
                    RewardIAPBox.Setup2().Show(lsRewardShow);
                    SetText();
                    var miniGameData = HomeController.Instance.miniGameController.connectBirdMG;
@@ -124,7 +124,7 @@ public class ConnectBirdMiniGameShopBox : BaseBox
                },
                actionNotLoadedVideo: () =>
                {
-                   GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                   BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                     buttnRewardVideo.transform.position,
                     Localization.Get(LocalizationKey.NOADS_MOMENT),
@@ -141,8 +141,8 @@ public class ConnectBirdMiniGameShopBox : BaseBox
     }
     public void IapButton(TypePackIAP param, GameObject btn)
     {
-        GameController.Instance.iapController.BuyProduct(param, btn);
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.iapController.BuyProduct(param, btn);
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void HandleClose()
     {
@@ -152,7 +152,7 @@ public class ConnectBirdMiniGameShopBox : BaseBox
         }
 
         Close();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         wasClose = true;
     }
     
@@ -185,7 +185,7 @@ public class ConnectBirdMiniGameShopBox : BaseBox
     protected override void OnDisable()
     {
         base.OnDisable();
-        GameController.Instance.iapController.onInitSuccess -= SetPrice;
+        BirdSortGameController.Instance.iapController.onInitSuccess -= SetPrice;
     }
 
 }

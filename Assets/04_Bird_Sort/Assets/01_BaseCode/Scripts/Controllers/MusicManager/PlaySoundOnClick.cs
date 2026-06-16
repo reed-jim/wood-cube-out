@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class PlaySoundOnClick : MonoBehaviour
@@ -23,7 +23,7 @@ public class PlaySoundOnClick : MonoBehaviour
 
     public void PlaySound()
     {
-        GameController.Instance.musicManager.PlayOneShot(sound);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(sound);
        // AnalyticsController.LogActionClick(actionClick);
         //Debug.Log(StringHelper.StringColor(gameObject.name, ColorString.green));
     }

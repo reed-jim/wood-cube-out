@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -56,7 +56,7 @@
             {
                 if (bird != null && data.birdParent.id == bird.id)
                 {
-                    //Phá boom thành công, hiển thị effect phá boom
+                    //Ph� boom th�nh c�ng, hi?n th? effect ph� boom
                     state = StateExtral.Success;
 
                     if (m_ExtralSuccess != null)
@@ -74,7 +74,7 @@
         private void ActiveCoolDown()
         {
             timeCoolDown--;
-            GameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
 
             if (timeCoolDown <= 0)
             {
@@ -106,7 +106,7 @@
             base.EndExtral(isDone);
             if (!isDone)
             {
-                //Gọi hiệu ứng nổ, show popup lose
+                //G?i hi?u ?ng n?, show popup lose
                 Debug.Log("============= Boom Lose");
                 fxFuse.gameObject.SetActive(false);
                 fxExplosion.gameObject.SetActive(true);
@@ -115,7 +115,7 @@
                 GamePlayController_BirdSort.Instance.state = StateGame.Lose;
                 this.data.birdParent.DisableBody();
                 body.gameObject.SetActive(false);
-                GameController.Instance.musicManager.PlayOneShot(explosionClip, audioBoomSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(explosionClip, audioBoomSource);
                 EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.FLY_OUT_RANDOM, this.data.birdParent);
          
                     StartCoroutine(Helper.StartAction(() =>
@@ -159,7 +159,7 @@
                 this.transform.DOKill();
                 this.transform.localScale = 3 * Vector3.one;
 
-                GameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(beepClip, audioBoomSource);
                 boomSke.AnimationState.ClearTracks();
 
                 var track = boomSke.AnimationState.SetAnimation(0, "start", false);

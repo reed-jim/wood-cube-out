@@ -25,7 +25,7 @@ public class VideoGirlPackController : PackVideoBase
 
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.packVideoDatabase.GetPack(TypePackVideo.VideoGirl);
+        packModel = BirdSortGameController.Instance.dataContain.packVideoDatabase.GetPack(TypePackVideo.VideoGirl);
     }
 
     protected override int LevelUnlock()
@@ -35,7 +35,7 @@ public class VideoGirlPackController : PackVideoBase
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoGirl);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoGirl);
 
         if (!packModel.isCanShowPopup)
             return false;

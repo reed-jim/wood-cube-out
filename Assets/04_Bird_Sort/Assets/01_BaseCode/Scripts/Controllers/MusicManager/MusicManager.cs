@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using UnityEngine.Audio;
 using DG.Tweening;
 using UnityEngine.Events;
@@ -66,21 +66,21 @@ public class MusicManager : SerializedMonoBehaviour
     {
         get
         {
-            return GameController.Instance.useProfile.OnMusic ? 1 : 0;
+            return BirdSortGameController.Instance.useProfile.OnMusic ? 1 : 0;
         }
     }
     public float SoundVolume
     {
         get
         {
-            return GameController.Instance.useProfile.OnSound ? 1 : 0;
+            return BirdSortGameController.Instance.useProfile.OnSound ? 1 : 0;
         }
     }
 
     public void Init()
     {
-        musicSource.volume = GameController.Instance.useProfile.OnMusic ? 0.7f : 0;
-        effectSource.volume = GameController.Instance.useProfile.OnSound ? 1 : 0;
+        musicSource.volume = BirdSortGameController.Instance.useProfile.OnMusic ? 0.7f : 0;
+        effectSource.volume = BirdSortGameController.Instance.useProfile.OnSound ? 1 : 0;
     }
 
 
@@ -232,7 +232,7 @@ public class MusicManager : SerializedMonoBehaviour
     #region === Play Sound ===
     public void PlayWinSound()
     {
-        if (!GameController.Instance.useProfile.OnMusic)
+        if (!BirdSortGameController.Instance.useProfile.OnMusic)
             return;
         // musicSource.clip = winMusic;
         //musicSource.Play();
@@ -241,7 +241,7 @@ public class MusicManager : SerializedMonoBehaviour
 
     public void PlayLoseSound()
     {
-        if (!GameController.Instance.useProfile.OnMusic)
+        if (!BirdSortGameController.Instance.useProfile.OnMusic)
             return;
         // musicSource.clip = winMusic;
         //musicSource.Play();

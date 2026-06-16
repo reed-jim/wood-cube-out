@@ -92,7 +92,7 @@ public class StartChestView : MonoBehaviour
         {
             controller.OpenChestByButton();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }    
 
 }

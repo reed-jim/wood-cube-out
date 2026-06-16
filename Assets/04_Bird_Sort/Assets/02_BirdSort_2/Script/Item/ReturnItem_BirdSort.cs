@@ -17,7 +17,7 @@ public class ReturnItem_BirdSort : ItemBase
 
     public override bool IsCanUseItem()
     {
-        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ReturnItem_BirdSort).unlockLevel)
+        if (UseProfile.CurrentLevel < BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ReturnItem_BirdSort).unlockLevel)
         {
             return false;
         }

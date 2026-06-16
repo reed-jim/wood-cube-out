@@ -49,7 +49,7 @@ public class RewardConnectBirdMNBox : BaseBox
         if (numb > 0)
         {
 
-            GameController.Instance.moneyEffectController.SpawnEffect_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp
             (
                 btnClose.gameObject.transform.position,
                 GiftType.pointConnectBirdMNG,
@@ -65,8 +65,8 @@ public class RewardConnectBirdMNBox : BaseBox
         controller.tut.OffTut();
         base.Close();
         wasClose = true;
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: ()=> 
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: ()=> 
         {
             
         }, actionWatchLog: "Video_EndMinigame");

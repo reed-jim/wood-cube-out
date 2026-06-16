@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,7 +90,7 @@ public class RoyalPassBox : BaseBox
 
     public void Init()
     {
-        challengeController = GameController.Instance.challengeController.GetChallenges(ChallengeType.RoyalPass);
+        challengeController = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.RoyalPass);
         config = challengeController.config;
         indexRewardElements = new List<Transform>();
         //rewardsElementLst = new List<RewardElementRoyalPass>();
@@ -181,10 +181,10 @@ public class RoyalPassBox : BaseBox
         {
             if (challengeController.data.CurrentNumItem >= challengeController.CurrentItemRequirement)
             {
-                //Diễn tăng progess
+                //Di?n tang progess
                 int indexRewardBefore = challengeController.data.CurrentIndexReward - 1 > 0 ? challengeController.data.CurrentIndexReward - 1 : 0;
                 int currentProgessShow = challengeController.data.CurrentIndexReward > 0 ? Mathf.Abs(challengeController.data.CurrentNumItem - challengeController.config.rewards[indexRewardBefore].numItemRequire) : challengeController.data.CurrentNumItem;
-                //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+                //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
                 int targetShow = Mathf.Abs(challengeController.CurrentItemRequirement - challengeController.config.rewards[indexRewardBefore].numItemRequire);
                 if (targetShow == 0)
                     targetShow = challengeController.config.rewards[indexRewardBefore].numItemRequire;
@@ -197,7 +197,7 @@ public class RoyalPassBox : BaseBox
 
                 SetProgessBarImg((float)currentProgessShow / targetShow, true, actionProgessDone: () =>
                 {
-                    //Diễn nhận quà
+                    //Di?n nh?n qu�
                     filmountProgessIndexReward = contentScorllProgess[challengeController.data.CurrentIndexReward].progess;
 
                     progessIndexRewardImg.transform.DOScaleY(filmountProgessIndexReward, 0.5f).OnComplete(() =>
@@ -243,7 +243,7 @@ public class RoyalPassBox : BaseBox
         {
             int indexRewardBefore = challengeController.data.CurrentIndexReward - 1 > 0 ? challengeController.data.CurrentIndexReward - 1 : 0;
             currentProgessShow = challengeController.data.CurrentIndexReward > 0 ? Mathf.Abs(challengeController.data.RememberCurrentNumItem - challengeController.config.rewards[indexRewardBefore].numItemRequire) : challengeController.data.RememberCurrentNumItem;
-            //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+            //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
             targetShow = Mathf.Abs(challengeController.CurrentItemRequirement - challengeController.config.rewards[indexRewardBefore].numItemRequire);
             if (targetShow == 0)
                 targetShow = challengeController.config.rewards[indexRewardBefore].numItemRequire;
@@ -292,13 +292,13 @@ public class RoyalPassBox : BaseBox
     private void OpenInfoBox()
     {
         RoyalPassTutBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private void OnClickActiveRoyalPass()
     {
         ActiveRoyalPassBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private IEnumerator MoveScrollToCurrentReward(int index, bool isAnim = false)

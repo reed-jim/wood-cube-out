@@ -105,7 +105,7 @@ public class XCoinWinGame : MonoBehaviour
     public virtual void StopArrow()
     {
         isMove = false;
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
           actionReward: () =>
           {
               var coinArrow = GetArrpwPoint();
@@ -113,7 +113,7 @@ public class XCoinWinGame : MonoBehaviour
               {
                   isEnd = true;
                   int xValue = coinArrow.valueX;
-                  GameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, this.firstCoinValue * (xValue - 1), Reason.x_coin_end_level);
+                  BirdSortGameController.Instance.dataContain.giftDatabase.Claim(GiftType.Coin, this.firstCoinValue * (xValue - 1), Reason.x_coin_end_level);
 
                   fxRewardXCoin.gameObject.SetActive(true);
                   SetActiveBody(false);
@@ -137,7 +137,7 @@ public class XCoinWinGame : MonoBehaviour
           actionNotLoadedVideo: () =>
           {
               isMove = true;
-              GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+              BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                (
                stopArrowBtn.transform.position,
                "No video at the moment!",

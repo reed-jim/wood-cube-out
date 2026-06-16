@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -52,7 +52,7 @@ public class EggLockBirdExtral : ExtralPlayBase
         newSkin.AddSkin(skeEgg.Skeleton.Data.FindSkin(string.Format("skin-{0}", (int)data.extralValues[2] + 1))); // 2. Add items
         skeEgg.Skeleton.SetSkin(newSkin); // 1. Set the active skin
 
-        //Hiện chìa khoá ở chân chim idBirdHasKey
+        //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
         //var stand = GamePlayController.Instance.level.standsInLevel[idStandKey];
 
         //birdHasKey = stand.birdsOnArray[idBirdHasKey];
@@ -110,7 +110,7 @@ public class EggLockBirdExtral : ExtralPlayBase
         {
             body.gameObject.SetActive(true);
             skeEgg.AnimationState.ClearTracks();
-            GameController.Instance.musicManager.PlayOneShot(eggLockClip, audioCageSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(eggLockClip, audioCageSource);
             var track = skeEgg.AnimationState.SetAnimation(0, "1-fall", false);
             track.Complete += (s) =>
             {
@@ -127,10 +127,10 @@ public class EggLockBirdExtral : ExtralPlayBase
                     //float timeMove = Vector2.Distance(birdHasKey.transform.position, key.transform.position) / 3.5f;
                     hammer.transform.DOMove(birdHasKey.transform.position, timeMove).OnComplete(() =>
                     {
-                        GameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
                         hammer.transform.parent = birdHasKey.transform;
 
-                        if (GameController.Instance.modeGame == ModeGame.Campaign)
+                        if (BirdSortGameController.Instance.modeGame == ModeGame.Campaign)
                         {
                             //GamePlayController.Instance.tutorialController.ActiveTutExtral(this);
                             //GamePlayController.Instance.tutorialController.ActiveHintLockBird();
@@ -145,7 +145,7 @@ public class EggLockBirdExtral : ExtralPlayBase
 
                     }).SetDelay(0.3f);
                     hammer.transform.DOScale(1f, timeMove * 0.95f).SetDelay(0.3f);
-                    GameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(hammerAppearClip, hammerSource);
                 }).SetEase(Ease.OutBack);
 
                 skeEgg.AnimationState.SetAnimation(0, "2-idle", true);
@@ -156,7 +156,7 @@ public class EggLockBirdExtral : ExtralPlayBase
 
     protected override void PlayAnimEnd()
     {
-        //=> anim chìa khoá bay mở cửa
+        //=> anim ch�a kho� bay m? c?a
         hammer.transform.parent = GamePlayController.Instance.level.birdParent;
 
         hammer.gameObject.SetActive(true);
@@ -165,7 +165,7 @@ public class EggLockBirdExtral : ExtralPlayBase
         hammer.transform.DOScale(1.5f, 0.35f).OnComplete(() =>
         {
             //key.transform.DOScale(0.8f, 0.3f);
-            GameController.Instance.musicManager.PlayOneShot(getHammerClip, hammerSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(getHammerClip, hammerSource);
         });
 
         float timeMoveKey = Vector2.Distance(hammer.transform.position, posLock.transform.position) / 7.5f;
@@ -175,7 +175,7 @@ public class EggLockBirdExtral : ExtralPlayBase
         {
             skeEgg.AnimationState.ClearTracks();
             data.birdParent.ActiveBody();
-            GameController.Instance.musicManager.PlayOneShot(eggOpenClip, audioCageSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(eggOpenClip, audioCageSource);
             var track = skeEgg.AnimationState.SetAnimation(0, "3-break", false);
             track.Complete += (s) =>
             {

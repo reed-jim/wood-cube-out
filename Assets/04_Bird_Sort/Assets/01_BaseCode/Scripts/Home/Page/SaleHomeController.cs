@@ -18,8 +18,8 @@ public class SaleHomeController : MonoBehaviour
         actionReloadSale = (sender) => { LoadSaleHome(); };
         EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.RELOAD_SALE_HOME, actionReloadSale);
         ReloadPool();
-        GameController.Instance.packController.InitState();
-        GameController.Instance.videoPackController.InitState();
+        BirdSortGameController.Instance.packController.InitState();
+        BirdSortGameController.Instance.videoPackController.InitState();
     }
 
    
@@ -31,10 +31,10 @@ public class SaleHomeController : MonoBehaviour
     private void LoadSaleHome()
     {
         ReloadPool();
-        if(GameController.Instance.packController.HasPackSale())
+        if(BirdSortGameController.Instance.packController.HasPackSale())
         {
             bool hasSalePack = false;
-            var packs = GameController.Instance.packController.activeSalePacks;
+            var packs = BirdSortGameController.Instance.packController.activeSalePacks;
             var packSaleEvent = packs.Find((o) => o.packModel.typePackIAP == TypePackIAP.NoelSale_1 || o.packModel.typePackIAP == TypePackIAP.NoelSale_2);
             for (int i = 0; i < packs.Count; i++)
             {
@@ -79,9 +79,9 @@ public class SaleHomeController : MonoBehaviour
             }
         }
 
-        if (GameController.Instance.videoPackController.HasPackSale())
+        if (BirdSortGameController.Instance.videoPackController.HasPackSale())
         {
-            var packs = GameController.Instance.videoPackController.activeSalePacks;
+            var packs = BirdSortGameController.Instance.videoPackController.activeSalePacks;
             for (int i = 0; i < packs.Count; i++)
             {
                 int index = i;

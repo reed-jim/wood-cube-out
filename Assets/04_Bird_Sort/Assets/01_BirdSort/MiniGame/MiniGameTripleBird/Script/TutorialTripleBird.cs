@@ -24,12 +24,12 @@ public class TutorialTripleBird : MonoBehaviour
     }
     public void MoveToAnotherBird()
     {
-        for (int i = 0; i < controller.levelManager.lsAllBird.Count; i++)
+        for (int i = 0; i < controller.TripleBirdLevelManager.lsAllBird.Count; i++)
         {
-            if (!controller.levelManager.lsSort.Contains(controller.levelManager.lsAllBird[i]))
+            if (!controller.TripleBirdLevelManager.lsSort.Contains(controller.TripleBirdLevelManager.lsAllBird[i]))
             {
                 isOffTut = false;
-                hand.transform.DOMove(controller.levelManager.lsAllBird[i].transform.position, 1);
+                hand.transform.DOMove(controller.TripleBirdLevelManager.lsAllBird[i].transform.position, 1);
                 break;
             }
             else

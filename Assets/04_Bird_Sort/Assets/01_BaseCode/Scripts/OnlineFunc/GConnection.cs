@@ -44,7 +44,7 @@ public class GConnection : MonoBehaviour
     public static void UpdateData(string nameData, string jsonValue,
         UnityAction<UpdateUserDataResult> actionUpdateDataSuccess, UnityAction errorAction = null, bool isForce = false)
     {
-        if (!GameController.Instance.playerData.isSyncData || isForce)
+        if (!BirdSortGameController.Instance.playerData.isSyncData || isForce)
         {
 #if LOG_ERROR
             Debug.LogError("Chưa Sync Lần đầu");
@@ -137,7 +137,7 @@ public class GConnection : MonoBehaviour
         //Nếu chưa từng sync lần đầu
         if (!isForce && !bData.isSyncData)
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
 #if LOG_ERROR
             Debug.LogError("Not Sync.\n" + tracer);
 #endif
@@ -206,7 +206,7 @@ public class GConnection : MonoBehaviour
         }
         else
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
         }
     }
 
@@ -236,7 +236,7 @@ public class GConnection : MonoBehaviour
         //Nếu chưa từng sync lần đầu
         if (!isForce && !bData.isSyncData)
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
 #if LOG_ERROR
             Debug.LogError("Not Sync First Time");
 #endif
@@ -302,7 +302,7 @@ public class GConnection : MonoBehaviour
         }
         else
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
         }
     }
 
@@ -350,7 +350,7 @@ public class GConnection : MonoBehaviour
         //Nếu chưa từng sync lần đầu
         if (!isForce && !bData.isSyncData)
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
 #if LOG_ERROR
             Debug.LogError("Not Sync.\n" + tracer);
 #endif
@@ -441,7 +441,7 @@ public class GConnection : MonoBehaviour
         }
         else
         {
-            GameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(SendRequest, () => ErrorCallback(PlayFabTimeout));
         }
     }
 
@@ -500,7 +500,7 @@ public class GConnection : MonoBehaviour
         {
             var jsonDataPlayer = result.Data[DataPlayFab.PLAYER_DATA].Value;
             if (jsonDataPlayer != null && jsonDataPlayer != "")
-                GameController.Instance.playerData.SetData(jsonDataPlayer);
+                BirdSortGameController.Instance.playerData.SetData(jsonDataPlayer);
         }
 
         actionGetDataSuccess?.Invoke();
@@ -664,9 +664,9 @@ public class GConnection : MonoBehaviour
                 }
             }
         };
-        if (!GameController.Instance.loginController.IsLoginPlayfab())
+        if (!BirdSortGameController.Instance.loginController.IsLoginPlayfab())
         {
-            GameController.Instance.loginController.ReLoginPlayFab(UploadData);
+            BirdSortGameController.Instance.loginController.ReLoginPlayFab(UploadData);
             return;
         }
 
@@ -694,7 +694,7 @@ public class GConnection : MonoBehaviour
         {
             case GDataTable.PlayerData:
                 tableString = DataPlayFab.PLAYER_DATA;
-                classBase = GameController.Instance.playerData;
+                classBase = BirdSortGameController.Instance.playerData;
                 return;
         }
     }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 //using Facebook.MiniJSON;
 //using Facebook.Unity;
 using PlayFab;
@@ -162,12 +162,12 @@ public class FacebookAndPlayFabManager : MonoBehaviour
             //PlayFabClientAPI.LinkFacebookAccount(
             //    new LinkFacebookAccountRequest { AccessToken = AccessToken.CurrentAccessToken.TokenString }, r =>
             //    {
-            //        //Link thành công
+            //        //Link th�nh c�ng
             //        //Up load data
             //        WaitingBox.Setup().HideWaiting();
             //        UseProfile.LinkedId = GUtils.GetDeviceId();
             //        UseProfile.IsLoggedIn = true;
-            //        GameController.Instance.playerData.SaveData();
+            //        BirdSortGameController.Instance.playerData.SaveData();
             //        try
             //        {
             //            GetUserNameFB();
@@ -178,15 +178,15 @@ public class FacebookAndPlayFabManager : MonoBehaviour
             //        }
 
             //        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.ON_LOGIN_GG_OR_FB_COMPLETE);
-            //        GameController.Instance.openFeatureBox = true;
-            //       // GameController.Instance.LoadScene(SceneName.GAME_PLAY);
+            //        BirdSortGameController.Instance.openFeatureBox = true;
+            //       // BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
             //    }, e =>
             //    {
             //        Debug.Log("======== " + e.Error);
             //        WaitingBox.Setup().HideWaiting();
             //        if (e.Error == PlayFabErrorCode.LinkedAccountAlreadyClaimed)
-            //            //Face đã đc Link ở Tk khác => tự động đăng nhập vào tk đó
-            //            // Mở popup gợi ý lấy data ở local hay ở sever
+            //            //Face d� dc Link ? Tk kh�c => t? d?ng dang nh?p v�o tk d�
+            //            // M? popup g?i � l?y data ? local hay ? sever
             //            ConfirmBox.Setup().AddMessageYesNo("Login", "Do you want to get data from sever or local?",
             //                delegate { HandleConfirmDataSever(); },
             //                delegate { HandleConfirmDataLocal(); }, "Sever", "Local");
@@ -368,7 +368,7 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //{
     //    WaitingBox.Setup().HideWaiting();
     //    WaitingBox.Setup().ShowWaiting();
-    //    var localData = GameController.Instance.playerData.ToJson();
+    //    var localData = BirdSortGameController.Instance.playerData.ToJson();
     //    var deviceID_Old = GUtils.GetDeviceId();
     //    PlayFabClientAPI.LoginWithFacebook(
     //        new LoginWithFacebookRequest
@@ -384,16 +384,16 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //            Debug.Log("Login Success");
     //            GConnection.GetData(r.PlayFabId, () =>
     //            {
-    //                Debug.Log(GameController.Instance.playerData.linkedId);
-    //                var linkedId = GameController.Instance.playerData.linkedId;
-    //                GameController.Instance.playerData.SetData(localData);
+    //                Debug.Log(BirdSortGameController.Instance.playerData.linkedId);
+    //                var linkedId = BirdSortGameController.Instance.playerData.linkedId;
+    //                BirdSortGameController.Instance.playerData.SetData(localData);
     //                UseProfile.PlayFabId = r.PlayFabId;
     //                UseProfile.LinkedId = linkedId;
-    //                GameController.Instance.playerData.InitData();
+    //                BirdSortGameController.Instance.playerData.InitData();
     //                var deviceID_New = r.PlayFabId;
     //                if (localData != null && localData != "")
     //                {
-    //                    GameController.Instance.loginController.LoginPlayFab(
+    //                    BirdSortGameController.Instance.loginController.LoginPlayFab(
     //                        deviceID_Old,
     //                        () =>
     //                        {
@@ -402,17 +402,17 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                            GConnection.UpdateDataQuick(DataPlayFab.PLAYER_DATA, localDataParse.ToJson(),
     //                                (s) =>
     //                                {
-    //                                    GameController.Instance.loginController.LoginPlayFab(linkedId, () =>
+    //                                    BirdSortGameController.Instance.loginController.LoginPlayFab(linkedId, () =>
     //                                    {
-    //                                        GameController.Instance.playerData.SetData(localData);
+    //                                        BirdSortGameController.Instance.playerData.SetData(localData);
     //                                        UseProfile.PlayFabId = r.PlayFabId;
     //                                        UseProfile.LinkedId = linkedId;
-    //                                        GameController.Instance.playerData.InitData();
+    //                                        BirdSortGameController.Instance.playerData.InitData();
 
-    //                                        GameController.Instance.playerData.SaveToCloud(onSuccess: (a) =>
+    //                                        BirdSortGameController.Instance.playerData.SaveToCloud(onSuccess: (a) =>
     //                                        {
     //                                            UseProfile.IsLoggedIn = true;
-    //                                            GameController.Instance.playerData.SaveData();
+    //                                            BirdSortGameController.Instance.playerData.SaveData();
     //                                            try
     //                                            {
     //                                                GetUserNameFB();
@@ -423,8 +423,8 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                                            }
 
     //                                            EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.ON_LOGIN_GG_OR_FB_COMPLETE);
-    //                                            GameController.Instance.openFeatureBox = true;
-    //                                            GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+    //                                            BirdSortGameController.Instance.openFeatureBox = true;
+    //                                            BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
     //                                        },
     //                                            onFail: (a) => { SyncDataFail(); }, isForce: true);
     //                                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.UPDATE_NAME_AVATAR);
@@ -438,7 +438,7 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                else
     //                {
     //                    WaitingBox.Setup().HideWaiting();
-    //                    GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+    //                    BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
     //                }    
     //            }, () => { SyncDataFail(); });
     //        },
@@ -449,7 +449,7 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //{
     //    WaitingBox.Setup().ShowWaiting();
     //    Debug.Log("===================== Before Login " + UseProfile.PlayFabId);
-    //    var localData = GameController.Instance.playerData.ToJson();
+    //    var localData = BirdSortGameController.Instance.playerData.ToJson();
     //    var deviceID_Old = GUtils.GetDeviceId();
     //    PlayFabClientAPI.LoginWithFacebook(
     //        new LoginWithFacebookRequest
@@ -467,12 +467,12 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //            GConnection.GetData(r.PlayFabId, () =>
     //            {
     //                Debug.Log("============= A");
-    //                var linkedId = GameController.Instance.playerData.linkedId;
+    //                var linkedId = BirdSortGameController.Instance.playerData.linkedId;
     //                var deviceID_New = r.PlayFabId;
     //                if (localData != null && localData != "")
     //                {
     //                    Debug.Log("============= B");
-    //                    GameController.Instance.loginController.LoginPlayFab(
+    //                    BirdSortGameController.Instance.loginController.LoginPlayFab(
     //                        deviceID_Old,
     //                        () =>
     //                        {
@@ -483,7 +483,7 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                                (s) =>
     //                                {
     //                                    Debug.Log("============= D");
-    //                                    GameController.Instance.loginController.LoginPlayFab(linkedId, () =>
+    //                                    BirdSortGameController.Instance.loginController.LoginPlayFab(linkedId, () =>
     //                                    {
     //                                        UseProfile.PlayFabId = r.PlayFabId;
     //                                        WaitingBox.Setup().HideWaiting();
@@ -497,10 +497,10 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                                        }
 
     //                                        UseProfile.IsLoggedIn = true;
-    //                                        GameController.Instance.playerData.SaveData();
+    //                                        BirdSortGameController.Instance.playerData.SaveData();
     //                                        EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.ON_LOGIN_GG_OR_FB_COMPLETE);
-    //                                        GameController.Instance.openFeatureBox = true;
-    //                                        GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+    //                                        BirdSortGameController.Instance.openFeatureBox = true;
+    //                                        BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
     //                                    },
     //                                        () => { SyncDataFail(); }, isLoginOtherAccount: true);
     //                                },
@@ -512,7 +512,7 @@ public class FacebookAndPlayFabManager : MonoBehaviour
     //                {
     //                    Debug.Log("============= E");
     //                    WaitingBox.Setup().HideWaiting();
-    //                    GameController.Instance.LoadScene(SceneName.HOME_SCENE);
+    //                    BirdSortGameController.Instance.LoadScene(SceneName.HOME_SCENE);
     //                }    
     //            }, () => { SyncDataFail(); });
     //        },

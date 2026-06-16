@@ -17,7 +17,7 @@ public class HomeController : Singleton<HomeController>
     public HomeThemeController themeController;
     protected override void OnAwake()
     {
-        GameController.Instance.currentScene = SceneType.MainHome;
+        BirdSortGameController.Instance.currentScene = BirdSortSceneType.MainHome;
         CheckHealth();
     }
 
@@ -30,8 +30,8 @@ public class HomeController : Singleton<HomeController>
         homeScene.Init();
         pageController.Init();
 
-        GameController.Instance.packController.CheckShowPopupSaleHome();
-        GameController.Instance.videoPackController.CheckShowPopupSaleHome();
+        BirdSortGameController.Instance.packController.CheckShowPopupSaleHome();
+        BirdSortGameController.Instance.videoPackController.CheckShowPopupSaleHome();
         dailyLoginController.Init();
         isInited = true;
         if (IsShowRate())
@@ -48,7 +48,7 @@ public class HomeController : Singleton<HomeController>
              );
         }
 
-        if (IsShowChristmasEvent() && TimeManager.CaculateTime(UseProfile.LastTimeOpenMinigame, UnbiasedTime.Instance.Now()) >= GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.time_delay_show)
+        if (IsShowChristmasEvent() && TimeManager.CaculateTime(UseProfile.LastTimeOpenMinigame, UnbiasedTime.Instance.Now()) >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.time_delay_show)
         {
                 suggetPopupHomeController.RegisterSuggetPopupShow();
                 suggetPopupHomeController.AddActionShow(new SuggetPopupHomeController.SuggetPopupData()
@@ -62,34 +62,34 @@ public class HomeController : Singleton<HomeController>
                 );
             
         }
-        /// GameController.Instance.packController.CheckShowPopupSaleHome();
+        /// BirdSortGameController.Instance.packController.CheckShowPopupSaleHome();
 
-        //GameController.Instance.admobAds.DestroyBanner();
-       // GameController.Instance.admobAds.ShowBanner();
+        //BirdSortGameController.Instance.admobAds.DestroyBanner();
+       // BirdSortGameController.Instance.admobAds.ShowBanner();
 
         suggetPopupHomeController.CheckStartShowSugget();
 
-       // GameController.Instance.musicManager.PlayBGMusicHome();
+       // BirdSortGameController.Instance.musicManager.PlayBGMusicHome();
 
         Level.isHasBeenWinLevel = false;
 
-        if (!GameController.isFirstLoadLevel)
+        if (!BirdSortGameController.isFirstLoadLevel)
         {
-            //GameController.Instance.admobAds.DestroyBanner();
-            GameController.Instance.admobAds.ShowBanner();
-            GameController.isFirstLoadLevel = true;
+            //BirdSortGameController.Instance.admobAds.DestroyBanner();
+            BirdSortGameController.Instance.admobAds.ShowBanner();
+            BirdSortGameController.isFirstLoadLevel = true;
 
             //isBannerShow = true;
         }
         miniGameController.Init();
-        // GameController.Instance.segmentController.ConfigToJson();
+        // BirdSortGameController.Instance.segmentController.ConfigToJson();
     }
 
     public void CheckHealth()
     {
         if (UseProfile.IsRefillHealth || UseProfile.Health < GiftDatabase.DefaultItem[GiftType.Health])
         {
-            var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
+            var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
             //var coolDownTime = TimeManager.CaculateTime(timeRefill, UnbiasedTime.Instance.Now());
             if (UnbiasedTime.Instance.Now() > timeRefill)
             {
@@ -104,8 +104,8 @@ public class HomeController : Singleton<HomeController>
 
     public void OnLeftHome()
     {
-        GameController.Instance.challengeController.OnLeftHome();
-        GameController.Instance.eventSaleController.OnLeftHome();
+        BirdSortGameController.Instance.challengeController.OnLeftHome();
+        BirdSortGameController.Instance.eventSaleController.OnLeftHome();
     }
 
     public void OnDestroy()
@@ -120,7 +120,7 @@ public class HomeController : Singleton<HomeController>
 
 
         int X = UseProfile.CurrentLevel - 1;
-        var rateConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.rateConfig;
+        var rateConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.rateConfig;
 
         if (!rateConfig.isActive)
             return false;
@@ -138,7 +138,7 @@ public class HomeController : Singleton<HomeController>
     }
     public bool IsShowChristmasEvent()
     {
-        var config = GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
+        var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
             .config;
       
         if (TimeManager.CaculateTime2(UnbiasedTime.Instance.Now(), config.start_date)> 0 ||

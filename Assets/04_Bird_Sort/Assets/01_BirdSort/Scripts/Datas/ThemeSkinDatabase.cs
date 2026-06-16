@@ -26,7 +26,7 @@ public class ThemeSkinDatabase : SerializedScriptableObject
     /*public bool OwnedThemeSkin(TypePackIAP type)
     {
         bool result = false;
-        var data = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedThemeSkin);
+        var data = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedThemeSkin);
         if (data == null) return result;
         for (int i = 0; i < listThemeSkinData.Count; i++)
         {
@@ -46,7 +46,7 @@ public class ThemeSkinDatabase : SerializedScriptableObject
     public bool OwnedThemeSkin(int id)
     {
         bool result = false;
-        var data = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedThemeSkin);
+        var data = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedThemeSkin);
         if (data == null) return result;
         for (int i = 0; i < listThemeSkinData.Count; i++)
         {

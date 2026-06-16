@@ -26,26 +26,26 @@ public class NoelSmallController : PackBaseController
     public override bool CheckActive()
     {
         bool eventActive = false;
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.NoelSale_1);
-        bool boughtSale = GameController.Instance.eventPackController.HadBoughtSaleEvent;
-        if (GameController.Instance.eventPackController.OpenPack == TypePackIAP.None && !IsBoughtAnyPack())
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.NoelSale_1);
+        bool boughtSale = BirdSortGameController.Instance.eventPackController.HadBoughtSaleEvent;
+        if (BirdSortGameController.Instance.eventPackController.OpenPack == TypePackIAP.None && !IsBoughtAnyPack())
         {
-            GameController.Instance.eventPackController.OpenPack = TypePackIAP.NoelSale_1;
+            BirdSortGameController.Instance.eventPackController.OpenPack = TypePackIAP.NoelSale_1;
         }
-        EndlessSale endless = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+        EndlessSale endless = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
         if (endless != null &&
             endless.gameTheme == EventSaleType.Noel)
         {
-            packModel.PackTimeEnd = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
+            packModel.PackTimeEnd = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().end;
             eventActive = (packModel.PackTimeEnd - UnbiasedTime.Instance.Now()).TotalSeconds > 0;
         }
 
-        return base.CheckActive() && GameController.Instance.eventPackController.OpenPack == TypePackIAP.NoelSale_1 && !boughtSale && eventActive;
+        return base.CheckActive() && BirdSortGameController.Instance.eventPackController.OpenPack == TypePackIAP.NoelSale_1 && !boughtSale && eventActive;
     }
 
     public override bool IsCanShowSugget()
     {
-        var segement = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.NoelSale_1);
+        var segement = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.NoelSale_1);
 
         if (!segement.IsPackReady())
         {
@@ -58,7 +58,7 @@ public class NoelSmallController : PackBaseController
         if (UseProfile.CurrentLevel < segement.level_unlock)
             return false;
 
-        if (GameController.Instance.eventPackController.OpenPack == TypePackIAP.NoelSale_1 && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
+        if (BirdSortGameController.Instance.eventPackController.OpenPack == TypePackIAP.NoelSale_1 && TimeManager.CaculateTime(packModel.LastTimeShowHome, UnbiasedTime.Instance.Now()) >= segement.time_delay_show)
             return true;
 
         return false;
@@ -77,7 +77,7 @@ public class NoelSmallController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.NoelSale_1);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.NoelSale_1);
     }
 
     public override void ResetDataNewDay()

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +20,7 @@ public class DailyLoginElement : MonoBehaviour
 
     public void Init(int indexDay)
     {
-        this.data = GameController.Instance.dataContain.dailyLoginDatabase.rewardDays[indexDay];
+        this.data = BirdSortGameController.Instance.dataContain.dailyLoginDatabase.rewardDays[indexDay];
         this.indexDay = indexDay;
 
         claimBtn.onClick.AddListener(OnClickClaim);
@@ -37,7 +37,7 @@ public class DailyLoginElement : MonoBehaviour
 
         if (!data.isChest)
         {
-            iconImg.sprite = GameController.Instance.dataContain.giftDatabase.GetIconItem(data.rewards[0].typeItem);
+            iconImg.sprite = BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(data.rewards[0].typeItem);
             
             if(data.rewards[0].isUnlimited)
             {
@@ -84,18 +84,18 @@ public class DailyLoginElement : MonoBehaviour
     {
         if (!data.isChest)
         {
-            GameController.Instance.dataContain.giftDatabase.Claim(data.rewards[0].typeItem, data.rewards[0].amount, Reason.daily_login, isUnlimited: data.rewards[0].isUnlimited);
+            BirdSortGameController.Instance.dataContain.giftDatabase.Claim(data.rewards[0].typeItem, data.rewards[0].amount, Reason.daily_login, isUnlimited: data.rewards[0].isUnlimited);
 
             //if(!data.rewards[0].isUnlimited)
             //{
-            //    GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+            //    BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
             //  body.transform.position,
             //  data.rewards[0].typeItem,
             // data.rewards[0].amount,
             //   Color.white
             //  );
             //}    
-            var config = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
+            var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
             GPlayFuntPuzzle.GPopupRewardNormal.Setup().Show(
                 new List<RewardRandom>()
                 {
@@ -109,22 +109,22 @@ public class DailyLoginElement : MonoBehaviour
         }
         else
         {
-            //Mở hòm
+            //M? h�m
             List<RewardRandom> rewardsShow = new List<RewardRandom>();
             for (int i = 0; i < data.rewards.Length; i++)
             {
                 int index = i;
-                GameController.Instance.dataContain.giftDatabase.Claim(data.rewards[index].typeItem, data.rewards[index].amount, Reason.daily_login, isUnlimited: data.rewards[index].isUnlimited);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(data.rewards[index].typeItem, data.rewards[index].amount, Reason.daily_login, isUnlimited: data.rewards[index].isUnlimited);
                 rewardsShow.Add(data.rewards[index]);
             }
 
-            var config = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
+            var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.dailyLoginConfig;
             GPlayFuntPuzzle.GPopupRewardChest.Setup().Show(TypeChest.DailyLoginChest, rewardsShow, Reason.daily_login, config.is_video_x_reward, config.num_x_reward);
             //OpenChestBox.Setup().Show(TypeChest.DailyLoginChest, rewardsShow);
         }
         Debug.Log("=============== Daily Claim");
         HomeController.Instance.dailyLoginController.ClaimReward();
         InitState();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 }

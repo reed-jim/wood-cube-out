@@ -120,7 +120,7 @@ public class ItemController : MonoBehaviour
                 if (UseProfile.IsUseItem(items[index].typeItem))
                 {
                     if (items[index].ActiveItem())
-                        GameController.Instance.dataContain.giftDatabase.Claim(items[index].typeItem, -1, Reason.in_campain_level);
+                        BirdSortGameController.Instance.dataContain.giftDatabase.Claim(items[index].typeItem, -1, Reason.in_campain_level);
                 }
             }
         }

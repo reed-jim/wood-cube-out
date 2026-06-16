@@ -10,7 +10,7 @@ public class TutItemInGameController : TutorialFunController
     public override void Init()
     {
         base.Init();
-        bootConfig = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
+        bootConfig = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig;
     }
 
     public override void OnBirdReady()

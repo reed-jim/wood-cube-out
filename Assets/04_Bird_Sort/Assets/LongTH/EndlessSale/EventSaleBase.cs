@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System;
 using UnityEngine;
 using static SaleSegemntData;
@@ -15,9 +15,9 @@ public enum EventSaleType
 
 public class EventString
 {
-    public const string CURRENT_NUM_ITEM = "current_num_item_"; // tổng item hiện tại
-    public const string REMEMBER_CURRENT_NUM_ITEM = "remember_current_num_item_"; // item của 1 stage
-    public const string CURRENT_INDEX_REWARD = "current_index_reward_"; // reward hiện tại
+    public const string CURRENT_NUM_ITEM = "current_num_item_"; // t?ng item hi?n t?i
+    public const string REMEMBER_CURRENT_NUM_ITEM = "remember_current_num_item_"; // item c?a 1 stage
+    public const string CURRENT_INDEX_REWARD = "current_index_reward_"; // reward hi?n t?i
 
     public const string TIME_END_EVENT = "time_end_event_";
 }
@@ -202,13 +202,13 @@ public abstract class EventBase : MonoBehaviour
     public virtual void Init()
     {
         data = new DataEvent(typeEvent);
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(typeEvent);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(typeEvent);
     }
 
     public virtual void InitHome()
     {
         isCoolDownEnd = false;
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(typeEvent);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndlessConfig(typeEvent);
         priovitySugget = SuggetPopupHomeController.PriovitySugget.Special;
         if (IsEventActive())
         {
@@ -316,7 +316,7 @@ public abstract class EventBase : MonoBehaviour
             {
                 if (item.typeItem != GiftType.None)
                 {
-                    GameController.Instance.dataContain.giftDatabase.Claim(item.typeItem, item.amount, reasonClaimReward, item.isUnlimited);
+                    BirdSortGameController.Instance.dataContain.giftDatabase.Claim(item.typeItem, item.amount, reasonClaimReward, item.isUnlimited);
                     rewards.Add(item);
                 }
             }

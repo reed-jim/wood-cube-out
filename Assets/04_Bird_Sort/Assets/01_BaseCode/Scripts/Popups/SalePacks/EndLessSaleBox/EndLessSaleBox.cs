@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -82,7 +82,7 @@ public class EndLessSaleBox : BaseBox
 
     public bool isPlayingAnim = false;
 
-    public float moveDuration = 0.125f;        // thời gian head di chuyển từ điểm i → i+1
+    public float moveDuration = 0.125f;        // th?i gian head di chuy?n t? di?m i ? i+1
 
     private void Update()
     {
@@ -117,8 +117,8 @@ public class EndLessSaleBox : BaseBox
     }
     public void InitState()
     {
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
-        eventSaleController = GameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+        eventSaleController = BirdSortGameController.Instance.eventSaleController.GetEventSales(config.gameTheme);
 
         isCounting = true;
 
@@ -191,7 +191,7 @@ public class EndLessSaleBox : BaseBox
             lstElements[start].GetComponent<RectTransform>().DOAnchorPos(target, moveDuration).SetEase(Ease.Linear);
             lstElements[start].transform.DOScale(1f, moveDuration).SetEase(Ease.Linear);
 
-            // tween các segment theo vị trí mà head đã đi trước đó với delay tăng dần
+            // tween c�c segment theo v? tr� m� head d� di tru?c d� v?i delay tang d?n
             for (int s = start + 1; s < end; s++)
             {
                 if (i == 0 || s - start > i)
@@ -199,13 +199,13 @@ public class EndLessSaleBox : BaseBox
                     break;
                 }
                 float delay = moveDuration * s;
-                // lưu vị trí head hiện tại (phiên bản cũ) để segment theo
+                // luu v? tr� head hi?n t?i (phi�n b?n cu) d? segment theo
                 Vector2 followPos = ItemPos[i].GetComponent<RectTransform>().anchoredPosition;
                 lstElements[s].GetComponent<RectTransform>().DOAnchorPos(followPos, moveDuration).SetEase(Ease.Linear).SetDelay(delay);
                 lstElements[s].transform.DOScale(1f, moveDuration).SetEase(Ease.Linear).SetDelay(delay);
             }
 
-            // đợi head hoàn thành trước khi đi next
+            // d?i head ho�n th�nh tru?c khi di next
             yield return new WaitForSeconds(moveDuration);
         }
         yield return new WaitForSeconds(moveDuration);
@@ -224,7 +224,7 @@ public class EndLessSaleBox : BaseBox
             lstElements[start].GetComponent<RectTransform>().anchoredPosition = target;
             lstElements[start].transform.localScale = Vector3.one;
 
-            // tween các segment theo vị trí mà head đã đi trước đó với delay tăng dần
+            // tween c�c segment theo v? tr� m� head d� di tru?c d� v?i delay tang d?n
             for (int s = start + 1; s < end; s++)
             {
                 if (i == 0 || s - start > i || s > lstElements.Count - 1)
@@ -232,7 +232,7 @@ public class EndLessSaleBox : BaseBox
                     break;
                 }
                 //float delay = moveDuration * s;
-                // lưu vị trí head hiện tại (phiên bản cũ) để segment theo
+                // luu v? tr� head hi?n t?i (phi�n b?n cu) d? segment theo
                 Vector2 followPos = ItemPos[i].GetComponent<RectTransform>().anchoredPosition;
                 lstElements[s].GetComponent<RectTransform>().anchoredPosition = followPos;
                 lstElements[s].transform.localScale = Vector3.one;
@@ -348,13 +348,13 @@ public class EndLessSaleBox : BaseBox
             back.DOKill();
             Sequence seq = DOTween.Sequence();
 
-            // 1️⃣ NẢY LÊN NHẸ TRƯỚC
+            // 1?? N?Y L�N NH? TRU?C
             seq.Append(
                 back.DOAnchorPosY(165f, 0.3f)
                      .SetEase(Ease.OutBack, 3f)
             );
 
-            // 2️⃣ BỊ KÉO TUỘT XUỐNG CỰC NHANH
+            // 2?? B? K�O TU?T XU?NG C?C NHANH
             seq.Append(
                 back.DOAnchorPosY(-5000f, 0.5f)
                      .SetEase(Ease.InExpo)
@@ -431,7 +431,7 @@ public class EndLessSaleBox : BaseBox
         {
             temp = CurrentIndex - 1;
         }
-        //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+        //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
         int targetShow = Mathf.Abs(currentItemRequirement - eventSaleController.config.rewardData[temp - levelup].requireToken);
         if (targetShow == 0)
             targetShow = eventSaleController.config.rewardData[temp].requireToken - eventSaleController.config.rewardData[temp - 1].requireToken;

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -34,7 +34,7 @@
             idBirdHasClock = data.birdParent.id;
             birdHasClock = data.birdParent;
 
-            //Hiện chìa khoá ở chân chim idBirdHasKey
+            //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
             clockSke.transform.parent = birdHasClock.transform;
             clockSke.transform.localPosition = new Vector3(1, -45f, 0);
 
@@ -89,7 +89,7 @@
         {
             yield return new WaitUntil(() => birdHasClock.isFlyOut);
             PlayAnimEnd();
-            //Post Event check lại StandSuccess cả map
+            //Post Event check l?i StandSuccess c? map
         }
 
         protected override void ReturnExtralHandle()
@@ -132,7 +132,7 @@
                             GamePlayController_BirdSort.Instance.returnController.IsLockReturn = false;
                         }).SetDelay(0.3f);
                         clockSke.transform.DOScale(1.3f, timeMove * 0.95f).SetDelay(0.3f);
-                        GameController.Instance.musicManager.PlayOneShot(clockAppearClip, clockAudioSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(clockAppearClip, clockAudioSource);
                     }).SetEase(Ease.OutBack);
 
                 for (int i = 0; i < birdsSleep.Count; i++)
@@ -145,7 +145,7 @@
                     });
                     ZsleepLst[index].gameObject.SetActive(true);
                     if (index == birdsSleep.Count - 1)
-                        GameController.Instance.musicManager.PlayOneShot(sleepAudio, birdSleepSource, volume: 0.4f);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(sleepAudio, birdSleepSource, volume: 0.4f);
 
                 }
 
@@ -154,7 +154,7 @@
 
         protected override void PlayAnimEnd()
         {
-            //=> anim chìa khoá bay mở cửa
+            //=> anim ch�a kho� bay m? c?a
             clockSke.gameObject.SetActive(true);
             clockSke.transform.parent = GamePlayController_BirdSort.Instance.level.birdParent;
             clockSke.transform.SetAsLastSibling();
@@ -162,7 +162,7 @@
             clockSke.transform.DOLocalMove(new Vector3(0, 400, 0), 0.3f).OnComplete(() =>
             {
                 //key.transform.DOScale(0.8f, 0.3f);
-                GameController.Instance.musicManager.PlayOneShot(clockArlamClip, clockAudioSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(clockArlamClip, clockAudioSource);
 
                 clockSke.AnimationState.ClearTracks();
                 var track = clockSke.AnimationState.SetAnimation(0, "3-alarm", true);
@@ -180,10 +180,10 @@
                     ZsleepLst[index].gameObject.SetActive(false);
 
                     if (index == birdsSleep.Count - 1)
-                        GameController.Instance.musicManager.PlayOneShot(wakeupAudio, birdSleepSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(wakeupAudio, birdSleepSource);
                 }
 
-            //Chuyển anim bird sang Idle
+            //Chuy?n anim bird sang Idle
 
             StartCoroutine(Helper.StartAction(() =>
                 {

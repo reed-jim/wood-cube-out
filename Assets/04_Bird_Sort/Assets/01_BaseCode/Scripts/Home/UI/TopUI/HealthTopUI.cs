@@ -44,7 +44,7 @@ public class HealthTopUI : BaseTopButtonGUI
             if (UseProfile.Health < GiftDatabase.DefaultItem[GiftType.Health])
             {
                 isCooldowning = true;
-                var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
+                var timeRefill = UseProfile.TimeLastOverHealth.AddSeconds(BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth);
                 coolDownTime = TimeManager.CaculateTime(timeRefill, UnbiasedTime.Instance.Now());
                 if(UnbiasedTime.Instance.Now() > timeRefill)
                 {
@@ -75,7 +75,7 @@ public class HealthTopUI : BaseTopButtonGUI
         {
             OutOfHealthBox.Setup().Show();
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     private void Update()

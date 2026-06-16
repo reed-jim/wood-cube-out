@@ -1,4 +1,4 @@
-﻿using DG.Tweening;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -57,11 +57,11 @@ public class RewardHomeWeekly : RewardElement
         this.actionClaimDone = actionClaimDone;
         this.viewController = viewController;
 
-        this.transform.DOKill();//Move Reward ra giữa màn hình
+        this.transform.DOKill();//Move Reward ra gi?a m�n h�nh
         this.transform.DOJump(posReward, 4, 1, 0.75f).OnComplete(() =>
         {
             StartCoroutine(Helper.StartAction(() => { fxAppearOldReward.gameObject.SetActive(true); }, 0.2f));
-            claimCanvasGroup.DOKill();//Hiện BG claim
+            claimCanvasGroup.DOKill();//Hi?n BG claim
             claimCanvasGroup.DOFade(1, 0.3f).OnComplete(() =>
             {
                 claimBtn.interactable = true;
@@ -71,30 +71,30 @@ public class RewardHomeWeekly : RewardElement
             }).SetDelay(0.2f);
 
             claimBtnCanvasGroup.DOKill();
-            claimBtnCanvasGroup.DOFade(1, 0.25f).SetDelay(0.2f); ;//Hiện claim Btn
+            claimBtnCanvasGroup.DOFade(1, 0.25f).SetDelay(0.2f); ;//Hi?n claim Btn
 
-            GameController.Instance.musicManager.PlayOneShot(rewardShowAudio, rewardShowSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(rewardShowAudio, rewardShowSource);
         });
         contentReward.transform.DOScale(2, 1);
 
-        GameController.Instance.musicManager.PlayOneShot(jumpRewardAudio, jumpRewardSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(jumpRewardAudio, jumpRewardSource);
     }
 
     private void OnClickClaimReward()
     {
         viewController.controller.data.RememberCurrentNumItem = viewController.controller.data.CurrentNumItem;
 
-        claimBtnCanvasGroup.DOKill();//Tắt claim Btn
+        claimBtnCanvasGroup.DOKill();//T?t claim Btn
         claimBtnCanvasGroup.DOFade(0, 0.25f);
         raycaster.enabled = false;
 
-        rewardCanvasGroup.DOKill();//Disable quà cũ
+        rewardCanvasGroup.DOKill();//Disable qu� cu
         rewardCanvasGroup.DOFade(0, 0.3f).OnComplete(() =>
         {
             var reward = ((WeeklyChallegen)this.viewController.controller).GetCurrentRewardData();
-            if (reward == null)//Đã là quà cuối
+            if (reward == null)//�� l� qu� cu?i
             {
-                claimCanvasGroup.DOKill();//Tắt BG Claim
+                claimCanvasGroup.DOKill();//T?t BG Claim
                 claimCanvasGroup.DOFade(0, 0.3f).OnComplete(() =>
                 {
                     actionClaimDone?.Invoke();
@@ -105,7 +105,7 @@ public class RewardHomeWeekly : RewardElement
             }
             SetUpUI
             (
-            GameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
+            BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(reward.typeItem),
             reward.amount,
             isUnlimitedItem: reward.isUnlimited,
             isX2Item: reward.typeItem != GiftType.X2WeeklyChallgeneItem ? false : true,
@@ -116,33 +116,33 @@ public class RewardHomeWeekly : RewardElement
             {
                 fxIdleOldReward.gameObject.SetActive(false);
 
-                //Hiện quà mới
+                //Hi?n qu� m?i
                 fxAppearNewReward.gameObject.SetActive(true);
                 rewardCanvasGroup.DOFade(1, 0.3f).OnComplete(() =>
                 {
                     StartCoroutine(Helper.StartAction(() =>
                     {
-                        claimCanvasGroup.DOKill();//Tắt BG Claim
+                        claimCanvasGroup.DOKill();//T?t BG Claim
                         claimCanvasGroup.DOFade(0, 0.3f);
 
                         contentReward.transform.DOScale(1, 1.3f);
                         fxAppearNewReward.gameObject.SetActive(false);
-                        //Quà mới bay về vị trí ban đầu
+                        //Qu� m?i bay v? v? tr� ban d?u
                         this.transform.DOJump(posStartReward, 4, 1, 0.75f).SetEase(Ease.OutSine).OnComplete(() =>
                         {
                             actionClaimDone?.Invoke();
                             ((WeeklyChallegenView)this.viewController).ShowCurrentRewards(false);
                             HomeController.Instance.suggetPopupHomeController.NextSuggetSuperStarLegendaryShow();
                         });
-                        GameController.Instance.musicManager.PlayOneShot(jumpRewardAudio, jumpRewardSource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(jumpRewardAudio, jumpRewardSource);
                     }, 1.5f));
 
-                    GameController.Instance.musicManager.PlayOneShot(rewardShowAudio, rewardShowSource);
+                    BirdSortGameController.Instance.musicManager.PlayOneShot(rewardShowAudio, rewardShowSource);
                 });
             }, 1));
 
         });
 
-        GameController.Instance.musicManager.PlayOneShot(claimRewardAudio, claimRewardSource);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(claimRewardAudio, claimRewardSource);
     }
 }

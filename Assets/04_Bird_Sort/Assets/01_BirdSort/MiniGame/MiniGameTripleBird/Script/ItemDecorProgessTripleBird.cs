@@ -22,12 +22,12 @@ public class ItemDecorProgessTripleBird : MonoBehaviour
     public string tempString;
     public void InitState()
     {
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         SetUp(giftData.GetIconItem(dataGiftMiniGame.reward.giftType), dataGiftMiniGame.thumnailDecor, dataGiftMiniGame.reward.amount.ToString());
     }
     public void SetUp(Sprite paramThumnail, Sprite paramBg, string numb)
     {
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         bgThumnail.gameObject.SetActive(true);
 
         thumnail.gameObject.SetActive(true);
@@ -67,12 +67,12 @@ public class ItemDecorProgessTripleBird : MonoBehaviour
         }
         else
         {
-            var giftData = GameController.Instance.dataContain.giftDatabase;
+            var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
             switch (dataGiftMiniGame.reward.giftType) // check 3 qua cuoi xem nguoi choi da co chua
             {
                 case GiftType.EventTripleBirdBranch:
                     SetUp(giftData.GetIconItem(dataGiftMiniGame.reward.giftType), dataGiftMiniGame.thumnailDecor, "New Branch");
-                    var oldBranchData = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedBranchSkin);
+                    var oldBranchData = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedBranchSkin);
                     if (oldBranchData == null)
                     {
                         oldBranchData = new List<int>();
@@ -85,7 +85,7 @@ public class ItemDecorProgessTripleBird : MonoBehaviour
                     break;
                 case GiftType.EventTripleBirdTheme:
                     SetUp(giftData.GetIconItem(dataGiftMiniGame.reward.giftType), dataGiftMiniGame.thumnailDecor, "New Theme");
-                    var oldThemeData = JsonConvert.DeserializeObject<List<int>>(GameController.Instance.useProfile.OwnedThemeSkin);
+                    var oldThemeData = JsonConvert.DeserializeObject<List<int>>(BirdSortGameController.Instance.useProfile.OwnedThemeSkin);
                     if (oldThemeData == null)
                     {
                         oldThemeData = new List<int>();

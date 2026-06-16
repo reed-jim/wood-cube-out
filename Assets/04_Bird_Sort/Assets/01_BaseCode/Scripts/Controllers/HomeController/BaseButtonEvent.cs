@@ -68,7 +68,7 @@ public class BaseButtonEvent : MonoBehaviour
     protected void OnClick()
     {
         this.actionClick?.Invoke();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     protected virtual void Update()

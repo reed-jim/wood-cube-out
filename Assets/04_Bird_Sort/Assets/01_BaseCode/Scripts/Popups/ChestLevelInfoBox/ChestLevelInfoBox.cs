@@ -28,7 +28,7 @@ public class ChestLevelInfoBox : BaseBox
 
     public void InitState()
     {
-        int levelSpacing = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.levelSpacing;
+        int levelSpacing = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.levelChestConfig.levelSpacing;
         levelPassTxt.text = string.Format(Localization.Get("s_level_chest_detail"), levelSpacing * (((UseProfile.CurrentLevel) / levelSpacing) + 1));
     }
 }

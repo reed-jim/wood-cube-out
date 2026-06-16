@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -59,7 +59,7 @@ public class DiamodChallengeBox : BaseBox
         closeBtn.onClick.AddListener(Close);
         continueBtn.onClick.AddListener(OnClickPlay);
 
-        challengeController = GameController.Instance.challengeController.GetChallenges(ChallengeType.DiamodChallenge);
+        challengeController = BirdSortGameController.Instance.challengeController.GetChallenges(ChallengeType.DiamodChallenge);
 
         for (int i = 0; i < challengeController.config.parmaExtral.Length; i++)
         {
@@ -89,7 +89,7 @@ public class DiamodChallengeBox : BaseBox
             int indexRewardBefore = challengeController.data.CurrentIndexReward - 1 > 0 ? challengeController.data.CurrentIndexReward - 1 : 0;
             currentProgessShow = challengeController.data.CurrentIndexReward > 0 ? Mathf.Abs(challengeController.data.RememberCurrentNumItem - (int)challengeController.config.parmaExtral[indexRewardBefore])
                 : challengeController.data.RememberCurrentNumItem;
-            //currentProgessShow = CurrentIndexReward - yêu cầu của mốc trước đó
+            //currentProgessShow = CurrentIndexReward - y�u c?u c?a m?c tru?c d�
             targetShow = Mathf.Abs(challengeController.CurrentItemRequirement - (int)challengeController.config.parmaExtral[indexRewardBefore]);
             if (targetShow == 0)
                 targetShow = (int)challengeController.config.parmaExtral[indexRewardBefore];
@@ -147,7 +147,7 @@ public class DiamodChallengeBox : BaseBox
     private void OnClickPlay()
     {
         Close();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 
     public override void CreateInstance()

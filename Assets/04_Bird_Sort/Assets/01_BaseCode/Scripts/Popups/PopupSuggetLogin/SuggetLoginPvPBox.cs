@@ -26,20 +26,20 @@ public class SuggetLoginPvPBox : BaseBox
 
     private void OnClickConfirm()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         HandleButtonConfirm();
     }
 
     private void OnClickLoginGG()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.loginController.Login(TypeLogin.GG);
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.loginController.Login(TypeLogin.GG);
     }
 
     private void OnClickLoginFb()
     {
-        GameController.Instance.musicManager.PlayClickSound();
-        GameController.Instance.loginController.Login(TypeLogin.FB);
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.loginController.Login(TypeLogin.FB);
     }
 
 
@@ -54,7 +54,7 @@ public class SuggetLoginPvPBox : BaseBox
 
     public void CloseButtonHandle()
     {
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
         ClosePopUp(null);
     }
     private void ClosePopUp(object param)
@@ -74,7 +74,7 @@ public class SuggetLoginPvPBox : BaseBox
     {
         if (string.IsNullOrEmpty(inputString))
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
             (
                 transform.position,
                 "Pls enter your name!",
@@ -93,7 +93,7 @@ public class SuggetLoginPvPBox : BaseBox
                     new UpdateUserTitleDisplayNameRequest { DisplayName = inputString }, s =>
                     {
                         UseProfile.NamePlayer = inputString;
-                        // GameController.Instance.playerData.SaveData();
+                        // BirdSortGameController.Instance.playerData.SaveData();
                         ipfName.gameObject.SetActive(false);
                         btnConfirm.gameObject.SetActive(false);
                         box.HideWaiting();
@@ -104,7 +104,7 @@ public class SuggetLoginPvPBox : BaseBox
                         Debug.LogError(e);
                         box.HideWaiting();
                         btnConfirm.interactable = true;
-                        GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
+                        BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp(
                             transform.position,"Name already taken!",Color.red,true);
                     });
                 PlayFabClientAPI.UpdateAvatarUrl(new UpdateAvatarUrlRequest { ImageUrl = UseProfile.AvatarLink }, s => { },
@@ -112,10 +112,10 @@ public class SuggetLoginPvPBox : BaseBox
             }
             else
             {
-                GameController.Instance.loginController.ReLoginPlayFab(HandleButtonConfirm,(() =>
+                BirdSortGameController.Instance.loginController.ReLoginPlayFab(HandleButtonConfirm,(() =>
                 {
                     box.HideWaiting();
-                    GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                    BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                     (
                         transform.position,
                          Localization.Get("s_no_internet"),

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
 	using UnityEngine;
 
@@ -9,7 +9,7 @@
 
 		private void Start()
 		{
-			GameController.Instance.musicManager.PlayMusic(musicClip);
+			BirdSortGameController.Instance.musicManager.PlayMusic(musicClip);
 		}
 
 	}

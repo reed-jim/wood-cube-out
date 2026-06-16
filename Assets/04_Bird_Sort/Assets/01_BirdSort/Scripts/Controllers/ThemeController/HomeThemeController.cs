@@ -21,10 +21,10 @@ public class HomeThemeController : MonoBehaviour
     {
         try
         {
-            var config = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
+            var config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive();
             if (config != null && (config.end - UnbiasedTime.Instance.Now()).TotalSeconds > 0)
             {
-                var themeType = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().gameTheme;
+                var themeType = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetEndLessActive().gameTheme;
                 ThemeDataModle themeData = new ThemeDataModle();
                 for (int i = 0; i < theme.data.Count; i++)
                 {

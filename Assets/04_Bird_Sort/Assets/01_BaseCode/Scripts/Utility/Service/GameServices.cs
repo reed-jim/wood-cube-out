@@ -172,7 +172,7 @@ public class GameServices : SingletonClass<GameServices>, IService
         AnalyticsController.firebaseInitialized = true;
         //todo
         //RocketRemoteConfig.FetchData().ToObservable();
-        GameController.SetUserProperties();
+        BirdSortGameController.SetUserProperties();
     }
 
     private void InitProperty()

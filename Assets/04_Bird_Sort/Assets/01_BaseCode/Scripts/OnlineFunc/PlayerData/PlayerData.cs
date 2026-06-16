@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -134,10 +134,10 @@ public class PlayerData : BaseData
     public int FirstWeek;
 
     //SalePack
-    public int dailyBought; // số lần đã mua gói daily
-    public int coinBought; // số lần đã mua gói coin
-    public int itemBought; // số lần đã mua gói item
-    public int weekendBought; // số lần đã mua gói weekend
+    public int dailyBought; // s? l?n d� mua g�i daily
+    public int coinBought; // s? l?n d� mua g�i coin
+    public int itemBought; // s? l?n d� mua g�i item
+    public int weekendBought; // s? l?n d� mua g�i weekend
     public override void InitData()
     {
         version = UseProfile.VersionData;
@@ -151,8 +151,8 @@ public class PlayerData : BaseData
 
         //Data in Game
         currentLevel = UseProfile.CurrentLevel;
-        currentLevelPlay = GameController.Instance.useProfile.CurrentLevelPlay;
-        isRemoveAds = GameController.Instance.useProfile.IsRemoveAds;
+        currentLevelPlay = BirdSortGameController.Instance.useProfile.CurrentLevelPlay;
+        isRemoveAds = BirdSortGameController.Instance.useProfile.IsRemoveAds;
 
         //Daily Login
         lastTimeClaimReward_DailyLogin = DailyLoginController.LastTimeClaimReward.ToBinary();
@@ -261,7 +261,7 @@ public class PlayerData : BaseData
             onFail?.Invoke();
             return;
         }
-        if (!GameController.Instance.loginController.IsLoginPlayfab())
+        if (!BirdSortGameController.Instance.loginController.IsLoginPlayfab())
         {
             onFail?.Invoke();
             return;
@@ -314,8 +314,8 @@ public class PlayerData : BaseData
 
         //In Game Data
         UseProfile.CurrentLevel = data.currentLevel;
-        GameController.Instance.useProfile.CurrentLevelPlay = data.currentLevelPlay;
-        GameController.Instance.useProfile.IsRemoveAds = data.isRemoveAds;
+        BirdSortGameController.Instance.useProfile.CurrentLevelPlay = data.currentLevelPlay;
+        BirdSortGameController.Instance.useProfile.IsRemoveAds = data.isRemoveAds;
 
         //Daily Login
         DailyLoginController.LastTimeClaimReward = DateTime.FromBinary(data.lastTimeClaimReward_DailyLogin);

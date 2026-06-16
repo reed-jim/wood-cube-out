@@ -1,4 +1,4 @@
-﻿namespace GPlayFuntPuzzle
+namespace GPlayFuntPuzzle
 {
     using Spine.Unity;
     using System.Collections;
@@ -111,7 +111,7 @@
                 OnChestAppearDone();
             });
 
-            GameController.Instance.musicManager.PlayOneShot(appearChestClip, appearChestSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(appearChestClip, appearChestSource);
         }
         private void SetUpTween()
         {
@@ -138,14 +138,14 @@
                 });
             });
             StartCoroutine(ShowRewards(this.rewards));
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
 
         private IEnumerator ShowRewards(List<RewardRandom> rewards)
         {
-            yield return new WaitForSeconds(1.28f);//Căn chỉnh theo frame Open chest anim
+            yield return new WaitForSeconds(1.28f);//Can ch?nh theo frame Open chest anim
             int indexPos = rewards.Count - 1;
-            GameController.Instance.musicManager.PlayOneShot(openChestClip, openChestSource);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(openChestClip, openChestSource);
             for (int i = 0; i < rewards.Count; i++)
             {
                 //Appear
@@ -217,7 +217,7 @@
             for (int i = 0; i < gruopPosResults[indexPos].gruopPos.Length; i++)
             {
                 int index = i;
-                GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                   gruopPosResults[indexPos].gruopPos[index].transform.position,
                   rewards[index].typeItem,
                  isWatchVideo ? rewards[index].amount * numXReward : rewards[index].amount,
@@ -231,17 +231,17 @@
 
         private void ClaimXReward(int valueX)
         {
-            GameController.Instance.musicManager.PlayClickSound();
-            GameController.Instance.admobAds.ShowVideoReward(
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
                   isWatchVideo = true;
                   for (int i = 0; i < lstRewardShowing.Count; i++)
                   {
                       int index = i;
-                      GameController.Instance.dataContain.giftDatabase.Claim(rewards[index].typeItem, rewards[index].amount * valueX , reason: reasonClaim, isUnlimited: rewards[index].isUnlimited);
+                      BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[index].typeItem, rewards[index].amount * valueX , reason: reasonClaim, isUnlimited: rewards[index].isUnlimited);
 
-                      //Gọi diễn UI x2 nhảy tiền
+                      //G?i di?n UI x2 nh?y ti?n
                       lstRewardShowing[index].XValueElement(rewards[index].amount + rewards[index].amount * (valueX - 1) , rewards[index].isUnlimited);
                   }
 
@@ -259,14 +259,14 @@
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    claimVideoBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,ActionWatchVideo.None,
              AdsPlacement.VideoReward.X_REWARD);

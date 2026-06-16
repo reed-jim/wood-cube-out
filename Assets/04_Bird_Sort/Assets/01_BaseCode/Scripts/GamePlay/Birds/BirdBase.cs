@@ -292,7 +292,7 @@ public class BirdBase : MonoBehaviour
 
         if (timmerCallSound >= 1)
         {
-         //   GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdCallClip, audioCallSource);
+         //   BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdCallClip, audioCallSource);
             timmerCallSound = 0;
         }
 
@@ -319,7 +319,7 @@ public class BirdBase : MonoBehaviour
         if (timmerSoundIdle >= timmerDelayIdle)
         {
             timmerSoundIdle = 0;
-         //   GameController.Instance.musicManager.PlayOneShot(NameMusic.Idle, birdCallClip, audioSourceIdle);
+         //   BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Idle, birdCallClip, audioSourceIdle);
             timmerDelayIdle = UnityEngine.Random.Range(5, 7);
         }
     }
@@ -352,7 +352,7 @@ public class BirdBase : MonoBehaviour
         StartCoroutine(dieCroutine);
         ChangeLayer(1000, LayerGame.BIRD_SLOT);
         //Gọi FX Merge
-        var fx = GameController.Instance.fXController.GetFX(FXController.TypeFX.ExplosionLightning);
+        var fx = BirdSortGameController.Instance.fXController.GetFX(FXController.TypeFX.ExplosionLightning);
         fx.transform.position = this.transform.position;
     }
 
@@ -369,12 +369,12 @@ public class BirdBase : MonoBehaviour
         }).SetEase(Ease.OutBack);
 
         //Gọi FX Merge
-        var fx = GameController.Instance.fXController.GetFX(FXController.TypeFX.Combine);
+        var fx = BirdSortGameController.Instance.fXController.GetFX(FXController.TypeFX.Combine);
         fx.transform.position = this.transform.position + new Vector3(0, 0.15f, 0);
 
         GamePlayController.Instance.level.CheckAllRequiremnt();
 
-        if (GameController.Instance.useProfile.OnVibration)
+        if (BirdSortGameController.Instance.useProfile.OnVibration)
         {
           //  MMVibrationManager.Haptic(HapticTypes.Success, false, true, this);
         }
@@ -547,7 +547,7 @@ public class BirdBase : MonoBehaviour
         //    PlayAnim(FLY, false);
         //}
 
-   //     GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+   //     BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
     }
 
     public virtual void FlyComePath(Vector3[] path, Vector3 _posTrans, UnityAction actionCome, StandingBase standing = null, float speed = -1, Ease typeMove = Ease.Unset)
@@ -616,11 +616,11 @@ public class BirdBase : MonoBehaviour
             else
             {
                 PlayAnim(FLY, true);
-              //  GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+              //  BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
             }
         }).SetEase(typeMove);
 
-       // GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+       // BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
     }
 
     public virtual void FlyOutRandom(BirdBase bird, bool isPlaySoundFly = true)
@@ -654,7 +654,7 @@ public class BirdBase : MonoBehaviour
         this.transform.DOMove(posOut, timeMove).OnComplete(() => { });
 
         if (isPlaySoundFly)
-        //    GameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
+        //    BirdSortGameController.Instance.musicManager.PlayOneShot(NameMusic.Fly, birdFlyClip, audioFlySource);
 
         this.transform.parent = GamePlayController.Instance.level.birdParent;
         state = StateBird.MoveRandom;
@@ -814,7 +814,7 @@ public class BirdBase : MonoBehaviour
             PlayAnim(SELLECT, true);
             fsm.ChangeState(FSMBird.StateFSM.Catching);
             EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.CATCH_BIRD, this);
-            GameController.Instance.musicManager.PlayOneShot(sellectClip);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(sellectClip);
         }
 
         GamePlayController.Instance.level.birdChoosing = this;
@@ -883,13 +883,13 @@ public class BirdBase : MonoBehaviour
 
             GamePlayController.Instance.tutCoreGameController.NextTut();
             GamePlayController.Instance.tutExtralController.NextTut();
-            if (GameController.Instance.useProfile.OnVibration)
+            if (BirdSortGameController.Instance.useProfile.OnVibration)
             {
               //  MMVibrationManager.Haptic(HapticTypes.Selection, false, true, this);
             }
 
             GamePlayController.Instance.itemController.suggetUseItemInGame.ResetSugget();
-            //  GameController.Instance.musicManager.PlayOneShot(pickUpClip);
+            //  BirdSortGameController.Instance.musicManager.PlayOneShot(pickUpClip);
         }
         else
         {

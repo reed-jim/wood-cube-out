@@ -1,4 +1,4 @@
-﻿
+
 namespace BirdSort2
 {
     using DG.Tweening;
@@ -31,7 +31,7 @@ namespace BirdSort2
 
             TextAsset lvJson = null;
             lvJson = Resources.Load<TextAsset>(string.Format(pathLevel,
-GameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart +
+BirdSortGameController.Instance.segmentController.GetCurrentSegment().challengeModeData.config.levelStart +
 UseProfile.CurrentHardLevel * 5));
 
             if (lvJson != null)
@@ -66,8 +66,8 @@ UseProfile.CurrentHardLevel * 5));
 
                     if (numStandLef > numStandRight)
                     {
-                        //Lấy của bên nhiều hơn
-                        if (numStandRight + 1 < numStandLef) //Tính cả xem video thêm cành vẫn bé hơn 
+                        //L?y c?a b�n nhi?u hon
+                        if (numStandRight + 1 < numStandLef) //T�nh c? xem video th�m c�nh v?n b� hon 
                         {
                             StandParentLeft.ScaleWithNumStand(numStandLef);
                             StandParentRight.ScaleWithNumStand(numStandLef);
@@ -75,7 +75,7 @@ UseProfile.CurrentHardLevel * 5));
                         }
                         else
                         {
-                            numStandRight += 1; //Tính cả xem video thêm cành
+                            numStandRight += 1; //T�nh c? xem video th�m c�nh
                             StandParentLeft.ScaleWithNumStand(numStandRight);
                             StandParentRight.ScaleWithNumStand(numStandRight);
                             sideAddStand = 1;
@@ -83,8 +83,8 @@ UseProfile.CurrentHardLevel * 5));
                     }
                     else
                     {
-                        //Lấy của bên nhiều hơn
-                        if (numStandLef + 1 < numStandRight) //Tính cả xem video thêm cành vẫn bé hơn 
+                        //L?y c?a b�n nhi?u hon
+                        if (numStandLef + 1 < numStandRight) //T�nh c? xem video th�m c�nh v?n b� hon 
                         {
                             StandParentLeft.ScaleWithNumStand(numStandRight);
                             StandParentRight.ScaleWithNumStand(numStandRight);
@@ -212,15 +212,15 @@ UseProfile.CurrentHardLevel * 5));
             GamePlayController_BirdSort.Instance.eventSaleController.WinLevel();
             StartCoroutine(WinHandle());
             StartCoroutine(RemoveBranchEndGame());
-            GameController.Instance.musicManager.PauseCoolDownSoundSource();
+            BirdSortGameController.Instance.musicManager.PauseCoolDownSoundSource();
         }
 
         public override IEnumerator WinHandle()
         {
             isBirdFlying = true;
             yield return new WaitForSeconds(0.75f);
-            //Hiện popup win
-            GameController.Instance.musicManager.PlayWinSound();
+            //Hi?n popup win
+            BirdSortGameController.Instance.musicManager.PlayWinSound();
             float percentTimeRemming = ((timePlayRequire - timePlayLevel) / timePlayRequire);
             int star = 3;
             if (percentTimeRemming >= 0.7f)//Segment
@@ -246,13 +246,13 @@ UseProfile.CurrentHardLevel * 5));
         public override void NextLevel()
         {
             UseProfile.CurrentHardLevel += 1;
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
         }
 
         public override void BackLevel()
         {
             UseProfile.CurrentHardLevel -= 1;
-            GameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
+            BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY_CHALLENGE);
         }
 
         public LevelConfig AddRandomExtralTypeMystery(LevelConfig level, int minBirdId, int maxBirdId, bool isTut = false)
@@ -260,7 +260,7 @@ UseProfile.CurrentHardLevel * 5));
             if (isTut)
             {
 
-                // tạo extral mới
+                // t?o extral m?i
                 ExtralPlayData extral = new ExtralPlayData
                 {
                     type = ExtralPlayType.Mystery,
@@ -295,7 +295,7 @@ UseProfile.CurrentHardLevel * 5));
                         continue;
                 }
 
-                // tìm vị trí hợp lệ
+                // t�m v? tr� h?p l?
                 for (int i = 0; i < level.standConfig.Count; i++)
                 {
                     var stand = level.standConfig[i];
@@ -303,7 +303,7 @@ UseProfile.CurrentHardLevel * 5));
                     if (stand.idBirds == null || stand.idBirds.Count <= 1)
                         continue;
 
-                    // bỏ con đầu stack
+                    // b? con d?u stack
                     for (int j = 1; j < stand.idBirds.Count; j++)
                     {
                         if (!eggsPos.Contains((i, j)))
@@ -320,9 +320,9 @@ UseProfile.CurrentHardLevel * 5));
                 while (randomBirdNum > 0)
                 {
                     int index = UnityEngine.Random.Range(0, validPositions.Count);
-                    // random vị trí
+                    // random v? tr�
                     var pos = validPositions[index];
-                    // tạo extral mới
+                    // t?o extral m?i
                     ExtralPlayData extral = new ExtralPlayData
                     {
                         type = ExtralPlayType.Mystery,

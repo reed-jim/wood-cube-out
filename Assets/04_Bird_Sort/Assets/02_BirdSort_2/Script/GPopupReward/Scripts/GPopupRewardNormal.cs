@@ -1,4 +1,4 @@
-﻿namespace GPlayFuntPuzzle
+namespace GPlayFuntPuzzle
 {
     using System;
     using System.Collections.Generic;
@@ -117,7 +117,7 @@
             //    parslayer[i].sortingOrder = popupCanvas.sortingOrder + 1;
             //}
 
-            GameController.Instance.musicManager.PlayOneShot(rewardClip);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(rewardClip);
 
             claimBtn.gameObject.SetActive(false);
             claimVideoBtn.gameObject.SetActive(false);
@@ -189,22 +189,22 @@
                 return;
 
             ClaimSuccess();
-            GameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
 
         private void ClaimXReward(int valueX)
         {
-            GameController.Instance.musicManager.PlayClickSound();
-            GameController.Instance.admobAds.ShowVideoReward(
+            BirdSortGameController.Instance.musicManager.PlayClickSound();
+            BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
                   isWatchVideo = true;
                   for (int i = 0; i < lstRewardShowing.Count; i++)
                   {
                       int index = i;
-                      GameController.Instance.dataContain.giftDatabase.Claim(_reward[index].typeItem, _reward[index].amount * valueX , reason: reasonClaim, isUnlimited: _reward[index].isUnlimited);
+                      BirdSortGameController.Instance.dataContain.giftDatabase.Claim(_reward[index].typeItem, _reward[index].amount * valueX , reason: reasonClaim, isUnlimited: _reward[index].isUnlimited);
                       
-                      //Gọi diễn UI x2 nhảy tiền
+                      //G?i di?n UI x2 nh?y ti?n
                       lstRewardShowing[index].XValueElement(_reward[index].amount + _reward[index].amount * (valueX - 1), _reward[index].isUnlimited);
                   }
 
@@ -223,14 +223,14 @@
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    claimVideoBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,ActionWatchVideo.None,
              AdsPlacement.VideoReward.X_REWARD);
@@ -257,7 +257,7 @@
             for (int i = 0; i < lstRewardShowing.Count; i++)
             {
                 int index = i;
-                GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                   lstRewardShowing[index].transform.position,
                   _reward[index].typeItem,
                   isWatchVideo ? _reward[index].amount * numXReward : _reward[index].amount,
@@ -269,11 +269,11 @@
 
         private Sprite GetIcon(GiftType type)
         {
-            return GameController.Instance.dataContain.giftDatabase.GetIconItem(type);
+            return BirdSortGameController.Instance.dataContain.giftDatabase.GetIconItem(type);
         }
         private GameObject GetAnim(GiftType type)
         {
-            return GameController.Instance.dataContain.giftDatabase.GetAnimItem(type);
+            return BirdSortGameController.Instance.dataContain.giftDatabase.GetAnimItem(type);
         }
     }
 }

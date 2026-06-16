@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -20,7 +20,7 @@ public class BreakTheRuleItem_BirdSort : ItemBase
     }
     public override bool IsCanUseItem()
     {
-        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.BreakTheRule_BirdSort).unlockLevel)
+        if (UseProfile.CurrentLevel < BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.BreakTheRule_BirdSort).unlockLevel)
         {
             return false;
         }
@@ -99,7 +99,7 @@ public class BreakTheRuleItem_BirdSort : ItemBase
                         if (z == i)
                             continue;
 
-                        if (level.standsInLevel_Real[z].birdsOnArray.Length < level.standsInLevel_Real[z].data.numSlot)//Còn chỗ
+                        if (level.standsInLevel_Real[z].birdsOnArray.Length < level.standsInLevel_Real[z].data.numSlot)//C�n ch?
                         {
                             if(level.standsInLevel_Real[z].birdsOnArray.Length > 0)
                             {

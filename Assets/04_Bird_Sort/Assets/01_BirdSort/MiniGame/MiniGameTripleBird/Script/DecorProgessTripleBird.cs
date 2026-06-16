@@ -29,7 +29,7 @@ public class DecorProgessTripleBird : MonoBehaviour
     }
     private void HandleShowProgess()
     {
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         for (int i = 0; i < lsItemDecorProgesses.Count; i++)
         {
             lsItemDecorProgesses[i].dataGiftMiniGame = controller.giftMiniGame.GetGift(lsItemDecorProgesses[i].id);

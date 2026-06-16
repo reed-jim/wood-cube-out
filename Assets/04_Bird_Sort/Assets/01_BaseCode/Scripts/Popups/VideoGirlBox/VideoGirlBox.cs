@@ -40,7 +40,7 @@ public class VideoGirlBox : BaseBox
     public void Init()
     {
         rewardPool = new List<RewardElement>();
-        config = GameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoGirl);
+        config = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleVideoData.GetSaleConfig(TypePackVideo.VideoGirl);
         rewards = new List<RewardObj>();
 
         watchVideoBtn.onClick.AddListener(OnClickWatchVideo);
@@ -57,7 +57,7 @@ public class VideoGirlBox : BaseBox
             var dataRw = config.rewards[i].GetReward();
 
 
-            if(GameController.Instance.dataContain.giftDatabase.GetGift(dataRw.typeItem, out Gift gtf))
+            if(BirdSortGameController.Instance.dataContain.giftDatabase.GetGift(dataRw.typeItem, out Gift gtf))
             {
                 var rewardUI = GetReward();
                 rewardUI.Init(gtf.getGiftSprite, dataRw.amount, isUnlimitedItem: dataRw.isUnlimited);
@@ -101,17 +101,17 @@ public class VideoGirlBox : BaseBox
 
     public void OnClickWatchVideo()
     {
-        GameController.Instance.admobAds.ShowVideoReward(
+        BirdSortGameController.Instance.admobAds.ShowVideoReward(
               actionReward: () =>
               {
                   for (int i = 0; i < rewards.Count; i++)
                   {
                       int index = i;
-                      GameController.Instance.dataContain.giftDatabase.Claim(rewards[index].rewardData.typeItem, rewards[index].rewardData.amount, Reason.video_gird, isUnlimited: rewards[index].rewardData.isUnlimited);
+                      BirdSortGameController.Instance.dataContain.giftDatabase.Claim(rewards[index].rewardData.typeItem, rewards[index].rewardData.amount, Reason.video_gird, isUnlimited: rewards[index].rewardData.isUnlimited);
 
                       if (!rewards[index].rewardData.isUnlimited)
                       {
-                          GameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
+                          BirdSortGameController.Instance.moneyEffectController.SpawnEffect_FlyUp(
                              rewards[index].rewardShow.transform.position,
                             rewards[index].rewardData.typeItem,
                               rewards[index].rewardData.amount,
@@ -128,14 +128,14 @@ public class VideoGirlBox : BaseBox
               },
               actionNotLoadedVideo: () =>
               {
-                  GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                  BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                    watchVideoBtn.transform.position,
                    "No video at the moment!",
                    Color.white,
                    isSpawnItemPlayer: true
                    );
-                  GameController.Instance.musicManager.PlayClickSound();
+                  BirdSortGameController.Instance.musicManager.PlayClickSound();
               },
               actionClose: null,
              ActionWatchVideo.None);

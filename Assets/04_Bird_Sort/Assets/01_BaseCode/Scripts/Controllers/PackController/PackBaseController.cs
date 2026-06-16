@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -58,7 +58,7 @@ public abstract class PackBaseController : MonoBehaviour
     public virtual void OnClickIconBtn()
     {
         ShowPopup(false);
-        //Nếu là remove ads thì call Buy
+        //N?u l� remove ads th� call Buy
     }
     protected abstract void HandleGetPack();
 
@@ -90,13 +90,13 @@ public abstract class PackBaseController : MonoBehaviour
 
     public static int CheckBought(TypePackIAP typePackIAP)
     {
-        var pack = GameController.Instance.dataContain.salePackDatabase.GetPack(typePackIAP);
+        var pack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(typePackIAP);
         return pack.boughtTimes;
     }
     public static bool IsBoughtAnyPack()
     {
         bool result = false;
-        foreach (var item in GameController.Instance.packController.allPacksInGame)
+        foreach (var item in BirdSortGameController.Instance.packController.allPacksInGame)
         {
             if (item.packModel.IsPurchased || item.packModel.NumOfPurchased > 0 || CheckBought(item.packModel.typePackIAP) > 0)
             {

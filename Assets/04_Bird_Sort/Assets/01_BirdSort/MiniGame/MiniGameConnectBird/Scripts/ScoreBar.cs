@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -72,13 +72,13 @@ public class ScoreBar : MonoBehaviour
         lsRewardShow.Clear();
         actionCallBack = null;
         var data = HomeController.Instance.miniGameController.connectBirdMG;
-        var giftData = GameController.Instance.dataContain.giftDatabase;
-        if (data.lsRewardConnectBirdMNGOfPlayer.Count == 0) // nếu list = null thì lấy ra thằng đầu tiên  = 0
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
+        if (data.lsRewardConnectBirdMNGOfPlayer.Count == 0) // n?u list = null th� l?y ra th?ng d?u ti�n  = 0
         {
             temp = 0;
             firtGift = true;
         }
-        else // Khac null thì lấy ra thằng cuối cùng
+        else // Khac null th� l?y ra th?ng cu?i c�ng
         {
             temp = data.lsRewardConnectBirdMNGOfPlayer[data.lsRewardConnectBirdMNGOfPlayer.Count - 1];
             firtGift = false;
@@ -156,7 +156,7 @@ public class ScoreBar : MonoBehaviour
     {
         completeV.SetActive(true);
         completeFeather.SetActive(false);
-        var giftData = GameController.Instance.dataContain.giftDatabase;
+        var giftData = BirdSortGameController.Instance.dataContain.giftDatabase;
         //claimGiftMiniGame.SetUp(giftData.GetIconItem(GiftType.BirdSkinWitch), controler.giftMiniGame.GetGift(9).thumnail, "New Bird Skin");
         tvPoint.text = "Complete";
         progessBar.fillAmount = 1;

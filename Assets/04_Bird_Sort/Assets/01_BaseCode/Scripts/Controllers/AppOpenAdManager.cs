@@ -89,7 +89,7 @@ public class AppOpenAdManager
 
     public void ShowAdIfAvailable()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
             return;
         if (!IsAdAvailable || isShowingAd)
         {
@@ -112,7 +112,7 @@ public class AppOpenAdManager
         isShowingAd = false;
 
         LoadAd();
-        //GameController.Instance.admobAds.ShowBanner();
+        //BirdSortGameController.Instance.admobAds.ShowBanner();
     }
 
     private void HandleAdFailedToPresentFullScreenContent(AdError adError)
@@ -127,7 +127,7 @@ public class AppOpenAdManager
     {
         Debug.Log("Displayed app open ad");
         isShowingAd = true;
-        // GameController.Instance.admobAds.DestroyBanner();
+        // BirdSortGameController.Instance.admobAds.DestroyBanner();
     }
 
     private void HandleAdDidRecordImpression()

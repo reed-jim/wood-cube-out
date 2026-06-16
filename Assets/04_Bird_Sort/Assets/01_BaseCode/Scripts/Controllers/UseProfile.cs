@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -96,7 +96,7 @@ public class UseProfile : MonoBehaviour
         set
         {
             GPlayerPrefs.SetInt(StringHelper.ONOFF_SOUND, value ? 1 : 0);
-            GameController.Instance.musicManager.SetSoundVolume(value ? 1 : 0);
+            BirdSortGameController.Instance.musicManager.SetSoundVolume(value ? 1 : 0);
             GPlayerPrefs.Save();
         }
     }
@@ -110,7 +110,7 @@ public class UseProfile : MonoBehaviour
         set
         {
             GPlayerPrefs.SetInt(StringHelper.ONOFF_MUSIC, value ? 1 : 0);
-            GameController.Instance.musicManager.SetMusicVolume(value ? 0.7f : 0);
+            BirdSortGameController.Instance.musicManager.SetMusicVolume(value ? 0.7f : 0);
             GPlayerPrefs.Save();
         }
     }
@@ -833,7 +833,7 @@ public class UseProfile : MonoBehaviour
             //if (IsUnlimitedHealth)
             //    return GiftDatabase.DefaultItem[GiftType.Health];
 
-            //var timeRefill = GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth;
+            //var timeRefill = BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.healthConfig.timeReFillHealth;
             //int currentHealth = PlayerPrefs.GetInt(StringHelper.HEALTH, GiftDatabase.DefaultItem[GiftType.Health]);
             //if (currentHealth <= 0
             //    && TimeManager.CaculateTime(TimeLastOverHealth.AddSeconds(timeRefill), UnbiasedTime.Instance.Now()) >= timeRefill)
@@ -1046,7 +1046,7 @@ public class UseProfile : MonoBehaviour
             Debug.Log("Set turnBuy " + value);
             PlayerPrefs.SetInt(StringHelper.CONNECT_BIRD_TURN_BUY, value);
             PlayerPrefs.Save();
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     public static int Version
@@ -1064,7 +1064,7 @@ public class UseProfile : MonoBehaviour
         set
         {
             PlayerPrefs.SetInt(StringHelper.POINT_MINIGAME_CONNECT_BIRD, value);
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     public static string lsRewardConnectBirdMNGOfPlayer
@@ -1076,7 +1076,7 @@ public class UseProfile : MonoBehaviour
         set
         {
             PlayerPrefs.SetString(StringHelper.LIST_REWARD_MINI_GAME_CONNECT_BIRD, value);
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     public static int WasCommpleteConnectBirdMiniGame
@@ -1095,19 +1095,19 @@ public class UseProfile : MonoBehaviour
     {
         get
         {
-            return PlayerPrefs.GetInt(StringHelper.CONNECT_BIRD_TURN_FREE, GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.num_turn_free);
+            return PlayerPrefs.GetInt(StringHelper.CONNECT_BIRD_TURN_FREE, BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.num_turn_free);
         }
         set
         {
             PlayerPrefs.SetInt(StringHelper.CONNECT_BIRD_TURN_FREE, value);
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     public static int LimitNumbWatchVideoInDay
     {
         get
         {
-            return PlayerPrefs.GetInt(StringHelper.LIMIT_NUMB_WATCH_VIDEO_IN_DAY, GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.num_watch_video_buy_egg);
+            return PlayerPrefs.GetInt(StringHelper.LIMIT_NUMB_WATCH_VIDEO_IN_DAY, BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData.config.num_watch_video_buy_egg);
         }
         set
         {
@@ -1125,7 +1125,7 @@ public class UseProfile : MonoBehaviour
 
             PlayerPrefs.SetInt(StringHelper.FIRST_OPEN_CONNECT_BIRD_MINI_GAME, value);
             PlayerPrefs.Save();
-            // GameController.Instance.playerData.SaveData();
+            // BirdSortGameController.Instance.playerData.SaveData();
         }
     }
     public static int FirstShowHand
@@ -1216,9 +1216,9 @@ public class UseProfile : MonoBehaviour
     }
     public static void ResetDayMiniGame()
     {
-        ConnectBirdTurnFree = GameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
+        ConnectBirdTurnFree = BirdSortGameController.Instance.segmentController.GetCurrentSegment().minigameConnectSegmentData
             .config.num_turn_free;
-        CurrentNumWatchVideoInDay = LimitNumbWatchVideoInDay = GameController.Instance.segmentController.GetCurrentSegment()
+        CurrentNumWatchVideoInDay = LimitNumbWatchVideoInDay = BirdSortGameController.Instance.segmentController.GetCurrentSegment()
             .minigameConnectSegmentData
             .config.num_watch_video_buy_egg;
         var nowTime = UnbiasedTime.Instance.Now().AddDays(1);

@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -33,7 +33,7 @@
                 int idBirdKey = (int)data.extralValues[1];
                 int idStandKey = (int)data.extralValues[2];
 
-                //Hiện chìa khoá ở chân chim idBirdHasKey
+                //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
                 var stand = GamePlayController_BirdSort.Instance.level.standsInLevel_Real[idStandKey];
 
                 birdHasKey = stand.birdsOnArray[idBirdKey];
@@ -42,7 +42,7 @@
             }
             else
             {
-                //Hiện chìa khoá ở chân chim idBirdHasKey
+                //Hi?n ch�a kho� ? ch�n chim idBirdHasKey
                 var birdsInGame = GameObject.FindObjectsOfType<BirdBase>();
                 if (birdsInGame != null)
                 {
@@ -89,7 +89,7 @@
         {
             yield return new WaitUntil(() => birdHasKey.isFlyOut);
             PlayAnimEnd();
-            //Post Event check lại StandSuccess cả map
+            //Post Event check l?i StandSuccess c? map
         }
 
         protected override void ReturnExtralHandle()
@@ -104,7 +104,7 @@
             {
                 body.gameObject.SetActive(true);
                 skeGrade.AnimationState.ClearTracks();
-                GameController.Instance.musicManager.PlayOneShot(cageLockClip, audioCageSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(cageLockClip, audioCageSource);
                 var track = skeGrade.AnimationState.SetAnimation(0, "lock", false);
                 track.Complete += (s) =>
                 {
@@ -121,7 +121,7 @@
                     //float timeMove = Vector2.Distance(birdHasKey.transform.position, key.transform.position) / 3.5f;
                     key.transform.DOMove(birdHasKey.transform.position, timeMove).OnComplete(() =>
                         {
-                            GameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
+                            BirdSortGameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
                             key.transform.parent = birdHasKey.transform;
                         
                                 GamePlayController_BirdSort.Instance.tutorialController.ActiveTutExtral(this);
@@ -134,7 +134,7 @@
                             GamePlayController_BirdSort.Instance.returnController.IsLockReturn = false;
                         }).SetDelay(0.3f);
                         key.transform.DOScale(1f, timeMove * 0.95f).SetDelay(0.3f);
-                        GameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
+                        BirdSortGameController.Instance.musicManager.PlayOneShot(keyAppearClip, keySource);
                     }).SetEase(Ease.OutBack);
                 };
 
@@ -143,7 +143,7 @@
 
         protected override void PlayAnimEnd()
         {
-            //=> anim chìa khoá bay mở cửa
+            //=> anim ch�a kho� bay m? c?a
             Debug.Log("=============== Boom Done ");
             key.transform.parent = GamePlayController_BirdSort.Instance.level.birdParent;
 
@@ -153,7 +153,7 @@
             key.transform.DOScale(1.5f, 0.35f).OnComplete(() =>
             {
                 //key.transform.DOScale(0.8f, 0.3f);
-                GameController.Instance.musicManager.PlayOneShot(getKeyClip, keySource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(getKeyClip, keySource);
             });
 
             float timeMoveKey = Vector2.Distance(key.transform.position, posLock.transform.position) / 4.5f;
@@ -161,7 +161,7 @@
             key.transform.DOMove(posLock.position, timeMoveKey).OnComplete(() =>
             {
                 skeGrade.AnimationState.ClearTracks();
-                GameController.Instance.musicManager.PlayOneShot(cageOpenClip, audioCageSource);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(cageOpenClip, audioCageSource);
                 var track = skeGrade.AnimationState.SetAnimation(0, "lock3", false);
                 track.Complete += (s) =>
                 {

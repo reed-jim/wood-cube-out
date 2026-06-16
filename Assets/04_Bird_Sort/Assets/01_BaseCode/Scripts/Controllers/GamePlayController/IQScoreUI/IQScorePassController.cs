@@ -89,7 +89,7 @@
             player4.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos3, 0.25f).OnComplete(() =>
             {
             //GamePlayController.Instance.a
-            GameController.Instance.musicManager.PlayOneShot(soundUp1);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(soundUp1);
                 Step3();
             });
             player3.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos4, 0.25f);
@@ -98,7 +98,7 @@
         {
             player4.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos2, 0.25f).OnComplete(() =>
             {
-                GameController.Instance.musicManager.PlayOneShot(soundUp2);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(soundUp2);
                 Step4();
             });
             player2.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos3, 0.25f);
@@ -107,7 +107,7 @@
         {
             player4.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos1, 0.25f).OnComplete(() =>
             {
-                GameController.Instance.musicManager.PlayOneShot(soundUp3);
+                BirdSortGameController.Instance.musicManager.PlayOneShot(soundUp3);
                 Step5();
             });
             player1.transform.GetComponent<RectTransform>().DOAnchorPos(originalPos2, 0.25f);

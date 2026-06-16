@@ -19,7 +19,7 @@ public class RemoveAdsPackController : PackBaseController
         //if (typePackBought.Equals(packModel.typePackIAP))
         //    return;
 
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
         {
             packModel.CheckPurchased();
         }
@@ -27,7 +27,7 @@ public class RemoveAdsPackController : PackBaseController
 
     public override bool CheckActive()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
             return false;
 
         return base.CheckActive();
@@ -36,7 +36,7 @@ public class RemoveAdsPackController : PackBaseController
 
     public override void ShowPopup(bool isPostEventPopupClose = false)
     {
-        GameController.Instance.iapController.BuyProduct(TypePackIAP.RemoveAds);
+        BirdSortGameController.Instance.iapController.BuyProduct(TypePackIAP.RemoveAds);
     }
     protected override void HidePopup()
     {
@@ -45,7 +45,7 @@ public class RemoveAdsPackController : PackBaseController
     }
     protected override void HandleGetPack()
     {
-        packModel = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.RemoveAds);
+        packModel = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.RemoveAds);
     }
 
     public override void ResetDataNewDay()

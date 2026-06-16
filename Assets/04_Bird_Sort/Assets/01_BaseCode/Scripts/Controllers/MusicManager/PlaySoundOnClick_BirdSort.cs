@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using UnityEngine;
     using UnityEngine.UI;
@@ -25,7 +25,7 @@
 
         public void PlaySound()
         {
-            GameController.Instance.musicManager.PlayOneShot(sound);
+            BirdSortGameController.Instance.musicManager.PlayOneShot(sound);
             // AnalyticsController.LogActionClick(actionClick);
             //Debug.Log(StringHelper.StringColor(gameObject.name, ColorString.green));
         }

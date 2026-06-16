@@ -34,7 +34,7 @@ public class PasueBox : BaseBox
         quitBtn.onClick.AddListener(OnClickQuit);
         settingBtn.onClick.AddListener(OnClickSetting);
 
-    //    adsData = GameController.Instance.segmentController.GetCurrentSegment().adsData;
+    //    adsData = BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsData;
     }
 
     public void InitState()
@@ -74,7 +74,7 @@ public class PasueBox : BaseBox
         //{
         //    if (GamePlayController.Instance.level.GetPercentRequirementFound() >= adsData.config.interstitials.appResumedThreshold)
         //    {
-        //        GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
+        //        BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
         //        {
         //            Close();
         //            GamePlayController.Instance.level.PauseLevel(false);
@@ -114,6 +114,6 @@ public class PasueBox : BaseBox
     private void OnClickSetting()
     {
         SettingBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
 }

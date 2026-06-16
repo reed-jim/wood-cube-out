@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -18,7 +18,7 @@
         public List<StandingBase> lsStandingBase;
         public List<Solution> lsSolutions;
         public HashSet<string> visitedStates;
-        private bool isSolved; // Trạng thái đã giải xong hay chưa
+        private bool isSolved; // Tr?ng th�i d� gi?i xong hay chua
         private StandingBase standFrom;
         private StandingBase standTo;
         public GameObject hand;
@@ -100,7 +100,7 @@
             }
             else
             {
-                //GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+                //BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                 //  (
                 // GamePlayController_BirdSort.Instance.gameScene.btnSuggetBooster.transform.position,
                 //  "Use another booster",
@@ -130,14 +130,14 @@
 
             for (int i = 0; i < param.Count; i++)
             {
-                // Nếu thùng không rỗng
+                // N?u th�ng kh�ng r?ng
 
                 if (param[i].data.Count > 0)
                 {
                     if (param[i].data[0].isLock == false)
                     {
-                        int color = param[i].data[0].id; // Lấy màu đầu tiên trong thùng            
-                                                         // Duyệt qua các thùng khác
+                        int color = param[i].data[0].id; // L?y m�u d?u ti�n trong th�ng            
+                                                         // Duy?t qua c�c th�ng kh�c
                         for (int j = 0; j < param.Count; j++)
                         {
 

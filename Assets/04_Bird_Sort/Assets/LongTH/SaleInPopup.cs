@@ -22,7 +22,7 @@ public class SaleInPopup : MonoBehaviour
     private void OnEnable()
     {
         parentContent.sizeDelta = new Vector2(parentContent.parent.GetComponent<RectTransform>().sizeDelta.x, parentContent.sizeDelta.y);
-        //if (!GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
+        //if (!BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Win))
         //{
         Init();
         //}
@@ -44,9 +44,9 @@ public class SaleInPopup : MonoBehaviour
     public virtual void InitState()
     {
         ResetPack();
-        if (GameController.Instance.packController.HasPackSale())
+        if (BirdSortGameController.Instance.packController.HasPackSale())
         {
-            var packActiveSale = GameController.Instance.packController.activeSalePacks;
+            var packActiveSale = BirdSortGameController.Instance.packController.activeSalePacks;
             List<TypePackIAP> lstDel = new List<TypePackIAP>();
             foreach (var item in saleItems.Keys)
             {
@@ -86,10 +86,10 @@ public class SaleInPopup : MonoBehaviour
                     {
                         if (pack.typePackIAP == TypePackIAP.ProBundle || pack.typePackIAP == TypePackIAP.UtralBundle)
                         {
-                            var segementMaster = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
-                            var masterPack = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MasterOffer);
-                            var segementMega = GameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MegaOffer);
-                            var megaPack = GameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MegaOffer);
+                            var segementMaster = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MasterOffer);
+                            var masterPack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MasterOffer);
+                            var segementMega = BirdSortGameController.Instance.segmentController.GetCurrentSegment().saleData.GetSaleConfig(TypePackIAP.MegaOffer);
+                            var megaPack = BirdSortGameController.Instance.dataContain.salePackDatabase.GetPack(TypePackIAP.MegaOffer);
 
                             if (!(masterPack.boughtTimes >= segementMaster.parmaExtral[0] && megaPack.boughtTimes >= segementMega.parmaExtral[0]))
                             {

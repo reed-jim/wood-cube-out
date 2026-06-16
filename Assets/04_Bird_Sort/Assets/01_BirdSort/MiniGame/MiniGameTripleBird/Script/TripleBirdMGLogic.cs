@@ -35,21 +35,21 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
     public float countTimeEndDay;
     public bool controTime;
     public LevelTripleBird levelTripleBird;
-    public LevelManager levelManager;
+    public TripleBirdLevelManager TripleBirdLevelManager;
     public bool isLose = false;
     public int numBird = 0;
     public bool isResetLevel = false;
     public void InitLevel()
     {
         isLose = false;
-        levelManager.level = levelTripleBird;
-        levelManager.InitState(this);
+        TripleBirdLevelManager.level = levelTripleBird;
+        TripleBirdLevelManager.InitState(this);
     }
     public void CheckWinLose()
     {
         if (numBird <= 0)
         {
-            if (levelManager.level = levelTut)
+            if (TripleBirdLevelManager.level = levelTut)
             {
                 TripleBirdMGController.FirstOpenTripleBirdMNGame = true;
             }
@@ -58,7 +58,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
             LoadBoardData();
             InitLevel();
         }
-        else if (levelManager.lsSort.Count >= 6 && !levelManager.CheckCanClear())
+        else if (TripleBirdLevelManager.lsSort.Count >= 6 && !TripleBirdLevelManager.CheckCanClear())
         {
             isLose = true;
             btnRetry.interactable = true;
@@ -184,7 +184,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
                 TripleBirdMiniGameShopBox.Setup(this).Show();
             }
         }
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void OffBlindPanelObject()
     {
@@ -202,7 +202,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
     }
     private void OnCloseBlindPanel()
     {
-        levelManager.ClearMinigameTripleBird();
+        TripleBirdLevelManager.ClearMinigameTripleBird();
         HomeController.Instance.miniGameController.tripleBirdMG.PointTripleBirdMiniGame += numbPoint;
         gameAssets.tvTimeSecond.DOKill();
         gameAssets.tvTimeSecond.color = Color.white;
@@ -215,7 +215,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
         numbPoint = 0;
         tvFeather.text = "" + numbPoint;
         CurrentLevelMiniGame = 1;
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     private void OnButton()
     {
@@ -227,7 +227,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
     public void OpenInfoMiniGame()
     {
         TutorialTripleBirdBox.Setup().Show();
-        GameController.Instance.musicManager.PlayClickSound();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
     }
     public void ResetLevel()
     {
@@ -238,8 +238,8 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
         tvFeather.text = "" + numbPoint;
         numbPointToReset = 0;
         OffButton();
-        GameController.Instance.musicManager.PlayClickSound();
-        levelManager.ClearAllBirdInScene();
+        BirdSortGameController.Instance.musicManager.PlayClickSound();
+        TripleBirdLevelManager.ClearAllBirdInScene();
         LoadBoardData();
         InitLevel();
     }
@@ -301,7 +301,7 @@ public class TripleBirdMGLogic : SerializedMonoBehaviour
         }
         else
         {
-            levelManager.ClearMinigameTripleBird();
+            TripleBirdLevelManager.ClearMinigameTripleBird();
             HomeController.Instance.miniGameController.tripleBirdMG.PointTripleBirdMiniGame += numbPoint;
             RewardTripleBirdMNBox.Setup(this, numbPoint).Show();
             buttonPlay.gameObject.SetActive(true);

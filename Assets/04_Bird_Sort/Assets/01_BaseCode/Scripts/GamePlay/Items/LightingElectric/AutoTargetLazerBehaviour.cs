@@ -1,16 +1,16 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(LineRenderer))]
 public abstract class AutoTargetLazerBehaviour : BaseLazerBehaviour
 {
-    private bool isShooting = false; // đang bắn
+    private bool isShooting = false; // dang b?n
     protected Vector3 startTransform;
     protected Transform endTransform;
-    private Vector3 offsetShip; // cần có offset cho ship
-    private Vector3 offsetEnd; // với boss thì cần có offset
-    private float shootingTime; // thời gian bắn, dùng để chain
-    private float disappearTime; // thời gian để mất tia sét
+    private Vector3 offsetShip; // c?n c� offset cho ship
+    private Vector3 offsetEnd; // v?i boss th� c?n c� offset
+    private float shootingTime; // th?i gian b?n, d�ng d? chain
+    private float disappearTime; // th?i gian d? m?t tia s�t
     private Camera mainCam;
 
     // fake shoot, only for MainHome / Supporter
@@ -40,7 +40,7 @@ public abstract class AutoTargetLazerBehaviour : BaseLazerBehaviour
 
         if(lighningAudioSource == null)
             lighningAudioSource = this.GetComponent<AudioSource>();
-        GameController.Instance.musicManager.PlayOneShot(lighningClip, lighningAudioSource, volume: 0.3f);
+        BirdSortGameController.Instance.musicManager.PlayOneShot(lighningClip, lighningAudioSource, volume: 0.3f);
     }
 
     protected override void Update()

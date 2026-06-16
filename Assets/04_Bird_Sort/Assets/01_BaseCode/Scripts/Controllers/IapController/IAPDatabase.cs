@@ -201,7 +201,7 @@ public class IAPPack
             List<GiftRewardShow> lstReward = new List<GiftRewardShow>();
             foreach (var item in itemsResult)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, isUnlimited: item.Value.isUnlimited);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, isUnlimited: item.Value.isUnlimited);
 
                 GiftRewardShow rw = new GiftRewardShow();
                 rw.type = item.Key;
@@ -225,9 +225,9 @@ public class IAPPack
             List<GiftRewardShow> lstReward = new List<GiftRewardShow>();
             foreach (var item in itemsResult)
             {
-                GameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, reasonBuy, isUnlimited: item.Value.isUnlimited);
+                BirdSortGameController.Instance.dataContain.giftDatabase.Claim(item.Key, item.Value.amount, reasonBuy, isUnlimited: item.Value.isUnlimited);
                 EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.BUYED_ITEM, item.Key);
-                if (item.Key == GiftType.RemoveAds && GameController.Instance.useProfile.IsRemoveAds)
+                if (item.Key == GiftType.RemoveAds && BirdSortGameController.Instance.useProfile.IsRemoveAds)
                 {
                     continue;
                 }

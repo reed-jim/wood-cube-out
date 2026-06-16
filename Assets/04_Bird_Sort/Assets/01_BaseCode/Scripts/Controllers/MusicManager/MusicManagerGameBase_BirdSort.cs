@@ -1,4 +1,4 @@
-﻿namespace BirdSort2
+namespace BirdSort2
 {
     using UnityEngine;
     using UnityEngine.Audio;
@@ -76,21 +76,21 @@
         {
             get
             {
-                return GameController.Instance.useProfile.OnMusic ? 1 : 0;
+                return BirdSortGameController.Instance.useProfile.OnMusic ? 1 : 0;
             }
         }
         public float SoundVolume
         {
             get
             {
-                return GameController.Instance.useProfile.OnSound ? 1 : 0;
+                return BirdSortGameController.Instance.useProfile.OnSound ? 1 : 0;
             }
         }
 
         public void Init()
         {
-            musicSource.volume = GameController.Instance.useProfile.OnMusic ? 0.7f : 0;
-            effectSource.volume = GameController.Instance.useProfile.OnSound ? 1 : 0;
+            musicSource.volume = BirdSortGameController.Instance.useProfile.OnMusic ? 0.7f : 0;
+            effectSource.volume = BirdSortGameController.Instance.useProfile.OnSound ? 1 : 0;
         }
 
 
@@ -242,7 +242,7 @@
         #region === Play Sound ===
         public void PlayWinSound()
         {
-            if (!GameController.Instance.useProfile.OnMusic)
+            if (!BirdSortGameController.Instance.useProfile.OnMusic)
                 return;
             // musicSource.clip = winMusic;
             //musicSource.Play();
@@ -251,7 +251,7 @@
 
         public void PlayLoseSound()
         {
-            if (!GameController.Instance.useProfile.OnMusic)
+            if (!BirdSortGameController.Instance.useProfile.OnMusic)
                 return;
             // musicSource.clip = winMusic;
             //musicSource.Play();

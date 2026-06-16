@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
@@ -114,7 +114,7 @@ public class AdmobAds : MonoBehaviour
 
     //public IEnumerator ShowAppOpenAds()
     //{
-    //    yield return new WaitUntil(() => GameController.Instance.progessLoading > 0.9f);
+    //    yield return new WaitUntil(() => BirdSortGameController.Instance.progessLoading > 0.9f);
     //    if (SceneManager.GetActiveScene().name == SceneName.LOADING_SCENE)
     //    {
     //        AppOpenAdManager.Instance.ShowAdIfAvailable();
@@ -168,7 +168,7 @@ public class AdmobAds : MonoBehaviour
     };
             FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
-            //nếu dùng Appsflyer
+            //n?u d�ng Appsflyer
             var dic = new Dictionary<string, string>
     {
         { "ad_format", "collapsible_banner" }
@@ -194,7 +194,7 @@ public class AdmobAds : MonoBehaviour
 
     public bool EnableMrec()
     {
-        return GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.None);
+        return BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.None);
     }
 
     private bool IsAvaiableAdsMrec()
@@ -209,7 +209,7 @@ public class AdmobAds : MonoBehaviour
 
     public bool IsCanShowMrec()
     {
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
         {
             if (IsShowMrec())
             {
@@ -235,14 +235,14 @@ public class AdmobAds : MonoBehaviour
     public bool isShowMrec;
     public void InitializeMRecAds()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds || !enableMrec)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds || !enableMrec)
             return;
         // Attach Callbacks
         MaxSdkCallbacks.MRec.OnAdLoadedEvent += OnMRecAdLoadedEvent;
         MaxSdkCallbacks.MRec.OnAdLoadFailedEvent += OnMRecAdFailedEvent;
         MaxSdkCallbacks.MRec.OnAdClickedEvent += OnMRecAdClickedEvent;
         //MaxSdkCallbacks.MRec.OnAdRevenuePaidEvent +=
-        //    OnAdRevenuePaidEvent; // MRECs are automatically sized to 300x250. show bottom trên banner ads khoảng 50px vì banner ads có height là 50px
+        //    OnAdRevenuePaidEvent; // MRECs are automatically sized to 300x250. show bottom tr�n banner ads kho?ng 50px v� banner ads c� height l� 50px
                                   //var density = MaxSdkUtils.GetScreenDensity();
                                   //float mrecWidth = 300f;
                                   //float mrecHeight = 250f;
@@ -258,7 +258,7 @@ public class AdmobAds : MonoBehaviour
     public void ShowMRec()
     {
         Debug.Log("MREC=============call show mrec" + EnableMrec());
-        if (GameController.Instance.useProfile.IsRemoveAds || !EnableMrec())
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds || !EnableMrec())
             return;
 
         if (isLoadedMrec)
@@ -274,7 +274,7 @@ public class AdmobAds : MonoBehaviour
         else
         {
             Debug.Log("MREC============= not loaded mrec");
-            if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+            if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
             {
                 _bannerViewFakeMrec?.Show();
                 isMrecFail = true;
@@ -306,7 +306,7 @@ public class AdmobAds : MonoBehaviour
     private void OnMRecAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errorInfo)
     {
         isLoadedMrec = false;
-        if (GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
+        if (BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.mrec.CheckActive(AdsNewSegmentData.BannerMrec.MrecType.Fake))
         {
             _bannerViewFakeMrec?.Show();
             isMrecFail = true;
@@ -452,7 +452,7 @@ public class AdmobAds : MonoBehaviour
     };
             FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
-            //nếu dùng Appsflyer
+            //n?u d�ng Appsflyer
             var dic = new Dictionary<string, string>
     {
         { "ad_format", "collapsible_banner" }
@@ -478,7 +478,7 @@ public class AdmobAds : MonoBehaviour
     {
         if (RemoteConfigController.GetBoolConfig("is_show_collap_policy", true))
         {
-            if (GameController.Instance.useProfile.IsRemoveAds)
+            if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
                 return;
 
             if (_isShowAdmobCollap)
@@ -587,7 +587,7 @@ public class AdmobAds : MonoBehaviour
     };
             FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
-            //nếu dùng Appsflyer
+            //n?u d�ng Appsflyer
             var dic = new Dictionary<string, string>
     {
         { "ad_format", "collapsible_banner" }
@@ -676,7 +676,7 @@ public class AdmobAds : MonoBehaviour
     {
         Debug.Log($"LongTH_ Interstitial - OnInterstitialLoadedEvent ++ {adInfo} \n");
         _isLoading = true;
-        GameController.Instance.AnalyticsController.LogInterReady();
+        BirdSortGameController.Instance.AnalyticsController.LogInterReady();
     }
 
     private void OnInterstitialFailedEvent(string adUnitId, MaxSdk.ErrorInfo errInfo)
@@ -698,7 +698,7 @@ public class AdmobAds : MonoBehaviour
         if (_isLoading) return;
 
         MaxSdk.LoadInterstitial(InterstitialAdUnitId);
-        GameController.Instance.AnalyticsController.LogInterLoad();
+        BirdSortGameController.Instance.AnalyticsController.LogInterLoad();
         _isLoading = true;
     }
 
@@ -748,7 +748,7 @@ public class AdmobAds : MonoBehaviour
     private void MaxSdkCallbacks_OnInterstitialClickedEvent(string adUnitId, MaxSdk.AdInfo adInfo)
     {
         Debug.Log($"LongTH_ Interstitial - MaxSdkCallbacks_OnInterstitialClickedEvent  ++ {adInfo} \n");
-        GameController.Instance.AnalyticsController.LogInterClick();
+        BirdSortGameController.Instance.AnalyticsController.LogInterClick();
         _isLoading = false;
     }
 
@@ -761,7 +761,7 @@ public class AdmobAds : MonoBehaviour
         adWhere = actionWatchLog;
 
         Debug.Log("show inter ========" + countdownAds);
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
         {
             Debug.Log("show inter ======== is RemoveAds ");
             //if (!isInGame)
@@ -776,7 +776,7 @@ public class AdmobAds : MonoBehaviour
 
         if (UseProfile.CurrentLevel > RemoteConfigController.GetFloatConfig(FirebaseConfig.LEVEL_START_SHOW_INITSTIALL, 3))
         {
-            GameController.Instance.AnalyticsController.LoadInterEligible();
+            BirdSortGameController.Instance.AnalyticsController.LoadInterEligible();
             if (countdownAds > RemoteConfigController.GetFloatConfig(FirebaseConfig.DELAY_SHOW_INITSTIALL, 90))
             {
                 Debug.Log("show inter ========" + countdownAds);
@@ -806,7 +806,7 @@ public class AdmobAds : MonoBehaviour
         UnityAction actionIniterClose = null, string level = null)
     {
         actionIniterClose += () => { IsCooldownAdmobBanner = true; };
-        if (UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
+        if (UseProfile.CurrentLevel >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel && BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive)
         {
             var close = actionIniterClose;
             actionIniterClose = () => { ShowInterstitialAd(true, actionIniterClose: close); };
@@ -822,7 +822,7 @@ public class AdmobAds : MonoBehaviour
             IsCooldownAdmobBanner = false;
             MaxSdk.ShowInterstitial(InterstitialAdUnitId, actionWatchLog);
             countdownAds = 0;
-            GameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
+            BirdSortGameController.Instance.AnalyticsController.LogInterShow(actionWatchLog);
             try
             {
                 //DWHLog.Log.AdsLog(UseProfile.CurrentLevel, AdType.Interstitial, actionWatchLog);
@@ -892,7 +892,7 @@ public class AdmobAds : MonoBehaviour
         }
 
         Debug.Log("Loading the interstitial ad.");
-        GameController.Instance.AnalyticsController.LogInterLoad();
+        BirdSortGameController.Instance.AnalyticsController.LogInterLoad();
         // create our request used to load the ad.
         var adRequest = new AdRequest();
 
@@ -923,9 +923,9 @@ public class AdmobAds : MonoBehaviour
             LoadInterstitialAd();
         }
 
-        return (!GameController.Instance.useProfile.IsRemoveAds && _interstitialAd != null && _interstitialAd.CanShowAd()
-            && UseProfile.CurrentLevel >= GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
-                                        && GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
+        return (!BirdSortGameController.Instance.useProfile.IsRemoveAds && _interstitialAd != null && _interstitialAd.CanShowAd()
+            && UseProfile.CurrentLevel >= BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.minimumLevel
+                                        && BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
     }
 
     /// <summary>
@@ -936,22 +936,22 @@ public class AdmobAds : MonoBehaviour
     {
         blackImage.gameObject.SetActive(true);
         Debug.Log("Check Enable Short Inter:" +
-                       GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
-        if (GameController.Instance.useProfile.IsRemoveAds)
+                       BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.isActive);
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
         {
             actionIniterClose?.Invoke();
             return false;
         }
 
         if (isShowImmediatly || countdownAdsInterImage >
-            GameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.delayShow)
+            BirdSortGameController.Instance.segmentController.GetCurrentSegment().adsNewData.config.duppInter.delayShow)
         {
             if (CheckCanShowShortInter())
             {
                 Debug.Log("Showing interstitial ad.");
                 UseProfile.NumberOfAdsInDay = UseProfile.NumberOfAdsInDay + 1;
                 UseProfile.NumberOfAdsInPlay = UseProfile.NumberOfAdsInPlay + 1;
-                GameController.Instance.AnalyticsController.LogInterShow("LoadingInter");
+                BirdSortGameController.Instance.AnalyticsController.LogInterShow("LoadingInter");
                 actionShortInterstitialClose = actionIniterClose;
                 _interstitialAd.Show();
             }
@@ -1071,14 +1071,14 @@ public class AdmobAds : MonoBehaviour
     private void OnRewardedAdLoadedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
     {
         Debug.Log($"LongTH_ Rewarded - OnRewardedAdLoadedEvent  ++ {adInfo} \n");
-        GameController.Instance.AnalyticsController.LogVideoRewardReady();
+        BirdSortGameController.Instance.AnalyticsController.LogVideoRewardReady();
     }
 
     private void OnRewardedAdFailedEvent(string adUnitId, MaxSdkBase.ErrorInfo errInfo)
     {
         Debug.Log($"LongTH_ Rewarded - OnRewardedAdFailedEvent  ++ {errInfo} \n");
         Invoke("LoadRewardedAd", 15);
-        GameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
+        BirdSortGameController.Instance.AnalyticsController.LogVideoRewardLoadFail(actionWatchVideo.ToString(),
             errInfo.Message.ToString());
     }
 
@@ -1108,7 +1108,7 @@ public class AdmobAds : MonoBehaviour
     {
         Debug.Log($"LongTH_ Rewarded - OnRewardedAdClickedEvent ++ {adInfo} \n");
         isVideoDone = true;
-        GameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
+        BirdSortGameController.Instance.AnalyticsController.LogClickToVideoReward(actionWatchVideo.ToString());
     }
 
     private void OnRewardedAdDismissedEvent(string adUnitId, MaxSdkBase.AdInfo adInfo)
@@ -1139,7 +1139,7 @@ public class AdmobAds : MonoBehaviour
         _actionRewardVideo?.Invoke();
         _actionRewardVideo = null;
         countdownAds = 0;
-        GameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
+        BirdSortGameController.Instance.AnalyticsController.LogVideoRewardShowDone(actionWatchVideo.ToString());
     }
 
     private void InitializeRewardedAds()
@@ -1169,18 +1169,18 @@ public class AdmobAds : MonoBehaviour
     }
 
     /// <summary>
-    /// Xử lý Show Video
+    /// X? l� Show Video
     /// </summary>
-    /// <param name="actionReward">Hành động khi xem xong Video và nhận thưởng </param>
-    /// <param name="actionNotLoadedVideo"> Hành động báo lỗi không có video để xem </param>
-    /// <param name="actionClose"> Hành động khi đóng video (Đóng lúc đang xem dở hoặc đã xem hết) </param>
+    /// <param name="actionReward">H�nh d?ng khi xem xong Video v� nh?n thu?ng </param>
+    /// <param name="actionNotLoadedVideo"> H�nh d?ng b�o l?i kh�ng c� video d? xem </param>
+    /// <param name="actionClose"> H�nh d?ng khi d�ng video (��ng l�c dang xem d? ho?c d� xem h?t) </param>
     public void ShowVideoReward(UnityAction actionReward, UnityAction actionNotLoadedVideo, UnityAction actionClose,
         ActionWatchVideo actionType = ActionWatchVideo.None, string level = null, string adWhere = "")
     {
         if (Application.internetReachability == NetworkReachability.NotReachable)
         {
             actionNotLoadedVideo?.Invoke();
-            GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
+            BirdSortGameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, false,
                 UseProfile.CurrentLevel.ToString());
             return;
         }
@@ -1193,8 +1193,8 @@ public class AdmobAds : MonoBehaviour
 #endif
 
         actionWatchVideo = actionType;
-        GameController.Instance.AnalyticsController.LogRequestVideoReward(actionType.ToString());
-        GameController.Instance.AnalyticsController.LogVideoRewardEligible();
+        BirdSortGameController.Instance.AnalyticsController.LogRequestVideoReward(actionType.ToString());
+        BirdSortGameController.Instance.AnalyticsController.LogVideoRewardEligible();
         if (IsLoadedVideoReward())
         {
             isShowingAds = true;
@@ -1213,9 +1213,9 @@ public class AdmobAds : MonoBehaviour
             {
                 Debug.LogError(e.Message);
             }
-            GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
+            BirdSortGameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                 UseProfile.CurrentLevel.ToString());
-            GameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
+            BirdSortGameController.Instance.AnalyticsController.LogVideoRewardShow(actionWatchVideo.ToString());
         }
         else
         {
@@ -1226,7 +1226,7 @@ public class AdmobAds : MonoBehaviour
                 this._actionRewardVideo = actionReward;
 
                 ShowInterstitial(isShowImmediatly: true, actionType.ToString(), actionIniterClose: () => { });
-                GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
+                BirdSortGameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true,
                     UseProfile.CurrentLevel.ToString());
                 Debug.Log("ShowInterstitial !!!");
                 countdownAds = 0;
@@ -1244,7 +1244,7 @@ public class AdmobAds : MonoBehaviour
                 //ConfirmBox.Setup().AddMessageYes(Localization.Get("s_noti"), Localization.Get("s_TryAgain"), () => { });
                 Debug.Log("No ads !!!");
                 actionNotLoadedVideo?.Invoke();
-                GameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
+                BirdSortGameController.Instance.AnalyticsController.LogWatchVideo(actionType, false, true,
                     UseProfile.CurrentLevel.ToString());
             }
         }
@@ -1256,7 +1256,7 @@ public class AdmobAds : MonoBehaviour
 
     public void ShowBanner()
     {
-        if (GameController.Instance.useProfile.IsRemoveAds)
+        if (BirdSortGameController.Instance.useProfile.IsRemoveAds)
             return;
         if (isAdmobInitDone)
         {
@@ -1371,7 +1371,7 @@ public class AdmobAds : MonoBehaviour
     //            actionRewardInter = actionReward;
     //            Debug.Log("=========show");
     //            isRewardInter = true;
-    //            GameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true, "");
+    //            BirdSortGameController.Instance.AnalyticsController.LogWatchVideo(actionType, true, true, "");
     //            // TODO: Reward the user.
     //            Debug.Log(String.Format(rewardMsg, reward.Type, reward.Amount));
     //            // actionReward.Invoke();
@@ -1441,7 +1441,7 @@ public class AdmobAds : MonoBehaviour
     };
         FirebaseAnalytics.LogEvent("ad_impression", adParameters);
 
-        //nếu dùng Appsflyer                
+        //n?u d�ng Appsflyer                
         var dic = new Dictionary<string, string>
     {
         { "ad_unit_name", adInfo.AdUnitIdentifier },
@@ -1470,8 +1470,8 @@ public class AdmobAds : MonoBehaviour
                     return;
             }
 
-            //Trong game cần lưu vị trí gọi quảng cáo hiện tại,
-            //ta giả sử GameManager sẽ lưu vị trí đó
+            //Trong game c?n luu v? tr� g?i qu?ng c�o hi?n t?i,
+            //ta gi? s? GameManager s? luu v? tr� d�
 
             if (type == AdType.Banner)
             {

@@ -13,7 +13,7 @@ public class AddBrandItem_BirdSort : ItemBase
 
     public override bool IsCanUseItem()
     {
-        if (UseProfile.CurrentLevel < GameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ReturnItem_BirdSort).unlockLevel)
+        if (UseProfile.CurrentLevel < BirdSortGameController.Instance.segmentController.GetCurrentSegment().coreGameData.config.bootsConfig.GetBoot(GiftType.ReturnItem_BirdSort).unlockLevel)
         {
             return false;
         }
@@ -42,7 +42,7 @@ public class AddBrandItem_BirdSort : ItemBase
     {
         //if (isAddedBranch)
         //{
-        //    GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+        //    BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
         //           (
         //             BirdSort2.GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem].transform.position,
         //           Localization.Get("s_use_item_on_next_turn_play"),
@@ -54,7 +54,7 @@ public class AddBrandItem_BirdSort : ItemBase
         bool isAdd = BirdSort2.GamePlayController_BirdSort.Instance.level.AddStandHandleBool();
         if (!isAdd)
         {
-            GameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
+            BirdSortGameController.Instance.moneyEffectController.SpawnEffectText_FlyUp
                    (
                      BirdSort2.GamePlayController_BirdSort.Instance.gameScene.itemsUI[typeItem].transform.position,
                    Localization.Get("s_add_max_branch"),
