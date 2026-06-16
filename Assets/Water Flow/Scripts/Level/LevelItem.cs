@@ -59,19 +59,21 @@ namespace AntsFlow
 
             GUILayout.Space(10);
 
+            GUILayout.Label("Generate Level", EditorStyles.boldLabel);
+
             // startX = EditorGUILayout.IntField("StartX", startX);
             // startY = EditorGUILayout.IntField("StartY", startY);
             // size = EditorGUILayout.IntField("Size", size);
-            tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
+            // tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
-            colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
-            moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
-            factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
+            // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
+            // moveTilesCloserFactor = EditorGUILayout.FloatField("moveTilesCloserFactor", moveTilesCloserFactor);
+            // factionMapper = (FactionMapper)EditorGUILayout.ObjectField("Faction Mapper", factionMapper, typeof(FactionMapper), true);
 
-            GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
+            // GUILayout.Label("Import Level JSON", EditorStyles.boldLabel);
 
-            json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
+            // json = EditorGUILayout.TextArea(json, GUILayout.MinHeight(200));
 
             // if (GUILayout.Button("Spawn Pixel Art"))
             // {
@@ -83,59 +85,64 @@ namespace AntsFlow
             //     GenerateLevelFromJson(levelItem, json);
             // }
 
-            if (GUILayout.Button("Step 1: ReadLevel"))
+            if (GUILayout.Button("GENERATE LEVEL"))
             {
-                ReadLevel(levelItem);
+                GenerateLevel(levelItem);
             }
 
-            if (GUILayout.Button("Step 2: GroupColors"))
-            {
-                GroupColors(levelItem);
-            }
+            // if (GUILayout.Button("Step 1: ReadLevel"))
+            // {
+            //     ReadLevel(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 3: ReassignFactionForTiles"))
-            {
-                ReassignFactionForTiles(levelItem);
-            }
+            // if (GUILayout.Button("Step 2: GroupColors"))
+            // {
+            //     GroupColors(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 4: AssignLevelPriority"))
-            {
-                AssignLevelPriority(levelItem);
-            }
+            // if (GUILayout.Button("Step 3: ReassignFactionForTiles"))
+            // {
+            //     ReassignFactionForTiles(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 5: Find Tile Blockages"))
-            {
-                FindTileBlockages(levelItem);
-            }
+            // if (GUILayout.Button("Step 4: AssignLevelPriority"))
+            // {
+            //     AssignLevelPriority(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 6: Get Pool Faction"))
-            {
-                GetPoolFaction(levelItem);
-            }
+            // if (GUILayout.Button("Step 5: Find Tile Blockages"))
+            // {
+            //     FindTileBlockages(levelItem);
+            // }
 
-            if (GUILayout.Button("Step 7: Center On X"))
+            // if (GUILayout.Button("Step 6: Get Pool Faction"))
+            // {
+            //     GetPoolFaction(levelItem);
+            // }
+
+            if (GUILayout.Button("Center On X"))
             {
                 CenterOnX(levelItem);
             }
 
-            if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
-            {
-                MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
-            }
+            // if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
+            // {
+            //     MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            // }
 
-            GUILayout.Label("Preview Level", EditorStyles.boldLabel);
+            // GUILayout.Label("Preview Level", EditorStyles.boldLabel);
 
-            if (GUILayout.Button("Preview Level"))
-            {
-                PreviewLevel(levelItem);
-            }
+            // if (GUILayout.Button("Preview Level"))
+            // {
+            //     PreviewLevel(levelItem);
+            // }
 
-            GUILayout.Label("Manual Level Setup", EditorStyles.boldLabel);
+            // GUILayout.Label("Manual Level Setup", EditorStyles.boldLabel);
 
-            if (GUILayout.Button("FillTheRestOfLevel"))
-            {
-                FillTheRestOfLevel(levelItem);
-            }
+            // if (GUILayout.Button("FillTheRestOfLevel"))
+            // {
+            //     FillTheRestOfLevel(levelItem);
+            // }
         }
 
         private void GetPoolFaction(LevelItem levelItem)
@@ -201,6 +208,18 @@ namespace AntsFlow
             level.transform.localScale = level.spawnScale;
 
             EditorUtility.SetDirty(level);
+        }
+
+        private void GenerateLevel(LevelItem levelItem)
+        {
+            ReadLevel(levelItem);
+            // GroupColors(levelItem);
+            ReassignFactionForTiles(levelItem);
+            AssignLevelPriority(levelItem);
+            FindTileBlockages(levelItem);
+            GetPoolFaction(levelItem);
+            CenterOnX(levelItem);
+            MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
         }
 
         void ReadLevel(LevelItem level)
