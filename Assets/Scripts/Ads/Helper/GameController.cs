@@ -34,6 +34,9 @@ public class GameController : MonoBehaviour
     {
         Instance = this;
         DontDestroyOnLoad(this);
+
+        useProfile.IsRemoveAds = true;
+
         Init();
     }
     public void Init()
@@ -66,7 +69,7 @@ public class GameController : MonoBehaviour
     public void InitLoadScene()
     {
         segmentController.Init();
-        admobAds.Init();
+        // admobAds.Init();
         ActionLimitQueue.Init();
         gameLoading.Init();
     }
