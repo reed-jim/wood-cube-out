@@ -567,6 +567,8 @@ public class WashingMachineItem : MonoBehaviour
 
         tilesToMove.AddRange(tilesForGhostAnts);
 
+        isStucking = false;
+
         while (tilesToMove.Count > 0)
         {
             BaseAnt ant = ObjectPoolingEverything.GetFromPool<BaseAnt>(GameConstants.ant);

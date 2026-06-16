@@ -183,7 +183,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
                     _rewards[index].gameObject.SetActive(false);
 
-                    if (i % 2 == 0)
+                    if (i % 4 == 0)
                     {
                         SoundManager.Instance.PlaySoundCollectCoin();
                     }
