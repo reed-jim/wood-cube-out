@@ -44,6 +44,7 @@ public class RevivePopup : BasePopup
     public static event Action reviveRefusedEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<bool> fadeBlackOverlayEvent;
+    public static event Action updateCoinTextEvent;
 
     protected override void MoreActionInAwake()
     {
@@ -147,6 +148,7 @@ public class RevivePopup : BasePopup
             });
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
+            updateCoinTextEvent?.Invoke();
 
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",

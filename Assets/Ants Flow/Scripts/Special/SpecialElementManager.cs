@@ -24,6 +24,11 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
     {
         specialElementConfig = levelItem.specialElementConfig;
 
+        for (int i = 0; i < antBoxLinks.Count; i++)
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.antBoxLink, antBoxLinks[i].gameObject);
+        }
+
         antBoxLinks.Clear();
     }
 

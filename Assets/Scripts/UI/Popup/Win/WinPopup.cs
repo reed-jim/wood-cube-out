@@ -214,6 +214,11 @@ public class WinPopup : BasePopup
 
     private void OnCollectCoinCompleted()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (_isAlreadyWatchRewardedAd)
         {
             OnInterstitialAdCompleted();

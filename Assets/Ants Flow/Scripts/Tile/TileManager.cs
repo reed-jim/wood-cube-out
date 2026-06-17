@@ -8,7 +8,9 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using Unity.AI.Navigation;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -342,6 +344,7 @@ namespace AntsFlow
         // }
 
         #region BFS
+#if UNITY_EDITOR
         void OnDrawGizmosSelected()
         {
             foreach (var node in nodes)
@@ -423,12 +426,13 @@ namespace AntsFlow
                 }
             }
         }
+#endif
 
-        public List<Node> FindPath(BaseTile target)
+        public List<Node> FindPath(BaseTile target, Vector3 currentPosition)
         {
             Node start = bottomLeftMostNode;
 
-            if (target.transform.position.x > 0)
+            if (currentPosition.x > 0)
             {
                 start = bottomRightMostNode;
             }
