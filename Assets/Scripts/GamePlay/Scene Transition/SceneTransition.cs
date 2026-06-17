@@ -167,7 +167,8 @@ public class SceneTransition : MonoBehaviour
         Debug.Log("[FLOW] SceneTransition.TransitionOnLevelStarted() called");
         Reset();
 
-        loadingSpine.gameObject.SetActive(false);
+        if (loadingSpine != null)
+            loadingSpine.gameObject.SetActive(false);
 
         if (_waitForLevelLoadedCoroutine != null)
         {
