@@ -195,6 +195,9 @@ namespace NamPhuThuy.GamePlay
 
                 GamePersistentVariable.levelItem = null;
 
+                TutorialLevelOne.Ins.HideTutorial();
+                BoosterTutorial.Ins.EndTutorial();
+
                 return;
             }
             // NOT LOOP
