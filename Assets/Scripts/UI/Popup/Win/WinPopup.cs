@@ -209,6 +209,8 @@ public class WinPopup : BasePopup
 
     private async void Continue()
     {
+        continueButton.interactable = false;
+
         collectCoinEvent?.Invoke(_currentCollectedCoin);
     }
 

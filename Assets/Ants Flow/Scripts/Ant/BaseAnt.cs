@@ -127,21 +127,6 @@ namespace AntsFlow
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
-            if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
-            }
-
-            return;
-
             if (!isMovingToSideTile)
             {
                 Vector2 direction = navMeshAgent.velocity;
