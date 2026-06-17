@@ -94,6 +94,7 @@ public class SettingPopup : BasePopup
     private void EnableVibration(bool isTurnOn)
     {
         gameSetting.IsVibrate = isTurnOn;
+        GamePersistentVariable.IsVibrate = isTurnOn;
     }
 
     private void OnGameSettingLoaded()
@@ -211,6 +212,8 @@ public class SettingPopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
 
         replayLevelEvent?.Invoke();
+
+        GamePersistentVariable.isPreventSelectAntBox = false;
     }
 
     private void OpenBackupPopup()

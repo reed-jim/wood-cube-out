@@ -28,6 +28,7 @@ namespace AntsFlow
         private int totalTile;
         public int numAntBoxSpawned;
         public List<WashingMachineItem> ghostAntBoxes;
+        public Coroutine pendingLoseLevelCoroutine;
 
         public static event Action winLevelEvent;
         public static event Action loseLevelEvent;
@@ -41,6 +42,9 @@ namespace AntsFlow
             RevivePopup.reviveEvent += Revive;
             BaseTile.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
         }
 
         void OnDestroy()
@@ -48,6 +52,9 @@ namespace AntsFlow
             RevivePopup.reviveEvent -= Revive;
             BaseTile.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
+            SettingPopup.replayLevelEvent -= OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
         }
 
         private void OnAntBoxSelected(WashingMachineItem antBox)
@@ -77,6 +84,7 @@ namespace AntsFlow
             Debug.Log("[FLOW] WMM: UpdateTileCount DONE");
             TileManager.Ins.CalculateLevelCenter();
             Debug.Log("[FLOW] WMM: CalculateLevelCenter DONE");
+            TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             Debug.Log("[FLOW] WMM: SpecialElementManager.Setup START");
             SpecialElementManager.Ins.Setup(levelItem);
@@ -634,6 +642,8 @@ namespace AntsFlow
 
             if (isWin)
             {
+                OnLevelReplayed();
+
                 winLevelEvent?.Invoke();
             }
         }
@@ -670,11 +680,6 @@ namespace AntsFlow
 
         public bool CheckLoseLevel()
         {
-            if (GamePersistentVariable.isPendingLoseLevel)
-            {
-                return false;
-            }
-
             bool isLose = IsLose();
 
             if (isLose)
@@ -688,7 +693,7 @@ namespace AntsFlow
                     antBox.TurnOnWarningLoseAnimation();
                 }
 
-                StartCoroutine(PendingLoseLevel());
+                pendingLoseLevelCoroutine = StartCoroutine(PendingLoseLevel());
 
                 GamePersistentVariable.isPendingLoseLevel = true;
             }
@@ -705,7 +710,7 @@ namespace AntsFlow
                 yield return waitForSeconds;
             }
 
-            if (IsLose())
+            if (IsLose() && !GamePersistentVariable.isLevelLost)
             {
                 loseLevelEvent?.Invoke();
 
@@ -790,6 +795,18 @@ namespace AntsFlow
             }
         }
         #endregion
+
+        private void OnLevelReplayed()
+        {
+            if (pendingLoseLevelCoroutine != null)
+            {
+                StopCoroutine(pendingLoseLevelCoroutine);
+            }
+
+            ghostAntBoxes.Clear();
+
+            GamePersistentVariable.numActiveAnt = 0;
+        }
 
         #region Util
         public WashingMachineSlot GetAvailableWashingMachineSlot()

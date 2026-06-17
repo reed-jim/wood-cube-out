@@ -182,22 +182,24 @@ namespace NamPhuThuy.GamePlay
             }
 
             // NOT LOOP
-            if (GamePersistentVariable.isDisableLoopLevel)
+            if (currentLevel.Value > _maxLevel)
             {
-                if (currentLevel.Value > _maxLevel)
-                {
-                    isLoopLevel = true;
-                }
+                isLoopLevel = true;
+            }
 
-                if (isLoopLevel)
-                {
-                    showSceneTransitionEvent?.Invoke();
-                    setIsLevelLoadedEvent?.Invoke();
-                    switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
-                    setLevelNumberEvent?.Invoke();
+            if (isLoopLevel)
+            {
+                showSceneTransitionEvent?.Invoke();
+                setIsLevelLoadedEvent?.Invoke();
+                switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+                setLevelNumberEvent?.Invoke();
 
-                    return;
-                }
+                GamePersistentVariable.levelItem = null;
+
+                TutorialLevelOne.Ins.HideTutorial();
+                BoosterTutorial.Ins.EndTutorial();
+
+                return;
             }
             // NOT LOOP
 

@@ -63,8 +63,9 @@ public class GameLoading : MonoBehaviour
 
         GamePersistentVariable.hasAppJustLaunched = true;
 
+        SceneManager.LoadScene(2);
 
-
+        return;
         
         if (DataUtility.Load(GameConstants.IS_FIRST_TIME_OPEN_APP, true))
         {

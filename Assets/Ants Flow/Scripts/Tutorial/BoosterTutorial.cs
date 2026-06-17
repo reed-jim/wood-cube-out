@@ -12,7 +12,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
 
-public class BoosterTutorial : MonoBehaviour
+public class BoosterTutorial : Singleton<BoosterTutorial>
 {
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text description;
@@ -32,7 +32,7 @@ public class BoosterTutorial : MonoBehaviour
     private int step;
     private BoosterType boosterType;
 
-    void Awake()
+    protected override void MoreActionOnAwake()
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
@@ -165,7 +165,7 @@ public class BoosterTutorial : MonoBehaviour
         step++;
     }
 
-    private void EndTutorial()
+    public void EndTutorial()
     {
         SaferioTween.AlphaHide(canvasGroup);
     }
@@ -202,7 +202,14 @@ public class BoosterTutorial : MonoBehaviour
 
         if (isTutorial)
         {
-            isTutorial = DataUtility.Load($"is tutorial {boosterType} done", false);
+            if (DataUtility.Load($"is tutorial {boosterType} done", false))
+            {
+                isTutorial = false;
+            }
+            else
+            {
+                DataUtility.Save($"is tutorial {boosterType} done", true);
+            }
         }
 
         if (!isTutorial)

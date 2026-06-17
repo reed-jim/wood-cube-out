@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
@@ -32,15 +34,27 @@ namespace AntsFlow
         public BaseTile tile;
         public Vector3 destination;
 
+        private List<Tween> tweens;
+        private List<Sequence> sequences;
         private int siblingIndex;
         private float stuckTime;
         private float stuckTimeNoReachDestination;
         private float stuckThreshold;
         private float stuckNoReachDestinationThreshold;
+        private Vector2 direction;
 
         public static event Action requestUpdateNavmeshEvent;
 
 
+
+        #region Wiggle
+        private int wiggleCount;
+        private int numHalfWiggleDone;
+        public float wiggleMagnitude;
+        public int wiggleFrequency;
+        private bool isWiggleLeft;
+        private Vector3 skeletonAnimationInitialPosition;
+        #endregion
 
         [Header("Noise Settings")]
         [Tooltip("Độ mạnh của sự lắc lư (gạt sang 2 bên)")]
@@ -49,11 +63,16 @@ namespace AntsFlow
         public float noiseMagnitude = 2f;
         private float randomNoiseOffset;
 
+        private float speedMove;
+
         void Awake()
         {
+            speedMove = 6;
+
             // LevelLoader.startLevelEvent += OnLevelStarted;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
             WashingMachineManager.winLevelEvent += OnLevelWon;
 
             navMeshAgent.updateRotation = false;
@@ -72,6 +91,11 @@ namespace AntsFlow
             siblingIndex = transform.GetSiblingIndex();
             stuckThreshold = 3 * Time.deltaTime;
             stuckNoReachDestinationThreshold = 0.2f;
+
+            tweens = new List<Tween>();
+            sequences = new List<Sequence>();
+
+            skeletonAnimationInitialPosition = skeletonAnimation.transform.localPosition;
         }
 
         void OnDestroy()
@@ -79,6 +103,7 @@ namespace AntsFlow
             // LevelLoader.startLevelEvent -= OnLevelStarted;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent -= OnLevelReplayed;
+            DebugPopup.switchLevelEvent -= OnLevelReplayed;
             WashingMachineManager.winLevelEvent -= OnLevelWon;
         }
 
@@ -101,6 +126,21 @@ namespace AntsFlow
         void Update()
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+
+            if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime
+                );
+            }
+
+            return;
 
             if (!isMovingToSideTile)
             {
@@ -125,11 +165,6 @@ namespace AntsFlow
                 //    ApplyAntJitter();
                 //}
             }
-
-            // if (navMeshAgent.isOnNavMesh)
-            // {
-            //     navMeshAgent.destination = destination;
-            // }
 
             if (isMovingToTile)
             {
@@ -185,32 +220,54 @@ namespace AntsFlow
 
         private void Reset()
         {
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.ResetPath();
+            }
+
+            navMeshAgent.enabled = true;
+            navMeshAgent.areaMask = walkableMask;
+
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+            transform.localScale = Vector3.one;
+            destination = Vector3.zero;
+
             isMovingToTile = false;
             isMovingToNest = false;
+            isDroppingTile = false;
+
+            stuckTime = 0;
+            stuckTimeNoReachDestination = 0;
 
             if (tile != null)
             {
                 LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
             }
+
+            tile = null;
+
+            CommonUtil.StopAllTweens(tweens);
+            CommonUtil.StopAllSequences(sequences);
         }
 
         private void OnAntMovedToNest()
         {
             stuckTime = 0;
 
-            Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
+            tweens.Add(Tween.EulerAngles(transform, transform.eulerAngles, new Vector3(0, 0, 180), duration: 0.3f)
                 .OnComplete(() =>
                 {
 
-                });
+                }));
 
-            Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f);
-            Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.5f), duration: 0.3f);
-            Tween.Scale(transform, 0, duration: 0.3f);
+            tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.transform.position.AddY(-0.65f), duration: 0.3f));
+            tweens.Add(Tween.Position(tile.transform, TileManager.Ins.antNest.transform.position.AddY(-0.5f), duration: 0.3f));
+            tweens.Add(Tween.Scale(transform, 0, duration: 0.3f));
 
             Vector3 antScale = transform.localScale;
 
-            SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
+            sequences.Add(SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
             {
                 LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
 
@@ -226,7 +283,7 @@ namespace AntsFlow
                 tile = null;
 
                 GamePersistentVariable.numActiveAnt--;
-            });
+            }));
 
             GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
 
@@ -237,23 +294,23 @@ namespace AntsFlow
 
         private void OnLevelStarted()
         {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
-
             Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
         private void OnLevelWon()
         {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
-
             Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
         private void OnLevelReplayed()
         {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
-
             Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.ant, gameObject);
         }
 
         public void Init(Color faction)
@@ -269,6 +326,8 @@ namespace AntsFlow
 
             stuckTime = 0;
             isMovingToSideTile = false;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
         }
 
         public void SetGhostMode()
@@ -282,41 +341,168 @@ namespace AntsFlow
             navMeshAgent.enabled = isEnable;
         }
 
+        public void MoveTo(BaseTile tile, int index)
+        {
+            List<Node> path = tile.path;
+
+            navMeshAgent.enabled = false;
+
+            StartCoroutine(MovingTo(path, 1, index));
+
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
+
+            this.tile = tile;
+        }
+
+        public void MoveTo(List<Node> path, int index)
+        {
+            StartCoroutine(MovingTo(path, 2, index));
+        }
+
+        private IEnumerator MovingTo(List<Node> path, int count, int index)
+        {
+            WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
+
+            bool isMoving = false;
+
+            List<Node> reversePath = new List<Node>();
+
+            for (int i = path.Count - 1; i >= 0; i--)
+            {
+                reversePath.Add(path[i]);
+            }
+
+            Vector2 destination;
+            Vector3 offset = index % 2 == 0 ? 0.8f * transform.right : -0.8f * transform.right;
+
+            wiggleCount = 0;
+            numHalfWiggleDone = 0;
+            isWiggleLeft = true;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
+
+            while (path.Count > 0 || isMoving)
+            {
+                float speed = 6;
+                float duration;
+
+                if (!isMoving)
+                {
+                    Node node = path[0];
+
+                    destination = node.initialPosition;
+                    duration = Vector2.Distance(transform.position, destination) / speed;
+
+                    direction = destination - (Vector2)transform.position;
+                    // Rotate(direction);
+
+                    tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear)
+                    // .OnUpdate(target: transform, (target, tween) =>
+                    // {
+                    //     if (isWiggleLeft)
+                    //     {
+                    //         if (wiggleCount > -wiggleFrequency)
+                    //         {
+                    //             skeletonAnimation.transform.localPosition -= wiggleMagnitude * target.right;
+
+                    //             wiggleCount--;
+                    //         }
+                    //         else
+                    //         {
+                    //             numHalfWiggleDone++;
+                    //             isWiggleLeft = false;
+                    //         }
+                    //     }
+                    //     else
+                    //     {
+                    //         if (wiggleCount < wiggleFrequency)
+                    //         {
+                    //             skeletonAnimation.transform.localPosition += wiggleMagnitude * target.right;
+
+                    //             wiggleCount++;
+                    //         }
+                    //         else
+                    //         {
+                    //             numHalfWiggleDone++;
+                    //             isWiggleLeft = true;
+                    //         }
+                    //     }
+                    // })
+                    .OnComplete(() =>
+                    {
+                        isMoving = false;
+                    }));
+
+                    path.RemoveAt(0);
+
+                    isMoving = true;
+                }
+
+                yield return waitForSeconds;
+            }
+
+            if (count < 2)
+            {
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
+
+                MoveTo(reversePath, index);
+            }
+            else
+            {
+                float speed = 6;
+                float duration = Vector2.Distance(transform.position, TileManager.Ins.antNest.position.AddY(0.3f)) / speed;
+
+                direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
+                // Rotate(direction);
+
+                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    OnAntMovedToNest();
+                }));
+            }
+
+            void Rotate(Vector2 direction)
+            {
+                if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+                {
+                    float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                    Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                    transform.rotation = targetRotation;
+                }
+            }
+        }
+
         public void MoveToTile(BaseTile tile)
         {
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
 
-            //navMeshAgent.enabled = false;
             this.tile = tile;
-            // navMeshAgent.areaMask = walkableMask;
-            // navMeshAgent.enabled = true;
 
-            //// navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
-            //MoveTo(tile.coordinate.transform.position.ChangeZ(0), onCompleteAction: () =>
-            //{
-            //    stuckTime = 0;
-
-            //    tile.MoveToAnt(this);
-
-            //    MoveToNest();
-            //});
             destination = tile.coordinate.transform.position.ChangeZ(0);
             stuckTime = 0;
             navMeshAgent.enabled = false;
             navMeshAgent.areaMask = walkableMask;
             navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = destination;
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.destination = destination;
+            }
+            else
+            {
+                MoveToNest();
+            }
 
             isMovingToSideTile = false;
             isMovingToTile = true;
-            // tile.MoveToAnt(this);
-
-            //MoveToNest();
-
-
-            //isMovingToSideTile = true;
         }
 
         public void MoveToTileGhostMode(BaseTile tile)
@@ -341,7 +527,7 @@ namespace AntsFlow
 
             SetRotation(direction);
 
-            Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
+            tweens.Add(Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
                 if (tile != null)
@@ -355,12 +541,12 @@ namespace AntsFlow
 
                 SetRotation(direction);
 
-                Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
+                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();
-                });
-            });
+                }));
+            }));
 
             void SetRotation(Vector2 direction)
             {
@@ -384,11 +570,16 @@ namespace AntsFlow
             navMeshAgent.areaMask = walkableAndNestMask;
             navMeshAgent.enabled = true;
 
-            navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.3f);
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.destination = TileManager.Ins.antNest.position.AddY(0.3f);
+            }
+            else
+            {
+                OnAntMovedToNest();
+            }
+
             destination = TileManager.Ins.antNest.position.AddY(0.2f);
-            // AILerp.destination = TileManager.Ins.antNest.position;
-            // AIDestinationSetter.target = TileManager.Ins.antNest;
-            // AIPath.destination = TileManager.Ins.antNest.transform.position;
 
             isMovingToTile = false;
             isMovingToNest = true;
@@ -404,7 +595,7 @@ namespace AntsFlow
 
             Rotate(direction);
 
-            Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+            tweens.Add(Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
             .OnComplete(() =>
             {
                 nextPosition = transform.position.ChangeY(position.y);
@@ -412,7 +603,7 @@ namespace AntsFlow
 
                 Rotate(direction);
 
-                Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
+                tweens.Add(Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     // onCompleteAction?.Invoke();
@@ -424,8 +615,8 @@ namespace AntsFlow
 
                     isMovingToSideTile = false;
                     isMovingToTile = true;
-                });
-            });
+                }));
+            }));
 
             void Rotate(Vector2 direction)
             {
@@ -457,10 +648,6 @@ namespace AntsFlow
 
                 // Optional: continue moving somewhere
                 // agent.SetDestination(target.position);
-            }
-            else
-            {
-                Debug.LogWarning("No NavMesh found nearby.");
             }
         }
 
@@ -505,6 +692,31 @@ namespace AntsFlow
                 float angle = Mathf.Atan2(finalVelocity.y, finalVelocity.x) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, 0f, angle);
             }
+        }
+
+        private void OnEnable()
+        {
+            navMeshAgent.speed = speedMove;
+            EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
+            EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
+        }
+
+        private void OnDisable()
+        {
+            EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
+            EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
+        }
+
+        private void UpSpeed(float value)
+        {
+            //navMeshAgent.speed = speedMove * value;
+            Time.timeScale = value;
+        }
+
+        private void EndUpSpeed()
+        {
+            Time.timeScale = 1;
+            // navMeshAgent.speed = speedMove;
         }
     }
 }

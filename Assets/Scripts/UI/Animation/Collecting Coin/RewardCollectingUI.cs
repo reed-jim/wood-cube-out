@@ -20,6 +20,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
     private RectTransform[] _rewards;
     private Image[] _rewardImages;
 
+    bool isCompleted;
+
     #region EVENT
     public static event Action<float> addCoinEvent;
     public static event Action<float> updateCoinTextEvent;
@@ -150,6 +152,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         float maxDuration = 0;
 
+        isCompleted = false;
+
         for (int i = 0; i < poolSize; i++)
         {
             int index = i;
@@ -172,18 +176,28 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                 {
                     float valueLeft = (poolSize - index - 1) * unitValue;
 
-                    if (duration == maxDuration)
+                    if (!isCompleted && duration == maxDuration)
                     {
                         valueLeft = 0;
+                        GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
 
                         collectCoinCompleteEvent?.Invoke();
-                    }
 
-                    onCompleteAction?.Invoke();
+                        isCompleted = true;
+
+                        onCompleteAction?.Invoke();
+                    }
+                    else
+                    {
+                        if (!isCompleted)
+                        {
+                            onCompleteAction?.Invoke();
+                        }
+                    }
 
                     _rewards[index].gameObject.SetActive(false);
 
-                    if (i % 2 == 0)
+                    if (i % 8 == 0)
                     {
                         SoundManager.Instance.PlaySoundCollectCoin();
                     }
@@ -201,7 +215,10 @@ public class SpawnedRewardItemsData
 
     public float GetValueLeft()
     {
-        remaningItems--;
+        if (remaningItems > 0)
+        {
+            remaningItems--;
+        }
 
         return remaningItems * unitValue;
     }

@@ -151,7 +151,7 @@ public class ObjectPool
                 continue;
             }
 
-            if (!_pool[i].gameObject.activeSelf)
+            if (!_pool[i].gameObject.activeInHierarchy)
             {
                 _currentIndex = i;
 
