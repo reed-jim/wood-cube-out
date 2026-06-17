@@ -65,32 +65,31 @@ public class BoosterItemUI : MonoBehaviour
 
         int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
+        bool isUnlocked = currentLevel.Value >= GameConstants.GetLevelToUnlockBooster(boosterType);
+        bool isShowQuantityText = quantity > 0 && isUnlocked;
+        bool isShowAddButton = quantity <= 0 && isUnlocked;
+
+        quantityTextContainer.gameObject.SetActive(isShowQuantityText);
+        addButtonRT.gameObject.SetActive(isShowAddButton);
+
         if (quantity > 0)
         {
-            quantityTextContainer.gameObject.SetActive(true);
-            addButtonRT.gameObject.SetActive(false);
-
             quantityText.text = $"{quantity}";
         }
         else
         {
-            quantityTextContainer.gameObject.SetActive(false);
-            addButtonRT.gameObject.SetActive(true);
+
         }
 
         if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
         {
             lockCanvasGroup.gameObject.SetActive(true);
-            quantityTextContainer.gameObject.SetActive(false);
-            addButtonRT.gameObject.SetActive(false);
 
             localizedLevelToUnlock.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GameConstants.GetLevelToUnlockBooster(boosterType)}");
         }
         else
         {
             lockCanvasGroup.gameObject.SetActive(false);
-            quantityTextContainer.gameObject.SetActive(true);
-            addButtonRT.gameObject.SetActive(true);
         }
     }
 
@@ -124,23 +123,16 @@ public class BoosterItemUI : MonoBehaviour
 
             int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
+            bool isUnlocked = currentLevel.Value >= GameConstants.GetLevelToUnlockBooster(boosterType);
+            bool isShowQuantityText = quantity > 0 && isUnlocked;
+            bool isShowAddButton = quantity <= 0 && isUnlocked;
+
+            quantityTextContainer.gameObject.SetActive(isShowQuantityText);
+            addButtonRT.gameObject.SetActive(isShowAddButton);
+
             if (quantity > 0)
             {
-                quantityTextContainer.gameObject.SetActive(true);
-                addButtonRT.gameObject.SetActive(false);
-
                 quantityText.text = $"{quantity}";
-            }
-            else
-            {
-                quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(true);
-            }
-
-            if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
-            {
-                quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(false);
             }
         }
     }
@@ -153,23 +145,16 @@ public class BoosterItemUI : MonoBehaviour
 
             int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
 
+            bool isUnlocked = currentLevel.Value >= GameConstants.GetLevelToUnlockBooster(boosterType);
+            bool isShowQuantityText = quantity > 0 && isUnlocked;
+            bool isShowAddButton = quantity <= 0 && isUnlocked;
+
+            quantityTextContainer.gameObject.SetActive(isShowQuantityText);
+            addButtonRT.gameObject.SetActive(isShowAddButton);
+
             if (quantity > 0)
             {
-                quantityTextContainer.gameObject.SetActive(true);
-                addButtonRT.gameObject.SetActive(false);
-
                 quantityText.text = $"{quantity}";
-            }
-            else
-            {
-                quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(true);
-            }
-
-            if (currentLevel.Value < GameConstants.GetLevelToUnlockBooster(boosterType))
-            {
-                quantityTextContainer.gameObject.SetActive(false);
-                addButtonRT.gameObject.SetActive(false);
             }
         }
     }
