@@ -249,7 +249,7 @@ public class WashingMachineItem : MonoBehaviour
 
         OnSelectTrueCompleted();
 
-        if (gameSetting.IsVibrate)
+        if (GamePersistentVariable.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }
@@ -283,7 +283,7 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
-        if (gameSetting.IsVibrate)
+        if (GamePersistentVariable.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }
@@ -419,13 +419,17 @@ public class WashingMachineItem : MonoBehaviour
 
         var left = tilesToMove
             .Where(t => t.transform.position.x < 0)
-            .OrderBy(t => t.transform.position.x);
+            .OrderBy(t => t.transform.position.y)
+            .ThenBy(t => t.transform.position.x);
 
         var right = tilesToMove
             .Where(t => t.transform.position.x >= 0)
-            .OrderByDescending(t => t.transform.position.x);
+            .OrderBy(t => t.transform.position.y)
+            .ThenByDescending(t => t.transform.position.x);
 
         tilesToMove = left.Concat(right).ToList();
+
+        // tilesToMove = tilesToMove.OrderBy(t => t.GetPathTotalDistance(transform.position)).ToList();
 
         if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
         {
@@ -468,7 +472,7 @@ public class WashingMachineItem : MonoBehaviour
 
     private IEnumerator SpawningAnts()
     {
-        WaitForSeconds waitForSeconds = new WaitForSeconds(0.45f);
+        WaitForSeconds waitForSeconds = new WaitForSeconds(0.5f);
 
         int currentAntIndex = 0;
 
@@ -498,7 +502,9 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveTo(tilesToMove[currentAntIndex]);
+                ant.MoveToTile(tilesToMove[currentAntIndex]);
+                // BFS
+                // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -719,16 +725,20 @@ public class WashingMachineItem : MonoBehaviour
 
         // return tile.IsBlocked();
 
-        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile);
 
-        if (path == null || path.Count == 0)
-        {
-            return false;
-        }
+        // BFS
+        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
-        tile.path = path;
+        // if (path == null || path.Count == 0)
+        // {
+        //     return false;
+        // }
 
-        return true;
+        // tile.path = path;
+
+        // return true;
+        //
+
 
         return tile.actualBlockages.Count < 4;
     }

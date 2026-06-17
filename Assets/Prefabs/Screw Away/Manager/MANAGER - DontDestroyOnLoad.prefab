@@ -2039,6 +2039,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da9d59708946344a8d8bf32214116b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1476361203180820364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8548281405255364621}
+  - component: {fileID: 4964920797110804623}
+  m_Layer: 0
+  m_Name: You will be accepted
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8548281405255364621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476361203180820364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4964920797110804623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476361203180820364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: 'You will be accepted:'
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Vous serez accept\xE9 :"
+    Object: {fileID: 0}
+  - Language: German
+    Text: 'Sie werden angenommen:'
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Sarai accettato:'
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3042\u306A\u305F\u306F\u53D7\u3051\u5165\u308C\u3089\u308C\u307E\u3059\uFF1A"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2F9\uC2E0\uC740 \uBC1B\uC544\uB4E4\uC5EC\uC9C8 \uAC83\uC785\uB2C8\uB2E4:"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Voc\xEA ser\xE1 aceito:"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u0430\u0441 \u043F\u0440\u0438\u043C\u0443\u0442:"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Ser\xE1s aceptado:"
+    Object: {fileID: 0}
 --- !u!1 &1493961935904648032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2931,6 +3004,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "\xA1Haz clic en cualquier objeto para romperlo!"
+    Object: {fileID: 0}
+--- !u!1 &1955662493856358684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4990051466471391265}
+  - component: {fileID: 5301651220494480285}
+  m_Layer: 0
+  m_Name: Completed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4990051466471391265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955662493856358684}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5301651220494480285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955662493856358684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Completed
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Compl\xE9t\xE9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Vollendet
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Completato
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5B8C\u4E86"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC644\uC804\uD55C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Conclu\xEDdo"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044B\u0439"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Terminado
     Object: {fileID: 0}
 --- !u!1 &1963572080231008746
 GameObject:
@@ -6246,6 +6392,80 @@ MonoBehaviour:
   - Language: Spanish
     Text: Parte del objeto protegido
     Object: {fileID: 0}
+--- !u!1 &4092985663188884545
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7903932119191454150}
+  - component: {fileID: 7246142963032351142}
+  m_Layer: 0
+  m_Name: Clear One Color
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7903932119191454150
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092985663188884545}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7246142963032351142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4092985663188884545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Clear One Color
+    Object: {fileID: 0}
+  - Language: French
+    Text: Effacer une couleur
+    Object: {fileID: 0}
+  - Language: German
+    Text: "Eine Farbe l\xF6schen"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Cancella un colore
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u30AF\u30EA\u30A2\u30EF\u30F3\u30AB\u30E9\u30FC"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2E8\uC77C \uC0C9\uC0C1 \uC9C0\uC6B0\uAE30"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Limpar uma cor
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u041E\u0447\u0438\u0441\u0442\u0438\u0442\u044C \u043E\u0434\u0438\u043D
+      \u0446\u0432\u0435\u0442"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Borrar un color
+    Object: {fileID: 0}
 --- !u!1 &4100564401918148596
 GameObject:
   m_ObjectHideFlags: 0
@@ -8786,6 +9006,10 @@ Transform:
   - {fileID: 5091744374612608339}
   - {fileID: 1201730073043283461}
   - {fileID: 5250490845608636609}
+  - {fileID: 3647414901184992346}
+  - {fileID: 7903932119191454150}
+  - {fileID: 8548281405255364621}
+  - {fileID: 4990051466471391265}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -12031,6 +12255,80 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f745d8f1fe0823f478883c1b8562fc7b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &7230930665463152232
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3647414901184992346}
+  - component: {fileID: 3640670661641527595}
+  m_Layer: 0
+  m_Name: Choose Any Antbox
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3647414901184992346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7230930665463152232}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3640670661641527595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7230930665463152232}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Choose Any Antbox
+    Object: {fileID: 0}
+  - Language: French
+    Text: Choisissez n'importe quelle Antbox
+    Object: {fileID: 0}
+  - Language: German
+    Text: "W\xE4hlen Sie eine beliebige Antbox"
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Scegli Qualsiasi formicaio
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u4EFB\u610F\u306E Antbox \u3092\u9078\u629E\u3057\u3066\u304F\u3060\u3055\u3044"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "Antbox\uB97C \uC120\uD0DD\uD558\uC138\uC694"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: Escolha qualquer Antbox
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u044B\u0431\u0435\u0440\u0438\u0442\u0435 \u043B\u044E\u0431\u043E\u0439
+      \u043C\u0443\u0440\u0430\u0432\u0435\u0439\u043D\u0438\u043A"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Elija cualquier Antbox
+    Object: {fileID: 0}
 --- !u!1 &7260605558960898279
 GameObject:
   m_ObjectHideFlags: 0
@@ -14027,7 +14325,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: b3eb90dacc2efe146b52b5202b060dd5, type: 3}
+  m_Resource: {fileID: 8300000, guid: f1d35e3f519487a4ba911f009aafb144, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 0.2
   m_Pitch: 1

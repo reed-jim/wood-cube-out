@@ -94,6 +94,7 @@ public class SettingPopup : BasePopup
     private void EnableVibration(bool isTurnOn)
     {
         gameSetting.IsVibrate = isTurnOn;
+        GamePersistentVariable.IsVibrate = isTurnOn;
     }
 
     private void OnGameSettingLoaded()

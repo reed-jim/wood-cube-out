@@ -179,13 +179,21 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                     if (!isCompleted && duration == maxDuration)
                     {
                         valueLeft = 0;
+                        GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
 
                         collectCoinCompleteEvent?.Invoke();
 
                         isCompleted = true;
-                    }
 
-                    onCompleteAction?.Invoke();
+                        onCompleteAction?.Invoke();
+                    }
+                    else
+                    {
+                        if (!isCompleted)
+                        {
+                            onCompleteAction?.Invoke();
+                        }
+                    }
 
                     _rewards[index].gameObject.SetActive(false);
 
@@ -207,7 +215,10 @@ public class SpawnedRewardItemsData
 
     public float GetValueLeft()
     {
-        remaningItems--;
+        if (remaningItems > 0)
+        {
+            remaningItems--;
+        }
 
         return remaningItems * unitValue;
     }

@@ -176,7 +176,7 @@ public class WinPopup : BasePopup
 
                     userResourcesObserver.Save();
 
-                    _currentCollectedCoin += numCoin;
+                    _currentCollectedCoin = numCoin;
 
                     SaferioTracking.TrackResourceSource(
                         currentLevel.Value, "Coin", numCoin - _currentCollectedCoin, (int)userResourcesObserver.UserResources.CoinQuantity, "win_level");
@@ -209,11 +209,18 @@ public class WinPopup : BasePopup
 
     private async void Continue()
     {
+        continueButton.interactable = false;
+
         collectCoinEvent?.Invoke(_currentCollectedCoin);
     }
 
     private void OnCollectCoinCompleted()
     {
+        if (!gameObject.activeInHierarchy)
+        {
+            return;
+        }
+
         if (_isAlreadyWatchRewardedAd)
         {
             OnInterstitialAdCompleted();
@@ -244,7 +251,7 @@ public class WinPopup : BasePopup
         {
             HideImmediately();
         }));
-        
+
         // bool isBackHome = HandleSuggestFeature();
 
         // if (!isBackHome)
