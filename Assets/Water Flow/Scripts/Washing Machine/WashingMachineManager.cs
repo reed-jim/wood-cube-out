@@ -64,27 +64,39 @@ namespace AntsFlow
 
         public void StartLevel(AntsFlow.LevelItem levelItem)
         {
+            Debug.Log("[FLOW] WashingMachineManager.StartLevel() BEGIN");
             this.levelItem = levelItem;
 
             difficultyLevel = levelItem.difficulty;
             numAntBoxSpawned = 0;
 
+            Debug.Log("[FLOW] WMM: GetComponentsFromAllChildren<BaseTile>");
             TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
+            Debug.Log($"[FLOW] WMM: tiles count = {TileManager.Ins.tiles.Count}");
             TileManager.Ins.UpdateTileCount();
+            Debug.Log("[FLOW] WMM: UpdateTileCount DONE");
             TileManager.Ins.CalculateLevelCenter();
+            Debug.Log("[FLOW] WMM: CalculateLevelCenter DONE");
 
+            Debug.Log("[FLOW] WMM: SpecialElementManager.Setup START");
             SpecialElementManager.Ins.Setup(levelItem);
+            Debug.Log("[FLOW] WMM: SpecialElementManager.Setup DONE");
 
+            Debug.Log($"[FLOW] WMM: SpawnFirstWashingMachines numStartAntBoxes={levelItem.numStartAntBoxes}");
             List<WashingMachineItem> washingMachineItems = SpawnFirstWashingMachines(levelItem.numStartAntBoxes);
+            Debug.Log("[FLOW] WMM: SpawnFirstWashingMachines DONE");
 
             if (levelItem.isTutorialLevel)
             {
+                Debug.Log("[FLOW] WMM: TutorialLevelOne.StartTutorial");
                 TutorialLevelOne.Ins.StartTutorial(washingMachineItems);
             }
             else
             {
                 TutorialLevelOne.Ins.HideTutorial();
             }
+
+            Debug.Log("[FLOW] WashingMachineManager.StartLevel() END");
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)

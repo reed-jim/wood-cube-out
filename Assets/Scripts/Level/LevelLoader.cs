@@ -130,6 +130,7 @@ namespace NamPhuThuy.GamePlay
         #region LEVEL
         private async void LoadLevel()
         {
+            DebugLogger.LogSimple(message: "[FLOW] LoadLevel() START", color: Color.cyan);
             // showSceneTransitionEvent?.Invoke();
             // // NO INTERNET
             // if (Application.internetReachability == NetworkReachability.NotReachable)
@@ -181,19 +182,22 @@ namespace NamPhuThuy.GamePlay
             }
 
             // NOT LOOP
-            if (currentLevel.Value > _maxLevel)
+            if (GamePersistentVariable.isDisableLoopLevel)
             {
-                isLoopLevel = true;
-            }
+                if (currentLevel.Value > _maxLevel)
+                {
+                    isLoopLevel = true;
+                }
 
-            if (isLoopLevel)
-            {
-                showSceneTransitionEvent?.Invoke();
-                setIsLevelLoadedEvent?.Invoke();
-                switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
-                setLevelNumberEvent?.Invoke();
+                if (isLoopLevel)
+                {
+                    showSceneTransitionEvent?.Invoke();
+                    setIsLevelLoadedEvent?.Invoke();
+                    switchRouteEvent?.Invoke(ScreenRoute.LevelComingSoon);
+                    setLevelNumberEvent?.Invoke();
 
-                return;
+                    return;
+                }
             }
             // NOT LOOP
 
@@ -219,35 +223,51 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
+            DebugLogger.LogSimple(message: $"[FLOW] Addressables.InstantiateAsync: {levelName}", color: Color.cyan);
             _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
 
             _loadLevelHandle.Completed += (op) =>
             {
+                DebugLogger.LogSimple(message: $"[FLOW] Addressables.Completed status={op.Status}", color: Color.cyan);
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
+                    DebugLogger.LogSimple(message: "[FLOW] Addressables OK → ActualLoadLevel()", color: Color.green);
                     ActualLoadLevel(op.Result);
+                }
+                else
+                {
+                    DebugLogger.LogSimple(message: $"[FLOW] Addressables FAILED: {op.OperationException}", color: Color.red);
                 }
             };
 
+            DebugLogger.LogSimple(message: "[FLOW] startLevelEvent?.Invoke()", color: Color.cyan);
             startLevelEvent?.Invoke();
 
+            DebugLogger.LogSimple(message: "[FLOW] showSceneTransitionEvent?.Invoke()", color: Color.cyan);
             showSceneTransitionEvent?.Invoke();
 
             void ActualLoadLevel(GameObject resultLoad)
             {
+                DebugLogger.LogSimple(message: "[FLOW] ActualLoadLevel() START", color: Color.green);
                 GameObject level = resultLoad;
 
                 AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+                DebugLogger.LogSimple(message: $"[FLOW] LevelItem found: {(levelItem != null ? levelItem.name : "NULL")}", color: levelItem != null ? Color.green : Color.red);
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
+                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() START", color: Color.yellow);
                 WashingMachineManager.Ins.StartLevel(levelItem);
+                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() DONE", color: Color.green);
 
+                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() START", color: Color.yellow);
                 AntsFlow.TileManager.Ins.UpdateNavMesh();
+                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() DONE", color: Color.green);
 
                 Tween.Delay(1).OnComplete(() =>
                 {
+                    DebugLogger.LogSimple(message: "[FLOW] setIsLevelLoadedEvent?.Invoke()", color: Color.cyan);
                     setIsLevelLoadedEvent?.Invoke();
                 });
 
@@ -444,7 +464,7 @@ namespace NamPhuThuy.GamePlay
         {
             string res = levelName;
 
-            if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
+            if (GamePersistentVariable.specialLevelConfig != null && GamePersistentVariable.specialLevelConfig.isEnable) return res;
             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
 
             LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
@@ -688,6 +708,11 @@ namespace NamPhuThuy.GamePlay
             // }
 
             await Task.Delay(500);
+
+            if (this == null)
+            {
+                return;
+            }
 
             try
             {

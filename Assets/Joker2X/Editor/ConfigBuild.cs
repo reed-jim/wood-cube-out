@@ -491,7 +491,7 @@ public class ConfigBuild
     [MenuItem("Open Scene/Loading Scene &1")]
     public static void OpenSceneStartLoading()
     {
-        string localPath = "Assets/01_BaseCode/Scenes/LoadingScene.unity";
+        string localPath = "Assets/04_Bird_Sort/Assets/01_BaseCode/Scenes/LoadingScene.unity";
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.OpenScene(localPath);
     }
@@ -499,7 +499,7 @@ public class ConfigBuild
     [MenuItem("Open Scene/Home Scene")]
     public static void OpenSceneMainHome()
     {
-        string localPath = "Assets/01_BaseCode/Scenes/HomeScene.unity";
+        string localPath = "Assets/04_Bird_Sort/Assets/01_BaseCode/Scenes/HomeScene.unity";
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.OpenScene(localPath);
     }
@@ -507,7 +507,7 @@ public class ConfigBuild
     [MenuItem("Open Scene/Game Play &2")]
     public static void OpenSceneGamePlay()
     {
-        string localPath = "Assets/01_BaseCode/Scenes/GamePlay.unity";
+        string localPath = "Assets/Ants Flow/Scenes/Ants Flow.unity";
         EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo();
         EditorSceneManager.OpenScene(localPath);
     }
