@@ -247,8 +247,8 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                // CenterLevel(levelItem);
-                // FitLevelToScreenArea(levelItem);
+                FitLevelToScreenArea(levelItem);
+                CenterLevel(levelItem);
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
@@ -398,22 +398,30 @@ namespace NamPhuThuy.GamePlay
             void SetIsLoopLevel(bool isLoop)
             {
                 isLoopLevel = isLoop;
-                DebugLogger.LogSimple(message: $"isLoop: {isLoopLevel}", color: Color.red);
             }
         }
 
         private void CenterLevel(AntsFlow.LevelItem level)
         {
-            float sumX = 0f;
+            Vector2 average = Vector2.zero;
 
             foreach (Transform child in level.transform)
             {
-                sumX += child.position.x;
+                average += (Vector2)child.position;
             }
 
-            float averageX = sumX / level.transform.childCount;
+            average /= level.transform.childCount;
 
-            level.transform.position += Vector3.left * averageX;
+            level.transform.position += Vector3.left * average.x;
+            // level.transform.position += Vector3.down * average.y;
+
+            float distance = Mathf.Abs(Camera.main.transform.position.z);
+
+            Vector3 worldPos = Camera.main.ViewportToWorldPoint(
+                new Vector3(0, 0.55f, distance)
+            );
+
+            transform.position = transform.position.ChangeY(worldPos.y);
         }
 
         void FitLevelToScreenArea(AntsFlow.LevelItem level)
@@ -429,27 +437,15 @@ namespace NamPhuThuy.GamePlay
             float camWidth = camHeight * Camera.main.aspect;
 
             // Available screen area
-            float availableHeight = camHeight * 0.5f; // 90% - 40% = 50%
-            float availableWidth = camWidth;          // full width
+            float availableHeight = camHeight * 0.35f;
+            float availableWidth = 0.9f * camWidth;
 
-            float scaleX = availableWidth / levelWidth;
-            float scaleY = availableHeight / levelHeight;
+            float scaleX = level.transform.localScale.x * availableWidth / levelWidth;
+            float scaleY = level.transform.localScale.y * availableHeight / levelHeight;
 
             float scale = Mathf.Min(scaleX, scaleY);
 
             level.transform.localScale = Vector3.one * scale;
-
-            // Position level center in target area
-            float targetY =
-                Camera.main.transform.position.y +
-                camHeight * (0.4f + 0.5f * 0.5f) - // center of 40%-90%
-                camHeight * 0.5f;
-
-            level.transform.position = new Vector3(
-                Camera.main.transform.position.x,
-                targetY,
-                level.transform.position.z
-            );
         }
 
         public Bounds GetBoundsFromTiles(Transform level)
