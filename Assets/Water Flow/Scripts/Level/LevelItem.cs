@@ -3,6 +3,8 @@ using static GameEnum;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.IO;
+
 
 
 
@@ -88,6 +90,11 @@ namespace AntsFlow
             if (GUILayout.Button("GENERATE LEVEL"))
             {
                 GenerateLevel(levelItem);
+            }
+
+            if (GUILayout.Button("Convert to JSON"))
+            {
+                ConvertToJson(levelItem);
             }
 
             // if (GUILayout.Button("Step 1: ReadLevel"))
@@ -665,6 +672,64 @@ namespace AntsFlow
             }
         }
 
+        #region JSON
+        private void ConvertToJson(LevelItem level)
+        {
+            factionMapper =
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+            List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(level.transform);
+
+            AntLevelData antLevelData = new AntLevelData();
+
+            antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                AntLevelDataItem dataItem = new AntLevelDataItem();
+                dataItem.position = tile.transform.position;
+                dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+
+                dataItem.blockageIndexes = new List<int>();
+
+                for (int j = 0; j < tile.blockages.Count; j++)
+                {
+                    dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+                }
+
+                antLevelData.antLevelDataItems.Add(dataItem);
+            }
+
+
+            antLevelData.levelItemData = new LevelItemData()
+            {
+                poolFaction = level.poolFaction,
+                isTutorialLevel = level.isTutorialLevel,
+                isUseManualFactionSetupForFirstAntBoxes = level.isUseManualFactionSetupForFirstAntBoxes,
+                levelFactionConfig = level.levelFactionConfig,
+                difficulty = level.difficulty,
+                initialDifficulty = level.initialDifficulty,
+                overrideInitialDifficulty = level.overrideInitialDifficulty,
+                numStartAntBoxes = level.numStartAntBoxes,
+                specialElementConfig = level.specialElementConfig
+            };
+
+
+            // Use level name as file name
+            string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{level.name}.json");
+
+            // Serialize and save
+            string json = JsonUtility.ToJson(antLevelData, false);
+            File.WriteAllText(filePath, json);
+
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.Refresh();
+#endif
+        }
+        #endregion
+
         #region Manual Level Setup
         private void FillTheRestOfLevel(LevelItem levelItem)
         {
@@ -742,6 +807,36 @@ public class LevelFactionItemConfig
         this.numAnt = numAnt;
     }
 }
+
+[Serializable]
+public class AntLevelData
+{
+    public List<AntLevelDataItem> antLevelDataItems;
+    public LevelItemData levelItemData;
+}
+
+[Serializable]
+public class AntLevelDataItem
+{
+    public Vector3 position;
+    public int factionIndex;
+    public List<int> blockageIndexes;
+}
+
+[Serializable]
+public class LevelItemData
+{
+    public List<Color> poolFaction;
+    public bool isTutorialLevel;
+    public bool isUseManualFactionSetupForFirstAntBoxes;
+    public LevelFactionConfig levelFactionConfig;
+    public int difficulty;
+    public int initialDifficulty;
+    public bool overrideInitialDifficulty;
+    public int numStartAntBoxes = 6;
+    public SpecialElementConfig specialElementConfig;
+}
+
 
 [Serializable]
 public class SpecialElementConfig
