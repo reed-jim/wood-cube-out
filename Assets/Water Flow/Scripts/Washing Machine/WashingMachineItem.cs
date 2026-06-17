@@ -249,7 +249,7 @@ public class WashingMachineItem : MonoBehaviour
 
         OnSelectTrueCompleted();
 
-        if (gameSetting.IsVibrate)
+        if (GamePersistentVariable.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }
@@ -283,7 +283,7 @@ public class WashingMachineItem : MonoBehaviour
         skeletonAnimation.AnimationState.SetAnimation(0, selectFalseAnimation, false);
         // SaferioTween.Punch(transform, 1.1f, initScale: transform.localScale.x);
 
-        if (gameSetting.IsVibrate)
+        if (GamePersistentVariable.IsVibrate)
         {
             HapticFeedback.MediumFeedback();
         }

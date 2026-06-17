@@ -8,12 +8,12 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using Unity.AI.Navigation;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
 namespace AntsFlow
 {
-    [Serializable]
     public class Node
     {
         public Vector3 initialPosition;
@@ -36,6 +36,7 @@ namespace AntsFlow
 
 
         #region Custom Pathfinding
+        public bool isDebug;
         public List<BaseTile> tiles;
         public List<Node> nodes;
         private Dictionary<Vector2Int, BaseTile> tileMap;
@@ -121,6 +122,10 @@ namespace AntsFlow
             }
 
             List<Node> addedNodes = new List<Node>();
+            List<Node> bottomMostNodes = new List<Node>();
+            List<Node> topMostNodes = new List<Node>();
+            List<Node> leftMostNodes = new List<Node>();
+            List<Node> rightMostNodes = new List<Node>();
 
             for (int i = 0; i < nodes.Count; i++)
             {
@@ -136,6 +141,14 @@ namespace AntsFlow
                     node.neighbors.Add(nodeFromTile);
                     nodeFromTile.neighbors.Add(node);
                     addedNodes.Add(node);
+
+                    for (int j = 0; j < bottomMostNodes.Count; j++)
+                    {
+                        bottomMostNodes[j].neighbors.Add(node);
+                        node.neighbors.Add(bottomMostNodes[j]);
+                    }
+
+                    bottomMostNodes.Add(node);
                 }
                 else if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMax))
                 {
@@ -145,6 +158,14 @@ namespace AntsFlow
                     node.neighbors.Add(nodeFromTile);
                     nodeFromTile.neighbors.Add(node);
                     addedNodes.Add(node);
+
+                    for (int j = 0; j < topMostNodes.Count; j++)
+                    {
+                        topMostNodes[j].neighbors.Add(node);
+                        node.neighbors.Add(topMostNodes[j]);
+                    }
+
+                    topMostNodes.Add(node);
                 }
                 else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin))
                 {
@@ -154,6 +175,14 @@ namespace AntsFlow
                     node.neighbors.Add(nodeFromTile);
                     nodeFromTile.neighbors.Add(node);
                     addedNodes.Add(node);
+
+                    for (int j = 0; j < leftMostNodes.Count; j++)
+                    {
+                        leftMostNodes[j].neighbors.Add(node);
+                        node.neighbors.Add(leftMostNodes[j]);
+                    }
+
+                    leftMostNodes.Add(node);
                 }
                 else if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMax))
                 {
@@ -163,6 +192,14 @@ namespace AntsFlow
                     node.neighbors.Add(nodeFromTile);
                     nodeFromTile.neighbors.Add(node);
                     addedNodes.Add(node);
+
+                    for (int j = 0; j < rightMostNodes.Count; j++)
+                    {
+                        rightMostNodes[j].neighbors.Add(node);
+                        node.neighbors.Add(rightMostNodes[j]);
+                    }
+
+                    rightMostNodes.Add(node);
                 }
 
                 // if (Mathf.Approximately(nodeFromTile.initialPosition.x, xMin) && Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
@@ -313,7 +350,10 @@ namespace AntsFlow
                 {
                     Gizmos.color = Color.green;
 
-                    DrawConnectors(node);
+                    Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+
+                    // DrawConnectors(node);
                 }
                 else
                 {
@@ -321,11 +361,16 @@ namespace AntsFlow
                     {
                         Gizmos.color = Color.green;
 
-                        DrawConnectors(node);
+                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                        Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
+
+                        // DrawConnectors(node);
                     }
                     else
                     {
                         Gizmos.color = Color.red;
+
+                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
                     }
                 }
 
@@ -413,6 +458,11 @@ namespace AntsFlow
 
                 foreach (var neighbor in current.neighbors)
                 {
+                    // if (isDebug)
+                    // {
+                    //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)} {neighbor.tile}");
+                    // }
+
                     // blocked
                     if (neighbor.tile != null)
                     {

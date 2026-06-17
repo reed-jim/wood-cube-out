@@ -41,10 +41,20 @@ namespace AntsFlow
         private float stuckTimeNoReachDestination;
         private float stuckThreshold;
         private float stuckNoReachDestinationThreshold;
+        private Vector2 direction;
 
         public static event Action requestUpdateNavmeshEvent;
 
 
+
+        #region Wiggle
+        private int wiggleCount;
+        private int numHalfWiggleDone;
+        public float wiggleMagnitude;
+        public int wiggleFrequency;
+        private bool isWiggleLeft;
+        private Vector3 skeletonAnimationInitialPosition;
+        #endregion
 
         [Header("Noise Settings")]
         [Tooltip("Độ mạnh của sự lắc lư (gạt sang 2 bên)")]
@@ -84,6 +94,8 @@ namespace AntsFlow
 
             tweens = new List<Tween>();
             sequences = new List<Sequence>();
+
+            skeletonAnimationInitialPosition = skeletonAnimation.transform.localPosition;
         }
 
         void OnDestroy()
@@ -114,6 +126,19 @@ namespace AntsFlow
         void Update()
         {
             transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+
+            if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime
+                );
+            }
 
             return;
 
@@ -301,6 +326,8 @@ namespace AntsFlow
 
             stuckTime = 0;
             isMovingToSideTile = false;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
         }
 
         public void SetGhostMode()
@@ -347,8 +374,13 @@ namespace AntsFlow
             }
 
             Vector2 destination;
-            Vector2 direction;
             Vector3 offset = index % 2 == 0 ? 0.8f * transform.right : -0.8f * transform.right;
+
+            wiggleCount = 0;
+            numHalfWiggleDone = 0;
+            isWiggleLeft = true;
+
+            skeletonAnimation.transform.localPosition = skeletonAnimationInitialPosition;
 
             while (path.Count > 0 || isMoving)
             {
@@ -359,13 +391,44 @@ namespace AntsFlow
                 {
                     Node node = path[0];
 
-                    destination = node.initialPosition + offset;
+                    destination = node.initialPosition;
                     duration = Vector2.Distance(transform.position, destination) / speed;
 
                     direction = destination - (Vector2)transform.position;
-                    Rotate(direction);
+                    // Rotate(direction);
 
                     tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear)
+                    // .OnUpdate(target: transform, (target, tween) =>
+                    // {
+                    //     if (isWiggleLeft)
+                    //     {
+                    //         if (wiggleCount > -wiggleFrequency)
+                    //         {
+                    //             skeletonAnimation.transform.localPosition -= wiggleMagnitude * target.right;
+
+                    //             wiggleCount--;
+                    //         }
+                    //         else
+                    //         {
+                    //             numHalfWiggleDone++;
+                    //             isWiggleLeft = false;
+                    //         }
+                    //     }
+                    //     else
+                    //     {
+                    //         if (wiggleCount < wiggleFrequency)
+                    //         {
+                    //             skeletonAnimation.transform.localPosition += wiggleMagnitude * target.right;
+
+                    //             wiggleCount++;
+                    //         }
+                    //         else
+                    //         {
+                    //             numHalfWiggleDone++;
+                    //             isWiggleLeft = true;
+                    //         }
+                    //     }
+                    // })
                     .OnComplete(() =>
                     {
                         isMoving = false;
@@ -394,9 +457,9 @@ namespace AntsFlow
                 float duration = Vector2.Distance(transform.position, TileManager.Ins.antNest.position.AddY(0.3f)) / speed;
 
                 direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
-                Rotate(direction);
+                // Rotate(direction);
 
-                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f) + offset, duration, ease: Ease.Linear)
+                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();

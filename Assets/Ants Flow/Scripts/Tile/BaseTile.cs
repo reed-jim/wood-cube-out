@@ -119,7 +119,7 @@ namespace AntsFlow
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
 
-            if (gameSetting.IsVibrate)
+            if (GamePersistentVariable.IsVibrate)
             {
                 HapticFeedback.LightFeedback();
             }
