@@ -84,9 +84,12 @@ namespace AntsFlow
             );
 
             this.worldSize = worldSize.x;
-
-            Init();
         }
+
+        // void Start()
+        // {
+        //     Init();
+        // }
 
         void OnDestroy()
         {

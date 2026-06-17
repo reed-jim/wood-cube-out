@@ -705,6 +705,7 @@ namespace AntsFlow
 
             antLevelData.levelItemData = new LevelItemData()
             {
+                levelScale = level.transform.localScale,
                 poolFaction = level.poolFaction,
                 isTutorialLevel = level.isTutorialLevel,
                 isUseManualFactionSetupForFirstAntBoxes = level.isUseManualFactionSetupForFirstAntBoxes,
@@ -826,6 +827,7 @@ public class AntLevelDataItem
 [Serializable]
 public class LevelItemData
 {
+    public Vector3 levelScale;
     public List<Color> poolFaction;
     public bool isTutorialLevel;
     public bool isUseManualFactionSetupForFirstAntBoxes;

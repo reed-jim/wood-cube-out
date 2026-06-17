@@ -164,8 +164,7 @@ namespace AntsFlow
         #region Spawn
         public List<WashingMachineItem> SpawnFirstWashingMachines(int numStartAntBoxes)
         {
-            poolFaction = new List<Color>();
-
+            poolFaction = new List<Color>();    
             poolFaction.AddRange(levelItem.poolFaction);
 
             totalTile = poolFaction.Count;

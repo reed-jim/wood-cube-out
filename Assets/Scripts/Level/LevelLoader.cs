@@ -20,6 +20,9 @@ namespace NamPhuThuy.GamePlay
 {
     public class LevelLoader : MonoBehaviour
     {
+        [Header("Ant")]
+        public AntsFlow.BaseTile tilePrefab;
+
         [Header("Clone to calculate level rotation")]
         [SerializeField] private Transform cloneToCalculateRotation;
 
@@ -52,7 +55,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Memory Management
-        AsyncOperationHandle<GameObject> _loadLevelHandle;
+        AsyncOperationHandle<TextAsset> _loadLevelHandle;
         #endregion
 
         #region EVENT
@@ -224,13 +227,13 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
-            _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
+            _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
             {
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
-                    ActualLoadLevel(op.Result);
+                    ActualLoadLevel(op.Result.text);
                 }
             };
 
@@ -238,17 +241,21 @@ namespace NamPhuThuy.GamePlay
 
             showSceneTransitionEvent?.Invoke();
 
-            void ActualLoadLevel(GameObject resultLoad)
+            void ActualLoadLevel(string resultLoad)
             {
-                GameObject level = resultLoad;
+                // GameObject level = resultLoad;
+                string json = resultLoad;
+                AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
 
-                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+                Transform levelTransform;
+
+                AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                FitLevelToScreenArea(levelItem);
-                CenterLevel(levelItem);
+                FitLevelToScreenArea(levelTransform);
+                CenterLevel(levelTransform);
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
@@ -258,141 +265,6 @@ namespace NamPhuThuy.GamePlay
                 {
                     setIsLevelLoadedEvent?.Invoke();
                 });
-
-                return;
-
-                _currentLevelContainer = level.transform;
-
-                #region ASSIGN CLONE TO CALC ROTATION
-
-                try
-                {
-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                }
-                catch (System.Exception e)
-                {
-                    DebugLogger.LogException(e);
-                }
-                #endregion
-
-                // FIND DEPENDENCY
-                // delay for pieces scaling before level
-                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
-
-                _pieces = pieces.ToArray();
-
-                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                //
-
-                if (level.GetComponent<LevelTransformManualModifier>() == null)
-                {
-                    level.transform.position = Vector3.zero;
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                }
-
-                // AUTO CENTER LEVEL
-                _isNotAutoCenterLevel = false;
-
-                foreach (BasicObjectPart obj in pieces)
-                {
-                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-
-                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
-                    {
-                        _isNotAutoCenterLevel = true;
-
-
-                        break;
-                    }
-                }
-
-                _isNotAutoCenterLevel = false;
-
-                level.transform.position = Vector3.zero;
-
-                if (!_isNotAutoCenterLevel)
-                {
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform pivotAdjust = level.transform.GetChild(i);
-
-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
-                        {
-                            _pivotAdjust = pivotAdjust;
-
-                            _pivotAdjust.transform.position = Vector3.zero;
-                        }
-                    }
-
-                    foreach (BasicObjectPart piece in pieces)
-                    {
-                        if (_pivotAdjust == null)
-                        {
-                            _pivotAdjust = new GameObject().transform;
-                            _pivotAdjust.name = "Pivot Adjust";
-                            _pivotAdjust.SetParent(_currentLevelContainer);
-
-                            _pivotAdjust.transform.localPosition = Vector3.zero;
-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                            _pivotAdjust.transform.localScale = Vector3.one;
-                        }
-
-                        if (!piece.transform.IsChildOf(_pivotAdjust))
-                        {
-                            piece.transform.SetParent(_pivotAdjust);
-                        }
-                    }
-
-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
-
-                    _isSetLevelGradientBound = false;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset, isLevelDirty: false);
-
-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                }
-
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-
-                // ASSIGN SCREW FACTIONS
-                if (currentLevel.Value == 1)
-                {
-                    AutoAssignScrewFactionLevelManualGroup(level);
-                }
-                else
-                {
-                    AutoAssignScrewFaction(level);
-                }
-
-                AutoAssignScrewFactionMultiPhaseLevel(level);
-
-                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
-
-                if (isLoopLevel)
-                {
-                    RandomizeLevelModelColor(level);
-                }
-                else
-                {
-                    SaferioTracking.TrackLevelStart(currentLevel.Value);
-                }
-
-                _nextLevel = nextLevel;
-                _isLoopLevel = isLoopLevel;
-
-                _tweens.Add(Tween.Delay(3).OnComplete(() =>
-                {
-                    ShowSuggestion(nextLevel, isLoopLevel);
-                }));
-                // SuggestHardMode();
-
-                #region EVENT ITEMS
-                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
-
-                CoinChallengeGameplayUI.Instance.SetNumber();
-                #endregion
-
-                startLevelCompletedEvent?.Invoke();
             }
 
             void SetIsLoopLevel(bool isLoop)
@@ -401,7 +273,80 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        private void CenterLevel(AntsFlow.LevelItem level)
+        private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
+        {
+            AntsFlow.LevelItem levelItem = new AntsFlow.LevelItem()
+            {
+                poolFaction = antLevelData.levelItemData.poolFaction,
+                isTutorialLevel = antLevelData.levelItemData.isTutorialLevel,
+                isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes,
+                levelFactionConfig = antLevelData.levelItemData.levelFactionConfig,
+                difficulty = antLevelData.levelItemData.difficulty,
+                initialDifficulty = antLevelData.levelItemData.initialDifficulty,
+                overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty,
+                numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes,
+                specialElementConfig = antLevelData.levelItemData.specialElementConfig
+            };
+
+            GameObject level = new GameObject();
+
+            level.name = "Level";
+
+            levelTransform = level.transform;
+
+            level.transform.SetParent(transform);
+
+            level.transform.localScale = antLevelData.levelItemData.levelScale;
+
+            AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
+            spawnedLevelItem.poolFaction = antLevelData.levelItemData.poolFaction;
+            spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
+            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
+            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
+            spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
+            spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
+            spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
+            spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
+            spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
+
+            List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
+
+            for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
+            {
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
+                tile.transform.position = antLevelDataItem.position;
+
+                tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
+
+                tile.Init();
+
+                tiles.Add(tile);
+            }
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                AntsFlow.BaseTile tile = tiles[i];
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                List<AntsFlow.BaseTile> blockages = new List<AntsFlow.BaseTile>();
+
+                for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                {
+                    if (tiles.Any(item => tiles.IndexOf(tile) == antLevelDataItem.blockageIndexes[j]))
+                    {
+                        blockages.Add(tiles.First(item => tiles.IndexOf(tile) == antLevelDataItem.blockageIndexes[j]));
+                    }
+                }
+
+                tile.blockages.AddRange(blockages);
+            }
+
+            return spawnedLevelItem;
+        }
+
+        private void CenterLevel(Transform level)
         {
             Vector2 average = Vector2.zero;
 
@@ -424,10 +369,10 @@ namespace NamPhuThuy.GamePlay
             transform.position = transform.position.ChangeY(worldPos.y);
         }
 
-        void FitLevelToScreenArea(AntsFlow.LevelItem level)
+        void FitLevelToScreenArea(Transform level)
         {
             // Get level bounds
-            Bounds bounds = GetBoundsFromTiles(level.transform);
+            Bounds bounds = GetBoundsFromTiles(level);
 
             float levelWidth = bounds.size.x;
             float levelHeight = bounds.size.y;
@@ -440,12 +385,12 @@ namespace NamPhuThuy.GamePlay
             float availableHeight = camHeight * 0.35f;
             float availableWidth = 0.9f * camWidth;
 
-            float scaleX = level.transform.localScale.x * availableWidth / levelWidth;
-            float scaleY = level.transform.localScale.y * availableHeight / levelHeight;
+            float scaleX = level.localScale.x * availableWidth / levelWidth;
+            float scaleY = level.localScale.y * availableHeight / levelHeight;
 
             float scale = Mathf.Min(scaleX, scaleY);
 
-            level.transform.localScale = Vector3.one * scale;
+            level.localScale = Vector3.one * scale;
         }
 
         public Bounds GetBoundsFromTiles(Transform level)
