@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 8644192466549317275}
   - component: {fileID: 7382180585034802677}
-  - component: {fileID: 7728740718203070473}
   - component: {fileID: 7456042253066417937}
+  - component: {fileID: 7728740718203070473}
   m_Layer: 5
   m_Name: Coin UI
   m_TagString: Untagged
@@ -47,6 +47,28 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6655206068968023495}
   m_CullTransparentMesh: 1
+--- !u!114 &7456042253066417937
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6655206068968023495}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c85b20b88411234aa9b71a3aca76456, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RotatingCoin
+  coinImage: {fileID: 7728740718203070473}
+  fx: {fileID: 8284478341925261873}
+  poolCoins:
+  - {fileID: 365291500, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: -1449193073, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: -703680825, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: 1829065769, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: -982431417, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: 1941348089, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
+  - {fileID: 1829006638, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
 --- !u!114 &7728740718203070473
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,27 +99,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &7456042253066417937
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6655206068968023495}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c85b20b88411234aa9b71a3aca76456, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::RotatingCoin
-  coinImage: {fileID: 7728740718203070473}
-  poolCoins:
-  - {fileID: 365291500, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: -1449193073, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: -703680825, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: 1829065769, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: -982431417, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: 1941348089, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
-  - {fileID: 1829006638, guid: d5d80cda8a8675e47bcf95d376990c4a, type: 3}
 --- !u!1001 &726098104181483181
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,6 +211,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7242103240084982366, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7515951054802454135, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -230,13 +235,21 @@ PrefabInstance:
       propertyPath: m_SortingLayer
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8327629453627738139, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8415062482260496141, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8481434129074746543, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_Name
       value: coin
       objectReference: {fileID: 0}
     - target: {fileID: 8481434129074746543, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8661350449870231555, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_Enabled
@@ -244,6 +257,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8661350449870231555, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
       propertyPath: m_SortingLayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+      propertyPath: playOnAwake
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -254,5 +271,10 @@ PrefabInstance:
 --- !u!224 &4100882976334762138 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3673491670578705975, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
+  m_PrefabInstance: {fileID: 726098104181483181}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &8284478341925261873 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 8713338590325453980, guid: f97a6b3b574a07a4580c708ea4c56f60, type: 3}
   m_PrefabInstance: {fileID: 726098104181483181}
   m_PrefabAsset: {fileID: 0}

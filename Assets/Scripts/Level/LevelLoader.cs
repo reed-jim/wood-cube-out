@@ -334,9 +334,9 @@ namespace NamPhuThuy.GamePlay
 
                 for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
                 {
-                    if (tiles.Any(item => tiles.IndexOf(tile) == antLevelDataItem.blockageIndexes[j]))
+                    if (tiles.Any(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]))
                     {
-                        blockages.Add(tiles.First(item => tiles.IndexOf(tile) == antLevelDataItem.blockageIndexes[j]));
+                        blockages.Add(tiles.First(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]));
                     }
                 }
 

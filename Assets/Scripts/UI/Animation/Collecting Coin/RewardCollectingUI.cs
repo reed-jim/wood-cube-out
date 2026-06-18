@@ -191,11 +191,13 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                     {
                         if (!isCompleted)
                         {
+                            _rewards[index].GetComponent<RotatingCoin>().PlayFX();
+
                             onCompleteAction?.Invoke();
                         }
                     }
 
-                    _rewards[index].gameObject.SetActive(false);
+                    // _rewards[index].gameObject.SetActive(false);
 
                     if (i % 8 == 0)
                     {
