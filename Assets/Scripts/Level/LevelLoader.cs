@@ -81,6 +81,7 @@ namespace NamPhuThuy.GamePlay
             LosePopup.replayLevelEvent += Replay;
             ReplayPopup.replayLevelEvent += Replay;
             SettingPopup.replayLevelEvent += Replay;
+            LevelComingSoonPopup.replayLevelEvent += Replay;
             DebugPopup.toLevelEvent += GoLevel;
             DebugPopup.nextLevelEvent += NextLevel;
             DebugPopup.prevLevelEvent += PrevLevel;
@@ -116,6 +117,7 @@ namespace NamPhuThuy.GamePlay
             LosePopup.replayLevelEvent -= Replay;
             ReplayPopup.replayLevelEvent -= Replay;
             SettingPopup.replayLevelEvent -= Replay;
+            LevelComingSoonPopup.replayLevelEvent -= Replay;
             DebugPopup.toLevelEvent -= GoLevel;
             DebugPopup.nextLevelEvent -= NextLevel;
             DebugPopup.prevLevelEvent -= PrevLevel;
