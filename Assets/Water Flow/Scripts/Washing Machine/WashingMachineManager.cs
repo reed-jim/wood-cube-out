@@ -164,7 +164,7 @@ namespace AntsFlow
         #region Spawn
         public List<WashingMachineItem> SpawnFirstWashingMachines(int numStartAntBoxes)
         {
-            poolFaction = new List<Color>();    
+            poolFaction = new List<Color>();
             poolFaction.AddRange(levelItem.poolFaction);
 
             totalTile = poolFaction.Count;
@@ -925,7 +925,19 @@ namespace AntsFlow
 
                     if (washingMachineStartSlot.washingMachine != null)
                     {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        if (isIncludeStartSlot)
+                        {
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
+                        else
+                        {
+                            WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+
+                            if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                            {
+                                CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                            }
+                        }
                     }
                 }
             }
