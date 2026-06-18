@@ -1,4 +1,6 @@
 using System;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.RemoteConfig;
 using NamPhuThuy.GamePlay;
 using PrimeTween;
@@ -79,14 +81,6 @@ public class LosePopup : BasePopup
 
         changeLivesNumberEvent?.Invoke(-1);
 
-        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
-
-        // don't track loop level CostCenter
-        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
-        {
-            SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Lose.ToString());
-        }
-
         Show(onCompletedAction: () =>
         {
             Tween.Custom(0, levelObserver.Progress, duration: transitionDuration, onValueChange: newVal =>
@@ -132,6 +126,11 @@ public class LosePopup : BasePopup
         #endregion
 
         GamePersistentVariable.isLevelLost = true;
+
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
+
+        TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
+        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();
     }
 
     private void Replay()
@@ -150,7 +149,7 @@ public class LosePopup : BasePopup
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
-             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
         else
         {
@@ -174,8 +173,8 @@ public class LosePopup : BasePopup
 
     private void SkipLevel()
     {
-         GameController.Instance.admobAds.ShowVideoReward(
-            OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
+        GameController.Instance.admobAds.ShowVideoReward(
+           OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
     }
 
     private void OnRewaredAdCompletedToSkipLevel()

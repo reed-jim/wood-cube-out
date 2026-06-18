@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using static GameEnum;
 using DG.Tweening;
 using Spine.Unity;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
+using Falcon.FalconAnalytics.Scripts.Enum;
 
 public class RevivePopup : BasePopup
 {
@@ -150,16 +152,18 @@ public class RevivePopup : BasePopup
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
             updateCoinTextEvent?.Invoke();
 
-            SaferioTracking.TrackResourceSink(
-                    currentLevel.Value, "Coin",
-                    200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
-
             // userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
             {
                 userResourcesObserver.ChangeBoosterQuantity(2, 1);
             }
+
+            SaferioTracking.TrackResourceSink(
+                    currentLevel.Value, "Coin",
+                    200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
+
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Revive", 200, currentLevel.Value);
 
             // userResourcesObserver.Save();
         }

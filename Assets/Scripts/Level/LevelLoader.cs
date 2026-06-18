@@ -368,7 +368,7 @@ namespace NamPhuThuy.GamePlay
             float distance = Mathf.Abs(Camera.main.transform.position.z);
 
             Vector3 worldPos = Camera.main.ViewportToWorldPoint(
-                new Vector3(0, 0.5f, distance)
+                new Vector3(0, 0.51f, distance)
             );
 
             transform.position = transform.position.ChangeY(worldPos.y);

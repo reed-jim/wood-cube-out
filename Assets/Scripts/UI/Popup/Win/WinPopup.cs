@@ -209,11 +209,13 @@ public class WinPopup : BasePopup
         }
     }
 
-    private async void Continue()
+    private void Continue()
     {
         continueButton.interactable = false;
 
         collectCoinEvent?.Invoke(_currentCollectedCoin);
+
+        new FResourceLog(FlowType.Source, "Coin", "Coin", "win_level", _currentCollectedCoin, currentLevel.Value);
     }
 
     private void OnCollectCoinCompleted()
@@ -332,7 +334,7 @@ public class WinPopup : BasePopup
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
 
         TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
-        new FLevelLog(currentLevel.Value, $"GamePersistentVariable.levelItem.difficulty", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime);
+        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime).Send();
 
         GamePersistentVariable.levelRetryTime = 0;
 

@@ -297,6 +297,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
+                        
                         try
                         {
                             new FInAppLog(e.purchasedProduct.definition.id, e.purchasedProduct.metadata.localizedPrice, e.purchasedProduct.metadata.isoCurrencyCode, "shop", e.purchasedProduct.transactionID, "");

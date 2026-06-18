@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using NamPhuThuy;
 using NamPhuThuy.GamePlay;
@@ -209,11 +211,14 @@ public class SettingPopup : BasePopup
 
     private void ActualReplay()
     {
-        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
-
         replayLevelEvent?.Invoke();
 
         GamePersistentVariable.isPreventSelectAntBox = false;
+
+        SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Replay.ToString());
+
+        TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
+        new FLevelLog(currentLevel.Value, $"{GamePersistentVariable.levelItem.difficulty}", LevelStatus.Fail, playDuration, GamePersistentVariable.levelRetryTime).Send();
     }
 
     private void OpenBackupPopup()
