@@ -84,12 +84,9 @@ namespace AntsFlow
             );
 
             this.worldSize = worldSize.x;
-        }
 
-        // void Start()
-        // {
-        //     Init();
-        // }
+            Init();
+        }
 
         void OnDestroy()
         {
@@ -103,6 +100,18 @@ namespace AntsFlow
         {
             spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(faction);
             spriteRenderer.color = Color.white;
+        }
+
+        public void Reset()
+        {
+            transform.position = Vector3.zero;
+            transform.rotation = Quaternion.identity;
+
+            isAntApproaching = false;
+            isAnimating = false;
+
+            actualBlockages.Clear();
+            path.Clear();
         }
 
         public void MoveToAnt(BaseAnt ant)
@@ -168,6 +177,13 @@ namespace AntsFlow
         public void InvokeRemoveTileAsBlockageEvent()
         {
             removeTileAsBlockageEvent?.Invoke(this);
+        }
+
+        private void OnLevelReplayed()
+        {
+            Reset();
+
+            ObjectPoolingEverything.ReturnToPool(GameConstants.tile, gameObject);
         }
 
         private void OnTileCompleted(BaseTile tile)

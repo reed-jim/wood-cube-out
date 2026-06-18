@@ -13,6 +13,74 @@ public class FactionMapper : Singleton<FactionMapper>
 {
     public List<ColorSpriteContainerPair> mapper;
 
+    // public Dictionary<int, Color> indexesOfColors;
+
+    public Dictionary<int, Color> GetIndexesOfColors()
+    {
+        Dictionary<int, Color> indexesOfColors = new Dictionary<int, Color>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            indexesOfColors.Add(i, mapper[i].color);
+        }
+
+        return indexesOfColors;
+    }
+
+    public Dictionary<Color, int> GetColorsOfIndexes()
+    {
+        Dictionary<Color, int> indexesOfColors = new Dictionary<Color, int>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            indexesOfColors.Add(mapper[i].color, i);
+        }
+
+        return indexesOfColors;
+    }
+
+    public List<Color> GetPoolFactionFromPoolFactionIndex(List<int> poolFactionIndex)
+    {
+        List<Color> result = new List<Color>();
+
+        Dictionary<int, Color> indexesOfColors = new Dictionary<int, Color>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            indexesOfColors.Add(i, mapper[i].color);
+        }
+
+        for (int i = 0; i < poolFactionIndex.Count; i++)
+        {
+            int factionIndex = poolFactionIndex[i];
+
+            result.Add(indexesOfColors[factionIndex]);
+        }
+
+        return result;
+    }
+
+    public List<int> GetPoolFactionIndexFromPoolFaction(List<Color> poolFaction)
+    {
+        List<int> result = new List<int>();
+
+        Dictionary<Color, int> indexesOfColors = new Dictionary<Color, int>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            indexesOfColors.Add(mapper[i].color, i);
+        }
+
+        for (int i = 0; i < poolFaction.Count; i++)
+        {
+            Color faction = poolFaction[i];
+
+            result.Add(indexesOfColors[faction]);
+        }
+
+        return result;
+    }
+
     public Sprite GetAntBoxSprite(Color faction)
     {
         return mapper.First(item => item.color == faction).spriteContainer.tileSprite;

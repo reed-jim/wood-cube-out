@@ -102,11 +102,12 @@ namespace AntsFlow
                 antLevelData.antLevelDataItems.Add(dataItem);
             }
 
+            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
 
             antLevelData.levelItemData = new LevelItemData()
             {
                 levelScale = transform.localScale,
-                poolFaction = poolFaction,
+                poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = isTutorialLevel,
                 isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
                 levelFactionConfig = levelFactionConfig,
@@ -116,7 +117,6 @@ namespace AntsFlow
                 numStartAntBoxes = numStartAntBoxes,
                 specialElementConfig = specialElementConfig
             };
-
 
             // Use level name as file name
             string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
@@ -796,14 +796,18 @@ namespace AntsFlow
                     dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
                 }
 
+                dataItem.ring = tile.ring;
+                dataItem.priority = tile.priority;
+
                 antLevelData.antLevelDataItems.Add(dataItem);
             }
 
+            List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(level.poolFaction);
 
             antLevelData.levelItemData = new LevelItemData()
             {
                 levelScale = level.transform.localScale,
-                poolFaction = level.poolFaction,
+                poolFactionIndexes = poolFactionIndexes,
                 isTutorialLevel = level.isTutorialLevel,
                 isUseManualFactionSetupForFirstAntBoxes = level.isUseManualFactionSetupForFirstAntBoxes,
                 levelFactionConfig = level.levelFactionConfig,
@@ -813,7 +817,6 @@ namespace AntsFlow
                 numStartAntBoxes = level.numStartAntBoxes,
                 specialElementConfig = level.specialElementConfig
             };
-
 
             // Use level name as file name
             string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{level.name}.json");
@@ -909,8 +912,8 @@ public class LevelFactionItemConfig
 [Serializable]
 public class AntLevelData
 {
-    public List<AntLevelDataItem> antLevelDataItems;
     public LevelItemData levelItemData;
+    public List<AntLevelDataItem> antLevelDataItems;
 }
 
 [Serializable]
@@ -919,13 +922,15 @@ public class AntLevelDataItem
     public Vector3 position;
     public int factionIndex;
     public List<int> blockageIndexes;
+    public int ring;
+    public int priority;
 }
 
 [Serializable]
 public class LevelItemData
 {
     public Vector3 levelScale;
-    public List<Color> poolFaction;
+    public List<int> poolFactionIndexes;
     public bool isTutorialLevel;
     public bool isUseManualFactionSetupForFirstAntBoxes;
     public LevelFactionConfig levelFactionConfig;

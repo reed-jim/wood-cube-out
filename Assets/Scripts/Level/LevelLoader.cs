@@ -55,7 +55,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Memory Management
-        AsyncOperationHandle<TextAsset> _loadLevelHandle;
+        AsyncOperationHandle<GameObject> _loadLevelHandle;
         #endregion
 
         #region EVENT
@@ -227,13 +227,15 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
-            _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
+            _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
+            // load from json
+            // _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
             {
                 if (op.Status == AsyncOperationStatus.Succeeded)
                 {
-                    ActualLoadLevel(op.Result.text);
+                    ActualLoadLevel(op.Result);
                 }
             };
 
@@ -241,15 +243,19 @@ namespace NamPhuThuy.GamePlay
 
             showSceneTransitionEvent?.Invoke();
 
-            void ActualLoadLevel(string resultLoad)
+            void ActualLoadLevel(GameObject resultLoad)
             {
-                // GameObject level = resultLoad;
-                string json = resultLoad;
-                AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
+                GameObject level = resultLoad;
+                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+                Transform levelTransform = level.transform;
 
-                Transform levelTransform;
+                // load from json
+                // string json = resultLoad;
+                // AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
 
-                AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
+                // Transform levelTransform;
+
+                // AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
@@ -275,18 +281,7 @@ namespace NamPhuThuy.GamePlay
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
         {
-            AntsFlow.LevelItem levelItem = new AntsFlow.LevelItem()
-            {
-                poolFaction = antLevelData.levelItemData.poolFaction,
-                isTutorialLevel = antLevelData.levelItemData.isTutorialLevel,
-                isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes,
-                levelFactionConfig = antLevelData.levelItemData.levelFactionConfig,
-                difficulty = antLevelData.levelItemData.difficulty,
-                initialDifficulty = antLevelData.levelItemData.initialDifficulty,
-                overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty,
-                numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes,
-                specialElementConfig = antLevelData.levelItemData.specialElementConfig
-            };
+            List<Color> poolFaction = FactionMapper.Ins.GetPoolFactionFromPoolFactionIndex(antLevelData.levelItemData.poolFactionIndexes);
 
             GameObject level = new GameObject();
 
@@ -299,7 +294,7 @@ namespace NamPhuThuy.GamePlay
             level.transform.localScale = antLevelData.levelItemData.levelScale;
 
             AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
-            spawnedLevelItem.poolFaction = antLevelData.levelItemData.poolFaction;
+            spawnedLevelItem.poolFaction = poolFaction;
             spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
             spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
             spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
@@ -315,10 +310,16 @@ namespace NamPhuThuy.GamePlay
             {
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
-                AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
+                // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
+                AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
+
+                tile.transform.SetParent(levelTransform);
+
                 tile.transform.position = antLevelDataItem.position;
 
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
+                tile.ring = antLevelDataItem.ring;
+                tile.priority = antLevelDataItem.priority;
 
                 tile.Init();
 

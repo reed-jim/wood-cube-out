@@ -122,7 +122,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, int poolSize, float itemSizeX
     )
     {
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < _rewards.Length; i++)
         {
             _rewards[i].gameObject.SetActive(true);
 

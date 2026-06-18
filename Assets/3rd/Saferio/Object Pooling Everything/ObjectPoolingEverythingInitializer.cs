@@ -56,7 +56,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [SerializeField] private GameObject taskItemUIPrefab;
 
-    [Header("Connect Master")]
+    [Header("Ant Out")]
     [SerializeField] private GameObject baseTile;
 
     [Header("Washing Machine")]
@@ -133,15 +133,15 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<AudioSource>(GameConstants.COMPlETE_TASK_SOUND, completeTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.GENERATE_TASK_SOUND, generateTaskSoundPrefab, 1);
         RegisterPool<AudioSource>(GameConstants.collectCoinSound, coinSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.antPopSound, antPopSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.boxTapSound, boxTapSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.cubeEatSound, cubeEatSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.cubeLandSound, cubeLandSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.slotDoneSound, slotDoneSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.tileHitGroundSound, tileHitGroundSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.startFreezeSound, startFreezeSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 24);
-        RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 24);
+        RegisterPool<AudioSource>(GameConstants.antPopSound, antPopSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.boxTapSound, boxTapSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.cubeEatSound, cubeEatSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.cubeLandSound, cubeLandSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.slotDoneSound, slotDoneSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.tileHitGroundSound, tileHitGroundSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.startFreezeSound, startFreezeSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.iceBreakSound, iceBreakSoundPrefab, 8);
+        RegisterPool<AudioSource>(GameConstants.boosterAppearSound, boosterAppearSoundPrefab, 8);
 
         RegisterPool<TaskItemUI>(GameConstants.TASK_ITEM_UI, taskItemUIPrefab, 5);
         RegisterPool<ParticleSystem>(GameConstants.DESTROY_OBJECT_PART_FX, destroyObjectPartFxPrefab, 5);
@@ -152,7 +152,7 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<ScrewBoxLocked>(GameConstants.SCREW_BOX_LOCKED, lockedScrewBox, 2);
 
         // RegisterPool<RescueStory.BaseTile>(GameConstants.tile, baseTile, 100);
-        RegisterPool<BaseTile>(GameConstants.tile, baseTile, 100);
+        // RegisterPool<AntsFlow.BaseTile>(GameConstants.tile, baseTile, 1600);
 
         RegisterPool<WashingMachineItem>(GameConstants.washingMachine, washingMachineItemPrefab, 50);
         RegisterPool<ClothingPiece>(GameConstants.clothingPiece, clothingPiecePrefab, 50);
@@ -160,9 +160,9 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<BaseAnt>(GameConstants.ant, antPrefab, 200);
         RegisterPool<ParticleSystem>(GameConstants.antDissapearFxPrefab, antDissapearFxPrefab, 5);
         RegisterPool<AntBoxLink>(GameConstants.antBoxLink, antBoxLink, 5);
-        RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 50);
-        RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 50);
-        RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 50);
+        RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
+        RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
+        RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
