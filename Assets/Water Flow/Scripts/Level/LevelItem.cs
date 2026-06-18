@@ -163,7 +163,7 @@ namespace AntsFlow
             // startX = EditorGUILayout.IntField("StartX", startX);
             // startY = EditorGUILayout.IntField("StartY", startY);
             // size = EditorGUILayout.IntField("Size", size);
-            // tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
+            tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
             // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
@@ -229,10 +229,10 @@ namespace AntsFlow
                 CenterOnX(levelItem);
             }
 
-            // if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
-            // {
-            //     MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
-            // }
+            if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
+            {
+                MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            }
 
             // GUILayout.Label("Preview Level", EditorStyles.boldLabel);
 
@@ -753,10 +753,45 @@ namespace AntsFlow
 
             center /= tiles.Length;
 
+            // find num column
+            float firstRowY = tiles[0].transform.position.y;
+            float tolerance = 0.01f;
+
+            int numCols = 0;
+
+            foreach (var tile in tiles)
+            {
+                if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
+                    numCols++;
+            }
+
+            float baseSpacingX = 0.7605271f;
+            float baseSpacingY = 0.760527f;
+            float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
+            float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
+
+            float ratioX = currentSpacingX / baseSpacingX;
+            float ratioY = currentSpacingY / baseSpacingY;
+
             foreach (BaseTile tile in tiles)
             {
-                tile.transform.position = center + (tile.transform.position - center) * factor;
+                Vector3 offset = tile.transform.position - center;
+
+                float gridX = offset.x / currentSpacingX * ratioX;
+                float gridY = offset.y / currentSpacingY * ratioY;
+
+                tile.transform.position = center + new Vector3(
+                    gridX * tileSpacing.x,
+                    gridY * tileSpacing.y,
+                    offset.z
+                );
             }
+
+
+            // foreach (BaseTile tile in tiles)
+            // {
+            //     tile.transform.position = center + (tile.transform.position - center) * factor;
+            // }
 
             EditorUtility.SetDirty(level);
         }

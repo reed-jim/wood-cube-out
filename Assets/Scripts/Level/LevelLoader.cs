@@ -261,6 +261,7 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
+                AutoSpacingAllTiles(levelTransform);
                 FitLevelToScreenArea(levelTransform);
                 CenterLevel(levelTransform);
 
@@ -372,6 +373,59 @@ namespace NamPhuThuy.GamePlay
             );
 
             transform.position = transform.position.ChangeY(worldPos.y);
+        }
+
+        public void AutoSpacingAllTiles(Transform level)
+        {
+            AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+            Vector3 center = Vector3.zero;
+
+            foreach (AntsFlow.BaseTile tile in tiles)
+                center += tile.transform.position;
+
+            center /= tiles.Length;
+
+            // find num column
+            float firstRowY = tiles[0].transform.position.y;
+            float tolerance = 0.01f;
+
+            int numCols = 0;
+
+            foreach (var tile in tiles)
+            {
+                if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
+                    numCols++;
+            }
+
+            float baseSpacingX = 0.7605271f;
+            float baseSpacingY = 0.760527f;
+            float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
+            float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
+
+            float ratioX = currentSpacingX / baseSpacingX;
+            float ratioY = currentSpacingY / baseSpacingY;
+
+            Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+
+            float positionZ;
+
+            foreach (AntsFlow.BaseTile tile in tiles)
+            {
+                Vector3 offset = tile.transform.position - center;
+
+                float gridX = offset.x / currentSpacingX * ratioX;
+                float gridY = offset.y / currentSpacingY * ratioY;
+
+                positionZ = tile.transform.position.z;
+
+                tile.transform.position = center + new Vector3(
+                    gridX * tileSpacing.x,
+                    gridY * tileSpacing.y
+                );
+
+                tile.transform.position = tile.transform.position.ChangeZ(positionZ);
+            }
         }
 
         void FitLevelToScreenArea(Transform level)
