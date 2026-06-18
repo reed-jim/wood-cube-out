@@ -23,7 +23,7 @@ public class RotatingCoin : MonoBehaviour
 
         coinImage.enabled = true;
 
-        while (gameObject.activeInHierarchy)
+        while (coinImage.enabled)
         {
             coinImage.sprite = poolCoins[index];
 
@@ -45,8 +45,9 @@ public class RotatingCoin : MonoBehaviour
         fx.gameObject.SetActive(true);
         fx.Play();
 
-        Tween.Delay(1).OnComplete(() =>
+        Tween.Delay(0.5f).OnComplete(() =>
         {
+            fx.Stop();
             gameObject.SetActive(false);
         });
     }

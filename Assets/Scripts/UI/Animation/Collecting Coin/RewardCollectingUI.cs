@@ -119,7 +119,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
     public async void CollectItem
     (
-        ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, int poolSize, float itemSizeX
+        ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, float itemSizeX
     )
     {
         for (int i = 0; i < _rewards.Length; i++)
@@ -154,7 +154,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         isCompleted = false;
 
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < _rewards.Length; i++)
         {
             int index = i;
             float duration;
@@ -191,11 +191,11 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                     {
                         if (!isCompleted)
                         {
-                            _rewards[index].GetComponent<RotatingCoin>().PlayFX();
-
                             onCompleteAction?.Invoke();
                         }
                     }
+
+                    _rewards[index].GetComponent<RotatingCoin>().PlayFX();
 
                     // _rewards[index].gameObject.SetActive(false);
 

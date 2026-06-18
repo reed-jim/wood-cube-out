@@ -149,41 +149,41 @@ namespace NamPhuThuy.GamePlay
             // }
             // //
 
-            int nextLevel = 1;
+            int nextLevel = currentLevel.Value;
 
             bool isLoopLevel = false;
 
-            if (!UserData.IsLoopLevel)
-            {
-                if (currentLevel.Value <= _maxLevel)
-                {
-                    nextLevel = currentLevel.Value;
-                }
-                else
-                {
-                    nextLevel = GetLoopLevel();
+            // if (!UserData.IsLoopLevel)
+            // {
+            //     if (currentLevel.Value <= _maxLevel)
+            //     {
+            //         nextLevel = currentLevel.Value;
+            //     }
+            //     else
+            //     {
+            //         nextLevel = GetLoopLevel();
 
-                    await UserData.SetIsLoopLevel(true);
-                    await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+            //         await UserData.SetIsLoopLevel(true);
+            //         await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
 
-                    // isLoopLevel = true;
-                    SetIsLoopLevel(true);
-                }
-            }
-            else
-            {
-                if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
-                {
-                    nextLevel = GetLoopLevel();
-                }
-                else
-                {
-                    nextLevel = currentLevel.Value - UserData.NumLevelLoop;
-                }
+            //         // isLoopLevel = true;
+            //         SetIsLoopLevel(true);
+            //     }
+            // }
+            // else
+            // {
+            //     if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+            //     {
+            //         nextLevel = GetLoopLevel();
+            //     }
+            //     else
+            //     {
+            //         nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+            //     }
 
-                // isLoopLevel = true;
-                SetIsLoopLevel(true);
-            }
+            //     // isLoopLevel = true;
+            //     SetIsLoopLevel(true);
+            // }
 
             // NOT LOOP
             if (currentLevel.Value > _maxLevel)
@@ -219,7 +219,6 @@ namespace NamPhuThuy.GamePlay
             GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
 
             string levelName = $"Level {nextLevel}";
-            levelName = ModifyNameInFixedLevel(levelName, nextLevel);
 
             // Memory Management
             Resources.UnloadUnusedAssets();
@@ -273,6 +272,9 @@ namespace NamPhuThuy.GamePlay
                 {
                     setIsLevelLoadedEvent?.Invoke();
                 });
+
+                GamePersistentVariable.startLevelTime = Time.time;
+                GamePersistentVariable.levelRetryTime++;
             }
 
             void SetIsLoopLevel(bool isLoop)
@@ -366,7 +368,7 @@ namespace NamPhuThuy.GamePlay
             float distance = Mathf.Abs(Camera.main.transform.position.z);
 
             Vector3 worldPos = Camera.main.ViewportToWorldPoint(
-                new Vector3(0, 0.55f, distance)
+                new Vector3(0, 0.5f, distance)
             );
 
             transform.position = transform.position.ChangeY(worldPos.y);
@@ -422,7 +424,6 @@ namespace NamPhuThuy.GamePlay
         {
             endCurrentLevelEvent?.Invoke();
 
-            // DebugLogger.LogSimple();
             await Task.Delay(500);
 
             if (gameObject.transform.childCount > 0)
@@ -443,19 +444,16 @@ namespace NamPhuThuy.GamePlay
 
         private void NextLevel()
         {
-            DebugLogger.LogSimple();
             GoLevel(currentLevel.Value + 1);
         }
 
         private void PrevLevel()
         {
-            DebugLogger.LogSimple();
             GoLevel(currentLevel.Value - 1);
         }
 
         private void Replay()
         {
-            DebugLogger.LogSimple();
             GamePersistentVariable.isPreventLoadLevelData = true;
 
             GoLevel(currentLevel.Value);

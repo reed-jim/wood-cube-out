@@ -127,7 +127,6 @@ public class CoinContainerUI : MonoBehaviour
             positionRelativeToCanvas,
             onCompleteAction: () => UserResourcesManager.Instance.UpdateCoinTextAnimation(),
             totalValue: value,
-            poolSize: 16,
             itemSizeX: iconRT.sizeDelta.x
         );
 

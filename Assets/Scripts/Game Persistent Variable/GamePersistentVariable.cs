@@ -35,6 +35,8 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     public static bool isDisableLoopLevel;
     public static LevelMode currentLevelMode;
+    public static float startLevelTime;
+    public static int levelRetryTime;
     #endregion
 
     #region LEVEL DIFFICULTY

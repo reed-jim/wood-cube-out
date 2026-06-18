@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Firebase.RemoteConfig;
 using Lean.Localization;
 using NamPhuThuy.GamePlay;
@@ -328,6 +330,11 @@ public class WinPopup : BasePopup
         }
 
         SaferioTracking.TrackLevelWin(currentLevel.Value, levelBoosterObserver);
+
+        TimeSpan playDuration = TimeSpan.FromSeconds(Time.time - GamePersistentVariable.startLevelTime);
+        new FLevelLog(currentLevel.Value, $"GamePersistentVariable.levelItem.difficulty", LevelStatus.Pass, playDuration, GamePersistentVariable.levelRetryTime);
+
+        GamePersistentVariable.levelRetryTime = 0;
 
         // don't track loop level CostCenter
         if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
