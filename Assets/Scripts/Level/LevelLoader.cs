@@ -266,11 +266,14 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                // AutoSpacingAllTiles(levelTransform);
+                int numCols;
+                int numRows;
+
+                antLevelData = AutoSpacingAllTiles(antLevelData, out numCols, out numRows);
                 // FitLevelToScreenArea(levelTransform);
                 // CenterLevel(levelTransform);
 
-                FillTileMap(antLevelData, levelTransform);
+                FillTileMap(antLevelData, levelTransform, numCols, numRows);
                 // BuildMesh(levelTransform);   
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
@@ -292,23 +295,68 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
+        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform, int numCols, int numRows)
         {
             // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
 
             tilemapGrid.SetParent(levelTransform);
 
-            Debug.Log($"antLevelData.antLevelDataItems {antLevelData.antLevelDataItems.Count}");
-
-            foreach (var t in antLevelData.antLevelDataItems)
+            for (int i = 0; i < numRows; i++)
             {
-                Vector3Int cellPos = tilemap.WorldToCell(t.position);
+                Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+                Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
-                Tile tile = ScriptableObject.CreateInstance<Tile>();
-                tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-(numRows - i));
 
-                tilemap.SetTile(cellPos, tile);
+                for (int j = 0; j < numCols; j++)
+                {
+                    int index = j + i * numCols;
+
+                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+
+                    Tile tile = ScriptableObject.CreateInstance<Tile>();
+                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+
+                    spawnedTileMap.SetTile(cellPos, tile);
+                }
             }
+
+            // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Color faction = FactionMapper.Ins.indexesOfColors[t.factionIndex];
+
+            //     CommonUtil.AddValueOfDictionary(itemByFaction, faction, t);
+            // }
+
+            // foreach (var t in itemByFaction)
+            // {
+            // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+            // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+            //     for (int i = 0; i < t.Value.Count; i++)
+            //     {
+            //         Vector3Int cellPos = tilemap.WorldToCell(t.Value[i].position);
+
+            //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.Value[i].factionIndex]);
+
+            //         spawnedTileMap.SetTile(cellPos, tile);
+            //     }
+            // }
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Vector3Int cellPos = tilemap.WorldToCell(t.position);
+
+            //     Debug.Log($"row {t.position} {cellPos}");
+
+            //     Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+
+            //     tilemap.SetTile(cellPos, tile);
+            // }
         }
 
         // private void FillTileMap(Transform level)
@@ -422,59 +470,86 @@ namespace NamPhuThuy.GamePlay
             transform.position = transform.position.ChangeY(worldPos.y);
         }
 
-        // public void AutoSpacingAllTiles(Transform level)
-        // {
-        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData, out int numCols, out int numRows)
+        {
+            AntLevelData result = antLevelData;
 
-        //     Vector3 center = Vector3.zero;
+            Vector3 center = Vector3.zero;
 
-        //     foreach (AntsFlow.BaseTile tile in tiles)
-        //         center += tile.transform.position;
+            foreach (AntLevelDataItem tile in antLevelData.antLevelDataItems)
+                center += tile.position;
 
-        //     center /= tiles.Length;
+            center /= antLevelData.antLevelDataItems.Count;
 
-        //     // find num column
-        //     float firstRowY = tiles[0].transform.position.y;
-        //     float tolerance = 0.01f;
+            // find num column
+            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
+            float tolerance = 0.01f;
 
-        //     int numCols = 0;
+            numCols = 0;
+            numRows = 0;
 
-        //     foreach (var tile in tiles)
-        //     {
-        //         if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
-        //             numCols++;
-        //     }
+            foreach (var tile in antLevelData.antLevelDataItems)
+            {
+                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
+                {
+                    numCols++;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
-        //     float baseSpacingX = 0.7605271f;
-        //     float baseSpacingY = 0.760527f;
-        //     float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
-        //     float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
+            numRows = antLevelData.antLevelDataItems.Count / numCols;
 
-        //     float ratioX = currentSpacingX / baseSpacingX;
-        //     float ratioY = currentSpacingY / baseSpacingY;
+            // float baseSpacingX = 0.7605271f;
+            // float baseSpacingY = 0.760527f;
+            // float currentSpacingX = antLevelData.antLevelDataItems[1].position.x - antLevelData.antLevelDataItems[0].position.x;
+            // float currentSpacingY = antLevelData.antLevelDataItems[numCols].position.y - antLevelData.antLevelDataItems[0].position.y;
 
-        //     // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
-        //     Vector2 tileSpacing = new Vector2(1f, 0.92f);
+            // float ratioX = currentSpacingX / baseSpacingX;
+            // float ratioY = currentSpacingY / baseSpacingY;
 
-        //     float positionZ;
+            // // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+            // Vector2 tileSpacing = new Vector2(1.5f, 1.5f);
 
-        //     foreach (AntsFlow.BaseTile tile in tiles)
-        //     {
-        //         Vector3 offset = tile.transform.position - center;
+            // float positionZ;
 
-        //         float gridX = offset.x / currentSpacingX * ratioX;
-        //         float gridY = offset.y / currentSpacingY * ratioY;
+            // foreach (AntLevelDataItem item in result.antLevelDataItems)
+            // {
+            //     Vector3 offset = item.position - center;
 
-        //         positionZ = tile.transform.position.z;
+            //     float gridX = offset.x / currentSpacingX * ratioX;
+            //     float gridY = offset.y / currentSpacingY * ratioY;
 
-        //         tile.transform.position = center + new Vector3(
-        //             gridX * tileSpacing.x,
-        //             gridY * tileSpacing.y
-        //         );
+            //     positionZ = item.position.z;
 
-        //         tile.transform.position = tile.transform.position.ChangeZ(positionZ);
-        //     }
-        // }
+            //     // item.position = center + new Vector3(
+            //     //     gridX * tileSpacing.x,
+            //     //     gridY * tileSpacing.y
+            //     // );
+
+            //     item.position = CommonUtil.GetVector3Int(item.position);
+            // }
+
+            for (int row = 0; row < numRows; row++)
+            {
+                for (int col = 0; col < numCols; col++)
+                {
+                    Vector3 position = new Vector3(
+                        col * 1,
+                        row * 1,
+                        0f
+                    );
+
+                    int index = col + row * numCols;
+
+                    result.antLevelDataItems[index].position = position;
+                }
+            }
+
+            return result;
+        }
 
         void FitLevelToScreenArea(Transform level)
         {
