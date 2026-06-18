@@ -324,18 +324,17 @@ public class AdmobAdsMax
 
     #endregion
     #region Admob Banner
-
     private BannerView _bannerView;
 #if UNITY_ANDROID || UNITY_EDITOR
 #if TESTER
     private const string BANNER_ADMOB_ID = "ca-app-pub-3940256099942544/8388050270";
 #else
-    private const string BANNER_ADMOB_ID = "ca-app-pub-9457878244675693/1908612182";
+    private const string BANNER_ADMOB_ID = "ca-app-pub-3046520253844875/1905850868";
 #endif
 #if TESTER
     private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3940256099942544/9214589741";
 #else
-    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-9457878244675693/9348118506";
+    private const string BANNER_COLLAPSE_ADMOB_ID = "ca-app-pub-3046520253844875/2523627104";
 #endif
 #elif UNITY_IOS
 #if TESTER
