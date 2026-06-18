@@ -18,12 +18,18 @@ public class GameplayScreen : Singleton<GameplayScreen>
     [SerializeField] private Button openDebugPopupButton;
     [SerializeField] private Button openInventoryPopupButton;
     [SerializeField] private TMP_Text remainingScrewText;
-    [SerializeField] private LeanLocalizedTextMeshProUGUI localizedLevelText;
+    [SerializeField] private TMP_Text localizedLevelText;
     [SerializeField] private IntVariable currentLevel;
     [SerializeField] private GameSetting gameSetting;
     [SerializeField] private TMP_Text timerText;
     [Header("HARD MODE")]
     [SerializeField] private CanvasGroup hardModeCanvasGroup;
+    [Header("Resources")]
+    [SerializeField] private UserResourcesObserver userResourcesObserver;
+    [SerializeField] private TMP_Text coinText;
+    public static event Action<int> coinTextChangedEvent;
+
+
 
     public static event Action<ScreenRoute> switchRouteEvent;
     public static event Action nextLevelEvent;
@@ -42,6 +48,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent += UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent += OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent += OnAdsRemoved;
+
+        if (userResourcesObserver != null)
+        {
+            userResourcesObserver.updateCoinEvent += UpdateCoinText;
+        }
 
         pauseButton.onClick.AddListener(Pause);
         noAdsButton.onClick.AddListener(OpenNoAdsPopup);
@@ -62,6 +73,8 @@ public class GameplayScreen : Singleton<GameplayScreen>
         {
             openDebugPopupButton.gameObject.SetActive(false);
         }
+
+        UpdateCoinText();
     }
 
     void OnDestroy()
@@ -74,6 +87,11 @@ public class GameplayScreen : Singleton<GameplayScreen>
         ScrewsDataManager.updateRemainingScrewEvent -= UpdateRemainingScrew;
         ResourceEarnPopup.removeAdsEvent -= OnAdsRemoved;
         SaferioIAPManager.removeAdsEvent -= OnAdsRemoved;
+
+        if (userResourcesObserver != null)
+        {
+            userResourcesObserver.updateCoinEvent -= UpdateCoinText;
+        }
     }
 
     #endregion
@@ -152,17 +170,39 @@ public class GameplayScreen : Singleton<GameplayScreen>
 
     private void OnLevelStarted()
     {
+        UpdateCoinText();
+        //bool hasTimeLimit = TileManager.Ins.levelItem.timeLimit > 0;
+        //if (timerText != null)
+        //{
+        //    timerText.gameObject.SetActive(hasTimeLimit);
+        //    if (timerText.transform.parent != null)
+        //    {
+        //        // Optionally hide parent if it's a dedicated timer container
+        //        if (timerText.transform.parent.name.ToLower().Contains("time"))
+        //        {
+        //            timerText.transform.parent.gameObject.SetActive(hasTimeLimit);
+        //        }
+        //    }
+        //}
+    }
 
+    private void UpdateCoinText()
+    {
+        if (coinText != null && userResourcesObserver != null && userResourcesObserver.UserResources != null)
+        {
+            coinText.text = $"{userResourcesObserver.UserResources.CoinQuantity}";
+        }
     }
 
     private void OnLevelTextTranslated()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        //localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
     }
 
     private void SetLevelText()
     {
-        localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        //localizedLevelText.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{GetDisplayedLevel()}");
+        localizedLevelText.text = string.Format("LV {0}", GetDisplayedLevel());
     }
 
     private void UpdateRemainingScrew(int remainingScrew, int totalScrew)

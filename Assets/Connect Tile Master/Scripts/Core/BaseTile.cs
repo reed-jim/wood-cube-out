@@ -14,6 +14,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] public Image glow;
     [SerializeField] public Image icon;
     [SerializeField] public TMP_Text category;
+    [SerializeField] public TMP_Text txCount;
 
     [SerializeField] private ItemCategory itemCategory;
     [SerializeField] private bool isMoving;
@@ -24,6 +25,12 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
     [SerializeField] private bool isText;
     [SerializeField] private int themeItemId;
 
+    [Header("Init")]
+    [SerializeField] public Image ObjShow;
+    [SerializeField] public Image ObjHide;
+
+    private Tween _highlightScaleTween;
+    private Tween _highlightShakeTween;
 
 
     public static event Action<BaseTile> selectTileEvent;
@@ -122,49 +129,78 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         IsOutside = false;
         IsDone = false;
         _isDragging = false;
+
+        if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+        if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
+        if (glow != null) glow.gameObject.SetActive(false);
+        transform.localScale = Vector3.one;
     }
 
-    public void Shuffle(ItemCategory itemCategory, int themeItemId, Sprite iconSprite, string textData, Vector3 deckLocalPos)
+    public void PrepareForShuffle()
     {
         isMoving = true;
+        if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+        if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
+        if (glow != null) glow.gameObject.SetActive(false);
+        transform.localScale = Vector3.one;
+    }
 
-        Vector3 initialPosition = transform.localPosition;
+    public void FlipFaceDown(float delay, Action onComplete, float valueRotateWhenShuffling = -90f)
+    {
+        PrepareForShuffle();
 
-        Tween.LocalPosition(transform, deckLocalPos, duration: 0.3f)
-        .OnComplete(() =>
-        {
-            if (gameObject == null) return;
-
-            this.itemCategory = itemCategory;
-            this.themeItemId = themeItemId;
-            isText = !string.IsNullOrEmpty(textData);
-
-            if (isText)
-            {
-                icon.gameObject.SetActive(false);
-                category.gameObject.SetActive(true);
-                category.text = textData;
-            }
-            else
-            {
-                icon.gameObject.SetActive(true);
-                category.gameObject.SetActive(false);
-                icon.sprite = iconSprite;
-                UIUtil.SetSizeKeepRatioY(icon, 0.8f * container.sizeDelta.x);
-            }
-
-            containerImage.color = containerImage.color.ChangeAlpha(1);
-
-            IsOnValidSlot = false;
-            IsDone = false;
-
-            Tween.LocalPosition(transform, initialPosition, duration: 0.3f, startDelay: 0.1f)
+        float flipDuration = 0.12f;
+        // Lật bài góc Y sang 90 độ để úp mặt
+        Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, valueRotateWhenShuffling, 0), flipDuration, startDelay: delay)
             .OnComplete(() =>
             {
-                if (gameObject != null)
-                    isMoving = false;
+                if (gameObject == null)
+                {
+                    onComplete?.Invoke();
+                    return;
+                }
+                SetFaceUp(false);
+                // Xoay góc Y về 0 độ để lá bài phẳng trở lại (đang úp mặt)
+                Tween.LocalEulerAngles(transform, new Vector3(0, valueRotateWhenShuffling, 0), Vector3.zero, flipDuration)
+                    .OnComplete(() =>
+                    {
+                        onComplete?.Invoke();
+                    });
             });
-        });
+    }
+
+    public void FlyToDeck(Vector3 deckLocalPos, Action onComplete)
+    {
+        if (gameObject == null)
+        {
+            onComplete?.Invoke();
+            return;
+        }
+
+        // Di chuyển và giữ nguyên scale
+        float distance = Vector3.Distance(transform.localPosition, deckLocalPos);
+        float speed = 1500f;
+        float moveDuration = Mathf.Max(0.2f, distance / speed);
+
+        Tween.LocalPosition(transform, deckLocalPos, moveDuration, ease: Ease.InQuad);
+        Tween.Scale(ObjHide.transform, Vector3.one, moveDuration, ease: Ease.InQuad);
+
+        // Xoay nghiêng nửa đường đầu sang (0, 70, -70), nửa đường sau xoay về (0, 0, 0) để không bị méo khi vào bộ bài
+        float halfDuration = moveDuration / 2f;
+        Tween.LocalEulerAngles(transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                if (gameObject == null)
+                {
+                    onComplete?.Invoke();
+                    return;
+                }
+                Tween.LocalEulerAngles(transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
+                    .OnComplete(() =>
+                    {
+                        onComplete?.Invoke();
+                    });
+            });
     }
 
     public void Select()
@@ -187,6 +223,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         _originalSiblingIndex = transform.GetSiblingIndex();
 
         transform.SetAsLastSibling();
+        //Tween.Scale(transform, 1.1f, duration: 0.15f);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -215,8 +252,6 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             IsMoving = true;
 
-            Tween.Alpha(containerImage, 0, duration: 0.3f);
-
             TileManager.Ins.MoveTileToSlot(this, onCompleteAction: () =>
             {
                 IsMoving = false;
@@ -227,6 +262,7 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         else
         {
             IsMoving = true;
+            Tween.Scale(transform, Vector3.one, duration: 0.2f);
             Tween.Position(transform, _originalPosition, duration: 0.2f).OnComplete(() =>
             {
                 IsMoving = false;
@@ -260,5 +296,71 @@ public class BaseTile : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDrag
         {
             glow.gameObject.SetActive(isHighlight);
         }
+
+        if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+        if (_highlightShakeTween.isAlive) _highlightShakeTween.Stop();
+
+        if (isHighlight)
+        {
+            Tween.Delay(0.25f).OnComplete(() =>
+            {
+                if (gameObject != null && glow != null && glow.gameObject.activeSelf)
+                {
+                    StartHighlightScaleLoop();
+                    StartHighlightShakeLoop();
+                }
+            });
+        }
+        else
+        {
+            Tween.Scale(transform, Vector3.one, duration: 0.2f, ease: Ease.OutQuad);
+        }
+    }
+
+    private void StartHighlightScaleLoop()
+    {
+        if (glow == null || !glow.gameObject.activeSelf) return;
+
+        _highlightScaleTween = Tween.Scale(transform, 1.07f, duration: 0.5f, ease: Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                if (glow != null && glow.gameObject.activeSelf)
+                {
+                    _highlightScaleTween = Tween.Scale(transform, 1.0f, duration: 0.25f, ease: Ease.InQuad)
+                        .OnComplete(() =>
+                        {
+                            if (glow != null && glow.gameObject.activeSelf)
+                            {
+                                _highlightScaleTween = Tween.Delay(1.25f).OnComplete(() =>
+                                {
+                                    StartHighlightScaleLoop();
+                                });
+                            }
+                        });
+                }
+            });
+    }
+
+    private void StartHighlightShakeLoop()
+    {
+        if (glow == null || !glow.gameObject.activeSelf) return;
+
+        _highlightShakeTween = Tween.ShakeLocalPosition(transform, strength: new Vector3(8f, 8f, 0f), duration: 0.75f, frequency: 7)
+            .OnComplete(() =>
+            {
+                if (glow != null && glow.gameObject.activeSelf)
+                {
+                    _highlightShakeTween = Tween.Delay(1.25f).OnComplete(() =>
+                    {
+                        StartHighlightShakeLoop();
+                    });
+                }
+            });
+    }
+
+    public void SetFaceUp(bool isFaceUp)
+    {
+        if (ObjShow != null) ObjShow.gameObject.SetActive(isFaceUp);
+        if (ObjHide != null) ObjHide.gameObject.SetActive(!isFaceUp);
     }
 }

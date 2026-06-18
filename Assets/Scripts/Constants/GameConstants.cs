@@ -94,7 +94,7 @@ public static class GameConstants
     public static string UNSCREW_TASK_TRANSLATION_NAME = "Unscrew Task Description";
     public static string COMPLETE_LEVEL_TRANSLATION_NAME = "Complete Level Task Description";
     public static string LEVEL_COMPLETED = "Level Completed";
-    public static string LEVEL_PARAMETER = "LV";
+    public static string LEVEL_PARAMETER = "LEVEL";
     public static string VALUE_PARAMETER = "value";
 
     #endregion

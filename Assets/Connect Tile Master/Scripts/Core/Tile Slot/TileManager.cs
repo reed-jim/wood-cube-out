@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Dreamteck.Utilities;
@@ -45,6 +46,7 @@ public class TileManager : Singleton<TileManager>
     public static event Action winLevelEvent;
     public static event Action loseLevelEvent;
 
+    private float valueRotateWhenShuffling = 60f;
     #region Life Cycle
     protected override void MoreActionOnAwake()
     {
@@ -143,7 +145,8 @@ public class TileManager : Singleton<TileManager>
     {
         foreach (var tileToRemove in tiles)
         {
-            ObjectPoolingEverything.ReturnToPool(GameConstants.tile, tileToRemove.gameObject);
+            if (tileToRemove != null && tileToRemove.gameObject != null)
+                Destroy(tileToRemove.gameObject);
         }
 
         tiles = new List<BaseTile>();
@@ -217,7 +220,7 @@ public class TileManager : Singleton<TileManager>
                 tileSlotContainer.ClearTiles();
                 tileSlotContainer.UpdateCountText();
 
-                Tween.LocalPositionY(tileSlotContainer.transform, initialPositionY, duration: 0.3f);
+                StartCoroutine(WaitAndDropContainer(tileSlotContainer, initialPositionY));
             });
 
             if (categories.Count > 0)
@@ -480,7 +483,6 @@ public class TileManager : Singleton<TileManager>
                         // Hide tile and mark as done so it returns to pool and updates win condition properly
                         tile.IsDone = true;
                         tiles.Remove(tile);
-                        tile.gameObject.SetActive(false);
                         tile.transform.SetParent(tileSlot.transform);
 
                         tileSlotContainer.SwitchItem(tile);
@@ -534,7 +536,6 @@ public class TileManager : Singleton<TileManager>
 
             tile.IsDone = true;
             tiles.Remove(tile);
-            tile.gameObject.SetActive(false);
             tile.transform.SetParent(slot.transform);
 
             tileSlotContainer.SwitchItem(tile);
@@ -785,10 +786,45 @@ public class TileManager : Singleton<TileManager>
 
                     InitTileWithSpriteOrString(tile, nextCategory);
 
+                    tile.SetFaceUp(false);
+                    tile.transform.localEulerAngles = Vector3.zero;
+                    tile.transform.localScale = Vector3.one;
+
                     tile.IsMoving = true;
-                    Tween.LocalPosition(tile.transform, grids[i].position, duration: 0.3f).OnComplete(() =>
+
+                    float distance = Vector3.Distance(tile.transform.localPosition, grids[i].position);
+                    float dealSpeed = 1500f;
+                    float dealDuration = distance / dealSpeed;
+
+                    tile.transform.SetAsLastSibling();
+
+                    Tween.LocalPosition(tile.transform, grids[i].position, dealDuration);
+                    Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
+                    Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
+
+                    float halfDuration = dealDuration / 2f;
+                    Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
+                    .OnComplete(() =>
                     {
-                        tile.IsMoving = false;
+                        if (tile == null) return;
+                        Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad)
+                        .OnComplete(() =>
+                        {
+                            if (tile == null) return;
+                            float flipDuration = 0.15f;
+                            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
+                            {
+                                if (tile != null)
+                                {
+                                    tile.SetFaceUp(true);
+                                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration)
+                                    .OnComplete(() =>
+                                    {
+                                        if (tile != null) tile.IsMoving = false;
+                                    });
+                                }
+                            });
+                        });
                     });
 
                     grids[i].tile = tile;
@@ -880,6 +916,8 @@ public class TileManager : Singleton<TileManager>
 
         CardStockPile.Ins.UpdateText();
 
+        StartCoroutine(DealCardsAnimCoroutine());
+
         BaseTile SpawnTile(int xIndex, int yIndex)
         {
             ItemCategory currentCategory = itemCategoryPool.First();
@@ -903,6 +941,93 @@ public class TileManager : Singleton<TileManager>
             tiles.Add(tile);
 
             return tile;
+        }
+    }
+
+    private IEnumerator WaitForTransitionCompleted()
+    {
+        bool isTransitionDone = false;
+        Action onTransitionDone = () => isTransitionDone = true;
+        SceneTransition.transitionCompletedEvent += onTransitionDone;
+
+        float timeout = 10f; // Phòng hờ lỗi kẹt loading
+        while ((!isTransitionDone || !GamePersistentVariable.isLoadingComplete) && timeout > 0)
+        {
+            timeout -= UnityEngine.Time.deltaTime;
+            yield return null;
+        }
+
+        SceneTransition.transitionCompletedEvent -= onTransitionDone;
+    }
+
+    private IEnumerator WaitAndDropContainer(TileSlotContainer container, float targetY)
+    {
+        yield return StartCoroutine(WaitForTransitionCompleted());
+        Tween.LocalPositionY(container.transform, targetY, duration: 0.3f);
+    }
+
+    private IEnumerator DealCardsAnimCoroutine()
+    {
+        // Prepare
+        foreach (var grid in grids)
+        {
+            if (grid == null || grid.tile == null) continue;
+
+            BaseTile tile = grid.tile;
+            tile.SetFaceUp(false);
+            tile.transform.position = CardStockPile.Ins.transform.position;
+            tile.transform.localEulerAngles = Vector3.zero;
+            tile.transform.localScale = Vector3.one;
+        }
+
+        yield return StartCoroutine(WaitForTransitionCompleted());
+
+        var sortedGrids = grids.Where(g => g != null && g.tile != null)
+                               .OrderByDescending(g => g.position.y)
+                               .ThenBy(g => g.position.x)
+                               .ToList();
+
+        foreach (var grid in sortedGrids)
+        {
+            BaseTile tile = grid.tile;
+
+            float distance = Vector3.Distance(tile.transform.localPosition, grid.position);
+            float dealSpeed = 1500f;
+            float dealDuration = distance / dealSpeed;
+
+            tile.transform.SetAsLastSibling();
+            Tween.LocalPosition(tile.transform, grid.position, dealDuration);
+            Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
+            Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
+
+            float halfDuration = dealDuration / 2f;
+            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 70f, -70f), halfDuration, ease: Ease.OutQuad)
+                .OnComplete(() =>
+                {
+                    if (tile == null) return;
+                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 70f, -70f), Vector3.zero, halfDuration, ease: Ease.InQuad);
+                });
+
+            yield return new WaitForSeconds(0.15f);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        foreach (var grid in sortedGrids)
+        {
+            BaseTile tile = grid.tile;
+
+            float flipDuration = 0.15f;
+            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
+            {
+                if (tile != null)
+                {
+                    tile.SetFaceUp(true);
+                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration);
+                }
+            });
+
+            yield return new WaitForSeconds(0.15f);
         }
     }
     #endregion
@@ -1026,7 +1151,7 @@ public class TileManager : Singleton<TileManager>
             additionalTileSlots[i].gameObject.SetActive(false);
         }
     }
-
+    #region Booster Shuffle
     public void UseHintBooster()
     {
         TileSlotContainer activeContainer = null;
@@ -1062,7 +1187,7 @@ public class TileManager : Singleton<TileManager>
             if (upToAll != null)
             {
                 upToAll.gameObject.SetActive(true);
-                Tween.Alpha(upToAll, 0.7f, duration: 0.3f);
+                Tween.Alpha(upToAll, 0.7f, duration: 0.25f);
                 originalContainerParent = activeContainer.transform.parent;
                 originalContainerSiblingIndex = activeContainer.transform.GetSiblingIndex();
                 activeContainer.transform.SetParent(upToAll.transform, true);
@@ -1128,40 +1253,48 @@ public class TileManager : Singleton<TileManager>
         return tiles.Any(tile => !tile.IsOnSlot && !tile.IsOutside);
     }
 
+    private struct ShuffleTargetInfo
+    {
+        public BaseTile tile;
+        public ItemCategory category;
+        public int itemId;
+        public Sprite sprite;
+        public string text;
+        public Vector3 targetLocalPos;
+    }
+
     public void UseShuffleBooster()
     {
-        // ── STEP 1: Identify tiles to shuffle (on grid, not on slot, not outside) ──
-        // Note: tiles list only contains active (non-done) tiles since completed tiles are removed immediately.
+
         List<BaseTile> tilesToShuffle = tiles.Where(t => !t.IsOnSlot && !t.IsOutside && !t.IsMoving).ToList();
         int gridSize = tilesToShuffle.Count;
         if (gridSize == 0) return;
 
-        // ── STEP 2 & 3: Build per-category item ID pools from TWO sources: ──
-        //   (a) ThemeItemId of active grid tiles
-        //   (b) Unspawned content in availableItemIdsPerCategory
-        Dictionary<ItemCategory, List<int>> itemPools = new Dictionary<ItemCategory, List<int>>();
-
-        // (a) Collect actual item IDs from active tiles
+        foreach (BaseTile tile in tilesToShuffle)
+        {
+            tile.IsMoving = true;
+        }
+        Dictionary<ItemCategory, List<int>> freedIds = new Dictionary<ItemCategory, List<int>>();
         foreach (BaseTile tile in tilesToShuffle)
         {
             ItemCategory cat = tile.ItemCategory;
-            if (!itemPools.ContainsKey(cat)) itemPools[cat] = new List<int>();
-            itemPools[cat].Add(tile.ThemeItemId);
+            if (!freedIds.ContainsKey(cat)) freedIds[cat] = new List<int>();
+            freedIds[cat].Add(tile.ThemeItemId);
         }
 
-        // (b) Add unspawned content from existing available pools
+        Dictionary<ItemCategory, List<int>> itemPools = new Dictionary<ItemCategory, List<int>>();
         foreach (var theme in levelItem.themeDataList)
         {
             ItemCategory cat = theme.category;
-            if (!itemPools.ContainsKey(cat)) itemPools[cat] = new List<int>();
+            itemPools[cat] = new List<int>();
 
             if (availableItemIdsPerCategory.ContainsKey(cat))
-            {
                 itemPools[cat].AddRange(availableItemIdsPerCategory[cat]);
-            }
+
+            if (freedIds.ContainsKey(cat))
+                itemPools[cat].AddRange(freedIds[cat]);
         }
 
-        // Shuffle each pool and convert to queues for sequential unique dequeue
         Dictionary<ItemCategory, Queue<int>> itemQueues = new Dictionary<ItemCategory, Queue<int>>();
         foreach (var kv in itemPools)
         {
@@ -1169,20 +1302,16 @@ public class TileManager : Singleton<TileManager>
             itemQueues[kv.Key] = new Queue<int>(kv.Value);
         }
 
-        // ── STEP 4: Build combined category pool: active grid tiles + stock ──
-        //    Shuffle determines new category assignments for all grid positions.
+
         List<ItemCategory> allCategoriesInPlay = tilesToShuffle.Select(t => t.ItemCategory).ToList();
         allCategoriesInPlay.AddRange(itemCategoryPool);
 
-        // Priority: categories currently showing in active (non-locked) TileSlotContainers
         List<ItemCategory> priorityCategories = tileSlotContainers
             .Where(c => !c.isLocked && !c.isHidden)
             .Select(c => c.ItemCategory)
             .Distinct()
             .ToList();
 
-        // Guarantee exactly 1 tile on the grid for each active unlocked theme,
-        // so the player always has at least 1 playable tile per open slot.
         List<ItemCategory> guaranteedCategories = new List<ItemCategory>();
         foreach (ItemCategory cat in priorityCategories)
         {
@@ -1194,10 +1323,7 @@ public class TileManager : Singleton<TileManager>
             }
         }
 
-        // Fill remaining slots with weighted random:
-        //  - If priority-theme cards are still available, 50% chance to draw from them first
-        //    (encourages more playable tiles appearing on grid)
-        //  - Otherwise draw freely from any remaining category
+        // Fill remaining slots with weighted random
         List<ItemCategory> priorityPool = allCategoriesInPlay
             .Where(c => priorityCategories.Contains(c))
             .ToList();
@@ -1220,7 +1346,6 @@ public class TileManager : Singleton<TileManager>
             if (!hasPriority && !hasOther) break;
 
             ItemCategory chosen;
-            // priorityCardRatio% → pick from priority pool (same theme as active orders), else from other
             float ratio = levelItem != null ? levelItem.priorityCardRatio : 0.5f;
             if (hasPriority && (!hasOther || UnityEngine.Random.value < ratio))
             {
@@ -1229,7 +1354,6 @@ public class TileManager : Singleton<TileManager>
             }
             else
             {
-                // No priority cards left OR lost the 50/50 coin flip
                 if (hasOther)
                 {
                     chosen = otherPool[0];
@@ -1237,7 +1361,6 @@ public class TileManager : Singleton<TileManager>
                 }
                 else
                 {
-                    // otherPool empty, fall back to remaining priorityPool
                     chosen = priorityPool[0];
                     priorityPool.RemoveAt(0);
                 }
@@ -1246,17 +1369,11 @@ public class TileManager : Singleton<TileManager>
             shuffledGridCategories.Add(chosen);
         }
 
-        // Shuffle the final list so guaranteed tiles land at random positions, not always first
         shuffledGridCategories.Shuffle();
-
-        // ── STEP 5: Assign unique content to each grid tile from the queues ──
-        // Shuffle tilesToShuffle itself so different tile objects (grid positions) receive
-        // different categories each time, preventing identical consecutive shuffles.
         tilesToShuffle.Shuffle();
 
-        Vector3 deckLocalPos = Vector3.zero;
-        if (CardStockPile.Ins != null)
-            deckLocalPos = tilesToShuffle[0].transform.parent.InverseTransformPoint(CardStockPile.Ins.transform.position);
+        List<ShuffleTargetInfo> shuffleTargets = new List<ShuffleTargetInfo>();
+        Dictionary<ItemCategory, List<int>> assignedGridIds = new Dictionary<ItemCategory, List<int>>();
 
         for (int i = 0; i < gridSize; i++)
         {
@@ -1270,11 +1387,21 @@ public class TileManager : Singleton<TileManager>
             }
             else
             {
-                // Fallback if queue is empty
                 int spriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
                 int textCount = iconSet.text != null ? iconSet.text.Length : 0;
-                itemId = UnityEngine.Random.Range(0, spriteCount + textCount);
+                int totalItems = spriteCount + textCount;
+                List<int> alreadyUsed = assignedGridIds.ContainsKey(newCat) ? assignedGridIds[newCat] : new List<int>();
+                List<int> candidates = new List<int>();
+                for (int id = 0; id < totalItems; id++)
+                    if (!alreadyUsed.Contains(id)) candidates.Add(id);
+                itemId = candidates.Count > 0
+                    ? candidates[UnityEngine.Random.Range(0, candidates.Count)]
+                    : UnityEngine.Random.Range(0, totalItems);
             }
+
+            // Track the assigned ID
+            if (!assignedGridIds.ContainsKey(newCat)) assignedGridIds[newCat] = new List<int>();
+            assignedGridIds[newCat].Add(itemId);
 
             int currentSpriteCount = iconSet.icons != null ? iconSet.icons.Length : 0;
             string textData = null;
@@ -1289,11 +1416,18 @@ public class TileManager : Singleton<TileManager>
                 textData = iconSet.text[itemId - currentSpriteCount];
             }
 
-            tilesToShuffle[i].Shuffle(newCat, itemId, spriteData, textData, deckLocalPos);
+            shuffleTargets.Add(new ShuffleTargetInfo
+            {
+                tile = tilesToShuffle[i],
+                category = newCat,
+                itemId = itemId,
+                sprite = spriteData,
+                text = textData,
+                targetLocalPos = tilesToShuffle[i].transform.localPosition
+            });
         }
 
         // ── STEP 6: Rebuild available pools from queue remnants ──
-        //    Whatever remains in the queues after grid assignment = content for future spawns.
         foreach (var theme in levelItem.themeDataList)
         {
             ItemCategory cat = theme.category;
@@ -1302,28 +1436,169 @@ public class TileManager : Singleton<TileManager>
                 : new List<int>();
         }
 
-        // ── STEP 6b: Safety dedup pass ──
-        // Solution: remove every currently-visible tile content from the pool right now.
-        foreach (BaseTile tile in tiles)
+        // ── STEP 6b: Dedup pass using ASSIGNED IDs ──
+        foreach (var kv in assignedGridIds)
         {
-            if (tile.IsDone) continue;
-            ItemCategory tileCat = tile.ItemCategory;
-            if (availableItemIdsPerCategory.ContainsKey(tileCat))
+            ItemCategory cat = kv.Key;
+            if (availableItemIdsPerCategory.ContainsKey(cat))
             {
-                availableItemIdsPerCategory[tileCat].Remove(tile.ThemeItemId);
+                foreach (int id in kv.Value)
+                    availableItemIdsPerCategory[cat].Remove(id);
             }
         }
 
-        // ── STEP 7: Rebuild itemCategoryPool from leftover categories not assigned to the grid ──
-        // Leftover = what remains in priorityPool + otherPool after the fill loop consumed from them.
-        itemCategoryPool = priorityPool;
-        itemCategoryPool.AddRange(otherPool);
+        foreach (BaseTile tile in tiles)
+        {
+            if (tile.IsDone || tile.IsMoving) continue;
+            if (tilesToShuffle.Contains(tile)) continue;
+            ItemCategory tileCat = tile.ItemCategory;
+            if (availableItemIdsPerCategory.ContainsKey(tileCat))
+                availableItemIdsPerCategory[tileCat].Remove(tile.ThemeItemId);
+        }
+
+        // Start the shuffle animation coroutine
+        StartCoroutine(ShuffleBoosterCoroutine(shuffleTargets, priorityPool, otherPool));
     }
 
+    private IEnumerator ShuffleBoosterCoroutine(List<ShuffleTargetInfo> shuffleTargets, List<ItemCategory> priorityPool, List<ItemCategory> otherPool)
+    {
+        // 1. Xác định vị trí bộ bài
+        Vector3 deckLocalPos = Vector3.zero;
+        if (CardStockPile.Ins != null && shuffleTargets.Count > 0)
+        {
+            deckLocalPos = shuffleTargets[0].tile.transform.parent.InverseTransformPoint(CardStockPile.Ins.transform.position);
+        }
+
+        // Sắp xếp thứ tự các lá bài từ trái qua phải, từ trên xuống dưới
+        var sortedTargets = shuffleTargets
+            .OrderByDescending(t => t.tile.transform.parent.TransformPoint(t.targetLocalPos).y)
+            .ThenBy(t => t.tile.transform.parent.TransformPoint(t.targetLocalPos).x)
+            .ToList();
+
+        // 2a. Lần lượt úp các lá bài trên grid
+        int flipsCompleted = 0;
+        for (int i = 0; i < sortedTargets.Count; i++)
+        {
+            var target = sortedTargets[i];
+            float delay = i * 0.08f;
+            target.tile.FlipFaceDown(delay, () =>
+            {
+                flipsCompleted++;
+            });
+        }
+
+        // Đợi tất cả úp xong
+        while (flipsCompleted < sortedTargets.Count)
+        {
+            yield return null;
+        }
+
+        // 2b. Khi tất cả đã úp xong mới bắt đầu di chuyển để shuffle về bộ bài (staggered)
+        int flyCompleted = 0;
+        for (int i = 0; i < sortedTargets.Count; i++)
+        {
+            var target = sortedTargets[i];
+            float flyDelay = i * 0.15f; // Di chuyển xen kẽ nhanh
+            StartCoroutine(FlyToDeckWithDelayCoroutine(target.tile, deckLocalPos, flyDelay, () =>
+            {
+                flyCompleted++;
+            }));
+        }
+
+        // Đợi tất cả bay về bộ bài hoàn tất
+        while (flyCompleted < sortedTargets.Count)
+        {
+            yield return null;
+        }
+
+        // 3. Cập nhật dữ liệu mới khi các lá bài đang nằm ẩn trong bộ bài
+        foreach (var target in sortedTargets)
+        {
+            if (target.tile == null) continue;
+            target.tile.Init(target.category, target.itemId, target.sprite, target.text);
+            target.tile.SetFaceUp(false);
+            target.tile.transform.localScale = Vector3.one;
+            target.tile.transform.localEulerAngles = Vector3.zero;
+        }
+
+        // 4. Cập nhật lại pool chung của màn chơi
+        itemCategoryPool = new List<ItemCategory>(priorityPool);
+        itemCategoryPool.AddRange(otherPool);
+        CardStockPile.Ins.UpdateText();
+
+        yield return new WaitForSeconds(0.2f);
+
+        // 5. Chia bài ra
+        foreach (var target in sortedTargets)
+        {
+            BaseTile tile = target.tile;
+            if (tile == null) continue;
+
+            float distance = Vector3.Distance(tile.transform.localPosition, target.targetLocalPos);
+            float dealSpeed = 1500f;
+            float dealDuration = distance / dealSpeed;
+
+            tile.transform.SetAsLastSibling();
+            Tween.LocalPosition(tile.transform, target.targetLocalPos, dealDuration);
+            Tween.Scale(tile.transform, Vector3.one, dealDuration, ease: Ease.OutQuad);
+            Tween.Scale(tile.ObjHide.transform, 0.91f, dealDuration, ease: Ease.OutQuad);
+
+            float halfDuration = dealDuration / 3f;
+            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, valueRotateWhenShuffling, -valueRotateWhenShuffling), halfDuration)
+                .OnComplete(() =>
+                {
+                    if (tile == null) return;
+                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, valueRotateWhenShuffling, -valueRotateWhenShuffling), Vector3.zero, halfDuration * 2, ease: Ease.InQuad);
+                });
+
+            yield return new WaitForSeconds(0.15f);
+        }
+
+        yield return new WaitForSeconds(0.3f);
+
+        // 5b. Lật bài ngửa lên lần lượt
+        foreach (var target in sortedTargets)
+        {
+            BaseTile tile = target.tile;
+            if (tile == null) continue;
+
+            float flipDuration = 0.15f;
+            Tween.LocalEulerAngles(tile.transform, Vector3.zero, new Vector3(0, 90f, 0), flipDuration).OnComplete(() =>
+            {
+                if (tile != null)
+                {
+                    tile.SetFaceUp(true);
+                    Tween.LocalEulerAngles(tile.transform, new Vector3(0, 90f, 0), Vector3.zero, flipDuration).OnComplete(() =>
+                    {
+                        if (tile != null) tile.IsMoving = false;
+                    });
+                }
+            });
+
+            yield return new WaitForSeconds(0.15f);
+        }
+    }
+
+    private IEnumerator FlyToDeckWithDelayCoroutine(BaseTile tile, Vector3 deckLocalPos, float delay, Action onComplete)
+    {
+        if (delay > 0)
+            yield return new WaitForSeconds(delay);
+
+        if (tile != null)
+        {
+            tile.FlyToDeck(deckLocalPos, onComplete);
+        }
+        else
+        {
+            onComplete?.Invoke();
+        }
+    }
+    #endregion
     public bool IsAnyTileOnShelf()
     {
         return additionalTileSlots.Any(item => item.Tile != null);
     }
+
 
     public void UseSweeperBooster()
     {

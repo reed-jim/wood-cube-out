@@ -57,6 +57,8 @@ public class TileSlotContainer : MonoBehaviour
 
     public float originalPositionY;
     private bool originalIsLocked;
+    private Tween _highlightScaleTween;
+    private Tween _highlightShakeTween;
 
     void Awake()
     {
@@ -86,6 +88,10 @@ public class TileSlotContainer : MonoBehaviour
         this.isHidden = false;
         this.isMoving = false;
         this.isLocked = originalIsLocked;
+
+        if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+        if (glow != null) glow.gameObject.SetActive(false);
+        if (unlockObject != null) unlockObject.transform.localScale = Vector3.one;
         category.text = "???";
         if (category != null) category.alpha = 1f;
 
@@ -202,6 +208,9 @@ public class TileSlotContainer : MonoBehaviour
     {
         tiles.Add(tile);
         tileCountText.text = $"{tiles.Count}/{maxTile}";
+        tile.txCount.text = $"{tiles.Count}/{maxTile}";
+        tile.txCount.gameObject.SetActive(true);
+
     }
 
     public void SwitchItem(BaseTile tile)
@@ -271,7 +280,18 @@ public class TileSlotContainer : MonoBehaviour
         {
             foreach (var tileSlot in tileSlots)
             {
-                tileSlot.Tile = null;
+                if (tileSlot != null)
+                {
+                    // Destroy old stacked tiles
+                    foreach (Transform child in tileSlot.transform)
+                    {
+                        if (child.GetComponent<BaseTile>() != null)
+                        {
+                            Destroy(child.gameObject);
+                        }
+                    }
+                    tileSlot.Tile = null;
+                }
             }
         }
 
@@ -329,24 +349,28 @@ public class TileSlotContainer : MonoBehaviour
     {
         isMoving = true;
 
-        Tween.Alpha(category, 0f, duration: 0.2f).OnComplete(() =>
+        Tween.Alpha(category, 0f, duration: 0.05f).OnComplete(() =>
         {
             category.text = this.itemCategory.ToString().Replace("_", " ");
-            Tween.Alpha(category, 1f, duration: 0.2f).OnComplete(() =>
+            Tween.Alpha(category, 1f, duration: 0.05f).OnComplete(() =>
             {
                 float initialPositionY = originalPositionY;
 
-                Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
+                Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f)
                 .OnComplete(() =>
                 {
-                    Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
-                    category.alpha = 1f;
-
-                    Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+                    Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
                     .OnComplete(() =>
                     {
-                        isMoving = false;
-                        onCompleteAction?.Invoke();
+                        Init(nextCategory, TileManager.Ins.GetTargetCardAmount(nextCategory));
+                        category.alpha = 1f;
+
+                        Tween.LocalPositionY(transform, initialPositionY, duration: 0.3f)
+                        .OnComplete(() =>
+                        {
+                            isMoving = false;
+                            onCompleteAction?.Invoke();
+                        });
                     });
                 });
             });
@@ -365,11 +389,15 @@ public class TileSlotContainer : MonoBehaviour
             {
                 float initialPositionY = originalPositionY;
 
-                Tween.LocalPositionY(transform, initialPositionY + 1600, duration: 0.7f, startDelay: 0.5f)
+                Tween.LocalPositionY(transform, initialPositionY - 80f, duration: 0.2f, startDelay: 0.5f)
                 .OnComplete(() =>
                 {
-                    isMoving = false;
-                    onCompleteAction?.Invoke();
+                    Tween.LocalPositionY(transform, initialPositionY + 1600f, duration: 0.5f, ease: Ease.InSine)
+                    .OnComplete(() =>
+                    {
+                        isMoving = false;
+                        onCompleteAction?.Invoke();
+                    });
                 });
             });
         });
@@ -392,5 +420,68 @@ public class TileSlotContainer : MonoBehaviour
                 });
             }
         }
+
+        if (_highlightScaleTween.isAlive) _highlightScaleTween.Stop();
+
+        if (isHighlight)
+        {
+            Tween.Delay(0.25f).OnComplete(() =>
+            {
+                if (glow != null && glow.gameObject.activeSelf)
+                {
+                    StartHighlightScaleLoop();
+                    StartHighlightShakeLoop();
+                }
+            });
+        }
+        else
+        {
+            if (unlockObject != null)
+            {
+                Tween.Scale(unlockObject.transform, Vector3.one, duration: 0.2f, ease: Ease.OutQuad);
+            }
+        }
+    }
+
+
+
+    private void StartHighlightScaleLoop()
+    {
+        if (unlockObject == null || glow == null || !glow.gameObject.activeSelf) return;
+
+        _highlightScaleTween = Tween.Scale(unlockObject.transform, 1.07f, duration: 0.5f, ease: Ease.OutQuad)
+            .OnComplete(() =>
+            {
+                if (glow != null && glow.gameObject.activeSelf && unlockObject != null)
+                {
+                    _highlightScaleTween = Tween.Scale(unlockObject.transform, 1.0f, duration: 0.25f, ease: Ease.InQuad)
+                        .OnComplete(() =>
+                        {
+                            if (glow != null && glow.gameObject.activeSelf && unlockObject != null)
+                            {
+                                _highlightScaleTween = Tween.Delay(1.25f).OnComplete(() =>
+                                {
+                                    StartHighlightScaleLoop();
+                                });
+                            }
+                        });
+                }
+            });
+    }
+    private void StartHighlightShakeLoop()
+    {
+        if (glow == null || !glow.gameObject.activeSelf) return;
+
+        _highlightShakeTween = Tween.ShakeLocalPosition(unlockObject.transform, strength: new Vector3(8f, 8f, 0f), duration: 0.75f, frequency: 7)
+            .OnComplete(() =>
+            {
+                if (glow != null && glow.gameObject.activeSelf)
+                {
+                    _highlightShakeTween = Tween.Delay(1.25f).OnComplete(() =>
+                    {
+                        StartHighlightShakeLoop();
+                    });
+                }
+            });
     }
 }

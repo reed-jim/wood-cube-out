@@ -15,9 +15,12 @@ public class UserResourcesObserver : ScriptableObject
         }
     }
 
+    public event Action updateCoinEvent;
+
     public void Save()
     {
         DataUtility.SaveAsync(GameConstants.USER_RESOURCES, userResources);
+        updateCoinEvent?.Invoke();
     }
 
     public void Load()

@@ -45,7 +45,7 @@ public class BuyBoosterPopup : BasePopup
     public static event Action unlockScrewBoxEvent;
     public static event Action<ScreenRoute> openIAPShopPopupEvent;
     public static event Action<int> updateBoosterQuantityEvent;
-
+    public static event Action<int> updateCoinQuantityEvent;
     protected override void MoreActionInAwake()
     {
         _coinButtonPosition = coinButtonRT.localPosition;
@@ -60,6 +60,7 @@ public class BuyBoosterPopup : BasePopup
         TileSlotContainer.showBuyBoosterPopupEvent += ShowBuyBoosterPopup;
         ScrewSelectionInput.breakObjectEvent += OnConfirmedBreakObject;
         ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourcesEarnPopupShown;
+        //GameplayScreen.coinTextChangedEvent += OnCoinTextChanged;
 
         buyWithDiamondButton.onClick.AddListener(GetWithCoin);
         getWithAdsButton.onClick.AddListener(GetWithAds);

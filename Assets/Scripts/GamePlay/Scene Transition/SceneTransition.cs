@@ -36,6 +36,7 @@ public class SceneTransition : MonoBehaviour
     private bool _isLevelLoaded;
     private Coroutine _waitForLevelLoadedCoroutine;
 
+    public static event Action transitionCompletedEvent;
 
     #region MonoBehaviour Callbacks
 
@@ -97,6 +98,11 @@ public class SceneTransition : MonoBehaviour
             blackBackground.gameObject.SetActive(false);
 
             onCompletedAction?.Invoke();
+
+            if (!loadLevelInProgressContainer.gameObject.activeSelf)
+            {
+                transitionCompletedEvent?.Invoke();
+            }
         }));
     }
 
@@ -217,6 +223,7 @@ public class SceneTransition : MonoBehaviour
             .OnComplete(() =>
                 {
                     loadLevelInProgressContainer.gameObject.SetActive(false);
+                    transitionCompletedEvent?.Invoke();
                 })
             );
 

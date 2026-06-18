@@ -80,6 +80,12 @@ public class BoosterUI : MonoBehaviour
         ScrewBoxManager.screwPortsClearedEvent += OnAllScrewPortsCleared;
         RevivePopup.reviveEvent += OnRevived;
 
+        BuyBoosterPopup.updateBoosterQuantityEvent += OnBoosterQuantityChanged;
+        BoosterUI.updateBoosterQuantityEvent += OnBoosterQuantityChanged;
+        LevelLoader.startLevelCompletedEvent += UpdateUnlockThemeButtonState;
+        BuyBoosterPopup.unlockScrewBoxEvent += OnUnlockScrewBoxEvent;
+        ResourceEarnPopup.showResourcesEarnPopupEvent += OnResourceEarnPopupShow;
+
         addMoreScrewPortButton.onClick.AddListener(() => UseBooster(BoosterType.AddScrewPort));
         breakObjectButton.onClick.AddListener(() => UseBooster(BoosterType.Shuffle));
         clearAllScrewPortsButton.onClick.AddListener(() => UseBooster(BoosterType.ClearScrewPorts));
@@ -108,6 +114,7 @@ public class BoosterUI : MonoBehaviour
     private void Start()
     {
         InitializePositions();
+        UpdateUnlockThemeButtonState();
     }
 
     void OnDestroy()
@@ -120,6 +127,12 @@ public class BoosterUI : MonoBehaviour
         ScrewManager.enableBoosterEvent -= EnableBoosterWithoutWarningPopup;
         ScrewBoxManager.screwPortsClearedEvent -= OnAllScrewPortsCleared;
         RevivePopup.reviveEvent -= OnRevived;
+
+        BuyBoosterPopup.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
+        BoosterUI.updateBoosterQuantityEvent -= OnBoosterQuantityChanged;
+        LevelLoader.startLevelCompletedEvent -= UpdateUnlockThemeButtonState;
+        BuyBoosterPopup.unlockScrewBoxEvent -= OnUnlockScrewBoxEvent;
+        ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
 
         CommonUtil.StopAllTweens(_tweens);
     }
@@ -141,6 +154,8 @@ public class BoosterUI : MonoBehaviour
         _isInTransition = false;
         _isEnable = true;
         _isPreventShowWarningPopup = false;
+
+        UpdateUnlockThemeButtonState();
     }
 
     private void OnRevived(BoosterType boosterType)
@@ -337,13 +352,24 @@ public class BoosterUI : MonoBehaviour
 
     private void UseUnlockTheme()
     {
+        bool isBoosterAvailable = IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme);
+
         if (TileManager.Ins.NumLockedTileSlotContainer <= 0)
         {
-            // Không có theme nào bị khóa
-            return;
+            if (isBoosterAvailable)
+            {
+                // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
+                return;
+            }
+            else
+            {
+                // Khi hết booster nhưng đã mở khóa hết thì vẫn phải ấn được nút để mua booster
+                showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockTheme);
+                return;
+            }
         }
 
-        if (!IsBoosterAvailable(boosterIndex: (int)BoosterType.UnlockTheme))
+        if (!isBoosterAvailable)
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.UnlockTheme);
             return;
@@ -362,10 +388,61 @@ public class BoosterUI : MonoBehaviour
 
         TileManager.Ins.UseUnlockThemeBooster();
 
+        UpdateUnlockThemeButtonState();
+
         Tween.Delay(waitTimeBetweenClicks).OnComplete(() =>
         {
             _isInTransition = false;
         });
+    }
+
+    private void UpdateUnlockThemeButtonState()
+    {
+        if (unlockThemeButton == null) return;
+        if (TileManager.Ins == null) return;
+
+        bool hasLockedTheme = TileManager.Ins.NumLockedTileSlotContainer > 0;
+        bool isBoosterAvailable = IsBoosterAvailable((int)BoosterType.UnlockTheme);
+
+        if (!hasLockedTheme)
+        {
+            if (isBoosterAvailable)
+            {
+                // Khi có booster nhưng đã mở khóa hết thì mới ko cho ấn vào nữa
+                unlockThemeButton.interactable = false;
+            }
+            else
+            {
+                // Khi hết booster nhưng đã mở khóa hết thì vẫn phải ấn được nút để mua booster
+                unlockThemeButton.interactable = true;
+            }
+        }
+        else
+        {
+            // Nếu vẫn còn theme bị khóa, nút luôn luôn ấn được (dùng booster hoặc mua booster)
+            unlockThemeButton.interactable = true;
+        }
+    }
+
+    private void OnBoosterQuantityChanged(int boosterIndex)
+    {
+        if (boosterIndex == (int)BoosterType.UnlockTheme)
+        {
+            UpdateUnlockThemeButtonState();
+        }
+    }
+
+    private void OnUnlockScrewBoxEvent()
+    {
+        Tween.Delay(0.1f).OnComplete(UpdateUnlockThemeButtonState);
+    }
+
+    private void OnResourceEarnPopupShow(bool isShow)
+    {
+        if (!isShow)
+        {
+            UpdateUnlockThemeButtonState();
+        }
     }
 
     private void EnableBooster(bool isEnable)

@@ -22,6 +22,7 @@ public class WinPopup : BasePopup
     [SerializeField] private TMP_Text coinText;
     [SerializeField] private TMP_Text starText;
     [SerializeField] private TMP_Text goldPassKeyText;
+    [SerializeField] private LeanLocalizedTextMeshProUGUI txLevel;
     [SerializeField] private RectTransform coinGroup;
     [SerializeField] private RectTransform starGroup;
     [SerializeField] private RectTransform eventItemGroup;
@@ -74,6 +75,7 @@ public class WinPopup : BasePopup
         coinText.text = $"{0}";
         starText.text = $"{0}";
         goldPassKeyText.text = $"{0}";
+        txLevel.UpdateTranslationWithParameter(GameConstants.LEVEL_PARAMETER, $"{currentLevel.Value}");
         continueButton.transform.localScale = Vector3.zero;
 
         continueButton.interactable = true;
