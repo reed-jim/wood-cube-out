@@ -34,6 +34,101 @@ namespace AntsFlow
         public Vector3 spawnScale = 0.6f * Vector3.one;
 
         public List<Color> factions;
+
+        public void FindTileBlockages()
+        {
+            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(transform);
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                tile.blockages = new List<BaseTile>();
+
+                BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
+
+                FindBlockage(tile, boxCollider, tile.transform.up);
+                FindBlockage(tile, boxCollider, tile.transform.right);
+                FindBlockage(tile, boxCollider, -tile.transform.up);
+                FindBlockage(tile, boxCollider, -tile.transform.right);
+            }
+
+            EditorUtility.SetDirty(transform);
+
+            void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
+            {
+                RaycastHit2D[] hits = new RaycastHit2D[1];
+
+                collider.Raycast(direction, hits);
+
+                if (hits.Length > 0 && hits[0].collider != null)
+                {
+                    BaseTile blockage = hits[0].collider.GetComponent<BaseTile>();
+
+                    if (blockage != null)
+                    {
+                        tile.blockages.Add(blockage);
+                    }
+                }
+            }
+        }
+
+        public void ConvertToJson()
+        {
+            FactionMapper factionMapper =
+                AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+            List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(transform);
+
+            AntLevelData antLevelData = new AntLevelData();
+
+            antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
+
+                AntLevelDataItem dataItem = new AntLevelDataItem();
+                dataItem.position = tile.transform.position;
+                dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+
+                dataItem.blockageIndexes = new List<int>();
+
+                for (int j = 0; j < tile.blockages.Count; j++)
+                {
+                    dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+                }
+
+                antLevelData.antLevelDataItems.Add(dataItem);
+            }
+
+
+            antLevelData.levelItemData = new LevelItemData()
+            {
+                levelScale = transform.localScale,
+                poolFaction = poolFaction,
+                isTutorialLevel = isTutorialLevel,
+                isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
+                levelFactionConfig = levelFactionConfig,
+                difficulty = difficulty,
+                initialDifficulty = initialDifficulty,
+                overrideInitialDifficulty = overrideInitialDifficulty,
+                numStartAntBoxes = numStartAntBoxes,
+                specialElementConfig = specialElementConfig
+            };
+
+
+            // Use level name as file name
+            string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
+
+            // Serialize and save
+            string json = JsonUtility.ToJson(antLevelData, false);
+            File.WriteAllText(filePath, json);
+
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.Refresh();
+#endif
+        }
     }
 
 #if UNITY_EDITOR
@@ -160,6 +255,8 @@ namespace AntsFlow
 
             EditorUtility.SetDirty(levelItem);
         }
+
+
 
         void SpawnPixelArt(LevelItem level)
         {
