@@ -35,6 +35,10 @@ namespace AntsFlow
         public static event Action ghostAntBoxesClearedEvent;
         public static event Action finishUsingEnableAllAntBoxesBoosterEvent;
 
+        // KHÔNG DontDestroyOnLoad — washingMachineStartSlots là scene objects,
+        // nếu singleton sống qua scene reload sẽ giữ reference tới các object đã bị Destroy.
+        protected override bool ShouldPersist() => false;
+
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();

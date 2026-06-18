@@ -14,6 +14,9 @@ using static GameEnum;
 
 public class BoosterTutorial : Singleton<BoosterTutorial>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private TMP_Text description;
     [SerializeField] private LeanLocalizedTextMeshProUGUI localizedDescription;

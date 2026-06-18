@@ -48,25 +48,6 @@ public class PasueBox : BaseBox
         }
     }
 
-    // ── Connect Scene Integration ─────────────────────────────────
-    // public void SetConnectCallbacks(System.Action onResume, System.Action onHome)
-    // {
-    //     if (resumeBtn != null)
-    //     {
-    //         resumeBtn.onClick.RemoveAllListeners();
-    //         resumeBtn.onClick.AddListener(() => { Close(); onResume?.Invoke(); });
-    //     }
-    //     if (closeBtn != null)
-    //     {
-    //         closeBtn.onClick.RemoveAllListeners();
-    //         closeBtn.onClick.AddListener(() => { Close(); onResume?.Invoke(); });
-    //     }
-    //     if (quitBtn != null)
-    //     {
-    //         quitBtn.onClick.RemoveAllListeners();
-    //         quitBtn.onClick.AddListener(() => { Close(); });
-    //     }
-    // }
 
     public void OnClickResume()
     {
@@ -103,10 +84,7 @@ public class PasueBox : BaseBox
     private void OnClickQuit()
     {
         Close();
-        if (BirdSort2.GamePlayController_BirdSort.Instance != null)
-        {
-            QuitLevelBox.Setup().Show(GameplayScreen.Instance.GetItemYouMiss());
-        }
+        QuitLevelBox.Setup().Show(GameplayScreen.Instance.GetItemYouMiss());
     }
 
     

@@ -180,28 +180,28 @@ public class GameplayScreen : Singleton<GameplayScreen>
     public System.Collections.Generic.List<RewardRandom> GetItemYouMiss()
     {
 
-        if (BirdSort2.GamePlayController_BirdSort.Instance == null) return null;
+        // if (BirdSort2.GamePlayController_BirdSort.Instance == null) return null;
         System.Collections.Generic.List<RewardRandom> rewardMiss = new System.Collections.Generic.List<RewardRandom>();
         rewardMiss.Add(new RewardRandom() { typeItem = GiftType.StarCampain, amount = -1 });
 
         //Challenge
-        var scoreTtemsChallegen = BirdSort2.GamePlayController_BirdSort.Instance.challengeGameplayController.PredictItems;
-        foreach (var it in scoreTtemsChallegen)
-        {
-            if (it.Value > 0)
-            {
-                rewardMiss.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
-            }
-        }
+        // var scoreTtemsChallegen = BirdSort2.GamePlayController_BirdSort.Instance.challengeGameplayController.PredictItems;
+        // foreach (var it in scoreTtemsChallegen)
+        // {
+        //     if (it.Value > 0)
+        //     {
+        //         rewardMiss.Add(new RewardRandom() { typeItem = BirdSortGameController.Instance.challengeController.GetGiftTypeItemChallenge(it.Key), amount = it.Value });
+        //     }
+        // }
 
-        var scoreTtemsEvent = BirdSort2.GamePlayController_BirdSort.Instance.eventSaleController.PredictItems;
-        foreach (var it in scoreTtemsEvent)
-        {
-            if (it.Value > 0)
-            {
-                rewardMiss.Add(new RewardRandom() { typeItem = GiftType.EndlessSaleItem, amount = it.Value });
-            }
-        }
+        // var scoreTtemsEvent = BirdSort2.GamePlayController_BirdSort.Instance.eventSaleController.PredictItems;
+        // foreach (var it in scoreTtemsEvent)
+        // {
+        //     if (it.Value > 0)
+        //     {
+        //         rewardMiss.Add(new RewardRandom() { typeItem = GiftType.EndlessSaleItem, amount = it.Value });
+        //     }
+        // }
 
 
         return rewardMiss;

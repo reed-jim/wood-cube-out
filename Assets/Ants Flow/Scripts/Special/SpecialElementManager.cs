@@ -14,6 +14,9 @@ public enum LevelElement
 
 public class SpecialElementManager : Singleton<SpecialElementManager>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     public LevelElement nextLevelElement;
     public SpecialElementConfig specialElementConfig;
 

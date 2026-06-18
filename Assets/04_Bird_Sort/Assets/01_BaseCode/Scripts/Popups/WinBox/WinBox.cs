@@ -264,7 +264,16 @@ public class WinBox : BaseBox
             }
         };
 
-        WaitCloseDoneToStartAction(() => { GamePlayController_BirdSort.Instance.OnSuggetEndLevel(actionAfterSuggetSale); });
+        WaitCloseDoneToStartAction(() => { 
+            if (GamePlayController_BirdSort.Instance != null)
+            {
+                GamePlayController_BirdSort.Instance.OnSuggetEndLevel(actionAfterSuggetSale); 
+            }
+            else
+            {
+                actionAfterSuggetSale?.Invoke();
+            }
+        });
 
         //BirdSortGameController.Instance.admobAds.HideBannerCollap();
     }

@@ -8,70 +8,117 @@ public class UserResourcesObserver : ScriptableObject
 
     public UserResources UserResources
     {
-        get => userResources;
+        get
+        {
+            if (userResources == null)
+            {
+                userResources = new UserResources();
+            }
+            userResources.CoinQuantity = UseProfile.Coin;
+            
+            if (userResources.BoosterQuantities == null || userResources.BoosterQuantities.Length < 5)
+            {
+                int[] temp = userResources.BoosterQuantities;
+                Array.Resize(ref temp, 5);
+                userResources.BoosterQuantities = temp;
+            }
+
+            for (int i = 0; i < userResources.BoosterQuantities.Length; i++)
+            {
+                GiftType giftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)i);
+                if (giftType != GiftType.None)
+                {
+                    userResources.BoosterQuantities[i] = UseProfile.GetNumItem(giftType);
+                }
+            }
+            return userResources;
+        }
         set
         {
             userResources = value;
+            if (userResources != null)
+            {
+                UseProfile.Coin = (int)userResources.CoinQuantity;
+                
+                for (int i = 0; i < userResources.BoosterQuantities.Length; i++)
+                {
+                    GiftType giftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)i);
+                    if (giftType != GiftType.None)
+                    {
+                        UseProfile.SetItem(giftType, userResources.BoosterQuantities[i]);
+                    }
+                }
+            }
         }
     }
 
     public void Save()
     {
-        DataUtility.SaveAsync(GameConstants.USER_RESOURCES, userResources);
+        PlayerPrefs.Save();
     }
 
     public void Load()
     {
-        UserResources defaultUserResources = new UserResources();
-
-        defaultUserResources.CoinQuantity = 500;
-        defaultUserResources.BoosterQuantities = new int[4];
-
-        for (int i = 0; i < defaultUserResources.BoosterQuantities.Length; i++)
+        if (userResources == null)
         {
-            defaultUserResources.BoosterQuantities[i] = 2;
+            userResources = new UserResources();
+        }
+        userResources.CoinQuantity = UseProfile.Coin;
+        
+        if (userResources.BoosterQuantities == null || userResources.BoosterQuantities.Length < 5)
+        {
+            int[] temp = userResources.BoosterQuantities;
+            Array.Resize(ref temp, 5);
+            userResources.BoosterQuantities = temp;
         }
 
-        userResources = DataUtility.Load(GameConstants.USER_RESOURCES, defaultUserResources);
+        for (int i = 0; i < userResources.BoosterQuantities.Length; i++)
+        {
+            GiftType giftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)i);
+            if (giftType != GiftType.None)
+            {
+                userResources.BoosterQuantities[i] = UseProfile.GetNumItem(giftType);
+            }
+        }
     }
 
     public void ChangeCoin(float value)
     {
-        Load();
-
-        userResources.CoinQuantity += value;
-        userResources.CoinQuantity = Mathf.Max(userResources.CoinQuantity, 0);
-
+        UseProfile.Coin += (int)value;
+        if (userResources != null)
+        {
+            userResources.CoinQuantity = UseProfile.Coin;
+        }
         Save();
     }
 
     public void ChangeBoosterQuantity(int boosterIndex, int value)
     {
-        // UserResources updatedUserResources = userResources;
-
-        // int[] updatedBoosterQuantities = updatedUserResources.BoosterQuantities;
-
+        GiftType giftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex);
+        if (giftType != GiftType.None)
+        {
+            UseProfile.AddItem(giftType, value);
+        }
         Load();
-
-        userResources.BoosterQuantities[boosterIndex] += value;
-        userResources.BoosterQuantities[boosterIndex] = Mathf.Max(userResources.BoosterQuantities[boosterIndex], 0);
-
-        // updatedUserResources.BoosterQuantities = updatedBoosterQuantities;
-        // userResources = updatedUserResources;
-
         Save();
     }
 
     public void ConsumeBooster(int boosterIndex)
     {
-        Load();
-
-        if (userResources.BoosterQuantities[boosterIndex] > 0)
+        GiftType giftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex);
+        if (giftType != GiftType.None)
         {
-            userResources.BoosterQuantities[boosterIndex]--;
-
-            Save();
+            if (GameController.Instance != null && GameController.Instance.dataContain != null && GameController.Instance.dataContain.giftDatabase != null)
+            {
+                GameController.Instance.dataContain.giftDatabase.Claim(giftType, -1, Reason.in_campain_level);
+            }
+            else
+            {
+                UseProfile.AddItem(giftType, -1);
+            }
         }
+        Load();
+        Save();
     }
 }
 
@@ -101,6 +148,6 @@ public class UserResources
 
     public UserResources()
     {
-        boosterQuantities = new int[3];
+        boosterQuantities = new int[5];
     }
 }

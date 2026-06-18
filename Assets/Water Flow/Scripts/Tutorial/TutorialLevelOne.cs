@@ -10,6 +10,9 @@ using UnityEngine.UI;
 
 public class TutorialLevelOne : Singleton<TutorialLevelOne>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     public SkeletonAnimation tutorialHand;
     public CanvasGroup tutorialCanvasGroup;
     public TMP_Text description;

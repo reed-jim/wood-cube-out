@@ -11,6 +11,9 @@ using UnityEditor;
 
 public class FactionMapper : Singleton<FactionMapper>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     public List<ColorSpriteContainerPair> mapper;
 
     public Sprite GetAntBoxSprite(Color faction)

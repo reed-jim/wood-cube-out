@@ -9,6 +9,9 @@ public enum AntsFlowInputMode
 
 public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     public AntsFlowInputMode inputMode;
 
     void Update()

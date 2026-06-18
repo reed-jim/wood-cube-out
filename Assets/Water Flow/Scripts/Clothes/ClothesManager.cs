@@ -10,6 +10,9 @@ using static GameEnum;
 
 public class ClothesManager : Singleton<ClothesManager>
 {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
     public List<LoopPathSlot> loopPathSlots;
     public List<ClothingPiece> clothingPieces;
 

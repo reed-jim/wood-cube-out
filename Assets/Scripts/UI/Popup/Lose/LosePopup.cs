@@ -32,11 +32,21 @@ public class LosePopup : BasePopup
     public static event Action skipLevelEvent;
     public static event Action<int> changeLivesNumberEvent;
 
+    protected override void MoreActionInAwake()
+    {
+        base.MoreActionInAwake();
+        Canvas canvas = GetComponent<Canvas>();
+        if (canvas != null)
+        {
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        }
+    }
+
     protected override void RegisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent += OnLevelLose;
-        GameStateLose.loseLevelEvent += OnLevelLose;
-        RevivePopup.reviveRefusedEvent += OnLevelLose;
+        // GameStateLose.loseLevelEvent += OnLevelLose;
+        // RevivePopup.reviveRefusedEvent += OnLevelLose;
         GameplayScreen.skipLevelEvent += SkipLevel;
         Application.quitting += OnAppClosed;
 
@@ -55,8 +65,8 @@ public class LosePopup : BasePopup
     protected override void UnregisterMoreEvent()
     {
         // GameStateLose.loseLevelEvent -= OnLevelLose;
-        GameStateLose.loseLevelEvent -= OnLevelLose;
-        RevivePopup.reviveRefusedEvent -= OnLevelLose;
+        // GameStateLose.loseLevelEvent -= OnLevelLose;
+        // RevivePopup.reviveRefusedEvent -= OnLevelLose;
         GameplayScreen.skipLevelEvent -= SkipLevel;
         Application.quitting -= OnAppClosed;
     }
@@ -82,7 +92,7 @@ public class LosePopup : BasePopup
         SaferioTracking.TrackLevelLose(currentLevel.Value, levelObserver.Progress, levelBoosterObserver, EndLevelReason.Lose.ToString());
 
         // don't track loop level CostCenter
-        if (currentLevel.Value <= LevelManager.Ins.LevelDataContainer.MaxLevel)
+        if (currentLevel.Value <= NamPhuThuy.GamePlay.LevelManager.Ins.LevelDataContainer.MaxLevel)
         {
             SaferioTracking.TrackLevelEnd(currentLevel.Value, isSuccess: false, EndLevelReason.Lose.ToString());
         }
@@ -150,7 +160,7 @@ public class LosePopup : BasePopup
 
         if (RemoteConfigController.GetBoolConfig(FirebaseConfig.IS_SHOW_INTER_LOSE_LEVEL, false))
         {
-             GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdCompleted);
         }
         else
         {
@@ -174,7 +184,7 @@ public class LosePopup : BasePopup
 
     private void SkipLevel()
     {
-         GameController.Instance.admobAds.ShowVideoReward(
+        AdmobAdsMax.Instance.ShowVideoReward(
             OnRewaredAdCompletedToSkipLevel, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: ActionWatchVideo.SkipLevel);
     }
 

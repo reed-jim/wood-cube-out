@@ -159,7 +159,7 @@ public class BasePopup : MonoBehaviour
 
     private void OnRouteSwitched(ScreenRoute route)
     {
-        if (route == this.route)
+        if (route == this.route && this.route != ScreenRoute.Pause && this.route != ScreenRoute.Lose && this.route != ScreenRoute.Win)
         {
             Show();
         }

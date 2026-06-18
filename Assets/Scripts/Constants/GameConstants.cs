@@ -166,13 +166,11 @@ public static class GameConstants
     public static int UNLOCK_SCREW_BOX_BOOSTER_INDEX = 3;
     public static int GetLevelToUnlockBooster(BoosterType boosterType)
     {
-        switch (boosterType)
+        if (GameEnum.GetBoosterConfig(boosterType) != null)
         {
-            case BoosterType.BreakObject: return 3;
-            case BoosterType.ClearScrewPorts: return 5;
-            case BoosterType.ClearOneColor: return 7;
-            default: return 3;
+            return GameEnum.GetBoosterConfig(boosterType).unlockLevel;
         }
+        return 1;
     }
     #endregion
 

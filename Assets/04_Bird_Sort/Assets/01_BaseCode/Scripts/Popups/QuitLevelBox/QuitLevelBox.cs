@@ -77,7 +77,10 @@ public class QuitLevelBox : BaseBox
             ///GamePlayController.Instance.level.PauseLevel(false);
         }
 
-        BirdSort2.GamePlayController_BirdSort.Instance.state = BirdSort2.StateGame.Playing;
+        if (BirdSort2.GamePlayController_BirdSort.Instance != null)
+        {
+            BirdSort2.GamePlayController_BirdSort.Instance.state = BirdSort2.StateGame.Playing;
+        }
     }
 
     public virtual void OnClickQuit()

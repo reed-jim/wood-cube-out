@@ -64,6 +64,9 @@ namespace AntsFlow
 
         public static event Action winLevelEvent;
 
+        // Scene-specific — không DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
         protected override void MoreActionOnAwake()
         {
             base.MoreActionOnAwake();

@@ -107,7 +107,7 @@ public class SettingPopup : BasePopup
     #region LANGUAGE
     private void OpenLanguageDropdown()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Language);
+        SwitchRoute(ScreenRoute.Language);
 
         // chooseLanguageContainer.gameObject.SetActive(true);
 
@@ -171,7 +171,7 @@ public class SettingPopup : BasePopup
     #region RATE
     private void Rate()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Rate);
+        SwitchRoute(ScreenRoute.Rate);
         // switchRouteChannel.Invoke(ScreenRoute.Rate, nameof(SettingPopup));
     }
     #endregion
@@ -179,7 +179,7 @@ public class SettingPopup : BasePopup
     #region Compensate
     private void OpenCompensatePopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Compensate);
+        SwitchRoute(ScreenRoute.Compensate);
         // switchRouteChannel.Invoke(ScreenRoute.Compensate, nameof(SettingPopup));
     }
     #endregion
@@ -190,7 +190,7 @@ public class SettingPopup : BasePopup
 
         if (isShowInterReplayLevel)
         {
-            GameController.Instance.admobAds.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
+            AdmobAdsMax.Instance.ShowInterstitial(actionIniterClose: OnInterstitialAdToReplayCompleted);
         }
         else
         {
@@ -218,12 +218,12 @@ public class SettingPopup : BasePopup
 
     private void OpenBackupPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.Backup);
+        SwitchRoute(ScreenRoute.Backup);
     }
 
     private void OpenUserConsentPopup()
     {
-        switchRouteEvent?.Invoke(ScreenRoute.UserConsent);
+        SwitchRoute(ScreenRoute.UserConsent);
     }
 
     private void OpenFacebookGroup()

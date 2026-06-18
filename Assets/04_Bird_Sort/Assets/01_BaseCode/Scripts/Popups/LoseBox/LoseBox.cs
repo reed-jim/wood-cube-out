@@ -1,4 +1,5 @@
 using BirdSort2;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,9 @@ public class LoseBox : PlayCampainBox
         instance.InitState();
         return instance;
     }
+
+    /// <summary>Bắn ra khi người dùng bấm Replay — Connect Scene lắng nghe để restart level.</summary>
+    public static event Action replayLevelEvent;
 
    [SerializeField] protected Button closeBtn;
 
@@ -112,7 +116,6 @@ public class LoseBox : PlayCampainBox
             if (UseProfile.Health >= 1)
             {
                 isCanPlay = true;
-                //UseProfile.Health -= 1;
                 if (!UseProfile.IsRefillHealth)
                 {
                     UseProfile.TimeLastOverHealth = UnbiasedTime.Instance.Now();
@@ -123,19 +126,26 @@ public class LoseBox : PlayCampainBox
 
         if (isCanPlay)
         {
+            // Nếu có listener (Connect Scene), bắn event để replay trong scene hiện tại
+            if (replayLevelEvent != null)
+            {
+                Close();
+                replayLevelEvent?.Invoke();
+                return;
+            }
+
+            // Fallback: Bird Sort scene — load lại GAME_PLAY như cũ
             if (adsData.config.interstitials.showBeforeLevel)
             {
                 BirdSortGameController.Instance.admobAds.ShowInterstitial(actionIniterClose: () =>
                 {
                     Close();
-                  //  GamePlayController.Instance.level.ResetPoolBird();
                     BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
                 }, actionWatchLog: AdsPlacement.Interstitials.REPLAY_LEVEL_CAMPAIN);
             }
             else
             {
                 Close();
-               // GamePlayController.Instance.level.ResetPoolBird();
                 BirdSortGameController.Instance.LoadScene(SceneName.GAME_PLAY);
             }
         }
@@ -145,7 +155,5 @@ public class LoseBox : PlayCampainBox
             OutOfHealthBox.Setup().Show();
             BirdSortGameController.Instance.musicManager.PlayClickSound();
         }
-
-
     }
 }

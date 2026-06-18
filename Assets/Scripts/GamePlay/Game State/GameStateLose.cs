@@ -31,7 +31,8 @@ public class GameStateLose : BaseGameState
 
     public override void Enter()
     {
-        showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        // showRevivePopupEvent?.Invoke(BoosterType.UnlockScrewBox);
+        loseLevelEvent?.Invoke();
     }
 
     public override void Exit()

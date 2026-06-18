@@ -37,6 +37,7 @@ public class BoosterItemUI : MonoBehaviour
     [SerializeField] private UserResourcesObserver userResourcesObserver;
 
     public static event Action<BoosterType> showBuyBoosterPopupEvent;
+    private Action<object> actionReloadItem;
 
     void Awake()
     {
@@ -48,6 +49,27 @@ public class BoosterItemUI : MonoBehaviour
         addButton.onClick.AddListener(ShowBuyBoosterPopup);
         pressButton.onClick.AddListener(Press);
 
+        actionReloadItem = (obj) =>
+        {
+            if (obj is GiftType itemType)
+            {
+                GiftType myGiftType = GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex);
+                if (itemType == myGiftType)
+                {
+                    UpdateQuantityText(boosterIndex);
+                }
+            }
+            else
+            {
+                UpdateQuantityText(boosterIndex);
+            }
+        };
+
+        if (EventDispatcher.EventDispatcher.Instance != null)
+        {
+            EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.BUYED_ITEM, actionReloadItem);
+        }
+
         Setup();
     }
 
@@ -57,6 +79,11 @@ public class BoosterItemUI : MonoBehaviour
         BoosterUI.updateBoosterQuantityEvent -= UpdateQuantityText;
         ResourceEarnPopup.showResourcesEarnPopupEvent -= OnResourceEarnPopupShow;
         LevelLoader.startLevelEvent -= Setup;
+
+        if (EventDispatcher.EventDispatcher.Instance != null)
+        {
+            EventDispatcher.EventDispatcher.Instance.RemoveListener(EventID.BUYED_ITEM, actionReloadItem);
+        }
     }
 
     private void Setup()

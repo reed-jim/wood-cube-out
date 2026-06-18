@@ -16,6 +16,14 @@ public class TopBar : MonoBehaviour
 
     private void OpenSettingPopup()
     {
-        showPopupEvent?.Invoke(ScreenRoute.Setting);
+        // showPopupEvent?.Invoke(ScreenRoute.Setting);
+        if (ConnectPopupManager.Instance != null)
+        {
+            ConnectPopupManager.Instance.ShowPause();
+        }
+        else
+        {
+            SettingBox.Setup().Show();
+        }
     }
 }

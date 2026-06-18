@@ -158,4 +158,41 @@ public class GameEnum : MonoBehaviour
 
         return (T)enumValues.GetValue(random.Next(enumValues.Length));
     }
+
+    public static GiftType MapBoosterToGiftType(BoosterType boosterType)
+    {
+        switch (boosterType)
+        {
+            case BoosterType.AddScrewPort:
+                return GiftType.AddBrandItem_BirdSort; // 1007
+            case BoosterType.BreakObject:
+                return GiftType.ShuffleItem_BirdSort; // 1005
+            case BoosterType.ClearScrewPorts: 
+                return GiftType.BreakTheRule_BirdSort; // 1006
+            case BoosterType.UnlockScrewBox:
+                return GiftType.ReturnItem_BirdSort; // 1002
+            case BoosterType.ClearOneColor:
+                return GiftType.IceItem_BirdSort; // 1004
+            default:
+                return GiftType.None;
+        }
+    }
+    
+    public static CoreGameData.BootsData GetBoosterConfig(BoosterType boosterType)
+    {
+        try
+        {
+            var segment = GameController.Instance.segmentController.GetCurrentSegment();
+            var giftType = GameEnum.MapBoosterToGiftType(boosterType);
+            var bootData = segment.coreGameData.config.bootsConfig.GetBoot(giftType);
+            if (bootData != null)
+            {
+                return bootData;
+            }
+        }
+        catch (Exception)
+        {
+        }
+        return null;
+    }
 }

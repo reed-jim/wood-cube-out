@@ -15,11 +15,13 @@ public class DebugPopup : BasePopup
     [SerializeField] private Button debugNextLevelButton;
     [SerializeField] private Button debugPrevLevelButton;
     [SerializeField] private Button debugWinLevelButton;
+    [SerializeField] private Button debugLoseLevelButton;
     [SerializeField] private Button debugAdsButton;
     [SerializeField] private Button debugAddBoostersButton;
     [SerializeField] private Button debugAddCoinButton;
     [SerializeField] private Button changeBackgroundColorButton;
     [SerializeField] private Button startAutoTestLevelButton;
+    [SerializeField] private Button startAutoTestLevelFailButton;
     [SerializeField] private Button clearAddressablesCacheButton;
     [SerializeField] private Button increaseGameSpeedButton;
     [SerializeField] private Button decreaseGameSpeedButton;
@@ -32,6 +34,7 @@ public class DebugPopup : BasePopup
     public static event Action nextLevelEvent;
     public static event Action prevLevelEvent;
     public static event Action winLevelEvent;
+    public static event Action loseLevelEvent;
     public static event Action switchLevelEvent;
     public static event Action startAutoTestLevelEvent;
 
@@ -41,12 +44,20 @@ public class DebugPopup : BasePopup
         debugNextLevelButton.onClick.AddListener(NextLevel);
         debugPrevLevelButton.onClick.AddListener(PrevLevel);
         debugWinLevelButton.onClick.AddListener(DebugWinLevel);
+        if (debugLoseLevelButton != null)
+        {
+            debugLoseLevelButton.onClick.AddListener(DebugLoseLevel);
+        }
         debugAdsButton.onClick.AddListener(DebugAdsButton);
         debugAddBoostersButton.onClick.AddListener(AddBooster);
         debugAddCoinButton.onClick.AddListener(AddCoin);
         increaseGameSpeedButton.onClick.AddListener(IncreaseGameSpeed);
         decreaseGameSpeedButton.onClick.AddListener(DecreaseGameSpeed);
         startAutoTestLevelButton.onClick.AddListener(StartAutoTestLevel);
+        if (startAutoTestLevelFailButton != null)
+        {
+            startAutoTestLevelFailButton.onClick.AddListener(StartAutoTestLevelFail);
+        }
         clearAddressablesCacheButton.onClick.AddListener(ClearAddressablesCache);
         changeBackgroundColorButton.onClick.AddListener(ChangeBackgroundColor);
 
@@ -62,6 +73,68 @@ public class DebugPopup : BasePopup
         else
         {
             debugAdsText.text = "Disable Ads";
+        }
+
+        if (startAutoTestLevelFailButton == null && startAutoTestLevelButton != null)
+        {
+            GameObject autoplayButtonGo = startAutoTestLevelButton.gameObject;
+            GameObject failButtonGo = Instantiate(autoplayButtonGo, autoplayButtonGo.transform.parent);
+            failButtonGo.name = "Auto Test Level Fail Button";
+            
+            startAutoTestLevelFailButton = failButtonGo.GetComponent<Button>();
+            
+            startAutoTestLevelFailButton.onClick.RemoveAllListeners();
+            startAutoTestLevelFailButton.onClick.AddListener(StartAutoTestLevelFail);
+
+            TMP_Text buttonText = failButtonGo.GetComponentInChildren<TMP_Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = "Auto Play Fail";
+            }
+
+            RectTransform rectOriginal = autoplayButtonGo.GetComponent<RectTransform>();
+            RectTransform rectFail = failButtonGo.GetComponent<RectTransform>();
+
+            float yPos = rectOriginal.anchoredPosition.y;
+            float newWidth = 240f;
+            float newHeight = rectOriginal.sizeDelta.y;
+
+            rectOriginal.anchoredPosition = new Vector2(-140f, yPos);
+            rectOriginal.sizeDelta = new Vector2(newWidth, newHeight);
+
+            rectFail.anchoredPosition = new Vector2(140f, yPos);
+            rectFail.sizeDelta = new Vector2(newWidth, newHeight);
+        }
+
+        if (debugLoseLevelButton == null && debugWinLevelButton != null)
+        {
+            GameObject winButtonGo = debugWinLevelButton.gameObject;
+            GameObject loseButtonGo = Instantiate(winButtonGo, winButtonGo.transform.parent);
+            loseButtonGo.name = "Lose Level Button";
+            
+            debugLoseLevelButton = loseButtonGo.GetComponent<Button>();
+            
+            debugLoseLevelButton.onClick.RemoveAllListeners();
+            debugLoseLevelButton.onClick.AddListener(DebugLoseLevel);
+
+            TMP_Text buttonText = loseButtonGo.GetComponentInChildren<TMP_Text>();
+            if (buttonText != null)
+            {
+                buttonText.text = "Lose Level";
+            }
+
+            RectTransform rectOriginal = winButtonGo.GetComponent<RectTransform>();
+            RectTransform rectLose = loseButtonGo.GetComponent<RectTransform>();
+
+            float yPos = rectOriginal.anchoredPosition.y;
+            float newWidth = 240f;
+            float newHeight = rectOriginal.sizeDelta.y;
+
+            rectOriginal.anchoredPosition = new Vector2(-140f, yPos);
+            rectOriginal.sizeDelta = new Vector2(newWidth, newHeight);
+
+            rectLose.anchoredPosition = new Vector2(140f, yPos);
+            rectLose.sizeDelta = new Vector2(newWidth, newHeight);
         }
     }
 
@@ -100,11 +173,29 @@ public class DebugPopup : BasePopup
         winLevelEvent?.Invoke();
     }
 
+    private async void DebugLoseLevel()
+    {
+        Hide();
+
+        await Task.Delay(500);
+
+        loseLevelEvent?.Invoke();
+    }
+
     private void StartAutoTestLevel()
     {
         AddCoin();
 
         AntsFlow.AutoplayManager.Ins.StartAutoplay();
+
+        Hide();
+    }
+
+    private void StartAutoTestLevelFail()
+    {
+        AddCoin();
+
+        AntsFlow.AutoplayManager.Ins.StartAutoplayFail();
 
         Hide();
     }

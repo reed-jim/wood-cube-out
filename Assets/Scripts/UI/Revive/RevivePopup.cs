@@ -47,13 +47,31 @@ public class RevivePopup : BasePopup
 
     protected override void MoreActionInAwake()
     {
-        costText.text = $"{boosterDataObserver.BoosterCosts.Last()}";
+        costText.text = $"{GetBoosterCost(BoosterType.UnlockScrewBox)}";
 
         _reviveByDiamondButtonRT = reviveByDiamondButton.GetComponent<RectTransform>();
         _reviveByAdsButtonRT = reviveByAdsButton.GetComponent<RectTransform>();
 
         _reviveCoinButtonPosition = _reviveByDiamondButtonRT.localPosition;
         _reviveAdsButtonPosition = _reviveByAdsButtonRT.localPosition;
+    }
+
+    private int GetBoosterCost(BoosterType boosterType)
+    {
+        try
+        {
+            var segment = GameController.Instance.segmentController.GetCurrentSegment();
+            var giftType = GameEnum.MapBoosterToGiftType(boosterType);
+            var bootData = segment.coreGameData.config.bootsConfig.GetBoot(giftType);
+            if (bootData != null)
+            {
+                return bootData.price;
+            }
+        }
+        catch (Exception)
+        {
+        }
+        return boosterDataObserver.BoosterCosts[(int)boosterType];
     }
 
     protected override void RegisterMoreEvent()
@@ -115,6 +133,8 @@ public class RevivePopup : BasePopup
         //     boosterImage.sprite = clearHolesSprite;
         // }
 
+        costText.text = $"{GetBoosterCost(boosterType)}";
+
         UIUtil.SetSizeKeepRatioY(boosterImage, 0.2f * container.sizeDelta.x);
 
         reviveByDiamondButton.interactable = true;
@@ -135,7 +155,9 @@ public class RevivePopup : BasePopup
 
         reviveByDiamondButton.interactable = false;
 
-        if (userResourcesObserver.UserResources.CoinQuantity >= boosterDataObserver.BoosterCosts.Last())
+        int cost = GetBoosterCost(_currentBoosterOnRevive);
+
+        if (userResourcesObserver.UserResources.CoinQuantity >= cost)
         {
             base.Hide(onCompletedAction: () =>
             {
@@ -146,13 +168,13 @@ public class RevivePopup : BasePopup
                 reviveByDiamondButton.interactable = true;
             });
 
-            userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts.Last());
+            userResourcesObserver.ChangeCoin(-cost);
 
             SaferioTracking.TrackResourceSink(
                     currentLevel.Value, "Coin",
-                    200, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
+                    cost, (int)userResourcesObserver.UserResources.CoinQuantity, $"Revive");
 
-            // userResourcesObserver.UserResources.CoinQuantity -= boosterDataObserver.BoosterCosts.Last();
+            // userResourcesObserver.UserResources.CoinQuantity -= cost;
 
             if (_currentBoosterOnRevive == BoosterType.ClearScrewPorts)
             {
@@ -190,7 +212,7 @@ public class RevivePopup : BasePopup
             default: actionWatchVideo = ActionWatchVideo.UnlockScrewBox; break;
         }
 
-        GameController.Instance.admobAds.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
+        AdmobAdsMax.Instance.ShowVideoReward(OnRewaredAdCompleted, actionNotLoadedVideo: ShowAdsNotLoadedPopup, actionClose: null, actionType: actionWatchVideo);
     }
 
     private void OnRewaredAdCompleted()

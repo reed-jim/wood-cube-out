@@ -12,6 +12,9 @@ namespace AntsFlow
 {
     public class HardLevelManager : Singleton<HardLevelManager>
     {
+        // Scene-specific - khong DontDestroyOnLoad
+        protected override bool ShouldPersist() => false;
+
         [SerializeField] private CanvasGroup canvasGroup;
         [SerializeField] private SkeletonGraphic hardLevelSpine;
         [SerializeField] private Image blackOverlay;
