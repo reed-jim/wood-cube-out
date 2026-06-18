@@ -13,7 +13,26 @@ public class FactionMapper : Singleton<FactionMapper>
 {
     public List<ColorSpriteContainerPair> mapper;
 
-    // public Dictionary<int, Color> indexesOfColors;
+    public Dictionary<Color, SpriteContainer> spriteContainersOfColors;
+
+    protected override void MoreActionOnAwake()
+    {
+        base.MoreActionOnAwake();
+
+        BuildSpriteContainersOfColors();
+    }
+
+    private void BuildSpriteContainersOfColors()
+    {
+        spriteContainersOfColors = new Dictionary<Color, SpriteContainer>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            ColorSpriteContainerPair pair = mapper[i];
+
+            spriteContainersOfColors.Add(pair.color, pair.spriteContainer);
+        }
+    }
 
     public Dictionary<int, Color> GetIndexesOfColors()
     {
@@ -83,32 +102,38 @@ public class FactionMapper : Singleton<FactionMapper>
 
     public Sprite GetAntBoxSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return spriteContainersOfColors[faction].tileSprite;
+        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
     public Sprite GetAntBoxLidSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return spriteContainersOfColors[faction].tileSprite;
+        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
     public Sprite GetTileSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
+        return spriteContainersOfColors[faction].tileSprite;
+        // return mapper.First(item => item.color == faction).spriteContainer.tileSprite;
     }
 
     public Sprite GetDoubleAntLinkSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.doubleBoxLink;
+        return spriteContainersOfColors[faction].doubleBoxLink;
+        // return mapper.First(item => item.color == faction).spriteContainer.doubleBoxLink;
     }
 
     public Sprite GetDoubleAntHoleSprite(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.doubleBoxHole;
+        return spriteContainersOfColors[faction].doubleBoxHole;
+        // return mapper.First(item => item.color == faction).spriteContainer.doubleBoxHole;
     }
 
     public string GetAntBoxSkin(Color faction)
     {
-        return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
+        return spriteContainersOfColors[faction].antBoxSkin;
+        // return mapper.First(item => item.color == faction).spriteContainer.antBoxSkin;
     }
 }
 

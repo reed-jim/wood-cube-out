@@ -53,7 +53,9 @@ namespace AntsFlow
                 FindBlockage(tile, boxCollider, -tile.transform.right);
             }
 
+#if UNITY_EDITOR
             EditorUtility.SetDirty(transform);
+#endif
 
             void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
             {
@@ -75,6 +77,7 @@ namespace AntsFlow
 
         public void ConvertToJson()
         {
+#if UNITY_EDITOR
             FactionMapper factionMapper =
                 AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
 
@@ -125,8 +128,7 @@ namespace AntsFlow
             string json = JsonUtility.ToJson(antLevelData, false);
             File.WriteAllText(filePath, json);
 
-#if UNITY_EDITOR
-            UnityEditor.AssetDatabase.Refresh();
+            AssetDatabase.Refresh();
 #endif
         }
     }
