@@ -14,6 +14,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Tilemaps;
 using static GameEnum;
 
 namespace NamPhuThuy.GamePlay
@@ -55,7 +56,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Memory Management
-        AsyncOperationHandle<GameObject> _loadLevelHandle;
+        AsyncOperationHandle<TextAsset> _loadLevelHandle;
         #endregion
 
         #region EVENT
@@ -74,6 +75,10 @@ namespace NamPhuThuy.GamePlay
 
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
+
+        public Material material;
+        public Tilemap tilemap;
+        public Transform tilemapGrid;
 
         private void Awake()
         {
@@ -228,9 +233,9 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
-            _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
+            // _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
             // load from json
-            // _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
+            _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
             {
@@ -244,19 +249,19 @@ namespace NamPhuThuy.GamePlay
 
             showSceneTransitionEvent?.Invoke();
 
-            void ActualLoadLevel(GameObject resultLoad)
+            void ActualLoadLevel(TextAsset resultLoad)
             {
-                GameObject level = resultLoad;
-                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
-                Transform levelTransform = level.transform;
+                // GameObject level = resultLoad;
+                // AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+                // Transform levelTransform = level.transform;
 
                 // load from json
-                // string json = resultLoad;
-                // AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
+                string json = resultLoad.text;
+                AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
 
-                // Transform levelTransform;
+                Transform levelTransform;
 
-                // AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
+                AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
@@ -264,6 +269,9 @@ namespace NamPhuThuy.GamePlay
                 AutoSpacingAllTiles(levelTransform);
                 FitLevelToScreenArea(levelTransform);
                 CenterLevel(levelTransform);
+
+                FillTileMap(antLevelData, levelTransform);
+                // BuildMesh(levelTransform);   
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
@@ -282,6 +290,95 @@ namespace NamPhuThuy.GamePlay
             {
                 isLoopLevel = isLoop;
             }
+        }
+
+        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
+        {
+            // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+            tilemapGrid.SetParent(levelTransform);
+
+            foreach (var t in antLevelData.antLevelDataItems)
+            {
+                Vector3Int cellPos = tilemap.WorldToCell(t.position);
+
+                Tile tile = ScriptableObject.CreateInstance<Tile>();
+                tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+
+                tilemap.SetTile(cellPos, tile);
+            }
+        }
+
+        // private void FillTileMap(Transform level)
+        // {
+        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+        //     tilemap.transform.SetParent(level);
+
+        //     foreach (var t in tiles)
+        //     {
+        //         Vector3Int cellPos = tilemap.WorldToCell(t.transform.position);
+
+        //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+        //         tile.sprite = t.spriteRenderer.sprite;
+
+        //         tilemap.SetTile(cellPos, tile);
+        //     }
+        // }
+
+        void BuildMesh(Transform level)
+        {
+            AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+            Mesh mesh = new Mesh();
+
+            List<Vector3> vertices = new();
+            List<Vector2> uvs = new();
+            List<int> triangles = new();
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                Sprite sprite = tiles[i].spriteRenderer.sprite;
+                Vector2 pos = tiles[i].transform.position;
+
+                int start = vertices.Count;
+
+                Rect rect = sprite.rect;
+                float w = rect.width / sprite.pixelsPerUnit;
+                float h = rect.height / sprite.pixelsPerUnit;
+
+                vertices.Add(new Vector3(pos.x, pos.y, 0));
+                vertices.Add(new Vector3(pos.x + w, pos.y, 0));
+                vertices.Add(new Vector3(pos.x + w, pos.y + h, 0));
+                vertices.Add(new Vector3(pos.x, pos.y + h, 0));
+
+                Vector2[] spriteUVs = sprite.uv;
+
+                uvs.Add(spriteUVs[0]);
+                uvs.Add(spriteUVs[1]);
+                uvs.Add(spriteUVs[2]);
+                uvs.Add(spriteUVs[3]);
+
+                triangles.Add(start + 0);
+                triangles.Add(start + 1);
+                triangles.Add(start + 2);
+
+                triangles.Add(start + 0);
+                triangles.Add(start + 2);
+                triangles.Add(start + 3);
+            }
+
+            mesh.SetVertices(vertices);
+            mesh.SetUVs(0, uvs);
+            mesh.SetTriangles(triangles, 0);
+
+            GameObject spawned = new GameObject();
+
+            var mf = spawned.AddComponent<MeshFilter>();
+            var mr = spawned.AddComponent<MeshRenderer>();
+
+            mf.mesh = mesh;
+            mr.material = material;
         }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
@@ -316,11 +413,12 @@ namespace NamPhuThuy.GamePlay
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
                 // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
-                AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
+                // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
+                AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
 
-                tile.transform.SetParent(levelTransform);
+                // tile.transform.SetParent(levelTransform);
 
-                tile.transform.position = antLevelDataItem.position;
+                // tile.transform.position = antLevelDataItem.position;
 
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
                 tile.ring = antLevelDataItem.ring;
@@ -369,7 +467,7 @@ namespace NamPhuThuy.GamePlay
             float distance = Mathf.Abs(Camera.main.transform.position.z);
 
             Vector3 worldPos = Camera.main.ViewportToWorldPoint(
-                new Vector3(0, 0.51f, distance)
+                new Vector3(0, 0.55f, distance)
             );
 
             transform.position = transform.position.ChangeY(worldPos.y);
@@ -406,7 +504,8 @@ namespace NamPhuThuy.GamePlay
             float ratioX = currentSpacingX / baseSpacingX;
             float ratioY = currentSpacingY / baseSpacingY;
 
-            Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+            // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+            Vector2 tileSpacing = new Vector2(1f, 0.92f);
 
             float positionZ;
 

@@ -832,12 +832,12 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
-            // foreach (var item in numSpawnPerFactionOrderByDifficulty)
-            // {
-            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-            // }
+            foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            {
+                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            }
 
             int maxValidIndex = 0;
 
@@ -917,26 +917,24 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = GetRemaniningTilePerFaction();
 
-            if (isIncludeStartSlot)
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
-                for (int i = 0; i < washingMachineStartSlots.Count; i++)
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+
+                if (washingMachineStartSlot.washingMachine != null)
                 {
-                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
-
-                    if (washingMachineStartSlot.washingMachine != null)
+                    if (isIncludeStartSlot)
                     {
-                        if (isIncludeStartSlot)
-                        {
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                        else
-                        {
-                            WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                            if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
-                            {
-                                CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                            }
+                        if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                        {
+                            Debug.Log($"washingMachine {washingMachine} {isIncludeStartSlot}");
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                         }
                     }
                 }

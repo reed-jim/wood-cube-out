@@ -14,6 +14,8 @@ public class FactionMapper : Singleton<FactionMapper>
     public List<ColorSpriteContainerPair> mapper;
 
     public Dictionary<Color, SpriteContainer> spriteContainersOfColors;
+    public Dictionary<int, Color> indexesOfColors;
+    public Dictionary<Color, int> colorsOfIndexes;
 
     protected override void MoreActionOnAwake()
     {
@@ -31,6 +33,20 @@ public class FactionMapper : Singleton<FactionMapper>
             ColorSpriteContainerPair pair = mapper[i];
 
             spriteContainersOfColors.Add(pair.color, pair.spriteContainer);
+        }
+
+        indexesOfColors = new Dictionary<int, Color>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            indexesOfColors.Add(i, mapper[i].color);
+        }
+
+        colorsOfIndexes = new Dictionary<Color, int>();
+
+        for (int i = 0; i < mapper.Count; i++)
+        {
+            colorsOfIndexes.Add(mapper[i].color, i);
         }
     }
 

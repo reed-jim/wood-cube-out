@@ -131,7 +131,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             UIUtil.SetSizeKeepRatioY(_rewards[i], itemSizeX);
 
-            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
+            // _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
+            _rewards[i].localPosition = Vector3.zero;
             _rewards[i].localScale = Vector3.zero;
 
             AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));

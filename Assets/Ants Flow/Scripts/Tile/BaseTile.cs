@@ -38,7 +38,7 @@ namespace AntsFlow
             get => faction;
             set
             {
-                spriteRenderer.color = faction;
+                // spriteRenderer.color = faction;
 
                 faction = value;
             }

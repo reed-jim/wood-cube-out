@@ -24,6 +24,7 @@ public class SceneTransition : MonoBehaviour
     [SerializeField] private SkeletonGraphic loadingSpine;
     [SerializeField] private CanvasGroup canvasGroup;
     [SerializeField] private RectTransform[] scrollingAntBoxes;
+    [SerializeField] private Vector3[] scrollingAntBoxInitialPositions;
 
 
     [SpineAnimation] public string idleAnimation;
@@ -82,6 +83,13 @@ public class SceneTransition : MonoBehaviour
         }
 
         blackBackgroundToPassPolicy.gameObject.SetActive(false);
+
+        scrollingAntBoxInitialPositions = new Vector3[scrollingAntBoxes.Length];
+
+        for (int i = 0; i < scrollingAntBoxes.Length; i++)
+        {
+            scrollingAntBoxInitialPositions[i] = scrollingAntBoxes[i].localPosition;
+        }
     }
 
     private void OnDestroy()
@@ -302,6 +310,11 @@ public class SceneTransition : MonoBehaviour
         float moveSpeed = 300f;
         Vector2 resetOffset = scrollingAntBoxes[0].sizeDelta;
         Vector2 direction = new Vector2(1f, 1f).normalized;
+
+        for (int i = 0; i < scrollingAntBoxes.Length; i++)
+        {
+            scrollingAntBoxes[i].localPosition = scrollingAntBoxInitialPositions[i];
+        }
 
         while (true)
         {

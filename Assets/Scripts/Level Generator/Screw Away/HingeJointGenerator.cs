@@ -349,7 +349,7 @@ public class HingeJointGenerator : EditorWindow
     #region Ant
     private void FindTileBlockagesAll()
     {
-        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Ants Flow/Prefabs/Levels Ant" });
+        string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/Ants Flow/Prefabs/Levels Ant Future" });
 
         int processed = 0;
 
