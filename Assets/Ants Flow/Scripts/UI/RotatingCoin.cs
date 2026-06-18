@@ -1,10 +1,12 @@
 using System.Collections;
+using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class RotatingCoin : MonoBehaviour
 {
     public Image coinImage;
+    public ParticleSystem fx;
 
     public Sprite[] poolCoins;
 
@@ -19,6 +21,8 @@ public class RotatingCoin : MonoBehaviour
 
         int index = Random.Range(0, poolCoins.Length - 1);
 
+        coinImage.enabled = true;
+
         while (gameObject.activeInHierarchy)
         {
             coinImage.sprite = poolCoins[index];
@@ -32,5 +36,18 @@ public class RotatingCoin : MonoBehaviour
 
             yield return waitForSeconds;
         }
+    }
+
+    public void PlayFX()
+    {
+        coinImage.enabled = false;
+
+        fx.gameObject.SetActive(true);
+        fx.Play();
+
+        Tween.Delay(1).OnComplete(() =>
+        {
+            gameObject.SetActive(false);
+        });
     }
 }
