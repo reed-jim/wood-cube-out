@@ -20,6 +20,7 @@ namespace AntsFlow
         public NavMeshModifierVolume navMeshModifierVolume;
 
         public Vector2Int GridPos;
+        public bool isDone;
         public bool isAntApproaching;
         public bool isAnimating;
         public bool isLocked;
@@ -84,8 +85,6 @@ namespace AntsFlow
             );
 
             this.worldSize = worldSize.x;
-
-            Init();
         }
 
         void OnDestroy()

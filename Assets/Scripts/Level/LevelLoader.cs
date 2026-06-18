@@ -266,9 +266,9 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                AutoSpacingAllTiles(levelTransform);
-                FitLevelToScreenArea(levelTransform);
-                CenterLevel(levelTransform);
+                // AutoSpacingAllTiles(levelTransform);
+                // FitLevelToScreenArea(levelTransform);
+                // CenterLevel(levelTransform);
 
                 FillTileMap(antLevelData, levelTransform);
                 // BuildMesh(levelTransform);   
@@ -298,6 +298,8 @@ namespace NamPhuThuy.GamePlay
 
             tilemapGrid.SetParent(levelTransform);
 
+            Debug.Log($"antLevelData.antLevelDataItems {antLevelData.antLevelDataItems.Count}");
+
             foreach (var t in antLevelData.antLevelDataItems)
             {
                 Vector3Int cellPos = tilemap.WorldToCell(t.position);
@@ -325,61 +327,6 @@ namespace NamPhuThuy.GamePlay
         //         tilemap.SetTile(cellPos, tile);
         //     }
         // }
-
-        void BuildMesh(Transform level)
-        {
-            AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
-
-            Mesh mesh = new Mesh();
-
-            List<Vector3> vertices = new();
-            List<Vector2> uvs = new();
-            List<int> triangles = new();
-
-            for (int i = 0; i < tiles.Length; i++)
-            {
-                Sprite sprite = tiles[i].spriteRenderer.sprite;
-                Vector2 pos = tiles[i].transform.position;
-
-                int start = vertices.Count;
-
-                Rect rect = sprite.rect;
-                float w = rect.width / sprite.pixelsPerUnit;
-                float h = rect.height / sprite.pixelsPerUnit;
-
-                vertices.Add(new Vector3(pos.x, pos.y, 0));
-                vertices.Add(new Vector3(pos.x + w, pos.y, 0));
-                vertices.Add(new Vector3(pos.x + w, pos.y + h, 0));
-                vertices.Add(new Vector3(pos.x, pos.y + h, 0));
-
-                Vector2[] spriteUVs = sprite.uv;
-
-                uvs.Add(spriteUVs[0]);
-                uvs.Add(spriteUVs[1]);
-                uvs.Add(spriteUVs[2]);
-                uvs.Add(spriteUVs[3]);
-
-                triangles.Add(start + 0);
-                triangles.Add(start + 1);
-                triangles.Add(start + 2);
-
-                triangles.Add(start + 0);
-                triangles.Add(start + 2);
-                triangles.Add(start + 3);
-            }
-
-            mesh.SetVertices(vertices);
-            mesh.SetUVs(0, uvs);
-            mesh.SetTriangles(triangles, 0);
-
-            GameObject spawned = new GameObject();
-
-            var mf = spawned.AddComponent<MeshFilter>();
-            var mr = spawned.AddComponent<MeshRenderer>();
-
-            mf.mesh = mesh;
-            mr.material = material;
-        }
 
         private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
         {
@@ -424,8 +371,6 @@ namespace NamPhuThuy.GamePlay
                 tile.ring = antLevelDataItem.ring;
                 tile.priority = antLevelDataItem.priority;
 
-                tile.Init();
-
                 tiles.Add(tile);
             }
 
@@ -444,8 +389,12 @@ namespace NamPhuThuy.GamePlay
                     }
                 }
 
+                tile.blockages = new List<AntsFlow.BaseTile>();
                 tile.blockages.AddRange(blockages);
             }
+
+            AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
+            AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
 
             return spawnedLevelItem;
         }
@@ -473,59 +422,59 @@ namespace NamPhuThuy.GamePlay
             transform.position = transform.position.ChangeY(worldPos.y);
         }
 
-        public void AutoSpacingAllTiles(Transform level)
-        {
-            AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+        // public void AutoSpacingAllTiles(Transform level)
+        // {
+        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
 
-            Vector3 center = Vector3.zero;
+        //     Vector3 center = Vector3.zero;
 
-            foreach (AntsFlow.BaseTile tile in tiles)
-                center += tile.transform.position;
+        //     foreach (AntsFlow.BaseTile tile in tiles)
+        //         center += tile.transform.position;
 
-            center /= tiles.Length;
+        //     center /= tiles.Length;
 
-            // find num column
-            float firstRowY = tiles[0].transform.position.y;
-            float tolerance = 0.01f;
+        //     // find num column
+        //     float firstRowY = tiles[0].transform.position.y;
+        //     float tolerance = 0.01f;
 
-            int numCols = 0;
+        //     int numCols = 0;
 
-            foreach (var tile in tiles)
-            {
-                if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
-                    numCols++;
-            }
+        //     foreach (var tile in tiles)
+        //     {
+        //         if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
+        //             numCols++;
+        //     }
 
-            float baseSpacingX = 0.7605271f;
-            float baseSpacingY = 0.760527f;
-            float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
-            float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
+        //     float baseSpacingX = 0.7605271f;
+        //     float baseSpacingY = 0.760527f;
+        //     float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
+        //     float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
 
-            float ratioX = currentSpacingX / baseSpacingX;
-            float ratioY = currentSpacingY / baseSpacingY;
+        //     float ratioX = currentSpacingX / baseSpacingX;
+        //     float ratioY = currentSpacingY / baseSpacingY;
 
-            // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
-            Vector2 tileSpacing = new Vector2(1f, 0.92f);
+        //     // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+        //     Vector2 tileSpacing = new Vector2(1f, 0.92f);
 
-            float positionZ;
+        //     float positionZ;
 
-            foreach (AntsFlow.BaseTile tile in tiles)
-            {
-                Vector3 offset = tile.transform.position - center;
+        //     foreach (AntsFlow.BaseTile tile in tiles)
+        //     {
+        //         Vector3 offset = tile.transform.position - center;
 
-                float gridX = offset.x / currentSpacingX * ratioX;
-                float gridY = offset.y / currentSpacingY * ratioY;
+        //         float gridX = offset.x / currentSpacingX * ratioX;
+        //         float gridY = offset.y / currentSpacingY * ratioY;
 
-                positionZ = tile.transform.position.z;
+        //         positionZ = tile.transform.position.z;
 
-                tile.transform.position = center + new Vector3(
-                    gridX * tileSpacing.x,
-                    gridY * tileSpacing.y
-                );
+        //         tile.transform.position = center + new Vector3(
+        //             gridX * tileSpacing.x,
+        //             gridY * tileSpacing.y
+        //         );
 
-                tile.transform.position = tile.transform.position.ChangeZ(positionZ);
-            }
-        }
+        //         tile.transform.position = tile.transform.position.ChangeZ(positionZ);
+        //     }
+        // }
 
         void FitLevelToScreenArea(Transform level)
         {

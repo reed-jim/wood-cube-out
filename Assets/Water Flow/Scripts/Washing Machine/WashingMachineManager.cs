@@ -76,10 +76,9 @@ namespace AntsFlow
             difficultyLevel = levelItem.difficulty;
             numAntBoxSpawned = 0;
 
-            TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
+            // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
-            TileManager.Ins.CalculateLevelCenter();
-            TileManager.Ins.BuildMap(TileManager.Ins.tiles);
+            // TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
 
@@ -479,7 +478,7 @@ namespace AntsFlow
         public void UseBoosterClearOneColor(Color selectedFaction)
         {
             List<BaseTile> tilesToClear = TileManager.Ins.tiles
-                .Where(tile => tile.gameObject.activeInHierarchy && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
+                .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
             // Remove blockages
             for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
@@ -895,7 +894,7 @@ namespace AntsFlow
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                if (tile.isDone || tile.isAntApproaching)
                 {
                     continue;
                 }
@@ -980,7 +979,7 @@ namespace AntsFlow
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                if (tile.isDone || tile.isAntApproaching)
                 {
                     continue;
                 }

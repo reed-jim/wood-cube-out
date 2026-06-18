@@ -360,7 +360,7 @@ namespace AntsFlow
                 }
                 else
                 {
-                    if (node.tile.isAntApproaching || !node.tile.gameObject.activeInHierarchy)
+                    if (node.tile.isAntApproaching || node.tile.isDone)
                     {
                         Gizmos.color = Color.green;
 
@@ -654,14 +654,14 @@ namespace AntsFlow
 
         public void UpdateTileCount()
         {
-            int tileLeft = tiles.Count(item => item.gameObject.activeInHierarchy);
+            int tileLeft = tiles.Count(item => !item.isDone);
 
             tileCountText.text = $"{tileLeft}/{tiles.Count()}";
         }
 
         private void CheckWinLevel()
         {
-            bool isWon = !tiles.Any(tile => tile.gameObject.activeInHierarchy);
+            bool isWon = !tiles.Any(tile => !tile.isDone);
 
             if (isWon)
             {
