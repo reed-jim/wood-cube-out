@@ -3652,11 +3652,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.44444445
+      value: 0.32430556
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.16216215
+      value: 0.3179054
       objectReference: {fileID: 0}
     - target: {fileID: 5612500807938215128, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -4054,8 +4054,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AntsFlow.TileManager
   navMeshSurface: {fileID: 1252789725}
-  astarPath: {fileID: 0}
   tileCountText: {fileID: 1440758466}
+  shadowTilemap: {fileID: 1451543133}
   isDebug: 0
   tiles: []
   antNest: {fileID: 654761504}
@@ -5597,7 +5597,7 @@ GameObject:
   - component: {fileID: 1153400086}
   - component: {fileID: 1153400085}
   m_Layer: 0
-  m_Name: Grid
+  m_Name: Shadow Grid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6140,33 +6140,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a4a47233c1bc1c4ea5bb7e1accd1f4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NamPhuThuy.GamePlay.LevelLoader
-  tilePrefab:
-    tilemap: {fileID: 0}
-    tilemapPosition: {x: 0, y: 0, z: 0}
-    position: {x: 0, y: 0, z: 0}
-    isDone: 0
-    isAntApproaching: 0
-    isAnimating: 0
-    isLocked: 0
-    ring: 0
-    priority: 0
-    faction: {r: 0, g: 0, b: 0, a: 0}
-    worldSize: 0
-  cloneToCalculateRotation: {fileID: 0}
   currentLevel: {fileID: 11400000, guid: dfc7835bc5f6fb64d9f4b1582f01db6e, type: 2}
   levelDataContainer: {fileID: 11400000, guid: fba3314bd227e3e43ae7d3bc59576c94, type: 2}
   levelBoosterObserver: {fileID: 11400000, guid: 9296786de3965404da0e4202bc991a64, type: 2}
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
   texturedMaterial: {fileID: 0}
   tutorialDelay: 0.2
-  material: {fileID: 0}
-  tilemap: {fileID: 1451543133}
-  tilemapGrid: {fileID: 1153400086}
+  shadowTilemap: {fileID: 1451543133}
+  shadowTilemapGrid: {fileID: 1153400086}
+  shadowSprite: {fileID: 21300000, guid: c169d82cae7894044869e7f993bddf2f, type: 3}
   tilemapGrids: []
-  scaleFactor: 0.35
+  scaleFactor: 0.55
+  shadowTilemapOffset: {x: -0.3, y: 0.3, z: 0}
   tile:
     tilemap: {fileID: 0}
     tilemapPosition: {x: 0, y: 0, z: 0}
+    name: 0
     position: {x: 0, y: 0, z: 0}
     isDone: 0
     isAntApproaching: 0
@@ -7190,7 +7179,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.32430556, y: 0.3179054}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7431,7 +7420,7 @@ GameObject:
   - component: {fileID: 1451543133}
   - component: {fileID: 1451543132}
   m_Layer: 0
-  m_Name: Tilemap
+  m_Name: Shadow Tilemap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11421,7 +11410,7 @@ RectTransform:
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMax: {x: 0.32430556, y: 0.3179054}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

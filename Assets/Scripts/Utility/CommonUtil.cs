@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using DG.Tweening;
 using Dreamteck.Utilities;
 using PrimeTween;
 using UnityEngine;
@@ -11,6 +12,25 @@ using static GameEnum;
 
 public static class CommonUtil
 {
+    public static void MoveInCurve(Transform target, Vector3 from, Vector3 to, float height, float duration, Action onComplete)
+    {
+        Vector3 mid = Vector3.Lerp(from, to, 0.5f);
+        mid.y += height;
+
+        Vector3[] path =
+        {
+            from,
+            mid,
+            to
+        };
+
+        target.DOPath(path, duration, DG.Tweening.PathType.CatmullRom)
+        .SetEase(DG.Tweening.Ease.Linear)
+        .OnComplete(() =>
+        {
+            onComplete?.Invoke();
+        });
+    }
 
     #region Component
     public static TDerived ReplaceAndCopy<TBase, TDerived>(GameObject obj)
@@ -73,7 +93,7 @@ public static class CommonUtil
     }
     #endregion
 
-    public static void StopTween(Tween tween)
+    public static void StopTween(PrimeTween.Tween tween)
     {
         if (tween.isAlive)
         {
@@ -81,7 +101,7 @@ public static class CommonUtil
         }
     }
 
-    public static void StopAllTweens(List<Tween> tweens)
+    public static void StopAllTweens(List<PrimeTween.Tween> tweens)
     {
         if (tweens == null)
         {
@@ -97,7 +117,7 @@ public static class CommonUtil
         }
     }
 
-    public static void StopAllSequences(List<Sequence> tweens)
+    public static void StopAllSequences(List<PrimeTween.Sequence> tweens)
     {
         if (tweens == null)
         {
@@ -119,10 +139,10 @@ public static class CommonUtil
         Color startColor,
         Color endColor,
         float duration,
-        List<Tween> tweens
+        List<PrimeTween.Tween> tweens
     )
     {
-        Tween tween = Tween.Custom(
+        PrimeTween.Tween tween = PrimeTween.Tween.Custom(
             startColor, endColor,
             duration: duration,
             onValueChange: newVal =>

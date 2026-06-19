@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using CandyCoded.HapticFeedback;
 using EPOOutline;
+using NamPhuThuy.GamePlay;
 using PrimeTween;
 using Saferio.Util.SaferioTween;
 using Unity.AI.Navigation;
@@ -22,6 +23,7 @@ namespace AntsFlow
         public Tilemap tilemap;
         public Vector3Int tilemapPosition;
 
+        public int name;
         public Vector3 position;
         public bool isDone;
         public bool isAntApproaching;
@@ -140,6 +142,7 @@ namespace AntsFlow
             }
 
             tilemap.SetTile(tilemapPosition, null);
+            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
 
             tileMoveToAntEvent?.Invoke(this);
         }

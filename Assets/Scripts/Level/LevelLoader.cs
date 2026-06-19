@@ -21,12 +21,6 @@ namespace NamPhuThuy.GamePlay
 {
     public class LevelLoader : MonoBehaviour
     {
-        [Header("Ant")]
-        public AntsFlow.BaseTile tilePrefab;
-
-        [Header("Clone to calculate level rotation")]
-        [SerializeField] private Transform cloneToCalculateRotation;
-
         [Header("SCRIPTABLE OBJECT")]
         [SerializeField] private IntVariable currentLevel;
         [SerializeField] private LevelDataContainer levelDataContainer;
@@ -48,7 +42,6 @@ namespace NamPhuThuy.GamePlay
         private BasicObjectPart[] _pieces;
         private Transform _currentLevelContainer;
         private Transform _pivotAdjust;
-        private bool _isNotAutoCenterLevel;
         private bool _isSetLevelGradientBound;
         private bool _isNewLoopLevel;
         private int _nextLevel;
@@ -76,11 +69,12 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
-        public Material material;
-        public Tilemap tilemap;
-        public Transform tilemapGrid;
+        public Tilemap shadowTilemap;
+        public Transform shadowTilemapGrid;
+        public Sprite shadowSprite;
         public List<Transform> tilemapGrids;
         public float scaleFactor;
+        public Vector3 shadowTilemapOffset;
 
         public AntsFlow.BaseTile tile;
 
@@ -309,6 +303,10 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
+            shadowTilemapGrid.SetParent(levelTransform);
+            shadowTilemapGrid.position = shadowTilemapOffset;
+            shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
+
             for (int i = 0; i < numRows; i++)
             {
                 // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
@@ -323,12 +321,17 @@ namespace NamPhuThuy.GamePlay
                 {
                     int index = j + i * numCols;
 
-                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+                    // Vector3Int cellPos = shadowTilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
 
                     Tile tile = ScriptableObject.CreateInstance<Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
+                    Tile shadowTile = ScriptableObject.CreateInstance<Tile>();
+                    shadowTile.sprite = shadowSprite;
+
                     spawnedTileMap.SetTile(cellPos, tile);
+                    shadowTilemap.SetTile(cellPos, shadowTile);
 
                     tilemapGrids.Add(spawnedTileMapGrid);
 
@@ -336,6 +339,8 @@ namespace NamPhuThuy.GamePlay
                     AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
                 }
             }
+
+            AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
 
             // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
 
@@ -433,6 +438,7 @@ namespace NamPhuThuy.GamePlay
 
                 // tile.transform.position = antLevelDataItem.position;
 
+                tile.name = i;
                 tile.position = antLevelDataItem.position;
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
                 tile.ring = antLevelDataItem.ring;
@@ -467,38 +473,38 @@ namespace NamPhuThuy.GamePlay
                 AntsFlow.BaseTile tile = tiles[i];
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
-                // int upIndex = i + GamePersistentVariable.numColumn;
-                // int downIndex = i - GamePersistentVariable.numColumn;
-                // int rightIndex = i + 1;
-                // int leftIndex = i - 1;
-
-                // tile.blockages = new List<AntsFlow.BaseTile>();
-
-                // if (upIndex < tiles.Count)
-                // {
-                //     tile.blockages.Add(tiles[upIndex]);
-                // }
-                // if (downIndex >= tiles.Count)
-                // {
-                //     tile.blockages.Add(tiles[downIndex]);
-                // }
-                // if (rightIndex < tiles.Count)
-                // {
-                //     tile.blockages.Add(tiles[rightIndex]);
-                // }
-                // if (leftIndex >= tiles.Count)
-                // {
-                //     tile.blockages.Add(tiles[leftIndex]);
-                // }
+                int upIndex = i + GamePersistentVariable.numColumn;
+                int downIndex = i - GamePersistentVariable.numColumn;
+                int rightIndex = i + 1;
+                int leftIndex = i - 1;
 
                 tile.blockages = new List<AntsFlow.BaseTile>();
 
-                for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                if (upIndex < tiles.Count)
                 {
-                    int index = antLevelDataItem.blockageIndexes[j];
-
-                    tile.blockages.Add(tiles[index]);
+                    tile.blockages.Add(tiles[upIndex]);
                 }
+                if (downIndex >= 0)
+                {
+                    tile.blockages.Add(tiles[downIndex]);
+                }
+                if (rightIndex < tiles.Count)
+                {
+                    tile.blockages.Add(tiles[rightIndex]);
+                }
+                if (leftIndex >= 0)
+                {
+                    tile.blockages.Add(tiles[leftIndex]);
+                }
+
+                // tile.blockages = new List<AntsFlow.BaseTile>();
+
+                // for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                // {
+                //     int index = antLevelDataItem.blockageIndexes[j];
+
+                //     tile.blockages.Add(tiles[index]);
+                // }
             }
 
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
@@ -588,7 +594,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (numRows / 4) + row * 1,
+                        (numRows / 3) + row * 1,
                         0f
                     );
 
@@ -655,8 +661,12 @@ namespace NamPhuThuy.GamePlay
 
             await Task.Delay(500);
 
+            shadowTilemapGrid.SetParent(transform.parent);
+
             for (int i = 0; i < tilemapGrids.Count; i++)
             {
+                tilemapGrids[i].GetComponentInChildren<Tilemap>().ClearAllTiles();
+
                 ObjectPoolingEverything.ReturnToPool(GameConstants.tileMap, tilemapGrids[i].gameObject);
             }
 
