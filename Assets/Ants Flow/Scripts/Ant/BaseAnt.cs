@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NamPhuThuy.GamePlay;
@@ -121,7 +121,14 @@ namespace AntsFlow
                 SoundManager.Instance.PlaySoundCubeLand();
             }, 0.15f);
 
-            GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
+            if (GameController.Instance != null && GameController.Instance.ActionLimitQueue != null)
+            {
+                GameController.Instance.ActionLimitQueue.AddAction(ActionLimitQueue.NameAction.FxAntComeToNest, actionAntToNest);
+            }
+            else
+            {
+                actionAntToNest.action?.Invoke();
+            }
         }
 
         void Update()
@@ -281,7 +288,10 @@ namespace AntsFlow
                 GamePersistentVariable.numActiveAnt--;
             }));
 
+            if (GameController.Instance != null && GameController.Instance.ActionLimitQueue != null)
+            {
             GameController.Instance.ActionLimitQueue.PlayAction(ActionLimitQueue.NameAction.FxAntComeToNest);
+            }
 
             isDroppingTile = true;
 

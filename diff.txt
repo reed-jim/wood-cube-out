@@ -1,0 +1,88 @@
+﻿diff --git a/Assets/Scripts/Level/LevelLoader.cs b/Assets/Scripts/Level/LevelLoader.cs
+index 335b2d3b0d..cad860ee07 100644
+--- a/Assets/Scripts/Level/LevelLoader.cs
++++ b/Assets/Scripts/Level/LevelLoader.cs
+@@ -145,6 +145,7 @@ namespace NamPhuThuy.GamePlay
+         #region LEVEL
+         private async void LoadLevel()
+         {
++            DebugLogger.LogSimple(message: "[FLOW] LoadLevel() START", color: Color.cyan);
+             // showSceneTransitionEvent?.Invoke();
+             // // NO INTERNET
+             // if (Application.internetReachability == NetworkReachability.NotReachable)
+@@ -238,28 +239,31 @@ namespace NamPhuThuy.GamePlay
+                 Addressables.Release(_loadLevelHandle);
+             }
+ 
+-            // _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
+             // load from json
+             _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
+ 
+             _loadLevelHandle.Completed += (op) =>
+             {
++                DebugLogger.LogSimple(message: $"[FLOW] Addressables.Completed status={op.Status}", color: Color.cyan);
+                 if (op.Status == AsyncOperationStatus.Succeeded)
+                 {
++                    DebugLogger.LogSimple(message: "[FLOW] Addressables OK ΓåÆ ActualLoadLevel()", color: Color.green);
+                     ActualLoadLevel(op.Result);
+                 }
++                else
++                {
++                    DebugLogger.LogSimple(message: $"[FLOW] Addressables FAILED: {op.OperationException}", color: Color.red);
++                }
+             };
+ 
++            DebugLogger.LogSimple(message: "[FLOW] startLevelEvent?.Invoke()", color: Color.cyan);
+             startLevelEvent?.Invoke();
+ 
++            DebugLogger.LogSimple(message: "[FLOW] showSceneTransitionEvent?.Invoke()", color: Color.cyan);
+             showSceneTransitionEvent?.Invoke();
+ 
+             void ActualLoadLevel(TextAsset resultLoad)
+             {
+-                // GameObject level = resultLoad;
+-                // AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+-                // Transform levelTransform = level.transform;
+-
+                 // load from json
+                 string json = resultLoad.text;
+                 AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
+@@ -277,13 +281,16 @@ namespace NamPhuThuy.GamePlay
+ 
+                 FillTileMap(antLevelData, levelTransform);
+                 // // BuildMesh(levelTransform);   
+-
+                 WashingMachineManager.Ins.StartLevel(levelItem);
++                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() DONE", color: Color.green);
+ 
++                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() START", color: Color.yellow);
+                 AntsFlow.TileManager.Ins.UpdateNavMesh();
++                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() DONE", color: Color.green);
+ 
+                 Tween.Delay(1).OnComplete(() =>
+                 {
++                    DebugLogger.LogSimple(message: "[FLOW] setIsLevelLoadedEvent?.Invoke()", color: Color.cyan);
+                     setIsLevelLoadedEvent?.Invoke();
+                 });
+ 
+@@ -702,7 +709,7 @@ namespace NamPhuThuy.GamePlay
+         {
+             string res = levelName;
+ 
+-            if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
++            if (GamePersistentVariable.specialLevelConfig != null && GamePersistentVariable.specialLevelConfig.isEnable) return res;
+             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+ 
+             LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
+@@ -947,6 +954,11 @@ namespace NamPhuThuy.GamePlay
+ 
+             await Task.Delay(500);
+ 
++            if (this == null)
++            {
++                return;
++            }
++
+             try
+             {
+                 Vector3 currentPosition = _pivotAdjust.transform.position;

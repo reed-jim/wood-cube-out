@@ -84,7 +84,6 @@ namespace AntsFlow
             // KHÔNG override TileManager.Ins.tiles ở đây — sẽ mất data tiles đã set trước đó
             // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
-            TileManager.Ins.CalculateLevelCenter();
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             Debug.Log("[FLOW] WMM: SpecialElementManager.Setup START");

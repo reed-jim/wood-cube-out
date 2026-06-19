@@ -1,0 +1,726 @@
+﻿diff --git a/Assets/Scripts/Level/LevelLoader.cs b/temp_levelloader.cs
+index 9cbb1d34a3..c6658c8705 100644
+--- a/Assets/Scripts/Level/LevelLoader.cs
++++ b/temp_levelloader.cs
+@@ -1,4 +1,4 @@
+-using System;
++∩╗┐using System;
+ using System.Collections.Generic;
+ using System.Linq;
+ using System.Threading.Tasks;
+@@ -14,12 +14,16 @@ using Unity.VisualScripting;
+ using UnityEngine;
+ using UnityEngine.AddressableAssets;
+ using UnityEngine.ResourceManagement.AsyncOperations;
++using UnityEngine.Tilemaps;
+ using static GameEnum;
+ 
+ namespace NamPhuThuy.GamePlay
+ {
+     public class LevelLoader : MonoBehaviour
+     {
++        [Header("Ant")]
++        public AntsFlow.BaseTile tilePrefab;
++
+         [Header("Clone to calculate level rotation")]
+         [SerializeField] private Transform cloneToCalculateRotation;
+ 
+@@ -52,7 +56,7 @@ namespace NamPhuThuy.GamePlay
+         #endregion
+ 
+         #region Memory Management
+-        AsyncOperationHandle<GameObject> _loadLevelHandle;
++        AsyncOperationHandle<TextAsset> _loadLevelHandle;
+         #endregion
+ 
+         #region EVENT
+@@ -72,12 +76,18 @@ namespace NamPhuThuy.GamePlay
+         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
+         #endregion
+ 
++        public Material material;
++        public Tilemap tilemap;
++        public Transform tilemapGrid;
++        public List<Transform> tilemapGrids;
++
+         private void Awake()
+         {
+             PausePopup.replayLevelEvent += Replay;
+             LosePopup.replayLevelEvent += Replay;
+             ReplayPopup.replayLevelEvent += Replay;
+             SettingPopup.replayLevelEvent += Replay;
++            LevelComingSoonPopup.replayLevelEvent += Replay;
+             DebugPopup.toLevelEvent += GoLevel;
+             DebugPopup.nextLevelEvent += NextLevel;
+             DebugPopup.prevLevelEvent += PrevLevel;
+@@ -90,6 +100,7 @@ namespace NamPhuThuy.GamePlay
+ 
+             _tweens = new List<Tween>();
+             _autoCenterLevelTweens = new List<Tween>();
++            tilemapGrids = new List<Transform>();
+ 
+             currentLevel.Load();
+ 
+@@ -113,6 +124,7 @@ namespace NamPhuThuy.GamePlay
+             LosePopup.replayLevelEvent -= Replay;
+             ReplayPopup.replayLevelEvent -= Replay;
+             SettingPopup.replayLevelEvent -= Replay;
++            LevelComingSoonPopup.replayLevelEvent -= Replay;
+             DebugPopup.toLevelEvent -= GoLevel;
+             DebugPopup.nextLevelEvent -= NextLevel;
+             DebugPopup.prevLevelEvent -= PrevLevel;
+@@ -130,7 +142,6 @@ namespace NamPhuThuy.GamePlay
+         #region LEVEL
+         private async void LoadLevel()
+         {
+-            DebugLogger.LogSimple(message: "[FLOW] LoadLevel() START", color: Color.cyan);
+             // showSceneTransitionEvent?.Invoke();
+             // // NO INTERNET
+             // if (Application.internetReachability == NetworkReachability.NotReachable)
+@@ -145,41 +156,41 @@ namespace NamPhuThuy.GamePlay
+             // }
+             // //
+ 
+-            int nextLevel = 1;
++            int nextLevel = currentLevel.Value;
+ 
+             bool isLoopLevel = false;
+ 
+-            if (!UserData.IsLoopLevel)
+-            {
+-                if (currentLevel.Value <= _maxLevel)
+-                {
+-                    nextLevel = currentLevel.Value;
+-                }
+-                else
+-                {
+-                    nextLevel = GetLoopLevel();
++            // if (!UserData.IsLoopLevel)
++            // {
++            //     if (currentLevel.Value <= _maxLevel)
++            //     {
++            //         nextLevel = currentLevel.Value;
++            //     }
++            //     else
++            //     {
++            //         nextLevel = GetLoopLevel();
+ 
+-                    await UserData.SetIsLoopLevel(true);
+-                    await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
++            //         await UserData.SetIsLoopLevel(true);
++            //         await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+ 
+-                    // isLoopLevel = true;
+-                    SetIsLoopLevel(true);
+-                }
+-            }
+-            else
+-            {
+-                if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+-                {
+-                    nextLevel = GetLoopLevel();
+-                }
+-                else
+-                {
+-                    nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+-                }
++            //         // isLoopLevel = true;
++            //         SetIsLoopLevel(true);
++            //     }
++            // }
++            // else
++            // {
++            //     if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
++            //     {
++            //         nextLevel = GetLoopLevel();
++            //     }
++            //     else
++            //     {
++            //         nextLevel = currentLevel.Value - UserData.NumLevelLoop;
++            //     }
+ 
+-                // isLoopLevel = true;
+-                SetIsLoopLevel(true);
+-            }
++            //     // isLoopLevel = true;
++            //     SetIsLoopLevel(true);
++            // }
+ 
+             // NOT LOOP
+             if (currentLevel.Value > _maxLevel)
+@@ -215,7 +226,6 @@ namespace NamPhuThuy.GamePlay
+             GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
+ 
+             string levelName = $"Level {nextLevel}";
+-            levelName = ModifyNameInFixedLevel(levelName, nextLevel);
+ 
+             // Memory Management
+             Resources.UnloadUnusedAssets();
+@@ -225,202 +235,404 @@ namespace NamPhuThuy.GamePlay
+                 Addressables.Release(_loadLevelHandle);
+             }
+ 
+-            DebugLogger.LogSimple(message: $"[FLOW] Addressables.InstantiateAsync: {levelName}", color: Color.cyan);
+-            _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
++            // _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
++            // load from json
++            _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
+ 
+             _loadLevelHandle.Completed += (op) =>
+             {
+-                DebugLogger.LogSimple(message: $"[FLOW] Addressables.Completed status={op.Status}", color: Color.cyan);
+                 if (op.Status == AsyncOperationStatus.Succeeded)
+                 {
+-                    DebugLogger.LogSimple(message: "[FLOW] Addressables OK ΓåÆ ActualLoadLevel()", color: Color.green);
+                     ActualLoadLevel(op.Result);
+                 }
+-                else
+-                {
+-                    DebugLogger.LogSimple(message: $"[FLOW] Addressables FAILED: {op.OperationException}", color: Color.red);
+-                }
+             };
+ 
+-            DebugLogger.LogSimple(message: "[FLOW] startLevelEvent?.Invoke()", color: Color.cyan);
+             startLevelEvent?.Invoke();
+ 
+-            DebugLogger.LogSimple(message: "[FLOW] showSceneTransitionEvent?.Invoke()", color: Color.cyan);
+             showSceneTransitionEvent?.Invoke();
+ 
+-            void ActualLoadLevel(GameObject resultLoad)
++            void ActualLoadLevel(TextAsset resultLoad)
+             {
+-                DebugLogger.LogSimple(message: "[FLOW] ActualLoadLevel() START", color: Color.green);
+-                GameObject level = resultLoad;
++                // GameObject level = resultLoad;
++                // AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
++                // Transform levelTransform = level.transform;
++
++                // load from json
++                string json = resultLoad.text;
++                AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
+ 
+-                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
+-                DebugLogger.LogSimple(message: $"[FLOW] LevelItem found: {(levelItem != null ? levelItem.name : "NULL")}", color: levelItem != null ? Color.green : Color.red);
++                Transform levelTransform;
++
++                AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
+ 
+                 GamePersistentVariable.levelItem = levelItem;
+                 GamePersistentVariable.isLevelLost = false;
+ 
+-                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() START", color: Color.yellow);
++                int numCols;
++                int numRows;
++
++                antLevelData = AutoSpacingAllTiles(antLevelData, out numCols, out numRows);
++                // FitLevelToScreenArea(levelTransform);
++                // CenterLevel(levelTransform);
++
++                FillTileMap(antLevelData, levelTransform, numCols, numRows);
++                // BuildMesh(levelTransform);   
++
+                 WashingMachineManager.Ins.StartLevel(levelItem);
+-                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() DONE", color: Color.green);
+ 
+-                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() START", color: Color.yellow);
+                 AntsFlow.TileManager.Ins.UpdateNavMesh();
+-                DebugLogger.LogSimple(message: "[FLOW] TileManager.UpdateNavMesh() DONE", color: Color.green);
+ 
+                 Tween.Delay(1).OnComplete(() =>
+                 {
+-                    DebugLogger.LogSimple(message: "[FLOW] setIsLevelLoadedEvent?.Invoke()", color: Color.cyan);
+                     setIsLevelLoadedEvent?.Invoke();
+                 });
+ 
+-                return;
++                GamePersistentVariable.startLevelTime = Time.time;
++                GamePersistentVariable.levelRetryTime++;
++            }
+ 
+-                _currentLevelContainer = level.transform;
++            void SetIsLoopLevel(bool isLoop)
++            {
++                isLoopLevel = isLoop;
++            }
++        }
+ 
+-                #region ASSIGN CLONE TO CALC ROTATION
++        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform, int numCols, int numRows)
++        {
++            // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+ 
+-                try
+-                {
+-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
+-                }
+-                catch (System.Exception e)
+-                {
+-                    DebugLogger.LogException(e);
+-                }
+-                #endregion
++            Vector3 initialScale = tilemapGrid.localScale;
+ 
+-                // FIND DEPENDENCY
+-                // delay for pieces scaling before level
+-                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
++            tilemapGrid.SetParent(levelTransform);
++            // tilemapGrid.localScale = Vector3.one;
+ 
+-                _pieces = pieces.ToArray();
++            for (int i = 0; i < numRows; i++)
++            {
++                Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
++                Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+ 
+-                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
+-                //
++                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
++                spawnedTileMapGrid.localScale = initialScale;
+ 
+-                if (level.GetComponent<LevelTransformManualModifier>() == null)
++                for (int j = 0; j < numCols; j++)
+                 {
+-                    level.transform.position = Vector3.zero;
+-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
+-                }
++                    int index = j + i * numCols;
+ 
+-                // AUTO CENTER LEVEL
+-                _isNotAutoCenterLevel = false;
++                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+ 
+-                foreach (BasicObjectPart obj in pieces)
+-                {
+-                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
++                    Tile tile = ScriptableObject.CreateInstance<Tile>();
++                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+ 
+-                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
+-                    {
+-                        _isNotAutoCenterLevel = true;
++                    spawnedTileMap.SetTile(cellPos, tile);
+ 
++                    tilemapGrids.Add(spawnedTileMapGrid);
+ 
+-                        break;
+-                    }
++                    AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
++                    AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+                 }
++            }
+ 
+-                _isNotAutoCenterLevel = false;
++            // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
+ 
+-                level.transform.position = Vector3.zero;
++            // foreach (var t in antLevelData.antLevelDataItems)
++            // {
++            //     Color faction = FactionMapper.Ins.indexesOfColors[t.factionIndex];
+ 
+-                if (!_isNotAutoCenterLevel)
+-                {
+-                    for (int i = 0; i < level.transform.childCount; i++)
+-                    {
+-                        Transform pivotAdjust = level.transform.GetChild(i);
++            //     CommonUtil.AddValueOfDictionary(itemByFaction, faction, t);
++            // }
+ 
+-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
+-                        {
+-                            _pivotAdjust = pivotAdjust;
++            // foreach (var t in itemByFaction)
++            // {
++            // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
++            // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+ 
+-                            _pivotAdjust.transform.position = Vector3.zero;
+-                        }
+-                    }
++            //     for (int i = 0; i < t.Value.Count; i++)
++            //     {
++            //         Vector3Int cellPos = tilemap.WorldToCell(t.Value[i].position);
+ 
+-                    foreach (BasicObjectPart piece in pieces)
+-                    {
+-                        if (_pivotAdjust == null)
+-                        {
+-                            _pivotAdjust = new GameObject().transform;
+-                            _pivotAdjust.name = "Pivot Adjust";
+-                            _pivotAdjust.SetParent(_currentLevelContainer);
++            //         Tile tile = ScriptableObject.CreateInstance<Tile>();
++            //         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.Value[i].factionIndex]);
+ 
+-                            _pivotAdjust.transform.localPosition = Vector3.zero;
+-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
+-                            _pivotAdjust.transform.localScale = Vector3.one;
+-                        }
++            //         spawnedTileMap.SetTile(cellPos, tile);
++            //     }
++            // }
+ 
+-                        if (!piece.transform.IsChildOf(_pivotAdjust))
+-                        {
+-                            piece.transform.SetParent(_pivotAdjust);
+-                        }
+-                    }
++            // foreach (var t in antLevelData.antLevelDataItems)
++            // {
++            //     Vector3Int cellPos = tilemap.WorldToCell(t.position);
+ 
+-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
++            //     Debug.Log($"row {t.position} {cellPos}");
+ 
+-                    _isSetLevelGradientBound = false;
++            //     Tile tile = ScriptableObject.CreateInstance<Tile>();
++            //     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+ 
+-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset, isLevelDirty: false);
++            //     tilemap.SetTile(cellPos, tile);
++            // }
++        }
+ 
+-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
+-                }
++        // private void FillTileMap(Transform level)
++        // {
++        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+ 
+-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
++        //     tilemap.transform.SetParent(level);
+ 
+-                // ASSIGN SCREW FACTIONS
+-                if (currentLevel.Value == 1)
+-                {
+-                    AutoAssignScrewFactionLevelManualGroup(level);
+-                }
+-                else
++        //     foreach (var t in tiles)
++        //     {
++        //         Vector3Int cellPos = tilemap.WorldToCell(t.transform.position);
++
++        //         Tile tile = ScriptableObject.CreateInstance<Tile>();
++        //         tile.sprite = t.spriteRenderer.sprite;
++
++        //         tilemap.SetTile(cellPos, tile);
++        //     }
++        // }
++
++        private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
++        {
++            List<Color> poolFaction = FactionMapper.Ins.GetPoolFactionFromPoolFactionIndex(antLevelData.levelItemData.poolFactionIndexes);
++
++            GameObject level = new GameObject();
++
++            level.name = "Level";
++
++            levelTransform = level.transform;
++
++            level.transform.SetParent(transform);
++
++            level.transform.localScale = antLevelData.levelItemData.levelScale;
++
++            AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
++            spawnedLevelItem.poolFaction = poolFaction;
++            spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
++            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
++            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
++            spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
++            spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
++            spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
++            spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
++            spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
++
++            List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
++
++            GameObject tileComponentHolder = new GameObject();
++            tileComponentHolder.name = "tileComponentHolder";
++
++            for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
++            {
++                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
++
++                // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
++                // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
++                AntsFlow.BaseTile tile = tileComponentHolder.AddComponent<AntsFlow.BaseTile>();
++
++                // tile.transform.SetParent(levelTransform);
++
++                // tile.transform.position = antLevelDataItem.position;
++
++                tile.position = antLevelDataItem.position;
++                tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
++                tile.ring = antLevelDataItem.ring;
++                tile.priority = antLevelDataItem.priority;
++
++                tiles.Add(tile);
++            }
++
++            for (int i = 0; i < tiles.Count; i++)
++            {
++                AntsFlow.BaseTile tile = tiles[i];
++                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
++
++                List<AntsFlow.BaseTile> blockages = new List<AntsFlow.BaseTile>();
++
++                for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                 {
+-                    AutoAssignScrewFaction(level);
++                    if (tiles.Any(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]))
++                    {
++                        blockages.Add(tiles.First(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]));
++                    }
+                 }
+ 
+-                AutoAssignScrewFactionMultiPhaseLevel(level);
++                tile.blockages = new List<AntsFlow.BaseTile>();
++                tile.blockages.AddRange(blockages);
++            }
++
++            AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
++            AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
+ 
+-                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
++            return spawnedLevelItem;
++        }
++
++        private void CenterLevel(Transform level)
++        {
++            Vector2 average = Vector2.zero;
+ 
+-                if (isLoopLevel)
++            foreach (Transform child in level.transform)
++            {
++                average += (Vector2)child.position;
++            }
++
++            average /= level.transform.childCount;
++
++            level.transform.position += Vector3.left * average.x;
++            // level.transform.position += Vector3.down * average.y;
++
++            float distance = Mathf.Abs(Camera.main.transform.position.z);
++
++            Vector3 worldPos = Camera.main.ViewportToWorldPoint(
++                new Vector3(0, 0.55f, distance)
++            );
++
++            transform.position = transform.position.ChangeY(worldPos.y);
++        }
++
++        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData, out int numCols, out int numRows)
++        {
++            AntLevelData result = antLevelData;
++
++            Vector3 center = Vector3.zero;
++
++            foreach (AntLevelDataItem tile in antLevelData.antLevelDataItems)
++                center += tile.position;
++
++            center /= antLevelData.antLevelDataItems.Count;
++
++            // find num column
++            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
++            float tolerance = 0.01f;
++
++            numCols = 0;
++            numRows = 0;
++
++            foreach (var tile in antLevelData.antLevelDataItems)
++            {
++                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
+                 {
+-                    RandomizeLevelModelColor(level);
++                    numCols++;
+                 }
+                 else
+                 {
+-                    SaferioTracking.TrackLevelStart(currentLevel.Value);
++                    break;
+                 }
++            }
++
++            numRows = antLevelData.antLevelDataItems.Count / numCols;
++
++            // float baseSpacingX = 0.7605271f;
++            // float baseSpacingY = 0.760527f;
++            // float currentSpacingX = antLevelData.antLevelDataItems[1].position.x - antLevelData.antLevelDataItems[0].position.x;
++            // float currentSpacingY = antLevelData.antLevelDataItems[numCols].position.y - antLevelData.antLevelDataItems[0].position.y;
++
++            // float ratioX = currentSpacingX / baseSpacingX;
++            // float ratioY = currentSpacingY / baseSpacingY;
++
++            // // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
++            // Vector2 tileSpacing = new Vector2(1.5f, 1.5f);
+ 
+-                _nextLevel = nextLevel;
+-                _isLoopLevel = isLoopLevel;
++            // float positionZ;
+ 
+-                _tweens.Add(Tween.Delay(3).OnComplete(() =>
++            // int index = 0;
++
++            // foreach (AntLevelDataItem item in result.antLevelDataItems)
++            // {
++            //     Vector3 offset = item.position - center;
++
++            //     float gridX = offset.x / currentSpacingX * ratioX;
++            //     float gridY = offset.y / currentSpacingY * ratioY;
++
++            //     positionZ = item.position.z;
++
++            //     Vector3 position = center + new Vector3(
++            //         gridX * tileSpacing.x,
++            //         gridY * tileSpacing.y
++            //     );
++
++            //     item.position = position;
++
++            //     AntsFlow.TileManager.Ins.tiles[index].position = position;
++
++            //     index++;
++
++            //     // item.position = CommonUtil.GetVector3Int(item.position);
++            // }
++
++            for (int row = 0; row < numRows; row++)
++            {
++                for (int col = 0; col < numCols; col++)
+                 {
+-                    ShowSuggestion(nextLevel, isLoopLevel);
+-                }));
+-                // SuggestHardMode();
++                    Vector3 position = new Vector3(
++                        -numCols / 2 + col * 1,
++                        (-numRows / 2 + 16) + row * 1,
++                        0f
++                    );
++
++                    int index = col + row * numCols;
+ 
+-                #region EVENT ITEMS
+-                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
++                    result.antLevelDataItems[index].position = position;
+ 
+-                CoinChallengeGameplayUI.Instance.SetNumber();
+-                #endregion
++                    AntsFlow.TileManager.Ins.tiles[index].position = position * 0.5f;
+ 
+-                startLevelCompletedEvent?.Invoke();
++                    Debug.Log($"AntsFlow.TileManager {AntsFlow.TileManager.Ins.tiles[index].position} {tilemapGrid.lossyScale.x}");
++                }
+             }
+ 
+-            void SetIsLoopLevel(bool isLoop)
++            for (int i = 0; i < tilemapGrids.Count; i++)
+             {
+-                isLoopLevel = isLoop;
+-                DebugLogger.LogSimple(message: $"isLoop: {isLoopLevel}", color: Color.red);
++                tilemapGrids[i].localScale = 1.5f * Vector3.one;
++            }
++
++            return result;
++        }
++
++        void FitLevelToScreenArea(Transform level)
++        {
++            // Get level bounds
++            Bounds bounds = GetBoundsFromTiles(level);
++
++            float levelWidth = bounds.size.x;
++            float levelHeight = bounds.size.y;
++
++            // Orthographic camera size
++            float camHeight = Camera.main.orthographicSize * 2f;
++            float camWidth = camHeight * Camera.main.aspect;
++
++            // Available screen area
++            float availableHeight = camHeight * 0.35f;
++            float availableWidth = 0.9f * camWidth;
++
++            float scaleX = level.localScale.x * availableWidth / levelWidth;
++            float scaleY = level.localScale.y * availableHeight / levelHeight;
++
++            float scale = Mathf.Min(scaleX, scaleY);
++
++            level.localScale = Vector3.one * scale;
++        }
++
++        public Bounds GetBoundsFromTiles(Transform level)
++        {
++            if (level.childCount == 0)
++                return new Bounds(level.position, Vector3.zero);
++
++            Vector3 min = level.GetChild(0).position;
++            Vector3 max = min;
++
++            for (int i = 1; i < level.childCount; i++)
++            {
++                Vector3 pos = level.GetChild(i).position;
++
++                min = Vector3.Min(min, pos);
++                max = Vector3.Max(max, pos);
+             }
++
++            Bounds bounds = new Bounds();
++            bounds.SetMinMax(min, max);
++
++            return bounds;
+         }
+ 
+         private async void GoLevel(int level)
+         {
+             endCurrentLevelEvent?.Invoke();
+ 
+-            // DebugLogger.LogSimple();
+             await Task.Delay(500);
+ 
+             if (gameObject.transform.childCount > 0)
+@@ -441,19 +653,16 @@ namespace NamPhuThuy.GamePlay
+ 
+         private void NextLevel()
+         {
+-            DebugLogger.LogSimple();
+             GoLevel(currentLevel.Value + 1);
+         }
+ 
+         private void PrevLevel()
+         {
+-            DebugLogger.LogSimple();
+             GoLevel(currentLevel.Value - 1);
+         }
+ 
+         private void Replay()
+         {
+-            DebugLogger.LogSimple();
+             GamePersistentVariable.isPreventLoadLevelData = true;
+ 
+             GoLevel(currentLevel.Value);
+@@ -466,7 +675,7 @@ namespace NamPhuThuy.GamePlay
+         {
+             string res = levelName;
+ 
+-            if (GamePersistentVariable.specialLevelConfig != null && GamePersistentVariable.specialLevelConfig.isEnable) return res;
++            if (GamePersistentVariable.specialLevelConfig.isEnable) return res;
+             if (levelDataContainer == null || levelDataContainer.LevelsData == null) return res;
+ 
+             LevelMode mode = levelDataContainer.LevelsData[levelId - 1].levelMode;
+@@ -711,11 +920,6 @@ namespace NamPhuThuy.GamePlay
+ 
+             await Task.Delay(500);
+ 
+-            if (this == null)
+-            {
+-                return;
+-            }
+-
+             try
+             {
+                 Vector3 currentPosition = _pivotAdjust.transform.position;
+@@ -1250,5 +1454,4 @@ namespace NamPhuThuy.GamePlay
+         }
+         #endregion
+     }
+-
+-}
+\ No newline at end of file
++}

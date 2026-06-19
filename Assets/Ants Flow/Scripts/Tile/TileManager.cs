@@ -600,8 +600,6 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
-            return;
-
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
             {
                 if (delayedUpdateNavmeshCoroutine != null)

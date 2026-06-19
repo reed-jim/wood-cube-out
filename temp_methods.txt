@@ -1,0 +1,332 @@
+        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform, int numCols, int numRows)
+        {
+            // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+            Vector3 initialScale = tilemapGrid.localScale;
+
+            tilemapGrid.SetParent(levelTransform);
+            // tilemapGrid.localScale = Vector3.one;
+
+            for (int i = 0; i < numRows; i++)
+            {
+                Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+                Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
+                spawnedTileMapGrid.localScale = initialScale;
+
+                for (int j = 0; j < numCols; j++)
+                {
+                    int index = j + i * numCols;
+
+                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+
+                    Tile tile = ScriptableObject.CreateInstance<Tile>();
+                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+
+                    spawnedTileMap.SetTile(cellPos, tile);
+
+                    tilemapGrids.Add(spawnedTileMapGrid);
+
+                    AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
+                    AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+                }
+            }
+
+            // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Color faction = FactionMapper.Ins.indexesOfColors[t.factionIndex];
+
+            //     CommonUtil.AddValueOfDictionary(itemByFaction, faction, t);
+            // }
+
+            // foreach (var t in itemByFaction)
+            // {
+            // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+            // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+            //     for (int i = 0; i < t.Value.Count; i++)
+            //     {
+            //         Vector3Int cellPos = tilemap.WorldToCell(t.Value[i].position);
+
+            //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.Value[i].factionIndex]);
+
+            //         spawnedTileMap.SetTile(cellPos, tile);
+            //     }
+            // }
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Vector3Int cellPos = tilemap.WorldToCell(t.position);
+
+            //     Debug.Log($"row {t.position} {cellPos}");
+
+            //     Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+
+            //     tilemap.SetTile(cellPos, tile);
+            // }
+        }
+
+        // private void FillTileMap(Transform level)
+        // {
+        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+        //     tilemap.transform.SetParent(level);
+
+        //     foreach (var t in tiles)
+        //     {
+        //         Vector3Int cellPos = tilemap.WorldToCell(t.transform.position);
+
+        //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+        //         tile.sprite = t.spriteRenderer.sprite;
+
+        //         tilemap.SetTile(cellPos, tile);
+        //     }
+        // }
+
+        private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
+        {
+            List<Color> poolFaction = FactionMapper.Ins.GetPoolFactionFromPoolFactionIndex(antLevelData.levelItemData.poolFactionIndexes);
+
+            GameObject level = new GameObject();
+
+            level.name = "Level";
+
+            levelTransform = level.transform;
+
+            level.transform.SetParent(transform);
+
+            level.transform.localScale = antLevelData.levelItemData.levelScale;
+
+            AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
+            spawnedLevelItem.poolFaction = poolFaction;
+            spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
+            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
+            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
+            spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
+            spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
+            spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
+            spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
+            spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
+
+            List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
+
+            GameObject tileComponentHolder = new GameObject();
+            tileComponentHolder.name = "tileComponentHolder";
+
+            for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
+            {
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
+                // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
+                AntsFlow.BaseTile tile = tileComponentHolder.AddComponent<AntsFlow.BaseTile>();
+
+                // tile.transform.SetParent(levelTransform);
+
+                // tile.transform.position = antLevelDataItem.position;
+
+                tile.position = antLevelDataItem.position;
+                tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
+                tile.ring = antLevelDataItem.ring;
+                tile.priority = antLevelDataItem.priority;
+
+                tiles.Add(tile);
+            }
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                AntsFlow.BaseTile tile = tiles[i];
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                List<AntsFlow.BaseTile> blockages = new List<AntsFlow.BaseTile>();
+
+                for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                {
+                    if (tiles.Any(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]))
+                    {
+                        blockages.Add(tiles.First(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]));
+                    }
+                }
+
+                tile.blockages = new List<AntsFlow.BaseTile>();
+                tile.blockages.AddRange(blockages);
+            }
+
+            AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
+            AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
+
+            return spawnedLevelItem;
+        }
+
+        private void CenterLevel(Transform level)
+        {
+            Vector2 average = Vector2.zero;
+
+            foreach (Transform child in level.transform)
+            {
+                average += (Vector2)child.position;
+            }
+
+            average /= level.transform.childCount;
+
+            level.transform.position += Vector3.left * average.x;
+            // level.transform.position += Vector3.down * average.y;
+
+            float distance = Mathf.Abs(Camera.main.transform.position.z);
+
+            Vector3 worldPos = Camera.main.ViewportToWorldPoint(
+                new Vector3(0, 0.55f, distance)
+            );
+
+            transform.position = transform.position.ChangeY(worldPos.y);
+        }
+
+        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData, out int numCols, out int numRows)
+        {
+            AntLevelData result = antLevelData;
+
+            Vector3 center = Vector3.zero;
+
+            foreach (AntLevelDataItem tile in antLevelData.antLevelDataItems)
+                center += tile.position;
+
+            center /= antLevelData.antLevelDataItems.Count;
+
+            // find num column
+            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
+            float tolerance = 0.01f;
+
+            numCols = 0;
+            numRows = 0;
+
+            foreach (var tile in antLevelData.antLevelDataItems)
+            {
+                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
+                {
+                    numCols++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            numRows = antLevelData.antLevelDataItems.Count / numCols;
+
+            // float baseSpacingX = 0.7605271f;
+            // float baseSpacingY = 0.760527f;
+            // float currentSpacingX = antLevelData.antLevelDataItems[1].position.x - antLevelData.antLevelDataItems[0].position.x;
+            // float currentSpacingY = antLevelData.antLevelDataItems[numCols].position.y - antLevelData.antLevelDataItems[0].position.y;
+
+            // float ratioX = currentSpacingX / baseSpacingX;
+            // float ratioY = currentSpacingY / baseSpacingY;
+
+            // // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+            // Vector2 tileSpacing = new Vector2(1.5f, 1.5f);
+
+            // float positionZ;
+
+            // int index = 0;
+
+            // foreach (AntLevelDataItem item in result.antLevelDataItems)
+            // {
+            //     Vector3 offset = item.position - center;
+
+            //     float gridX = offset.x / currentSpacingX * ratioX;
+            //     float gridY = offset.y / currentSpacingY * ratioY;
+
+            //     positionZ = item.position.z;
+
+            //     Vector3 position = center + new Vector3(
+            //         gridX * tileSpacing.x,
+            //         gridY * tileSpacing.y
+            //     );
+
+            //     item.position = position;
+
+            //     AntsFlow.TileManager.Ins.tiles[index].position = position;
+
+            //     index++;
+
+            //     // item.position = CommonUtil.GetVector3Int(item.position);
+            // }
+
+            for (int row = 0; row < numRows; row++)
+            {
+                for (int col = 0; col < numCols; col++)
+                {
+                    Vector3 position = new Vector3(
+                        -numCols / 2 + col * 1,
+                        (-numRows / 2 + 16) + row * 1,
+                        0f
+                    );
+
+                    int index = col + row * numCols;
+
+                    result.antLevelDataItems[index].position = position;
+
+                    AntsFlow.TileManager.Ins.tiles[index].position = position * 0.5f;
+
+                    Debug.Log($"AntsFlow.TileManager {AntsFlow.TileManager.Ins.tiles[index].position} {tilemapGrid.lossyScale.x}");
+                }
+            }
+
+            for (int i = 0; i < tilemapGrids.Count; i++)
+            {
+                tilemapGrids[i].localScale = 1.5f * Vector3.one;
+            }
+
+            return result;
+        }
+
+        void FitLevelToScreenArea(Transform level)
+        {
+            // Get level bounds
+            Bounds bounds = GetBoundsFromTiles(level);
+
+            float levelWidth = bounds.size.x;
+            float levelHeight = bounds.size.y;
+
+            // Orthographic camera size
+            float camHeight = Camera.main.orthographicSize * 2f;
+            float camWidth = camHeight * Camera.main.aspect;
+
+            // Available screen area
+            float availableHeight = camHeight * 0.35f;
+            float availableWidth = 0.9f * camWidth;
+
+            float scaleX = level.localScale.x * availableWidth / levelWidth;
+            float scaleY = level.localScale.y * availableHeight / levelHeight;
+
+            float scale = Mathf.Min(scaleX, scaleY);
+
+            level.localScale = Vector3.one * scale;
+        }
+
+        public Bounds GetBoundsFromTiles(Transform level)
+        {
+            if (level.childCount == 0)
+                return new Bounds(level.position, Vector3.zero);
+
+            Vector3 min = level.GetChild(0).position;
+            Vector3 max = min;
+
+            for (int i = 1; i < level.childCount; i++)
+            {
+                Vector3 pos = level.GetChild(i).position;
+
+                min = Vector3.Min(min, pos);
+                max = Vector3.Max(max, pos);
+            }
+
+            Bounds bounds = new Bounds();
+            bounds.SetMinMax(min, max);
+
+            return bounds;
+        }
+

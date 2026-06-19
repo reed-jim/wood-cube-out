@@ -277,7 +277,7 @@ namespace NamPhuThuy.GamePlay
 
                 antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
-                // CenterLevel(levelTransform);
+                CenterLevel(levelTransform);
 
                 FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
@@ -330,9 +330,9 @@ namespace NamPhuThuy.GamePlay
                 {
                     int index = j + i * numCols;
 
-                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+                    Vector3Int cellPos = CommonUtil.GetVector3Int(antLevelData.antLevelDataItems[index].position);
 
-                    Tile tile = ScriptableObject.CreateInstance<Tile>();
+                    UnityEngine.Tilemaps.Tile tile = ScriptableObject.CreateInstance<UnityEngine.Tilemaps.Tile>();
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
                     spawnedTileMap.SetTile(cellPos, tile);
@@ -526,7 +526,7 @@ namespace NamPhuThuy.GamePlay
             average /= level.transform.childCount;
 
             level.transform.position += Vector3.left * average.x;
-            // level.transform.position += Vector3.down * average.y;
+            level.transform.position += Vector3.down * average.y;
 
             float distance = Mathf.Abs(Camera.main.transform.position.z);
 
