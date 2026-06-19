@@ -326,6 +326,9 @@ namespace NamPhuThuy.GamePlay
                     spawnedTileMap.SetTile(cellPos, tile);
 
                     tilemapGrids.Add(spawnedTileMapGrid);
+
+                    AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
+                    AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
                 }
             }
 

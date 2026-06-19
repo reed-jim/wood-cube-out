@@ -7,6 +7,7 @@ using Saferio.Util.SaferioTween;
 using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps;
 
 namespace AntsFlow
 {
@@ -18,6 +19,9 @@ namespace AntsFlow
         public SpriteRenderer outline;
         public BoxCollider2D boxCollider;
         public NavMeshModifierVolume navMeshModifierVolume;
+
+        public Tilemap tilemap;
+        public Vector3Int tilemapPosition;
 
         public Vector3 position;
         public bool isDone;
@@ -134,6 +138,8 @@ namespace AntsFlow
             // {
             //     HapticFeedback.LightFeedback();
             // }
+
+            tilemap.SetTile(tilemapPosition, null);
 
             tileMoveToAntEvent?.Invoke(this);
         }
