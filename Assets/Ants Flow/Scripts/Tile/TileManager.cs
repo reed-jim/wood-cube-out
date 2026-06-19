@@ -37,7 +37,9 @@ namespace AntsFlow
 
         public Tilemap baseTilemap;
         public Tilemap shadowTilemap;
+        public Tilemap tileGlowTilemap;
         public Tilemap[] tilemaps;
+        public Sprite tileGlowSprite;
 
 
         #region Custom Pathfinding
@@ -552,7 +554,7 @@ namespace AntsFlow
             if (validTiles.Count > 0)
             {
                 availableTile = validTiles[0];
-                
+
                 return true;
             }
             else
@@ -663,6 +665,11 @@ namespace AntsFlow
 
             int currentFactionIndex = 0;
 
+            bool isSetTiles = false;
+            float alpha = 1;
+            float deltaAlpha = 0.05f;
+            bool isGlowingUp = false;
+
             while (WaterFlowGameInput.Ins.inputMode == AntsFlowInputMode.SelectTile)
             {
                 KeyValuePair<Color, List<BaseTile>> item = tilesOfFaction.ElementAt(currentFactionIndex);
@@ -673,24 +680,63 @@ namespace AntsFlow
 
                     BaseTile tile = item.Value[i];
 
-                    tile.isAnimating = true;
-
-                    tile.Highlight(onComplete: () =>
+                    if (!isSetTiles)
                     {
-                        tile.isAnimating = false;
+                        Tile tileGlow = ScriptableObject.CreateInstance<Tile>();
+                        tileGlow.sprite = tileGlowSprite;
+                        tileGlowTilemap.SetTile(tile.tilemapPosition, tileGlow);
 
-                        if (index == item.Value.Count - 1)
+                        if (i == item.Value.Count - 1)
                         {
-                            currentFactionIndex++;
+                            isSetTiles = true;
+                        }
+                    }
+                    else
+                    {
+                        tileGlowTilemap.SetColor(tile.tilemapPosition, ColorUtil.WithAlpha(Color.white, alpha));
 
-                            if (currentFactionIndex >= tilesOfFaction.Count)
+                        if (isGlowingUp)
+                        {
+                            if (alpha < 1)
                             {
-                                GroupTiles();
-
-                                currentFactionIndex = 0;
+                                alpha += deltaAlpha;
+                            }
+                            else
+                            {
+                                isGlowingUp = false;
                             }
                         }
-                    });
+                        else
+                        {
+                            if (alpha > 0)
+                            {
+                                alpha -= deltaAlpha;
+                            }
+                            else
+                            {
+                                isGlowingUp = true;
+                            }
+                        }
+                    }
+
+                    // tile.isAnimating = true;
+
+                    // tile.Highlight(onComplete: () =>
+                    // {
+                    //     tile.isAnimating = false;
+
+                    //     if (index == item.Value.Count - 1)
+                    //     {
+                    //         currentFactionIndex++;
+
+                    //         if (currentFactionIndex >= tilesOfFaction.Count)
+                    //         {
+                    //             GroupTiles();
+
+                    //             currentFactionIndex = 0;
+                    //         }
+                    //     }
+                    // });
 
                     // SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
                     // {
@@ -710,7 +756,16 @@ namespace AntsFlow
                     // });
                 }
 
-                yield return waitForSeconds;
+                if (isSetTiles)
+                {
+                    yield return new WaitForSeconds(1f / 30);
+                }
+                else
+                {
+                    yield return waitForSeconds;
+                }
+
+                // yield return waitForSeconds;
             }
 
             void GroupTiles()

@@ -78,7 +78,7 @@ public class BoosterUI : MonoBehaviour
     private void Awake()
     {
         ScrewSelectionInput.breakObjectEvent += DisableBreakObjectMode;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent += ConfirmClearOneColor;
+        WaterFlowGameInput.useClearOneColorBoosterEvent += ConfirmClearOneColor;
         LevelLoader.startLevelEvent += Reset;
         BuyBoosterPopup.useBoosterEvent += UseBooster;
         BoosterTutorial.useTutorialBoosterEvent += UseBooster;
@@ -114,7 +114,7 @@ public class BoosterUI : MonoBehaviour
     void OnDestroy()
     {
         ScrewSelectionInput.breakObjectEvent -= DisableBreakObjectMode;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
+        WaterFlowGameInput.useClearOneColorBoosterEvent -= ConfirmClearOneColor;
         LevelLoader.startLevelEvent -= Reset;
         BuyBoosterPopup.useBoosterEvent -= UseBooster;
         BoosterTutorial.useTutorialBoosterEvent -= UseBooster;

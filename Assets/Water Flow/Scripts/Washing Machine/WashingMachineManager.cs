@@ -40,7 +40,7 @@ namespace AntsFlow
             base.MoreActionOnAwake();
 
             RevivePopup.reviveEvent += Revive;
-            BaseTile.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
+            WaterFlowGameInput.useClearOneColorBoosterEvent += UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;
@@ -50,7 +50,7 @@ namespace AntsFlow
         void OnDestroy()
         {
             RevivePopup.reviveEvent -= Revive;
-            BaseTile.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
+            WaterFlowGameInput.useClearOneColorBoosterEvent -= UseBoosterClearOneColor;
             WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
             SettingPopup.replayLevelEvent -= OnLevelReplayed;
             LosePopup.replayLevelEvent += OnLevelReplayed;

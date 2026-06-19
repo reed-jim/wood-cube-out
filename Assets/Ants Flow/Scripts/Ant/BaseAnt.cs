@@ -395,7 +395,7 @@ namespace AntsFlow
                     direction = destination - (Vector2)transform.position;
                     // Rotate(direction);
 
-                    // tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear);
+                    tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear)
                     // .OnUpdate(target: transform, (target, tween) =>
                     // {
                     //     if (isWiggleLeft)
@@ -427,15 +427,15 @@ namespace AntsFlow
                     //         }
                     //     }
                     // })
-                    // .OnComplete(() =>
-                    // {
-                    //     isMoving = false;
-                    // }));
-
-                    CommonUtil.MoveInCurve(transform, transform.position, destination, 1, duration, onComplete: () =>
+                    .OnComplete(() =>
                     {
                         isMoving = false;
-                    });
+                    }));
+
+                    // CommonUtil.MoveInCurve(transform, transform.position, destination, 1, duration, onComplete: () =>
+                    // {
+                    //     isMoving = false;
+                    // });
 
                     path.RemoveAt(0);
 

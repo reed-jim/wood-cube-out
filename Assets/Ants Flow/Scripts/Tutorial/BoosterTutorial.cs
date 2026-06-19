@@ -36,7 +36,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     {
         LevelLoader.startLevelEvent += OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent += OnAntBoxSelected;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent += OnClearOneColorBoosterUsed;
+        WaterFlowGameInput.useClearOneColorBoosterEvent += OnClearOneColorBoosterUsed;
 
         for (int i = 0; i < useBoosterButtons.Length; i++)
         {
@@ -48,7 +48,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     {
         LevelLoader.startLevelEvent -= OnLevelStarted;
         WashingMachineItem.selectWashingMachineEvent -= OnAntBoxSelected;
-        AntsFlow.BaseTile.useClearOneColorBoosterEvent -= OnClearOneColorBoosterUsed;
+        WaterFlowGameInput.useClearOneColorBoosterEvent -= OnClearOneColorBoosterUsed;
     }
 
     private IEnumerator RunTutorial()
@@ -121,7 +121,7 @@ public class BoosterTutorial : Singleton<BoosterTutorial>
     private IEnumerator RunClearOneColorBoosterTutorial()
     {
         yield return new WaitForSeconds(1f / 30);
-        
+
         // WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
 
         // int maxStep = 3;
