@@ -13,6 +13,7 @@ using UnityEditor;
 #endif
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Tilemaps;
 
 namespace AntsFlow
 {
@@ -31,10 +32,12 @@ namespace AntsFlow
     public class TileManager : Singleton<TileManager>
     {
         [SerializeField] private NavMeshSurface navMeshSurface;
-        [SerializeField] private AstarPath astarPath;
 
         [SerializeField] private TMP_Text tileCountText;
 
+        public Tilemap baseTilemap;
+        public Tilemap shadowTilemap;
+        public Tilemap[] tilemaps;
 
 
         #region Custom Pathfinding

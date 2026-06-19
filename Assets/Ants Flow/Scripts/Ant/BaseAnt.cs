@@ -141,11 +141,13 @@ namespace AntsFlow
 
                 Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
+                // transform.rotation = Quaternion.Lerp(
+                //     transform.rotation,
+                //     targetRotation,
+                //     rotationSpeed * Time.deltaTime
+                // );
+
+                transform.rotation = targetRotation;
             }
 
             return;
@@ -403,7 +405,7 @@ namespace AntsFlow
                     direction = destination - (Vector2)transform.position;
                     // Rotate(direction);
 
-                    tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear)
+                    // tweens.Add(Tween.Position(transform, destination, duration: duration, ease: Ease.Linear);
                     // .OnUpdate(target: transform, (target, tween) =>
                     // {
                     //     if (isWiggleLeft)
@@ -435,10 +437,15 @@ namespace AntsFlow
                     //         }
                     //     }
                     // })
-                    .OnComplete(() =>
+                    // .OnComplete(() =>
+                    // {
+                    //     isMoving = false;
+                    // }));
+
+                    CommonUtil.MoveInCurve(transform, transform.position, destination, 1, duration, onComplete: () =>
                     {
                         isMoving = false;
-                    }));
+                    });
 
                     path.RemoveAt(0);
 
