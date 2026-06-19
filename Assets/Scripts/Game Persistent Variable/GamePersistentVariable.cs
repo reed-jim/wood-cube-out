@@ -35,6 +35,8 @@ public static class GamePersistentVariable
     public static RaycastHit lastScrewSelectedSurfaceHit;
     public static bool isDisableLoopLevel;
     public static LevelMode currentLevelMode;
+    public static float startLevelTime;
+    public static int levelRetryTime;
     #endregion
 
     #region LEVEL DIFFICULTY
@@ -194,5 +196,7 @@ public static class GamePersistentVariable
     public static bool isPreventSelectAntBox;
     public static AntsFlow.LevelItem levelItem;
     public static int numActiveAnt;
+    public static int numColumn;
+    public static int numRow;
     #endregion
 }

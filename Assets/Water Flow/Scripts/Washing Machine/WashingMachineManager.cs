@@ -81,13 +81,10 @@ namespace AntsFlow
             difficultyLevel = levelItem.difficulty;
             numAntBoxSpawned = 0;
 
-            Debug.Log("[FLOW] WMM: GetComponentsFromAllChildren<BaseTile>");
-            TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
-            Debug.Log($"[FLOW] WMM: tiles count = {TileManager.Ins.tiles.Count}");
+            // KHÔNG override TileManager.Ins.tiles ở đây — sẽ mất data tiles đã set trước đó
+            // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
-            Debug.Log("[FLOW] WMM: UpdateTileCount DONE");
             TileManager.Ins.CalculateLevelCenter();
-            Debug.Log("[FLOW] WMM: CalculateLevelCenter DONE");
             TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             Debug.Log("[FLOW] WMM: SpecialElementManager.Setup START");
@@ -181,7 +178,6 @@ namespace AntsFlow
         public List<WashingMachineItem> SpawnFirstWashingMachines(int numStartAntBoxes)
         {
             poolFaction = new List<Color>();
-
             poolFaction.AddRange(levelItem.poolFaction);
 
             totalTile = poolFaction.Count;
@@ -387,54 +383,54 @@ namespace AntsFlow
 
         public void UseMagicBooster()
         {
-            List<BaseTile> randomPickedTiles = new List<BaseTile>();
+            // List<BaseTile> randomPickedTiles = new List<BaseTile>();
 
-            Dictionary<Color, int> numTileWithNoAntPerFaction = GetNumTileWithNoAntPerFaction();
+            // Dictionary<Color, int> numTileWithNoAntPerFaction = GetNumTileWithNoAntPerFaction();
 
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
-            {
-                BaseTile tile = TileManager.Ins.tiles[i];
+            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // {
+            //     BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (tile.gameObject.activeInHierarchy && !tile.isAntApproaching)
-                {
-                    randomPickedTiles.Add(tile);
-                }
-            }
+            //     if (tile.gameObject.activeInHierarchy && !tile.isAntApproaching)
+            //     {
+            //         randomPickedTiles.Add(tile);
+            //     }
+            // }
 
-            randomPickedTiles.Shuffle();
-            randomPickedTiles = randomPickedTiles.Take(10).ToList();
+            // randomPickedTiles.Shuffle();
+            // randomPickedTiles = randomPickedTiles.Take(10).ToList();
 
-            for (int i = 0; i < randomPickedTiles.Count; i++)
-            {
-                BaseTile tile = randomPickedTiles[i];
+            // for (int i = 0; i < randomPickedTiles.Count; i++)
+            // {
+            //     BaseTile tile = randomPickedTiles[i];
 
-                for (int j = 0; j < washingMachineStartSlots.Count; j++)
-                {
-                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
-                    WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+            //     for (int j = 0; j < washingMachineStartSlots.Count; j++)
+            //     {
+            //         WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[j];
+            //         WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
 
-                    if (washingMachine != null)
-                    {
-                        if (washingMachine.faction == tile.Faction && washingMachine.number > 0)
-                        {
-                            Tween.Position(tile.transform, washingMachine.transform.position, duration: 0.3f)
-                            .OnComplete(() =>
-                            {
-                                ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
+            //         if (washingMachine != null)
+            //         {
+            //             if (washingMachine.faction == tile.Faction && washingMachine.number > 0)
+            //             {
+            //                 Tween.Position(tile.transform, washingMachine.transform.position, duration: 0.3f)
+            //                 .OnComplete(() =>
+            //                 {
+            //                     ParticleSystem antDissappearFx = ObjectPoolingEverything.GetFromPool<ParticleSystem>(GameConstants.antDissapearFxPrefab);
 
-                                antDissappearFx.transform.position = tile.transform.position;
-                                antDissappearFx.Play();
+            //                     antDissappearFx.transform.position = tile.transform.position;
+            //                     antDissappearFx.Play();
 
-                                tile.gameObject.SetActive(false);
-                            });
+            //                     tile.gameObject.SetActive(false);
+            //                 });
 
-                            tile.isAntApproaching = true;
+            //                 tile.isAntApproaching = true;
 
-                            washingMachine.ReceiveTile();
-                        }
-                    }
-                }
-            }
+            //                 washingMachine.ReceiveTile();
+            //             }
+            //         }
+            //     }
+            // }
         }
 
         public void UseBoosterShuffle()
@@ -496,7 +492,7 @@ namespace AntsFlow
         public void UseBoosterClearOneColor(Color selectedFaction)
         {
             List<BaseTile> tilesToClear = TileManager.Ins.tiles
-                .Where(tile => tile.gameObject.activeInHierarchy && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
+                .Where(tile => !tile.isDone && tile.Faction == selectedFaction && !tile.isAntApproaching).ToList();
 
             // Remove blockages
             for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
@@ -515,36 +511,36 @@ namespace AntsFlow
                 }
             }
 
-            for (int i = 0; i < tilesToClear.Count; i++)
-            {
-                int index = i;
+            // for (int i = 0; i < tilesToClear.Count; i++)
+            // {
+            //     int index = i;
 
-                BaseTile tile = tilesToClear[i];
+            //     BaseTile tile = tilesToClear[i];
 
-                Vector3 initialPosition = tile.transform.position;
+            //     Vector3 initialPosition = tile.transform.position;
 
-                tile.isAntApproaching = true;
+            //     tile.isAntApproaching = true;
 
-                Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
-                Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
-                .OnComplete(() =>
-                {
-                    Tween.ScaleY(tile.transform, 1, duration: 0.15f);
-                    Tween.Position(tile.transform, initialPosition, duration: 0.15f)
-                    .OnComplete(() =>
-                    {
-                        SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
-                        {
-                            tile.Complete();
-                        });
+            //     Tween.ScaleY(tile.transform, 1.6f, duration: 0.3f);
+            //     Tween.PositionY(tile.transform, tile.transform.position.y + 1.6f, duration: 0.3f)
+            //     .OnComplete(() =>
+            //     {
+            //         Tween.ScaleY(tile.transform, 1, duration: 0.15f);
+            //         Tween.Position(tile.transform, initialPosition, duration: 0.15f)
+            //         .OnComplete(() =>
+            //         {
+            //             SaferioTween.ScaleDownWithPunch(tile.transform, onCompleteAction: () =>
+            //             {
+            //                 tile.Complete();
+            //             });
 
-                        if (index == tilesToClear.Count - 1)
-                        {
-                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-                        }
-                    });
-                });
-            }
+            //             if (index == tilesToClear.Count - 1)
+            //             {
+            //                 SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+            //             }
+            //         });
+            //     });
+            // }
 
             AdjustAntBoxAfterClearingOneColor(tilesToClear);
         }
@@ -849,12 +845,12 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            // Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
 
-            // foreach (var item in numSpawnPerFactionOrderByDifficulty)
-            // {
-            //     Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
-            // }
+            foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            {
+                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+            }
 
             int maxValidIndex = 0;
 
@@ -912,7 +908,7 @@ namespace AntsFlow
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                if (tile.isDone || tile.isAntApproaching)
                 {
                     continue;
                 }
@@ -934,15 +930,25 @@ namespace AntsFlow
         {
             Dictionary<Color, int> result = GetRemaniningTilePerFaction();
 
-            if (isIncludeStartSlot)
+            for (int i = 0; i < washingMachineStartSlots.Count; i++)
             {
-                for (int i = 0; i < washingMachineStartSlots.Count; i++)
-                {
-                    WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
+                WashingMachineStartSlot washingMachineStartSlot = washingMachineStartSlots[i];
 
-                    if (washingMachineStartSlot.washingMachine != null)
+                if (washingMachineStartSlot.washingMachine != null)
+                {
+                    if (isIncludeStartSlot)
                     {
                         CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                    }
+                    else
+                    {
+                        WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
+
+                        if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
+                        {
+                            Debug.Log($"washingMachine {washingMachine} {isIncludeStartSlot}");
+                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
+                        }
                     }
                 }
             }
@@ -960,25 +966,6 @@ namespace AntsFlow
             return result;
         }
 
-        public Dictionary<Color, int> GetNumBlockagesPerFaction()
-        {
-            Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
-
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
-            {
-                BaseTile tile = TileManager.Ins.tiles[i];
-
-                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
-                {
-                    continue;
-                }
-
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count);
-            }
-
-            return sortedPoolFaction;
-        }
-
         public Dictionary<Color, int> GetNumNotBlockedTilePerFaction()
         {
             Dictionary<Color, int> sortedPoolFaction = new Dictionary<Color, int>();
@@ -987,12 +974,12 @@ namespace AntsFlow
             {
                 BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (!tile.gameObject.activeInHierarchy || tile.isAntApproaching)
+                if (tile.isDone || tile.isAntApproaching)
                 {
                     continue;
                 }
 
-                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 1 : 0);
+                CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.IsBlocked() ? 0 : 1);
                 // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.blockages.Count < 4 ? 50 : 0);
                 // CommonUtil.SumValueOfDictionary(sortedPoolFaction, tile.Faction, tile.ring);
             }

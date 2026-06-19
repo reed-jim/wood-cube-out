@@ -278,8 +278,8 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
 
                         if (productData.IsRemoveAd)
                         {
-                             //GameController.Instance.admobAds.Hi();
-                             GameController.Instance.admobAds.DestroyBanner();
+                            //GameController.Instance.admobAds.Hi();
+                            GameController.Instance.admobAds.DestroyBanner();
 
                             UserData.IsRemoveAds = true;
                         }
@@ -295,8 +295,17 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             unlockScrewBoxesPurchasedCompletedEvent?.Invoke();
                         }
 
+                        // // Simulate DELAY on iOS    
+                        // Tween.Delay(3).OnComplete(() =>
+                        // {
+                        //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
+                        // });
+
+                        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
+
                         SaferioTracking.TrackIAPEvent(productData.ProductId);
                         AnalyticsController.AppsFlyerPurchaseEvent(e.purchasedProduct);
+
                         try
                         {
                             new FInAppLog(e.purchasedProduct.definition.id, e.purchasedProduct.metadata.localizedPrice, e.purchasedProduct.metadata.isoCurrencyCode, "shop", e.purchasedProduct.transactionID, "");
@@ -306,20 +315,11 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             Debug.LogError(f.Message);
                         }
 
-                        // // Simulate DELAY on iOS    
-                        // Tween.Delay(3).OnComplete(() =>
-                        // {
-                        //     showResourcesEarnPopupEvent?.Invoke(productData.CoinQuantity, boosterQuantites, productData.IsRemoveAd);
-                        // });
-
-                        showResourcesEarnPopupEvent?.Invoke(coinQuantity, boosterQuantites, productData.IsRemoveAd);
-
                         break;
                     }
                 }
             }
         }
-
 
         if (GamePersistentVariable.IAPAddition > 0)
         {

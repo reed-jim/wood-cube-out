@@ -119,10 +119,10 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
     public async void CollectItem
     (
-        ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, int poolSize, float itemSizeX
+        ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, float itemSizeX
     )
     {
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < _rewards.Length; i++)
         {
             _rewards[i].gameObject.SetActive(true);
 
@@ -131,7 +131,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             UIUtil.SetSizeKeepRatioY(_rewards[i], itemSizeX);
 
-            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
+            // _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
+            _rewards[i].localPosition = Vector3.zero;
             _rewards[i].localScale = Vector3.zero;
 
             AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
@@ -154,7 +155,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         isCompleted = false;
 
-        for (int i = 0; i < poolSize; i++)
+        for (int i = 0; i < _rewards.Length; i++)
         {
             int index = i;
             float duration;
@@ -195,7 +196,9 @@ public class RewardCollectingUI : SaferioTweenBehaviour
                         }
                     }
 
-                    _rewards[index].gameObject.SetActive(false);
+                    _rewards[index].GetComponent<RotatingCoin>().PlayFX();
+
+                    // _rewards[index].gameObject.SetActive(false);
 
                     if (i % 8 == 0)
                     {

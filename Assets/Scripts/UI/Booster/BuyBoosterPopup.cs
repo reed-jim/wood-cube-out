@@ -1,4 +1,6 @@
 using System;
+using Falcon.FalconAnalytics.Scripts.Enum;
+using Falcon.FalconAnalytics.Scripts.Models.Messages.PreDefines;
 using Lean.Localization;
 using PrimeTween;
 using TMPro;
@@ -156,6 +158,8 @@ public class BuyBoosterPopup : BasePopup
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 3, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
+
+                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
             }
             else if (_boosterType == BoosterType.UnlockScrewBox)
             {
@@ -190,6 +194,8 @@ public class BuyBoosterPopup : BasePopup
 
                 SaferioTracking.TrackResourceSource(
                     currentLevel.Value, _boosterType.ToString(), 1, userResourcesObserver.UserResources.BoosterQuantities[boosterIndex], "buy_with_coin");
+
+                new FResourceLog(FlowType.Source, _boosterType.ToString(), _boosterType.ToString(), "buy_with_coin", 3, currentLevel.Value);
             }
 
             userResourcesObserver.ChangeCoin(-boosterDataObserver.BoosterCosts[boosterIndex]);
@@ -203,6 +209,8 @@ public class BuyBoosterPopup : BasePopup
 
                 // useBoosterEvent?.Invoke(_boosterType);
             });
+
+            new FResourceLog(FlowType.Sink, "Coin", "Coin", $"Buy_Booster_{_boosterType}", boosterDataObserver.BoosterCosts[boosterIndex], currentLevel.Value);
         }
         else
         {

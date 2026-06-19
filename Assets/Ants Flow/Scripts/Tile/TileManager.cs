@@ -8,7 +8,9 @@ using PrimeTween;
 using Saferio.Util.SaferioTween;
 using TMPro;
 using Unity.AI.Navigation;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -86,10 +88,10 @@ namespace AntsFlow
         #region Grid
         public void BuildMap(List<BaseTile> tiles)
         {
-            float yMin = tiles.Min(tile => tile.transform.position.y);
-            float yMax = tiles.Max(tile => tile.transform.position.y);
-            float xMin = tiles.Min(tile => tile.transform.position.x);
-            float xMax = tiles.Max(tile => tile.transform.position.x);
+            float yMin = tiles.Min(tile => tile.position.y);
+            float yMax = tiles.Max(tile => tile.position.y);
+            float xMin = tiles.Min(tile => tile.position.x);
+            float xMax = tiles.Max(tile => tile.position.x);
 
             nodes = new List<Node>();
 
@@ -98,7 +100,7 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 Node node = new Node();
-                node.initialPosition = tile.transform.position;
+                node.initialPosition = tile.position;
                 node.tile = tile;
 
                 nodes.Add(node);
@@ -135,6 +137,7 @@ namespace AntsFlow
                 Node nodeFromTile = nodes[i];
 
                 float tileSize = nodeFromTile.tile.worldSize;
+                tileSize = 1;
 
                 if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
                 {
@@ -345,6 +348,7 @@ namespace AntsFlow
         // }
 
         #region BFS
+#if UNITY_EDITOR
         void OnDrawGizmosSelected()
         {
             foreach (var node in nodes)
@@ -353,28 +357,28 @@ namespace AntsFlow
                 {
                     Gizmos.color = Color.green;
 
-                    Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    Gizmos.DrawSphere(node.initialPosition, 0.15f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                     // DrawConnectors(node);
                 }
                 else
                 {
-                    if (node.tile.isAntApproaching || !node.tile.gameObject.activeInHierarchy)
+                    if (node.tile.isAntApproaching || node.tile.isDone)
                     {
                         Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                        Gizmos.DrawSphere(node.initialPosition, 0.15f);
                         Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                         // DrawConnectors(node);
                     }
-                    else
-                    {
-                        Gizmos.color = Color.red;
+                    // else
+                    // {
+                    //     Gizmos.color = Color.red;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
-                    }
+                    //     Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    // }
                 }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
@@ -426,12 +430,13 @@ namespace AntsFlow
                 }
             }
         }
+#endif
 
-        public List<Node> FindPath(BaseTile target)
+        public List<Node> FindPath(BaseTile target, Vector3 currentPosition)
         {
             Node start = bottomLeftMostNode;
 
-            if (target.transform.position.x > 0)
+            if (currentPosition.x > 0)
             {
                 start = bottomRightMostNode;
             }
@@ -471,7 +476,7 @@ namespace AntsFlow
                     {
                         if (
                             !neighbor.tile.isAntApproaching &&
-                            neighbor.tile.gameObject.activeInHierarchy
+                            !neighbor.tile.isDone
                         )
                         {
                             continue;
@@ -515,21 +520,7 @@ namespace AntsFlow
         #endregion
         #endregion
 
-        public void CalculateLevelCenter()
-        {
-            levelCenter = Vector3.zero;
-
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
-
-                levelCenter += (Vector2)tile.transform.position;
-            }
-
-            levelCenter /= tiles.Count;
-        }
-
-        public BaseTile GetAvailableTile(Color faction)
+        public bool GetAvailableTile(Color faction, out BaseTile availableTile)
         {
             // bool isAvailable = tiles.Any(
             //     i => i.gameObject.activeInHierarchy &&
@@ -545,8 +536,8 @@ namespace AntsFlow
             {
                 BaseTile tile = tiles[i];
 
-                if (tile.gameObject.activeInHierarchy &&
-                    tile.blockages.Count < 4 &&
+                if (!tile.isDone &&
+                    !tile.IsBlocked() &&
                     tile.Faction == faction &&
                     !tile.isAntApproaching &&
                     !tile.isLocked
@@ -557,31 +548,18 @@ namespace AntsFlow
             }
 
             validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
-            // validTiles = SortFrom9OClockCounterClockwise(validTiles, levelCenter);
-
-            // validTiles = validTiles
-            //     .OrderBy(p =>
-            //     {
-            //         Vector2 dir = ((Vector2)p.transform.position - levelCenter).normalized;
-
-            //         // Standard atan2 starts at +X (3 o'clock)
-            //         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-            //         // Shift so 9 o'clock becomes 0°
-            //         angle = (angle - 180f + 360f) % 360f;
-            //     }).ToList();
 
             if (validTiles.Count > 0)
             {
-                // BaseTile availableTile =
-                //     tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching && !i.isLocked);
-
-                // return availableTile;
-                return validTiles[0];
+                availableTile = validTiles[0];
+                
+                return true;
             }
             else
             {
-                return null;
+                availableTile = null;
+
+                return false;
             }
         }
 
@@ -589,21 +567,21 @@ namespace AntsFlow
         {
             List<BaseTile> validTiles = new List<BaseTile>();
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     BaseTile tile = tiles[i];
 
-                if (tile.gameObject.activeInHierarchy &&
-                    tile.Faction == faction &&
-                    !tile.isAntApproaching &&
-                    !tile.isLocked
-                )
-                {
-                    validTiles.Add(tile);
-                }
-            }
+            //     if (tile.gameObject.activeInHierarchy &&
+            //         tile.Faction == faction &&
+            //         !tile.isAntApproaching &&
+            //         !tile.isLocked
+            //     )
+            //     {
+            //         validTiles.Add(tile);
+            //     }
+            // }
 
-            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
+            // validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
 
             return validTiles;
         }
@@ -617,6 +595,11 @@ namespace AntsFlow
 
         public void UpdateNavMesh(BaseTile tile)
         {
+            UpdateNavMesh();
+        }
+
+        public void UpdateNavMesh()
+        {
             return;
 
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
@@ -628,25 +611,6 @@ namespace AntsFlow
 
                 delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
 
-                return;
-            }
-
-            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
-
-            isUpdatingNavMesh = true;
-
-            Tween.Delay(1).OnComplete(() =>
-            {
-                isUpdatingNavMesh = false;
-            });
-        }
-
-        public void UpdateNavMesh()
-        {
-            return;
-
-            if (isUpdatingNavMesh)
-            {
                 return;
             }
 
@@ -669,14 +633,14 @@ namespace AntsFlow
 
         public void UpdateTileCount()
         {
-            int tileLeft = tiles.Count(item => item.gameObject.activeInHierarchy);
+            int tileLeft = tiles.Count(item => !item.isDone);
 
             tileCountText.text = $"{tileLeft}/{tiles.Count()}";
         }
 
         private void CheckWinLevel()
         {
-            bool isWon = !tiles.Any(tile => tile.gameObject.activeInHierarchy);
+            bool isWon = !tiles.Any(tile => !tile.isDone);
 
             if (isWon)
             {
@@ -788,11 +752,11 @@ namespace AntsFlow
 
         public void AssignTilesForGrids()
         {
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
-                gridNode.tile = tiles[i];
-            }
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
+            //     gridNode.tile = tiles[i];
+            // }
         }
 
         public GridNode GetGridNode(Vector3 position)

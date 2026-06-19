@@ -262,5 +262,7 @@ public static class GameConstants
     public static string hiddenAntBox = "hiddenAntBox";
     public static string freezedAntBox = "freezedAntBox";
     public static string tileRemaining = "tileRemaining";
+    public static string fakeTile = "fakeTile";
+    public static string tileMap = "tileMap";
     #endregion
 }

@@ -3,6 +3,8 @@ using static GameEnum;
 using System.Collections.Generic;
 using System.Linq;
 using System;
+using System.IO;
+
 
 
 
@@ -18,6 +20,8 @@ namespace AntsFlow
         public BaseTile tilePrefab;
         public Sprite picture;
 
+        public int numColumn;
+        public int numRow;
         public List<Color> poolFaction;
         public bool isTutorialLevel;
         public bool isUseManualFactionSetupForFirstAntBoxes;
@@ -32,6 +36,106 @@ namespace AntsFlow
         public Vector3 spawnScale = 0.6f * Vector3.one;
 
         public List<Color> factions;
+
+        public void FindTileBlockages()
+        {
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(transform);
+
+            // for (int i = 0; i < tiles.Length; i++)
+            // {
+            //     BaseTile tile = tiles[i];
+
+            //     tile.blockages = new List<BaseTile>();
+
+            //     BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
+
+            //     FindBlockage(tile, boxCollider, tile.transform.up);
+            //     FindBlockage(tile, boxCollider, tile.transform.right);
+            //     FindBlockage(tile, boxCollider, -tile.transform.up);
+            //     FindBlockage(tile, boxCollider, -tile.transform.right);
+            // }
+
+#if UNITY_EDITOR
+            EditorUtility.SetDirty(transform);
+#endif
+
+            void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
+            {
+                RaycastHit2D[] hits = new RaycastHit2D[1];
+
+                collider.Raycast(direction, hits);
+
+                if (hits.Length > 0 && hits[0].collider != null)
+                {
+                    BaseTile blockage = hits[0].collider.GetComponent<BaseTile>();
+
+                    if (blockage != null)
+                    {
+                        tile.blockages.Add(blockage);
+                    }
+                }
+            }
+        }
+
+        public void ConvertToJson()
+        {
+// #if UNITY_EDITOR
+//             FactionMapper factionMapper =
+//                 AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+//             List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(transform);
+
+//             AntLevelData antLevelData = new AntLevelData();
+
+//             antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+
+//             for (int i = 0; i < tiles.Count; i++)
+//             {
+//                 BaseTile tile = tiles[i];
+
+//                 AntLevelDataItem dataItem = new AntLevelDataItem();
+//                 dataItem.position = tile.transform.position;
+//                 dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+
+//                 dataItem.blockageIndexes = new List<int>();
+
+//                 if (tile.blockages != null)
+//                 {
+//                     for (int j = 0; j < tile.blockages.Count; j++)
+//                     {
+//                         dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+//                     }
+//                 }
+
+//                 antLevelData.antLevelDataItems.Add(dataItem);
+//             }
+
+//             List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(poolFaction); ;
+
+//             antLevelData.levelItemData = new LevelItemData()
+//             {
+//                 levelScale = transform.localScale,
+//                 poolFactionIndexes = poolFactionIndexes,
+//                 isTutorialLevel = isTutorialLevel,
+//                 isUseManualFactionSetupForFirstAntBoxes = isUseManualFactionSetupForFirstAntBoxes,
+//                 levelFactionConfig = levelFactionConfig,
+//                 difficulty = difficulty,
+//                 initialDifficulty = initialDifficulty,
+//                 overrideInitialDifficulty = overrideInitialDifficulty,
+//                 numStartAntBoxes = numStartAntBoxes,
+//                 specialElementConfig = specialElementConfig
+//             };
+
+//             // Use level name as file name
+//             string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{name}.json");
+
+//             // Serialize and save
+//             string json = JsonUtility.ToJson(antLevelData, false);
+//             File.WriteAllText(filePath, json);
+
+//             AssetDatabase.Refresh();
+// #endif
+        }
     }
 
 #if UNITY_EDITOR
@@ -64,7 +168,7 @@ namespace AntsFlow
             // startX = EditorGUILayout.IntField("StartX", startX);
             // startY = EditorGUILayout.IntField("StartY", startY);
             // size = EditorGUILayout.IntField("Size", size);
-            // tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
+            tileSpacing = EditorGUILayout.Vector2Field("Tile Spacing", tileSpacing);
             numTileX = EditorGUILayout.IntField("numTileX", numTileX);
             numTileY = EditorGUILayout.IntField("numTileY", numTileY);
             // colorGroupThreshold = EditorGUILayout.FloatField("colorGroupThreshold", colorGroupThreshold);
@@ -90,6 +194,11 @@ namespace AntsFlow
                 GenerateLevel(levelItem);
             }
 
+            if (GUILayout.Button("Convert to JSON"))
+            {
+                levelItem.ConvertToJson();
+            }
+
             // if (GUILayout.Button("Step 1: ReadLevel"))
             // {
             //     ReadLevel(levelItem);
@@ -110,10 +219,10 @@ namespace AntsFlow
             //     AssignLevelPriority(levelItem);
             // }
 
-            // if (GUILayout.Button("Step 5: Find Tile Blockages"))
-            // {
-            //     FindTileBlockages(levelItem);
-            // }
+            if (GUILayout.Button("Step 5: Find Tile Blockages"))
+            {
+                levelItem.FindTileBlockages();
+            }
 
             // if (GUILayout.Button("Step 6: Get Pool Faction"))
             // {
@@ -125,10 +234,10 @@ namespace AntsFlow
                 CenterOnX(levelItem);
             }
 
-            // if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
-            // {
-            //     MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
-            // }
+            if (GUILayout.Button("Step 8: MoveTilesCloserTogether"))
+            {
+                MoveTilesCloserTogether(levelItem, moveTilesCloserFactor);
+            }
 
             // GUILayout.Label("Preview Level", EditorStyles.boldLabel);
 
@@ -147,12 +256,14 @@ namespace AntsFlow
 
         private void GetPoolFaction(LevelItem levelItem)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(levelItem.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(levelItem.transform);
 
-            levelItem.poolFaction = tiles.Select(item => item.Faction).ToList();
+            // levelItem.poolFaction = tiles.Select(item => item.Faction).ToList();
 
-            EditorUtility.SetDirty(levelItem);
+            // EditorUtility.SetDirty(levelItem);
         }
+
+
 
         void SpawnPixelArt(LevelItem level)
         {
@@ -178,31 +289,31 @@ namespace AntsFlow
 
             int index = 0;
 
-            for (int y = startY; y < startY + size; y++)
-            {
-                for (int x = startX; x < startX + size; x++)
-                {
-                    Color pixelColor = pixels[y * width + x];
+            // for (int y = startY; y < startY + size; y++)
+            // {
+            //     for (int x = startX; x < startX + size; x++)
+            //     {
+            //         Color pixelColor = pixels[y * width + x];
 
-                    // Skip transparent pixels if enabled
-                    if (pixelColor.a < 1)
-                        continue;
+            //         // Skip transparent pixels if enabled
+            //         if (pixelColor.a < 1)
+            //             continue;
 
-                    // Create tile
-                    Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing.x, (y - startY) * tileSpacing.y, 0.01f * y);
+            //         // Create tile
+            //         Vector3 spawnPos = new Vector3(-8 + (x - startX) * tileSpacing.x, (y - startY) * tileSpacing.y, 0.01f * y);
 
-                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-                        level.tilePrefab,
-                        level.transform
-                    );
-                    tile.name = $"Tile {index}";
-                    tile.transform.position = spawnPos;
+            //         BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+            //             level.tilePrefab,
+            //             level.transform
+            //         );
+            //         tile.name = $"Tile {index}";
+            //         tile.transform.position = spawnPos;
 
-                    tile.spriteRenderer.color = pixelColor;
+            //         tile.spriteRenderer.color = pixelColor;
 
-                    index++;
-                }
-            }
+            //         index++;
+            //     }
+            // }
 
             level.transform.position = level.spawnPosition;
             level.transform.localScale = level.spawnScale;
@@ -277,16 +388,16 @@ namespace AntsFlow
                     // Create tile
                     Vector3 spawnPos = new Vector3(pixelX / pixelStepX * tileSpacing.x, pixelY / pixelStepY * tileSpacing.y, 0.01f * y);
 
-                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-                        level.tilePrefab,
-                        level.transform
-                    );
-                    tile.name = $"Tile {index}";
-                    tile.transform.position = spawnPos;
+                    // BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+                    //     level.tilePrefab,
+                    //     level.transform
+                    // );
+                    // tile.name = $"Tile {index}";
+                    // tile.transform.position = spawnPos;
 
-                    tile.spriteRenderer.color = pixelColor;
+                    // tile.spriteRenderer.color = pixelColor;
 
-                    index++;
+                    // index++;
                 }
             }
 
@@ -298,23 +409,23 @@ namespace AntsFlow
 
         private void FindTileBlockages(LevelItem level)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            for (int i = 0; i < tiles.Length; i++)
-            {
-                BaseTile tile = tiles[i];
+            // for (int i = 0; i < tiles.Length; i++)
+            // {
+            //     BaseTile tile = tiles[i];
 
-                tile.blockages = new List<BaseTile>();
+            //     tile.blockages = new List<BaseTile>();
 
-                BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
+            //     BoxCollider2D boxCollider = tile.GetComponent<BoxCollider2D>();
 
-                FindBlockage(tile, boxCollider, tile.transform.up);
-                FindBlockage(tile, boxCollider, tile.transform.right);
-                FindBlockage(tile, boxCollider, -tile.transform.up);
-                FindBlockage(tile, boxCollider, -tile.transform.right);
-            }
+            //     FindBlockage(tile, boxCollider, tile.transform.up);
+            //     FindBlockage(tile, boxCollider, tile.transform.right);
+            //     FindBlockage(tile, boxCollider, -tile.transform.up);
+            //     FindBlockage(tile, boxCollider, -tile.transform.right);
+            // }
 
-            EditorUtility.SetDirty(level);
+            // EditorUtility.SetDirty(level);
 
             void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
             {
@@ -388,20 +499,20 @@ namespace AntsFlow
                         0
                     );
 
-                    BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
-                        level.tilePrefab,
-                        level.transform
-                    );
+                    // BaseTile tile = (BaseTile)PrefabUtility.InstantiatePrefab(
+                    //     level.tilePrefab,
+                    //     level.transform
+                    // );
 
-                    // Set tile data
-                    tile.name = $"Tile_{row}_{col}_{tileKey}";
-                    tile.transform.position = pos;
+                    // // Set tile data
+                    // tile.name = $"Tile_{row}_{col}_{tileKey}";
+                    // tile.transform.position = pos;
 
-                    // Apply color from palette
-                    if (paletteMap.TryGetValue(tileKey, out Color color))
-                    {
-                        tile.spriteRenderer.color = color;
-                    }
+                    // // Apply color from palette
+                    // if (paletteMap.TryGetValue(tileKey, out Color color))
+                    // {
+                    //     tile.spriteRenderer.color = color;
+                    // }
                 }
             }
 
@@ -410,114 +521,114 @@ namespace AntsFlow
 
         private void GroupColors(LevelItem level)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            List<Color> colors = tiles.Select(item => item.spriteRenderer.color).ToList();
+            // List<Color> colors = tiles.Select(item => item.spriteRenderer.color).ToList();
 
-            List<Color> groups = new();
+            // List<Color> groups = new();
 
-            float threshold = colorGroupThreshold;
+            // float threshold = colorGroupThreshold;
 
-            foreach (var color in colors)
-            {
-                bool found = false;
+            // foreach (var color in colors)
+            // {
+            //     bool found = false;
 
-                for (int i = 0; i < groups.Count; i++)
-                {
-                    float distance = Vector3.Distance(
-                        new Vector3(color.r, color.g, color.b),
-                        new Vector3(groups[i].r, groups[i].g, groups[i].b));
+            //     for (int i = 0; i < groups.Count; i++)
+            //     {
+            //         float distance = Vector3.Distance(
+            //             new Vector3(color.r, color.g, color.b),
+            //             new Vector3(groups[i].r, groups[i].g, groups[i].b));
 
-                    if (distance < threshold)
-                    {
-                        found = true;
-                        break;
-                    }
-                }
+            //         if (distance < threshold)
+            //         {
+            //             found = true;
+            //             break;
+            //         }
+            //     }
 
-                if (!found)
-                    groups.Add(color);
-            }
+            //     if (!found)
+            //         groups.Add(color);
+            // }
 
 
-            level.factions = groups;
+            // level.factions = groups;
         }
 
         private void ReassignFactionForTiles(LevelItem level)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            foreach (var tile in tiles)
-            {
-                Color color = FindNearestFaction(tile.spriteRenderer.color, level.factions);
-                tile.Faction = color;
-                tile.spriteRenderer.color = color;
-            }
+            // foreach (var tile in tiles)
+            // {
+            //     Color color = FindNearestFaction(tile.spriteRenderer.color, level.factions);
+            //     tile.Faction = color;
+            //     tile.spriteRenderer.color = color;
+            // }
 
-            Color FindNearestFaction(Color color, List<Color> centers)
-            {
-                int bestIndex = 0;
-                float bestDistance = float.MaxValue;
+            // Color FindNearestFaction(Color color, List<Color> centers)
+            // {
+            //     int bestIndex = 0;
+            //     float bestDistance = float.MaxValue;
 
-                Color outputFaction = color;
+            //     Color outputFaction = color;
 
-                for (int i = 0; i < centers.Count; i++)
-                {
-                    float distance =
-                        Mathf.Pow(color.r - centers[i].r, 2) +
-                        Mathf.Pow(color.g - centers[i].g, 2) +
-                        Mathf.Pow(color.b - centers[i].b, 2);
+            //     for (int i = 0; i < centers.Count; i++)
+            //     {
+            //         float distance =
+            //             Mathf.Pow(color.r - centers[i].r, 2) +
+            //             Mathf.Pow(color.g - centers[i].g, 2) +
+            //             Mathf.Pow(color.b - centers[i].b, 2);
 
-                    if (distance < bestDistance)
-                    {
-                        bestDistance = distance;
-                        bestIndex = i;
+            //         if (distance < bestDistance)
+            //         {
+            //             bestDistance = distance;
+            //             bestIndex = i;
 
-                        outputFaction = centers[i];
-                    }
-                }
+            //             outputFaction = centers[i];
+            //         }
+            //     }
 
-                return outputFaction;
-            }
+            //     return outputFaction;
+            // }
 
-            EditorUtility.SetDirty(level);
+            // EditorUtility.SetDirty(level);
         }
 
         private void AssignLevelPriority(LevelItem level)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            // Gom theo hàng
-            Dictionary<float, List<BaseTile>> rows = new();
+            // // Gom theo hàng
+            // Dictionary<float, List<BaseTile>> rows = new();
 
-            foreach (var tile in tiles)
-            {
-                float y = tile.transform.localPosition.y;
+            // foreach (var tile in tiles)
+            // {
+            //     float y = tile.transform.localPosition.y;
 
-                // Làm tròn để tránh lỗi float
-                y = Mathf.Round(y * 1000f) / 1000f;
+            //     // Làm tròn để tránh lỗi float
+            //     y = Mathf.Round(y * 1000f) / 1000f;
 
-                if (!rows.ContainsKey(y))
-                    rows[y] = new List<BaseTile>();
+            //     if (!rows.ContainsKey(y))
+            //         rows[y] = new List<BaseTile>();
 
-                rows[y].Add(tile);
-            }
+            //     rows[y].Add(tile);
+            // }
 
-            // Sắp xếp từ dưới lên trên
-            int numberPriovity = 0;
-            var sortedRows = rows.Keys.OrderBy(y => y).ToList();
+            // // Sắp xếp từ dưới lên trên
+            // int numberPriovity = 0;
+            // var sortedRows = rows.Keys.OrderBy(y => y).ToList();
 
-            for (int rowIndex = 0; rowIndex < sortedRows.Count; rowIndex++)
-            {
-                float y = sortedRows[rowIndex];
+            // for (int rowIndex = 0; rowIndex < sortedRows.Count; rowIndex++)
+            // {
+            //     float y = sortedRows[rowIndex];
 
-                foreach (var tile in rows[y])
-                {
-                    tile.ring = rowIndex;
-                    tile.priority = numberPriovity;
-                    numberPriovity++;
-                }
-            }
+            //     foreach (var tile in rows[y])
+            //     {
+            //         tile.ring = rowIndex;
+            //         tile.priority = numberPriovity;
+            //         numberPriovity++;
+            //     }
+            // }
 
             //Dictionary<int, List<BaseTile>> groups = new Dictionary<int, List<BaseTile>>();
 
@@ -638,32 +749,129 @@ namespace AntsFlow
 
         public void MoveTilesCloserTogether(LevelItem level, float factor)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            Vector3 center = Vector3.zero;
+            // Vector3 center = Vector3.zero;
 
-            foreach (BaseTile tile in tiles)
-                center += tile.transform.position;
+            // foreach (BaseTile tile in tiles)
+            //     center += tile.transform.position;
 
-            center /= tiles.Length;
+            // center /= tiles.Length;
 
-            foreach (BaseTile tile in tiles)
-            {
-                tile.transform.position = center + (tile.transform.position - center) * factor;
-            }
+            // // find num column
+            // float firstRowY = tiles[0].transform.position.y;
+            // float tolerance = 0.01f;
+
+            // int numCols = 0;
+
+            // foreach (var tile in tiles)
+            // {
+            //     if (Mathf.Abs(tile.transform.position.y - firstRowY) < tolerance)
+            //         numCols++;
+            // }
+
+            // float baseSpacingX = 0.7605271f;
+            // float baseSpacingY = 0.760527f;
+            // float currentSpacingX = tiles[1].transform.position.x - tiles[0].transform.position.x;
+            // float currentSpacingY = tiles[numCols].transform.position.y - tiles[0].transform.position.y;
+
+            // float ratioX = currentSpacingX / baseSpacingX;
+            // float ratioY = currentSpacingY / baseSpacingY;
+
+            // foreach (BaseTile tile in tiles)
+            // {
+            //     Vector3 offset = tile.transform.position - center;
+
+            //     float gridX = offset.x / currentSpacingX * ratioX;
+            //     float gridY = offset.y / currentSpacingY * ratioY;
+
+            //     tile.transform.position = center + new Vector3(
+            //         gridX * tileSpacing.x,
+            //         gridY * tileSpacing.y,
+            //         offset.z
+            //     );
+            // }
+
+
+            // foreach (BaseTile tile in tiles)
+            // {
+            //     tile.transform.position = center + (tile.transform.position - center) * factor;
+            // }
 
             EditorUtility.SetDirty(level);
         }
 
         public void PreviewLevel(LevelItem level)
         {
-            BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
+            // BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<BaseTile>(level.transform);
 
-            foreach (BaseTile tile in tiles)
-            {
-                tile.spriteRenderer.sprite = factionMapper.GetAntBoxSprite(tile.Faction);
-            }
+            // foreach (BaseTile tile in tiles)
+            // {
+            //     tile.spriteRenderer.sprite = factionMapper.GetAntBoxSprite(tile.Faction);
+            // }
         }
+
+        #region JSON
+        private void ConvertToJson(LevelItem level)
+        {
+            // factionMapper =
+            //     AssetDatabase.LoadAssetAtPath<GameObject>("Assets/Ants Flow/Prefabs/Faction Mapper.prefab")?.GetComponent<FactionMapper>();
+
+            // List<BaseTile> tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(level.transform);
+
+            // AntLevelData antLevelData = new AntLevelData();
+
+            // antLevelData.antLevelDataItems = new List<AntLevelDataItem>();
+
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     BaseTile tile = tiles[i];
+
+            //     AntLevelDataItem dataItem = new AntLevelDataItem();
+            //     dataItem.position = tile.transform.position;
+            //     dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
+
+            //     dataItem.blockageIndexes = new List<int>();
+
+            //     for (int j = 0; j < tile.blockages.Count; j++)
+            //     {
+            //         dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+            //     }
+
+            //     dataItem.ring = tile.ring;
+            //     dataItem.priority = tile.priority;
+
+            //     antLevelData.antLevelDataItems.Add(dataItem);
+            // }
+
+            // List<int> poolFactionIndexes = factionMapper.GetPoolFactionIndexFromPoolFaction(level.poolFaction);
+
+            // antLevelData.levelItemData = new LevelItemData()
+            // {
+            //     levelScale = level.transform.localScale,
+            //     poolFactionIndexes = poolFactionIndexes,
+            //     isTutorialLevel = level.isTutorialLevel,
+            //     isUseManualFactionSetupForFirstAntBoxes = level.isUseManualFactionSetupForFirstAntBoxes,
+            //     levelFactionConfig = level.levelFactionConfig,
+            //     difficulty = level.difficulty,
+            //     initialDifficulty = level.initialDifficulty,
+            //     overrideInitialDifficulty = level.overrideInitialDifficulty,
+            //     numStartAntBoxes = level.numStartAntBoxes,
+            //     specialElementConfig = level.specialElementConfig
+            // };
+
+            // // Use level name as file name
+            // string filePath = Path.Combine("Assets/Ants Flow/JSON/Levels", $"{level.name}.json");
+
+            // // Serialize and save
+            // string json = JsonUtility.ToJson(antLevelData, false);
+            // File.WriteAllText(filePath, json);
+
+#if UNITY_EDITOR
+            UnityEditor.AssetDatabase.Refresh();
+#endif
+        }
+        #endregion
 
         #region Manual Level Setup
         private void FillTheRestOfLevel(LevelItem levelItem)
@@ -742,6 +950,41 @@ public class LevelFactionItemConfig
         this.numAnt = numAnt;
     }
 }
+
+[Serializable]
+public class AntLevelData
+{
+    public LevelItemData levelItemData;
+    public List<AntLevelDataItem> antLevelDataItems;
+}
+
+[Serializable]
+public class AntLevelDataItem
+{
+    public Vector3 position;
+    public int factionIndex;
+    public List<int> blockageIndexes;
+    public int ring;
+    public int priority;
+}
+
+[Serializable]
+public class LevelItemData
+{
+    public Vector3 levelScale;
+    public int numColumn;
+    public int numRow;
+    public List<int> poolFactionIndexes;
+    public bool isTutorialLevel;
+    public bool isUseManualFactionSetupForFirstAntBoxes;
+    public LevelFactionConfig levelFactionConfig;
+    public int difficulty;
+    public int initialDifficulty;
+    public bool overrideInitialDifficulty;
+    public int numStartAntBoxes = 6;
+    public SpecialElementConfig specialElementConfig;
+}
+
 
 [Serializable]
 public class SpecialElementConfig

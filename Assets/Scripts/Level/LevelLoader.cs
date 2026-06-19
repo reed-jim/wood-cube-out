@@ -14,12 +14,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.Tilemaps;
 using static GameEnum;
 
 namespace NamPhuThuy.GamePlay
 {
     public class LevelLoader : MonoBehaviour
     {
+        [Header("Ant")]
+        public AntsFlow.BaseTile tilePrefab;
+
         [Header("Clone to calculate level rotation")]
         [SerializeField] private Transform cloneToCalculateRotation;
 
@@ -52,7 +56,7 @@ namespace NamPhuThuy.GamePlay
         #endregion
 
         #region Memory Management
-        AsyncOperationHandle<GameObject> _loadLevelHandle;
+        AsyncOperationHandle<TextAsset> _loadLevelHandle;
         #endregion
 
         #region EVENT
@@ -72,12 +76,21 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        public Material material;
+        public Tilemap tilemap;
+        public Transform tilemapGrid;
+        public List<Transform> tilemapGrids;
+        public float scaleFactor;
+
+        public AntsFlow.BaseTile tile;
+
         private void Awake()
         {
             PausePopup.replayLevelEvent += Replay;
             LosePopup.replayLevelEvent += Replay;
             ReplayPopup.replayLevelEvent += Replay;
             SettingPopup.replayLevelEvent += Replay;
+            LevelComingSoonPopup.replayLevelEvent += Replay;
             DebugPopup.toLevelEvent += GoLevel;
             DebugPopup.nextLevelEvent += NextLevel;
             DebugPopup.prevLevelEvent += PrevLevel;
@@ -90,6 +103,7 @@ namespace NamPhuThuy.GamePlay
 
             _tweens = new List<Tween>();
             _autoCenterLevelTweens = new List<Tween>();
+            tilemapGrids = new List<Transform>();
 
             currentLevel.Load();
 
@@ -113,6 +127,7 @@ namespace NamPhuThuy.GamePlay
             LosePopup.replayLevelEvent -= Replay;
             ReplayPopup.replayLevelEvent -= Replay;
             SettingPopup.replayLevelEvent -= Replay;
+            LevelComingSoonPopup.replayLevelEvent -= Replay;
             DebugPopup.toLevelEvent -= GoLevel;
             DebugPopup.nextLevelEvent -= NextLevel;
             DebugPopup.prevLevelEvent -= PrevLevel;
@@ -145,41 +160,41 @@ namespace NamPhuThuy.GamePlay
             // }
             // //
 
-            int nextLevel = 1;
+            int nextLevel = currentLevel.Value;
 
             bool isLoopLevel = false;
 
-            if (!UserData.IsLoopLevel)
-            {
-                if (currentLevel.Value <= _maxLevel)
-                {
-                    nextLevel = currentLevel.Value;
-                }
-                else
-                {
-                    nextLevel = GetLoopLevel();
+            // if (!UserData.IsLoopLevel)
+            // {
+            //     if (currentLevel.Value <= _maxLevel)
+            //     {
+            //         nextLevel = currentLevel.Value;
+            //     }
+            //     else
+            //     {
+            //         nextLevel = GetLoopLevel();
 
-                    await UserData.SetIsLoopLevel(true);
-                    await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
+            //         await UserData.SetIsLoopLevel(true);
+            //         await UserData.SetIsLastLevelBeforeLoop(_maxLevel);
 
-                    // isLoopLevel = true;
-                    SetIsLoopLevel(true);
-                }
-            }
-            else
-            {
-                if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
-                {
-                    nextLevel = GetLoopLevel();
-                }
-                else
-                {
-                    nextLevel = currentLevel.Value - UserData.NumLevelLoop;
-                }
+            //         // isLoopLevel = true;
+            //         SetIsLoopLevel(true);
+            //     }
+            // }
+            // else
+            // {
+            //     if (currentLevel.Value - UserData.NumLevelLoop >= _maxLevel)
+            //     {
+            //         nextLevel = GetLoopLevel();
+            //     }
+            //     else
+            //     {
+            //         nextLevel = currentLevel.Value - UserData.NumLevelLoop;
+            //     }
 
-                // isLoopLevel = true;
-                SetIsLoopLevel(true);
-            }
+            //     // isLoopLevel = true;
+            //     SetIsLoopLevel(true);
+            // }
 
             // NOT LOOP
             if (currentLevel.Value > _maxLevel)
@@ -215,7 +230,6 @@ namespace NamPhuThuy.GamePlay
             GamePersistentVariable.currentLevelMode = levelDataContainer.LevelsData.First(item => item.levelId + 1 == nextLevel).levelMode;
 
             string levelName = $"Level {nextLevel}";
-            levelName = ModifyNameInFixedLevel(levelName, nextLevel);
 
             // Memory Management
             Resources.UnloadUnusedAssets();
@@ -225,8 +239,8 @@ namespace NamPhuThuy.GamePlay
                 Addressables.Release(_loadLevelHandle);
             }
 
-            DebugLogger.LogSimple(message: $"[FLOW] Addressables.InstantiateAsync: {levelName}", color: Color.cyan);
-            _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
+            // load from json
+            _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
             {
@@ -248,18 +262,25 @@ namespace NamPhuThuy.GamePlay
             DebugLogger.LogSimple(message: "[FLOW] showSceneTransitionEvent?.Invoke()", color: Color.cyan);
             showSceneTransitionEvent?.Invoke();
 
-            void ActualLoadLevel(GameObject resultLoad)
+            void ActualLoadLevel(TextAsset resultLoad)
             {
-                DebugLogger.LogSimple(message: "[FLOW] ActualLoadLevel() START", color: Color.green);
-                GameObject level = resultLoad;
+                // load from json
+                string json = resultLoad.text;
+                AntLevelData antLevelData = JsonUtility.FromJson<AntLevelData>(json);
 
-                AntsFlow.LevelItem levelItem = level.GetComponent<AntsFlow.LevelItem>();
-                DebugLogger.LogSimple(message: $"[FLOW] LevelItem found: {(levelItem != null ? levelItem.name : "NULL")}", color: levelItem != null ? Color.green : Color.red);
+                Transform levelTransform;
+
+                AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
-                DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() START", color: Color.yellow);
+                antLevelData = AutoSpacingAllTiles(antLevelData);
+                // FitLevelToScreenArea(levelTransform);
+                // CenterLevel(levelTransform);
+
+                FillTileMap(antLevelData, levelTransform);
+                // // BuildMesh(levelTransform);   
                 WashingMachineManager.Ins.StartLevel(levelItem);
                 DebugLogger.LogSimple(message: "[FLOW] WashingMachineManager.StartLevel() DONE", color: Color.green);
 
@@ -273,155 +294,380 @@ namespace NamPhuThuy.GamePlay
                     setIsLevelLoadedEvent?.Invoke();
                 });
 
-                return;
-
-                _currentLevelContainer = level.transform;
-
-                #region ASSIGN CLONE TO CALC ROTATION
-
-                try
-                {
-                    level.GetComponent<RotateObject>().cloneToCalculateRotation = cloneToCalculateRotation;
-                }
-                catch (System.Exception e)
-                {
-                    DebugLogger.LogException(e);
-                }
-                #endregion
-
-                // FIND DEPENDENCY
-                // delay for pieces scaling before level
-                List<BasicObjectPart> pieces = TransformUtil.GetComponentsFromAllChildren<BasicObjectPart>(level.transform);
-
-                _pieces = pieces.ToArray();
-
-                Dictionary<int, List<Transform>> obstaclesOfPieces = LevelDifficultyCalculatorUltility.FindPieceDependency(pieces.ToArray());
-                //
-
-                if (level.GetComponent<LevelTransformManualModifier>() == null)
-                {
-                    level.transform.position = Vector3.zero;
-                    level.transform.rotation = Quaternion.Euler(new Vector3(-15, -45, 15));
-                }
-
-                // AUTO CENTER LEVEL
-                _isNotAutoCenterLevel = false;
-
-                foreach (BasicObjectPart obj in pieces)
-                {
-                    MeshFilter meshFilter = obj.GetComponent<MeshFilter>();
-
-                    if (Vector3.Distance(meshFilter.mesh.bounds.center, Vector3.zero) > 0.03f)
-                    {
-                        _isNotAutoCenterLevel = true;
-
-
-                        break;
-                    }
-                }
-
-                _isNotAutoCenterLevel = false;
-
-                level.transform.position = Vector3.zero;
-
-                if (!_isNotAutoCenterLevel)
-                {
-                    for (int i = 0; i < level.transform.childCount; i++)
-                    {
-                        Transform pivotAdjust = level.transform.GetChild(i);
-
-                        if (pivotAdjust.name.Contains("Pivot Adjust"))
-                        {
-                            _pivotAdjust = pivotAdjust;
-
-                            _pivotAdjust.transform.position = Vector3.zero;
-                        }
-                    }
-
-                    foreach (BasicObjectPart piece in pieces)
-                    {
-                        if (_pivotAdjust == null)
-                        {
-                            _pivotAdjust = new GameObject().transform;
-                            _pivotAdjust.name = "Pivot Adjust";
-                            _pivotAdjust.SetParent(_currentLevelContainer);
-
-                            _pivotAdjust.transform.localPosition = Vector3.zero;
-                            _pivotAdjust.transform.localEulerAngles = Vector3.zero;
-                            _pivotAdjust.transform.localScale = Vector3.one;
-                        }
-
-                        if (!piece.transform.IsChildOf(_pivotAdjust))
-                        {
-                            piece.transform.SetParent(_pivotAdjust);
-                        }
-                    }
-
-                    GamePersistentVariable.levelOffset = new Vector3(0, 1f, 0);
-
-                    _isSetLevelGradientBound = false;
-
-                    Vector3 center = GetCenterOfObjectsWithBoundsAndPivot(pieces.ToArray(), offset: GamePersistentVariable.levelOffset, isLevelDirty: false);
-
-                    _pivotAdjust.localPosition = -center / _currentLevelContainer.transform.localScale.x;
-                }
-
-                _currentLevelDifficultyConfiguration = LevelDifficultyCalculatorUltility.GenerateScrewBoxDifficultyTemplate(currentLevel.Value);
-
-                // ASSIGN SCREW FACTIONS
-                if (currentLevel.Value == 1)
-                {
-                    AutoAssignScrewFactionLevelManualGroup(level);
-                }
-                else
-                {
-                    AutoAssignScrewFaction(level);
-                }
-
-                AutoAssignScrewFactionMultiPhaseLevel(level);
-
-                texturedMaterial.SetVector("_MainTextureOffset", new Vector2(0, 0));
-
-                if (isLoopLevel)
-                {
-                    RandomizeLevelModelColor(level);
-                }
-                else
-                {
-                    SaferioTracking.TrackLevelStart(currentLevel.Value);
-                }
-
-                _nextLevel = nextLevel;
-                _isLoopLevel = isLoopLevel;
-
-                _tweens.Add(Tween.Delay(3).OnComplete(() =>
-                {
-                    ShowSuggestion(nextLevel, isLoopLevel);
-                }));
-                // SuggestHardMode();
-
-                #region EVENT ITEMS
-                GamePersistentVariable.coinChallengeItemGainedInLevel = 0;
-
-                CoinChallengeGameplayUI.Instance.SetNumber();
-                #endregion
-
-                startLevelCompletedEvent?.Invoke();
+                GamePersistentVariable.startLevelTime = Time.time;
+                GamePersistentVariable.levelRetryTime++;
             }
 
             void SetIsLoopLevel(bool isLoop)
             {
                 isLoopLevel = isLoop;
-                DebugLogger.LogSimple(message: $"isLoop: {isLoopLevel}", color: Color.red);
             }
+        }
+
+        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
+        {
+            // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+            // Vector3 initialScale = tilemapGrid.localScale;
+
+            // tilemapGrid.SetParent(levelTransform);
+            // tilemapGrid.localScale = Vector3.one;
+
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
+
+            for (int i = 0; i < numRows; i++)
+            {
+                // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+                Transform spawnedTileMapGrid = ObjectPoolingEverything.GetFromPool<Transform>(GameConstants.tileMap);
+                Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+                spawnedTileMapGrid.SetParent(levelTransform);
+                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
+                spawnedTileMapGrid.localScale = scaleFactor * Vector3.one;
+
+                for (int j = 0; j < numCols; j++)
+                {
+                    int index = j + i * numCols;
+
+                    Vector3Int cellPos = tilemap.WorldToCell(antLevelData.antLevelDataItems[index].position);
+
+                    Tile tile = ScriptableObject.CreateInstance<Tile>();
+                    tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
+
+                    spawnedTileMap.SetTile(cellPos, tile);
+
+                    tilemapGrids.Add(spawnedTileMapGrid);
+
+                    AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
+                    AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+                }
+            }
+
+            // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Color faction = FactionMapper.Ins.indexesOfColors[t.factionIndex];
+
+            //     CommonUtil.AddValueOfDictionary(itemByFaction, faction, t);
+            // }
+
+            // foreach (var t in itemByFaction)
+            // {
+            // Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
+            // Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
+
+            //     for (int i = 0; i < t.Value.Count; i++)
+            //     {
+            //         Vector3Int cellPos = tilemap.WorldToCell(t.Value[i].position);
+
+            //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //         tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.Value[i].factionIndex]);
+
+            //         spawnedTileMap.SetTile(cellPos, tile);
+            //     }
+            // }
+
+            // foreach (var t in antLevelData.antLevelDataItems)
+            // {
+            //     Vector3Int cellPos = tilemap.WorldToCell(t.position);
+
+            //     Debug.Log($"row {t.position} {cellPos}");
+
+            //     Tile tile = ScriptableObject.CreateInstance<Tile>();
+            //     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[t.factionIndex]);
+
+            //     tilemap.SetTile(cellPos, tile);
+            // }
+        }
+
+        // private void FillTileMap(Transform level)
+        // {
+        //     AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
+
+        //     tilemap.transform.SetParent(level);
+
+        //     foreach (var t in tiles)
+        //     {
+        //         Vector3Int cellPos = tilemap.WorldToCell(t.transform.position);
+
+        //         Tile tile = ScriptableObject.CreateInstance<Tile>();
+        //         tile.sprite = t.spriteRenderer.sprite;
+
+        //         tilemap.SetTile(cellPos, tile);
+        //     }
+        // }
+
+        private AntsFlow.LevelItem JsonToLevelItem(AntLevelData antLevelData, out Transform levelTransform)
+        {
+            List<Color> poolFaction = FactionMapper.Ins.GetPoolFactionFromPoolFactionIndex(antLevelData.levelItemData.poolFactionIndexes);
+
+            GameObject level = new GameObject();
+
+            level.name = "Level";
+
+            levelTransform = level.transform;
+
+            level.transform.SetParent(transform);
+
+            AntsFlow.LevelItem spawnedLevelItem = level.AddComponent<AntsFlow.LevelItem>();
+            spawnedLevelItem.poolFaction = poolFaction;
+            spawnedLevelItem.isTutorialLevel = antLevelData.levelItemData.isTutorialLevel;
+            spawnedLevelItem.isUseManualFactionSetupForFirstAntBoxes = antLevelData.levelItemData.isUseManualFactionSetupForFirstAntBoxes;
+            spawnedLevelItem.levelFactionConfig = antLevelData.levelItemData.levelFactionConfig;
+            spawnedLevelItem.difficulty = antLevelData.levelItemData.difficulty;
+            spawnedLevelItem.initialDifficulty = antLevelData.levelItemData.initialDifficulty;
+            spawnedLevelItem.overrideInitialDifficulty = antLevelData.levelItemData.overrideInitialDifficulty;
+            spawnedLevelItem.numStartAntBoxes = antLevelData.levelItemData.numStartAntBoxes;
+            spawnedLevelItem.specialElementConfig = antLevelData.levelItemData.specialElementConfig;
+
+            List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
+
+            GameObject tileComponentHolder = new GameObject();
+            tileComponentHolder.name = "tileComponentHolder";
+
+            for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
+            {
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
+                // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
+                // AntsFlow.BaseTile tile = tileComponentHolder.AddComponent<AntsFlow.BaseTile>();
+                AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
+
+                // tile.transform.SetParent(levelTransform);
+
+                // tile.transform.position = antLevelDataItem.position;
+
+                tile.position = antLevelDataItem.position;
+                tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
+                tile.ring = antLevelDataItem.ring;
+                tile.priority = antLevelDataItem.priority;
+
+                tiles.Add(tile);
+            }
+
+            // find num column
+            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
+            float tolerance = 0.01f;
+
+            GamePersistentVariable.numColumn = 0;
+
+            foreach (var tile in antLevelData.antLevelDataItems)
+            {
+                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
+                {
+                    GamePersistentVariable.numColumn++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            GamePersistentVariable.numRow = antLevelData.antLevelDataItems.Count / GamePersistentVariable.numColumn;
+            //
+
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                AntsFlow.BaseTile tile = tiles[i];
+                AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                // int upIndex = i + GamePersistentVariable.numColumn;
+                // int downIndex = i - GamePersistentVariable.numColumn;
+                // int rightIndex = i + 1;
+                // int leftIndex = i - 1;
+
+                // tile.blockages = new List<AntsFlow.BaseTile>();
+
+                // if (upIndex < tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[upIndex]);
+                // }
+                // if (downIndex >= tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[downIndex]);
+                // }
+                // if (rightIndex < tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[rightIndex]);
+                // }
+                // if (leftIndex >= tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[leftIndex]);
+                // }
+
+                tile.blockages = new List<AntsFlow.BaseTile>();
+
+                for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
+                {
+                    int index = antLevelDataItem.blockageIndexes[j];
+
+                    tile.blockages.Add(tiles[index]);
+                }
+            }
+
+            AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
+            AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
+
+            return spawnedLevelItem;
+        }
+
+        private void CenterLevel(Transform level)
+        {
+            Vector2 average = Vector2.zero;
+
+            foreach (Transform child in level.transform)
+            {
+                average += (Vector2)child.position;
+            }
+
+            average /= level.transform.childCount;
+
+            level.transform.position += Vector3.left * average.x;
+            // level.transform.position += Vector3.down * average.y;
+
+            float distance = Mathf.Abs(Camera.main.transform.position.z);
+
+            Vector3 worldPos = Camera.main.ViewportToWorldPoint(
+                new Vector3(0, 0.55f, distance)
+            );
+
+            transform.position = transform.position.ChangeY(worldPos.y);
+        }
+
+        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData)
+        {
+            AntLevelData result = antLevelData;
+
+            Vector3 center = Vector3.zero;
+
+            foreach (AntLevelDataItem tile in antLevelData.antLevelDataItems)
+                center += tile.position;
+
+            center /= antLevelData.antLevelDataItems.Count;
+
+            // float baseSpacingX = 0.7605271f;
+            // float baseSpacingY = 0.760527f;
+            // float currentSpacingX = antLevelData.antLevelDataItems[1].position.x - antLevelData.antLevelDataItems[0].position.x;
+            // float currentSpacingY = antLevelData.antLevelDataItems[numCols].position.y - antLevelData.antLevelDataItems[0].position.y;
+
+            // float ratioX = currentSpacingX / baseSpacingX;
+            // float ratioY = currentSpacingY / baseSpacingY;
+
+            // // Vector2 tileSpacing = new Vector2(0.8f, 0.72f);
+            // Vector2 tileSpacing = new Vector2(1.5f, 1.5f);
+
+            // float positionZ;
+
+            // int index = 0;
+
+            // foreach (AntLevelDataItem item in result.antLevelDataItems)
+            // {
+            //     Vector3 offset = item.position - center;
+
+            //     float gridX = offset.x / currentSpacingX * ratioX;
+            //     float gridY = offset.y / currentSpacingY * ratioY;
+
+            //     positionZ = item.position.z;
+
+            //     Vector3 position = center + new Vector3(
+            //         gridX * tileSpacing.x,
+            //         gridY * tileSpacing.y
+            //     );
+
+            //     item.position = position;
+
+            //     AntsFlow.TileManager.Ins.tiles[index].position = position;
+
+            //     index++;
+
+            //     // item.position = CommonUtil.GetVector3Int(item.position);
+            // }
+
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
+
+            for (int row = 0; row < numRows; row++)
+            {
+                for (int col = 0; col < numCols; col++)
+                {
+                    Vector3 position = new Vector3(
+                        -numCols / 2 + col * 1,
+                        (numRows / 4) + row * 1,
+                        0f
+                    );
+
+                    int index = col + row * numCols;
+
+                    result.antLevelDataItems[index].position = position;
+
+                    AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
+                }
+            }
+
+            return result;
+        }
+
+        void FitLevelToScreenArea(Transform level)
+        {
+            // Get level bounds
+            Bounds bounds = GetBoundsFromTiles(level);
+
+            float levelWidth = bounds.size.x;
+            float levelHeight = bounds.size.y;
+
+            // Orthographic camera size
+            float camHeight = Camera.main.orthographicSize * 2f;
+            float camWidth = camHeight * Camera.main.aspect;
+
+            // Available screen area
+            float availableHeight = camHeight * 0.35f;
+            float availableWidth = 0.9f * camWidth;
+
+            float scaleX = level.localScale.x * availableWidth / levelWidth;
+            float scaleY = level.localScale.y * availableHeight / levelHeight;
+
+            float scale = Mathf.Min(scaleX, scaleY);
+
+            level.localScale = Vector3.one * scale;
+        }
+
+        public Bounds GetBoundsFromTiles(Transform level)
+        {
+            if (level.childCount == 0)
+                return new Bounds(level.position, Vector3.zero);
+
+            Vector3 min = level.GetChild(0).position;
+            Vector3 max = min;
+
+            for (int i = 1; i < level.childCount; i++)
+            {
+                Vector3 pos = level.GetChild(i).position;
+
+                min = Vector3.Min(min, pos);
+                max = Vector3.Max(max, pos);
+            }
+
+            Bounds bounds = new Bounds();
+            bounds.SetMinMax(min, max);
+
+            return bounds;
         }
 
         private async void GoLevel(int level)
         {
             endCurrentLevelEvent?.Invoke();
 
-            // DebugLogger.LogSimple();
             await Task.Delay(500);
+
+            for (int i = 0; i < tilemapGrids.Count; i++)
+            {
+                ObjectPoolingEverything.ReturnToPool(GameConstants.tileMap, tilemapGrids[i].gameObject);
+            }
+
+            tilemapGrids.Clear();
 
             if (gameObject.transform.childCount > 0)
             {
@@ -441,19 +687,16 @@ namespace NamPhuThuy.GamePlay
 
         private void NextLevel()
         {
-            DebugLogger.LogSimple();
             GoLevel(currentLevel.Value + 1);
         }
 
         private void PrevLevel()
         {
-            DebugLogger.LogSimple();
             GoLevel(currentLevel.Value - 1);
         }
 
         private void Replay()
         {
-            DebugLogger.LogSimple();
             GamePersistentVariable.isPreventLoadLevelData = true;
 
             GoLevel(currentLevel.Value);
@@ -1250,5 +1493,4 @@ namespace NamPhuThuy.GamePlay
         }
         #endregion
     }
-
 }

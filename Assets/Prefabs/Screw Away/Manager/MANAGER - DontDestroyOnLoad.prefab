@@ -2039,6 +2039,79 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6da9d59708946344a8d8bf32214116b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1476361203180820364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8548281405255364621}
+  - component: {fileID: 4964920797110804623}
+  m_Layer: 0
+  m_Name: You will be accepted
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8548281405255364621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476361203180820364}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4964920797110804623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1476361203180820364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: 'You will be accepted:'
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Vous serez accept\xE9 :"
+    Object: {fileID: 0}
+  - Language: German
+    Text: 'Sie werden angenommen:'
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: 'Sarai accettato:'
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u3042\u306A\u305F\u306F\u53D7\u3051\u5165\u308C\u3089\u308C\u307E\u3059\uFF1A"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uB2F9\uC2E0\uC740 \uBC1B\uC544\uB4E4\uC5EC\uC9C8 \uAC83\uC785\uB2C8\uB2E4:"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Voc\xEA ser\xE1 aceito:"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0412\u0430\u0441 \u043F\u0440\u0438\u043C\u0443\u0442:"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: "Ser\xE1s aceptado:"
+    Object: {fileID: 0}
 --- !u!1 &1493961935904648032
 GameObject:
   m_ObjectHideFlags: 0
@@ -2398,7 +2471,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 6655206068968023495, guid: 32c18610d458dfa40af83d745434d857, type: 3}
   container: {fileID: 1676761650030170320}
-  poolSize: 16
+  poolSize: 3
   resourceSprites:
   - {fileID: 21300000, guid: 1e2c125206e7a5c44be36bd7d15196ef, type: 3}
   - {fileID: 21300000, guid: 81e66c65763eeca4fa9ad4b51d33c3b5, type: 3}
@@ -2931,6 +3004,79 @@ MonoBehaviour:
     Object: {fileID: 0}
   - Language: Spanish
     Text: "\xA1Haz clic en cualquier objeto para romperlo!"
+    Object: {fileID: 0}
+--- !u!1 &1955662493856358684
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4990051466471391265}
+  - component: {fileID: 5301651220494480285}
+  m_Layer: 0
+  m_Name: Completed
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4990051466471391265
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955662493856358684}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2382114561705044355}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5301651220494480285
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1955662493856358684}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eb15fa0e7301ff849bf4d6dcede7c12b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: LeanLocalization::Lean.Localization.LeanPhrase
+  data: 0
+  entries:
+  - Language: English
+    Text: Completed
+    Object: {fileID: 0}
+  - Language: French
+    Text: "Compl\xE9t\xE9"
+    Object: {fileID: 0}
+  - Language: German
+    Text: Vollendet
+    Object: {fileID: 0}
+  - Language: Italian
+    Text: Completato
+    Object: {fileID: 0}
+  - Language: Japanese
+    Text: "\u5B8C\u4E86"
+    Object: {fileID: 0}
+  - Language: Korean
+    Text: "\uC644\uC804\uD55C"
+    Object: {fileID: 0}
+  - Language: Portuguese
+    Text: "Conclu\xEDdo"
+    Object: {fileID: 0}
+  - Language: Russian
+    Text: "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043D\u043D\u044B\u0439"
+    Object: {fileID: 0}
+  - Language: Spanish
+    Text: Terminado
     Object: {fileID: 0}
 --- !u!1 &1963572080231008746
 GameObject:
@@ -4064,7 +4210,9 @@ MonoBehaviour:
   eventItem: {fileID: 4045919677029267673, guid: 160b795de7cf2034a897bce11f321b03, type: 3}
   lockedScrewBox: {fileID: 4363298669875526981, guid: b7c69b1e6b3e18545955f4cd992911d3, type: 3}
   taskItemUIPrefab: {fileID: 413993787269842527, guid: cfbf48fdb9ee8ba438323f24aaa9fe07, type: 3}
-  baseTile: {fileID: 6985166345269861242, guid: fea6240acc8b8f349bfe15ea27fec325, type: 3}
+  baseTile: {fileID: 7515087262887657689, guid: 404ca0b5774a17548b239b1f69c1dec8, type: 3}
+  fakeTilePrefab: {fileID: 7515087262887657689, guid: 0cb926ee7f35018418e0c0171d4f9080, type: 3}
+  tilemapPrefab: {fileID: 5196122292102480756, guid: e0c172cfcbdcd774caefec61dcb77b35, type: 3}
   washingMachineItemPrefab: {fileID: 1148281578818409660, guid: 9f39d111f9cc954499c2f5ce7c22292e, type: 3}
   clothingPiecePrefab: {fileID: 2626563146641554035, guid: e9ab9a5bf6d05f04aad5b1a7711f2fac, type: 3}
   pathSlotPrefab: {fileID: 8262014832508821915, guid: 405925f23c037394883c206d0062ff77, type: 3}
@@ -8862,6 +9010,8 @@ Transform:
   - {fileID: 5250490845608636609}
   - {fileID: 3647414901184992346}
   - {fileID: 7903932119191454150}
+  - {fileID: 8548281405255364621}
+  - {fileID: 4990051466471391265}
   m_Father: {fileID: 328848638671994766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8403633201106417269
@@ -9048,7 +9198,7 @@ MonoBehaviour:
         banner:
           minimumLevel: 0
         interstitials:
-          minimumLevel: 5
+          minimumLevel: 10
           minimumInterval: 70
           showAfterDefeat: 1
           showAfterQuit: 1
