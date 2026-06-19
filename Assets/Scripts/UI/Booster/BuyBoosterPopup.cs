@@ -81,6 +81,16 @@ public class BuyBoosterPopup : BasePopup
 
     private void ShowBuyBoosterPopup(BoosterType boosterType)
     {
+        if (boosterType != BoosterType.UnlockScrewBox)
+        {
+            GiftType giftType = GameEnum.MapBoosterToGiftType(boosterType);
+            if (giftType != GiftType.None)
+            {
+                BuyItemBox.Setup().Show(giftType);
+            }
+            return;
+        }
+
         Show();
 
         _boosterType = boosterType;

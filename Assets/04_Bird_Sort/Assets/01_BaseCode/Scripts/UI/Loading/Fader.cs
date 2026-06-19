@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using NamPhuThuy.GamePlay;
 
 public class Fader : MonoBehaviour
 {
@@ -21,15 +22,16 @@ public class Fader : MonoBehaviour
     Image bg;
     float lastTime = 0;
     bool startedLoading = false;
-    //Set callback
     void OnEnable()
     {
         SceneManager.sceneLoaded += OnLevelFinishedLoading;
+        SceneTransition.levelSceneTransitionCompleteEvent += OnGameplayStartLevel;
     }
     //Remove callback
     void OnDisable()
     {
         SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+        SceneTransition.levelSceneTransitionCompleteEvent -= OnGameplayStartLevel;
     }
 
     public void InitiateFader()
@@ -132,8 +134,23 @@ public class Fader : MonoBehaviour
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
+        if (scene.name == GameConstants.GAMEPLAY_SCENE || scene.name == SceneName.GAME_PLAY)
+        {
+            return;
+        }
+
         StartCoroutine(FadeIt());
         //We can now fade in
         isFadeIn = true;
+    }
+
+    void OnGameplayStartLevel()
+    {
+        var sceneName = SceneManager.GetActiveScene().name;
+        if (sceneName == GameConstants.GAMEPLAY_SCENE || sceneName == SceneName.GAME_PLAY)
+        {
+            StartCoroutine(FadeIt());
+            isFadeIn = true;
+        }
     }
 }

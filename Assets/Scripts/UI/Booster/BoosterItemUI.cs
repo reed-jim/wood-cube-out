@@ -90,7 +90,7 @@ public class BoosterItemUI : MonoBehaviour
     {
         userResourcesObserver.Load();
 
-        int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+        int quantity = UseProfile.GetNumItem(GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex));
 
         if (quantity > 0)
         {
@@ -149,7 +149,7 @@ public class BoosterItemUI : MonoBehaviour
         {
             userResourcesObserver.Load();
 
-            int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+            int quantity = UseProfile.GetNumItem(GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex));
 
             if (quantity > 0)
             {
@@ -178,7 +178,7 @@ public class BoosterItemUI : MonoBehaviour
         {
             userResourcesObserver.Load();
 
-            int quantity = userResourcesObserver.UserResources.BoosterQuantities[boosterIndex];
+            int quantity = UseProfile.GetNumItem(GameEnum.MapBoosterToGiftType((GameEnum.BoosterType)boosterIndex));
 
             if (quantity > 0)
             {

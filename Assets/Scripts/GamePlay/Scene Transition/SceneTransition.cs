@@ -167,6 +167,12 @@ public class SceneTransition : MonoBehaviour
         Debug.Log("[FLOW] SceneTransition.TransitionOnLevelStarted() called");
         Reset();
 
+        if (almostThereBackground != null)
+        {
+            almostThereBackground.gameObject.SetActive(true);
+            almostThereBackground.alpha = 1;
+        }
+
         if (loadingSpine != null)
             loadingSpine.gameObject.SetActive(false);
 
@@ -243,11 +249,23 @@ public class SceneTransition : MonoBehaviour
     {
         // Nếu không có UI references (SceneTransition bị disable/thiếu assign)
         // thì bỏ qua ads + UI, fire event ngay lập tức
-        if (loadLevelInProgressContainer == null || loadLevelInProgressCanvasGroup == null)
+        if (loadLevelInProgressContainer == null || loadLevelInProgressCanvasGroup == null || !loadLevelInProgressContainer.gameObject.activeInHierarchy)
         {
-            Debug.Log("[FLOW] SceneTransition: No UI refs → fire levelSceneTransitionCompleteEvent immediately");
+            Debug.Log("[FLOW] SceneTransition: No UI refs → fade almostThereBackground and fire event");
             _isFirstTimeEnterScene = false;
-            levelSceneTransitionCompleteEvent?.Invoke();
+
+            if (almostThereBackground != null && almostThereBackground.gameObject.activeSelf)
+            {
+                _tweens.Add(Tween.Alpha(almostThereBackground, 1, 0, duration: 0.3f).OnComplete(() =>
+                {
+                    almostThereBackground.gameObject.SetActive(false);
+                    levelSceneTransitionCompleteEvent?.Invoke();
+                }));
+            }
+            else
+            {
+                levelSceneTransitionCompleteEvent?.Invoke();
+            }
             return;
         }
 
@@ -295,11 +313,17 @@ public class SceneTransition : MonoBehaviour
             {
                 if (loadLevelInProgressCanvasGroup != null)
                     loadLevelInProgressCanvasGroup.alpha = newVal;
+                
+                if (almostThereBackground != null && almostThereBackground.gameObject.activeSelf)
+                    almostThereBackground.alpha = newVal;
             })
             .OnComplete(() =>
                 {
                     if (loadLevelInProgressContainer != null)
                         loadLevelInProgressContainer.gameObject.SetActive(false);
+                        
+                    if (almostThereBackground != null)
+                        almostThereBackground.gameObject.SetActive(false);
 
                     levelSceneTransitionCompleteEvent?.Invoke();
                 })

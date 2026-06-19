@@ -360,7 +360,7 @@ public class BoosterUI : MonoBehaviour
 
     private void EnableClearOneColorMode()
     {
-        if (!IsBoosterAvailable(boosterIndex: 3))
+        if (!IsBoosterAvailable(boosterIndex: (int)BoosterType.ClearOneColor))
         {
             showBuyBoosterPopupEvent?.Invoke(BoosterType.ClearOneColor);
 
@@ -392,7 +392,7 @@ public class BoosterUI : MonoBehaviour
 
     private void ConfirmClearOneColor(Color faction)
     {
-        ConsumeBooster(boosterIndex: 3);
+        ConsumeBooster(boosterIndex: (int)BoosterType.ClearOneColor);
 
         DisableBreakObjectMode();
     }
