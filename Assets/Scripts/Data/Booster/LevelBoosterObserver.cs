@@ -21,6 +21,6 @@ public class LevelBoosterObserver : ScriptableObject
 
     public void Reset()
     {
-        boosterQuantitiesUsed = new int[4];
+        boosterQuantitiesUsed = new int[5];
     }
 }

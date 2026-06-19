@@ -116,8 +116,8 @@ public class BoosterItemUI : MonoBehaviour
         else
         {
             lockCanvasGroup.gameObject.SetActive(false);
-            quantityTextContainer.gameObject.SetActive(true);
-            addButtonRT.gameObject.SetActive(true);
+            quantityTextContainer.gameObject.SetActive(quantity > 0);
+            addButtonRT.gameObject.SetActive(quantity <= 0);
         }
     }
 
