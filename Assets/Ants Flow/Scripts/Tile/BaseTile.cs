@@ -141,10 +141,15 @@ namespace AntsFlow
                 HapticFeedback.LightFeedback();
             }
 
-            tilemap.SetTile(tilemapPosition, null);
-            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
+            Hide();
 
             tileMoveToAntEvent?.Invoke(this);
+        }
+
+        public void Hide()
+        {
+            tilemap.SetTile(tilemapPosition, null);
+            TileManager.Ins.shadowTilemap.SetTile(tilemapPosition, null);
         }
 
         public void Highlight(Action onComplete)

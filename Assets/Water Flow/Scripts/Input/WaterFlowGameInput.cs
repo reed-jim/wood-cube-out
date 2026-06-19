@@ -22,11 +22,11 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 worldPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-                RaycastHit2D hit = Physics2D.Raycast(
-                worldPoint,
-                Vector2.zero,
-                0f
-            );
+            RaycastHit2D hit = Physics2D.Raycast(
+            worldPoint,
+            Vector2.zero,
+            0f
+        );
 
             if (IsClickedOnUI())
             {
@@ -37,28 +37,53 @@ public class WaterFlowGameInput : Singleton<WaterFlowGameInput>
 
             if (inputMode == AntsFlowInputMode.SelectTile)
             {
-                Vector3 worldPos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+                Vector3 touchPoint = mainCamera.ScreenToWorldPoint(Input.mousePosition);
 
-                Vector3Int cellPos = AntsFlow.TileManager.Ins.baseTilemap.WorldToCell(worldPos);
+                Vector3Int cellPos = AntsFlow.TileManager.Ins.baseTilemap.WorldToCell(touchPoint);
 
-                for (int i = 0; i < AntsFlow.TileManager.Ins.tilemaps.Length; i++)
+                float smallestDistance = float.MaxValue;
+                AntsFlow.BaseTile selectedTile = null;
+
+                for (int i = 0; i < AntsFlow.TileManager.Ins.tiles.Count; i++)
                 {
-                    Sprite sprite = AntsFlow.TileManager.Ins.tilemaps[i].GetSprite(cellPos);
+                    AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.tiles[i];
 
-                    if (sprite != null)
+                    float distance = Vector2.Distance(0.55f * (Vector3)tile.tilemapPosition, touchPoint);
+
+                    if (distance < smallestDistance)
                     {
-                        Color faction = FactionMapper.Ins.GetFaction(sprite);
-
-                        useClearOneColorBoosterEvent?.Invoke(faction);
-
-                        inputMode = AntsFlowInputMode.Normal;
-
-                        break;
+                        smallestDistance = distance;
+                        selectedTile = tile;
                     }
                 }
+
+                if (selectedTile != null)
+                {
+                    Color faction = selectedTile.Faction;
+
+                    useClearOneColorBoosterEvent?.Invoke(faction);
+
+                    inputMode = AntsFlowInputMode.Normal;
+                }
+
+                // for (int i = 0; i < AntsFlow.TileManager.Ins.tilemaps.Length; i++)
+                // {
+                //     Sprite sprite = AntsFlow.TileManager.Ins.tilemaps[i].GetSprite(cellPos);
+
+                //     if (sprite != null)
+                //     {
+                //         Color faction = FactionMapper.Ins.GetFaction(sprite);
+
+                //         useClearOneColorBoosterEvent?.Invoke(faction);
+
+                //         inputMode = AntsFlowInputMode.Normal;
+
+                //         break;
+                //     }
+                // }
             }
 
-    
+
 
             if (hit.collider != null)
             {

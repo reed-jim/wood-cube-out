@@ -41,7 +41,6 @@ namespace AntsFlow
         public Tilemap[] tilemaps;
         public Sprite tileGlowSprite;
 
-
         #region Custom Pathfinding
         public bool isDebug;
         public List<BaseTile> tiles;
@@ -657,7 +656,7 @@ namespace AntsFlow
 
         private IEnumerator HightlightEachFactionSequentially()
         {
-            WaitForSeconds waitForSeconds = new WaitForSeconds(1.1f);
+            WaitForSeconds waitForSeconds = new WaitForSeconds(2f);
 
             Dictionary<Color, List<BaseTile>> tilesOfFaction = new Dictionary<Color, List<BaseTile>>();
 
@@ -666,107 +665,87 @@ namespace AntsFlow
             int currentFactionIndex = 0;
 
             bool isSetTiles = false;
-            float alpha = 1;
+            float alpha = 0;
             float deltaAlpha = 0.05f;
-            bool isGlowingUp = false;
+            bool isGlowingUp = true;
+
+            tileGlowTilemap.gameObject.SetActive(true);
+            tileGlowTilemap.color = ColorUtil.WithAlpha(Color.white, 0);
 
             while (WaterFlowGameInput.Ins.inputMode == AntsFlowInputMode.SelectTile)
             {
                 KeyValuePair<Color, List<BaseTile>> item = tilesOfFaction.ElementAt(currentFactionIndex);
 
-                for (int i = 0; i < item.Value.Count; i++)
+                if (isSetTiles)
                 {
-                    int index = i;
+                    tileGlowTilemap.color = ColorUtil.WithAlpha(Color.white, alpha);
 
-                    BaseTile tile = item.Value[i];
-
-                    if (!isSetTiles)
+                    if (isGlowingUp)
                     {
-                        Tile tileGlow = ScriptableObject.CreateInstance<Tile>();
-                        tileGlow.sprite = tileGlowSprite;
-                        tileGlowTilemap.SetTile(tile.tilemapPosition, tileGlow);
-
-                        if (i == item.Value.Count - 1)
+                        if (alpha < 1)
                         {
-                            isSetTiles = true;
+                            alpha += deltaAlpha;
+                        }
+                        else
+                        {
+                            isGlowingUp = false;
                         }
                     }
                     else
                     {
-                        tileGlowTilemap.SetColor(tile.tilemapPosition, ColorUtil.WithAlpha(Color.white, alpha));
-
-                        if (isGlowingUp)
+                        if (alpha > 0)
                         {
-                            if (alpha < 1)
+                            alpha -= deltaAlpha;
+                        }
+                        else
+                        {
+                            isGlowingUp = true;
+
+                            if (currentFactionIndex < tilesOfFaction.Count - 1)
                             {
-                                alpha += deltaAlpha;
+                                currentFactionIndex++;
                             }
                             else
                             {
-                                isGlowingUp = false;
+                                currentFactionIndex = 0;
+                            }
+
+                            isSetTiles = false;
+                        }
+                    }
+                }
+                else
+                {
+                    tileGlowTilemap.ClearAllTiles();
+
+                    for (int i = 0; i < item.Value.Count; i++)
+                    {
+                        int index = i;
+
+                        BaseTile tile = item.Value[i];
+
+                        if (!isSetTiles)
+                        {
+                            Tile tileGlow = ScriptableObject.CreateInstance<Tile>();
+                            tileGlow.sprite = tileGlowSprite;
+                            tileGlowTilemap.SetTile(tile.tilemapPosition, tileGlow);
+
+                            if (i == item.Value.Count - 1)
+                            {
+                                isSetTiles = true;
                             }
                         }
                         else
                         {
-                            if (alpha > 0)
-                            {
-                                alpha -= deltaAlpha;
-                            }
-                            else
-                            {
-                                isGlowingUp = true;
-                            }
+
                         }
                     }
-
-                    // tile.isAnimating = true;
-
-                    // tile.Highlight(onComplete: () =>
-                    // {
-                    //     tile.isAnimating = false;
-
-                    //     if (index == item.Value.Count - 1)
-                    //     {
-                    //         currentFactionIndex++;
-
-                    //         if (currentFactionIndex >= tilesOfFaction.Count)
-                    //         {
-                    //             GroupTiles();
-
-                    //             currentFactionIndex = 0;
-                    //         }
-                    //     }
-                    // });
-
-                    // SaferioTween.MoveUpThenDown(tile.transform, 1.3f, onCompleteAction: () =>
-                    // {
-                    //     tile.isAnimating = false;
-
-                    //     if (index == item.Value.Count - 1)
-                    //     {
-                    //         SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
-
-                    //         currentFactionIndex++;
-
-                    //         if (currentFactionIndex >= item.Value.Count)
-                    //         {
-                    //             currentFactionIndex = 0;
-                    //         }
-                    //     }
-                    // });
                 }
 
-                if (isSetTiles)
-                {
-                    yield return new WaitForSeconds(1f / 30);
-                }
-                else
-                {
-                    yield return waitForSeconds;
-                }
-
-                // yield return waitForSeconds;
+                yield return new WaitForSeconds(1f / 30);
             }
+
+            tileGlowTilemap.gameObject.SetActive(false);
 
             void GroupTiles()
             {

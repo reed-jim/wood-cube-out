@@ -492,9 +492,14 @@ namespace AntsFlow
                     for (int j = 0; j < toRemoveBlockages.Count; j++)
                     {
                         tile.blockages.Remove(toRemoveBlockages[j]);
-                        tile.actualBlockages.Remove(toRemoveBlockages[j]);
+                        // tile.actualBlockages.Remove(toRemoveBlockages[j]);
                     }
                 }
+            }
+
+            for (int i = 0; i < tilesToClear.Count; i++)
+            {
+                tilesToClear[i].Hide();
             }
 
             // for (int i = 0; i < tilesToClear.Count; i++)
