@@ -107,25 +107,37 @@ namespace AntsFlow
                 nodes.Add(node);
             }
 
-            for (int i = 0; i < nodes.Count; i++)
+
+
+            Dictionary<BaseTile, Node> nodeLookup = new Dictionary<BaseTile, Node>();
+
+            foreach (Node node in nodes)
             {
-                Node node = nodes[i];
+                nodeLookup[node.tile] = node;
+            }
 
-                node.neighbors = new List<Node>();
+            foreach (Node node in nodes)
+            {
+                List<Node> neighbors = new List<Node>();
+                node.neighbors = neighbors;
 
-                for (int j = 0; j < nodes.Count; j++)
+                foreach (BaseTile blockedTile in node.tile.blockages)
                 {
-                    if (j == i)
+                    if (nodeLookup.TryGetValue(blockedTile, out Node neighbor))
                     {
-                        continue;
-                    }
-
-                    if (nodes[i].tile.blockages.Contains(nodes[j].tile))
-                    {
-                        node.neighbors.Add(nodes[j]);
+                        neighbors.Add(neighbor);
                     }
                 }
             }
+
+            foreach (Node node in nodes)
+            {
+                foreach (var item in node.neighbors)
+                {
+                    Debug.Log($"AntsFlow.BaseTile {node.tile.name} {item.tile.name}");
+                }
+            }
+
 
             List<Node> addedNodes = new List<Node>();
             List<Node> bottomMostNodes = new List<Node>();
@@ -460,6 +472,11 @@ namespace AntsFlow
             {
                 Node current = queue.Dequeue();
 
+                // if (isDebug)
+                // {
+                //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)}");
+                // }
+
                 if (current == targetNode)
                 {
                     return RetracePath(start, targetNode);
@@ -467,11 +484,6 @@ namespace AntsFlow
 
                 foreach (var neighbor in current.neighbors)
                 {
-                    // if (isDebug)
-                    // {
-                    //     Debug.Log($"FindPath {target.name} {nodes.IndexOf(current)} {neighbor.tile}");
-                    // }
-
                     // blocked
                     if (neighbor.tile != null)
                     {
@@ -491,6 +503,14 @@ namespace AntsFlow
 
                     visited.Add(neighbor);
                     neighbor.Parent = current;
+
+                    if (isDebug)
+                    {
+                        if (neighbor.tile != null && current.tile != null)
+                        {
+                            Debug.Log($"FindPath22 {target.name} {neighbor.tile.name} {current.tile.name}");
+                        }
+                    }
 
                     queue.Enqueue(neighbor);
                 }
@@ -516,6 +536,18 @@ namespace AntsFlow
             }
 
             path.Reverse();
+
+            if (isDebug)
+            {
+                for (int i = 0; i < path.Count; i++)
+                {
+                    if (path[i].tile != null)
+                    {
+                        Debug.Log($"FindPath {end.tile.name} {path[i].tile.name}");
+                    }
+                }
+            }
+
             return path;
         }
         #endregion
@@ -568,21 +600,21 @@ namespace AntsFlow
         {
             List<BaseTile> validTiles = new List<BaseTile>();
 
-            // for (int i = 0; i < tiles.Count; i++)
-            // {
-            //     BaseTile tile = tiles[i];
+            for (int i = 0; i < tiles.Count; i++)
+            {
+                BaseTile tile = tiles[i];
 
-            //     if (tile.gameObject.activeInHierarchy &&
-            //         tile.Faction == faction &&
-            //         !tile.isAntApproaching &&
-            //         !tile.isLocked
-            //     )
-            //     {
-            //         validTiles.Add(tile);
-            //     }
-            // }
+                if (!tile.isDone &&
+                    tile.Faction == faction &&
+                    !tile.isAntApproaching &&
+                    !tile.isLocked
+                )
+                {
+                    validTiles.Add(tile);
+                }
+            }
 
-            // validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
+            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
 
             return validTiles;
         }

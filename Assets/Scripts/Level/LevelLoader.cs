@@ -488,11 +488,11 @@ namespace NamPhuThuy.GamePlay
                 {
                     tile.blockages.Add(tiles[downIndex]);
                 }
-                if (rightIndex < tiles.Count)
+                if (rightIndex < tiles.Count && SameRow(i, rightIndex, GamePersistentVariable.numColumn))
                 {
                     tile.blockages.Add(tiles[rightIndex]);
                 }
-                if (leftIndex >= 0)
+                if (leftIndex >= 0 && SameRow(i, leftIndex, GamePersistentVariable.numColumn))
                 {
                     tile.blockages.Add(tiles[leftIndex]);
                 }
@@ -511,6 +511,11 @@ namespace NamPhuThuy.GamePlay
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
 
             return spawnedLevelItem;
+
+            bool SameRow(int indexA, int indexB, int numCol)
+            {
+                return (indexA / numCol) == (indexB / numCol);
+            }
         }
 
         private void CenterLevel(Transform level)

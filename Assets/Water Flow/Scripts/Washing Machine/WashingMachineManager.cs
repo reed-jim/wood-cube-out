@@ -836,11 +836,14 @@ namespace AntsFlow
         {
             Dictionary<Color, int> numSpawnPerFactionOrderByDifficulty = GetNumAntSpawnPerFactionOrderByDifficulty(isIncludeStartSlot);
 
-            Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
-
-            foreach (var item in numSpawnPerFactionOrderByDifficulty)
+            if (!isIncludeStartSlot)
             {
-                Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+                Debug.Log($"GetNextAntSpawnByDifficulty =============== {difficultyLevel}");
+
+                foreach (var item in numSpawnPerFactionOrderByDifficulty)
+                {
+                    Debug.Log($"GetNextAntSpawnByDifficulty {ColorUtil.ColorToHex(item.Key)} {item.Value}");
+                }
             }
 
             int maxValidIndex = 0;
@@ -927,20 +930,7 @@ namespace AntsFlow
 
                 if (washingMachineStartSlot.washingMachine != null)
                 {
-                    if (isIncludeStartSlot)
-                    {
-                        CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                    }
-                    else
-                    {
-                        WashingMachineItem washingMachine = washingMachineStartSlot.washingMachine;
-
-                        if (washingMachine.isDouble || washingMachine is HiddenAntBox || washingMachine is FreezedAntBox)
-                        {
-                            Debug.Log($"washingMachine {washingMachine} {isIncludeStartSlot}");
-                            CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
-                        }
-                    }
+                    CommonUtil.SumValueOfDictionary(result, washingMachineStartSlot.washingMachine.faction, -washingMachineStartSlot.washingMachine.number);
                 }
             }
 
