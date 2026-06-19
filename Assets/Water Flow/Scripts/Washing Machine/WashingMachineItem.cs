@@ -398,18 +398,21 @@ public class WashingMachineItem : MonoBehaviour
 
         for (int i = 0; i < remainingNumber; i++)
         {
-            AntsFlow.BaseTile tile = AntsFlow.TileManager.Ins.GetAvailableTile(faction);
+            AntsFlow.BaseTile tile;
 
-            if (tile == null)
+            bool isFound = AntsFlow.TileManager.Ins.GetAvailableTile(faction, out tile);
+
+            if (!isFound)
             {
                 break;
             }
-            else if (!tilesToMove.Contains(tile))
+
+            if (!tilesToMove.Contains(tile))
             {
                 tilesToMove.Add(tile);
 
                 tile.isAntApproaching = true;
-                tile.InvokeRemoveTileAsBlockageEvent();
+                // tile.InvokeRemoveTileAsBlockageEvent();
 
                 addedTile++;
             }
@@ -418,14 +421,14 @@ public class WashingMachineItem : MonoBehaviour
         remainingNumber -= addedTile;
 
         var left = tilesToMove
-            .Where(t => t.transform.position.x < 0)
-            .OrderBy(t => t.transform.position.y)
-            .ThenBy(t => t.transform.position.x);
+            .Where(t => t.position.x < 0)
+            .OrderBy(t => t.position.y)
+            .ThenBy(t => t.position.x);
 
         var right = tilesToMove
-            .Where(t => t.transform.position.x >= 0)
-            .OrderBy(t => t.transform.position.y)
-            .ThenByDescending(t => t.transform.position.x);
+            .Where(t => t.position.x >= 0)
+            .OrderBy(t => t.position.y)
+            .ThenByDescending(t => t.position.x);
 
         tilesToMove = left.Concat(right).ToList();
 
@@ -502,9 +505,9 @@ public class WashingMachineItem : MonoBehaviour
                 ant.transform.eulerAngles = Vector3.zero;
 
                 ant.Init(faction);
-                ant.MoveToTile(tilesToMove[currentAntIndex]);
+                // ant.MoveToTile(tilesToMove[currentAntIndex]);
                 // BFS
-                // ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
+                ant.MoveTo(tilesToMove[currentAntIndex], tilesToMove.Count);
 
                 SoundManager.Instance.PlaySoundAntPop();
 
@@ -727,17 +730,17 @@ public class WashingMachineItem : MonoBehaviour
 
 
         // BFS
-        // List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
+        List<Node> path = AntsFlow.TileManager.Ins.FindPath(tile, transform.position);
 
-        // if (path == null || path.Count == 0)
-        // {
-        //     return false;
-        // }
+        if (path == null || path.Count == 0)
+        {
+            return false;
+        }
 
-        // tile.path = path;
+        tile.path = path;
 
-        // return true;
-        //
+        return true;
+
 
 
         return tile.actualBlockages.Count < 4;

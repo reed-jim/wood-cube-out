@@ -85,10 +85,10 @@ namespace AntsFlow
         #region Grid
         public void BuildMap(List<BaseTile> tiles)
         {
-            float yMin = tiles.Min(tile => tile.transform.position.y);
-            float yMax = tiles.Max(tile => tile.transform.position.y);
-            float xMin = tiles.Min(tile => tile.transform.position.x);
-            float xMax = tiles.Max(tile => tile.transform.position.x);
+            float yMin = tiles.Min(tile => tile.position.y);
+            float yMax = tiles.Max(tile => tile.position.y);
+            float xMin = tiles.Min(tile => tile.position.x);
+            float xMax = tiles.Max(tile => tile.position.x);
 
             nodes = new List<Node>();
 
@@ -97,7 +97,7 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 Node node = new Node();
-                node.initialPosition = tile.transform.position;
+                node.initialPosition = tile.position;
                 node.tile = tile;
 
                 nodes.Add(node);
@@ -134,6 +134,7 @@ namespace AntsFlow
                 Node nodeFromTile = nodes[i];
 
                 float tileSize = nodeFromTile.tile.worldSize;
+                tileSize = 1;
 
                 if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
                 {
@@ -530,7 +531,7 @@ namespace AntsFlow
             levelCenter /= tiles.Count;
         }
 
-        public BaseTile GetAvailableTile(Color faction)
+        public bool GetAvailableTile(Color faction, out BaseTile availableTile)
         {
             // bool isAvailable = tiles.Any(
             //     i => i.gameObject.activeInHierarchy &&
@@ -546,7 +547,7 @@ namespace AntsFlow
             {
                 BaseTile tile = tiles[i];
 
-                if (tile.gameObject.activeInHierarchy &&
+                if (!tile.isDone &&
                     tile.blockages.Count < 4 &&
                     tile.Faction == faction &&
                     !tile.isAntApproaching &&
@@ -558,31 +559,18 @@ namespace AntsFlow
             }
 
             validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
-            // validTiles = SortFrom9OClockCounterClockwise(validTiles, levelCenter);
-
-            // validTiles = validTiles
-            //     .OrderBy(p =>
-            //     {
-            //         Vector2 dir = ((Vector2)p.transform.position - levelCenter).normalized;
-
-            //         // Standard atan2 starts at +X (3 o'clock)
-            //         float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-            //         // Shift so 9 o'clock becomes 0°
-            //         angle = (angle - 180f + 360f) % 360f;
-            //     }).ToList();
 
             if (validTiles.Count > 0)
             {
-                // BaseTile availableTile =
-                //     tiles.First(i => i.gameObject.activeInHierarchy && i.blockages.Count < 4 && i.Faction == faction && !i.isAntApproaching && !i.isLocked);
-
-                // return availableTile;
-                return validTiles[0];
+                availableTile = validTiles[0];
+                
+                return true;
             }
             else
             {
-                return null;
+                availableTile = null;
+
+                return false;
             }
         }
 
@@ -623,6 +611,8 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
+            return;
+
             if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
             {
                 if (delayedUpdateNavmeshCoroutine != null)

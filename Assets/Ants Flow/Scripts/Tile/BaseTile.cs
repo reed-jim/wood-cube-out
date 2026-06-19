@@ -19,7 +19,7 @@ namespace AntsFlow
         public BoxCollider2D boxCollider;
         public NavMeshModifierVolume navMeshModifierVolume;
 
-        public Vector2Int GridPos;
+        public Vector3 position;
         public bool isDone;
         public bool isAntApproaching;
         public bool isAnimating;
@@ -74,17 +74,17 @@ namespace AntsFlow
             tileMoveToAntEvent += OnTileMoveToAnt;
             removeTileAsBlockageEvent += OnRemoveTileAsBlockage;
 
-            actualBlockages = new List<BaseTile>();
-            actualBlockages.AddRange(blockages);
+            // actualBlockages = new List<BaseTile>();
+            // actualBlockages.AddRange(blockages);
 
-            Vector2 spriteSize = outline.sprite.bounds.size;
+            // Vector2 spriteSize = outline.sprite.bounds.size;
 
-            Vector2 worldSize = new Vector2(
-                spriteSize.x * outline.transform.lossyScale.x,
-                spriteSize.y * outline.transform.lossyScale.y
-            );
+            // Vector2 worldSize = new Vector2(
+            //     spriteSize.x * outline.transform.lossyScale.x,
+            //     spriteSize.y * outline.transform.lossyScale.y
+            // );
 
-            this.worldSize = worldSize.x;
+            // this.worldSize = worldSize.x;
         }
 
         void OnDestroy()
@@ -115,25 +115,25 @@ namespace AntsFlow
 
         public void MoveToAnt(BaseAnt ant)
         {
-            boxCollider.enabled = false;
-            navMeshModifierVolume.enabled = false;
-            outline.gameObject.SetActive(false);
-            shadow.gameObject.SetActive(false);
+            // boxCollider.enabled = false;
+            // navMeshModifierVolume.enabled = false;
+            // outline.gameObject.SetActive(false);
+            // shadow.gameObject.SetActive(false);
 
-            Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
+            // Tween.Color(outline, CommonUtil.GetHighContrastComplementary(spriteRenderer.color), duration: 0.3f);
 
-            transform.SetParent(ant.transform);
-            Tween.LocalPosition(transform, new Vector3(0, 0.6f, -1), duration: 0.3f);
-            // Tween.Scale(transform, 0.45f, duration: 0.3f);
-            Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
+            // transform.SetParent(ant.transform);
+            // Tween.LocalPosition(transform, new Vector3(0, 0.6f, -1), duration: 0.3f);
+            // // Tween.Scale(transform, 0.45f, duration: 0.3f);
+            // Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
-            TileRemainingManager.Ins.SpawnTileRemaining(this);
-            SoundManager.Instance.PlaySoundCubeEat();
+            // TileRemainingManager.Ins.SpawnTileRemaining(this);
+            // SoundManager.Instance.PlaySoundCubeEat();
 
-            if (GamePersistentVariable.IsVibrate)
-            {
-                HapticFeedback.LightFeedback();
-            }
+            // if (GamePersistentVariable.IsVibrate)
+            // {
+            //     HapticFeedback.LightFeedback();
+            // }
 
             tileMoveToAntEvent?.Invoke(this);
         }
@@ -168,7 +168,7 @@ namespace AntsFlow
 
         public void InvokeAntStartMoveToTileEvent()
         {
-            navMeshModifierVolume.enabled = false;
+            // navMeshModifierVolume.enabled = false;
 
             antStartMoveToTileEvent?.Invoke(this);
         }
@@ -200,10 +200,10 @@ namespace AntsFlow
             blockages.Remove(tile);
 
             // faster ant spawning
-            if (actualBlockages.Contains(tile))
-            {
-                actualBlockages.Remove(tile);
-            }
+            // if (actualBlockages.Contains(tile))
+            // {
+            //     actualBlockages.Remove(tile);
+            // }
         }
 
         private void OnTileMoveToAnt(BaseTile tile)

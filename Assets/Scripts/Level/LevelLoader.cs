@@ -79,6 +79,7 @@ namespace NamPhuThuy.GamePlay
         public Material material;
         public Tilemap tilemap;
         public Transform tilemapGrid;
+        public List<Transform> tilemapGrids;
 
         private void Awake()
         {
@@ -99,6 +100,7 @@ namespace NamPhuThuy.GamePlay
 
             _tweens = new List<Tween>();
             _autoCenterLevelTweens = new List<Tween>();
+            tilemapGrids = new List<Transform>();
 
             currentLevel.Load();
 
@@ -299,14 +301,18 @@ namespace NamPhuThuy.GamePlay
         {
             // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
 
+            Vector3 initialScale = tilemapGrid.localScale;
+
             tilemapGrid.SetParent(levelTransform);
+            // tilemapGrid.localScale = Vector3.one;
 
             for (int i = 0; i < numRows; i++)
             {
                 Transform spawnedTileMapGrid = Instantiate(tilemapGrid, tilemapGrid.parent);
                 Tilemap spawnedTileMap = spawnedTileMapGrid.GetComponentInChildren<Tilemap>();
 
-                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-(numRows - i));
+                spawnedTileMapGrid.position = spawnedTileMapGrid.position.ChangeZ(-0.01f * (numRows - i));
+                spawnedTileMapGrid.localScale = initialScale;
 
                 for (int j = 0; j < numCols; j++)
                 {
@@ -318,6 +324,8 @@ namespace NamPhuThuy.GamePlay
                     tile.sprite = FactionMapper.Ins.GetTileSprite(FactionMapper.Ins.indexesOfColors[antLevelData.antLevelDataItems[index].factionIndex]);
 
                     spawnedTileMap.SetTile(cellPos, tile);
+
+                    tilemapGrids.Add(spawnedTileMapGrid);
                 }
             }
 
@@ -403,18 +411,22 @@ namespace NamPhuThuy.GamePlay
 
             List<AntsFlow.BaseTile> tiles = new List<AntsFlow.BaseTile>();
 
+            GameObject tileComponentHolder = new GameObject();
+            tileComponentHolder.name = "tileComponentHolder";
+
             for (int i = 0; i < antLevelData.antLevelDataItems.Count; i++)
             {
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
 
                 // AntsFlow.BaseTile tile = Instantiate(tilePrefab, level.transform);
                 // AntsFlow.BaseTile tile = ObjectPoolingEverything.GetFromPool<AntsFlow.BaseTile>(GameConstants.tile);
-                AntsFlow.BaseTile tile = new AntsFlow.BaseTile();
+                AntsFlow.BaseTile tile = tileComponentHolder.AddComponent<AntsFlow.BaseTile>();
 
                 // tile.transform.SetParent(levelTransform);
 
                 // tile.transform.position = antLevelDataItem.position;
 
+                tile.position = antLevelDataItem.position;
                 tile.Faction = FactionMapper.Ins.mapper[antLevelDataItem.factionIndex].color;
                 tile.ring = antLevelDataItem.ring;
                 tile.priority = antLevelDataItem.priority;
@@ -515,6 +527,8 @@ namespace NamPhuThuy.GamePlay
 
             // float positionZ;
 
+            // int index = 0;
+
             // foreach (AntLevelDataItem item in result.antLevelDataItems)
             // {
             //     Vector3 offset = item.position - center;
@@ -524,12 +538,18 @@ namespace NamPhuThuy.GamePlay
 
             //     positionZ = item.position.z;
 
-            //     // item.position = center + new Vector3(
-            //     //     gridX * tileSpacing.x,
-            //     //     gridY * tileSpacing.y
-            //     // );
+            //     Vector3 position = center + new Vector3(
+            //         gridX * tileSpacing.x,
+            //         gridY * tileSpacing.y
+            //     );
 
-            //     item.position = CommonUtil.GetVector3Int(item.position);
+            //     item.position = position;
+
+            //     AntsFlow.TileManager.Ins.tiles[index].position = position;
+
+            //     index++;
+
+            //     // item.position = CommonUtil.GetVector3Int(item.position);
             // }
 
             for (int row = 0; row < numRows; row++)
@@ -537,15 +557,24 @@ namespace NamPhuThuy.GamePlay
                 for (int col = 0; col < numCols; col++)
                 {
                     Vector3 position = new Vector3(
-                        col * 1,
-                        row * 1,
+                        -numCols / 2 + col * 1,
+                        (-numRows / 2 + 16) + row * 1,
                         0f
                     );
 
                     int index = col + row * numCols;
 
                     result.antLevelDataItems[index].position = position;
+
+                    AntsFlow.TileManager.Ins.tiles[index].position = position * 0.5f;
+
+                    Debug.Log($"AntsFlow.TileManager {AntsFlow.TileManager.Ins.tiles[index].position} {tilemapGrid.lossyScale.x}");
                 }
+            }
+
+            for (int i = 0; i < tilemapGrids.Count; i++)
+            {
+                tilemapGrids[i].localScale = 1.5f * Vector3.one;
             }
 
             return result;
@@ -1422,5 +1451,4 @@ namespace NamPhuThuy.GamePlay
         }
         #endregion
     }
-
 }

@@ -78,7 +78,7 @@ namespace AntsFlow
 
             // TileManager.Ins.tiles = TransformUtil.GetComponentsFromAllChildren<BaseTile>(levelItem.transform);
             TileManager.Ins.UpdateTileCount();
-            // TileManager.Ins.BuildMap(TileManager.Ins.tiles);
+            TileManager.Ins.BuildMap(TileManager.Ins.tiles);
 
             SpecialElementManager.Ins.Setup(levelItem);
 

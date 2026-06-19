@@ -92,7 +92,7 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 AntLevelDataItem dataItem = new AntLevelDataItem();
-                dataItem.position = tile.transform.position;
+                dataItem.position = tile.coordinate.transform.position;
                 dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
 
                 dataItem.blockageIndexes = new List<int>();
