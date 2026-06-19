@@ -240,7 +240,6 @@ namespace NamPhuThuy.GamePlay
 
             // _loadLevelHandle = Addressables.InstantiateAsync(levelName, transform);
             // load from json
-            levelName = "Level 50";
             _loadLevelHandle = Addressables.LoadAssetAsync<TextAsset>(levelName);
 
             _loadLevelHandle.Completed += (op) =>
@@ -269,17 +268,14 @@ namespace NamPhuThuy.GamePlay
 
                 AntsFlow.LevelItem levelItem = JsonToLevelItem(antLevelData, out levelTransform);
 
-                // GamePersistentVariable.levelItem = levelItem;
-                // GamePersistentVariable.isLevelLost = false;
+                GamePersistentVariable.levelItem = levelItem;
+                GamePersistentVariable.isLevelLost = false;
 
-                int numCols;
-                int numRows;
-
-                antLevelData = AutoSpacingAllTiles(antLevelData, out numCols, out numRows);
+                antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
                 // CenterLevel(levelTransform);
 
-                FillTileMap(antLevelData, levelTransform, numCols, numRows);
+                FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
 
                 WashingMachineManager.Ins.StartLevel(levelItem);
@@ -301,7 +297,7 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
-        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform, int numCols, int numRows)
+        private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
         {
             // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
 
@@ -309,6 +305,9 @@ namespace NamPhuThuy.GamePlay
 
             // tilemapGrid.SetParent(levelTransform);
             // tilemapGrid.localScale = Vector3.one;
+
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
 
             for (int i = 0; i < numRows; i++)
             {
@@ -442,10 +441,55 @@ namespace NamPhuThuy.GamePlay
                 tiles.Add(tile);
             }
 
+            // find num column
+            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
+            float tolerance = 0.01f;
+
+            GamePersistentVariable.numColumn = 0;
+
+            foreach (var tile in antLevelData.antLevelDataItems)
+            {
+                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
+                {
+                    GamePersistentVariable.numColumn++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            GamePersistentVariable.numRow = antLevelData.antLevelDataItems.Count / GamePersistentVariable.numColumn;
+            //
+
             for (int i = 0; i < tiles.Count; i++)
             {
                 AntsFlow.BaseTile tile = tiles[i];
                 AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
+
+                // int upIndex = i + GamePersistentVariable.numColumn;
+                // int downIndex = i - GamePersistentVariable.numColumn;
+                // int rightIndex = i + 1;
+                // int leftIndex = i - 1;
+
+                // tile.blockages = new List<AntsFlow.BaseTile>();
+
+                // if (upIndex < tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[upIndex]);
+                // }
+                // if (downIndex >= tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[downIndex]);
+                // }
+                // if (rightIndex < tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[rightIndex]);
+                // }
+                // if (leftIndex >= tiles.Count)
+                // {
+                //     tile.blockages.Add(tiles[leftIndex]);
+                // }
 
                 tile.blockages = new List<AntsFlow.BaseTile>();
 
@@ -456,25 +500,6 @@ namespace NamPhuThuy.GamePlay
                     tile.blockages.Add(tiles[index]);
                 }
             }
-
-            // for (int i = 0; i < tiles.Count; i++)
-            // {
-            //     AntsFlow.BaseTile tile = tiles[i];
-            //     AntLevelDataItem antLevelDataItem = antLevelData.antLevelDataItems[i];
-
-            //     List<AntsFlow.BaseTile> blockages = new List<AntsFlow.BaseTile>();
-
-            //     for (int j = 0; j < antLevelDataItem.blockageIndexes.Count; j++)
-            //     {
-            //         if (tiles.Any(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]))
-            //         {
-            //             blockages.Add(tiles.First(item => tiles.IndexOf(item) == antLevelDataItem.blockageIndexes[j]));
-            //         }
-            //     }
-
-            //     tile.blockages = new List<AntsFlow.BaseTile>();
-            //     tile.blockages.AddRange(blockages);
-            // }
 
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
@@ -505,7 +530,7 @@ namespace NamPhuThuy.GamePlay
             transform.position = transform.position.ChangeY(worldPos.y);
         }
 
-        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData, out int numCols, out int numRows)
+        public AntLevelData AutoSpacingAllTiles(AntLevelData antLevelData)
         {
             AntLevelData result = antLevelData;
 
@@ -515,27 +540,6 @@ namespace NamPhuThuy.GamePlay
                 center += tile.position;
 
             center /= antLevelData.antLevelDataItems.Count;
-
-            // find num column
-            float firstRowY = antLevelData.antLevelDataItems[0].position.y;
-            float tolerance = 0.01f;
-
-            numCols = 0;
-            numRows = 0;
-
-            foreach (var tile in antLevelData.antLevelDataItems)
-            {
-                if (Mathf.Abs(tile.position.y - firstRowY) < tolerance)
-                {
-                    numCols++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            numRows = antLevelData.antLevelDataItems.Count / numCols;
 
             // float baseSpacingX = 0.7605271f;
             // float baseSpacingY = 0.760527f;
@@ -574,6 +578,9 @@ namespace NamPhuThuy.GamePlay
 
             //     // item.position = CommonUtil.GetVector3Int(item.position);
             // }
+
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
 
             for (int row = 0; row < numRows; row++)
             {

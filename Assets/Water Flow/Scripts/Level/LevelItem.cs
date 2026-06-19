@@ -94,14 +94,17 @@ namespace AntsFlow
 //                 BaseTile tile = tiles[i];
 
 //                 AntLevelDataItem dataItem = new AntLevelDataItem();
-//                 dataItem.position = tile.coordinate.transform.position;
+//                 dataItem.position = tile.transform.position;
 //                 dataItem.factionIndex = factionMapper.mapper.FindIndex(item => item.color == tile.Faction);
 
 //                 dataItem.blockageIndexes = new List<int>();
 
-//                 for (int j = 0; j < tile.blockages.Count; j++)
+//                 if (tile.blockages != null)
 //                 {
-//                     dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+//                     for (int j = 0; j < tile.blockages.Count; j++)
+//                     {
+//                         dataItem.blockageIndexes.Add(tiles.IndexOf(tile.blockages[j]));
+//                     }
 //                 }
 
 //                 antLevelData.antLevelDataItems.Add(dataItem);
@@ -193,7 +196,7 @@ namespace AntsFlow
 
             if (GUILayout.Button("Convert to JSON"))
             {
-                ConvertToJson(levelItem);
+                levelItem.ConvertToJson();
             }
 
             // if (GUILayout.Button("Step 1: ReadLevel"))
@@ -216,10 +219,10 @@ namespace AntsFlow
             //     AssignLevelPriority(levelItem);
             // }
 
-            // if (GUILayout.Button("Step 5: Find Tile Blockages"))
-            // {
-            //     FindTileBlockages(levelItem);
-            // }
+            if (GUILayout.Button("Step 5: Find Tile Blockages"))
+            {
+                levelItem.FindTileBlockages();
+            }
 
             // if (GUILayout.Button("Step 6: Get Pool Faction"))
             // {
@@ -422,7 +425,7 @@ namespace AntsFlow
             //     FindBlockage(tile, boxCollider, -tile.transform.right);
             // }
 
-            EditorUtility.SetDirty(level);
+            // EditorUtility.SetDirty(level);
 
             void FindBlockage(BaseTile tile, BoxCollider2D collider, Vector2 direction)
             {
