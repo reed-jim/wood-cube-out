@@ -32,6 +32,7 @@ namespace AntsFlow
         public bool isMovingToNest;
         public bool isDroppingTile;
         public BaseTile tile;
+        public FakeTile fakeTile;
         public Vector3 destination;
 
         private List<Tween> tweens;
@@ -240,11 +241,6 @@ namespace AntsFlow
             stuckTime = 0;
             stuckTimeNoReachDestination = 0;
 
-            if (tile != null)
-            {
-                LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
-            }
-
             tile = null;
 
             CommonUtil.StopAllTweens(tweens);
@@ -267,9 +263,9 @@ namespace AntsFlow
 
             Vector3 antScale = transform.localScale;
 
-            sequences.Add(SaferioTween.ScaleDownWithPunch(tile.transform, scaleUpVal: 3f, onCompleteAction: () =>
+            sequences.Add(SaferioTween.ScaleDownWithPunch(fakeTile.transform, scaleUpVal: 3f, onCompleteAction: () =>
             {
-                LevelGarbageBin.Instance.PutOnGarbage(tile.transform);
+                LevelGarbageBin.Instance.PutOnGarbage(fakeTile.transform);
 
                 tile.Complete();
                 gameObject.SetActive(false);
@@ -481,87 +477,87 @@ namespace AntsFlow
 
         public void MoveToTile(BaseTile tile)
         {
-            tile.isAntApproaching = true;
-            tile.InvokeAntStartMoveToTileEvent();
+            // tile.isAntApproaching = true;
+            // tile.InvokeAntStartMoveToTileEvent();
 
-            this.tile = tile;
+            // this.tile = tile;
 
-            destination = tile.coordinate.transform.position.ChangeZ(0);
-            stuckTime = 0;
-            navMeshAgent.enabled = false;
-            navMeshAgent.areaMask = walkableMask;
-            navMeshAgent.enabled = true;
+            // destination = tile.coordinate.transform.position.ChangeZ(0);
+            // stuckTime = 0;
+            // navMeshAgent.enabled = false;
+            // navMeshAgent.areaMask = walkableMask;
+            // navMeshAgent.enabled = true;
 
-            if (navMeshAgent.isOnNavMesh)
-            {
-                navMeshAgent.destination = destination;
-            }
-            else
-            {
-                MoveToNest();
-            }
+            // if (navMeshAgent.isOnNavMesh)
+            // {
+            //     navMeshAgent.destination = destination;
+            // }
+            // else
+            // {
+            //     MoveToNest();
+            // }
 
-            isMovingToSideTile = false;
-            isMovingToTile = true;
+            // isMovingToSideTile = false;
+            // isMovingToTile = true;
         }
 
         public void MoveToTileGhostMode(BaseTile tile)
         {
-            navMeshAgent.enabled = false;
+            // navMeshAgent.enabled = false;
 
-            tile.isAntApproaching = true;
-            tile.InvokeAntStartMoveToTileEvent();
+            // tile.isAntApproaching = true;
+            // tile.InvokeAntStartMoveToTileEvent();
 
-            this.tile = tile;
+            // this.tile = tile;
 
-            SetRotation((Vector2)(tile.transform.position - transform.position));
+            // SetRotation((Vector2)(tile.transform.position - transform.position));
 
-            Vector2 direction;
-            float speed = 10;
-            float distance;
-            float duration;
+            // Vector2 direction;
+            // float speed = 10;
+            // float distance;
+            // float duration;
 
-            direction = (Vector2)(tile.transform.position - transform.position);
-            distance = direction.magnitude;
-            duration = distance / speed;
+            // direction = (Vector2)(tile.transform.position - transform.position);
+            // distance = direction.magnitude;
+            // duration = distance / speed;
 
-            SetRotation(direction);
+            // SetRotation(direction);
 
-            tweens.Add(Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
-            .OnComplete(() =>
-            {
-                if (tile != null)
-                {
-                    tile.MoveToAnt(this);
-                }
+            // tweens.Add(Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
+            // .OnComplete(() =>
+            // {
+            //     if (tile != null)
+            //     {
+            //         tile.MoveToAnt(this);
+            //     }
 
-                direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
-                distance = direction.magnitude;
-                duration = distance / speed;
+            //     direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
+            //     distance = direction.magnitude;
+            //     duration = distance / speed;
 
-                SetRotation(direction);
+            //     SetRotation(direction);
 
-                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
-                .OnComplete(() =>
-                {
-                    OnAntMovedToNest();
-                }));
-            }));
+            //     tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
+            //     .OnComplete(() =>
+            //     {
+            //         OnAntMovedToNest();
+            //     }));
+            // }));
 
-            void SetRotation(Vector2 direction)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // void SetRotation(Vector2 direction)
+            // {
+            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                transform.rotation = targetRotation;
+            //     transform.rotation = targetRotation;
 
-                // transform.rotation = Quaternion.Lerp(
-                //     transform.rotation,
-                //     targetRotation,
-                //     rotationSpeed * Time.deltaTime
-                // );
-            }
+            //     // transform.rotation = Quaternion.Lerp(
+            //     //     transform.rotation,
+            //     //     targetRotation,
+            //     //     rotationSpeed * Time.deltaTime
+            //     // );
+            // }
         }
 
         public void MoveToNest()
@@ -606,15 +602,15 @@ namespace AntsFlow
                 tweens.Add(Tween.Position(transform, nextPosition, duration: Vector2.Distance(nextPosition, transform.position) / moveSpeed, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
-                    // onCompleteAction?.Invoke();
-                    navMeshAgent.enabled = false;
-                    navMeshAgent.areaMask = walkableMask;
-                    navMeshAgent.enabled = true;
+                    // // onCompleteAction?.Invoke();
+                    // navMeshAgent.enabled = false;
+                    // navMeshAgent.areaMask = walkableMask;
+                    // navMeshAgent.enabled = true;
 
-                    navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
+                    // navMeshAgent.destination = tile.coordinate.transform.position.ChangeZ(0);
 
-                    isMovingToSideTile = false;
-                    isMovingToTile = true;
+                    // isMovingToSideTile = false;
+                    // isMovingToTile = true;
                 }));
             }));
 

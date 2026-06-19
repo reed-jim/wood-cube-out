@@ -75,18 +75,18 @@ namespace AntsFlow
 
         public void MoveToCenterOfTiles()
         {
-            Vector3 center = new Vector3();
+            // Vector3 center = new Vector3();
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     BaseTile tile = tiles[i];
 
-                center += tile.transform.position;
-            }
+            //     center += tile.transform.position;
+            // }
 
-            center /= tiles.Count;
+            // center /= tiles.Count;
 
-            transform.position = center.AddZ(-1);
+            // transform.position = center.AddZ(-1);
         }
     }
 

@@ -354,7 +354,7 @@ namespace AntsFlow
                 {
                     Gizmos.color = Color.green;
 
-                    Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    Gizmos.DrawSphere(node.initialPosition, 0.15f);
                     Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                     // DrawConnectors(node);
@@ -365,17 +365,17 @@ namespace AntsFlow
                     {
                         Gizmos.color = Color.green;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                        Gizmos.DrawSphere(node.initialPosition, 0.15f);
                         Handles.Label(node.initialPosition.AddY(0.3f).AddZ(-0.3f), nodes.IndexOf(node).ToString());
 
                         // DrawConnectors(node);
                     }
-                    else
-                    {
-                        Gizmos.color = Color.red;
+                    // else
+                    // {
+                    //     Gizmos.color = Color.red;
 
-                        Gizmos.DrawSphere(node.initialPosition, 0.2f);
-                    }
+                    //     Gizmos.DrawSphere(node.initialPosition, 0.2f);
+                    // }
                 }
 
                 // Gizmos.DrawSphere(node.initialPosition, 0.2f);
@@ -473,7 +473,7 @@ namespace AntsFlow
                     {
                         if (
                             !neighbor.tile.isAntApproaching &&
-                            neighbor.tile.gameObject.activeInHierarchy
+                            !neighbor.tile.isDone
                         )
                         {
                             continue;
@@ -517,20 +517,6 @@ namespace AntsFlow
         #endregion
         #endregion
 
-        public void CalculateLevelCenter()
-        {
-            levelCenter = Vector3.zero;
-
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
-
-                levelCenter += (Vector2)tile.transform.position;
-            }
-
-            levelCenter /= tiles.Count;
-        }
-
         public bool GetAvailableTile(Color faction, out BaseTile availableTile)
         {
             // bool isAvailable = tiles.Any(
@@ -548,7 +534,7 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 if (!tile.isDone &&
-                    tile.blockages.Count < 4 &&
+                    !tile.IsBlocked() &&
                     tile.Faction == faction &&
                     !tile.isAntApproaching &&
                     !tile.isLocked
@@ -578,21 +564,21 @@ namespace AntsFlow
         {
             List<BaseTile> validTiles = new List<BaseTile>();
 
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                BaseTile tile = tiles[i];
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     BaseTile tile = tiles[i];
 
-                if (tile.gameObject.activeInHierarchy &&
-                    tile.Faction == faction &&
-                    !tile.isAntApproaching &&
-                    !tile.isLocked
-                )
-                {
-                    validTiles.Add(tile);
-                }
-            }
+            //     if (tile.gameObject.activeInHierarchy &&
+            //         tile.Faction == faction &&
+            //         !tile.isAntApproaching &&
+            //         !tile.isLocked
+            //     )
+            //     {
+            //         validTiles.Add(tile);
+            //     }
+            // }
 
-            validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
+            // validTiles = validTiles.OrderBy(item => item.ring).ThenBy(item => item.priority).ToList();
 
             return validTiles;
         }
@@ -763,11 +749,11 @@ namespace AntsFlow
 
         public void AssignTilesForGrids()
         {
-            for (int i = 0; i < tiles.Count; i++)
-            {
-                GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
-                gridNode.tile = tiles[i];
-            }
+            // for (int i = 0; i < tiles.Count; i++)
+            // {
+            //     GridNode gridNode = grids.First(item => item.Position == CommonUtil.GetVector2Int(tiles[i].transform.position));
+            //     gridNode.tile = tiles[i];
+            // }
         }
 
         public GridNode GetGridNode(Vector3 position)

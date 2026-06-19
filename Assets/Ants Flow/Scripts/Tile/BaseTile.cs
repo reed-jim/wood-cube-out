@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using CandyCoded.HapticFeedback;
 using EPOOutline;
 using PrimeTween;
@@ -11,14 +12,12 @@ using UnityEngine.Tilemaps;
 
 namespace AntsFlow
 {
-    public class BaseTile : MonoBehaviour
+    [Serializable]
+    public class BaseTile
     {
-        public Transform coordinate;
-        public SpriteRenderer spriteRenderer;
-        public SpriteRenderer shadow;
-        public SpriteRenderer outline;
-        public BoxCollider2D boxCollider;
-        public NavMeshModifierVolume navMeshModifierVolume;
+        // public Transform coordinate;
+        // public SpriteRenderer spriteRenderer;
+        // public SpriteRenderer outline;
 
         public Tilemap tilemap;
         public Vector3Int tilemapPosition;
@@ -28,9 +27,9 @@ namespace AntsFlow
         public bool isAntApproaching;
         public bool isAnimating;
         public bool isLocked;
-        public List<BaseTile> blockages;
-        public List<BaseTile> actualBlockages;
-        public List<Node> path;
+        [NonSerialized] public List<BaseTile> blockages;
+        [NonSerialized] public List<BaseTile> actualBlockages;
+        [NonSerialized] public List<Node> path;
 
         public int ring;
         public int priority;
@@ -63,7 +62,7 @@ namespace AntsFlow
             return worldSize;
         }
 
-        public GameSetting gameSetting;
+        // public GameSetting gameSetting;
 
         public static event Action<BaseTile> removeTileAsBlockageEvent;
         public static event Action<BaseTile> tileCompleteEvent;
@@ -101,15 +100,12 @@ namespace AntsFlow
 
         public void Init()
         {
-            spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(faction);
-            spriteRenderer.color = Color.white;
+            // spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(faction);
+            // spriteRenderer.color = Color.white;
         }
 
         public void Reset()
         {
-            transform.position = Vector3.zero;
-            transform.rotation = Quaternion.identity;
-
             isAntApproaching = false;
             isAnimating = false;
 
@@ -131,13 +127,17 @@ namespace AntsFlow
             // // Tween.Scale(transform, 0.45f, duration: 0.3f);
             // Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
-            // TileRemainingManager.Ins.SpawnTileRemaining(this);
-            // SoundManager.Instance.PlaySoundCubeEat();
+            FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
-            // if (GamePersistentVariable.IsVibrate)
-            // {
-            //     HapticFeedback.LightFeedback();
-            // }
+            fakeTile.Init(ant, faction);
+
+            TileRemainingManager.Ins.SpawnTileRemaining(this);
+            SoundManager.Instance.PlaySoundCubeEat();
+
+            if (GamePersistentVariable.IsVibrate)
+            {
+                HapticFeedback.LightFeedback();
+            }
 
             tilemap.SetTile(tilemapPosition, null);
 
@@ -146,28 +146,30 @@ namespace AntsFlow
 
         public void Highlight(Action onComplete)
         {
-            outline.gameObject.SetActive(true);
+            // outline.gameObject.SetActive(true);
 
-            outline.color = ColorUtil.WithAlpha(Color.white, 0);
+            // outline.color = ColorUtil.WithAlpha(Color.white, 0);
 
-            Tween.Alpha(outline, 0.75f, duration: 0.3f)
-            .OnComplete(() =>
-            {
-                Tween.Alpha(outline, 0, duration: 0.5f)
-                .OnComplete(() =>
-                {
-                    outline.gameObject.SetActive(false);
+            // Tween.Alpha(outline, 0.75f, duration: 0.3f)
+            // .OnComplete(() =>
+            // {
+            //     Tween.Alpha(outline, 0, duration: 0.5f)
+            //     .OnComplete(() =>
+            //     {
+            //         outline.gameObject.SetActive(false);
 
-                    onComplete?.Invoke();
-                });
-            });
+            //         onComplete?.Invoke();
+            //     });
+            // });
         }
 
         public void Complete()
         {
-            gameObject.SetActive(false);
+            // gameObject.SetActive(false);
 
             // TileManager.Ins.UpdateNavMesh(boxCollider);
+
+            isDone = true;
 
             tileCompleteEvent.Invoke(this);
         }
@@ -182,13 +184,6 @@ namespace AntsFlow
         public void InvokeRemoveTileAsBlockageEvent()
         {
             removeTileAsBlockageEvent?.Invoke(this);
-        }
-
-        private void OnLevelReplayed()
-        {
-            Reset();
-
-            ObjectPoolingEverything.ReturnToPool(GameConstants.tile, gameObject);
         }
 
         private void OnTileCompleted(BaseTile tile)
@@ -226,15 +221,14 @@ namespace AntsFlow
             useClearOneColorBoosterEvent?.Invoke(Faction);
         }
 
+        public int GetNumBlockages()
+        {
+            return blockages.Where(tile => !tile.isDone && !tile.isAntApproaching).Count();
+        }
+
         public bool IsBlocked()
         {
-            Vector2 pos = transform.position;
-
-            return
-                Physics2D.Raycast(pos, Vector2.up) &&
-                Physics2D.Raycast(pos, Vector2.down) &&
-                Physics2D.Raycast(pos, Vector2.left) &&
-                Physics2D.Raycast(pos, Vector2.right);
+            return GetNumBlockages() >= 4;
         }
     }
 }

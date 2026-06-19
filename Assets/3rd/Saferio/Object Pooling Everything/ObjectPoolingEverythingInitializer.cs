@@ -58,6 +58,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
 
     [Header("Ant Out")]
     [SerializeField] private GameObject baseTile;
+    [SerializeField] private GameObject fakeTilePrefab;
+    [SerializeField] private GameObject tilemapPrefab;
 
     [Header("Washing Machine")]
     public GameObject washingMachineItemPrefab;
@@ -163,6 +165,8 @@ public class ObjectPoolingEverythingInitializer : MonoBehaviour
         RegisterPool<HiddenAntBox>(GameConstants.hiddenAntBox, hiddenAntBoxPrefab, 20);
         RegisterPool<FreezedAntBox>(GameConstants.freezedAntBox, freezedAntBoxPrefab, 20);
         RegisterPool<TileRemaining>(GameConstants.tileRemaining, tileRemainingPrefab, 30);
+        RegisterPool<FakeTile>(GameConstants.fakeTile, fakeTilePrefab, 200);
+        RegisterPool<Transform>(GameConstants.tileMap, tilemapPrefab, 40);
     }
 
     private void RegisterPool<T>(string key, GameObject prefab, int poolSize)
