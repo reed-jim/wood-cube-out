@@ -486,6 +486,11 @@ namespace NamPhuThuy.GamePlay
                 int rightIndex = i + 1;
                 int leftIndex = i - 1;
 
+                int topRightIndex = i + GamePersistentVariable.numColumn + 1;
+                int topLeftIndex = i + GamePersistentVariable.numColumn - 1;
+                int downRightIndex = i - GamePersistentVariable.numColumn + 1;
+                int downLeftIndex = i - GamePersistentVariable.numColumn - 1;
+
                 tile.blockages = new List<AntsFlow.BaseTile>();
 
                 if (upIndex < tiles.Count)
@@ -504,6 +509,23 @@ namespace NamPhuThuy.GamePlay
                 {
                     tile.blockages.Add(tiles[leftIndex]);
                 }
+
+                // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
+                // {
+                //     tile.blockages.Add(tiles[topRightIndex]);
+                // }
+                // if (topLeftIndex >= 0 && topLeftIndex < tiles.Count && i - 1 >= 0)
+                // {
+                //     tile.blockages.Add(tiles[topLeftIndex]);
+                // }
+                // if (downRightIndex >= 0 && downRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
+                // {
+                //     tile.blockages.Add(tiles[downRightIndex]);
+                // }
+                // if (downLeftIndex >= 0 && downLeftIndex < tiles.Count && i - 1 >= 0)
+                // {
+                //     tile.blockages.Add(tiles[downLeftIndex]);
+                // }
 
                 // tile.blockages = new List<AntsFlow.BaseTile>();
 

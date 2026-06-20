@@ -522,6 +522,9 @@ namespace AntsFlow
 
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
+            float moveSpeed = 5f;
+            float zigZagWidth = 0.15f;
+            float zigZagFrequency = 1f;
             float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
 
             if (count == 1)
@@ -535,9 +538,25 @@ namespace AntsFlow
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
             points = Simplify(points);
 
+            bool isCenter = Math.Abs(transform.position.x) < 0.1f;
+
             if (count == 1)
             {
-                points[0] = GetRandomPointAround(points[0], 1.5f);
+                // points[0] = GetRandomPointAround(points[0], 1.5f);
+
+                // start at center
+                // if (isCenter)
+                // {
+                //     int sign = transform.position.x > 0 ? 1 : -1;
+
+                //     points.Insert(0, TileManager.Ins.antNest.position.ChangeY(-3));
+                //     points.Insert(1, TileManager.Ins.antNest.position.ChangeY(-3).ChangeX(sign * 3f));
+                //     points.Insert(2, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(sign * 3f));
+                // }
+                // else
+                // {
+                //     points.Insert(0, TileManager.Ins.bottomLeftMostNode.initialPosition.ChangeX(transform.position.x));
+                // }
             }
 
             float totalDistance = GetTotalDistance(points, transform.position);
@@ -545,7 +564,31 @@ namespace AntsFlow
 
             if (count == 2)
             {
-                points.RemoveAt(points.Count - 1);
+                List<Vector3> toRemovePoints = new List<Vector3>();
+
+                float removeThresholdY = TileManager.Ins.bottomRightMostInsideLevelNode.initialPosition.y;
+
+                for (int i = 0; i < points.Count; i++)
+                {
+                    if (points[i].y < removeThresholdY)
+                    {
+                        toRemovePoints.Add(points[i]);
+                    }
+                }
+
+                for (int i = 0; i < toRemovePoints.Count; i++)
+                {
+                    points.Remove(toRemovePoints[i]);
+                }
+
+                if (path[0].initialPosition.x > 0)
+                {
+                    points.Add(TileManager.Ins.bottomRightMostInsideLevelNode.initialPosition);
+                }
+                else
+                {
+                    points.Add(TileManager.Ins.bottomLeftMostInsideLevelNode.initialPosition);
+                }
                 points.Add(TileManager.Ins.antNest.position.AddY(UnityEngine.Random.RandomRange(-0.5f, 0.7f)));
             }
 
@@ -566,22 +609,24 @@ namespace AntsFlow
                 Vector3 control = mid + perp * curveHeight;
 
                 bool isCurved = false;
+                bool isZigzag = false;
 
                 if (count == 1 && index == 1)
                 {
                     isCurved = true;
                 }
 
-                // if (count == 2 && index == points.Count - 1)
-                // {
-                //     isCurved = true;
-                // }
+                if (count == 1 && index == 0)
+                {
+                    if (!isCenter)
+                    {
+                        isZigzag = true;
+                    }
+                }
 
                 isCurved = false;
 
                 float t = 0f;
-                // float deltaT = (moveSpeed / distance) * Time.deltaTime;
-
                 float timeNeeded = distance / totalDistance * totalTime;
                 float timePassed = 0;
 
@@ -610,7 +655,18 @@ namespace AntsFlow
                     }
                     else
                     {
-                        pos = Vector3.Lerp(start, end, t);
+                        if (isZigzag)
+                        {
+                            float offset =
+                                Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
+                                zigZagWidth;
+
+                            pos = Vector3.Lerp(start, end, t) + perp * offset;
+                        }
+                        else
+                        {
+                            pos = Vector3.Lerp(start, end, t);
+                        }
                     }
 
                     direction = (end - pos).normalized;

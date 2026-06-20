@@ -1,4 +1,5 @@
 using AntsFlow;
+using NamPhuThuy.GamePlay;
 using Saferio.Util.SaferioTween;
 using UnityEngine;
 
@@ -12,6 +13,22 @@ namespace AntsFlow
 
         public Vector3 positionInAnt;
         public float scaleInAnt;
+
+        void Awake()
+        {
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+        }
+
+        void OnDestroy()
+        {
+            LevelLoader.startLevelEvent += OnLevelReplayed;
+            SettingPopup.replayLevelEvent += OnLevelReplayed;
+            LosePopup.replayLevelEvent += OnLevelReplayed;
+            DebugPopup.switchLevelEvent += OnLevelReplayed;
+        }
 
         public void Init(BaseAnt ant, Color faction)
         {
@@ -34,6 +51,11 @@ namespace AntsFlow
             transform.position = GamePersistentVariable.tileMapScaleFactor * position.AddZ(-0.01f * position.y);
             transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
             transform.localRotation = Quaternion.identity;
+        }
+
+        private void OnLevelReplayed()
+        {
+            ObjectPoolingEverything.ReturnToPool(GameConstants.washingMachine, gameObject);
         }
     }
 }
