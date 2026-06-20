@@ -421,19 +421,19 @@ public class WashingMachineItem : MonoBehaviour
 
         remainingNumber -= addedTile;
 
-        var left = tilesToMove
-            .Where(t => t.position.x < 0)
-            .OrderBy(t => t.position.y)
-            .ThenBy(t => t.position.x);
+        // var left = tilesToMove
+        //     .Where(t => t.position.x < 0)
+        //     .OrderBy(t => t.position.y)
+        //     .ThenBy(t => t.position.x);
 
-        var right = tilesToMove
-            .Where(t => t.position.x >= 0)
-            .OrderBy(t => t.position.y)
-            .ThenByDescending(t => t.position.x);
+        // var right = tilesToMove
+        //     .Where(t => t.position.x >= 0)
+        //     .OrderBy(t => t.position.y)
+        //     .ThenByDescending(t => t.position.x);
 
-        tilesToMove = left.Concat(right).ToList();
+        // tilesToMove = left.Concat(right).ToList();
 
-        // tilesToMove = tilesToMove.OrderBy(t => t.GetPathTotalDistance(transform.position)).ToList();
+        tilesToMove = tilesToMove.OrderBy(t => t.GetTotalPathDistance(transform.position)).ToList();
 
         if (!GamePersistentVariable.isPendingLoseLevel && isPlayingWarningLoseAnimation)
         {

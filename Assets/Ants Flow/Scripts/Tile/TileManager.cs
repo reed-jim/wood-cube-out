@@ -87,7 +87,7 @@ namespace AntsFlow
         }
 
         #region Grid
-        private Vector3 GetTilePosition(BaseTile tile)
+        public Vector3 GetTilePosition(BaseTile tile)
         {
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
         }

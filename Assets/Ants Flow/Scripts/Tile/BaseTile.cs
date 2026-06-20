@@ -64,6 +64,27 @@ namespace AntsFlow
             return worldSize;
         }
 
+        public float GetTotalPathDistance(Vector3 start)
+        {
+            if (path == null || path.Count == 0)
+            {
+                return 0;
+            }
+            
+            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+            
+            float distance = 0;
+
+            distance += Vector2.Distance(points[0], start);
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                distance += Vector2.Distance(points[i], points[i + 1]);
+            }
+
+            return distance;
+        }
+
         // public GameSetting gameSetting;
 
         public static event Action<BaseTile> removeTileAsBlockageEvent;

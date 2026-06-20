@@ -808,11 +808,13 @@ namespace AntsFlow
             float distance;
             float duration;
 
-            direction = (Vector2)(tile.position - transform.position);
+            Vector3 tilePosition = TileManager.Ins.GetTilePosition(tile);
+
+            direction = (Vector2)(tilePosition - transform.position);
             distance = direction.magnitude;
             duration = distance / speed;
 
-            tweens.Add(Tween.Position(transform, tile.position.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
+            tweens.Add(Tween.Position(transform, tilePosition.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
                 if (tile != null)

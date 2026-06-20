@@ -25,7 +25,10 @@ public class UpSpeedAnt : MonoBehaviour
         {
             if (Input.GetMouseButtonUp(0))
             {
-                Time.timeScale = 1;
+                if (!GamePersistentVariable.isGameSpeedChangeInDebug)
+                {
+                    Time.timeScale = 1;
+                }
 
                 isHolding = false;
             }
