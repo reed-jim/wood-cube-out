@@ -499,7 +499,42 @@ namespace AntsFlow
 
             for (int i = 0; i < tilesToClear.Count; i++)
             {
+                bool isLast = i == tilesToClear.Count - 1;
+
                 tilesToClear[i].Hide();
+
+                SpawnFakeTile(tilesToClear[i], isLast);
+            }
+
+            void SpawnFakeTile(BaseTile tile, bool isLast)
+            {
+                FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
+
+                fakeTile.Init(tile);
+
+                Vector3 initialPosition = fakeTile.transform.position;
+
+                Tween.ScaleY(fakeTile.transform, 1.6f, duration: 0.3f);
+                Tween.PositionY(fakeTile.transform, fakeTile.transform.position.y + 1.6f, duration: 0.3f)
+                .OnComplete(() =>
+                {
+                    Tween.ScaleY(fakeTile.transform, 1, duration: 0.15f);
+                    Tween.Position(fakeTile.transform, initialPosition, duration: 0.15f)
+                    .OnComplete(() =>
+                    {
+                        SaferioTween.ScaleDownWithPunch(fakeTile.transform, onCompleteAction: () =>
+                        {
+                            tile.Complete();
+
+                            ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
+                        });
+
+                        if (isLast)
+                        {
+                            SoundManager.Instance.PlaySound(GameConstants.tileHitGroundSound);
+                        }
+                    });
+                });
             }
 
             // for (int i = 0; i < tilesToClear.Count; i++)

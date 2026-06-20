@@ -108,6 +108,7 @@ namespace NamPhuThuy.GamePlay
             GoLevel(currentLevel.Value);
 
             GamePersistentVariable.hasPlayerReachedGameplay = true;
+            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
         }
 
         private void Start()
@@ -599,7 +600,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (numRows / 3) + row * 1,
+                        (numRows / 4) + row * 1,
                         0f
                     );
 

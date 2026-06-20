@@ -1,4 +1,5 @@
 using AntsFlow;
+using Saferio.Util.SaferioTween;
 using UnityEngine;
 
 namespace AntsFlow
@@ -22,6 +23,17 @@ namespace AntsFlow
             transform.localRotation = Quaternion.identity;
 
             ant.fakeTile = this;
+        }
+
+        public void Init(BaseTile tile)
+        {
+            spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(tile.Faction);
+
+            Vector3 position = (Vector3)(tile.tilemapPosition);
+
+            transform.position = GamePersistentVariable.tileMapScaleFactor * position.AddZ(-1);
+            transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
+            transform.localRotation = Quaternion.identity;
         }
     }
 }

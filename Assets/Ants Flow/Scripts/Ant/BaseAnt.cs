@@ -127,21 +127,21 @@ namespace AntsFlow
 
         void Update()
         {
-            transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+            // transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
-            if (direction.sqrMagnitude > 0.01f && !isDroppingTile)
+            if (!isDroppingTile)
             {
                 float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
                 Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                // transform.rotation = Quaternion.Lerp(
-                //     transform.rotation,
-                //     targetRotation,
-                //     rotationSpeed * Time.deltaTime
-                // );
+                transform.rotation = Quaternion.Lerp(
+                    transform.rotation,
+                    targetRotation,
+                    rotationSpeed * Time.deltaTime
+                );
 
-                transform.rotation = targetRotation;
+                // transform.rotation = targetRotation;
             }
 
             return;
@@ -346,7 +346,7 @@ namespace AntsFlow
 
             navMeshAgent.enabled = false;
 
-            StartCoroutine(MovingToZigZag(path, 1));
+            StartCoroutine(MovingCurved(path, 1));
 
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
@@ -356,14 +356,14 @@ namespace AntsFlow
 
         public void MoveTo(List<Node> path)
         {
-            StartCoroutine(MovingToZigZag(path, 2));
+            StartCoroutine(MovingCurved(path, 2));
         }
 
         private IEnumerator MovingToZigZag(List<Node> path, int count)
         {
             float moveSpeed = 5f;
             float zigZagWidth = 0.2f;
-            float zigZagFrequency = 3f;
+            float zigZagFrequency = 2f;
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
 
@@ -460,15 +460,69 @@ namespace AntsFlow
             }
         }
 
+        public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 0.1f)
+        {
+            if (points.Count < 3)
+                return points;
+
+            var result = new List<Vector3> { points[0] };
+
+            for (int i = 1; i < points.Count - 1; i++)
+            {
+                Vector2 dir1 = ((Vector2)(points[i] - points[i - 1])).normalized;
+                Vector2 dir2 = ((Vector2)(points[i + 1] - points[i])).normalized;
+
+                if (Vector2.Distance(dir1, dir2) > tolerance)
+                    result.Add(points[i]);
+            }
+
+            result.Add(points[^1]);
+            return result;
+        }
+
+        private float GetTotalDistance(List<Vector3> points, Vector3 start)
+        {
+            float distance = 0;
+
+            distance += Vector2.Distance(points[0], start);
+
+            for (int i = 0; i < points.Count - 1; i++)
+            {
+                distance += Vector2.Distance(points[i], points[i + 1]);
+            }
+
+            return distance;
+        }
+
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
-            float moveSpeed = 5f;
-            float curveHeight = 2f;
+            float moveSpeed = 6f;
+            float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 2f);
+
+            if (count == 1)
+            {
+                if (path[0].initialPosition.x > 0)
+                {
+                    curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 2f);
+                }
+            }
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+            points = Simplify(points);
+
+            float totalDistance = GetTotalDistance(points, transform.position);
+            float totalTime = totalDistance / speedMove;
+
+            if (count == 2)
+            {
+                points.RemoveAt(points.Count - 1);
+                points.Add(TileManager.Ins.antNest.position.AddY(1.8f));
+            }
 
             for (int i = 0; i < points.Count; i++)
             {
+                int index = i;
+
                 Vector3 start = transform.position;
                 Vector3 end = points[i];
 
@@ -481,20 +535,55 @@ namespace AntsFlow
                 Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
                 Vector3 control = mid + perp * curveHeight;
 
-                float t = 0f;
+                bool isCurved = false;
 
-                while (t < 1f)
+                if (count == 1 && index == 0)
                 {
-                    t += (moveSpeed / distance) * Time.deltaTime;
-                    t = Mathf.Clamp01(t);
+                    isCurved = true;
+                }
 
-                    // Quadratic Bezier
-                    Vector3 pos =
-                        Mathf.Pow(1 - t, 2) * start +
-                        2 * (1 - t) * t * control +
-                        Mathf.Pow(t, 2) * end;
+                // if (count == 2 && index == points.Count - 1)
+                // {
+                //     isCurved = true;
+                // }
 
-                    transform.position = pos;
+                float t = 0f;
+                // float deltaT = (moveSpeed / distance) * Time.deltaTime;
+
+                float timeNeeded = distance / totalDistance * totalTime;
+                float timePassed = 0;
+
+                while (timePassed < timeNeeded)
+                {
+                    // t += Time.deltaTime;
+                    // t = Mathf.Clamp01(t);
+                    timePassed += Time.deltaTime;
+                    t = timePassed / timeNeeded;
+
+                    Vector3 pos;
+
+                    if (isCurved)
+                    {
+                        // // Quadratic Bezier
+                        // pos =
+                        //     Mathf.Pow(1 - t, 2) * start +
+                        //     2 * (1 - t) * t * control +
+                        //     Mathf.Pow(t, 2) * end;
+
+                        float tt = t * t;
+
+                        pos = start
+                            + (2f * (control - start)) * t
+                            + (start - 2f * control + end) * tt;
+                    }
+                    else
+                    {
+                        pos = Vector3.Lerp(start, end, t);
+                    }
+
+                    direction = (end - pos).normalized;
+
+                    transform.position = pos.ChangeZ(-3 - 0.001f * siblingIndex);
 
                     yield return null;
                 }
@@ -523,6 +612,7 @@ namespace AntsFlow
                 OnAntMovedToNest();
             }
         }
+
         private IEnumerator MovingTo(List<Node> path, int count, int index)
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);

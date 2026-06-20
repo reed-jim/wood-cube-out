@@ -198,5 +198,6 @@ public static class GamePersistentVariable
     public static int numActiveAnt;
     public static int numColumn;
     public static int numRow;
+    public static float tileMapScaleFactor;
     #endregion
 }

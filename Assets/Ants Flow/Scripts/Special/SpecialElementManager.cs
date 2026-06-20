@@ -117,8 +117,16 @@ public class SpecialElementManager : Singleton<SpecialElementManager>
         }
         else if (specialElementConfig.frozenAntBoxConfig.IsValidToSpawn(WashingMachineManager.Ins.numAntBoxSpawned))
         {
-            nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
-            specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+            try
+            {
+                nextFreezeAntBoxRequiredNumber = specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze[0];
+                specialElementConfig.frozenAntBoxConfig.numBoxToUnfreeze.RemoveAt(0);
+            }
+            catch (System.Exception)
+            {
+
+                nextFreezeAntBoxRequiredNumber = 2;
+            }
 
             specialElementConfig.frozenAntBoxConfig.RemoveOneSpecialElementInPool();
 

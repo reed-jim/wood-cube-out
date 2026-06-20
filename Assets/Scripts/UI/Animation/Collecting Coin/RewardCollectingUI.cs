@@ -136,11 +136,9 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             _rewards[i].localPosition = Vector3.zero;
             _rewards[i].localScale = Vector3.zero;
 
-            _rewards[i].DOScale(1, duration: 0.3f);
+            // _rewards[i].DOScale(1, duration: 0.3f);
             // AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
-
-        await Task.Delay(620);
 
         float remainValue = totalValue % poolSize;
         float unitValue = (float)(totalValue - remainValue) / poolSize;
@@ -172,16 +170,18 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             Sequence seq = DOTween.Sequence();
 
             seq.Join(
-                _rewards[index].DOLocalPath(
+                DOTween.Sequence()
+                .Append(_rewards[index].DOScale(1, 0.3f))
+                .Append(_rewards[index].DOLocalPath(
                     path,
                     0.8f,
                     PathType.CatmullRom
-                ).SetEase(Ease.InOutSine).SetDelay(0.3f * i)
+                )).SetEase(Ease.InOutSine).SetDelay(0.2f * i)
             );
 
             seq.Join(
                 DOTween.Sequence()
-                    .Append(_rewards[index].DOScale(2f, 0.3f))
+                    .Append(_rewards[index].DOScale(3f, 0.3f))
                     .Append(_rewards[index].DOScale(1f, 0.3f))
             );
 
@@ -210,12 +210,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
                 _rewards[index].GetComponent<RotatingCoin>().PlayFX();
 
-                // _rewards[index].gameObject.SetActive(false);
-
-                if (i % 8 == 0)
-                {
-                    SoundManager.Instance.PlaySoundCollectCoin();
-                }
+                SoundManager.Instance.PlaySoundCollectCoin();
             });
 
             // Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
