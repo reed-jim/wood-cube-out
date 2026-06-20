@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using PrimeTween;
+using DG.Tweening;
+// using PrimeTween;
 using UnityEngine;
 using UnityEngine.UI;
 using static GameEnum;
@@ -72,49 +73,49 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
     private async void Collect(Vector3 position, int totalValue = 0)
     {
-        for (int i = 0; i < poolSize; i++)
-        {
-            _rewards[i].gameObject.SetActive(true);
+        // for (int i = 0; i < poolSize; i++)
+        // {
+        //     _rewards[i].gameObject.SetActive(true);
 
-            _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
-            _rewards[i].localScale = Vector3.zero;
+        //     _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-150, 150), UnityEngine.Random.Range(-150, 150));
+        //     _rewards[i].localScale = Vector3.zero;
 
-            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
-        }
+        //     AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+        // }
 
-        await Task.Delay(620);
+        // await Task.Delay(620);
 
-        float remainValue = totalValue % poolSize;
-        float unitValue = (float)(totalValue - remainValue) / poolSize;
+        // float remainValue = totalValue % poolSize;
+        // float unitValue = (float)(totalValue - remainValue) / poolSize;
 
-        SpawnedRewardItemsData spawnedRewardItemsData = new SpawnedRewardItemsData();
+        // SpawnedRewardItemsData spawnedRewardItemsData = new SpawnedRewardItemsData();
 
-        spawnedRewardItemsData.totalItems = poolSize;
-        spawnedRewardItemsData.remaningItems = poolSize;
-        spawnedRewardItemsData.unitValue = unitValue;
+        // spawnedRewardItemsData.totalItems = poolSize;
+        // spawnedRewardItemsData.remaningItems = poolSize;
+        // spawnedRewardItemsData.unitValue = unitValue;
 
-        GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
+        // GamePersistentVariable.spawnedRewardItemsData = spawnedRewardItemsData;
 
-        for (int i = 0; i < poolSize; i++)
-        {
-            int index = i;
+        // for (int i = 0; i < poolSize; i++)
+        // {
+        //     int index = i;
 
-            AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
-            {
-                // addCoinEvent?.Invoke((float)totalValue / poolSize);
+        //     AddTween(Tween.LocalPosition(_rewards[index], position, duration: UnityEngine.Random.Range(0.2f, 0.6f)).OnComplete(() =>
+        //     {
+        //         // addCoinEvent?.Invoke((float)totalValue / poolSize);
 
-                float valueLeft = (poolSize - index - 1) * unitValue;
+        //         float valueLeft = (poolSize - index - 1) * unitValue;
 
-                if (index == poolSize - 1)
-                {
-                    valueLeft = 0;
-                }
+        //         if (index == poolSize - 1)
+        //         {
+        //             valueLeft = 0;
+        //         }
 
-                UserResourcesManager.Instance.UpdateCoinTextAnimation();
+        //         UserResourcesManager.Instance.UpdateCoinTextAnimation();
 
-                _rewards[index].gameObject.SetActive(false);
-            }));
-        }
+        //         _rewards[index].gameObject.SetActive(false);
+        //     }));
+        // }
     }
 
     public async void CollectItem
@@ -135,7 +136,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             _rewards[i].localPosition = Vector3.zero;
             _rewards[i].localScale = Vector3.zero;
 
-            AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
+            _rewards[i].DOScale(1, duration: 0.3f);
+            // AddTween(Tween.Scale(_rewards[i], 1, duration: UnityEngine.Random.Range(0.2f, 0.6f)));
         }
 
         await Task.Delay(620);
@@ -155,57 +157,113 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         isCompleted = false;
 
+        Vector3[] path =
+        {
+            new Vector3(150f, -100f, 0f), // curve right & down
+            new Vector3(250f,  50f, 0f), // start moving up
+            position
+        };
+
         for (int i = 0; i < _rewards.Length; i++)
         {
             int index = i;
             float duration;
 
-            Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
+            Sequence seq = DOTween.Sequence();
 
-            AddTween(Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: Ease.Linear)
-            .OnComplete(() =>
+            seq.Join(
+                _rewards[index].DOLocalPath(
+                    path,
+                    0.8f,
+                    PathType.CatmullRom
+                ).SetEase(Ease.InOutSine).SetDelay(0.3f * i)
+            );
+
+            seq.Join(
+                DOTween.Sequence()
+                    .Append(_rewards[index].DOScale(2f, 0.3f))
+                    .Append(_rewards[index].DOScale(1f, 0.3f))
+            );
+
+            seq.OnComplete(() =>
             {
-                duration = UnityEngine.Random.Range(0.2f, 0.6f);
+                float valueLeft = (poolSize - index - 1) * unitValue;
 
-                if (duration > maxDuration)
+                if (!isCompleted && index == _rewards.Length - 1)
                 {
-                    maxDuration = duration;
+                    valueLeft = 0;
+                    GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
+
+                    collectCoinCompleteEvent?.Invoke();
+
+                    isCompleted = true;
+
+                    onCompleteAction?.Invoke();
                 }
-
-                AddTween(Tween.LocalPosition(_rewards[index], position, duration: duration, ease: Ease.InOutSine)
-                .OnComplete(() =>
+                else
                 {
-                    float valueLeft = (poolSize - index - 1) * unitValue;
-
-                    if (!isCompleted && duration == maxDuration)
+                    if (!isCompleted)
                     {
-                        valueLeft = 0;
-                        GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
-
-                        collectCoinCompleteEvent?.Invoke();
-
-                        isCompleted = true;
-
                         onCompleteAction?.Invoke();
                     }
-                    else
-                    {
-                        if (!isCompleted)
-                        {
-                            onCompleteAction?.Invoke();
-                        }
-                    }
+                }
 
-                    _rewards[index].GetComponent<RotatingCoin>().PlayFX();
+                _rewards[index].GetComponent<RotatingCoin>().PlayFX();
 
-                    // _rewards[index].gameObject.SetActive(false);
+                // _rewards[index].gameObject.SetActive(false);
 
-                    if (i % 8 == 0)
-                    {
-                        SoundManager.Instance.PlaySoundCollectCoin();
-                    }
-                }));
-            }));
+                if (i % 8 == 0)
+                {
+                    SoundManager.Instance.PlaySoundCollectCoin();
+                }
+            });
+
+            // Vector3 randomBouncePosition = _rewards[index].localPosition - new Vector3(UnityEngine.Random.Range(-100, 100), UnityEngine.Random.Range(50, 100), 0);
+
+            // AddTween(Tween.LocalPosition(_rewards[index], randomBouncePosition, duration: 0.3f, ease: Ease.Linear)
+            // .OnComplete(() =>
+            // {
+            //     duration = UnityEngine.Random.Range(0.2f, 0.6f);
+
+            //     if (duration > maxDuration)
+            //     {
+            //         maxDuration = duration;
+            //     }
+
+            //     AddTween(Tween.LocalPosition(_rewards[index], position, duration: duration, ease: Ease.InOutSine)
+            //     .OnComplete(() =>
+            //     {
+            //         float valueLeft = (poolSize - index - 1) * unitValue;
+
+            //         if (!isCompleted && duration == maxDuration)
+            //         {
+            //             valueLeft = 0;
+            //             GamePersistentVariable.spawnedRewardItemsData.remaningItems = 0;
+
+            //             collectCoinCompleteEvent?.Invoke();
+
+            //             isCompleted = true;
+
+            //             onCompleteAction?.Invoke();
+            //         }
+            //         else
+            //         {
+            //             if (!isCompleted)
+            //             {
+            //                 onCompleteAction?.Invoke();
+            //             }
+            //         }
+
+            //         _rewards[index].GetComponent<RotatingCoin>().PlayFX();
+
+            //         // _rewards[index].gameObject.SetActive(false);
+
+            //         if (i % 8 == 0)
+            //         {
+            //             SoundManager.Instance.PlaySoundCollectCoin();
+            //         }
+            //     }));
+            // }));
         }
     }
 }

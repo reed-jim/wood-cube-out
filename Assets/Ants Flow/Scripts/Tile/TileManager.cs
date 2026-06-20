@@ -130,13 +130,13 @@ namespace AntsFlow
                 }
             }
 
-            foreach (Node node in nodes)
-            {
-                foreach (var item in node.neighbors)
-                {
-                    Debug.Log($"AntsFlow.BaseTile {node.tile.name} {item.tile.name}");
-                }
-            }
+            // foreach (Node node in nodes)
+            // {
+            //     foreach (var item in node.neighbors)
+            //     {
+            //         Debug.Log($"AntsFlow.BaseTile {node.tile.name} {item.tile.name}");
+            //     }
+            // }
 
 
             List<Node> addedNodes = new List<Node>();

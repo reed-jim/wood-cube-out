@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using NamPhuThuy.GamePlay;
 using Pathfinding;
 using PrimeTween;
@@ -345,7 +346,7 @@ namespace AntsFlow
 
             navMeshAgent.enabled = false;
 
-            StartCoroutine(MovingTo(path, 1, index));
+            StartCoroutine(MovingToZigZag(path, 1));
 
             tile.isAntApproaching = true;
             tile.InvokeAntStartMoveToTileEvent();
@@ -353,11 +354,175 @@ namespace AntsFlow
             this.tile = tile;
         }
 
-        public void MoveTo(List<Node> path, int index)
+        public void MoveTo(List<Node> path)
         {
-            StartCoroutine(MovingTo(path, 2, index));
+            StartCoroutine(MovingToZigZag(path, 2));
         }
 
+        private IEnumerator MovingToZigZag(List<Node> path, int count)
+        {
+            float moveSpeed = 5f;
+            float zigZagWidth = 0.2f;
+            float zigZagFrequency = 3f;
+
+            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+
+            if (count == 2)
+            {
+                points.Add(TileManager.Ins.antNest.position.AddY(0.3f));
+            }
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                int index = i;
+
+                Vector3 start = transform.position;
+                Vector3 target = points[i];
+
+                float distance = Vector3.Distance(start, target);
+                if (distance < 0.01f)
+                    continue;
+
+                Vector3 dir = (target - start).normalized;
+                Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
+
+                direction = dir;
+
+                float t = 0f;
+
+                bool isZigzag = false;
+
+                if (count == 1 && index == 0)
+                {
+                    isZigzag = true;
+                }
+
+                if (count == 2 && index == points.Count - 1)
+                {
+                    isZigzag = true;
+                }
+
+                while (t < 1f)
+                {
+                    t += (moveSpeed / distance) * Time.deltaTime;
+
+                    Vector3 basePos = Vector3.Lerp(start, target, t);
+
+                    if (isZigzag)
+                    {
+                        float offset =
+                            Mathf.Sin(t * zigZagFrequency * Mathf.PI * 2f) *
+                            zigZagWidth;
+
+                        transform.position = basePos + perp * offset;
+                    }
+                    else
+                    {
+                        transform.position = basePos;
+                    }
+
+                    yield return null;
+                }
+
+                transform.position = target;
+            }
+
+            if (count < 2)
+            {
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
+
+                List<Node> reversePath = new List<Node>();
+
+                for (int i = path.Count - 1; i >= 0; i--)
+                {
+                    reversePath.Add(path[i]);
+                }
+
+                MoveTo(reversePath);
+            }
+            else
+            {
+                OnAntMovedToNest();
+
+                // float speed = 6;
+                // float duration = Vector2.Distance(transform.position, TileManager.Ins.antNest.position.AddY(0.3f)) / speed;
+
+                // direction = TileManager.Ins.antNest.position.AddY(0.3f) - transform.position;
+
+                // tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.3f), duration, ease: Ease.Linear)
+                // .OnComplete(() =>
+                // {
+                //     OnAntMovedToNest();
+                // }));
+            }
+        }
+
+        private IEnumerator MovingCurved(List<Node> path, int count)
+        {
+            float moveSpeed = 5f;
+            float curveHeight = 2f;
+
+            List<Vector3> points = path.Select(item => item.initialPosition).ToList();
+
+            for (int i = 0; i < points.Count; i++)
+            {
+                Vector3 start = transform.position;
+                Vector3 end = points[i];
+
+                float distance = Vector3.Distance(start, end);
+
+                Vector3 mid = (start + end) * 0.5f;
+
+                // Control point above the line
+                Vector3 dir = (end - start).normalized;
+                Vector3 perp = new Vector3(-dir.y, dir.x, 0f);
+                Vector3 control = mid + perp * curveHeight;
+
+                float t = 0f;
+
+                while (t < 1f)
+                {
+                    t += (moveSpeed / distance) * Time.deltaTime;
+                    t = Mathf.Clamp01(t);
+
+                    // Quadratic Bezier
+                    Vector3 pos =
+                        Mathf.Pow(1 - t, 2) * start +
+                        2 * (1 - t) * t * control +
+                        Mathf.Pow(t, 2) * end;
+
+                    transform.position = pos;
+
+                    yield return null;
+                }
+
+                transform.position = end;
+            }
+
+            if (count < 2)
+            {
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
+
+                List<Node> reversePath = new List<Node>();
+
+                for (int i = path.Count - 1; i >= 0; i--)
+                {
+                    reversePath.Add(path[i]);
+                }
+
+                MoveTo(reversePath);
+            }
+            else
+            {
+                OnAntMovedToNest();
+            }
+        }
         private IEnumerator MovingTo(List<Node> path, int count, int index)
         {
             WaitForSeconds waitForSeconds = new WaitForSeconds(1f / 30);
@@ -452,7 +617,7 @@ namespace AntsFlow
                     tile.MoveToAnt(this);
                 }
 
-                MoveTo(reversePath, index);
+                MoveTo(reversePath);
             }
             else
             {
@@ -510,61 +675,61 @@ namespace AntsFlow
 
         public void MoveToTileGhostMode(BaseTile tile)
         {
-            // navMeshAgent.enabled = false;
+            navMeshAgent.enabled = false;
 
-            // tile.isAntApproaching = true;
-            // tile.InvokeAntStartMoveToTileEvent();
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
 
-            // this.tile = tile;
+            this.tile = tile;
 
-            // SetRotation((Vector2)(tile.transform.position - transform.position));
+            SetRotation((Vector2)(tile.position - transform.position));
 
-            // Vector2 direction;
-            // float speed = 10;
-            // float distance;
-            // float duration;
+            Vector2 direction;
+            float speed = 10;
+            float distance;
+            float duration;
 
-            // direction = (Vector2)(tile.transform.position - transform.position);
-            // distance = direction.magnitude;
-            // duration = distance / speed;
+            direction = (Vector2)(tile.position - transform.position);
+            distance = direction.magnitude;
+            duration = distance / speed;
 
-            // SetRotation(direction);
+            SetRotation(direction);
 
-            // tweens.Add(Tween.Position(transform, tile.transform.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
-            // .OnComplete(() =>
-            // {
-            //     if (tile != null)
-            //     {
-            //         tile.MoveToAnt(this);
-            //     }
+            tweens.Add(Tween.Position(transform, tile.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
+            .OnComplete(() =>
+            {
+                if (tile != null)
+                {
+                    tile.MoveToAnt(this);
+                }
 
-            //     direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
-            //     distance = direction.magnitude;
-            //     duration = distance / speed;
+                direction = (Vector2)(TileManager.Ins.antNest.position - transform.position);
+                distance = direction.magnitude;
+                duration = distance / speed;
 
-            //     SetRotation(direction);
+                SetRotation(direction);
 
-            //     tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
-            //     .OnComplete(() =>
-            //     {
-            //         OnAntMovedToNest();
-            //     }));
-            // }));
+                tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
+                .OnComplete(() =>
+                {
+                    OnAntMovedToNest();
+                }));
+            }));
 
-            // void SetRotation(Vector2 direction)
-            // {
-            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            void SetRotation(Vector2 direction)
+            {
+                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-            //     transform.rotation = targetRotation;
+                transform.rotation = targetRotation;
 
-            //     // transform.rotation = Quaternion.Lerp(
-            //     //     transform.rotation,
-            //     //     targetRotation,
-            //     //     rotationSpeed * Time.deltaTime
-            //     // );
-            // }
+                // transform.rotation = Quaternion.Lerp(
+                //     transform.rotation,
+                //     targetRotation,
+                //     rotationSpeed * Time.deltaTime
+                // );
+            }
         }
 
         public void MoveToNest()

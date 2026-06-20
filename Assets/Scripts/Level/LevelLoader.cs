@@ -667,6 +667,7 @@ namespace NamPhuThuy.GamePlay
             await Task.Delay(500);
 
             shadowTilemapGrid.SetParent(transform.parent);
+            shadowTilemap.ClearAllTiles();
 
             for (int i = 0; i < tilemapGrids.Count; i++)
             {
