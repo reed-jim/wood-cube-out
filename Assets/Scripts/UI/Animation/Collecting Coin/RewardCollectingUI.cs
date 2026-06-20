@@ -169,20 +169,20 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Join(
+            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.2f * i));
+
+            seq.Append(
                 DOTween.Sequence()
-                .Append(_rewards[index].DOScale(1, 0.3f))
-                .Append(_rewards[index].DOLocalPath(
+                .Join(_rewards[index].DOLocalPath(
                     path,
                     0.8f,
                     PathType.CatmullRom
-                )).SetEase(Ease.InOutSine).SetDelay(0.2f * i)
-            );
-
-            seq.Join(
-                DOTween.Sequence()
-                    .Append(_rewards[index].DOScale(3f, 0.3f))
-                    .Append(_rewards[index].DOScale(1f, 0.3f))
+                ).SetEase(Ease.InOutSine))
+                .Join(
+                    DOTween.Sequence()
+                        .Append(_rewards[index].DOScale(2f, 0.4f))
+                        .Append(_rewards[index].DOScale(1f, 0.4f))
+                )
             );
 
             seq.OnComplete(() =>

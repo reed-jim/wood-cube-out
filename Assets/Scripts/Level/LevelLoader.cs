@@ -304,8 +304,8 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
-            float scaleByX = 16f / numCols;
-            float scaleByY = 16f / numRows;
+            float scaleByX = 15f / numCols;
+            float scaleByY = 15f / numRows;
             float finalScale = Mathf.Min(scaleByX, scaleByY);
 
             scaleFactor = finalScale;
@@ -607,7 +607,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (0.18f * numRows) + row * 1,
+                        (0.175f * numRows) + row * 1,
                         0f
                     );
 

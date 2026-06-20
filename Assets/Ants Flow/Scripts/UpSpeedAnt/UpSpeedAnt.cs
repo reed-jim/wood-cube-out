@@ -10,14 +10,6 @@ public class UpSpeedAnt : MonoBehaviour
 
     public GameSetting gameSetting;
 
-    void Awake()
-    {
-        if (gameSetting.IsDebug)
-        {
-            gameObject.SetActive(false);
-        }
-    }
-
     void Update()
     {
         if (!isHolding)
@@ -40,19 +32,15 @@ public class UpSpeedAnt : MonoBehaviour
         }
     }
 
-    public void OnMouseDown()
-    {
-        Time.timeScale = 2;
+    // public void OnMouseDown()
+    // {
+    //     EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.EVENT_START_UP_SPEED_ANT, 2f);
+    // }
 
-        // EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.EVENT_START_UP_SPEED_ANT, 2f);
-    }
-
-    public void OnMouseUp()
-    {
-        Time.timeScale = 1;
-
-        // EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.EVENT_END_UP_SPEED_ANT);
-    }
+    // public void OnMouseUp()
+    // {
+    //     EventDispatcher.EventDispatcher.Instance.PostEvent(EventID.EVENT_END_UP_SPEED_ANT);
+    // }
 
     private bool IsClickedOnUI()
     {

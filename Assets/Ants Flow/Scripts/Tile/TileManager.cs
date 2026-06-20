@@ -89,7 +89,7 @@ namespace AntsFlow
         #region Grid
         private Vector3 GetTilePosition(BaseTile tile)
         {
-            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.1f, 0.1f);
+            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
         }
 
         public void BuildMap(List<BaseTile> tiles)
@@ -155,7 +155,7 @@ namespace AntsFlow
                 Node nodeFromTile = nodes[i];
 
                 float tileSize = nodeFromTile.tile.worldSize;
-                tileSize = 1;
+                tileSize = 2;
 
                 if (Mathf.Approximately(nodeFromTile.initialPosition.y, yMin))
                 {

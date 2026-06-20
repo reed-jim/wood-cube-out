@@ -66,10 +66,11 @@ namespace AntsFlow
         private float randomNoiseOffset;
 
         private float speedMove;
+        public float initialSpeedMove;
 
         void Awake()
         {
-            speedMove = 6;
+            speedMove = initialSpeedMove;
 
             // LevelLoader.startLevelEvent += OnLevelStarted;
             SettingPopup.replayLevelEvent += OnLevelReplayed;
@@ -521,7 +522,6 @@ namespace AntsFlow
 
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
-            float moveSpeed = 6f;
             float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
 
             if (count == 1)
@@ -546,7 +546,7 @@ namespace AntsFlow
             if (count == 2)
             {
                 points.RemoveAt(points.Count - 1);
-                points.Add(TileManager.Ins.antNest.position.AddY(0.2f));
+                points.Add(TileManager.Ins.antNest.position.AddY(UnityEngine.Random.RandomRange(-0.5f, 0.7f)));
             }
 
             for (int i = 0; i < points.Count; i++)
@@ -804,9 +804,6 @@ namespace AntsFlow
 
             this.tile = tile;
 
-            SetRotation((Vector2)(tile.position - transform.position));
-
-            Vector2 direction;
             float speed = 10;
             float distance;
             float duration;
@@ -815,9 +812,7 @@ namespace AntsFlow
             distance = direction.magnitude;
             duration = distance / speed;
 
-            SetRotation(direction);
-
-            tweens.Add(Tween.Position(transform, tile.position.ChangeZ(transform.position.z), duration: duration, ease: Ease.Linear)
+            tweens.Add(Tween.Position(transform, tile.position.ChangeZ(-3 - 0.001f * siblingIndex), duration: duration, ease: Ease.Linear)
             .OnComplete(() =>
             {
                 if (tile != null)
@@ -829,29 +824,12 @@ namespace AntsFlow
                 distance = direction.magnitude;
                 duration = distance / speed;
 
-                SetRotation(direction);
-
                 tweens.Add(Tween.Position(transform, TileManager.Ins.antNest.position.AddY(0.2f), duration: duration, ease: Ease.Linear)
                 .OnComplete(() =>
                 {
                     OnAntMovedToNest();
                 }));
             }));
-
-            void SetRotation(Vector2 direction)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
-
-                transform.rotation = targetRotation;
-
-                // transform.rotation = Quaternion.Lerp(
-                //     transform.rotation,
-                //     targetRotation,
-                //     rotationSpeed * Time.deltaTime
-                // );
-            }
         }
 
         public void MoveToNest()
@@ -986,7 +964,6 @@ namespace AntsFlow
 
         private void OnEnable()
         {
-            navMeshAgent.speed = speedMove;
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_START_UP_SPEED_ANT, (a) => UpSpeed((float)a));
             EventDispatcher.EventDispatcher.Instance.RegisterListener(EventID.EVENT_END_UP_SPEED_ANT, (a) => EndUpSpeed());
         }
@@ -999,14 +976,14 @@ namespace AntsFlow
 
         private void UpSpeed(float value)
         {
-            //navMeshAgent.speed = speedMove * value;
-            Time.timeScale = value;
+            speedMove = value * initialSpeedMove;
+            // Time.timeScale = value;
         }
 
         private void EndUpSpeed()
         {
-            Time.timeScale = 1;
-            // navMeshAgent.speed = speedMove;
+            speedMove = initialSpeedMove;
+            // Time.timeScale = 1;
         }
     }
 }
