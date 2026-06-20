@@ -65,6 +65,20 @@ public class DebugPopup : BasePopup
         }
     }
 
+    protected override void Show(Action onCompletedAction = null)
+    {
+        base.Show(onCompletedAction);
+
+        if (GameController.Instance.useProfile.IsRemoveAds)
+        {
+            debugAdsText.text = "Enable Ads";
+        }
+        else
+        {
+            debugAdsText.text = "Disable Ads";
+        }
+    }
+
     private void DebugPlayLevel()
     {
         int level = int.Parse(levelInput.text);
@@ -87,7 +101,7 @@ public class DebugPopup : BasePopup
     {
         prevLevelEvent?.Invoke();
         switchLevelEvent?.Invoke();
-        
+
         Hide();
     }
 
@@ -111,15 +125,17 @@ public class DebugPopup : BasePopup
 
     private void DebugAdsButton()
     {
-        if (UserData.IsRemoveAds)
+        if (GameController.Instance.useProfile.IsRemoveAds)
         {
             UserData.IsRemoveAds = false;
+            GameController.Instance.useProfile.IsRemoveAds = false;
 
             debugAdsText.text = "Disable Ads";
         }
         else
         {
             UserData.IsRemoveAds = true;
+            GameController.Instance.useProfile.IsRemoveAds = true;
 
             debugAdsText.text = "Enable Ads";
         }

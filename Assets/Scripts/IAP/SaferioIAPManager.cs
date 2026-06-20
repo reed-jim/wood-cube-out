@@ -249,6 +249,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                 removeAdPurchasedCompletedEvent?.Invoke();
 
                 UserData.IsRemoveAds = true;
+                GameController.Instance.useProfile.IsRemoveAds = true;
             }
             else
             {
@@ -282,6 +283,7 @@ public class SaferioIAPManager : MonoBehaviour, IDetailedStoreListener
                             GameController.Instance.admobAds.DestroyBanner();
 
                             UserData.IsRemoveAds = true;
+                            GameController.Instance.useProfile.IsRemoveAds = true;
                         }
 
                         if (productData.IsUnlockAllScrewBoxes)
