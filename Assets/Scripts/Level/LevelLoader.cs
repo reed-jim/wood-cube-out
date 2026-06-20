@@ -266,6 +266,8 @@ namespace NamPhuThuy.GamePlay
                 GamePersistentVariable.levelItem = levelItem;
                 GamePersistentVariable.isLevelLost = false;
 
+                CalculateLevelScale();
+
                 antLevelData = AutoSpacingAllTiles(antLevelData);
                 // FitLevelToScreenArea(levelTransform);
                 // CenterLevel(levelTransform);
@@ -292,6 +294,19 @@ namespace NamPhuThuy.GamePlay
             }
         }
 
+        private void CalculateLevelScale()
+        {
+            int numRows = GamePersistentVariable.numRow;
+            int numCols = GamePersistentVariable.numColumn;
+
+            float scaleByX = 15f / numCols;
+            float scaleByY = 15f / numRows;
+            float finalScale = Mathf.Min(scaleByX, scaleByY);
+
+            scaleFactor = finalScale;
+            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
+        }
+
         private void FillTileMap(AntLevelData antLevelData, Transform levelTransform)
         {
             // AntsFlow.BaseTile[] tiles = TransformUtil.GetComponentArrayFromAllChildren<AntsFlow.BaseTile>(level.transform);
@@ -303,13 +318,6 @@ namespace NamPhuThuy.GamePlay
 
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
-
-            float scaleByX = 15f / numCols;
-            float scaleByY = 15f / numRows;
-            float finalScale = Mathf.Min(scaleByX, scaleByY);
-
-            scaleFactor = finalScale;
-            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
 
             shadowTilemapGrid.SetParent(levelTransform);
             shadowTilemapGrid.position = shadowTilemapOffset;
@@ -510,6 +518,9 @@ namespace NamPhuThuy.GamePlay
                     tile.blockages.Add(tiles[leftIndex]);
                 }
 
+                tile.actualBlockages = new List<AntsFlow.BaseTile>();
+                tile.actualBlockages.AddRange(tile.blockages);
+
                 // if (topRightIndex >= 0 && topRightIndex < tiles.Count && i + 1 < GamePersistentVariable.numColumn)
                 // {
                 //     tile.blockages.Add(tiles[topRightIndex]);
@@ -638,7 +649,20 @@ namespace NamPhuThuy.GamePlay
                     result.antLevelDataItems[index].position = position;
 
                     AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
+
+                    SpawnObstacle(AntsFlow.TileManager.Ins.tiles[index]);
                 }
+            }
+
+            AntsFlow.TileManager.Ins.UpdateNavMesh();
+
+            void SpawnObstacle(AntsFlow.BaseTile tile)
+            {
+                // TileObstacle obstacle = ObjectPoolingEverything.GetFromPool<TileObstacle>(GameConstants.tileObstacle);
+
+                // obstacle.Init(tile);
+
+                TileObstacleManager.Ins.SpawnObstacleAt(tile);
             }
 
             return result;

@@ -22,6 +22,7 @@ namespace AntsFlow
 
         public Tilemap tilemap;
         public Vector3Int tilemapPosition;
+        public TileObstacle tileObstacle;
 
         public int name;
         public Vector3 position;
@@ -70,9 +71,9 @@ namespace AntsFlow
             {
                 return 0;
             }
-            
+
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
-            
+
             float distance = 0;
 
             distance += Vector2.Distance(points[0], start);
@@ -150,6 +151,12 @@ namespace AntsFlow
             // // Tween.Scale(transform, 0.45f, duration: 0.3f);
             // Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
+            if (tileObstacle != null)
+            {
+                tileObstacle.Hide();
+                tileObstacle = null;
+            }
+
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
             fakeTile.Init(ant, faction);
@@ -200,7 +207,42 @@ namespace AntsFlow
 
             isDone = true;
 
+            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            {
+                BaseTile tile = TileManager.Ins.tiles[i];
+
+                if (tile == this)
+                {
+                    continue;
+                }
+
+                tile.blockages.Remove(this);
+            }
+
+            // if (tileObstacle != null)
+            // {
+            //     tileObstacle.Hide();
+            //     tileObstacle = null;
+            // }
+
+            // for (int i = 0; i < blockages.Count; i++)
+            // {
+            //     BaseTile blockage = blockages[i];
+
+            //     SpawnObstacle(blockage);
+            // }
+
             tileCompleteEvent.Invoke(this);
+
+            void SpawnObstacle(BaseTile tile)
+            {
+                if (tile.tileObstacle == null)
+                {
+                    TileObstacle obstacle = ObjectPoolingEverything.GetFromPool<TileObstacle>(GameConstants.tileObstacle);
+
+                    obstacle.Init(tile);
+                }
+            }
         }
 
         public void InvokeAntStartMoveToTileEvent()

@@ -524,7 +524,7 @@ namespace AntsFlow
                     {
                         SaferioTween.ScaleDownWithPunch(fakeTile.transform, onCompleteAction: () =>
                         {
-                            tile.Complete();
+                            // tile.Complete();
 
                             ObjectPoolingEverything.ReturnToPool(GameConstants.fakeTile, fakeTile.gameObject);
                         });

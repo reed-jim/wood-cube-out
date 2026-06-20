@@ -128,24 +128,24 @@ namespace AntsFlow
 
         void Update()
         {
-            // transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
+            transform.position = transform.position.ChangeZ(-3 - 0.001f * siblingIndex);
 
-            if (!isDroppingTile)
-            {
-                float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            // if (!isDroppingTile)
+            // {
+            //     float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-                Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+            //     Quaternion targetRotation = Quaternion.Euler(0, 0, angle - 90f);
 
-                transform.rotation = Quaternion.Lerp(
-                    transform.rotation,
-                    targetRotation,
-                    rotationSpeed * Time.deltaTime
-                );
+            //     transform.rotation = Quaternion.Lerp(
+            //         transform.rotation,
+            //         targetRotation,
+            //         rotationSpeed * Time.deltaTime
+            //     );
 
-                // transform.rotation = targetRotation;
-            }
+            //     // transform.rotation = targetRotation;
+            // }
 
-            return;
+            // return;
 
             if (!isMovingToSideTile)
             {
@@ -566,7 +566,7 @@ namespace AntsFlow
             {
                 List<Vector3> toRemovePoints = new List<Vector3>();
 
-                float removeThresholdY = TileManager.Ins.bottomRightMostInsideLevelNode.initialPosition.y;
+                float removeThresholdY = TileManager.Ins.antNest.transform.position.y;
 
                 for (int i = 0; i < points.Count; i++)
                 {
@@ -827,28 +827,28 @@ namespace AntsFlow
 
         public void MoveToTile(BaseTile tile)
         {
-            // tile.isAntApproaching = true;
-            // tile.InvokeAntStartMoveToTileEvent();
+            tile.isAntApproaching = true;
+            tile.InvokeAntStartMoveToTileEvent();
 
-            // this.tile = tile;
+            this.tile = tile;
 
-            // destination = tile.coordinate.transform.position.ChangeZ(0);
-            // stuckTime = 0;
-            // navMeshAgent.enabled = false;
-            // navMeshAgent.areaMask = walkableMask;
-            // navMeshAgent.enabled = true;
+            destination = TileManager.Ins.GetTilePosition(tile).ChangeZ(0);
+            stuckTime = 0;
+            navMeshAgent.enabled = false;
+            navMeshAgent.areaMask = walkableMask;
+            navMeshAgent.enabled = true;
 
-            // if (navMeshAgent.isOnNavMesh)
-            // {
-            //     navMeshAgent.destination = destination;
-            // }
-            // else
-            // {
-            //     MoveToNest();
-            // }
+            if (navMeshAgent.isOnNavMesh)
+            {
+                navMeshAgent.destination = destination;
+            }
+            else
+            {
+                MoveToNest();
+            }
 
-            // isMovingToSideTile = false;
-            // isMovingToTile = true;
+            isMovingToSideTile = false;
+            isMovingToTile = true;
         }
 
         public void MoveToTileGhostMode(BaseTile tile)
