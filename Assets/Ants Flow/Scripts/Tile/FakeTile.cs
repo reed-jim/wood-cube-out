@@ -29,9 +29,9 @@ namespace AntsFlow
         {
             spriteRenderer.sprite = FactionMapper.Ins.GetTileSprite(tile.Faction);
 
-            Vector3 position = (Vector3)(tile.tilemapPosition);
+            Vector3 position = (Vector3)tile.tilemapPosition;
 
-            transform.position = GamePersistentVariable.tileMapScaleFactor * position.AddZ(-1);
+            transform.position = GamePersistentVariable.tileMapScaleFactor * position.AddZ(-0.01f * position.y);
             transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
             transform.localRotation = Quaternion.identity;
         }

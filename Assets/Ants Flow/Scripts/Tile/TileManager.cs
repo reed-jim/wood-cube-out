@@ -87,12 +87,17 @@ namespace AntsFlow
         }
 
         #region Grid
+        private Vector3 GetTilePosition(BaseTile tile)
+        {
+            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.1f, 0.1f);
+        }
+
         public void BuildMap(List<BaseTile> tiles)
         {
-            float yMin = tiles.Min(tile => tile.position.y);
-            float yMax = tiles.Max(tile => tile.position.y);
-            float xMin = tiles.Min(tile => tile.position.x);
-            float xMax = tiles.Max(tile => tile.position.x);
+            float yMin = tiles.Min(tile => GetTilePosition(tile).y);
+            float yMax = tiles.Max(tile => GetTilePosition(tile).y);
+            float xMin = tiles.Min(tile => GetTilePosition(tile).x);
+            float xMax = tiles.Max(tile => GetTilePosition(tile).x);
 
             nodes = new List<Node>();
 
@@ -101,7 +106,7 @@ namespace AntsFlow
                 BaseTile tile = tiles[i];
 
                 Node node = new Node();
-                node.initialPosition = tile.position;
+                node.initialPosition = GetTilePosition(tile);
                 node.tile = tile;
 
                 nodes.Add(node);

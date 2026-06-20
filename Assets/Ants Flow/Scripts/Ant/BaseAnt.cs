@@ -460,7 +460,7 @@ namespace AntsFlow
             }
         }
 
-        public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 0.1f)
+        public static List<Vector3> Simplify(List<Vector3> points, float tolerance = 1f)
         {
             if (points.Count < 3)
                 return points;
@@ -494,21 +494,51 @@ namespace AntsFlow
             return distance;
         }
 
+        Vector2 GetRandomPointAround(Vector2 point, float radius)
+        {
+            return point + UnityEngine.Random.insideUnitCircle * radius;
+        }
+
+        public void AddRandomPoints(List<Vector3> points, int count)
+        {
+            if (points == null || points.Count < 2)
+            {
+                return;
+            }
+
+            float minY = Mathf.Min(points[0].y, points[1].y);
+            float maxY = Mathf.Max(points[0].y, points[1].y);
+
+            for (int i = 0; i < count; i++)
+            {
+                points.Insert(1, new Vector3(
+                    UnityEngine.Random.Range(points[0].x, points[1].x),
+                    UnityEngine.Random.Range(minY, maxY),
+                    points[0].z
+                ));
+            }
+        }
+
         private IEnumerator MovingCurved(List<Node> path, int count)
         {
             float moveSpeed = 6f;
-            float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 2f);
+            float curveHeight = 1f * UnityEngine.Random.RandomRange(0f, 1f);
 
             if (count == 1)
             {
                 if (path[0].initialPosition.x > 0)
                 {
-                    curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 2f);
+                    curveHeight = -1f * UnityEngine.Random.RandomRange(0f, 1f);
                 }
             }
 
             List<Vector3> points = path.Select(item => item.initialPosition).ToList();
             points = Simplify(points);
+
+            if (count == 1)
+            {
+                points[0] = GetRandomPointAround(points[0], 1.5f);
+            }
 
             float totalDistance = GetTotalDistance(points, transform.position);
             float totalTime = totalDistance / speedMove;
@@ -516,7 +546,7 @@ namespace AntsFlow
             if (count == 2)
             {
                 points.RemoveAt(points.Count - 1);
-                points.Add(TileManager.Ins.antNest.position.AddY(1.8f));
+                points.Add(TileManager.Ins.antNest.position.AddY(0.2f));
             }
 
             for (int i = 0; i < points.Count; i++)
@@ -537,7 +567,7 @@ namespace AntsFlow
 
                 bool isCurved = false;
 
-                if (count == 1 && index == 0)
+                if (count == 1 && index == 1)
                 {
                     isCurved = true;
                 }
@@ -546,6 +576,8 @@ namespace AntsFlow
                 // {
                 //     isCurved = true;
                 // }
+
+                isCurved = false;
 
                 float t = 0f;
                 // float deltaT = (moveSpeed / distance) * Time.deltaTime;

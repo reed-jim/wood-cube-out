@@ -165,6 +165,7 @@ public class WashingMachineItem : MonoBehaviour
         isAnimating = false;
         isInSlot = false;
         isStucking = false;
+        isPlayingWarningLoseAnimation = false;
 
         washingMachineStartSlot = null;
         washingMachineSlot = null;

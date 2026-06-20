@@ -12,7 +12,7 @@ namespace AntsFlow
         {
             gameObject.SetActive(true);
 
-            transform.position = GamePersistentVariable.tileMapScaleFactor * tile.position;
+            transform.position = GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition;
             transform.eulerAngles = new Vector3(0, 0, Random.Range(0, 180));
 
             for (int i = 0; i < spriteRenderers.Length; i++)

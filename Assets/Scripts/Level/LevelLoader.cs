@@ -304,6 +304,13 @@ namespace NamPhuThuy.GamePlay
             int numRows = GamePersistentVariable.numRow;
             int numCols = GamePersistentVariable.numColumn;
 
+            float scaleByX = 16f / numCols;
+            float scaleByY = 16f / numRows;
+            float finalScale = Mathf.Min(scaleByX, scaleByY);
+
+            scaleFactor = finalScale;
+            GamePersistentVariable.tileMapScaleFactor = scaleFactor;
+
             shadowTilemapGrid.SetParent(levelTransform);
             shadowTilemapGrid.position = shadowTilemapOffset;
             shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
@@ -600,7 +607,7 @@ namespace NamPhuThuy.GamePlay
                 {
                     Vector3 position = new Vector3(
                         -numCols / 2 + col * 1,
-                        (numRows / 4) + row * 1,
+                        (0.18f * numRows) + row * 1,
                         0f
                     );
 
