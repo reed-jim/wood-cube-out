@@ -169,7 +169,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
             Sequence seq = DOTween.Sequence();
 
-            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.2f * i));
+            seq.Append(_rewards[index].DOScale(1f, 0.3f).SetDelay(0.1f * i));
 
             seq.Append(
                 DOTween.Sequence()
