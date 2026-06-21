@@ -36839,11 +36839,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.32430556
+      value: 0.44444445
       objectReference: {fileID: 0}
     - target: {fileID: 5611920150841437189, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.3179054
+      value: 0.16216215
       objectReference: {fileID: 0}
     - target: {fileID: 5612500807938215128, guid: e29177f00edc30349a45e63a0c49ca2a, type: 3}
       propertyPath: m_StaticEditorFlags
@@ -39231,6 +39231,8 @@ MonoBehaviour:
   tileGlowTilemap: {fileID: 1605944948}
   tilemaps: []
   tileGlowSprite: {fileID: 21300000, guid: dea13c183864f3848ba60f8df67a6ea6, type: 3}
+  lastTimeUpdateNavmesh: 0
+  intervalUpdateNavmesh: 2
   isDebug: 0
   numExtraRow: 2
   tiles: []
@@ -65248,8 +65250,8 @@ MonoBehaviour:
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 1
   m_TileSize: 1024
-  m_OverrideVoxelSize: 0
-  m_VoxelSize: 0.016666668
+  m_OverrideVoxelSize: 1
+  m_VoxelSize: 0.2
   m_MinRegionArea: 2
   m_NavMeshData: {fileID: 23800000, guid: a636117e7310acd479c5ab019d102b00, type: 2}
   m_BuildHeightMesh: 0
@@ -65866,7 +65868,7 @@ MonoBehaviour:
   shadowSprite: {fileID: 21300000, guid: c169d82cae7894044869e7f993bddf2f, type: 3}
   tilemapGrids: []
   scaleFactor: 0.55
-  shadowTilemapOffset: {x: -0.3, y: 0.3, z: 0}
+  shadowTilemapOffset: {x: -0.1, y: 0.1, z: 0}
   tile:
     tilemap: {fileID: 0}
     tilemapPosition: {x: 0, y: 0, z: 0}

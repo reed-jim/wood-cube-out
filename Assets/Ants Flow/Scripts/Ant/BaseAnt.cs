@@ -92,7 +92,7 @@ namespace AntsFlow
             walkableAndNestMask = walkableMask | (1 << nestArea);
 
             siblingIndex = transform.GetSiblingIndex();
-            stuckThreshold = 3 * Time.deltaTime;
+            stuckThreshold = 2 * Time.deltaTime;
             stuckNoReachDestinationThreshold = 0.2f;
 
             tweens = new List<Tween>();

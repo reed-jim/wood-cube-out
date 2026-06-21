@@ -20,9 +20,9 @@ namespace AntsFlow
 
         public void Init(BaseTile tile)
         {
-            // transform.position = TileManager.Ins.GetTilePosition(tile);
+            transform.position = TileManager.Ins.GetTilePosition(tile);
             gameObject.SetActive(true);
-            transform.position = tile.position + new Vector3(0.3f, 0.5f);
+            // transform.position = tile.position;
             transform.localScale = GamePersistentVariable.tileMapScaleFactor * Vector3.one;
 
             tile.tileObstacle = this;

@@ -31,6 +31,7 @@ namespace AntsFlow
         public bool isAnimating;
         public bool isLocked;
         [NonSerialized] public List<BaseTile> blockages;
+        [NonSerialized] public HashSet<BaseTile> blockedByMe;
         [NonSerialized] public List<BaseTile> actualBlockages;
         [NonSerialized] public List<Node> path;
 
@@ -151,15 +152,11 @@ namespace AntsFlow
             // // Tween.Scale(transform, 0.45f, duration: 0.3f);
             // Tween.LocalEulerAngles(transform, transform.localEulerAngles, Vector3.zero, duration: 0.3f);
 
-            if (tileObstacle != null)
-            {
-                tileObstacle.Hide();
-                tileObstacle = null;
-            }
-
             FakeTile fakeTile = ObjectPoolingEverything.GetFromPool<FakeTile>(GameConstants.fakeTile);
 
             fakeTile.Init(ant, faction);
+
+            TileManager.Ins.UpdateNavMesh();
 
             TileRemainingManager.Ins.SpawnTileRemaining(this);
             SoundManager.Instance.PlaySoundCubeEat();
@@ -207,17 +204,17 @@ namespace AntsFlow
 
             isDone = true;
 
-            for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
-            {
-                BaseTile tile = TileManager.Ins.tiles[i];
+            // for (int i = 0; i < TileManager.Ins.tiles.Count; i++)
+            // {
+            //     BaseTile tile = TileManager.Ins.tiles[i];
 
-                if (tile == this)
-                {
-                    continue;
-                }
+            //     if (tile == this)
+            //     {
+            //         continue;
+            //     }
 
-                tile.blockages.Remove(this);
-            }
+            //     tile.blockages.Remove(this);
+            // }
 
             // if (tileObstacle != null)
             // {
@@ -248,6 +245,17 @@ namespace AntsFlow
         public void InvokeAntStartMoveToTileEvent()
         {
             // navMeshModifierVolume.enabled = false;
+
+            if (tileObstacle != null)
+            {
+                tileObstacle.Hide();
+                tileObstacle = null;
+            }
+
+            foreach (var tile in blockedByMe)
+            {
+                tile.blockages.Remove(this);
+            }
 
             antStartMoveToTileEvent?.Invoke(this);
         }

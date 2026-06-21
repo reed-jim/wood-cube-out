@@ -42,6 +42,11 @@ namespace AntsFlow
         public Tilemap[] tilemaps;
         public Sprite tileGlowSprite;
 
+        #region Navmesh
+        public float lastTimeUpdateNavmesh;
+        public float intervalUpdateNavmesh;
+        #endregion
+
         #region Custom Pathfinding
         public bool isDebug;
         public int numExtraRow;
@@ -81,26 +86,25 @@ namespace AntsFlow
 
             BaseTile.tileCompleteEvent += OnTileCompleted;
             BaseTile.antStartMoveToTileEvent += UpdateNavMesh;
-            // BaseAnt.requestUpdateNavmeshEvent += UpdateNavMesh;
         }
 
         void OnDestroy()
         {
             BaseTile.tileCompleteEvent -= OnTileCompleted;
             BaseTile.antStartMoveToTileEvent -= UpdateNavMesh;
-            // BaseAnt.requestUpdateNavmeshEvent -= UpdateNavMesh;
         }
 
         #region Grid
         public Vector3 GetTilePosition(BaseTile tile)
         {
+            return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + (GamePersistentVariable.tileMapScaleFactor / 2) * new Vector3(1, 1);
             return (GamePersistentVariable.tileMapScaleFactor * (Vector3)tile.tilemapPosition) + new Vector3(0.3f, 0.3f);
         }
 
         public void BuildMap(List<BaseTile> tiles)
         {
             return;
-            
+
             float yMin = tiles.Min(tile => GetTilePosition(tile).y);
             float yMax = tiles.Max(tile => GetTilePosition(tile).y);
             float xMin = tiles.Min(tile => GetTilePosition(tile).x);
@@ -704,7 +708,6 @@ namespace AntsFlow
 
         private void OnTileCompleted(BaseTile tile)
         {
-            // UpdateNavMesh(tile);
             UpdateTileCount();
             CheckWinLevel();
         }
@@ -716,7 +719,13 @@ namespace AntsFlow
 
         public void UpdateNavMesh()
         {
-            if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            if (Time.time - lastTimeUpdateNavmesh > intervalUpdateNavmesh)
+            {
+                navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+                lastTimeUpdateNavmesh = Time.time;
+            }
+            else
             {
                 if (delayedUpdateNavmeshCoroutine != null)
                 {
@@ -724,23 +733,33 @@ namespace AntsFlow
                 }
 
                 delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
-
-                return;
             }
 
-            navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+            // if (navMeshUpdateOperation != null && !navMeshUpdateOperation.isDone)
+            // {
+            // if (delayedUpdateNavmeshCoroutine != null)
+            // {
+            //     StopCoroutine(delayedUpdateNavmeshCoroutine);
+            // }
 
-            isUpdatingNavMesh = true;
+            // delayedUpdateNavmeshCoroutine = StartCoroutine(DelayedUpdateNavmesh());
 
-            Tween.Delay(2).OnComplete(() =>
-            {
-                isUpdatingNavMesh = false;
-            });
+            //     return;
+            // }
+
+            // navMeshUpdateOperation = navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
+
+            // isUpdatingNavMesh = true;
+
+            // Tween.Delay(2).OnComplete(() =>
+            // {
+            //     isUpdatingNavMesh = false;
+            // });
         }
 
         private IEnumerator DelayedUpdateNavmesh()
         {
-            yield return new WaitForSeconds(5);
+            yield return new WaitForSeconds(intervalUpdateNavmesh);
 
             navMeshSurface.UpdateNavMesh(navMeshSurface.navMeshData);
         }

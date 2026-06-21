@@ -360,10 +360,13 @@ namespace NamPhuThuy.GamePlay
 
                     AntsFlow.TileManager.Ins.tiles[index].tilemap = spawnedTileMap;
                     AntsFlow.TileManager.Ins.tiles[index].tilemapPosition = cellPos;
+
+                    TileObstacleManager.Ins.SpawnObstacleAt(AntsFlow.TileManager.Ins.tiles[index]);
                 }
             }
 
             AntsFlow.TileManager.Ins.tilemaps = tilemapGrids.Select(item => item.GetComponentInChildren<Tilemap>()).ToArray();
+            AntsFlow.TileManager.Ins.UpdateNavMesh();
 
             // Dictionary<Color, List<AntLevelDataItem>> itemByFaction = new Dictionary<Color, List<AntLevelDataItem>>();
 
@@ -555,6 +558,21 @@ namespace NamPhuThuy.GamePlay
                 // }
             }
 
+            // Clear in case this is rebuilt
+            foreach (var tile in tiles)
+            {
+                tile.blockedByMe = new HashSet<AntsFlow.BaseTile>();
+            }
+
+            // Build reverse references
+            foreach (var tile in tiles)
+            {
+                foreach (var blockage in tile.blockages)
+                {
+                    blockage.blockedByMe.Add(tile);
+                }
+            }
+
             AntsFlow.TileManager.Ins.tiles = new List<AntsFlow.BaseTile>();
             AntsFlow.TileManager.Ins.tiles.AddRange(tiles);
 
@@ -656,20 +674,7 @@ namespace NamPhuThuy.GamePlay
                     result.antLevelDataItems[index].position = position;
 
                     AntsFlow.TileManager.Ins.tiles[index].position = scaleFactor * position;
-
-                    SpawnObstacle(AntsFlow.TileManager.Ins.tiles[index]);
                 }
-            }
-
-            AntsFlow.TileManager.Ins.UpdateNavMesh();
-
-            void SpawnObstacle(AntsFlow.BaseTile tile)
-            {
-                // TileObstacle obstacle = ObjectPoolingEverything.GetFromPool<TileObstacle>(GameConstants.tileObstacle);
-
-                // obstacle.Init(tile);
-
-                TileObstacleManager.Ins.SpawnObstacleAt(tile);
             }
 
             return result;

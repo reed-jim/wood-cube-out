@@ -13,7 +13,7 @@ public class UpSpeedAnt : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0) && !isHolding)
+        if (Input.GetMouseButton(0) && !isHolding && !GamePersistentVariable.isGameSpeedChangeInDebug)
         {
             if (timeHold < 0.5f)
             {
