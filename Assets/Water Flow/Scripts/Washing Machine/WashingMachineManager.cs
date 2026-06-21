@@ -92,6 +92,11 @@ namespace AntsFlow
             {
                 TutorialLevelOne.Ins.HideTutorial();
             }
+
+            if (levelItem.isTutorialSpeedUpLevel)
+            {
+                SpeedUpTutorialManager.Ins.StartTutorial();
+            }
         }
 
         public WashingMachineSlot MoveItemToSlot(WashingMachineItem washingMachineItem, Action onCompleteAction = null)

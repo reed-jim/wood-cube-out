@@ -20060,6 +20060,50 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 7572492778082143720, guid: 4dc2ed3352f1e0a4e84852ae1f260d4b, type: 3}
   m_PrefabInstance: {fileID: 390615021}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &394140830
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 394140832}
+  - component: {fileID: 394140831}
+  m_Layer: 0
+  m_Name: Speed Up Tutorial Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &394140831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394140830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f6998c84ffb8a74e85e2f6729b20bbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpeedUpTutorialManager
+--- !u!4 &394140832
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 394140830}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &394228622
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -25777,6 +25821,7 @@ RectTransform:
   - {fileID: 669729803}
   - {fileID: 1470172834}
   - {fileID: 670769128}
+  - {fileID: 1670502356}
   - {fileID: 1344145236}
   m_Father: {fileID: 1577199173}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -65815,6 +65860,7 @@ MonoBehaviour:
   objectPartMaterialContainer: {fileID: 11400000, guid: edf63df89a48f4140915aa4dd0e58917, type: 2}
   texturedMaterial: {fileID: 0}
   tutorialDelay: 0.2
+  glowTilemapGrid: {fileID: 1097758170}
   shadowTilemap: {fileID: 1451543133}
   shadowTilemapGrid: {fileID: 1153400086}
   shadowSprite: {fileID: 21300000, guid: c169d82cae7894044869e7f993bddf2f, type: 3}
@@ -87631,6 +87677,124 @@ PrefabInstance:
 Transform:
   m_CorrespondingSourceObject: {fileID: 7572492778082143720, guid: 4dc2ed3352f1e0a4e84852ae1f260d4b, type: 3}
   m_PrefabInstance: {fileID: 1669823291}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1670502355
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 510946579}
+    m_Modifications:
+    - target: {fileID: 3113824652823305248, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_Name
+      value: Speed Up Tutorial Popup
+      objectReference: {fileID: 0}
+    - target: {fileID: 3113824652823305248, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745464444601029022, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_text
+      value: Continue
+      objectReference: {fileID: 0}
+    - target: {fileID: 7336728553004970211, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_text
+      value: Level 5 Completed!
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_Pivot.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_Pivot.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9047227480353637906, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+      propertyPath: m_text
+      value: Good Job!
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+--- !u!224 &1670502356 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8684835883523114881, guid: d6d9854a1d1f4ce43b0344af59b0f579, type: 3}
+  m_PrefabInstance: {fileID: 1670502355}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1670603025
 PrefabInstance:
@@ -114533,3 +114697,4 @@ SceneRoots:
   - {fileID: 1393011581}
   - {fileID: 1097758170}
   - {fileID: 284994141}
+  - {fileID: 394140832}
