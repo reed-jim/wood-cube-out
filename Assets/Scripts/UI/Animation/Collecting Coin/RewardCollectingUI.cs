@@ -123,6 +123,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
         ResourceType resourceType, Vector3 position, Action onCompleteAction, int totalValue, float itemSizeX
     )
     {
+        Vector3 startPosition = new Vector3(-50, -150, 0);
+
         for (int i = 0; i < _rewards.Length; i++)
         {
             _rewards[i].gameObject.SetActive(true);
@@ -133,7 +135,7 @@ public class RewardCollectingUI : SaferioTweenBehaviour
             UIUtil.SetSizeKeepRatioY(_rewards[i], itemSizeX);
 
             // _rewards[i].localPosition = new Vector3(UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX), UnityEngine.Random.Range(-2 * itemSizeX, 2 * itemSizeX));
-            _rewards[i].localPosition = Vector3.zero;
+            _rewards[i].localPosition = startPosition;
             _rewards[i].localScale = Vector3.zero;
 
             // _rewards[i].DOScale(1, duration: 0.3f);
@@ -157,8 +159,8 @@ public class RewardCollectingUI : SaferioTweenBehaviour
 
         Vector3[] path =
         {
-            new Vector3(150f, -100f, 0f), // curve right & down
-            new Vector3(250f,  50f, 0f), // start moving up
+            startPosition + new Vector3(150f, -100f, 0f), // curve right & down
+            startPosition + new Vector3(250f,  50f, 0f), // start moving up
             position
         };
 

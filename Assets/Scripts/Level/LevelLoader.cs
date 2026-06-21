@@ -69,6 +69,7 @@ namespace NamPhuThuy.GamePlay
         public static event Action<bool> specialTutIntroduceEvent; // true if this is the first time a special tut is shown
         #endregion
 
+        public Transform glowTilemapGrid;
         public Tilemap shadowTilemap;
         public Transform shadowTilemapGrid;
         public Sprite shadowSprite;
@@ -275,6 +276,11 @@ namespace NamPhuThuy.GamePlay
                 FillTileMap(antLevelData, levelTransform);
                 // // BuildMesh(levelTransform);   
 
+                if (currentLevel.Value == 2)
+                {
+                    levelItem.isTutorialSpeedUpLevel = true;
+                }
+
                 WashingMachineManager.Ins.StartLevel(levelItem);
 
                 AntsFlow.TileManager.Ins.UpdateNavMesh();
@@ -322,6 +328,7 @@ namespace NamPhuThuy.GamePlay
             shadowTilemapGrid.SetParent(levelTransform);
             shadowTilemapGrid.position = shadowTilemapOffset;
             shadowTilemapGrid.localScale = scaleFactor * Vector3.one;
+            glowTilemapGrid.localScale = scaleFactor * Vector3.one;
 
             for (int i = 0; i < numRows; i++)
             {
